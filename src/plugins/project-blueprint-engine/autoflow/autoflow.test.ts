@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest'
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import {
+  AUTOFLOW_STATES,
   applyHumanAction,
   completeAutoflowStep,
   createIdleAutoflowState,
@@ -11,6 +14,15 @@ import {
 } from './autoflow'
 
 describe('PBE Autoflow', () => {
+  it('keeps the TypeScript state list aligned with the JSON schema', () => {
+    const schemaPath = resolve(process.cwd(), 'schemas/autoflow-state.schema.json')
+    const schema = JSON.parse(readFileSync(schemaPath, 'utf8')) as {
+      properties: { state: { enum: string[] } }
+    }
+
+    expect([...AUTOFLOW_STATES]).toEqual(schema.properties.state.enum)
+  })
+
   it('starts in full profile by default and automatically targets RPD', () => {
     expect(createIdleAutoflowState().state).toBe('IDLE')
 

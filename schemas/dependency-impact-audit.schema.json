@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local/project-blueprint-engine/dependency-impact-audit.schema.json",
+  "title": "Dependency Impact Audit",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "status",
+    "futureItems",
+    "scopeDecisionRequired",
+    "architectureRunwayRequired",
+    "summary"
+  ],
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "status": {
+      "type": "string",
+      "enum": ["not_started", "complete", "blocked"]
+    },
+    "generatedFrom": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "futureItems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "classification",
+          "currentSliceImpact",
+          "riskIfSkipped",
+          "decision"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "relatedRequirementIds": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "relatedWorkGraphNodeIds": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "classification": {
+            "type": "string",
+            "enum": [
+              "optional_deferred",
+              "required_foundation",
+              "blocking_dependency",
+              "high_impact_future_module"
+            ]
+          },
+          "currentSliceImpact": { "type": "string" },
+          "requiredFoundationIds": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "riskIfSkipped": { "type": "string" },
+          "decision": {
+            "type": "string",
+            "enum": [
+              "pending_user_decision",
+              "approved_foundation",
+              "approved_foundation_only",
+              "deferred_with_no_current_impact",
+              "included_in_current_slice",
+              "blocked",
+              "rejected_by_user"
+            ]
+          },
+          "decisionBy": {
+            "type": ["string", "null"],
+            "enum": ["user", "codex", null]
+          },
+          "decisionAt": { "type": ["string", "null"] },
+          "notes": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "scopeDecisionRequired": { "type": "boolean" },
+    "architectureRunwayRequired": { "type": "boolean" },
+    "blockingIssues": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "summary": { "type": "string" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "futureItems": {
+            "contains": {
+              "properties": {
+                "classification": {
+                  "enum": [
+                    "required_foundation",
+                    "blocking_dependency",
+                    "high_impact_future_module"
+                  ]
+                }
+              },
+              "required": ["classification"]
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "architectureRunwayRequired": { "const": true }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

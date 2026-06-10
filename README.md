@@ -35,6 +35,7 @@ skills/
   pbe-ui-ux-confirm/
   pbe-wpd/
   pbe-vd/
+  pbe-dependency-impact-audit/
   pbe-plan-execution/
   pbe-coverage-audit/
   pbe-ux-audit/
@@ -79,11 +80,12 @@ PBE is easiest to understand as a stateful Codex workflow:
 
 1. Codex reads the target repository and the existing `.pbe/` folder.
 2. PBE stores durable state in `.pbe/blueprint/pbe-state.json`.
-3. Deterministic stages continue automatically.
-4. Human gates stop the flow only when product judgment is required.
-5. ACEP turns the approved plan into a Codex execution contract.
-6. Codex implements only selected and approved foundation scope.
-7. The user, not Codex, decides whether the result is accepted.
+3. PBE routing reads that state before implementation work.
+4. Deterministic stages continue automatically.
+5. Human gates stop the flow only when product judgment is required.
+6. ACEP turns the approved plan into a Codex execution contract.
+7. Codex implements only selected and approved foundation scope.
+8. The user, not Codex, decides whether the result is accepted.
 
 ```mermaid
 flowchart TD
@@ -322,6 +324,14 @@ Human gates:
 
 Autoflow state is stored in `.pbe/blueprint/pbe-state.json` under `autoflow`.
 
+PBE routing uses that state before implementation work:
+
+- active `currentGate` means Codex must stop and ask for the user's decision
+- `BLOCKED` means Codex must report `lastFailure` and repair options
+- deterministic `nextStep` means Codex should run the next PBE step before ordinary coding
+- ordinary usage help or conceptual review can be answered without a PBE status card
+- `accepted` requires explicit user acceptance metadata; Codex may submit for review, but only the user can set acceptance
+
 `COMPLETED` means the whole project is complete. A single slice completion should use `SLICE_ACCEPTED` or `WAITING_NEXT_SLICE_DECISION`.
 
 ## Parallel Safety
@@ -329,6 +339,11 @@ Autoflow state is stored in `.pbe/blueprint/pbe-state.json` under `autoflow`.
 WPD creates a WorkGraph. Plan Execution converts that WorkGraph into a staged strategy.
 
 PBE does not use RPD nodes directly as parallel coding tasks.
+
+Validator enforcement rejects parallel groups that reuse the same normalized
+`expectedFiles` path, mix shared files with another task's write set, use broad
+or unknown paths, omit integration tasks, or exceed the safe group size without
+human approval.
 
 Default policy:
 
@@ -362,6 +377,10 @@ accepted
 
 If the user is dissatisfied, feedback is mapped to affected requirements, tasks, UI/UX items, and verification items before a bounded Revision Pack is created.
 
+Revision manifests declare `allowedFiles`, `forbiddenFiles`, and `mustNotTouch`.
+The validator checks changed, staged, and untracked files against those
+boundaries so a narrow revision does not quietly expand into unrelated code.
+
 ## Validation
 
 Validate plugin structure and JSON files:
@@ -369,6 +388,11 @@ Validate plugin structure and JSON files:
 ```bash
 npm run validate:pbe
 ```
+
+This validation now compiles the JSON schemas with AJV, validates `.pbe`
+artifacts against those schemas when present, checks cross-artifact
+traceability, enforces dependency-impact artifacts, verifies UI impact fields,
+and rejects unsafe parallel or revision boundaries.
 
 Validate the Codex plugin manifest and skills:
 

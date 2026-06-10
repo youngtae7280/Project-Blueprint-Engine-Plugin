@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "status": "complete",
+  "generatedFrom": [
+    ".pbe/blueprint/requirement-tree.json",
+    ".pbe/blueprint/work-design.json",
+    ".pbe/blueprint/work-graph.json",
+    ".pbe/blueprint/verification-design.json",
+    ".pbe/blueprint/foundation-contract.md"
+  ],
+  "futureItems": [
+    {
+      "id": "FUTURE-001",
+      "title": "Future or deferred module",
+      "relatedRequirementIds": ["REQ-DEFERRED-001"],
+      "relatedWorkGraphNodeIds": ["WG-FOUND-001"],
+      "classification": "required_foundation",
+      "currentSliceImpact": "The current slice needs a stable interface, adapter, state model, event, schema, or stub before implementation.",
+      "requiredFoundationIds": ["FOUND-001"],
+      "riskIfSkipped": "The selected slice may hard-code an assumption that becomes expensive to unwind later.",
+      "decision": "pending_user_decision",
+      "decisionBy": null,
+      "decisionAt": null,
+      "notes": ""
+    }
+  ],
+  "scopeDecisionRequired": true,
+  "architectureRunwayRequired": true,
+  "blockingIssues": [],
+  "summary": "Dependency Impact Audit records whether deferred or future modules affect the current slice architecture."
+}

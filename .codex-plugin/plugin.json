@@ -1,6 +1,6 @@
 {
   "name": "project-blueprint-engine",
-  "version": "0.1.0",
+  "version": "0.1.0+codex.20260610074351",
   "description": "A Codex plugin that turns requirements into an autoflowing, traceable staged execution, review, feedback, and revision contract.",
   "author": {
     "name": "Local developer"
@@ -9,7 +9,7 @@
   "interface": {
     "displayName": "Project Blueprint Engine",
     "shortDescription": "Plan, execute, review, and revise Codex work with traceability.",
-    "longDescription": "Project Blueprint Engine runs inside Codex as a skill workflow. It stores planning artifacts in .pbe/, starts an Autoflow from one start command, walks requirements with RPD Tree Walk, stops for UI/UX confirmation before UI implementation, converts requirements into a WPD WorkGraph with an internal Module Boundary Check, plans staged parallel execution with integration tasks, runs coverage and UX audits, creates and runs an Autonomous Codex Execution Pack, stops for final result review, maps user feedback to affected artifacts, and creates bounded revision packs.",
+    "longDescription": "Project Blueprint Engine runs inside Codex as a skill workflow. It stores planning artifacts in .pbe/, starts an Autoflow from one start command, routes active PBE work through state-aware gates before ordinary coding, walks requirements with RPD Tree Walk, stops for UI/UX confirmation before UI implementation, converts requirements into a WPD WorkGraph with an internal Module Boundary Check, audits dependency impact before implementation scope, plans staged parallel execution with integration tasks, validates schema and cross-artifact traceability, runs coverage and UX audits, creates and runs an Autonomous Codex Execution Pack, stops for final result review, maps user feedback to affected artifacts, and creates bounded revision packs with allowed-file boundaries.",
     "developerName": "Local developer",
     "category": "Developer Tools",
     "capabilities": [
@@ -21,7 +21,10 @@
       "Autoflow orchestration",
       "Traceability",
       "Evidence tracking",
+      "Dependency impact auditing",
+      "Schema validation",
       "Staged parallel execution planning",
+      "Parallel safety validation",
       "User review workflow",
       "Revision planning"
     ],

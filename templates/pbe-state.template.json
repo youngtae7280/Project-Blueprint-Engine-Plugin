@@ -37,6 +37,7 @@
   "updatedAt": "2026-06-09T00:00:00.000Z",
   "artifacts": {
     "projectBrief": ".pbe/blueprint/project-brief.md",
+    "pbeRoutingContract": ".pbe/blueprint/pbe-routing-contract.md",
     "sourceOfTruthMatrix": ".pbe/blueprint/source-of-truth-matrix.md",
     "pbeInvariants": ".pbe/blueprint/pbe-invariants.md",
     "foundationContract": ".pbe/blueprint/foundation-contract.md",
@@ -54,6 +55,8 @@
     "workRoadmap": ".pbe/blueprint/work-roadmap.md",
     "verificationDesign": ".pbe/blueprint/verification-design.json",
     "verificationPlan": ".pbe/blueprint/verification-plan.md",
+    "dependencyImpactAudit": ".pbe/blueprint/dependency-impact-audit.json",
+    "dependencyImpactAuditMarkdown": ".pbe/blueprint/dependency-impact-audit.md",
     "executionStrategy": ".pbe/blueprint/execution-strategy.json",
     "executionStrategyMarkdown": ".pbe/blueprint/execution-strategy.md",
     "acep": ".pbe/codex-execution-pack/",

@@ -28,6 +28,13 @@
           "goal": { "type": "string" },
           "taskCandidateId": { "type": "string" },
           "uiUxCandidateIds": { "type": "array", "items": { "type": "string" } },
+          "uiImpact": {
+            "type": "string",
+            "enum": ["none", "indirect", "direct"]
+          },
+          "uiUxConfirmationRequired": { "type": "boolean" },
+          "uiUxConfirmationId": { "type": "string" },
+          "uiUxReason": { "type": "string" },
           "approvedUiUxDirection": { "type": "array", "items": { "type": "string" } },
           "uiUxNonScope": { "type": "array", "items": { "type": "string" } },
           "uiUxImplementationNotes": { "type": "array", "items": { "type": "string" } },

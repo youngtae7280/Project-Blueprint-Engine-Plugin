@@ -1,9 +1,65 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
+import { execFileSync } from 'node:child_process'
 import path from 'node:path'
 import process from 'node:process'
+import Ajv2020 from 'ajv/dist/2020.js'
 
 const root = process.cwd()
 const errors = []
+const targetContext = {}
+const schemaIdByTargetLabel = new Map([
+  ['.pbe/blueprint/pbe-state.json', 'https://local/project-blueprint-engine/pbe-state.schema.json'],
+  [
+    '.pbe/blueprint/requirement-tree.json',
+    'https://local/project-blueprint-engine/requirement-tree.schema.json',
+  ],
+  [
+    '.pbe/blueprint/ui-ux-preview.json',
+    'https://local/project-blueprint-engine/ui-ux-preview.schema.json',
+  ],
+  [
+    '.pbe/blueprint/work-design.json',
+    'https://local/project-blueprint-engine/work-design.schema.json',
+  ],
+  [
+    '.pbe/blueprint/work-graph.json',
+    'https://local/project-blueprint-engine/work-graph.schema.json',
+  ],
+  [
+    '.pbe/blueprint/verification-design.json',
+    'https://local/project-blueprint-engine/verification-design.schema.json',
+  ],
+  [
+    '.pbe/blueprint/dependency-impact-audit.json',
+    'https://local/project-blueprint-engine/dependency-impact-audit.schema.json',
+  ],
+  [
+    '.pbe/blueprint/execution-strategy.json',
+    'https://local/project-blueprint-engine/execution-strategy.schema.json',
+  ],
+  [
+    '.pbe/blueprint/traceability-matrix.json',
+    'https://local/project-blueprint-engine/traceability-matrix.schema.json',
+  ],
+  [
+    '.pbe/codex-execution-pack/execution-manifest.json',
+    'https://local/project-blueprint-engine/execution-manifest.schema.json',
+  ],
+  [
+    '.pbe/codex-execution-pack/04-traceability-matrix.json',
+    'https://local/project-blueprint-engine/traceability-matrix.schema.json',
+  ],
+  [
+    '.pbe/codex-execution-pack/05-ui-ux-spec.json',
+    'https://local/project-blueprint-engine/ui-ux-spec.schema.json',
+  ],
+  [
+    '.pbe/review/feedback-items.json',
+    'https://local/project-blueprint-engine/feedback-items.schema.json',
+  ],
+])
+const schemaFiles = new Map()
+let ajv = null
 
 const requiredPaths = [
   '.codex-plugin/plugin.json',
@@ -13,6 +69,7 @@ const requiredPaths = [
   'skills/pbe-ui-ux-confirm/SKILL.md',
   'skills/pbe-wpd/SKILL.md',
   'skills/pbe-vd/SKILL.md',
+  'skills/pbe-dependency-impact-audit/SKILL.md',
   'skills/pbe-plan-execution/SKILL.md',
   'skills/pbe-coverage-audit/SKILL.md',
   'skills/pbe-ux-audit/SKILL.md',
@@ -24,6 +81,7 @@ const requiredPaths = [
   'skills/pbe-run-revision/SKILL.md',
   'templates/pbe-state.template.json',
   'templates/autoflow-state.template.json',
+  'templates/pbe-routing-contract-template.md',
   'templates/source-of-truth-matrix-template.md',
   'templates/pbe-invariants-template.md',
   'templates/foundation-contract-template.md',
@@ -45,6 +103,8 @@ const requiredPaths = [
   'templates/work-design.template.json',
   'templates/work-graph.template.json',
   'templates/verification-design.template.json',
+  'templates/dependency-impact-audit.template.json',
+  'templates/dependency-impact-audit-template.md',
   'templates/execution-manifest.template.json',
   'templates/execution-strategy.template.json',
   'templates/execution-strategy-template.md',
@@ -72,6 +132,7 @@ const requiredPaths = [
   'schemas/work-design.schema.json',
   'schemas/work-graph.schema.json',
   'schemas/verification-design.schema.json',
+  'schemas/dependency-impact-audit.schema.json',
   'schemas/execution-manifest.schema.json',
   'schemas/execution-strategy.schema.json',
   'schemas/traceability-matrix.schema.json',
@@ -82,6 +143,7 @@ const requiredPaths = [
   'docs/usage.md',
   'docs/workflow.md',
   'docs/autoflow.md',
+  'docs/pbe-routing.md',
   'docs/pbe-philosophy.md',
   'docs/execution-profiles.md',
   'docs/source-of-truth-matrix.md',
@@ -120,12 +182,16 @@ for (const relativePath of requiredPaths) {
 
 for (const relativePath of findJsonFiles(root, ['.codex-plugin', 'templates', 'schemas'])) {
   try {
-    JSON.parse(readFileSync(path.join(root, relativePath), 'utf8'))
+    const json = JSON.parse(readFileSync(path.join(root, relativePath), 'utf8'))
+    if (relativePath.startsWith('schemas/')) {
+      schemaFiles.set(relativePath, json)
+    }
   } catch (error) {
     errors.push(`Invalid JSON: ${relativePath} (${error.message})`)
   }
 }
 
+validateJsonSchemas()
 validateSkillFrontmatter()
 validateStatusCardTemplates()
 validateOptionalPbeTarget()
@@ -165,6 +231,34 @@ function findJsonFiles(baseDir, directories) {
       }
     }
   }
+}
+
+function validateJsonSchemas() {
+  ajv = new Ajv2020({ allErrors: true, strict: false })
+
+  for (const [relativePath, schema] of schemaFiles) {
+    try {
+      ajv.addSchema(schema)
+    } catch (error) {
+      errors.push(`Invalid JSON schema: ${relativePath} (${error.message})`)
+    }
+  }
+
+  for (const [relativePath, schema] of schemaFiles) {
+    try {
+      ajv.compile(schema)
+    } catch (error) {
+      errors.push(`Schema compile failed: ${relativePath} (${error.message})`)
+    }
+  }
+}
+
+function getSchemaEnum(relativePath, propertyPath) {
+  let cursor = schemaFiles.get(relativePath)
+  for (const segment of propertyPath) {
+    cursor = cursor?.[segment]
+  }
+  return Array.isArray(cursor) ? cursor : []
 }
 
 function validateSkillFrontmatter() {
@@ -245,7 +339,10 @@ function validateOptionalPbeTarget() {
   const previewPath = path.join(blueprintRoot, 'ui-ux-preview.json')
   const workDesignPath = path.join(blueprintRoot, 'work-design.json')
   const workGraphPath = path.join(blueprintRoot, 'work-graph.json')
+  const verificationDesignPath = path.join(blueprintRoot, 'verification-design.json')
+  const dependencyImpactAuditPath = path.join(blueprintRoot, 'dependency-impact-audit.json')
   const executionStrategyPath = path.join(blueprintRoot, 'execution-strategy.json')
+  const blueprintTraceabilityPath = path.join(blueprintRoot, 'traceability-matrix.json')
   const feedbackPath = path.join(root, '.pbe', 'review', 'feedback-items.json')
 
   if (!existsSync(blueprintRoot)) {
@@ -253,9 +350,14 @@ function validateOptionalPbeTarget() {
     return
   }
 
+  if (!existsSync(statePath)) {
+    errors.push('.pbe exists but .pbe/blueprint/pbe-state.json is missing')
+  }
+
   if (existsSync(statePath)) {
     const state = parseTargetJson(statePath, '.pbe/blueprint/pbe-state.json')
     if (state) {
+      targetContext.state = state
       validatePbeState(state)
     }
   }
@@ -263,6 +365,7 @@ function validateOptionalPbeTarget() {
   if (existsSync(treePath)) {
     const tree = parseTargetJson(treePath, '.pbe/blueprint/requirement-tree.json')
     if (tree) {
+      targetContext.requirementTree = tree
       validateRequirementTree(tree)
     }
   }
@@ -270,6 +373,7 @@ function validateOptionalPbeTarget() {
   if (existsSync(previewPath)) {
     const preview = parseTargetJson(previewPath, '.pbe/blueprint/ui-ux-preview.json')
     if (preview) {
+      targetContext.uiUxPreview = preview
       validateUiUxPreview(preview)
     }
   }
@@ -277,6 +381,7 @@ function validateOptionalPbeTarget() {
   if (existsSync(workDesignPath)) {
     const workDesign = parseTargetJson(workDesignPath, '.pbe/blueprint/work-design.json')
     if (workDesign) {
+      targetContext.workDesign = workDesign
       validateWorkDesign(workDesign)
     }
   }
@@ -284,7 +389,30 @@ function validateOptionalPbeTarget() {
   if (existsSync(workGraphPath)) {
     const workGraph = parseTargetJson(workGraphPath, '.pbe/blueprint/work-graph.json')
     if (workGraph) {
+      targetContext.workGraph = workGraph
       validateWorkGraph(workGraph, '.pbe/blueprint/work-graph.json')
+    }
+  }
+
+  if (existsSync(verificationDesignPath)) {
+    const verificationDesign = parseTargetJson(
+      verificationDesignPath,
+      '.pbe/blueprint/verification-design.json',
+    )
+    if (verificationDesign) {
+      targetContext.verificationDesign = verificationDesign
+      validateVerificationDesign(verificationDesign)
+    }
+  }
+
+  if (existsSync(dependencyImpactAuditPath)) {
+    const dependencyImpactAudit = parseTargetJson(
+      dependencyImpactAuditPath,
+      '.pbe/blueprint/dependency-impact-audit.json',
+    )
+    if (dependencyImpactAudit) {
+      targetContext.dependencyImpactAudit = dependencyImpactAudit
+      validateDependencyImpactAudit(dependencyImpactAudit)
     }
   }
 
@@ -294,7 +422,19 @@ function validateOptionalPbeTarget() {
       '.pbe/blueprint/execution-strategy.json',
     )
     if (executionStrategy) {
+      targetContext.executionStrategy = executionStrategy
       validateExecutionStrategy(executionStrategy, '.pbe/blueprint/execution-strategy.json')
+    }
+  }
+
+  if (existsSync(blueprintTraceabilityPath)) {
+    const traceability = parseTargetJson(
+      blueprintTraceabilityPath,
+      '.pbe/blueprint/traceability-matrix.json',
+    )
+    if (traceability) {
+      targetContext.blueprintTraceability = traceability
+      validateTraceabilityMatrix(traceability, '.pbe/blueprint/traceability-matrix.json')
     }
   }
 
@@ -304,6 +444,9 @@ function validateOptionalPbeTarget() {
       validateFeedbackItems(feedback)
     }
   }
+
+  validatePbeRouting(targetContext)
+  validatePbeCrossArtifacts(targetContext)
 }
 
 function validateOptionalAcepTarget() {
@@ -350,6 +493,7 @@ function validateOptionalAcepTarget() {
     '.pbe/codex-execution-pack/execution-manifest.json',
   )
   if (manifest) {
+    targetContext.executionManifest = manifest
     validateExecutionManifest(manifest, acepRoot)
   }
 
@@ -358,7 +502,8 @@ function validateOptionalAcepTarget() {
     '.pbe/codex-execution-pack/04-traceability-matrix.json',
   )
   if (traceability) {
-    validateTraceabilityMatrix(traceability)
+    targetContext.acepTraceability = traceability
+    validateTraceabilityMatrix(traceability, '.pbe/codex-execution-pack/04-traceability-matrix.json')
   }
 
   const uiUxSpec = parseTargetJson(
@@ -366,17 +511,53 @@ function validateOptionalAcepTarget() {
     '.pbe/codex-execution-pack/05-ui-ux-spec.json',
   )
   if (uiUxSpec) {
+    targetContext.uiUxSpec = uiUxSpec
     validateUiUxSpec(uiUxSpec)
   }
+
+  validateAcepCrossArtifacts(targetContext)
 }
 
 function parseTargetJson(absolutePath, label) {
   try {
-    return JSON.parse(readFileSync(absolutePath, 'utf8'))
+    const value = JSON.parse(readFileSync(absolutePath, 'utf8'))
+    validateTargetAgainstSchema(value, label)
+    return value
   } catch (error) {
     errors.push(`Invalid target JSON: ${label} (${error.message})`)
     return null
   }
+}
+
+function validateTargetAgainstSchema(value, label) {
+  if (!ajv) {
+    return
+  }
+
+  const schemaId = getSchemaIdForTargetLabel(label)
+  if (!schemaId) {
+    return
+  }
+
+  const validate = ajv.getSchema(schemaId)
+  if (!validate) {
+    errors.push(`No compiled schema found for ${label}: ${schemaId}`)
+    return
+  }
+
+  if (!validate(value)) {
+    for (const error of validate.errors || []) {
+      const instancePath = error.instancePath || '/'
+      errors.push(`${label} schema violation at ${instancePath}: ${error.message}`)
+    }
+  }
+}
+
+function getSchemaIdForTargetLabel(label) {
+  if (label.startsWith('.pbe/revisions/') && label.endsWith('/revision-manifest.json')) {
+    return 'https://local/project-blueprint-engine/revision-manifest.schema.json'
+  }
+  return schemaIdByTargetLabel.get(label)
 }
 
 function validateRequirementTree(tree) {
@@ -413,6 +594,9 @@ function validateRequirementTree(tree) {
     if (!Array.isArray(node.children)) {
       errors.push(`Node ${node.id} children must be an array`)
     }
+    validateUiImpactContract(node, `requirement-tree.json node ${node.id}`, {
+      requireReference: false,
+    })
   }
 
   if (tree.rootNodeId && !ids.has(tree.rootNodeId)) {
@@ -448,46 +632,55 @@ function validateUiUxPreview(preview) {
 }
 
 function validatePbeState(state) {
+  if (state.deliveryStatus === 'accepted') {
+    if (!state.acceptance) {
+      errors.push('pbe-state.json deliveryStatus accepted requires acceptance metadata')
+    } else {
+      if (state.acceptance.setBy !== 'user') {
+        errors.push('pbe-state.json accepted status must be setBy user')
+      }
+      if (state.acceptance.acceptanceSource !== 'explicit_user_reply') {
+        errors.push('pbe-state.json accepted status requires explicit_user_reply source')
+      }
+      if (!state.acceptance.acceptedAt) {
+        errors.push('pbe-state.json accepted status requires acceptedAt')
+      }
+    }
+  }
+
   if (state.autoflow) {
     validateAutoflowState(state.autoflow, '.pbe/blueprint/pbe-state.json autoflow')
   }
 }
 
 function validateAutoflowState(autoflow, label) {
-  const allowedStates = new Set([
-    'IDLE',
-    'STARTED',
-    'RPD_DONE',
-    'WAITING_UI_UX_CONFIRM',
-    'UI_UX_APPROVED',
-    'WPD_DONE',
-    'VD_DONE',
-    'DEPENDENCY_IMPACT_AUDITED',
-    'WAITING_IMPLEMENTATION_SCOPE',
-    'SCOPE_SELECTED',
-    'WAITING_ARCHITECTURE_RUNWAY_CONFIRM',
-    'ARCHITECTURE_RUNWAY_APPROVED',
-    'PLAN_EXECUTED',
-    'COVERAGE_AUDITED',
-    'UX_AUDITED',
-    'ACEP_GENERATED',
-    'ACEP_RUN_DONE',
-    'WAITING_REVIEW_RESULT',
-    'PARTIAL_IMPLEMENTATION_DONE',
-    'WAITING_NEXT_SLICE_DECISION',
-    'SLICE_ACCEPTED',
-    'COMPLETED',
-    'BLOCKED',
-    'STOPPED',
+  const allowedStates = new Set(
+    getSchemaEnum('schemas/autoflow-state.schema.json', ['properties', 'state', 'enum']),
+  )
+  const allowedGates = new Set(
+    getSchemaEnum('schemas/autoflow-state.schema.json', [
+      'properties',
+      'currentGate',
+      'enum',
+    ]).filter(Boolean),
+  )
+  const allowedProfiles = new Set(
+    getSchemaEnum('schemas/autoflow-state.schema.json', ['properties', 'profile', 'enum']),
+  )
+  const allowedSteps = new Set([
+    ...getSchemaEnum('schemas/autoflow-state.schema.json', [
+      'properties',
+      'deterministicSteps',
+      'items',
+      'enum',
+    ]),
+    ...allowedGates,
+    'start',
+    'complete',
+    'collect_feedback',
+    'create_revision_pack',
+    'run_revision',
   ])
-  const allowedGates = new Set([
-    'ui_ux_confirm',
-    'implementation_scope',
-    'architecture_runway',
-    'review_result',
-    'next_slice_decision',
-  ])
-  const allowedProfiles = new Set(['bypass', 'lite', 'full'])
 
   if (!allowedStates.has(autoflow.state)) {
     errors.push(`${label} has invalid state: ${autoflow.state}`)
@@ -497,6 +690,12 @@ function validateAutoflowState(autoflow, label) {
   }
   if (!Array.isArray(autoflow.completedSteps)) {
     errors.push(`${label} completedSteps must be an array`)
+  } else {
+    for (const step of autoflow.completedSteps) {
+      if (!allowedSteps.has(step)) {
+        errors.push(`${label} completedSteps contains unknown step: ${step}`)
+      }
+    }
   }
   if (
     autoflow.currentGate !== null &&
@@ -534,6 +733,13 @@ function validateAutoflowState(autoflow, label) {
   if (autoflow.state === 'BLOCKED' && !autoflow.lastFailure) {
     errors.push(`${label} BLOCKED state must include lastFailure`)
   }
+  if (
+    autoflow.nextStep !== null &&
+    autoflow.nextStep !== undefined &&
+    !allowedSteps.has(autoflow.nextStep)
+  ) {
+    errors.push(`${label} nextStep is not a known PBE step or gate: ${autoflow.nextStep}`)
+  }
 }
 
 function validateWorkDesign(workDesign) {
@@ -545,6 +751,9 @@ function validateWorkDesign(workDesign) {
       if (!['selected', 'foundation', 'deferred', 'blocked', 'out_of_scope'].includes(unit.scopeClass)) {
         errors.push(`work-design.json work unit ${unitId} must include valid scopeClass`)
       }
+      validateUiImpactContract(unit, `work-design.json work unit ${unitId}`, {
+        requireReference: true,
+      })
     }
   }
 
@@ -614,6 +823,11 @@ function validateWorkGraph(workGraph, label) {
       if (!Array.isArray(node.expectedFiles) || node.expectedFiles.length === 0) {
         errors.push(`${label} node ${nodeId} cannot run in parallel without expectedFiles`)
       }
+      for (const file of [...(node.expectedFiles || []), ...(node.expectedSharedFiles || [])]) {
+        if (isBroadOrUnknownPath(file)) {
+          errors.push(`${label} node ${nodeId} cannot run in parallel with broad or unknown path: ${file}`)
+        }
+      }
       if (['medium', 'high'].includes(node.unknownFileTouchRisk)) {
         errors.push(
           `${label} node ${nodeId} cannot run in parallel with unknownFileTouchRisk ${node.unknownFileTouchRisk}`,
@@ -628,6 +842,9 @@ function validateWorkGraph(workGraph, label) {
         }
       }
     }
+    validateUiImpactContract(node, `${label} node ${nodeId}`, {
+      requireReference: true,
+    })
   }
 
   if (Array.isArray(workGraph.edges)) {
@@ -659,6 +876,52 @@ function validateModuleBoundaryCheck(check, label) {
   }
   if (check.status === 'blocked') {
     errors.push(`${label} has unresolved boundary blockers`)
+  }
+}
+
+function validateVerificationDesign(verificationDesign) {
+  if (!Array.isArray(verificationDesign.verificationItems)) {
+    errors.push('verification-design.json verificationItems must be an array')
+    return
+  }
+
+  for (const item of verificationDesign.verificationItems) {
+    const itemId = item.id || '<missing id>'
+    if (!hasAny(item.requirementIds) && !item.requirementNodeId) {
+      errors.push(`verification-design.json item ${itemId} must link to a requirement`)
+    }
+    if (!hasAny(item.evidenceToCapture)) {
+      errors.push(`verification-design.json item ${itemId} must include evidenceToCapture`)
+    }
+  }
+}
+
+function validateDependencyImpactAudit(audit) {
+  if (audit.status === 'blocked' && !hasAny(audit.blockingIssues)) {
+    errors.push('dependency-impact-audit.json blocked status requires blockingIssues')
+  }
+
+  for (const item of audit.futureItems || []) {
+    const itemId = item.id || '<missing id>'
+    const userDecision = [
+      'approved_foundation',
+      'approved_foundation_only',
+      'included_in_current_slice',
+      'rejected_by_user',
+    ].includes(item.decision)
+    if (userDecision && item.decisionBy !== 'user') {
+      errors.push(`dependency-impact-audit.json item ${itemId} decision ${item.decision} must be decisionBy user`)
+    }
+    if (
+      ['required_foundation', 'blocking_dependency', 'high_impact_future_module'].includes(
+        item.classification,
+      ) &&
+      item.decision === 'deferred_with_no_current_impact'
+    ) {
+      errors.push(
+        `dependency-impact-audit.json item ${itemId} cannot be ${item.classification} and deferred_with_no_current_impact`,
+      )
+    }
   }
 }
 
@@ -719,6 +982,9 @@ function validateExecutionManifest(manifest, acepRoot) {
     if (!Array.isArray(task.forbiddenFiles)) {
       errors.push(`Task ${taskId} must include forbiddenFiles`)
     }
+    validateUiImpactContract(task, `Task ${taskId}`, {
+      requireReference: task.executionMode !== 'review_only',
+    })
 
     if (task.executionMode === 'parallel_group' && !task.parallelGroup) {
       errors.push(`Task ${taskId} is parallel_group but lacks parallelGroup`)
@@ -831,6 +1097,7 @@ function validateParallelGroups(parallelGroups, taskById, taskIds, label, option
     }
 
     const expectedFiles = new Map()
+    const sharedFileOwners = new Map()
     for (const taskId of group.tasks) {
       const task = taskById.get(taskId)
       if (!task) {
@@ -848,6 +1115,11 @@ function validateParallelGroups(parallelGroups, taskById, taskIds, label, option
       }
       if (!hasAny(task.expectedFiles)) {
         errors.push(`${label} task ${taskId} cannot run in a parallel group without expectedFiles`)
+      }
+      for (const file of [...(task.expectedFiles || []), ...(task.expectedSharedFiles || [])]) {
+        if (isBroadOrUnknownPath(file)) {
+          errors.push(`${label} task ${taskId} cannot run in a parallel group with broad or unknown path: ${file}`)
+        }
       }
       if (!hasAny(task.workGraphNodeIds)) {
         errors.push(`${label} task ${taskId} cannot run in a parallel group without workGraphNodeIds`)
@@ -872,15 +1144,43 @@ function validateParallelGroups(parallelGroups, taskById, taskIds, label, option
         errors.push(`${label} task ${taskId} declares forbidden shared changes inside a parallel group`)
       }
 
-      for (const file of task.expectedSharedFiles || []) {
-        if (expectedFiles.has(file)) {
+      for (const file of task.expectedFiles || []) {
+        const normalizedFile = normalizePathForMatch(file)
+        if (expectedFiles.has(normalizedFile)) {
           errors.push(
-            `${label} parallel group ${groupId} has same-file/shared-file conflict: ${file} in ${expectedFiles.get(
-              file,
+            `${label} parallel group ${groupId} has same expectedFiles conflict: ${file} in ${expectedFiles.get(
+              normalizedFile,
             )} and ${taskId}`,
           )
         } else {
-          expectedFiles.set(file, taskId)
+          expectedFiles.set(normalizedFile, taskId)
+        }
+        if (sharedFileOwners.has(normalizedFile) && sharedFileOwners.get(normalizedFile) !== taskId) {
+          errors.push(
+            `${label} parallel group ${groupId} has expectedFiles/sharedFiles conflict: ${file} in ${taskId} and ${sharedFileOwners.get(
+              normalizedFile,
+            )}`,
+          )
+        }
+      }
+
+      for (const file of task.expectedSharedFiles || []) {
+        const normalizedFile = normalizePathForMatch(file)
+        if (sharedFileOwners.has(normalizedFile)) {
+          errors.push(
+            `${label} parallel group ${groupId} has same shared-file conflict: ${file} in ${sharedFileOwners.get(
+              normalizedFile,
+            )} and ${taskId}`,
+          )
+        } else {
+          sharedFileOwners.set(normalizedFile, taskId)
+        }
+        if (expectedFiles.has(normalizedFile) && expectedFiles.get(normalizedFile) !== taskId) {
+          errors.push(
+            `${label} parallel group ${groupId} has sharedFiles/expectedFiles conflict: ${file} in ${taskId} and ${expectedFiles.get(
+              normalizedFile,
+            )}`,
+          )
         }
       }
     }
@@ -897,6 +1197,180 @@ function validateOptionalReviewTarget() {
     const feedback = parseTargetJson(feedbackPath, '.pbe/review/feedback-items.json')
     if (feedback) {
       validateFeedbackItems(feedback)
+    }
+  }
+}
+
+function validatePbeRouting(context) {
+  const autoflow = context.state?.autoflow
+  if (!autoflow) {
+    return
+  }
+
+  if (context.state.artifacts && !context.state.artifacts.pbeRoutingContract) {
+    errors.push('pbe-state.json artifacts must include pbeRoutingContract when .pbe routing is active')
+  }
+
+  if (autoflow.currentGate && autoflow.nextStep !== autoflow.currentGate) {
+    errors.push(
+      `PBE routing mismatch: currentGate ${autoflow.currentGate} must be the nextStep while waiting at a gate`,
+    )
+  }
+
+  const deterministicPastDependency = [
+    'plan_execution',
+    'coverage_audit',
+    'ux_audit',
+    'generate_acep',
+    'run_acep',
+  ]
+  const needsDependencyAudit =
+    autoflow.completedSteps?.includes('dependency_impact_audit') ||
+    deterministicPastDependency.includes(autoflow.nextStep)
+
+  if (needsDependencyAudit && !context.dependencyImpactAudit) {
+    errors.push('PBE routing requires dependency-impact-audit.json before downstream execution')
+  }
+
+  if (
+    context.dependencyImpactAudit?.futureItems?.some(
+      (item) => item.decision === 'pending_user_decision',
+    ) &&
+    !['WAITING_IMPLEMENTATION_SCOPE', 'WAITING_ARCHITECTURE_RUNWAY_CONFIRM', 'BLOCKED'].includes(
+      autoflow.state,
+    )
+  ) {
+    errors.push('PBE routing cannot continue while dependency impact decisions are pending')
+  }
+}
+
+function validatePbeCrossArtifacts(context) {
+  const requirementIds = collectRequirementIds(context.requirementTree)
+  const workGraphNodeIds = collectWorkGraphNodeIds(context.workGraph)
+  const workUnitIds = collectWorkUnitIds(context.workDesign)
+  const verificationIds = collectVerificationIds(context.verificationDesign)
+
+  if (context.workGraph) {
+    for (const node of context.workGraph.nodes || []) {
+      for (const requirementId of node.relatedRequirementNodeIds || []) {
+        if (requirementIds.size > 0 && !requirementIds.has(requirementId)) {
+          errors.push(`work-graph.json node ${node.id} references missing requirement ${requirementId}`)
+        }
+      }
+    }
+  }
+
+  if (context.workDesign) {
+    for (const unit of context.workDesign.workUnits || []) {
+      for (const requirementId of unit.requirementIds || []) {
+        if (requirementIds.size > 0 && !requirementIds.has(requirementId)) {
+          errors.push(`work-design.json unit ${unit.id} references missing requirement ${requirementId}`)
+        }
+      }
+      if (unit.workGraphNodeId && workGraphNodeIds.size > 0 && !workGraphNodeIds.has(unit.workGraphNodeId)) {
+        errors.push(`work-design.json unit ${unit.id} references missing WorkGraph node ${unit.workGraphNodeId}`)
+      }
+    }
+  }
+
+  if (context.verificationDesign) {
+    for (const item of context.verificationDesign.verificationItems || []) {
+      for (const requirementId of item.requirementIds || []) {
+        if (requirementIds.size > 0 && !requirementIds.has(requirementId)) {
+          errors.push(`verification-design.json item ${item.id} references missing requirement ${requirementId}`)
+        }
+      }
+      if (item.workDesignId && workUnitIds.size > 0 && !workUnitIds.has(item.workDesignId)) {
+        errors.push(`verification-design.json item ${item.id} references missing work unit ${item.workDesignId}`)
+      }
+    }
+  }
+
+  if (context.dependencyImpactAudit) {
+    for (const item of context.dependencyImpactAudit.futureItems || []) {
+      for (const requirementId of item.relatedRequirementIds || []) {
+        if (requirementIds.size > 0 && !requirementIds.has(requirementId)) {
+          errors.push(`dependency-impact-audit.json item ${item.id} references missing requirement ${requirementId}`)
+        }
+      }
+      for (const nodeId of item.relatedWorkGraphNodeIds || []) {
+        if (workGraphNodeIds.size > 0 && !workGraphNodeIds.has(nodeId)) {
+          errors.push(`dependency-impact-audit.json item ${item.id} references missing WorkGraph node ${nodeId}`)
+        }
+      }
+    }
+  }
+
+  if (context.blueprintTraceability) {
+    validateTraceabilityReferences(
+      context.blueprintTraceability,
+      '.pbe/blueprint/traceability-matrix.json',
+      {
+        requirementIds,
+        verificationIds,
+      },
+    )
+  }
+}
+
+function validateAcepCrossArtifacts(context) {
+  const manifest = context.executionManifest
+  const traceability = context.acepTraceability || context.blueprintTraceability
+  if (!manifest || !traceability) {
+    return
+  }
+
+  const requirementIds = collectRequirementIds(context.requirementTree)
+  const workGraphNodeIds = collectWorkGraphNodeIds(context.workGraph)
+  const verificationIds = collectVerificationIds(context.verificationDesign)
+  const taskIds = new Set((manifest.tasks || []).map((task) => task.id).filter(Boolean))
+  const tracedRequirementIds = new Set(
+    (traceability.items || []).map((item) => item.requirementNodeId).filter(Boolean),
+  )
+
+  for (const task of manifest.tasks || []) {
+    for (const requirementId of task.requirementIds || []) {
+      if (requirementIds.size > 0 && !requirementIds.has(requirementId)) {
+        errors.push(`execution-manifest.json task ${task.id} references missing requirement ${requirementId}`)
+      }
+    }
+    for (const verificationId of task.verificationIds || []) {
+      if (verificationIds.size > 0 && !verificationIds.has(verificationId)) {
+        errors.push(`execution-manifest.json task ${task.id} references missing verification ${verificationId}`)
+      }
+    }
+    for (const nodeId of task.workGraphNodeIds || []) {
+      if (workGraphNodeIds.size > 0 && !workGraphNodeIds.has(nodeId)) {
+        errors.push(`execution-manifest.json task ${task.id} references missing WorkGraph node ${nodeId}`)
+      }
+    }
+    if (['deferred', 'out_of_scope'].includes(task.scopeClass) && task.executionMode !== 'review_only') {
+      errors.push(`execution-manifest.json task ${task.id} must not implement ${task.scopeClass} scope`)
+    }
+  }
+
+  for (const item of traceability.items || []) {
+    for (const taskId of item.linkedTaskIds || []) {
+      if (!taskIds.has(taskId)) {
+        errors.push(`traceability item ${item.requirementNodeId} references missing task ${taskId}`)
+      }
+    }
+    for (const verificationId of item.linkedVerificationIds || []) {
+      if (verificationIds.size > 0 && !verificationIds.has(verificationId)) {
+        errors.push(`traceability item ${item.requirementNodeId} references missing verification ${verificationId}`)
+      }
+    }
+  }
+
+  validateTraceabilityReferences(traceability, 'traceability matrix', {
+    requirementIds,
+    taskIds,
+    verificationIds,
+  })
+
+  for (const requirementId of collectSelectedAndFoundationRequirementIds(context.workGraph)) {
+    if (!tracedRequirementIds.has(requirementId)) {
+      errors.push(`selected/foundation requirement ${requirementId} is missing from traceability matrix`)
     }
   }
 }
@@ -944,6 +1418,16 @@ function validateFeedbackItems(feedback) {
 }
 
 function validateRevisionManifest(manifest, revisionRoot, revisionId) {
+  if (!hasAny(manifest.allowedFiles)) {
+    errors.push(`Revision ${revisionId} must include allowedFiles`)
+  }
+  if (!Array.isArray(manifest.forbiddenFiles)) {
+    errors.push(`Revision ${revisionId} must include forbiddenFiles`)
+  }
+  if (!manifest.maxChangeIntent) {
+    errors.push(`Revision ${revisionId} must include maxChangeIntent`)
+  }
+
   if (!Array.isArray(manifest.tasks)) {
     errors.push(`Revision ${revisionId} tasks must be an array`)
     return
@@ -964,32 +1448,212 @@ function validateRevisionManifest(manifest, revisionRoot, revisionId) {
     if (!hasAny(task.evidenceRequired)) {
       errors.push(`Revision task ${taskId} must include evidenceRequired`)
     }
+    if (!hasAny(task.allowedFiles)) {
+      errors.push(`Revision task ${taskId} must include allowedFiles`)
+    }
+    if (!Array.isArray(task.forbiddenFiles)) {
+      errors.push(`Revision task ${taskId} must include forbiddenFiles`)
+    }
     if (task.file && !existsSync(path.join(revisionRoot, task.file))) {
       errors.push(`Revision task ${taskId} points to a missing file: ${task.file}`)
     }
   }
+
+  validateRevisionDiffBoundary(manifest, revisionId)
+}
+
+function validateRevisionDiffBoundary(manifest, revisionId) {
+  const changedFiles = getGitChangedFiles()
+  if (changedFiles.length === 0 || !hasAny(manifest.allowedFiles)) {
+    return
+  }
+
+  const allowedFiles = manifest.allowedFiles || []
+  const forbiddenFiles = [...(manifest.forbiddenFiles || []), ...(manifest.mustNotTouch || [])]
+
+  for (const file of changedFiles) {
+    if (file.startsWith('.pbe/')) {
+      continue
+    }
+    if (matchesAnyPath(file, forbiddenFiles)) {
+      errors.push(`Revision ${revisionId} changed forbidden file: ${file}`)
+    }
+    if (!matchesAnyPath(file, allowedFiles)) {
+      errors.push(`Revision ${revisionId} changed file outside allowedFiles: ${file}`)
+    }
+  }
+}
+
+function getGitChangedFiles() {
+  try {
+    const outputs = [
+      execFileSync('git', ['diff', '--name-only'], {
+        cwd: root,
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'],
+      }),
+      execFileSync('git', ['diff', '--name-only', '--cached'], {
+        cwd: root,
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'],
+      }),
+      execFileSync('git', ['ls-files', '--others', '--exclude-standard'], {
+        cwd: root,
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'],
+      }),
+    ]
+    return [...new Set(outputs.flatMap((output) => output.split(/\r?\n/)))]
+      .map((line) => normalizePathForMatch(line.trim()))
+      .filter(Boolean)
+  } catch {
+    return []
+  }
+}
+
+function matchesAnyPath(file, patterns) {
+  return patterns.some((pattern) => pathPatternMatches(file, pattern))
+}
+
+function pathPatternMatches(file, pattern) {
+  const normalizedPattern = normalizePathForMatch(pattern)
+  if (!normalizedPattern) {
+    return false
+  }
+  if (normalizedPattern.endsWith('/**')) {
+    return file.startsWith(normalizedPattern.slice(0, -3))
+  }
+  if (normalizedPattern.endsWith('/*')) {
+    const prefix = normalizedPattern.slice(0, -1)
+    return file.startsWith(prefix) && !file.slice(prefix.length).includes('/')
+  }
+  return file === normalizedPattern
+}
+
+function normalizePathForMatch(value) {
+  return String(value || '').replaceAll('\\', '/').replace(/^\.\//, '')
+}
+
+function isBroadOrUnknownPath(file) {
+  const normalized = normalizePathForMatch(file).toLowerCase()
+  return (
+    !normalized ||
+    normalized.includes('*') ||
+    normalized.includes('...') ||
+    normalized.includes('tbd') ||
+    normalized.includes('unknown') ||
+    normalized.includes('multiple files') ||
+    normalized.endsWith('/') ||
+    normalized === 'src' ||
+    normalized === 'src/'
+  )
+}
+
+function validateUiImpactContract(item, label, options) {
+  if (!item.uiImpact) {
+    return
+  }
+  if (!['none', 'indirect', 'direct'].includes(item.uiImpact)) {
+    errors.push(`${label} has invalid uiImpact: ${item.uiImpact}`)
+    return
+  }
+  if (item.uiImpact === 'direct' && item.uiUxConfirmationRequired !== true) {
+    errors.push(`${label} has direct UI impact and must set uiUxConfirmationRequired true`)
+  }
+  if (item.uiUxConfirmationRequired === true && !item.uiUxReason) {
+    errors.push(`${label} requires UI/UX confirmation but lacks uiUxReason`)
+  }
+  const hasReference =
+    Boolean(item.uiUxConfirmationId) ||
+    hasAny(item.uiUxIds) ||
+    hasAny(item.uiUxCandidateIds)
+  if (item.uiImpact === 'direct' && options.requireReference && !hasReference) {
+    errors.push(`${label} has direct UI impact and must link a UI/UX confirmation item`)
+  }
+}
+
+function validateTraceabilityReferences(traceability, label, references) {
+  for (const item of traceability.items || []) {
+    const requirementId = item.requirementNodeId || '<missing requirementNodeId>'
+    if (
+      item.requirementNodeId &&
+      references.requirementIds?.size > 0 &&
+      !references.requirementIds.has(item.requirementNodeId)
+    ) {
+      errors.push(`${label} item ${requirementId} references missing requirement`)
+    }
+
+    for (const taskId of item.linkedTaskIds || []) {
+      if (references.taskIds?.size > 0 && !references.taskIds.has(taskId)) {
+        errors.push(`${label} item ${requirementId} references missing task ${taskId}`)
+      }
+    }
+
+    for (const verificationId of item.linkedVerificationIds || []) {
+      if (references.verificationIds?.size > 0 && !references.verificationIds.has(verificationId)) {
+        errors.push(`${label} item ${requirementId} references missing verification ${verificationId}`)
+      }
+    }
+  }
+}
+
+function collectRequirementIds(tree) {
+  return new Set((tree?.nodes || []).map((node) => node.id).filter(Boolean))
+}
+
+function collectWorkGraphNodeIds(workGraph) {
+  return new Set((workGraph?.nodes || []).map((node) => node.id).filter(Boolean))
+}
+
+function collectWorkUnitIds(workDesign) {
+  return new Set((workDesign?.workUnits || []).map((unit) => unit.id).filter(Boolean))
+}
+
+function collectVerificationIds(verificationDesign) {
+  return new Set(
+    (verificationDesign?.verificationItems || []).map((item) => item.id).filter(Boolean),
+  )
+}
+
+function collectSelectedAndFoundationRequirementIds(workGraph) {
+  const ids = new Set()
+  for (const node of workGraph?.nodes || []) {
+    if (!['selected', 'foundation'].includes(node.scopeClass)) {
+      continue
+    }
+    for (const requirementId of node.relatedRequirementNodeIds || []) {
+      ids.add(requirementId)
+    }
+  }
+  return ids
 }
 
 function hasAny(value) {
   return Array.isArray(value) && value.length > 0
 }
 
-function validateTraceabilityMatrix(traceability) {
+function validateTraceabilityMatrix(traceability, label = '04-traceability-matrix.json') {
   if (!Array.isArray(traceability.items)) {
-    errors.push('04-traceability-matrix.json items must be an array')
+    errors.push(`${label} items must be an array`)
     return
   }
 
   for (const item of traceability.items) {
     const requirementId = item.requirementNodeId || '<missing requirementNodeId>'
     if (!item.requirementNodeId) {
-      errors.push('Traceability item lacks requirementNodeId')
+      errors.push(`${label} traceability item lacks requirementNodeId`)
     }
     if (!Array.isArray(item.linkedTaskIds) || item.linkedTaskIds.length === 0) {
-      errors.push(`Traceability item ${requirementId} lacks linkedTaskIds`)
+      errors.push(`${label} traceability item ${requirementId} lacks linkedTaskIds`)
+    }
+    if (!Array.isArray(item.linkedVerificationIds) || item.linkedVerificationIds.length === 0) {
+      errors.push(`${label} traceability item ${requirementId} lacks linkedVerificationIds`)
     }
     if (!Array.isArray(item.evidenceRequired) || item.evidenceRequired.length === 0) {
-      errors.push(`Traceability item ${requirementId} lacks evidenceRequired`)
+      errors.push(`${label} traceability item ${requirementId} lacks evidenceRequired`)
+    }
+    if (item.coverageStatus === 'covered' && !hasAny(item.evidenceCaptured)) {
+      errors.push(`${label} traceability item ${requirementId} is covered but lacks evidenceCaptured`)
     }
   }
 }

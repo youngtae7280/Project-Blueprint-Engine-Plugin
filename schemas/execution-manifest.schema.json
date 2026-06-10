@@ -166,6 +166,13 @@
           "verificationIds": { "type": "array", "items": { "type": "string" } },
           "verificationExplanation": { "type": "string" },
           "uiUxIds": { "type": "array", "items": { "type": "string" } },
+          "uiImpact": {
+            "type": "string",
+            "enum": ["none", "indirect", "direct"]
+          },
+          "uiUxConfirmationRequired": { "type": "boolean" },
+          "uiUxConfirmationId": { "type": "string" },
+          "uiUxReason": { "type": "string" },
           "evidenceRequired": { "type": "array", "items": { "type": "string" } },
           "focusedValidation": { "type": "array", "items": { "type": "string" } }
         },

@@ -24,7 +24,12 @@
           "linkedTaskIds": { "type": "array", "items": { "type": "string" } },
           "linkedVerificationIds": { "type": "array", "items": { "type": "string" } },
           "uiUxIds": { "type": "array", "items": { "type": "string" } },
+          "scopeClass": {
+            "type": "string",
+            "enum": ["selected", "foundation", "deferred", "blocked", "out_of_scope"]
+          },
           "evidenceRequired": { "type": "array", "items": { "type": "string" } },
+          "evidenceCaptured": { "type": "array", "items": { "type": "string" } },
           "coverageStatus": {
             "type": "string",
             "enum": ["pending", "covered", "deferred", "out_of_scope", "blocked"]

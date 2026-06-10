@@ -23,6 +23,7 @@ UX_AUDITED
 ACEP_GENERATED
 ACEP_RUN_DONE
 WAITING_REVIEW_RESULT
+PARTIAL_IMPLEMENTATION_DONE
 WAITING_NEXT_SLICE_DECISION
 SLICE_ACCEPTED
 COMPLETED
@@ -51,6 +52,7 @@ IDLE
 -> ACEP_GENERATED
 -> ACEP_RUN_DONE
 -> WAITING_REVIEW_RESULT
+-> PARTIAL_IMPLEMENTATION_DONE, when only the current slice is implemented
 -> WAITING_NEXT_SLICE_DECISION
 ```
 
@@ -98,5 +100,5 @@ IDLE
 - Architecture runway gate cannot pass without approval when Required Foundation, Blocking Dependency, or High-Impact Future Module exists.
 - `COMPLETED` is used only for whole-project completion.
 - Slice completion uses `SLICE_ACCEPTED` or `WAITING_NEXT_SLICE_DECISION`.
-- Only the user can set `accepted`.
+- `accepted` may exist as a delivery status, but only the user can set it and it must include explicit acceptance metadata.
 - Any automatic step failure moves to `BLOCKED` and stops downstream progress.

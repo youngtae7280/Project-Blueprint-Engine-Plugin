@@ -7,6 +7,10 @@
   "affectedTaskIds": ["TASK-001"],
   "affectedUiUxIds": ["SCREEN-001"],
   "affectedVerificationIds": ["TEST-001-UX"],
+  "allowedFiles": ["src/features/example.ts"],
+  "forbiddenFiles": ["package.json", "build config", "deployment files"],
+  "mustNotTouch": ["unrelated modules", "deferred or out-of-scope feature behavior"],
+  "maxChangeIntent": "bounded_fix_only",
   "nonScope": [
     "Do not change behavior outside the affected items unless the user approves scope expansion."
   ],
@@ -20,6 +24,8 @@
       "affectedTaskIds": ["TASK-001"],
       "affectedUiUxIds": ["SCREEN-001"],
       "affectedVerificationIds": ["TEST-001-UX"],
+      "allowedFiles": ["src/features/example.ts"],
+      "forbiddenFiles": ["package.json", "build config", "deployment files"],
       "evidenceRequired": [
         "changed files",
         "focused validation output",

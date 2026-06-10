@@ -13,6 +13,7 @@ failure.
   blueprint/
     pbe-state.json
     project-brief.md
+    pbe-routing-contract.md
     source-of-truth-matrix.md
     pbe-invariants.md
     foundation-contract.md
@@ -30,6 +31,8 @@ failure.
     work-roadmap.md
     verification-design.json
     verification-plan.md
+    dependency-impact-audit.json
+    dependency-impact-audit.md
     traceability-matrix.json
     traceability-matrix.md
     execution-strategy.json
@@ -123,6 +126,7 @@ Plugin-local schemas live in `schemas/`:
 - `work-design.schema.json`
 - `work-graph.schema.json`
 - `verification-design.schema.json`
+- `dependency-impact-audit.schema.json`
 - `traceability-matrix.schema.json`
 - `ui-ux-spec.schema.json`
 - `execution-manifest.schema.json`
@@ -131,4 +135,6 @@ Plugin-local schemas live in `schemas/`:
 - `revision-manifest.schema.json`
 - `final-coverage-check.schema.json`
 
-The schemas document the contract and support lightweight validation. They are intentionally permissive for MVP iteration.
+The schemas document the contract and are compiled by `npm run validate:pbe`.
+The validator also performs cross-artifact checks for routing, traceability,
+parallel safety, dependency impact, UI impact, and revision file boundaries.

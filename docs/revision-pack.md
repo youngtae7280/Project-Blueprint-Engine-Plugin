@@ -30,5 +30,7 @@ Revision Pack turns user feedback into bounded patch work.
 
 - Revision is not a full rewrite.
 - Revision tasks must stay within affected requirement, task, UI/UX, and verification scope.
+- `revision-manifest.json` must declare `allowedFiles`, `forbiddenFiles`, and `mustNotTouch` boundaries.
+- Validator checks changed, staged, and untracked files against revision boundaries.
 - Regression checks protect unaffected behavior.
 - Scope expansion requires user approval.

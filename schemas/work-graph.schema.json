@@ -177,6 +177,13 @@
             ]
           }
         },
+        "uiImpact": {
+          "type": "string",
+          "enum": ["none", "indirect", "direct"]
+        },
+        "uiUxConfirmationRequired": { "type": "boolean" },
+        "uiUxConfirmationId": { "type": "string" },
+        "uiUxReason": { "type": "string" },
         "expectedOutputs": { "type": "array", "items": { "type": "string" } },
         "riskLevel": { "$ref": "#/$defs/riskLevel" },
         "canRunInParallel": { "type": "boolean" },

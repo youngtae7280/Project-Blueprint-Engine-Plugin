@@ -67,6 +67,9 @@ A task can be placed in a parallel group only when:
 - the group has an integration task
 - rollback path is available
 
+`npm run validate:pbe` normalizes path strings before checking conflicts, so
+`src/a.ts` and `./src/a.ts` are treated as the same file.
+
 Default policy:
 
 ```text

@@ -26,6 +26,8 @@ validation.
 .pbe/blueprint/source-of-truth-matrix.md
 .pbe/blueprint/foundation-contract.md
 .pbe/blueprint/parallel-safety-contract.md
+.pbe/blueprint/dependency-impact-audit.json
+.pbe/blueprint/dependency-impact-audit.md
 ```
 
 Use `work-design.json.workGraph` if a standalone `work-graph.json` is not
@@ -54,20 +56,21 @@ These outputs are later copied or rendered into:
 5. Verify WPD Module Boundary Check has been performed.
 6. Verify all boundary blockers are resolved or explicitly block execution planning.
 7. Verify implementation scope classification is explicit: selected, deferred, foundation, blocked, and out_of_scope.
-8. Verify dependency impact and architecture runway decisions are recorded.
-9. Classify WorkGraph nodes into foundation, feature, integration, verification, documentation, and review work.
-10. Build a Task DAG from WorkGraph dependencies.
-11. Create sequential foundation phases.
-12. Create safe parallel groups only for independent selected feature nodes.
-13. Create or confirm one integration task for every parallel group.
-14. Create final validation and review phases.
-15. Save `execution-strategy.md`.
-16. Save `execution-strategy.json`.
-17. Update `pbe-state.json` artifact references when available.
-18. Update `pbe-state.json.autoflow.state` to `PLAN_EXECUTED`.
-19. Add `plan_execution` to `autoflow.completedSteps`.
-20. Set `autoflow.nextStep` to `coverage_audit`.
-21. Continue automatically to Coverage Audit unless a blocker exists.
+8. Verify `dependency-impact-audit.json` exists and dependency impact decisions are recorded.
+9. Verify architecture runway decisions are recorded when required by Dependency Impact Audit.
+10. Classify WorkGraph nodes into foundation, feature, integration, verification, documentation, and review work.
+11. Build a Task DAG from WorkGraph dependencies.
+12. Create sequential foundation phases.
+13. Create safe parallel groups only for independent selected feature nodes.
+14. Create or confirm one integration task for every parallel group.
+15. Create final validation and review phases.
+16. Save `execution-strategy.md`.
+17. Save `execution-strategy.json`.
+18. Update `pbe-state.json` artifact references when available.
+19. Update `pbe-state.json.autoflow.state` to `PLAN_EXECUTED`.
+20. Add `plan_execution` to `autoflow.completedSteps`.
+21. Set `autoflow.nextStep` to `coverage_audit`.
+22. Continue automatically to Coverage Audit unless a blocker exists.
 
 ## Execution Modes
 
@@ -200,6 +203,7 @@ Stop before producing an executable strategy when:
 
 - WorkGraph is missing.
 - WPD Module Boundary Check is missing.
+- Dependency Impact Audit artifact is missing.
 - boundary blockers are unresolved.
 - a parallel group has no integration task.
 - a parallel candidate would change shared schema, shared type, build config, auth, permissions, migration, package configuration, or the same files as another parallel task.

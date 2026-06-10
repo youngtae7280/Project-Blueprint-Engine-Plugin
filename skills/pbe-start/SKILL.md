@@ -37,20 +37,22 @@ Use `bypass` only when the request is a typo, single-file edit, or clearly bound
 3. Create or update `.pbe/blueprint/pbe-state.json`.
 4. Create or update `.pbe/blueprint/project-brief.md`.
 5. Create `.pbe/blueprint/requirement-tree.json` with a root node if it does not exist.
-6. Create `.pbe/blueprint/source-of-truth-matrix.md` from the Source of Truth Matrix template.
-7. Create `.pbe/blueprint/pbe-invariants.md` from the PBE Invariants template.
-8. Create `.pbe/blueprint/foundation-contract.md` and `.pbe/blueprint/parallel-safety-contract.md` placeholders.
-9. Create `.pbe/blueprint/requirement-tree.md`, `.pbe/blueprint/rpd-interview-log.md`, and `.pbe/blueprint/rpd-summary.md`.
-10. Initialize UI/UX confirmation placeholders when UI work may be involved.
-11. Initialize `pbe-state.json.autoflow` with:
+6. Create `.pbe/blueprint/pbe-routing-contract.md` from the PBE Routing Contract template.
+7. Create `.pbe/blueprint/source-of-truth-matrix.md` from the Source of Truth Matrix template.
+8. Create `.pbe/blueprint/pbe-invariants.md` from the PBE Invariants template.
+9. Create `.pbe/blueprint/foundation-contract.md` and `.pbe/blueprint/parallel-safety-contract.md` placeholders.
+10. Create dependency impact placeholders for `.pbe/blueprint/dependency-impact-audit.json` and `.pbe/blueprint/dependency-impact-audit.md`.
+11. Create `.pbe/blueprint/requirement-tree.md`, `.pbe/blueprint/rpd-interview-log.md`, and `.pbe/blueprint/rpd-summary.md`.
+12. Initialize UI/UX confirmation placeholders when UI work may be involved.
+13. Initialize `pbe-state.json.autoflow` with:
    - `state`: `STARTED`
    - `enabled`: `true`
    - `profile`: `full`, `lite`, or `bypass`
    - `completedSteps`: `["start"]`
    - `nextStep`: `rpd`
-12. Immediately begin RPD Tree Walk unless the selected profile is `bypass`.
-13. If the provided project brief is enough to complete RPD safely, continue automatically until the UI/UX confirmation gate.
-14. If RPD needs more information, ask exactly one RPD question. The user should answer naturally; do not require `@project-blueprint-engine rpd`.
+14. Immediately begin RPD Tree Walk unless the selected profile is `bypass`.
+15. If the provided project brief is enough to complete RPD safely, continue automatically until the UI/UX confirmation gate.
+16. If RPD needs more information, ask exactly one RPD question. The user should answer naturally; do not require `@project-blueprint-engine rpd`.
 
 ## File Contract
 
@@ -59,10 +61,13 @@ Use these paths:
 ```text
 .pbe/blueprint/pbe-state.json
 .pbe/blueprint/project-brief.md
+.pbe/blueprint/pbe-routing-contract.md
 .pbe/blueprint/source-of-truth-matrix.md
 .pbe/blueprint/pbe-invariants.md
 .pbe/blueprint/foundation-contract.md
 .pbe/blueprint/parallel-safety-contract.md
+.pbe/blueprint/dependency-impact-audit.json
+.pbe/blueprint/dependency-impact-audit.md
 .pbe/blueprint/requirement-tree.json
 .pbe/blueprint/requirement-tree.md
 .pbe/blueprint/rpd-interview-log.md

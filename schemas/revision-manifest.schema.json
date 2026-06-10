@@ -16,6 +16,13 @@
     "affectedTaskIds": { "type": "array", "items": { "type": "string" } },
     "affectedUiUxIds": { "type": "array", "items": { "type": "string" } },
     "affectedVerificationIds": { "type": "array", "items": { "type": "string" } },
+    "allowedFiles": { "type": "array", "items": { "type": "string" } },
+    "forbiddenFiles": { "type": "array", "items": { "type": "string" } },
+    "mustNotTouch": { "type": "array", "items": { "type": "string" } },
+    "maxChangeIntent": {
+      "type": "string",
+      "enum": ["bounded_fix_only", "bounded_test_only", "bounded_ui_fix", "scope_expansion_requires_user"]
+    },
     "nonScope": { "type": "array", "items": { "type": "string" } },
     "tasks": {
       "type": "array",
@@ -31,6 +38,8 @@
           "affectedTaskIds": { "type": "array", "items": { "type": "string" } },
           "affectedUiUxIds": { "type": "array", "items": { "type": "string" } },
           "affectedVerificationIds": { "type": "array", "items": { "type": "string" } },
+          "allowedFiles": { "type": "array", "items": { "type": "string" } },
+          "forbiddenFiles": { "type": "array", "items": { "type": "string" } },
           "evidenceRequired": { "type": "array", "items": { "type": "string" } }
         },
         "additionalProperties": true

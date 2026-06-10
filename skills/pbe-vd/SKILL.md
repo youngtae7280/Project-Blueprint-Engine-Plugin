@@ -45,7 +45,7 @@ VD owns verification design. It must preserve selected, deferred, foundation, bl
 12. Update `pbe-state.json.autoflow.state` to `VD_DONE`.
 13. Add `vd` to `autoflow.completedSteps`.
 14. Set `autoflow.nextStep` to `dependency_impact_audit`.
-15. Continue automatically to Dependency Impact Audit unless a blocker exists.
+15. Continue automatically to `pbe-dependency-impact-audit` unless a blocker exists.
 
 ## VD Rules
 

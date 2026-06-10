@@ -21,6 +21,8 @@ Coverage Audit and UX Audit pass.
 .pbe/blueprint/work-roadmap.md
 .pbe/blueprint/verification-design.json
 .pbe/blueprint/verification-plan.md
+.pbe/blueprint/dependency-impact-audit.json
+.pbe/blueprint/dependency-impact-audit.md
 .pbe/blueprint/execution-strategy.json
 .pbe/blueprint/execution-strategy.md
 .pbe/blueprint/ui-ux-confirmation.md

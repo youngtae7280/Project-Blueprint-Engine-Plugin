@@ -38,6 +38,19 @@ PBE is optimized for safe, reviewable, staged project construction, not for spee
 
 This means PBE may deliberately stop at human gates, may require foundation work before visible feature work, and may run sequentially when parallel safety cannot be proven.
 
+## Routing Rules
+
+When `.pbe/` exists or the user mentions PBE, ACEP, RPD, WPD, VD, traceability,
+dependency impact, implementation scope, or PBE review, route implementation
+work through PBE before ordinary coding.
+
+1. Read `.pbe/blueprint/pbe-state.json` before implementation or modification work.
+2. If `autoflow.currentGate` is set, do not implement; report the active gate and ask for the user's decision.
+3. If `autoflow.state` is `BLOCKED`, do not continue downstream; report `lastFailure` and repair options.
+4. If `autoflow.nextStep` is deterministic, run that PBE step before ordinary coding.
+5. Use ordinary AI answers only for usage help, explanations, or reviews that do not change PBE workflow state.
+6. Do not bypass PBE when the request touches selected, foundation, deferred, blocked, or out-of-scope work unless the profile is explicitly set to `bypass` and the risk is recorded.
+
 ## Execution Profiles
 
 Use:
@@ -203,6 +216,8 @@ Rules:
 - Out-of-scope changes are a warning or failure depending on impact.
 
 ## Dependency Impact Audit
+
+The owner for this step is `pbe-dependency-impact-audit`.
 
 Before implementation scope is selected, inspect deferred and future modules:
 

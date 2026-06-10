@@ -38,3 +38,5 @@ blocked
 - Do not mark a preview confirmed until the user explicitly confirms it.
 - If the user requests changes, update the preview and log the revision.
 - Do not proceed to WPD, ACEP, or UI implementation while required UI/UX items are unconfirmed.
+- Requirement, WorkGraph, work-unit, and ACEP task artifacts can declare `uiImpact`, `uiUxConfirmationRequired`, `uiUxConfirmationId`, and `uiUxReason`.
+- Direct UI impact must require UI/UX confirmation and link back to a confirmed UI/UX item before implementation.

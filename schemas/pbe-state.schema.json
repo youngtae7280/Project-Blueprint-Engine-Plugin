@@ -28,11 +28,48 @@
         "accepted"
       ]
     },
+    "acceptance": {
+      "type": "object",
+      "required": ["setBy", "acceptedAt", "acceptanceSource"],
+      "properties": {
+        "setBy": { "type": "string", "enum": ["user"] },
+        "acceptedAt": { "type": "string" },
+        "acceptanceSource": {
+          "type": "string",
+          "enum": ["explicit_user_reply"]
+        },
+        "reviewGateId": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
     "createdAt": { "type": "string" },
     "updatedAt": { "type": "string" },
     "artifacts": { "type": "object" }
     ,
     "autoflow": { "$ref": "autoflow-state.schema.json" }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "deliveryStatus": { "const": "accepted" }
+        },
+        "required": ["deliveryStatus"]
+      },
+      "then": {
+        "required": ["acceptance"],
+        "properties": {
+          "acceptance": {
+            "required": ["setBy", "acceptedAt", "acceptanceSource"],
+            "properties": {
+              "setBy": { "const": "user" },
+              "acceptanceSource": { "const": "explicit_user_reply" }
+            }
+          }
+        }
+      }
+    }
+  ],
   "additionalProperties": true
 }
