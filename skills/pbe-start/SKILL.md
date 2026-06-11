@@ -1,6 +1,6 @@
 ---
 name: pbe-start
-description: Start Project Blueprint Engine in a target repo, enable autoflow, create .pbe blueprint files, and begin RPD automatically.
+description: Start Project Blueprint Engine in a target repo, enable autoflow, create tree-native .pbe artifacts with backward-compatible blueprint views, and begin RPD/Product Tree growth automatically.
 ---
 
 # PBE Start
@@ -21,7 +21,14 @@ Add order cancellation to this existing project.
 
 ## Purpose
 
-Initialize `.pbe/blueprint/` in the target repository. PBE is not a GUI and does not call OpenAI APIs from a separate app. It is a Codex skill workflow that writes durable planning artifacts into the repository.
+Initialize `.pbe/` in the target repository. PBE is not a GUI and does not call OpenAI APIs from a separate app. It is a Codex skill workflow that writes durable planning, execution, control, evidence, and compatibility artifacts into the repository.
+
+PBE v2 is tree-native. The Product Tree is the source of truth. Existing RPD, WPD, VD, and ACEP names remain valid compatibility terms:
+
+- `RPD`: Product Tree growth plus `.pbe/blueprint/requirement-tree.json` compatibility view.
+- `WPD`: Project Tree and Work Tree derivation plus WorkDesign/WorkGraph compatibility views.
+- `VD`: Test Tree derivation plus VerificationDesign compatibility view.
+- `ACEP`: Cycle Contract and Node Execution Contract packaging plus the existing execution pack views.
 
 `start` enables Autoflow. The user should not need to type each internal step
 manually after start.
@@ -33,30 +40,56 @@ Use `bypass` only when the request is a typo, single-file edit, or clearly bound
 ## Required Actions
 
 1. Inspect the target repository enough to understand whether this is a new project or a change to an existing project.
-2. Create `.pbe/blueprint/` if it does not exist.
+2. Create `.pbe/tree/`, `.pbe/execution/node-execution-contracts/`, `.pbe/control/`, `.pbe/evidence/screenshots/`, `.pbe/evidence/test-results/`, `.pbe/evidence/logs/`, and `.pbe/blueprint/` if they do not exist.
 3. Create or update `.pbe/blueprint/pbe-state.json`.
-4. Create or update `.pbe/blueprint/project-brief.md`.
-5. Create `.pbe/blueprint/requirement-tree.json` with a root node if it does not exist.
-6. Create `.pbe/blueprint/pbe-routing-contract.md` from the PBE Routing Contract template.
-7. Create `.pbe/blueprint/source-of-truth-matrix.md` from the Source of Truth Matrix template.
-8. Create `.pbe/blueprint/pbe-invariants.md` from the PBE Invariants template.
-9. Create `.pbe/blueprint/foundation-contract.md` and `.pbe/blueprint/parallel-safety-contract.md` placeholders.
-10. Create dependency impact placeholders for `.pbe/blueprint/dependency-impact-audit.json` and `.pbe/blueprint/dependency-impact-audit.md`.
-11. Create `.pbe/blueprint/requirement-tree.md`, `.pbe/blueprint/rpd-interview-log.md`, and `.pbe/blueprint/rpd-summary.md`.
-12. Initialize UI/UX confirmation placeholders when UI work may be involved.
-13. Initialize `pbe-state.json.autoflow` with:
+4. Create `.pbe/tree/product-tree.json` from `templates/product-tree.template.json` if it does not exist.
+5. Create `.pbe/tree/project-tree.json` from `templates/project-tree.template.json` if it does not exist.
+6. Create `.pbe/tree/work-tree.json` from `templates/work-tree.template.json` if it does not exist.
+7. Create `.pbe/tree/test-tree.json` from `templates/test-tree.template.json` if it does not exist.
+8. Create `.pbe/control/decision-queue.json`, `.pbe/control/change-tree.json`, `.pbe/control/impact-tree.json`, `.pbe/control/acceptance-tree.json`, and `.pbe/evidence/evidence-tree.json` from matching templates if they do not exist.
+9. Create or update `.pbe/blueprint/project-brief.md`.
+10. Create `.pbe/blueprint/requirement-tree.json` with a root node if it does not exist, treating it as the Product Tree compatibility alias.
+11. Create `.pbe/blueprint/pbe-routing-contract.md` from the PBE Routing Contract template.
+12. Create `.pbe/blueprint/source-of-truth-matrix.md` from the Source of Truth Matrix template.
+13. Create `.pbe/blueprint/pbe-invariants.md` from the PBE Invariants template.
+14. Create `.pbe/blueprint/foundation-contract.md` and `.pbe/blueprint/parallel-safety-contract.md` placeholders.
+15. Create dependency impact placeholders for `.pbe/blueprint/dependency-impact-audit.json` and `.pbe/blueprint/dependency-impact-audit.md`.
+16. Create `.pbe/blueprint/requirement-tree.md`, `.pbe/blueprint/rpd-interview-log.md`, and `.pbe/blueprint/rpd-summary.md`.
+17. Initialize UI/UX confirmation placeholders when UI work may be involved.
+18. Initialize `pbe-state.json.autoflow` with:
    - `state`: `STARTED`
    - `enabled`: `true`
    - `profile`: `full`, `lite`, or `bypass`
    - `completedSteps`: `["start"]`
    - `nextStep`: `rpd`
-14. Immediately begin RPD Tree Walk unless the selected profile is `bypass`.
-15. If the provided project brief is enough to complete RPD safely, continue automatically until the UI/UX confirmation gate.
-16. If RPD needs more information, ask exactly one RPD question. The user should answer naturally; do not require `@project-blueprint-engine rpd`.
+19. Add tree-native artifact paths to `pbe-state.json.artifacts` so later stages can discover Product, Project, Work, Test, Cycle, Decision, Change, Impact, Evidence, and Acceptance trees without guessing paths.
+20. Immediately begin RPD/Product Tree growth unless the selected profile is `bypass`.
+21. If the provided project brief is enough to complete RPD safely, continue automatically until the UI/UX confirmation gate.
+22. If RPD needs more information, ask exactly one RPD question. The user should answer naturally; do not require `@project-blueprint-engine rpd`.
 
 ## File Contract
 
-Use these paths:
+Use these primary tree-native paths:
+
+```text
+.pbe/tree/product-tree.json
+.pbe/tree/project-tree.json
+.pbe/tree/work-tree.json
+.pbe/tree/test-tree.json
+.pbe/execution/cycle-tree.json
+.pbe/execution/cycle-contract.md
+.pbe/execution/node-execution-contracts/
+.pbe/control/decision-queue.json
+.pbe/control/change-tree.json
+.pbe/control/impact-tree.json
+.pbe/control/acceptance-tree.json
+.pbe/evidence/evidence-tree.json
+.pbe/evidence/screenshots/
+.pbe/evidence/test-results/
+.pbe/evidence/logs/
+```
+
+Also keep these backward-compatible blueprint paths:
 
 ```text
 .pbe/blueprint/pbe-state.json
@@ -78,6 +111,8 @@ Use these paths:
 .pbe/blueprint/ui-ux-confirmation-log.md
 ```
 
+When both v2 and v1 files exist, prefer the v2 tree file as the source of truth and update the v1 blueprint file as a compatibility view.
+
 The initial root node status is `pending_interview` unless the user already provided enough detail to begin as `interviewing`.
 
 ## Startup State
@@ -87,6 +122,27 @@ Set `pbe-state.json` stage to `rpd` and mode to `rpd_tree_walk`.
 Set `pbe-state.json.autoflow.state` to `STARTED`.
 
 Set `pbe-state.json.autoflow.profile` to the chosen profile. If no profile is explicitly requested, set it to `full`.
+
+Set `pbe-state.json.artifacts` to include at least:
+
+```text
+productTree: .pbe/tree/product-tree.json
+projectTree: .pbe/tree/project-tree.json
+workTree: .pbe/tree/work-tree.json
+testTree: .pbe/tree/test-tree.json
+cycleTree: .pbe/execution/cycle-tree.json
+cycleContract: .pbe/execution/cycle-contract.md
+nodeExecutionContracts: .pbe/execution/node-execution-contracts/
+decisionQueue: .pbe/control/decision-queue.json
+changeTree: .pbe/control/change-tree.json
+impactTree: .pbe/control/impact-tree.json
+acceptanceTree: .pbe/control/acceptance-tree.json
+evidenceTree: .pbe/evidence/evidence-tree.json
+requirementTree: .pbe/blueprint/requirement-tree.json
+workDesign: .pbe/blueprint/work-design.json
+workGraph: .pbe/blueprint/work-graph.json
+verificationDesign: .pbe/blueprint/verification-design.json
+```
 
 Do not generate WPD, VD, ACEP, review, feedback, or revision files during start unless RPD is already complete and the next deterministic step can safely continue. Stop at UI/UX confirmation when UI/UX judgment is required.
 

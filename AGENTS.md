@@ -182,9 +182,11 @@ When running RPD:
 4. Extract facts after each answer.
 5. Ask before decomposing a node.
 6. Ask before confirming a node.
-7. Update `.pbe/blueprint/requirement-tree.json` after every confirmed decision.
-8. Update `.pbe/blueprint/rpd-interview-log.md` after every interview turn.
-9. Update Source of Truth Matrix links when requirements change.
+7. Update `.pbe/tree/product-tree.json` after every confirmed decision when v2 files exist.
+8. Update `.pbe/blueprint/requirement-tree.json` as the compatibility view after every confirmed decision.
+9. Update `.pbe/control/decision-queue.json` when a decision is opened or resolved.
+10. Update `.pbe/blueprint/rpd-interview-log.md` after every interview turn.
+11. Update Source of Truth Matrix links when requirements change.
 
 RPD owns user intent, not coding task boundaries.
 
@@ -192,7 +194,7 @@ RPD owns user intent, not coding task boundaries.
 
 WPD must run Module Boundary Check internally. Do not create a separate Module Boundary Auditor skill.
 
-WPD must not treat RPD nodes as direct Codex tasks. It must produce a module-aware WorkGraph with:
+WPD must not treat RPD/Product Tree nodes as direct Codex tasks. It must produce `.pbe/tree/project-tree.json`, `.pbe/tree/work-tree.json`, and a module-aware WorkGraph compatibility view with:
 
 - `expectedFiles`
 - `expectedSharedFiles`
@@ -203,6 +205,14 @@ WPD must not treat RPD nodes as direct Codex tasks. It must produce a module-awa
 - selected/foundation/deferred/blocked/out_of_scope classification
 
 If `expectedFiles` is empty or unknown, the node is not parallel-safe.
+
+Every selected or foundation Work Tree node must derive from Product/Project nodes unless it is the Work Tree root placeholder.
+
+## VD And Test Tree
+
+VD must derive `.pbe/tree/test-tree.json` from Product, Project, and Work Trees when v2 files exist. It must keep `.pbe/blueprint/verification-design.json` and `.pbe/blueprint/verification-plan.md` as compatibility views.
+
+Every non-root Test Tree node must verify at least one Product or Work node and declare required evidence.
 
 ## UI/UX Confirmation
 

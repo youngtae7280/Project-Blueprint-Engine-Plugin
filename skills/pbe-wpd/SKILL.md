@@ -1,11 +1,13 @@
 ---
 name: pbe-wpd
-description: Generate Work Process Design artifacts from completed RPD requirement-tree files.
+description: Derive Project Tree and Work Tree from completed RPD/Product Tree files while preserving Work Process Design and WorkGraph compatibility artifacts.
 ---
 
 # PBE WPD
 
 Use this skill to create Work Process Design from completed RPD output.
+
+In PBE v2, WPD derives `.pbe/tree/project-tree.json` and `.pbe/tree/work-tree.json` from accepted Product Tree branches. Existing `.pbe/blueprint/work-design.json` and `.pbe/blueprint/work-graph.json` remain compatibility views and must be generated from the tree-native output, not the other way around.
 
 WPD is the boundary between user requirements and coding work. It must not copy
 RPD requirement nodes directly into Codex coding tasks. It converts requirement
@@ -20,6 +22,8 @@ WPD automatically without asking the user for a separate command.
 ## Inputs
 
 ```text
+.pbe/tree/product-tree.json
+.pbe/control/decision-queue.json
 .pbe/blueprint/requirement-tree.json
 .pbe/blueprint/rpd-summary.md
 .pbe/blueprint/ui-ux-confirmation.md
@@ -30,32 +34,40 @@ WPD automatically without asking the user for a separate command.
 ## Outputs
 
 ```text
+.pbe/tree/project-tree.json
+.pbe/tree/work-tree.json
 .pbe/blueprint/work-design.json
 .pbe/blueprint/work-graph.json
 .pbe/blueprint/work-roadmap.md
 ```
 
+Prefer v2 tree files when present. If `.pbe/tree/product-tree.json` and `.pbe/blueprint/requirement-tree.json` disagree about selected, deferred, blocked, or out-of-scope scope, stop and report the mismatch instead of deriving work from stale data.
+
 ## Required Actions
 
 1. Verify RPD completion before generating WPD.
 2. Verify UI/UX confirmation is complete for UI-required items.
-3. Collect confirmed terminal requirement nodes and their parent context.
-4. Run the internal `Module Boundary Check` before creating work units.
-5. Extract shared foundations, feature candidates, integration points, verification links, and parallelization risks.
-6. Classify every WorkGraph node as `selected`, `deferred`, `foundation`, `blocked`, or `out_of_scope`.
-7. Create module-aware WorkGraph nodes and edges.
-8. Add required parallel safety metadata to every WorkGraph node.
-9. Create WorkDesign entries from the WorkGraph, not directly from RPD nodes.
-10. Create a root-level implementation roadmap that references WorkGraph phases.
-11. Update Source of Truth Matrix links from RPD nodes to WorkGraph nodes.
-12. Save `work-design.json`.
-13. Save `work-graph.json` as a standalone copy of the WorkGraph.
-14. Save `work-roadmap.md`.
-15. Update `pbe-state.json` stage to `wpd` or `vd_ready` when complete.
-16. Update `pbe-state.json.autoflow.state` to `WPD_DONE`.
-17. Add `wpd` to `autoflow.completedSteps`.
-18. Set `autoflow.nextStep` to `vd`.
-19. Continue automatically to VD unless a blocker exists.
+3. Collect accepted Product Tree branches and their compatibility requirement nodes.
+4. Derive Project Tree module, surface, service, contract, data boundary, integration boundary, and foundation nodes from accepted Product Tree branches.
+5. Run the internal `Module Boundary Check` before creating work units.
+6. Extract shared foundations, feature candidates, integration points, verification links, and parallelization risks.
+7. Derive Work Tree executable nodes from Project Tree nodes and Product Tree branches.
+8. Classify every Work Tree and WorkGraph node as `selected`, `deferred`, `foundation`, `blocked`, or `out_of_scope`.
+9. Create module-aware WorkGraph nodes and edges as a compatibility/dependency view around Work Tree nodes.
+10. Add required parallel safety metadata to every Work Tree and WorkGraph node.
+11. Create WorkDesign entries from the Work Tree and WorkGraph, not directly from RPD nodes.
+12. Create a root-level implementation roadmap that references Project Tree, Work Tree, and WorkGraph phases.
+13. Update Source of Truth Matrix links from Product/RPD nodes to Project Tree, Work Tree, and WorkGraph nodes.
+14. Save `.pbe/tree/project-tree.json`.
+15. Save `.pbe/tree/work-tree.json`.
+16. Save `work-design.json`.
+17. Save `work-graph.json` as a standalone copy of the WorkGraph.
+18. Save `work-roadmap.md`.
+19. Update `pbe-state.json` stage to `wpd` or `vd_ready` when complete.
+20. Update `pbe-state.json.autoflow.state` to `WPD_DONE`.
+21. Add `wpd` to `autoflow.completedSteps`.
+22. Set `autoflow.nextStep` to `vd`.
+23. Continue automatically to VD unless a blocker exists.
 
 ## WPD Rules
 
@@ -70,6 +82,7 @@ WPD automatically without asking the user for a separate command.
 - Reflect confirmed UI/UX direction in UI-related work units.
 - Do not plan UI implementation for unconfirmed UI/UX items.
 - Do not treat one RPD node as one Codex task.
+- Do not treat one Product Tree node as one Work Tree node unless the module boundary check proves that boundary is safe.
 - Allow one RPD node to split into multiple WPD tasks.
 - Allow several RPD nodes to merge into one shared foundation task.
 - Allow a parent RPD node to become an integration task.
@@ -77,6 +90,8 @@ WPD automatically without asking the user for a separate command.
 - Identify task boundaries before any parallel execution planning.
 - Never mark a WorkGraph node parallel-safe when `expectedFiles` is empty or unknown.
 - Never place foundation work in parallel unless it is documentation or test-fixture only.
+- Never create selected or foundation Work Tree nodes without at least one `derivedFromProductNodeIds` link, except the Work Tree root placeholder.
+- Every Project Tree node must list `derivedFromProductNodeIds` or be a root/container node with an explicit root responsibility.
 
 ## Module Boundary Check
 
@@ -106,6 +121,54 @@ Record:
 - `boundaryBlockers`
 
 If boundary blockers remain, stop before producing parallelization-ready output.
+
+## Project Tree
+
+Project Tree nodes express module ownership and boundaries. Use:
+
+- `module`
+- `surface`
+- `service`
+- `contract`
+- `data_boundary`
+- `integration_boundary`
+- `foundation`
+
+Every non-root Project Tree node must include:
+
+- `derivedFromProductNodeIds`
+- `responsibility`
+- `boundaries`
+- `risks`
+
+## Work Tree
+
+Work Tree nodes express executable implementation and support work. Use:
+
+- `foundation_task`
+- `feature_task`
+- `ui_task`
+- `api_task`
+- `domain_task`
+- `integration_task`
+- `verification_support_task`
+- `documentation_task`
+- `review_task`
+
+Every non-root Work Tree node must include:
+
+- `derivedFromProductNodeIds`
+- `derivedFromProjectNodeIds`
+- `scopeClass`
+- `expectedFiles`
+- `expectedSharedFiles`
+- `forbiddenFiles`
+- `unknownFileTouchRisk`
+- `dependencies`
+- `doneCriteria`
+- `validationHints`
+
+If a Work Tree node has unknown write scope, set `unknownFileTouchRisk` to `true` and ensure the compatibility WorkGraph marks it not parallel-safe.
 
 ## Scope Classification
 
@@ -192,6 +255,7 @@ No work unit should lose its source requirement. If a confirmed requirement does
 The standalone `work-graph.json` should contain:
 
 - `id`
+- `treeRefs` or equivalent links to Project Tree and Work Tree nodes
 - `nodes`
 - `edges`
 - `boundaryFindings`
@@ -234,6 +298,8 @@ The state card must say that WPD completed and whether PBE is automatically cont
 
 Include:
 
+- Project Tree node count
+- Work Tree node count
 - number of leaf work units
 - number of synthesized parent units
 - number of WorkGraph nodes

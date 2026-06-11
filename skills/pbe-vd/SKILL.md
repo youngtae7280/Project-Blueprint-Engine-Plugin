@@ -1,11 +1,13 @@
 ---
 name: pbe-vd
-description: Generate Verification Design artifacts from WPD outputs and the RPD requirement tree.
+description: Derive Test Tree from Product, Project, and Work Trees while preserving Verification Design compatibility artifacts.
 ---
 
 # PBE VD
 
 Use this skill to create Verification Design from WPD output.
+
+In PBE v2, VD derives `.pbe/tree/test-tree.json` from Product, Project, and Work Trees. Existing `.pbe/blueprint/verification-design.json` and `.pbe/blueprint/verification-plan.md` remain compatibility views and must be generated from the Test Tree.
 
 VD is deterministic in Autoflow. Run it automatically after WPD succeeds.
 
@@ -14,6 +16,9 @@ VD owns verification design. It must preserve selected, deferred, foundation, bl
 ## Inputs
 
 ```text
+.pbe/tree/product-tree.json
+.pbe/tree/project-tree.json
+.pbe/tree/work-tree.json
 .pbe/blueprint/requirement-tree.json
 .pbe/blueprint/work-design.json
 .pbe/blueprint/work-graph.json
@@ -25,27 +30,33 @@ VD owns verification design. It must preserve selected, deferred, foundation, bl
 ## Outputs
 
 ```text
+.pbe/tree/test-tree.json
 .pbe/blueprint/verification-design.json
 .pbe/blueprint/verification-plan.md
 ```
 
+Prefer v2 tree files when present. If Work Tree scope classifications conflict with WorkGraph or WorkDesign compatibility files, stop and report the mismatch before deriving verification.
+
 ## Required Actions
 
 1. Verify WPD completion.
-2. Create one VerificationDesign entry for each selected and foundation work unit.
-3. Record deferred and out-of-scope verification expectations separately.
-4. Synthesize parent and integration verification bottom-up.
-5. Create a root-level acceptance plan for the current slice.
-6. Identify validation command candidates.
-7. Identify regression risks, including deferred-module foundation risk.
-8. Save `verification-design.json`.
-9. Save `verification-plan.md`.
-10. Update Source of Truth Matrix verification links.
-11. Update `pbe-state.json` stage to `vd` or `acep_ready` when complete.
-12. Update `pbe-state.json.autoflow.state` to `VD_DONE`.
-13. Add `vd` to `autoflow.completedSteps`.
-14. Set `autoflow.nextStep` to `dependency_impact_audit`.
-15. Continue automatically to `pbe-dependency-impact-audit` unless a blocker exists.
+2. Verify Product Tree, Project Tree, and Work Tree links when v2 files exist.
+3. Create one Test Tree node for each selected and foundation Work Tree node that needs runnable, manual, UI, integration, regression, or acceptance verification.
+4. Create one VerificationDesign compatibility entry for each selected and foundation work unit.
+5. Record deferred and out-of-scope verification expectations separately.
+6. Synthesize parent and integration verification bottom-up.
+7. Create a root-level acceptance plan for the current slice.
+8. Identify validation command candidates.
+9. Identify regression risks, including deferred-module foundation risk.
+10. Save `.pbe/tree/test-tree.json`.
+11. Save `verification-design.json`.
+12. Save `verification-plan.md`.
+13. Update Source of Truth Matrix verification links from Product/Project/Work nodes to Test Tree and VerificationDesign nodes.
+14. Update `pbe-state.json` stage to `vd` or `acep_ready` when complete.
+15. Update `pbe-state.json.autoflow.state` to `VD_DONE`.
+16. Add `vd` to `autoflow.completedSteps`.
+17. Set `autoflow.nextStep` to `dependency_impact_audit`.
+18. Continue automatically to `pbe-dependency-impact-audit` unless a blocker exists.
 
 ## VD Rules
 
@@ -55,6 +66,7 @@ VD owns verification design. It must preserve selected, deferred, foundation, bl
 - Include focused validation, broader regression validation, and manual checks where needed.
 - Mark uncertain validation commands as candidates rather than pretending they are guaranteed.
 - Every verification item must link to a requirement ID and task/work ID.
+- Every non-root Test Tree node must link to at least one Product or Work node through `verifiesProductNodeIds` or `verifiesWorkNodeIds`.
 - UI-related work must require UI/UX evidence.
 - Do not allow a task to reach ACEP without verification links or an explicit explanation.
 - Convert confirmed UI/UX direction into verification checks.
@@ -63,6 +75,31 @@ VD owns verification design. It must preserve selected, deferred, foundation, bl
 - Selected and foundation items require runnable verification or an explicit not-runnable reason.
 - Deferred items require a deferral note, future verification hint, and dependency impact note.
 - Out-of-scope items require no implementation verification, but must be recorded so they are not accidentally changed.
+
+## Test Tree Shape
+
+Use Test Tree nodes for primary verification intent:
+
+- `unit_test`
+- `integration_test`
+- `component_test`
+- `ui_state_test`
+- `manual_check`
+- `regression_check`
+- `acceptance_check`
+
+Every non-root Test Tree node must include:
+
+- `verifiesProductNodeIds`
+- `verifiesProjectNodeIds`
+- `verifiesWorkNodeIds`
+- `validationCommands`
+- `manualChecks`
+- `passCriteria`
+- `evidenceRequired`
+- `partialCompletionEffect`
+
+Set Test Tree status to `planned` unless a validation command is known to be runnable now, in which case `runnable` is acceptable. Use `manual_required`, `deferred`, `not_applicable`, or `blocked` when appropriate. Do not mark `passed` before evidence exists.
 
 ## VerificationDesign Shape
 
@@ -108,6 +145,7 @@ The state card must say that VD completed and that Dependency Impact Audit is th
 
 Include:
 
+- number of Test Tree nodes
 - number of verification items
 - selected/foundation/deferred verification split
 - validation command candidates

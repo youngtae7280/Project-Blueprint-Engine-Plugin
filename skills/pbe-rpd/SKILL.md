@@ -1,11 +1,13 @@
 ---
 name: pbe-rpd
-description: Run RPD Tree Walk by interviewing one requirement node at a time and updating .pbe blueprint files.
+description: Run RPD/Product Tree growth by interviewing one product requirement node at a time, updating tree-native Product Tree files and backward-compatible .pbe blueprint views.
 ---
 
 # PBE RPD
 
 Run Recursive Program Designer as RPD Tree Walk Mode.
+
+In PBE v2, RPD means Product Tree growth. RPD owns product meaning, user intent, scope, non-scope, UX intent, risk, and acceptance language. It writes `.pbe/tree/product-tree.json` as the source of truth and keeps `.pbe/blueprint/requirement-tree.json` as the backward-compatible view.
 
 RPD participates in Autoflow. The user may invoke it directly for backward
 compatibility, but after `start` Codex should continue RPD automatically without
@@ -14,6 +16,28 @@ requiring the user to type `@project-blueprint-engine rpd`.
 RPD owns user intent. It does not own coding task boundaries, parallel execution, implementation architecture, or verification strategy. Those belong to WPD, Plan Execution, and VD.
 
 Update Source of Truth Matrix references whenever RPD creates, confirms, defers, or removes a requirement.
+
+## Inputs And Outputs
+
+Prefer these v2 files when present:
+
+```text
+.pbe/tree/product-tree.json
+.pbe/control/decision-queue.json
+.pbe/control/change-tree.json
+```
+
+Keep these v1 compatibility views current:
+
+```text
+.pbe/blueprint/requirement-tree.json
+.pbe/blueprint/requirement-tree.md
+.pbe/blueprint/rpd-interview-log.md
+.pbe/blueprint/rpd-summary.md
+.pbe/blueprint/source-of-truth-matrix.md
+```
+
+Every confirmed, deferred, blocked, or out-of-scope requirement node must have a Product Tree node or a recorded reason why it cannot yet be represented.
 
 ## RPD Tree Walk Rules
 
@@ -33,12 +57,41 @@ Update Source of Truth Matrix references whenever RPD creates, confirms, defers,
    - `blocked`
 9. Before decomposing a node, ask the user to confirm the proposed decomposition.
 10. Before confirming a node, ask the user to confirm the summary.
-11. Update `.pbe/blueprint/requirement-tree.json` after every confirmed decision.
-12. Update `.pbe/blueprint/rpd-interview-log.md` after every interview turn.
-13. Continue until every leaf node is `confirmed`, `deferred`, or `out_of_scope`.
-14. For UI-facing nodes, collect UI/UX intent without breaking the one-question rule.
-15. Record stable source IDs on every requirement node.
-16. Preserve scope classification: `selected`, `deferred`, `foundation_candidate`, `blocked`, or `out_of_scope` when known.
+11. Update `.pbe/tree/product-tree.json` and `.pbe/blueprint/requirement-tree.json` after every confirmed decision.
+12. Update `.pbe/control/decision-queue.json` when a human decision is needed or resolved.
+13. Update `.pbe/blueprint/rpd-interview-log.md` after every interview turn.
+14. Continue until every leaf node is `confirmed`, `deferred`, or `out_of_scope`.
+15. For UI-facing nodes, collect UI/UX intent without breaking the one-question rule.
+16. Record stable source IDs on every requirement node and Product Tree node.
+17. Preserve scope classification: `selected`, `deferred`, `foundation_candidate`, `blocked`, or `out_of_scope` when known.
+
+## Product Tree Mapping
+
+Map RPD compatibility nodes to Product Tree nodes as follows:
+
+- `pending_interview` or `interviewing` -> Product status `draft` or `needs_human_decision`.
+- `ready_to_decompose` or `ready_to_confirm` -> Product status `proposed`.
+- `confirmed` -> Product status `accepted`.
+- `deferred` -> Product status `deferred`.
+- `out_of_scope` -> Product status `out_of_scope`.
+- `blocked` -> Product status `blocked`.
+
+Use Product node types that match the intent: `goal`, `user`, `outcome`, `capability`, `behavior`, `ui_surface`, `ui_state`, `data`, `constraint`, `non_goal`, `risk`, `acceptance`, `assumption`, or `decision`.
+
+When a lower-risk detail is obvious from the parent and does not alter product meaning, record it as `auto_derived` or `assumed` in the Product Tree. If the assumption affects scope, UX, acceptance, verification, or already accepted work, create a Decision Queue item and stop for the user.
+
+## Decision Queue
+
+Use `.pbe/control/decision-queue.json` for questions that matter to product meaning or execution safety. Each decision should include:
+
+- target Product Tree node
+- reason the decision matters
+- single user-facing question
+- recommended default when safe
+- expected tree effect
+- blocking level: `advisory`, `gate`, or `blocking`
+
+Ask exactly one open-ended question when the next decision is blocking. Do not ask the user to type internal commands to continue RPD.
 
 ## Node Statuses
 
@@ -67,6 +120,8 @@ out_of_scope
 ## Current Node Selection
 
 Read `.pbe/blueprint/requirement-tree.json`.
+
+If `.pbe/tree/product-tree.json` exists, use it to confirm product status and scope before selecting the compatibility requirement node. If the two views disagree, stop and report the mismatch instead of guessing.
 
 Select the current node in this order:
 
@@ -141,6 +196,7 @@ When a node is specific enough:
 RPD is complete only when:
 
 1. `requirement-tree.json` exists.
+1. `.pbe/tree/product-tree.json` exists and has a root node.
 2. The root node exists.
 3. Every leaf node is `confirmed`, `deferred`, or `out_of_scope`.
 4. No node is `interviewing`.
@@ -150,6 +206,7 @@ RPD is complete only when:
 8. `rpd-summary.md` exists.
 9. Source of Truth Matrix records each terminal requirement.
 10. PBE Invariants have no RPD-level violation.
+11. No blocking item remains in `.pbe/control/decision-queue.json`.
 
 ## RPD Invariants
 
@@ -180,6 +237,8 @@ RPD Tree Walk complete
 - leaf nodes:
 
 Created/updated files:
+- .pbe/tree/product-tree.json
+- .pbe/control/decision-queue.json
 - .pbe/blueprint/requirement-tree.json
 - .pbe/blueprint/requirement-tree.md
 - .pbe/blueprint/rpd-interview-log.md
