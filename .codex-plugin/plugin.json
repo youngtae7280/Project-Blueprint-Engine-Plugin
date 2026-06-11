@@ -1,15 +1,15 @@
 {
   "name": "project-blueprint-engine",
-  "version": "0.1.0+codex.20260610074351",
-  "description": "A Codex plugin that turns requirements into an autoflowing, traceable staged execution, review, feedback, and revision contract.",
+  "version": "0.1.0+codex.20260610235955",
+  "description": "A Codex plugin that turns user intent into traceable Product, Project, Work, and Test trees, then controls staged execution, evidence, review, feedback, and revision through compatible PBE contracts.",
   "author": {
     "name": "Local developer"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "Project Blueprint Engine",
-    "shortDescription": "Plan, execute, review, and revise Codex work with traceability.",
-    "longDescription": "Project Blueprint Engine runs inside Codex as a skill workflow. It stores planning artifacts in .pbe/, starts an Autoflow from one start command, routes active PBE work through state-aware gates before ordinary coding, walks requirements with RPD Tree Walk, stops for UI/UX confirmation before UI implementation, converts requirements into a WPD WorkGraph with an internal Module Boundary Check, audits dependency impact before implementation scope, plans staged parallel execution with integration tasks, validates schema and cross-artifact traceability, runs coverage and UX audits, creates and runs an Autonomous Codex Execution Pack, stops for final result review, maps user feedback to affected artifacts, and creates bounded revision packs with allowed-file boundaries.",
+    "shortDescription": "Tree-based product blueprint, execution, evidence, and revision control for Codex.",
+    "longDescription": "Project Blueprint Engine runs inside Codex as a tree-based development control workflow while preserving the existing RPD, WPD, VD, and ACEP compatibility terms. It grows product intent into a Product Tree, derives Project, Work, and Test views, routes active PBE work through state-aware gates before ordinary coding, confirms UI/UX before implementation, audits dependency impact before implementation scope, selects staged execution slices, validates schema and cross-artifact traceability, tracks evidence, stops for user review, maps feedback to affected nodes, and creates bounded revision work through change and impact analysis.",
     "developerName": "Local developer",
     "category": "Developer Tools",
     "capabilities": [
@@ -17,6 +17,9 @@
       "Write",
       "Interactive",
       "Planning",
+      "Tree-based product design",
+      "Tree derivation",
+      "Cycle slice execution",
       "Code generation guidance",
       "Autoflow orchestration",
       "Traceability",
@@ -25,6 +28,8 @@
       "Schema validation",
       "Staged parallel execution planning",
       "Parallel safety validation",
+      "Change impact analysis",
+      "Node reopen workflow",
       "User review workflow",
       "Revision planning"
     ],

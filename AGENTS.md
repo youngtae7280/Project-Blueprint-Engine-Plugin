@@ -4,13 +4,49 @@
 
 If `.pbe/` exists, inspect it before planning work.
 
-PBE is a Codex Plugin workflow. Do not revive the deprecated GUI/API-provider/SaaS direction unless the user explicitly changes the product direction.
+PBE is a Codex Plugin workflow and is evolving into a tree-based development control system. Do not revive the deprecated GUI/API-provider/SaaS direction unless the user explicitly changes the product direction.
 
 PBE is optimized for safe, reviewable, staged project construction, not for speed.
 
 After future PBE plugin changes, run the relevant validation, commit the finished work, and push to `origin/main` unless the user explicitly asks not to push.
 
+## Tree Control Direction
+
+The Product Tree is the source of product truth. Lower trees and execution artifacts must derive from it.
+
+```text
+Product Tree -> Project Tree -> Work Tree -> Test Tree
+Cycle Tree -> Change Tree -> Impact Tree -> Evidence Tree -> Acceptance Tree
+```
+
+Compatibility terms stay valid during migration:
+
+- `RPD`: Product Tree growth
+- `WPD`: Project Tree and Work Tree derivation
+- `VD`: Test Tree derivation
+- `ACEP`: Cycle Contract and Node Execution Contract packaging
+- `Revision`: Change Tree, Impact Tree, and Reopen protocol
+
+Never implement work that cannot be traced to Product/Project/Work nodes. Never close work without Test/Evidence links. Never silently edit accepted blueprint scope during execution.
+
 ## Important Files
+
+Prefer v2 files when present:
+
+- `.pbe/tree/product-tree.json`
+- `.pbe/tree/project-tree.json`
+- `.pbe/tree/work-tree.json`
+- `.pbe/tree/test-tree.json`
+- `.pbe/execution/cycle-tree.json`
+- `.pbe/execution/cycle-contract.md`
+- `.pbe/execution/node-execution-contracts/`
+- `.pbe/control/decision-queue.json`
+- `.pbe/control/change-tree.json`
+- `.pbe/control/impact-tree.json`
+- `.pbe/control/acceptance-tree.json`
+- `.pbe/evidence/evidence-tree.json`
+
+Backward-compatible v1 views may also exist:
 
 - `.pbe/blueprint/pbe-state.json`
 - `.pbe/blueprint/source-of-truth-matrix.md`
@@ -28,6 +64,17 @@ After future PBE plugin changes, run the relevant validation, commit the finishe
 - `.pbe/codex-execution-pack/05-ui-ux-spec.json`
 - `.pbe/codex-execution-pack/18-execution-strategy.md`
 - `.pbe/codex-execution-pack/execution-manifest.json`
+
+## Human Questioning Rule
+
+Ask the user only when the answer changes product meaning, scope, UX, risk, acceptance criteria, verification strategy, or already implemented/verified/accepted work.
+
+Use:
+
+- `auto_derived` for obvious lower-tree nodes
+- `assumed` for plausible low-risk defaults
+- `needs_human_decision` for decisions that alter the tree
+- `blocked` for decisions that must stop execution
 
 ## Execution Profiles
 
@@ -192,6 +239,18 @@ When executing ACEP:
 8. Every parallel group must require integration evidence and integration pass.
 9. If actual parallel execution is unavailable, execute parallel-capable tasks sequentially and still run the integration task.
 
+## Cycle Execution
+
+When v2 cycle files exist:
+
+1. Read `.pbe/execution/cycle-tree.json` and `.pbe/execution/cycle-contract.md` before implementation.
+2. Implement only included Work nodes.
+3. Run only included Test nodes unless broader regression is explicitly required.
+4. Do not touch excluded, deferred, or out-of-scope nodes.
+5. If missing scope, design drift, new UX behavior, or technical impossibility is discovered, create or request a Change Node instead of silently coding it.
+6. Attach evidence to `.pbe/evidence/evidence-tree.json` when available.
+7. End as `submitted_for_review`, not accepted.
+
 ## ACEP Execution
 
 When running ACEP:
@@ -232,6 +291,14 @@ If the user is dissatisfied:
 5. Run revision tasks only within affected selected/foundation scope.
 6. Re-run relevant regression checks.
 7. Submit for review again.
+
+When v2 change/impact files exist:
+
+1. Record feedback as Change Tree input.
+2. Map affected Product/Project/Work/Test/Evidence nodes.
+3. Build or update Impact Tree.
+4. Mark affected completed nodes as `stale`, `invalidated`, or `reopened` when needed.
+5. Run only affected or reopened revision tasks.
 
 After review approval, move to `WAITING_NEXT_SLICE_DECISION`. Do not mark `COMPLETED` unless the user explicitly completes the whole project.
 

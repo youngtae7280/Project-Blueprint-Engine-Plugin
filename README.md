@@ -1,22 +1,66 @@
 # Project Blueprint Engine
 
-Project Blueprint Engine is a Codex Plugin.
+Project Blueprint Engine is a Codex Plugin and an evolving tree-based development control system.
 
-It does not provide a GUI, SaaS backend, or separate OpenAI API provider. It runs inside Codex as a set of skills, stores planning artifacts in `.pbe/`, generates an Autonomous Codex Execution Pack, and guides Codex through that pack until a human gate or stop condition.
+It does not provide a GUI, SaaS backend, or separate OpenAI API provider. It runs inside Codex as a set of skills, stores durable artifacts in `.pbe/`, generates execution contracts, and guides Codex through those contracts until a human gate or stop condition.
 
 PBE is optimized for safe, reviewable, staged project construction, not for speed.
 
+## Core Idea
+
+PBE v2 reframes the existing staged workflow around one operating model:
+
+```text
+Product Tree -> Project Tree -> Work Tree -> Test Tree
+            -> Cycle Tree -> Change Tree -> Impact Tree -> Evidence Tree -> Acceptance Tree
+```
+
+Everything executable should be a tree node or a tree-derived view.
+
+- Product Tree: what the product must mean and do for the user.
+- Project Tree: module ownership, surfaces, contracts, and responsibility boundaries.
+- Work Tree: executable work needed for selected branches.
+- Test Tree: verification of Product and Work nodes.
+- Cycle Tree: the selected slice for the current implementation cycle.
+- Change Tree: development-time discoveries, feedback, and scope changes.
+- Impact Tree: affected nodes that become stale, invalidated, or reopened.
+- Evidence Tree: tests, screenshots, logs, diffs, and review artifacts attached to nodes.
+- Acceptance Tree: user-controlled branch closure.
+
+During migration, the existing RPD/WPD/VD/ACEP terms remain supported as compatibility names:
+
+```text
+RPD  = Product Tree growth
+WPD  = Project Tree + Work Tree derivation
+VD   = Test Tree derivation
+ACEP = Cycle Contract and Node Execution Contract packaging
+Revision = Change Tree + Impact Tree + Reopen protocol
+```
+
+## Core Invariants
+
+```text
+If it is not in the Product Tree, it is not product scope.
+If it changes product meaning, scope, UX, risk, acceptance, or verification, it must be a Change Node.
+If work is not derived from Product/Project nodes, it is not executable work.
+If a test does not verify Product/Work nodes, it is not sufficient verification.
+If evidence does not attach to Test/Product nodes, it does not close the branch.
+If a change invalidates completed work, affected nodes reopen instead of being silently overwritten.
+```
+
 ## What PBE Produces
 
-PBE is not only a task-card generator. It creates an execution contract:
+PBE is not only a task-card generator. It creates a traceable tree-linked execution contract:
 
-- RPD requirement tree
+- Product Tree / RPD requirement-tree compatibility view
 - Source of Truth Matrix
 - PBE Invariants
 - Foundation Contract
-- WPD WorkGraph
-- VD verification design
+- Project Tree and Work Tree / WPD WorkGraph compatibility views
+- Test Tree / VD verification design compatibility view
 - UI/UX confirmation and UI/UX spec
+- Cycle Slice / staged execution strategy
+- Change Tree and Impact Tree for safe revisions
 - staged parallel execution strategy
 - traceability matrix
 - evidence requirements
@@ -51,6 +95,39 @@ docs/
 scripts/
 ```
 
+## Repository Artifact Layout
+
+The v2 target layout is additive. Existing `.pbe/blueprint/*` files stay as compatibility aliases or human-readable views while tree-native artifacts are introduced.
+
+```text
+.pbe/
+  tree/
+    product-tree.json
+    project-tree.json
+    work-tree.json
+    test-tree.json
+
+  execution/
+    cycle-tree.json
+    cycle-contract.md
+    node-execution-contracts/
+
+  control/
+    decision-queue.json
+    change-tree.json
+    impact-tree.json
+    acceptance-tree.json
+
+  evidence/
+    evidence-tree.json
+    screenshots/
+    test-results/
+    logs/
+
+  blueprint/
+    # backward-compatible v1 aliases and human-readable views
+```
+
 ## Usage
 
 In Codex, start with:
@@ -83,7 +160,7 @@ PBE is easiest to understand as a stateful Codex workflow:
 3. PBE routing reads that state before implementation work.
 4. Deterministic stages continue automatically.
 5. Human gates stop the flow only when product judgment is required.
-6. ACEP turns the approved plan into a Codex execution contract.
+6. ACEP/Cycle Contract turns the approved plan into a Codex execution contract.
 7. Codex implements only selected and approved foundation scope.
 8. The user, not Codex, decides whether the result is accepted.
 
@@ -296,18 +373,19 @@ full
 
 ```text
 start
--> rpd
+-> grow product tree / rpd
 -> ui ux confirm gate
--> wpd
--> vd
+-> derive project/work tree / wpd
+-> derive test tree / vd
 -> dependency impact audit
+-> select cycle slice
 -> implementation scope gate
 -> architecture runway gate, when needed
--> plan execution
+-> plan execution / generate cycle strategy
 -> coverage audit
 -> ux audit
--> generate acep
--> run acep
+-> generate acep / cycle contract
+-> run acep / run cycle contract
 -> review result gate
 -> next slice decision
 ```
@@ -369,10 +447,11 @@ revision_in_progress
 revision_verified
 ```
 
-Only the user can mark work as:
+Only the user can mark work or a Product branch as:
 
 ```text
 accepted
+accepted_done
 ```
 
 If the user is dissatisfied, feedback is mapped to affected requirements, tasks, UI/UX items, and verification items before a bounded Revision Pack is created.
