@@ -36,6 +36,8 @@ Inventory is not implementation scope by itself. Missing controls become Product
 
 Parity cannot be claimed when required legacy controls are still `missing`, `deferred`, `blocked`, or `unverified` unless the gap is explicitly recorded as deferred, blocked, or out of scope.
 
+Required legacy event handlers are part of parity. A visible control is not enough when the legacy behavior depends on a click, toggle, timer, async callback, retry, cancel, busy state, or error handler.
+
 ### Surface Completion Ledger
 
 Surface completion is a derived view that separates:
@@ -49,6 +51,10 @@ Technical stability means implementation and basic validation passed. It does no
 Parity reviewed means required inventory, visual/runtime checks, and evidence are present or explicitly marked not runnable with risk notes.
 
 Product accepted means the user accepted the Product branch through the Acceptance Tree.
+
+Commands that open dialogs, popups, subdialogs, or secondary workflows must create child surface coverage. The command can be `command_mapped`, but the opened surface needs its own controls, default values, enable/disable states, event handlers, workflow behavior, and evidence before it can be called complete.
+
+When something was not inspected, record it in `notChecked`. If it has `blocksCompletion: true`, it blocks `technical_stable`, `parity_reviewed`, and `product_accepted`.
 
 ### Visual Verification Profile
 
@@ -77,11 +83,15 @@ hardware_certified
 
 Software implementation and official hardware certification are separate. `hardware_certified` requires explicit certification evidence.
 
+When hardware prevents live validation, PBE must use substitute evidence before closing software readiness: mock-backed UI validation, fake read/result validation, UI automation with hardware disabled, or an explicit `manual_not_verified` item that remains blocking.
+
 ### Verification Miss Log
 
 When feedback reveals a verification gap, PBE records why the previous verification missed it.
 
 If the same miss type repeats, PBE promotes the learning into the next validation contract instead of treating it as another local patch.
+
+`legacy_subdialog_control_miss` is a promotion-class miss. It should create or update child surface inventory, Test Tree coverage, final coverage checks, and Not Checked reporting before similar work is submitted again.
 
 Repeated failure promotion can add Test Tree nodes, Evidence requirements, Visual Verification checks, or stop conditions. It must not silently expand implementation scope.
 

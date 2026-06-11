@@ -99,7 +99,11 @@ Check parity/completeness UI controls when present:
 2. Surface completion separates technical stability, parity review, and user acceptance.
 3. Popup, clipping, alignment, resize/DPI, and runtime coordinate concerns are included in the visual verification profile when they matter.
 4. Missing, deferred, blocked, and verification-pending controls remain visible in the surface completion ledger.
-5. A visual mismatch feedback item can trigger surface re-audit and verification expansion, but implementation scope must remain bounded by Change/Impact and selected/foundation Work nodes.
+5. Commands that open dialogs, popups, subdialogs, or secondary workflows have child surface inventory and child UI verification.
+6. Required controls, default values, enable/disable states, and event handlers are checked for opened surfaces, not inferred from the parent command.
+7. Hardware-gated UI actions have mock-backed, fake-result, UI-automation, or explicit blocking manual-not-verified evidence before closure.
+8. Blocking `notChecked` UI items prevent final UX audit pass.
+9. A visual mismatch feedback item can trigger surface re-audit and verification expansion, but implementation scope must remain bounded by Change/Impact and selected/foundation Work nodes.
 
 If gaps exist, report them as blocking issues before ACEP generation or final completion.
 
@@ -137,6 +141,7 @@ Include:
 - Impact/Reopen UI issues
 - Acceptance Tree UI guard result
 - surface completion ledger result, when active
+- dialog/subdialog and not-checked UI result, when active
 - legacy inventory and visual profile result, when active
 - blocking issues
 - pass/fail result

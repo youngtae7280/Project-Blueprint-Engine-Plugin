@@ -124,6 +124,10 @@ Enforce these rules when generating ACEP:
 - No slice completion recorded as whole-project completion.
 - No technical stability reported as parity review or product acceptance.
 - No parity claim without inventory/evidence when the parity/completeness profile is active.
+- No command-mapped dialog, popup, subdialog, or secondary workflow treated as complete without child surface inventory, Work/Test coverage, and evidence.
+- No required legacy control or event handler left missing, unverified, or not checked while claiming technical stability or parity.
+- No hardware-gated surface closed without mock-backed, fake-result, UI-automation, or explicit blocking manual-not-verified evidence.
+- No blocking `notChecked` item hidden from final coverage or final report.
 - No hardware certification claim without certification evidence.
 - No silent Product Tree edits during execution.
 - Any product/scope/UX/risk/acceptance/verification change must become a Change Node.
@@ -323,6 +327,9 @@ Every verification item must identify its linked Product, Work, task, and Test n
 - evidence for every included Test node
 - validation pass or not-runnable explanation
 - UI/UX evidence for required screens and states
+- child dialog/subdialog/control/event-handler evidence for commands that open secondary surfaces
+- hardware-gated substitute evidence or explicit blocking manual-not-verified entries
+- a Not Checked section for uninspected dialogs, controls, event handlers, hardware actions, and workflow states
 - completed Final Coverage Check
 - Result Review Pack creation
 - delivery status `submitted_for_review`
@@ -331,7 +338,7 @@ Every verification item must identify its linked Product, Work, task, and Test n
 
 `17-final-report-template.md` must include cycle ID, included/excluded nodes, requirement, task, verification, UI/UX confirmation, approved UI/UX implemented, traceability, evidence, files changed, deviations, known issues, delivery status, user review, revision history, stop conditions, and remaining manual review sections.
 
-When parity/completeness artifacts exist, final coverage and final report sections must also include surface completion, legacy inventory gaps, visual/runtime verification, hardware readiness, and verification miss promotion status.
+When parity/completeness artifacts exist, final coverage and final report sections must also include surface completion, legacy inventory gaps, dialog/subdialog inventory gaps, event-handler gaps, visual/runtime verification, hardware readiness, verification miss promotion status, and all blocking Not Checked items.
 
 ## Manifest Rules
 

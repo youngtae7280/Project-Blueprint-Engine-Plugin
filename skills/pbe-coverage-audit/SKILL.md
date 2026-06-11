@@ -113,10 +113,15 @@ Check parity/completeness controls when present:
 2. `technical_stable`, `parity_reviewed`, and `product_accepted` are not collapsed into one completion state.
 3. Parity cannot be claimed without a linked legacy inventory for legacy migration or parity-critical surfaces.
 4. Legacy inventory controls with `visible_enabled` and `requiredForParity: true` are not left `missing` or `unverified` while the surface claims `parity_reviewed`.
-5. Hardware features marked `hardware_certified` have certification evidence.
-6. Visual verification profiles marked `required` have passed checks or explicit not-runnable evidence/reasons.
-7. Verification miss log entries with repeated occurrences are promoted, blocked, or waiting on a human decision; they are not ignored as ordinary warnings.
-8. Ledger findings may expand audit and verification scope, but implementation scope still requires Product/Project/Work nodes and approved Change/Impact flow.
+5. Legacy event handlers with `requiredForParity: true` are not left `missing` or `unverified` while the surface claims `technical_stable`, `parity_reviewed`, or `product_accepted`.
+6. Commands that open dialogs, popups, subdialogs, or secondary workflows have child surface inventory, child Work/Test nodes, and evidence for opened controls and behavior.
+7. `command_mapped` items do not close workflow parity without `dialog_surface_complete`, `workflow_behavior_complete`, `mock_verified`, or `hardware_user_testable` evidence.
+8. Hardware-gated surfaces have mock-backed UI, fake result, UI automation with hardware disabled, or explicit `manual_not_verified` blocking entries.
+9. Any `notChecked` item with `blocksCompletion: true` blocks `technical_stable`, `parity_reviewed`, and `product_accepted`.
+10. Hardware features marked `hardware_certified` have certification evidence.
+11. Visual verification profiles marked `required` have passed checks or explicit not-runnable evidence/reasons.
+12. Verification miss log entries with repeated occurrences or `legacy_subdialog_control_miss` are promoted, blocked, or waiting on a human decision; they are not ignored as ordinary warnings.
+13. Ledger findings may expand audit and verification scope, but implementation scope still requires Product/Project/Work nodes and approved Change/Impact flow.
 
 When possible, run or mirror:
 
@@ -168,6 +173,8 @@ Include:
 - Change/Impact/Reopen result
 - Acceptance Tree guard result
 - parity/completeness ledger result, when active
+- dialog/subdialog inventory and event-handler result, when active
+- not-checked blocking items, when active
 - hardware readiness result, when active
 - verification miss promotion result, when active
 - selected/foundation coverage result

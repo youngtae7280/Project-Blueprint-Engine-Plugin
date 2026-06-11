@@ -122,6 +122,13 @@
 - Legacy inventory checked:
 - Required legacy controls missing:
 - Required legacy controls unverified:
+- Required legacy event handlers missing:
+- Required legacy event handlers unverified:
+- Commands opening dialogs without child surface inventory:
+- Dialog/subdialog controls not checked:
+- Dialog/subdialog behaviors not checked:
+- Hardware-gated dialogs lacking mock-backed or manual-open evidence:
+- Not checked items blocking completion:
 - Visual/runtime profile checked:
 - Visual/runtime checks passed:
 - Visual/runtime checks not runnable:
@@ -167,6 +174,9 @@ The current slice can be submitted for review only if:
 - every included Test node has current Evidence Tree evidence or an explicit not-runnable explanation
 - no required UI/UX state is missing without explanation
 - no parity-critical surface claims parity without inventory and evidence
+- no command that opens a dialog claims technical stability or parity without child dialog/control/event inventory
+- no hardware-gated dialog is closed without mock-backed, fake-result, UI-automation-disabled, or explicit manual-not-verified status
+- every final report lists dialogs, controls, hardware-backed actions, and states that were not checked
 - no hardware-dependent feature claims certification without certification evidence
 - no repeated verification miss is ignored without promotion, blocking, or human decision
 - no stale, invalidated, or reopened item is being treated as accepted

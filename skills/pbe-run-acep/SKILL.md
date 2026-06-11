@@ -81,15 +81,16 @@ Also read ACEP compatibility inputs:
 24. Fix failures and revalidate.
 25. Run broader validation at phase or pack completion.
 26. When parity/completeness profile artifacts exist, update surface completion, visual/runtime verification, hardware readiness, and verification miss evidence before final coverage.
-27. Complete `16-final-coverage-check.md`.
-28. Check `13-completion-criteria.md`.
-29. Write the final report using `17-final-report-template.md` only when technical completion criteria are satisfied.
-30. Do not mark the result `accepted` or `accepted_done`.
-31. End as `submitted_for_review` and run or recommend `pbe-review-result`.
-32. Update `pbe-state.json.autoflow.state` to `ACEP_RUN_DONE`.
-33. Add `run_acep` to `autoflow.completedSteps`.
-34. Set `autoflow.nextStep` to `review_result`.
-35. Continue automatically to Result Review gate.
+27. Record any uninspected dialog, subdialog, control, event handler, hardware action, or workflow state in the final report `Not Checked` section and in the relevant control artifact.
+28. Complete `16-final-coverage-check.md`.
+29. Check `13-completion-criteria.md`.
+30. Write the final report using `17-final-report-template.md` only when technical completion criteria are satisfied.
+31. Do not mark the result `accepted` or `accepted_done`.
+32. End as `submitted_for_review` and run or recommend `pbe-review-result`.
+33. Update `pbe-state.json.autoflow.state` to `ACEP_RUN_DONE`.
+34. Add `run_acep` to `autoflow.completedSteps`.
+35. Set `autoflow.nextStep` to `review_result`.
+36. Continue automatically to Result Review gate.
 
 ## Per-Task Loop
 
@@ -193,6 +194,10 @@ Stop when work requires:
 - unavailable dependency or environment that blocks meaningful progress
 - unresolved traceability gap that blocks completion
 - missing UI/UX evidence for a required UI screen or state
+- command-mapped dialog, popup, subdialog, or workflow that lacks child surface inventory, child Test coverage, or evidence
+- required legacy control or event handler that remains missing, unverified, or not checked
+- hardware-gated surface that lacks mock-backed, fake-result, UI-automation, or explicit blocking manual-not-verified evidence
+- a not-checked item that blocks technical stability, parity review, or product acceptance
 - implementation would conflict with confirmed UI/UX direction
 - missing Cycle Contract or missing Node Execution Contract for a selected Work node
 - a parallel group task requires shared schema, shared type, build config, auth, permission, migration, package configuration, deployment, billing, secret handling, or another forbidden change
@@ -213,10 +218,14 @@ Before final completion:
 7. Verify there are no verification items without evidence or not-runnable explanation.
 8. Verify no required UI state is missing without explanation.
 9. Verify any active surface completion ledger does not claim parity without inventory and evidence.
-10. Verify any hardware-certified feature has certification evidence.
-11. Verify any required visual profile checks passed or have explicit not-runnable evidence/reason.
-12. Verify no unresolved stop condition remains.
-13. Verify excluded nodes were not changed.
+10. Verify commands that open dialogs have child surface inventory and workflow/dialog evidence.
+11. Verify required legacy controls and event handlers are matched or explicitly deferred/blocked/out of scope.
+12. Verify hardware-gated surfaces have substitute evidence or blocking `manual_not_verified` entries.
+13. Verify the final report lists every not-checked dialog, control, event handler, hardware action, and workflow state.
+14. Verify any hardware-certified feature has certification evidence.
+15. Verify any required visual profile checks passed or have explicit not-runnable evidence/reason.
+16. Verify no unresolved stop condition remains.
+17. Verify excluded nodes were not changed.
 
 If coverage issues remain, continue working or record a stop condition. Do not write the final report first.
 
@@ -269,6 +278,8 @@ Include:
 - traceability matrix result
 - UI/UX evidence result
 - surface completion and parity result, when active
+- dialog/subdialog controls and event-handler result, when active
+- Not Checked section summary
 - hardware readiness result, when active
 - verification miss promotion result, when active
 - final coverage check result

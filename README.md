@@ -166,6 +166,8 @@ If work is not derived from Product/Project nodes, it is not executable work.
 If a test does not verify Product/Work nodes, it is not sufficient verification.
 If evidence does not attach to Test/Product nodes, it does not close the branch.
 If a change invalidates completed work, affected nodes reopen instead of being silently overwritten.
+If a command opens another surface, command mapping does not complete the opened workflow.
+If a control, event handler, hardware action, or workflow state was not checked, it must be reported as not checked and may block closure.
 ```
 
 ## What PBE Produces

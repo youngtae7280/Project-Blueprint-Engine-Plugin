@@ -195,6 +195,10 @@ When active:
 6. Do not treat build/open smoke as visual parity evidence.
 7. Do not silently expand implementation scope from a ledger finding. Use Change Tree, Impact Tree, and the relevant human gate when product meaning, UX, acceptance, verification, or selected scope changes.
 8. Separate `technical_stable`, `parity_reviewed`, and user-controlled `product_accepted`.
+9. Do not treat command mapping as workflow completion. If a command opens a dialog, popup, subdialog, or secondary workflow, create child surface inventory plus Work/Test/Evidence coverage for the opened surface.
+10. Required legacy controls and event handlers must be matched or explicitly deferred, blocked, out of scope, or listed as blocking not-checked items before any technical stability or parity claim.
+11. Hardware-gated surfaces need mock-backed, fake-result, UI-automation, or explicit blocking manual-not-verified evidence before closure.
+12. Final reports must separate completed, partially verified, skipped, and not checked items. Not checked items with `blocksCompletion: true` block `technical_stable`, `parity_reviewed`, and `product_accepted`.
 
 ## RPD Tree Walk
 

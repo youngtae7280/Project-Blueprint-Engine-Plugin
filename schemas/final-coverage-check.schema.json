@@ -91,6 +91,12 @@
         "productAcceptedSurfaceIds": { "type": "array", "items": { "type": "string" } },
         "missingLegacyControlIds": { "type": "array", "items": { "type": "string" } },
         "unverifiedLegacyControlIds": { "type": "array", "items": { "type": "string" } },
+        "missingLegacyEventHandlerIds": { "type": "array", "items": { "type": "string" } },
+        "unverifiedLegacyEventHandlerIds": { "type": "array", "items": { "type": "string" } },
+        "commandsOpeningDialogsWithoutChildSurfaceIds": { "type": "array", "items": { "type": "string" } },
+        "unverifiedSubdialogSurfaceIds": { "type": "array", "items": { "type": "string" } },
+        "hardwareGatedSurfacesWithoutSubstituteEvidence": { "type": "array", "items": { "type": "string" } },
+        "notCheckedBlockingItemIds": { "type": "array", "items": { "type": "string" } },
         "notRunnableVisualCheckIds": { "type": "array", "items": { "type": "string" } },
         "hardwareVerificationPendingIds": { "type": "array", "items": { "type": "string" } },
         "unpromotedRepeatedMissIds": { "type": "array", "items": { "type": "string" } }
@@ -110,6 +116,10 @@
         "acceptedNodesWithStaleEvidence": { "type": "array", "items": { "type": "string" } },
         "parityClaimedSurfacesWithoutInventory": { "type": "array", "items": { "type": "string" } },
         "parityClaimedSurfacesWithoutEvidence": { "type": "array", "items": { "type": "string" } },
+        "dialogSurfacesWithoutInventory": { "type": "array", "items": { "type": "string" } },
+        "dialogSurfacesWithOpenNotCheckedItems": { "type": "array", "items": { "type": "string" } },
+        "legacyEventHandlersWithoutEvidence": { "type": "array", "items": { "type": "string" } },
+        "hardwareGatedDialogsWithoutSubstituteEvidence": { "type": "array", "items": { "type": "string" } },
         "hardwareCertifiedItemsWithoutEvidence": { "type": "array", "items": { "type": "string" } },
         "repeatedMissesWithoutPromotion": { "type": "array", "items": { "type": "string" } }
       },

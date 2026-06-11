@@ -9,7 +9,7 @@
     "profileApplicability": {
       "type": "array",
       "items": {
-        "enum": ["legacy_migration", "parity_critical", "ui_heavy", "hardware_dependent"]
+        "enum": ["legacy_migration", "parity_critical", "ui_heavy", "hardware_dependent", "subdialog_parity"]
       }
     },
     "surfaces": {
@@ -24,6 +24,14 @@
       "properties": {
         "id": { "type": "string" },
         "title": { "type": "string" },
+        "surfaceKind": {
+          "enum": ["screen", "dialog", "popup", "subdialog", "command", "workflow", "other"]
+        },
+        "parentSurfaceId": { "type": ["string", "null"] },
+        "childSurfaceIds": { "type": "array", "items": { "type": "string" } },
+        "opensDialog": { "type": "boolean" },
+        "openedByCommandIds": { "type": "array", "items": { "type": "string" } },
+        "hardwareGated": { "type": "boolean" },
         "scopeClass": { "enum": ["selected", "foundation", "deferred", "blocked", "out_of_scope"] },
         "completionLayer": {
           "enum": ["not_started", "technical_stable", "parity_reviewed", "product_accepted", "blocked"]
@@ -44,6 +52,27 @@
           "type": "array",
           "items": { "$ref": "#/$defs/completionItem" }
         },
+        "subdialogAudit": {
+          "type": "object",
+          "properties": {
+            "required": { "type": "boolean" },
+            "status": {
+              "enum": ["not_required", "pending_inventory", "inventory_ready", "verified", "gap_known", "blocked"]
+            },
+            "legacyDialogIds": { "type": "array", "items": { "type": "string" } },
+            "childSurfaceIds": { "type": "array", "items": { "type": "string" } },
+            "legacyInventoryIds": { "type": "array", "items": { "type": "string" } },
+            "testNodeIds": { "type": "array", "items": { "type": "string" } },
+            "evidenceNodeIds": { "type": "array", "items": { "type": "string" } },
+            "notCheckedIds": { "type": "array", "items": { "type": "string" } },
+            "reason": { "type": "string" }
+          },
+          "additionalProperties": true
+        },
+        "notChecked": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/notCheckedItem" }
+        },
         "deferredParityDebt": {
           "type": "array",
           "items": { "type": "string" }
@@ -58,14 +87,52 @@
       "properties": {
         "id": { "type": "string" },
         "label": { "type": "string" },
+        "itemKind": {
+          "enum": ["command", "dialog_surface", "control", "event_handler", "workflow_behavior", "mock_check", "hardware_action", "state", "other"]
+        },
         "status": {
-          "enum": ["implemented", "missing", "deferred", "blocked", "verification_pending", "out_of_scope"]
+          "enum": [
+            "implemented",
+            "missing",
+            "deferred",
+            "blocked",
+            "verification_pending",
+            "out_of_scope",
+            "command_mapped",
+            "dialog_surface_complete",
+            "workflow_behavior_complete",
+            "mock_verified",
+            "hardware_user_testable",
+            "hardware_certification_pending",
+            "not_checked"
+          ]
+        },
+        "hardwareGated": { "type": "boolean" },
+        "substituteEvidenceType": {
+          "enum": ["mock_backed_ui", "fake_read_result", "ui_automation_hardware_disabled", "manual_not_verified", "not_required"]
         },
         "productNodeIds": { "type": "array", "items": { "type": "string" } },
         "workNodeIds": { "type": "array", "items": { "type": "string" } },
         "testNodeIds": { "type": "array", "items": { "type": "string" } },
         "evidenceNodeIds": { "type": "array", "items": { "type": "string" } },
         "reason": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "notCheckedItem": {
+      "type": "object",
+      "required": ["id", "itemType", "label", "reason", "blocksCompletion"],
+      "properties": {
+        "id": { "type": "string" },
+        "itemType": {
+          "enum": ["dialog", "subdialog", "control", "event_handler", "hardware_action", "state", "workflow", "other"]
+        },
+        "label": { "type": "string" },
+        "reason": { "type": "string" },
+        "blocksCompletion": { "type": "boolean" },
+        "requiredFollowUp": { "type": "string" },
+        "testNodeIds": { "type": "array", "items": { "type": "string" } },
+        "evidenceNodeIds": { "type": "array", "items": { "type": "string" } }
       },
       "additionalProperties": true
     }

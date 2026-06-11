@@ -3,8 +3,9 @@
   "$id": "https://local/project-blueprint-engine/verification-miss-log.schema.json",
   "title": "PBE Verification Miss Log",
   "type": "object",
-  "required": ["version", "misses"],
+  "required": ["misses"],
   "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
     "version": { "type": "string" },
     "misses": {
       "type": "array",
@@ -14,14 +15,31 @@
   "$defs": {
     "miss": {
       "type": "object",
-      "required": ["id", "missType", "occurrenceCount", "whyPreviousVerificationMissedThis", "promotionDecision", "status"],
+      "required": ["id", "status"],
       "properties": {
         "id": { "type": "string" },
+        "sourceFeedbackId": { "type": "string" },
         "feedbackItemIds": { "type": "array", "items": { "type": "string" } },
+        "affectedRequirementIds": { "type": "array", "items": { "type": "string" } },
+        "affectedTaskIds": { "type": "array", "items": { "type": "string" } },
+        "affectedVerificationIds": { "type": "array", "items": { "type": "string" } },
         "affectedNodeIds": { "type": "array", "items": { "type": "string" } },
+        "type": {
+          "enum": [
+            "legacy_inventory_gap",
+            "legacy_subdialog_control_miss",
+            "visual_runtime_gap",
+            "hardware_state_gap",
+            "test_gap",
+            "scope_gap",
+            "acceptance_gap",
+            "other"
+          ]
+        },
         "missType": {
           "enum": [
             "legacy_inventory_gap",
+            "legacy_subdialog_control_miss",
             "visual_runtime_gap",
             "hardware_state_gap",
             "test_gap",
@@ -31,13 +49,28 @@
           ]
         },
         "occurrenceCount": { "type": "integer", "minimum": 1 },
-        "whyPreviousVerificationMissedThis": { "type": "string" },
+        "summary": { "type": "string" },
+        "whyPreviousVerificationMissedThis": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ]
+        },
+        "requiredPbeImprovements": { "type": "array", "items": { "type": "string" } },
         "promotionDecision": { "enum": ["not_required", "pending", "promoted", "blocked"] },
+        "promotion": {
+          "type": "object",
+          "properties": {
+            "status": { "enum": ["not_required", "pending", "proposed", "promoted", "blocked"] },
+            "reason": { "type": "string" }
+          },
+          "additionalProperties": true
+        },
         "promotedTestNodeIds": { "type": "array", "items": { "type": "string" } },
         "promotedEvidenceNodeIds": { "type": "array", "items": { "type": "string" } },
         "promotedContractRefs": { "type": "array", "items": { "type": "string" } },
         "blockingReason": { "type": "string" },
-        "status": { "enum": ["open", "promoted", "resolved", "blocked"] }
+        "status": { "enum": ["open", "reported_for_pbe_improvement", "promoted", "resolved", "blocked"] }
       },
       "additionalProperties": true
     }

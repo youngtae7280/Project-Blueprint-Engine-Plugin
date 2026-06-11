@@ -141,6 +141,65 @@ describe('PBE v2 tree validator', () => {
     expect(result.status).toBe(1)
     expect(result.output).toContain('repeated 2 times but was resolved without promotion or blocking')
   })
+
+  it('rejects closed dialog surfaces that only prove command mapping', () => {
+    const workspace = createTreeValidatorWorkspace()
+    writeProductTree(workspace)
+    writeWorkTree(workspace, 'PT-1')
+    writeTestTree(workspace, 'PT-1', 'WT-1', 'planned')
+    writeCommandMappedDialogSurface(workspace)
+
+    const result = runTreeValidator(workspace)
+
+    expect(result.status).toBe(1)
+    expect(result.output).toContain('opens a dialog/workflow but lacks childSurfaceIds or subdialog legacyInventoryIds')
+    expect(result.output).toContain('from command mapping only; workflow/dialog evidence is required')
+  })
+
+  it('rejects parity claims when required legacy event handlers are unverified', () => {
+    const workspace = createTreeValidatorWorkspace()
+    writeProductTree(workspace)
+    writeWorkTree(workspace, 'PT-1')
+    writeTestTree(workspace, 'PT-1', 'WT-1', 'passed')
+    writeEvidenceTree(workspace, [
+      {
+        id: 'EV-1',
+        type: 'manual_note',
+        status: 'attached',
+        provesNodeIds: ['TT-1'],
+      },
+    ])
+    writeLegacyInventoryWithUnverifiedHandler(workspace)
+    writeParityReviewedSurfaceWithInventory(workspace)
+
+    const result = runTreeValidator(workspace)
+
+    expect(result.status).toBe(1)
+    expect(result.output).toContain('claims parity but required event handler EVT-READ is unverified')
+    expect(result.output).toContain('cannot close while legacy event handler EVT-READ is unverified')
+  })
+
+  it('rejects hardware-gated closed surfaces without substitute evidence', () => {
+    const workspace = createTreeValidatorWorkspace()
+    writeProductTree(workspace)
+    writeWorkTree(workspace, 'PT-1')
+    writeTestTree(workspace, 'PT-1', 'WT-1', 'planned')
+    writeHardwareGatedSurfaceWithoutSubstituteEvidence(workspace)
+
+    const result = runTreeValidator(workspace)
+
+    expect(result.status).toBe(1)
+    expect(result.output).toContain('is hardware-gated but lacks mock/fake/UI-automation substitute evidence')
+  })
+
+  it('accepts WindowsUtility-style verification miss process-improvement logs', () => {
+    const workspace = createTreeValidatorWorkspace()
+    writeWindowsUtilityStyleVerificationMissLog(workspace)
+
+    const result = runTreeValidator(workspace)
+
+    expect(result.status).toBe(0)
+  })
 })
 
 function createTreeValidatorWorkspace() {
@@ -353,6 +412,178 @@ function writeSurfaceCompletionLedger(workspace: string) {
   })
 }
 
+function writeCommandMappedDialogSurface(workspace: string) {
+  writeJson(join(workspace, '.pbe', 'control', 'surface-completion-ledger.json'), {
+    version: '0.2.1-parity-completeness',
+    profileApplicability: ['legacy_migration', 'subdialog_parity'],
+    surfaces: [
+      {
+        id: 'SURFACE-MEMORY-INFO-COMMAND',
+        title: 'Memory Info command',
+        surfaceKind: 'command',
+        opensDialog: true,
+        scopeClass: 'selected',
+        completionLayer: 'technical_stable',
+        parityClaim: 'inventory_ready',
+        productNodeIds: ['PT-1'],
+        projectNodeIds: [],
+        workNodeIds: ['WT-1'],
+        testNodeIds: ['TT-1'],
+        evidenceNodeIds: [],
+        legacyInventoryIds: [],
+        visualProfileIds: [],
+        hardwareReadinessIds: [],
+        acceptanceBranchIds: [],
+        childSurfaceIds: [],
+        subdialogAudit: {
+          required: true,
+          status: 'pending_inventory',
+          childSurfaceIds: [],
+          legacyInventoryIds: [],
+          testNodeIds: ['TT-1'],
+          evidenceNodeIds: [],
+        },
+        items: [
+          {
+            id: 'ITEM-CMD-MAPPED',
+            label: 'Config Memory Info command routes to a dialog',
+            itemKind: 'command',
+            status: 'command_mapped',
+            productNodeIds: ['PT-1'],
+            workNodeIds: ['WT-1'],
+            testNodeIds: ['TT-1'],
+            evidenceNodeIds: [],
+          },
+        ],
+      },
+    ],
+  })
+}
+
+function writeLegacyInventoryWithUnverifiedHandler(workspace: string) {
+  writeJson(join(workspace, '.pbe', 'control', 'legacy-control-inventory.json'), {
+    version: '0.2.1-parity-completeness',
+    inventories: [
+      {
+        id: 'LCI-MEMORY-INFO',
+        surfaceId: 'SURFACE-MEMORY-INFO-DIALOG',
+        title: 'Memory Info dialog',
+        sourceKind: 'rc_dialog',
+        sourcePaths: ['legacy/Config.rc'],
+        dialogResourceIds: ['IDD_CONFIG_MEMORY_INFO'],
+        claimStatus: 'parity_claimed',
+        productNodeIds: ['PT-1'],
+        projectNodeIds: [],
+        workNodeIds: ['WT-1'],
+        testNodeIds: ['TT-1'],
+        evidenceNodeIds: ['EV-1'],
+        controls: [
+          {
+            id: 'IDC_READ_MEMORY_INFO',
+            label: 'Read Memory Info',
+            controlType: 'button',
+            legacyState: 'visible_enabled',
+            currentStatus: 'matched',
+            requiredForParity: true,
+            eventHandlerIds: ['EVT-READ'],
+            evidenceNodeIds: ['EV-1'],
+          },
+        ],
+        eventHandlers: [
+          {
+            id: 'EVT-READ',
+            legacyHandler: 'OnBnClickedReadMemoryInfo',
+            triggerControlId: 'IDC_READ_MEMORY_INFO',
+            expectedBehavior: 'Reads memory info and displays the result.',
+            requiredForParity: true,
+            currentStatus: 'unverified',
+            evidenceNodeIds: [],
+          },
+        ],
+      },
+    ],
+  })
+}
+
+function writeParityReviewedSurfaceWithInventory(workspace: string) {
+  writeJson(join(workspace, '.pbe', 'control', 'surface-completion-ledger.json'), {
+    version: '0.2.1-parity-completeness',
+    surfaces: [
+      {
+        id: 'SURFACE-MEMORY-INFO-DIALOG',
+        title: 'Memory Info dialog',
+        surfaceKind: 'dialog',
+        scopeClass: 'selected',
+        completionLayer: 'parity_reviewed',
+        parityClaim: 'parity_reviewed',
+        productNodeIds: ['PT-1'],
+        projectNodeIds: [],
+        workNodeIds: ['WT-1'],
+        testNodeIds: ['TT-1'],
+        evidenceNodeIds: ['EV-1'],
+        legacyInventoryIds: ['LCI-MEMORY-INFO'],
+        visualProfileIds: [],
+        hardwareReadinessIds: [],
+        acceptanceBranchIds: [],
+        childSurfaceIds: [],
+        subdialogAudit: {
+          required: true,
+          status: 'verified',
+          childSurfaceIds: [],
+          legacyInventoryIds: ['LCI-MEMORY-INFO'],
+          testNodeIds: ['TT-1'],
+          evidenceNodeIds: ['EV-1'],
+        },
+        items: [
+          {
+            id: 'ITEM-DIALOG-SURFACE',
+            label: 'Memory Info dialog visible controls',
+            itemKind: 'dialog_surface',
+            status: 'dialog_surface_complete',
+            evidenceNodeIds: ['EV-1'],
+          },
+        ],
+      },
+    ],
+  })
+}
+
+function writeHardwareGatedSurfaceWithoutSubstituteEvidence(workspace: string) {
+  writeJson(join(workspace, '.pbe', 'control', 'surface-completion-ledger.json'), {
+    version: '0.2.1-parity-completeness',
+    surfaces: [
+      {
+        id: 'SURFACE-HARDWARE-DIALOG',
+        title: 'Hardware-gated dialog',
+        surfaceKind: 'dialog',
+        scopeClass: 'selected',
+        completionLayer: 'technical_stable',
+        parityClaim: 'inventory_ready',
+        hardwareGated: true,
+        productNodeIds: ['PT-1'],
+        projectNodeIds: [],
+        workNodeIds: ['WT-1'],
+        testNodeIds: ['TT-1'],
+        evidenceNodeIds: [],
+        legacyInventoryIds: [],
+        visualProfileIds: [],
+        hardwareReadinessIds: [],
+        acceptanceBranchIds: [],
+        items: [
+          {
+            id: 'ITEM-MANUAL-NOT-VERIFIED',
+            label: 'Hardware action was not clicked',
+            itemKind: 'hardware_action',
+            status: 'hardware_certification_pending',
+            hardwareGated: true,
+            substituteEvidenceType: 'manual_not_verified',
+          },
+        ],
+      },
+    ],
+  })
+}
+
 function writeHardwareReadinessLedger(workspace: string) {
   writeJson(join(workspace, '.pbe', 'control', 'hardware-readiness-ledger.json'), {
     version: '0.2.1-parity-completeness',
@@ -387,6 +618,36 @@ function writeVerificationMissLog(workspace: string) {
         promotedEvidenceNodeIds: [],
         promotedContractRefs: [],
         status: 'resolved',
+      },
+    ],
+  })
+}
+
+function writeWindowsUtilityStyleVerificationMissLog(workspace: string) {
+  writeJson(join(workspace, '.pbe', 'control', 'verification-miss-log.json'), {
+    schemaVersion: 1,
+    generatedAt: '2026-06-11T00:00:00.000Z',
+    misses: [
+      {
+        id: 'vml-memory-info-parity-miss',
+        sourceFeedbackId: 'fb-memory-info-dialog-controls-missing',
+        affectedRequirementIds: ['req-memory-info'],
+        affectedTaskIds: ['task-memory-info-command'],
+        affectedVerificationIds: ['verify-memory-info-command'],
+        type: 'legacy_subdialog_control_miss',
+        summary: 'Command-level completion missed required Memory Info dialog controls.',
+        whyPreviousVerificationMissedThis: [
+          'Validation checked command availability but did not open the dialog.',
+          'No child surface inventory existed for controls or event handlers.',
+        ],
+        requiredPbeImprovements: [
+          'Promote commands that open dialogs into child surface inventory and tests.',
+        ],
+        promotion: {
+          status: 'proposed',
+          reason: 'Subdialog controls must become explicit Work/Test nodes.',
+        },
+        status: 'reported_for_pbe_improvement',
       },
     ],
   })

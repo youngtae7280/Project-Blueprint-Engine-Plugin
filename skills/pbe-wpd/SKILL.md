@@ -64,6 +64,7 @@ Prefer v2 tree files when present. If `.pbe/tree/product-tree.json` and `.pbe/bl
 9. Create module-aware WorkGraph nodes and edges as a compatibility/dependency view around Work Tree nodes.
 9a. When parity/completeness profile applies, derive or update surface completion and legacy inventory placeholders from Product/Project surface nodes before any parity claim can exist.
 9b. When hardware-dependent work exists, derive or update hardware readiness entries and keep software implementation state separate from certification state.
+9c. When a command opens a dialog, popup, subdialog, or secondary workflow, create child Project/Work nodes for that opened surface instead of treating the command mapping as surface completion.
 10. Add required parallel safety metadata to every Work Tree and WorkGraph node.
 11. Create WorkDesign entries from the Work Tree and WorkGraph, not directly from RPD nodes.
 12. Create a root-level implementation roadmap that references Project Tree, Work Tree, and WorkGraph phases.
@@ -103,6 +104,10 @@ Prefer v2 tree files when present. If `.pbe/tree/product-tree.json` and `.pbe/bl
 - Never create selected or foundation Work Tree nodes without at least one `derivedFromProductNodeIds` link, except the Work Tree root placeholder.
 - Every Project Tree node must list `derivedFromProductNodeIds` or be a root/container node with an explicit root responsibility.
 - For legacy migration or parity-critical surfaces, do not allow a surface to be reported as parity complete unless `legacy-control-inventory.json` exists and is linked to Product/Project/Work nodes.
+- A command that opens a dialog is not complete at command mapping. Add child work for dialog open, visible controls, default values, enable/disable states, button actions, repeated or async behavior, busy/cancel/error states, and legacy event handlers.
+- `command_mapped`, `dialog_surface_complete`, `workflow_behavior_complete`, `mock_verified`, `hardware_user_testable`, and `hardware_certification_pending` are different completion facts. Do not collapse them into `technical_stable`, `parity_reviewed`, or `product_accepted`.
+- If legacy source or resource IDs indicate required controls or event handlers, represent them in `legacy-control-inventory.json` before any parity claim.
+- If hardware prevents live execution, keep the relevant work open until VD provides substitute evidence or the item is explicitly recorded as not checked and blocking.
 - `surface-completion-ledger.json` is a derived view. It must not silently add implementation work outside selected/foundation scope.
 - Hardware-dependent work must use `not_implemented`, `implemented_user_testable`, `hardware_verification_pending`, or `hardware_certified`; do not collapse implementation readiness and certification.
 

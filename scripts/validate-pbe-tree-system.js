@@ -188,6 +188,7 @@ function validateTreeLinks(data) {
   const changeIds = collectChangeIds(data.change)
   const evidenceIds = collectEvidenceIds(data.evidence)
   const legacyInventoryIds = collectInventoryIds(data.legacyInventory)
+  const legacyInventoryMap = collectInventoryMap(data.legacyInventory)
   const surfaceCompletionIds = collectSurfaceIds(data.surfaceCompletion)
   const hardwareReadinessIds = collectFeatureIds(data.hardwareReadiness)
   const visualProfileIds = collectProfileIds(data.visualVerification)
@@ -229,6 +230,8 @@ function validateTreeLinks(data) {
     testIds,
     evidenceIds,
     legacyInventoryIds,
+    legacyInventoryMap,
+    surfaceCompletionIds,
     visualProfileIds,
     hardwareReadinessIds,
   })
@@ -439,6 +442,14 @@ function validateLegacyControlInventory(inventoryTree, refs) {
         errors.push(`legacy inventory ${inventory.id} claims parity but required control ${control.id} is ${control.currentStatus}`)
       }
     }
+    for (const handler of inventory.eventHandlers || []) {
+      if (handler.requiredForParity === true && handler.currentStatus !== 'matched') {
+        errors.push(`legacy inventory ${inventory.id} claims parity but required event handler ${handler.id} is ${handler.currentStatus}`)
+      }
+      if (handler.currentStatus === 'matched' && !hasAny(handler.evidenceNodeIds) && !hasAny(inventory.evidenceNodeIds)) {
+        errors.push(`legacy inventory ${inventory.id} event handler ${handler.id} is matched but lacks evidenceNodeIds`)
+      }
+    }
   }
 }
 
@@ -453,8 +464,13 @@ function validateSurfaceCompletionLedger(ledger, refs) {
     validateKnownIds(surface.testNodeIds, refs.testIds, `surface ${surface.id}`, 'test node')
     validateKnownIds(surface.evidenceNodeIds, refs.evidenceIds, `surface ${surface.id}`, 'evidence node')
     validateKnownIds(surface.legacyInventoryIds, refs.legacyInventoryIds, `surface ${surface.id}`, 'legacy inventory')
+    validateKnownIds(surface.childSurfaceIds, refs.surfaceCompletionIds, `surface ${surface.id}`, 'child surface')
     validateKnownIds(surface.visualProfileIds, refs.visualProfileIds, `surface ${surface.id}`, 'visual verification profile')
     validateKnownIds(surface.hardwareReadinessIds, refs.hardwareReadinessIds, `surface ${surface.id}`, 'hardware readiness feature')
+    validateKnownIds(surface.subdialogAudit?.childSurfaceIds, refs.surfaceCompletionIds, `surface ${surface.id} subdialog audit`, 'child surface')
+    validateKnownIds(surface.subdialogAudit?.legacyInventoryIds, refs.legacyInventoryIds, `surface ${surface.id} subdialog audit`, 'legacy inventory')
+    validateKnownIds(surface.subdialogAudit?.testNodeIds, refs.testIds, `surface ${surface.id} subdialog audit`, 'test node')
+    validateKnownIds(surface.subdialogAudit?.evidenceNodeIds, refs.evidenceIds, `surface ${surface.id} subdialog audit`, 'evidence node')
 
     if (['selected', 'foundation'].includes(surface.scopeClass)) {
       if (!hasAny(surface.productNodeIds)) {
@@ -476,6 +492,69 @@ function validateSurfaceCompletionLedger(ledger, refs) {
     }
     if (surface.completionLayer === 'product_accepted' && !hasAny(surface.acceptanceBranchIds)) {
       errors.push(`surface ${surface.id} is product_accepted but lacks acceptanceBranchIds`)
+    }
+    validateWorkflowParitySurface(surface, refs)
+  }
+}
+
+function validateWorkflowParitySurface(surface, refs) {
+  const closingLayers = new Set(['technical_stable', 'parity_reviewed', 'product_accepted'])
+  if (!closingLayers.has(surface.completionLayer)) {
+    return
+  }
+
+  const requiresNestedInventory =
+    surface.opensDialog === true ||
+    surface.subdialogAudit?.required === true ||
+    surface.surfaceKind === 'workflow'
+  if (requiresNestedInventory) {
+    const childSurfaceIds = [
+      ...(surface.childSurfaceIds || []),
+      ...(surface.subdialogAudit?.childSurfaceIds || []),
+    ]
+    const inventoryIds = [
+      ...(surface.legacyInventoryIds || []),
+      ...(surface.subdialogAudit?.legacyInventoryIds || []),
+    ]
+    if (!hasAny(childSurfaceIds) && !hasAny(inventoryIds)) {
+      errors.push(`surface ${surface.id} opens a dialog/workflow but lacks childSurfaceIds or subdialog legacyInventoryIds`)
+    }
+    if (surface.subdialogAudit?.required === true && surface.subdialogAudit.status !== 'verified') {
+      errors.push(`surface ${surface.id} subdialog audit is required but status is ${surface.subdialogAudit.status}`)
+    }
+  }
+
+  for (const item of (surface.notChecked || []).filter((entry) => entry.blocksCompletion === true)) {
+    errors.push(`surface ${surface.id} has not_checked item ${item.id} blocking completion`)
+  }
+
+  const commandMappedItems = (surface.items || []).filter((item) => item.status === 'command_mapped')
+  const workflowEvidenceItems = (surface.items || []).filter((item) =>
+    ['implemented', 'dialog_surface_complete', 'workflow_behavior_complete', 'mock_verified', 'hardware_user_testable'].includes(item.status),
+  )
+  if (hasAny(commandMappedItems) && !hasAny(workflowEvidenceItems) && !hasAny(surface.evidenceNodeIds)) {
+    errors.push(`surface ${surface.id} is ${surface.completionLayer} from command mapping only; workflow/dialog evidence is required`)
+  }
+
+  if (surface.hardwareGated === true) {
+    const hasSafeSubstitute = (surface.items || []).some((item) =>
+      ['mock_backed_ui', 'fake_read_result', 'ui_automation_hardware_disabled'].includes(item.substituteEvidenceType) &&
+      (hasAny(item.evidenceNodeIds) || hasAny(surface.evidenceNodeIds)),
+    )
+    if (!hasSafeSubstitute) {
+      errors.push(`surface ${surface.id} is hardware-gated but lacks mock/fake/UI-automation substitute evidence`)
+    }
+  }
+
+  for (const inventoryId of surface.legacyInventoryIds || []) {
+    const inventory = refs.legacyInventoryMap?.get(inventoryId)
+    if (!inventory) {
+      continue
+    }
+    for (const handler of inventory.eventHandlers || []) {
+      if (handler.requiredForParity === true && handler.currentStatus !== 'matched') {
+        errors.push(`surface ${surface.id} cannot close while legacy event handler ${handler.id} is ${handler.currentStatus}`)
+      }
     }
   }
 }
@@ -528,15 +607,21 @@ function validateVerificationMissLog(missLog, refs) {
     return
   }
   for (const miss of missLog.misses || []) {
+    const promotionDecision = miss.promotionDecision || miss.promotion?.status
+    const occurrenceCount = miss.occurrenceCount || 1
+    const missType = miss.missType || miss.type
     validateKnownIds(miss.affectedNodeIds, refs.knownNodeIds, `verification miss ${miss.id}`, 'affected node')
     validateKnownIds(miss.promotedTestNodeIds, refs.testIds, `verification miss ${miss.id}`, 'promoted test node')
     validateKnownIds(miss.promotedEvidenceNodeIds, refs.evidenceIds, `verification miss ${miss.id}`, 'promoted evidence node')
 
-    if (miss.promotionDecision === 'promoted' && !hasAny(miss.promotedTestNodeIds) && !hasAny(miss.promotedEvidenceNodeIds) && !hasAny(miss.promotedContractRefs)) {
+    if (promotionDecision === 'promoted' && !hasAny(miss.promotedTestNodeIds) && !hasAny(miss.promotedEvidenceNodeIds) && !hasAny(miss.promotedContractRefs)) {
       errors.push(`verification miss ${miss.id} is promoted but lacks promoted validation references`)
     }
-    if (miss.occurrenceCount >= 2 && miss.status === 'resolved' && !['promoted', 'blocked'].includes(miss.promotionDecision)) {
-      errors.push(`verification miss ${miss.id} repeated ${miss.occurrenceCount} times but was resolved without promotion or blocking`)
+    if (occurrenceCount >= 2 && miss.status === 'resolved' && !['promoted', 'blocked'].includes(promotionDecision)) {
+      errors.push(`verification miss ${miss.id} repeated ${occurrenceCount} times but was resolved without promotion or blocking`)
+    }
+    if (missType === 'legacy_subdialog_control_miss' && !['proposed', 'promoted', 'blocked'].includes(promotionDecision) && miss.status !== 'reported_for_pbe_improvement') {
+      errors.push(`verification miss ${miss.id} is a legacy subdialog control miss but lacks promotion or blocking decision`)
     }
   }
 }
@@ -687,6 +772,10 @@ function collectEvidenceIds(evidenceTree) {
 
 function collectInventoryIds(inventoryTree) {
   return new Set((inventoryTree?.inventories || []).map((inventory) => inventory.id).filter(Boolean))
+}
+
+function collectInventoryMap(inventoryTree) {
+  return new Map((inventoryTree?.inventories || []).filter((inventory) => inventory.id).map((inventory) => [inventory.id, inventory]))
 }
 
 function collectSurfaceIds(ledger) {

@@ -7,6 +7,7 @@
       "title": "Primary legacy surface inventory",
       "sourceKind": "manual_reference",
       "sourcePaths": [],
+      "dialogResourceIds": [],
       "claimStatus": "inventory_only",
       "productNodeIds": ["PT-UI-001"],
       "projectNodeIds": ["PJ-SURFACE-001"],
@@ -17,14 +18,31 @@
         {
           "id": "LCI-CTRL-001",
           "label": "Legacy visible control",
+          "controlType": "button",
           "legacyState": "visible_enabled",
           "currentStatus": "unverified",
           "requiredForParity": true,
+          "eventHandlerIds": ["LCI-EVT-001"],
+          "childSurfaceId": "",
           "currentImplementationRef": "",
           "evidenceNodeIds": [],
           "reason": "Current implementation has not been compared yet."
         }
       ],
+      "eventHandlers": [
+        {
+          "id": "LCI-EVT-001",
+          "legacyHandler": "OnLegacyVisibleControl",
+          "triggerControlId": "LCI-CTRL-001",
+          "expectedBehavior": "Document the legacy handler behavior before claiming parity.",
+          "requiredForParity": true,
+          "currentStatus": "unverified",
+          "currentImplementationRef": "",
+          "evidenceNodeIds": [],
+          "reason": "Event handler parity has not been compared yet."
+        }
+      ],
+      "childSurfaceIds": [],
       "notes": "Inventory is required before parity is claimed for legacy migration or parity-critical surfaces."
     }
   ]

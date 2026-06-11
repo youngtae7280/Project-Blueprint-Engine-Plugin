@@ -3,12 +3,27 @@
   "misses": [
     {
       "id": "VML-001",
+      "sourceFeedbackId": "FB-001",
       "feedbackItemIds": ["FB-001"],
+      "affectedRequirementIds": [],
+      "affectedTaskIds": [],
+      "affectedVerificationIds": [],
       "affectedNodeIds": ["PT-UI-001", "WT-SURFACE-001", "TT-SURFACE-001"],
       "missType": "visual_runtime_gap",
+      "type": "visual_runtime_gap",
       "occurrenceCount": 1,
-      "whyPreviousVerificationMissedThis": "Build and open smoke did not verify runtime layout parity.",
+      "summary": "Previous verification missed a user-visible parity issue.",
+      "whyPreviousVerificationMissedThis": [
+        "Build and open smoke did not verify runtime layout parity."
+      ],
+      "requiredPbeImprovements": [
+        "Promote the missed dimension into a Test Tree, Evidence, visual profile, or stop condition."
+      ],
       "promotionDecision": "pending",
+      "promotion": {
+        "status": "pending",
+        "reason": "A promoted validation contract has not been selected yet."
+      },
       "promotedTestNodeIds": [],
       "promotedEvidenceNodeIds": [],
       "promotedContractRefs": [],

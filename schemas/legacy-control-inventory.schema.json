@@ -23,6 +23,7 @@
           "enum": ["rc_dialog", "xaml", "html", "native_ui", "screenshot", "documentation", "manual_reference", "other"]
         },
         "sourcePaths": { "type": "array", "items": { "type": "string" } },
+        "dialogResourceIds": { "type": "array", "items": { "type": "string" } },
         "claimStatus": {
           "enum": ["inventory_only", "gap_known", "parity_claimed", "not_applicable"]
         },
@@ -35,6 +36,11 @@
           "type": "array",
           "items": { "$ref": "#/$defs/control" }
         },
+        "eventHandlers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/eventHandler" }
+        },
+        "childSurfaceIds": { "type": "array", "items": { "type": "string" } },
         "notes": { "type": "string" }
       },
       "additionalProperties": true
@@ -45,6 +51,7 @@
       "properties": {
         "id": { "type": "string" },
         "label": { "type": "string" },
+        "controlType": { "type": "string" },
         "legacyState": {
           "enum": ["visible_enabled", "visible_disabled", "hidden", "not_applicable"]
         },
@@ -52,6 +59,26 @@
           "enum": ["matched", "missing", "deferred", "blocked", "unverified", "not_applicable"]
         },
         "requiredForParity": { "type": "boolean" },
+        "eventHandlerIds": { "type": "array", "items": { "type": "string" } },
+        "childSurfaceId": { "type": "string" },
+        "currentImplementationRef": { "type": "string" },
+        "evidenceNodeIds": { "type": "array", "items": { "type": "string" } },
+        "reason": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "eventHandler": {
+      "type": "object",
+      "required": ["id", "legacyHandler", "currentStatus"],
+      "properties": {
+        "id": { "type": "string" },
+        "legacyHandler": { "type": "string" },
+        "triggerControlId": { "type": "string" },
+        "expectedBehavior": { "type": "string" },
+        "requiredForParity": { "type": "boolean" },
+        "currentStatus": {
+          "enum": ["matched", "missing", "deferred", "blocked", "unverified", "not_applicable"]
+        },
         "currentImplementationRef": { "type": "string" },
         "evidenceNodeIds": { "type": "array", "items": { "type": "string" } },
         "reason": { "type": "string" }

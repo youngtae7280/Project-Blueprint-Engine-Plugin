@@ -68,6 +68,13 @@
 - Parity reviewed surfaces:
 - Product accepted surfaces:
 - Legacy inventory gaps:
+- Dialog/subdialog inventory gaps:
+- Required controls missing:
+- Required controls unverified:
+- Required event handlers missing:
+- Required event handlers unverified:
+- Workflow behavior gaps:
+- Hardware-gated substitute evidence:
 - Visual/runtime checks:
 - Popup/clipping/alignment checks:
 - Hardware readiness:
@@ -127,6 +134,17 @@
 - Visual/runtime evidence:
 - Hardware readiness evidence:
 - Verification miss root-cause evidence:
+
+## Not Checked
+
+- Dialogs not opened:
+- Subdialogs not inventoried:
+- Controls not inspected:
+- Event handlers not compared:
+- Hardware-backed buttons not clicked:
+- States not verified:
+- Reason each item remains open:
+- Whether each item blocks technical_stable/parity_reviewed/product_accepted:
 
 ## Deviations From Plan
 

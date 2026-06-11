@@ -109,6 +109,8 @@ The review pack must separate:
 - reopened nodes
 - surface completion layer: technical stable, parity reviewed, or product accepted
 - legacy inventory gaps, when active
+- dialog/subdialog, control, and event-handler gaps, when active
+- items listed as not checked and whether they block closure
 - visual/runtime verification gaps, when active
 - hardware readiness and certification state, when active
 - verification misses promoted or still pending, when active
@@ -130,7 +132,8 @@ When the user explicitly approves the current slice:
 3. `accepted_done` requires explicit user acceptance text, `userAcceptedAt`, and linked evidence.
 4. If coverage is partial, use `partial_satisfied` and explain what remains.
 5. If impact analysis marks a branch `stale`, `invalidated`, or `reopened`, do not close it.
-6. After approval, move to `WAITING_NEXT_SLICE_DECISION`.
+6. If required dialog/subdialog controls, event handlers, hardware actions, or workflow states are not checked, do not close the branch beyond the supported partial status.
+7. After approval, move to `WAITING_NEXT_SLICE_DECISION`.
 
 Codex may recommend acceptance status, but the user is the only actor that can grant acceptance.
 

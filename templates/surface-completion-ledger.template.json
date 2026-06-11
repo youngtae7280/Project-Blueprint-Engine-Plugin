@@ -1,10 +1,16 @@
 {
   "version": "0.2.1-parity-completeness",
-  "profileApplicability": ["legacy_migration", "parity_critical", "ui_heavy"],
+  "profileApplicability": ["legacy_migration", "parity_critical", "ui_heavy", "subdialog_parity"],
   "surfaces": [
     {
       "id": "SURFACE-001",
       "title": "Primary surface",
+      "surfaceKind": "screen",
+      "parentSurfaceId": null,
+      "childSurfaceIds": [],
+      "opensDialog": false,
+      "openedByCommandIds": [],
+      "hardwareGated": false,
       "scopeClass": "selected",
       "completionLayer": "not_started",
       "parityClaim": "not_claimed",
@@ -21,12 +27,38 @@
         {
           "id": "SCI-001",
           "label": "Visible command or control",
+          "itemKind": "control",
           "status": "verification_pending",
+          "hardwareGated": false,
+          "substituteEvidenceType": "not_required",
           "productNodeIds": ["PT-UI-001"],
           "workNodeIds": ["WT-SURFACE-001"],
           "testNodeIds": ["TT-SURFACE-001"],
           "evidenceNodeIds": [],
           "reason": "Parity evidence has not been attached yet."
+        }
+      ],
+      "subdialogAudit": {
+        "required": false,
+        "status": "not_required",
+        "legacyDialogIds": [],
+        "childSurfaceIds": [],
+        "legacyInventoryIds": ["LCI-001"],
+        "testNodeIds": ["TT-SURFACE-001"],
+        "evidenceNodeIds": [],
+        "notCheckedIds": [],
+        "reason": "Set required=true when this surface or command opens a dialog, popup, or nested workflow."
+      },
+      "notChecked": [
+        {
+          "id": "NC-001",
+          "itemType": "dialog",
+          "label": "Dialog or nested state not yet inspected",
+          "reason": "Replace or remove this placeholder before reporting technical_stable or parity_reviewed.",
+          "blocksCompletion": true,
+          "requiredFollowUp": "Inventory the dialog controls/event handlers or record explicit deferred/out_of_scope status.",
+          "testNodeIds": [],
+          "evidenceNodeIds": []
         }
       ],
       "deferredParityDebt": [],

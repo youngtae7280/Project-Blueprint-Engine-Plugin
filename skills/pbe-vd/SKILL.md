@@ -54,6 +54,8 @@ Prefer v2 tree files when present. If Work Tree scope classifications conflict w
 7. Create a root-level acceptance plan for the current slice.
 7a. When the parity/completeness profile applies, add visual/runtime parity checks for relevant surfaces and update `.pbe/control/visual-verification-profile.json`.
 7b. For hardware-dependent Work nodes, record readiness verification state in `.pbe/control/hardware-readiness-ledger.json`.
+7c. For commands that open dialogs, popups, subdialogs, or secondary workflows, add Test Tree coverage for the opened surface, visible controls, default values, enabled/disabled states, event handlers, repeated/async behavior, error handling, busy state, and cancel/retry behavior.
+7d. For hardware-gated dialogs or actions, require substitute evidence such as mock-backed UI validation, fake read/result validation, UI automation with hardware disabled, or an explicit `manual_not_verified` entry that blocks closure.
 8. Identify validation command candidates.
 9. Identify regression risks, including deferred-module foundation risk.
 10. Save `.pbe/tree/test-tree.json`.
@@ -78,7 +80,10 @@ Prefer v2 tree files when present. If Work Tree scope classifications conflict w
 - UI-related work must require UI/UX evidence.
 - Visual parity work must not rely only on build or open smoke. Use screenshot review, popup visual review, runtime coordinate check, resize/DPI review, clipped-control audit, or a not-runnable explanation when relevant.
 - Legacy parity work must require inventory comparison evidence or an explicit parity gap/deferred reason.
+- Command availability is not workflow verification. If a command opens another surface, the opened surface must have child Test Tree nodes or a recorded blocking not-checked item.
+- Required legacy event handlers are verification targets. They cannot be inferred from the existence of visible controls.
 - Hardware-dependent work must separate `implemented_user_testable`, `hardware_verification_pending`, and `hardware_certified`; certification requires explicit evidence.
+- Hardware-gated work may be software-stable only when substitute evidence exists; `manual_not_verified` must prevent final closure.
 - Do not allow a task to reach ACEP without verification links or an explicit explanation.
 - Convert confirmed UI/UX direction into verification checks.
 - Use WorkGraph nodes and edges to identify integration verification and regression checks.

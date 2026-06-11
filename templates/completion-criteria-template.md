@@ -11,12 +11,15 @@ Project completion requires:
 7. Every required UI state is implemented or explicitly documented as not applicable.
 8. When the parity/completeness profile is active, surface completion, legacy inventory, visual/runtime verification, hardware readiness, and verification miss promotion status are recorded.
 9. No surface claims `parity_reviewed` without inventory/evidence or explicit not-runnable/deferred risk notes.
-10. No hardware feature claims `hardware_certified` without certification evidence.
-11. Final Coverage Check is completed.
-12. Final Report is completed.
-13. Result Review Pack is created.
-14. Delivery status is `submitted_for_review`.
-15. No unresolved stop condition remains.
+10. No command that opens a dialog, popup, subdialog, or secondary workflow is treated as complete from command mapping alone.
+11. Required dialog/subdialog controls, default states, enable/disable states, button actions, async/repeated behavior, error/busy/cancel behavior, and legacy event handlers are either verified or explicitly listed as blocking not-checked items.
+12. Hardware-gated surfaces have substitute evidence or explicit blocking `manual_not_verified` entries.
+13. No hardware feature claims `hardware_certified` without certification evidence.
+14. Final Coverage Check is completed.
+15. Final Report is completed and includes a Not Checked section.
+16. Result Review Pack is created.
+17. Delivery status is `submitted_for_review`.
+18. No unresolved stop condition remains.
 
 User acceptance requires:
 
