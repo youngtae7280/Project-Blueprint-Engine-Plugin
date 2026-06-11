@@ -1,7 +1,7 @@
 {
   "name": "project-blueprint-engine",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0-alpha",
   "description": "Codex Plugin workflow for Project Blueprint Engine.",
   "type": "module",
   "scripts": {
@@ -16,7 +16,8 @@
     "legacy:build": "tsc -b && vite build",
     "legacy:lint": "eslint .",
     "legacy:test": "vitest run",
-    "legacy:preview": "vite preview"
+    "legacy:preview": "vite preview",
+    "validate": "node scripts/validate-pbe-files.js"
   },
   "dependencies": {
     "@xyflow/react": "12.6.4",

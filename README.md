@@ -6,6 +6,125 @@ It does not provide a GUI, SaaS backend, or separate OpenAI API provider. It run
 
 PBE is optimized for safe, reviewable, staged project construction, not for speed.
 
+## The Problem PBE Solves
+
+Ordinary AI coding can jump from a user request straight into code. That is fast, but it can lose the chain between product intent, implementation scope, tests, evidence, user review, and later revision impact.
+
+PBE turns that chain into a durable Codex development control protocol:
+
+- Requirements become Product Tree nodes.
+- Product branches derive Project, Work, and Test nodes.
+- Selected work is packaged into Cycle and Node Execution Contracts.
+- Validation and evidence attach back to the nodes they prove.
+- User feedback becomes Change and Impact nodes before revision work starts.
+- Only the user can accept product results.
+
+## 30-Second Summary
+
+Run PBE when a project needs controlled construction rather than a quick edit.
+
+```text
+@project-blueprint-engine start
+```
+
+PBE then walks the product intent, builds tree artifacts under `.pbe/`, stops for human gates when product judgment is needed, creates execution contracts for Codex, runs only selected/foundation scope, records evidence, and submits the result for user review.
+
+## Quick Start
+
+1. Install or update the plugin from your personal Codex marketplace.
+2. Open a target project in Codex.
+3. Start the workflow:
+
+```text
+@project-blueprint-engine start
+```
+
+You do not need to memorize every command. At gates, PBE reports the current state and gives natural-language examples such as:
+
+```text
+approve
+continue with the recommended scope
+defer login settings to the next slice
+change the empty-state copy before implementation
+what is risky here?
+stop
+```
+
+The detailed installation and use guide is in [docs/usage.md](docs/usage.md). A complete example run is in [examples/todo-app-pbe-run](examples/todo-app-pbe-run/README.md).
+
+## Learn The Model
+
+- [Core concepts](docs/core-concepts.md)
+- [Tree model](docs/tree-model.md)
+- [Human gates](docs/human-gates.md)
+- [Execution contracts](docs/execution-contracts.md)
+- [Revision flow](docs/revision-flow.md)
+- [Validator design](docs/validator-design.md)
+- [Release policy](RELEASE.md)
+
+## What Gets Created
+
+PBE writes durable project-control artifacts into the target repository:
+
+- `.pbe/tree/*`: Product, Project, Work, and Test trees.
+- `.pbe/execution/*`: Cycle selection, contracts, execution history, and node execution contracts.
+- `.pbe/control/*`: human decisions, changes, impact analysis, acceptance, and optional parity/completeness ledgers.
+- `.pbe/evidence/*`: evidence tree plus logs, screenshots, test results, and review reports.
+- `.pbe/blueprint/*`: compatibility views for older RPD/WPD/VD/ACEP artifacts.
+- `.pbe/codex-execution-pack/*`: ACEP compatibility package for Codex execution.
+
+## Official `.pbe` Layout
+
+The official v2 layout is tree-native and additive. Public v1 paths are preserved as compatibility views, not removed aliases.
+
+```text
+.pbe/
+  tree/
+    product-tree.json
+    project-tree.json
+    work-tree.json
+    test-tree.json
+
+  execution/
+    cycle-tree.json
+    cycle-contract.md
+    node-execution-contracts/
+
+  control/
+    decision-queue.json
+    change-tree.json
+    impact-tree.json
+    acceptance-tree.json
+    legacy-control-inventory.json
+    surface-completion-ledger.json
+    hardware-readiness-ledger.json
+    visual-verification-profile.json
+    verification-miss-log.json
+
+  evidence/
+    evidence-tree.json
+    screenshots/
+    test-results/
+    logs/
+    review-reports/
+
+  blueprint/
+    # backward-compatible v1 aliases and human-readable views
+
+  codex-execution-pack/
+    # ACEP compatibility package
+```
+
+## Execution Model
+
+PBE has three layers:
+
+- Skill Protocol: Codex skills define how RPD, WPD, VD, ACEP, review, feedback, and revision must behave.
+- Persistent Artifacts: `.pbe/` files make decisions, scope, contracts, evidence, and acceptance auditable across chats.
+- Validators: repository scripts check plugin structure, schemas, examples, WorkGraph safety, ACEP manifests, revision boundaries, and compatibility artifacts.
+
+This repository is the plugin and protocol definition. It is not a standalone backend service.
+
 ## Core Idea
 
 PBE v2 reframes the existing staged workflow around one operating model:
@@ -96,6 +215,12 @@ schemas/
 docs/
 scripts/
 ```
+
+## Legacy GUI Status
+
+The old React/Vite GUI is deprecated. It remains in the repository only as legacy source and test history, guarded by `legacy:*` npm scripts. The active product direction is the Codex Plugin workflow in `.codex-plugin/`, `skills/`, `templates/`, `schemas/`, `docs/`, and `scripts/`.
+
+Do not use the legacy GUI, API-provider, or SaaS direction as the basis for new PBE work unless the product direction is explicitly changed.
 
 ## Repository Artifact Layout
 
