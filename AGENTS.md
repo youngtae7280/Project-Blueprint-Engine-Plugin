@@ -300,19 +300,23 @@ If the user is dissatisfied:
 
 1. Record feedback in `.pbe/review/user-feedback.md`.
 2. Classify feedback in `.pbe/review/feedback-items.json`.
-3. Map feedback to affected requirement/task/UI/verification items.
-4. Create a revision pack under `.pbe/revisions/`.
-5. Run revision tasks only within affected selected/foundation scope.
-6. Re-run relevant regression checks.
-7. Submit for review again.
+3. Map feedback to affected Product/Project/Work/Test/Evidence nodes plus compatibility requirement/task/UI/verification items.
+4. Create or update Change Tree entries when feedback changes product meaning, scope, UX, risk, acceptance, verification, or accepted work.
+5. Build or update Impact Tree before revision tasks are created.
+6. Mark affected completed nodes as `stale`, `invalidated`, or `reopened` when needed.
+7. Create a revision pack under `.pbe/revisions/`.
+8. Run revision tasks only within affected selected/foundation scope.
+9. Re-run relevant impacted tests and regression checks.
+10. Refresh stale evidence and submit for review again.
 
 When v2 change/impact files exist:
 
 1. Record feedback as Change Tree input.
-2. Map affected Product/Project/Work/Test/Evidence nodes.
+2. Map affected Product/Project/Work/Test/Evidence/Cycle/Acceptance nodes.
 3. Build or update Impact Tree.
 4. Mark affected completed nodes as `stale`, `invalidated`, or `reopened` when needed.
 5. Run only affected or reopened revision tasks.
+6. Do not clear stale/reopened state without refreshed validation and evidence.
 
 After review approval, move to `WAITING_NEXT_SLICE_DECISION`. Do not mark `COMPLETED` unless the user explicitly completes the whole project.
 

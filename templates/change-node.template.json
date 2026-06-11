@@ -1,9 +1,13 @@
 {
-  "id": "CH-000",
-  "type": "missing_requirement",
+  "id": "CH-001",
+  "type": "feedback",
   "status": "proposed",
-  "reason": "",
-  "affectedNodeIds": [],
-  "treeMutation": {},
+  "reason": "User feedback requires a bounded revision or product-tree decision.",
+  "affectedNodeIds": ["PT-UI-001", "WT-UI-001", "TT-UI-001", "EV-UI-001"],
+  "treeMutation": {
+    "summary": "Describe the intended mutation or state change.",
+    "requiresHumanDecision": false,
+    "allowedScope": "affected selected/foundation nodes only"
+  },
   "decisionId": null
 }

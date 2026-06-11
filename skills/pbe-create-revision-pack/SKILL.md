@@ -1,6 +1,6 @@
 ---
 name: pbe-create-revision-pack
-description: Convert mapped user feedback into a bounded Revision Pack that changes only affected scope.
+description: Create a bounded revision pack from Change Nodes, Feedback Items, Impact Tree analysis, and reopened affected nodes.
 ---
 
 # PBE Create Revision Pack
@@ -11,11 +11,27 @@ In Autoflow, run this skill automatically after feedback is mapped clearly.
 
 ## Purpose
 
-Create a bounded revision instruction pack from user feedback. Revision is patch work, not a full project rewrite.
+Create a bounded revision instruction pack from user feedback, Change Tree entries, Impact Tree analysis, and reopened affected nodes. Revision is Change/Impact/Reopen execution, not a full project rewrite.
 
 The revision pack must preserve implementation scope classifications. Feedback may affect selected or foundation work from the current slice. Deferred or out-of-scope work can only enter the revision if the user explicitly changes the scope at a human gate.
 
 ## Inputs
+
+Prefer v2 files when present:
+
+```text
+.pbe/tree/product-tree.json
+.pbe/tree/project-tree.json
+.pbe/tree/work-tree.json
+.pbe/tree/test-tree.json
+.pbe/execution/cycle-tree.json
+.pbe/control/change-tree.json
+.pbe/control/impact-tree.json
+.pbe/control/acceptance-tree.json
+.pbe/evidence/evidence-tree.json
+```
+
+Also read compatibility and review artifacts:
 
 ```text
 .pbe/review/feedback-items.json
@@ -49,9 +65,34 @@ Use the next available revision number.
 revision-manifest.json
 ```
 
+Also update:
+
+```text
+.pbe/control/impact-tree.json
+.pbe/control/change-tree.json
+.pbe/control/acceptance-tree.json
+```
+
+## Required Actions
+
+1. Read Feedback Items and Change Tree.
+2. Build or update Impact Tree for affected Product, Project, Work, Test, Evidence, UI/UX, Cycle, and Acceptance nodes.
+3. Mark affected states when needed:
+   - `implemented` -> `stale`
+   - `verified` -> `invalidated`
+   - `accepted_done` -> `reopened`
+   - evidence attached -> stale or requires replacement
+4. Decide whether each change is local fix, blueprint mutation, scope expansion, or breaking impact.
+5. Ask the user when product/scope/risk/UX/acceptance/verification changes are not already approved.
+6. Generate bounded revision tasks only for affected selected/foundation nodes.
+7. Preserve deferred/out-of-scope nodes unless user approves mutation.
+8. Include allowed files, forbidden files, non-scope, and regression checks.
+9. Write revision manifest with source feedback IDs, source change IDs, impact IDs, affected nodes, reopened nodes, and stale evidence nodes.
+10. Continue automatically to `pbe-run-revision` when the revision pack is safe and bounded.
+
 ## Scope Rules
 
-1. Include only feedback-mapped affected requirements, tasks, UI/UX items, and verification items.
+1. Include only feedback/Change/Impact-mapped affected Product, Project, Work, Test, Evidence, requirement, task, UI/UX, and verification items.
 2. Do not modify unrelated behavior.
 3. Include regression checks for previously accepted or unaffected behavior.
 4. If feedback scope is unclear, ask clarification before creating implementation tasks.
@@ -59,6 +100,41 @@ revision-manifest.json
 6. Preserve `selected`, `foundation`, `deferred`, `blocked`, and `out_of_scope` classifications.
 7. Do not convert deferred items into revision tasks without user scope approval.
 8. If feedback reveals a missing foundation dependency, create a foundation revision task and record why it is required.
+9. If the revision would change an accepted Product branch, mark the branch reopened and require user review again.
+
+## Impact Tree Rules
+
+Every Impact Tree entry must state:
+
+- `changeId`
+- affected node
+- impact type: `none`, `stale`, `invalidated`, `reopened`, `obsolete`, `requires_retest`, or `requires_new_evidence`
+- required action: `preserve`, `defer`, `fork`, `reopen`, `retest`, `replace_evidence`, or `human_decision`
+- reason
+
+If an affected completed node remains valid, record `impactType: none` and `requiredAction: preserve` so Codex does not unnecessarily rewrite it.
+
+## Revision Manifest Additions
+
+`revision-manifest.json` must include or preserve:
+
+- `sourceFeedbackItems`
+- `sourceChangeIds`
+- `impactIds`
+- `affectedProductNodeIds`
+- `affectedProjectNodeIds`
+- `affectedWorkNodeIds`
+- `affectedTestNodeIds`
+- `affectedEvidenceNodeIds`
+- `affectedCycleIds`
+- `reopenedNodeIds`
+- `staleEvidenceNodeIds`
+- `allowedFiles`
+- `forbiddenFiles`
+- `mustNotTouch`
+- `maxChangeIntent`
+- `nonScope`
+- `regressionChecks`
 
 ## Autoflow
 
@@ -79,6 +155,17 @@ Report with `[PBE 상태 보고]` first, following `templates/stage-completion-s
 
 The state card must say whether the revision pack was created and PBE is continuing automatically to Revision Runner, or whether scope is unclear and the user must answer.
 
-Include revision pack path, affected scope, task count, regression checks, next step, user reply examples when blocked, and one recommended reply.
+Include:
+
+- revision pack path
+- source feedback and Change Tree entries
+- Impact Tree entries created or updated
+- affected/reopened/stale nodes
+- allowed files and forbidden files
+- task count
+- regression checks
+- next step
+- user reply examples when blocked
+- one recommended reply
 
 Use `[Codex 메모]` only for short explanation of revision boundaries.

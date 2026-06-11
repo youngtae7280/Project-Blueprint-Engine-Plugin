@@ -1,6 +1,6 @@
 ---
 name: pbe-review-result
-description: Package ACEP execution results for user review and set delivery status to submitted_for_review, not accepted.
+description: Review executed PBE cycle results, present Product branch coverage, collect user acceptance or dissatisfaction, and close branches or create Change Nodes without Codex self-acceptance.
 ---
 
 # PBE Review Result
@@ -9,13 +9,30 @@ Use this skill after `pbe-run-acep` or `pbe-run-revision`.
 
 ## Purpose
 
-Prepare a review pack that lets the user decide whether to accept the result, request changes, ask questions, start the next slice, or complete the whole project.
+Prepare a review pack that lets the user decide whether to accept the current slice, request changes, ask questions, start the next slice, or complete the whole project.
 
-Codex must not mark work as `accepted`.
+Review is Product branch closure, not Codex self-acceptance. Codex must not mark work as `accepted` or Product branches as `accepted_done`.
 
 This skill is a human gate in Autoflow. Stop here until the user approves, requests revision, asks a question, or stops.
 
 ## Inputs
+
+Prefer v2 tree/control/evidence files when present:
+
+```text
+.pbe/tree/product-tree.json
+.pbe/tree/project-tree.json
+.pbe/tree/work-tree.json
+.pbe/tree/test-tree.json
+.pbe/execution/cycle-tree.json
+.pbe/execution/cycle-contract.md
+.pbe/control/change-tree.json
+.pbe/control/impact-tree.json
+.pbe/control/acceptance-tree.json
+.pbe/evidence/evidence-tree.json
+```
+
+Also read ACEP review artifacts:
 
 ```text
 .pbe/codex-execution-pack/17-final-report-template.md
@@ -23,6 +40,7 @@ This skill is a human gate in Autoflow. Stop here until the user approves, reque
 .pbe/codex-execution-pack/15-ui-ux-evidence-checklist.md
 .pbe/codex-execution-pack/04-traceability-matrix.json
 .pbe/codex-execution-pack/execution-manifest.json
+.pbe/codex-execution-pack/22-cycle-contract.md
 ```
 
 Also inspect current changed files and validation results when available.
@@ -39,6 +57,8 @@ Also inspect current changed files and validation results when available.
 .pbe/review/user-review-checklist.md
 .pbe/review/user-feedback.md
 ```
+
+When user approval is explicit, update `.pbe/control/acceptance-tree.json` only as a user-driven acceptance record. Do not infer acceptance from passing tests or silence.
 
 ## Delivery Status
 
@@ -57,9 +77,10 @@ Only the user can set:
 
 ```text
 accepted
+accepted_done
 ```
 
-When this skill completes, set or report status as:
+When this skill completes without explicit user approval, set or report status as:
 
 ```text
 submitted_for_review
@@ -69,10 +90,18 @@ Set `pbe-state.json.autoflow.state` to `WAITING_REVIEW_RESULT`, set `autoflow.cu
 
 If the user approves at this gate, move to `WAITING_NEXT_SLICE_DECISION`, not `COMPLETED`. The next gate asks whether to finish the current slice, start another slice, or complete the whole project.
 
-## Review Scope
+## Branch Review Scope
 
 The review pack must separate:
 
+- active cycle ID
+- included Product branches
+- implemented Work nodes
+- verified Test nodes
+- evidence attached
+- partial satisfaction
+- stale or invalidated evidence
+- reopened nodes
 - selected scope completed
 - foundation scope completed
 - deferred scope protected
@@ -81,6 +110,19 @@ The review pack must separate:
 - failed or skipped validation
 - remaining risks
 - recommended next slice
+
+## Acceptance Tree Rules
+
+When the user explicitly approves the current slice:
+
+1. Update only Product branches included in the active cycle.
+2. Set branch status to `satisfied` or `accepted_done` only when evidence and review support it.
+3. `accepted_done` requires explicit user acceptance text, `userAcceptedAt`, and linked evidence.
+4. If coverage is partial, use `partial_satisfied` and explain what remains.
+5. If impact analysis marks a branch `stale`, `invalidated`, or `reopened`, do not close it.
+6. After approval, move to `WAITING_NEXT_SLICE_DECISION`.
+
+Codex may recommend acceptance status, but the user is the only actor that can grant acceptance.
 
 ## User Review Checklist
 
@@ -91,6 +133,8 @@ Include:
 - validation review
 - coverage audit review
 - UX audit review
+- evidence review
+- impact/reopen review
 - remaining issues review
 - final decision:
   - approve this slice
@@ -106,36 +150,23 @@ Do not show only internal commands. Use `[PBE 상태 보고]` first, following `
 Explain:
 
 ```text
-Final result review is needed.
+최종 결과 검토 단계입니다.
 
-Please review:
-- execution result
-- failed test cases
-- coverage audit result
-- UX audit result
-- remaining risks
-- items that may need rerun
+아래 내용을 확인해주세요:
+- 실행 결과
+- 실패한 테스트 케이스
+- coverage audit 결과
+- UX audit 결과
+- Evidence Tree 반영 상태
+- Impact/Reopen 상태
+- 남은 리스크
+- 재실행이 필요한 항목
 
-If this result is okay, say that naturally.
+이 결과가 괜찮으시면, 채팅창에 승인한다고 말해주세요.
 
-Examples:
-"approve"
-"results look good"
-"this slice is okay"
+수정이나 재실행이 필요하시면, 원하는 내용을 자연스럽게 말씀해주세요.
 
-If changes or rerun are needed, say what you want changed.
-
-Examples:
-"add a reconnection test"
-"fix only the failed case and rerun"
-"fill the missing coverage item and rerun ACEP"
-
-If you are unsure, ask naturally.
-
-Examples:
-"what must be fixed before completion?"
-"is this safe to finish?"
-"are the failed items real defects or environment issues?"
+판단이 어려우시면 "완료해도 되는 상태인지 판단해주세요"처럼 물어보셔도 됩니다.
 ```
 
 After approval, explain the next-slice gate:
@@ -155,10 +186,11 @@ Choose one:
 If the user is dissatisfied:
 
 1. Run `pbe-collect-feedback`.
-2. Map feedback to affected requirement/task/UI/verification IDs.
-3. Run `pbe-create-revision-pack`.
-4. Run `pbe-run-revision`.
-5. Return to this Review Result gate.
+2. Map feedback to affected Product, Project, Work, Test, Evidence, UI/UX, Cycle, and compatibility requirement/task/verification IDs.
+3. Create or update Change Tree entries for feedback that changes product meaning, scope, UX, risk, acceptance, verification, or accepted work.
+4. Run `pbe-create-revision-pack` to build Impact Tree and bounded revision tasks.
+5. Run `pbe-run-revision`.
+6. Return to this Review Result gate.
 
 Revision must stay inside affected selected/foundation scope unless the user explicitly changes implementation scope.
 
@@ -167,9 +199,13 @@ Revision must stay inside affected selected/foundation scope unless the user exp
 Report with `[PBE 상태 보고]` first:
 
 - review pack paths
+- active cycle ID
+- included Product/Work/Test/Evidence summary
 - selected/foundation/deferred/out-of-scope summary
 - validations run and skipped
 - coverage and UX audit status
+- Impact Tree and reopened node status
+- Acceptance Tree status
 - delivery status: `submitted_for_review`
 - next human choices in natural language
 - recommended reply for the user
