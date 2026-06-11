@@ -161,8 +161,10 @@ Revision = Change Tree + Impact Tree + Reopen protocol
 
 ```text
 If it is not in the Product Tree, it is not product scope.
+If executable Product scope cannot be expressed as acceptance criteria, it is not ready for Work Tree execution.
 If it changes product meaning, scope, UX, risk, acceptance, or verification, it must be a Change Node.
 If work is not derived from Product/Project nodes, it is not executable work.
+If Work/Test/Evidence does not link the relevant acceptance criteria IDs, it does not prove the Product contract.
 If a test does not verify Product/Work nodes, it is not sufficient verification.
 If evidence does not attach to Test/Product nodes, it does not close the branch.
 If a change invalidates completed work, affected nodes reopen instead of being silently overwritten.
@@ -175,6 +177,7 @@ If a control, event handler, hardware action, or workflow state was not checked,
 PBE is not only a task-card generator. It creates a traceable tree-linked execution contract:
 
 - Product Tree / RPD requirement-tree compatibility view
+- structured EARS acceptance criteria registry on Product nodes
 - Source of Truth Matrix
 - PBE Invariants
 - Foundation Contract

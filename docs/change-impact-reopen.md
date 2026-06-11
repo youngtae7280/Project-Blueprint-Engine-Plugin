@@ -13,6 +13,7 @@ If the change contains ambiguous product meaning or abstract quality language, m
 Impact Tree records affected Product, Project, Work, Test, Evidence, UI/UX, and Acceptance nodes.
 
 When acceptance criteria change, Impact Tree also records `affectedAcceptanceCriteriaIds` and whether impacted tests or evidence must be refreshed.
+Criteria changes require criteria-specific `retest`, `reopen`, or `replace_evidence` impact. A generic node impact is not enough when an AC changed.
 
 ## Reopen states
 

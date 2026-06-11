@@ -202,8 +202,11 @@ function validateTreeLinks(data) {
   const impactsByAffected = collectImpactsByAffected(data.impact)
   const impactsByChange = collectImpactsByChange(data.impact)
   const acceptanceCriteriaIds = collectAcceptanceCriteriaIds(data.product)
+  const acceptanceCriteriaMap = collectAcceptanceCriteriaMap(data.product)
   const acceptanceCriteriaByProduct = collectAcceptanceCriteriaByProduct(data.product)
+  const requiredAcceptanceCriteriaByProduct = collectRequiredAcceptanceCriteriaByProduct(data.product)
   const ambiguousProductIds = collectAmbiguousProductIds(data.product)
+  const closureRequiresEvidence = requiresClosureEvidence(data.cycle, data.acceptance)
   const knownNodeIds = new Set([
     ...productIds,
     ...projectIds,
@@ -281,6 +284,9 @@ function validateTreeLinks(data) {
     if (!isRoot && ['selected', 'foundation'].includes(node.scopeClass) && hasAny(sourceCriteriaIds) && !hasAny(node.satisfiesAcceptanceCriteriaIds)) {
       errors.push(`work ${node.id} derives from Product nodes with acceptanceCriteria but lacks satisfiesAcceptanceCriteriaIds`)
     }
+    if (!isRoot && ['selected', 'foundation'].includes(node.scopeClass) && !hasAny(node.satisfiesAcceptanceCriteriaIds) && !node.acceptanceCriteriaNotLinkedReason) {
+      errors.push(`work ${node.id} must link satisfiesAcceptanceCriteriaIds or record acceptanceCriteriaNotLinkedReason`)
+    }
     validateKnownIds(node.derivedFromProductNodeIds, productIds, `work ${node.id}`, 'product source')
     validateKnownIds(node.derivedFromProjectNodeIds, projectIds, `work ${node.id}`, 'project source')
     validateKnownIds(node.satisfiesAcceptanceCriteriaIds, acceptanceCriteriaIds, `work ${node.id}`, 'acceptance criteria')
@@ -305,13 +311,34 @@ function validateTreeLinks(data) {
     const verifiedCriteriaIds = new Set(
       (data.test.nodes || []).flatMap((node) => node.verifiesAcceptanceCriteriaIds || []),
     )
-    for (const [productId, criteriaIds] of acceptanceCriteriaByProduct) {
+    const testNodes = data.test.nodes || []
+    for (const node of data.work?.nodes || []) {
+      const isRoot = node.id === data.work.rootNodeId
+      if (isRoot || !['selected', 'foundation'].includes(node.scopeClass)) {
+        continue
+      }
+      const coveredByTest = testNodes.some((test) =>
+        test.verifiesWorkNodeIds?.includes(node.id) ||
+        (node.satisfiesAcceptanceCriteriaIds || []).some((criteriaId) => test.verifiesAcceptanceCriteriaIds?.includes(criteriaId)),
+      )
+      if (!coveredByTest) {
+        errors.push(`work ${node.id} lacks Test Tree coverage`)
+      }
+    }
+    for (const [productId, criteriaIds] of requiredAcceptanceCriteriaByProduct) {
       for (const criteriaId of criteriaIds) {
         if (!verifiedCriteriaIds.has(criteriaId)) {
           errors.push(`product ${productId} acceptance criteria ${criteriaId} lacks Test Tree coverage`)
         }
       }
     }
+  }
+
+  if (closureRequiresEvidence) {
+    validateAcceptanceCriteriaEvidenceClosure({
+      acceptanceCriteriaMap,
+      evidenceMap,
+    })
   }
 }
 
@@ -430,6 +457,7 @@ function validateProductReadiness(productTree) {
   if (!productTree) {
     return
   }
+  const seenCriteriaIds = new Set()
   for (const node of productTree.nodes || []) {
     const isLeaf = !hasAny(node.children)
     const executableStatus = ['confirmed', 'accepted'].includes(node.status)
@@ -446,9 +474,19 @@ function validateProductReadiness(productTree) {
       errors.push(`product ${node.id} is needs_clarification but remains in executable scope ${node.scopeClass}`)
     }
 
+    for (const criteria of node.acceptanceCriteria || []) {
+      if (seenCriteriaIds.has(criteria.id)) {
+        errors.push(`acceptance criteria ${criteria.id} is defined more than once`)
+      }
+      seenCriteriaIds.add(criteria.id)
+      if (criteria.format === 'EARS' && criteria.status === 'confirmed' && (!criteria.condition || !criteria.systemResponse)) {
+        errors.push(`acceptance criteria ${criteria.id} is confirmed EARS but lacks condition or systemResponse`)
+      }
+    }
+
     const abstractTerms = collectAbstractTerms(node)
-    if (executableStatus && hasAny(abstractTerms) && node.ambiguityResolution?.status !== 'resolved') {
-      errors.push(`product ${node.id} contains abstract quality terms (${abstractTerms.join(', ')}) but lacks resolved ambiguityResolution`)
+    if (executableStatus && hasAny(abstractTerms) && node.ambiguityResolution?.status !== 'resolved' && !hasAny(node.acceptanceCriteria)) {
+      errors.push(`product ${node.id} contains abstract quality terms (${abstractTerms.join(', ')}) but lacks resolved ambiguityResolution or acceptanceCriteria`)
     }
   }
 }
@@ -469,6 +507,21 @@ function validateChangeTree(changeTree, refs) {
       hasCriteriaDelta(change.criteriaDelta)
     if (['approved', 'applied', 'resolved'].includes(change.status) && changesCompletionMeaning && !hasAny(refs.impactsByChange.get(change.id))) {
       errors.push(`change ${change.id} changes product/scope/acceptance/verification meaning but lacks Impact Tree entries`)
+    }
+    if (['approved', 'applied', 'resolved'].includes(change.status) && hasCriteriaDelta(change.criteriaDelta)) {
+      const changedCriteriaIds = [
+        ...(change.criteriaDelta?.modified || []),
+        ...(change.criteriaDelta?.invalidated || []),
+      ]
+      for (const criteriaId of changedCriteriaIds) {
+        const hasCriteriaImpact = (refs.impactsByChange.get(change.id) || []).some((impact) =>
+          impact.affectedAcceptanceCriteriaIds?.includes(criteriaId) &&
+          ['reopen', 'retest', 'replace_evidence'].includes(impact.requiredAction),
+        )
+        if (!hasCriteriaImpact) {
+          errors.push(`change ${change.id} changes acceptance criteria ${criteriaId} but lacks retest/reopen/replace_evidence impact`)
+        }
+      }
     }
   }
 }
@@ -501,6 +554,27 @@ function validateEvidenceTree(evidenceTree, refs) {
     validateKnownIds(evidence.evidenceForAcceptanceCriteriaIds, refs.acceptanceCriteriaIds, `evidence ${evidence.id}`, 'acceptance criteria')
     if (!hasAny(evidence.provesNodeIds) && !hasAny(evidence.evidenceForTestNodeIds)) {
       errors.push(`evidence ${evidence.id} must prove at least one Product/Work/Test node or evidenceForTestNodeIds`)
+    }
+  }
+}
+
+function validateAcceptanceCriteriaEvidenceClosure(refs) {
+  const attachedCriteriaIds = new Set()
+  for (const evidence of refs.evidenceMap.values()) {
+    if (!['attached', 'replaced'].includes(evidence.status)) {
+      continue
+    }
+    for (const criteriaId of evidence.evidenceForAcceptanceCriteriaIds || []) {
+      attachedCriteriaIds.add(criteriaId)
+    }
+  }
+
+  for (const criteria of refs.acceptanceCriteriaMap.values()) {
+    if (criteria.status !== 'confirmed' || criteria.verification?.required !== true) {
+      continue
+    }
+    if (!attachedCriteriaIds.has(criteria.id)) {
+      errors.push(`acceptance criteria ${criteria.id} lacks attached Evidence Tree evidence`)
     }
   }
 }
@@ -876,11 +950,34 @@ function collectAcceptanceCriteriaIds(productTree) {
   )
 }
 
+function collectAcceptanceCriteriaMap(productTree) {
+  return new Map(
+    (productTree?.nodes || [])
+      .flatMap((node) => node.acceptanceCriteria || [])
+      .filter((criteria) => criteria.id)
+      .map((criteria) => [criteria.id, criteria]),
+  )
+}
+
 function collectAcceptanceCriteriaByProduct(productTree) {
   const criteriaByProduct = new Map()
   for (const node of productTree?.nodes || []) {
     const criteriaIds = (node.acceptanceCriteria || [])
       .filter((criteria) => criteria.status !== 'deferred' && criteria.status !== 'out_of_scope' && criteria.status !== 'invalidated')
+      .map((criteria) => criteria.id)
+      .filter(Boolean)
+    if (criteriaIds.length > 0) {
+      criteriaByProduct.set(node.id, criteriaIds)
+    }
+  }
+  return criteriaByProduct
+}
+
+function collectRequiredAcceptanceCriteriaByProduct(productTree) {
+  const criteriaByProduct = new Map()
+  for (const node of productTree?.nodes || []) {
+    const criteriaIds = (node.acceptanceCriteria || [])
+      .filter((criteria) => criteria.status === 'confirmed' && criteria.verification?.required === true)
       .map((criteria) => criteria.id)
       .filter(Boolean)
     if (criteriaIds.length > 0) {
@@ -954,6 +1051,13 @@ function collectImpactsByChange(impactTree) {
     grouped.get(impact.changeId).push(impact)
   }
   return grouped
+}
+
+function requiresClosureEvidence(cycleTree, acceptanceTree) {
+  const closureCycleStatuses = new Set(['submitted_for_review', 'accepted'])
+  const closureBranchStatuses = new Set(['submitted_for_review', 'accepted_done'])
+  return (cycleTree?.cycles || []).some((cycle) => closureCycleStatuses.has(cycle.status)) ||
+    (acceptanceTree?.branches || []).some((branch) => closureBranchStatuses.has(branch.status))
 }
 
 function evidenceForNode(evidenceMap, nodeId) {

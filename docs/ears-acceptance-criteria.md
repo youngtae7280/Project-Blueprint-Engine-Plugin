@@ -2,6 +2,8 @@
 
 PBE uses EARS inside RPD to convert natural language into testable Product Tree criteria. EARS does not replace PBE; it gives RPD a disciplined way to decide whether a requirement can be executed.
 
+Acceptance Criteria are Product Tree contract units. Work exists to satisfy them, Tests exist to verify them, Evidence proves them, and Change/Impact/Reopen records how they were changed or invalidated.
+
 ## Rule
 
 If user intent cannot be converted into acceptance criteria, the Product node is not ready for executable selected/foundation work.
@@ -69,5 +71,7 @@ Work nodes should reference criteria with `satisfiesAcceptanceCriteriaIds`.
 Test nodes should reference criteria with `verifiesAcceptanceCriteriaIds`.
 
 Evidence nodes should reference criteria with `evidenceForAcceptanceCriteriaIds`.
+
+Change and Impact nodes should reference criteria with `affectedAcceptanceCriteriaIds` when acceptance meaning changes.
 
 If a Product node is documentation-only or metadata-only, use `acceptanceNotRequiredReason` instead of inventing fake criteria.

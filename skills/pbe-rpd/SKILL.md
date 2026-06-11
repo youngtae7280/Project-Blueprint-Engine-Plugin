@@ -74,6 +74,12 @@ Every confirmed, deferred, blocked, or out-of-scope requirement node must have a
 
 Run Ambiguity Gate before proposing confirmation for any Product node candidate.
 
+A Product leaf node may be proposed as confirmed only when:
+
+1. `ambiguity.status` is `clear` or the node has no ambiguity finding.
+2. At least one `acceptanceCriteria` entry can be written, or `acceptanceNotRequiredReason` is explicitly recorded.
+3. Any abstract quality term has been resolved into target, condition, expected behavior, completion criteria, exception behavior, and verification method.
+
 Check:
 
 1. Target: screen, feature, module, user flow, API, or behavior.
@@ -108,6 +114,7 @@ THE SYSTEM SHALL <safe/error/retry behavior>.
 Store criteria on Product nodes as `acceptanceCriteria[]` with stable IDs. Keep legacy `acceptance[]` strings as compatibility summaries only.
 
 An executable confirmed Product node must have at least one structured criterion unless it is documentation-only or metadata-only and has `acceptanceNotRequiredReason`.
+Criteria IDs are the contract units used by WPD, VD, Evidence, Change, Impact, and Revision flows.
 
 ## Product Tree Mapping
 

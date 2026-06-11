@@ -20,7 +20,7 @@
       "required": ["id", "type", "title", "status", "children"],
       "properties": {
         "id": { "type": "string" },
-        "type": { "enum": ["goal", "user", "outcome", "capability", "behavior", "ui_surface", "ui_state", "data", "constraint", "non_goal", "risk", "acceptance", "assumption", "decision"] },
+        "type": { "enum": ["goal", "user", "outcome", "capability", "feature", "behavior", "ui_surface", "ui_state", "data", "constraint", "non_goal", "risk", "acceptance", "assumption", "decision"] },
         "title": { "type": "string" },
         "status": { "enum": ["draft", "assumed", "auto_derived", "needs_human_decision", "needs_clarification", "proposed", "confirmed", "accepted", "covered", "partial_satisfied", "satisfied", "accepted_done", "deferred", "out_of_scope", "blocked", "changed", "reopened"] },
         "parent": { "type": ["string", "null"] },
@@ -43,7 +43,7 @@
     },
     "acceptanceCriterion": {
       "type": "object",
-      "required": ["id", "format", "statement", "status"],
+      "required": ["id", "format", "type", "statement", "status"],
       "properties": {
         "id": { "type": "string" },
         "format": { "enum": ["EARS", "plain"] },
@@ -53,7 +53,7 @@
         "condition": { "type": "string" },
         "systemResponse": { "type": "string" },
         "statement": { "type": "string" },
-        "status": { "enum": ["draft", "proposed", "confirmed", "deferred", "out_of_scope", "invalidated"] },
+        "status": { "enum": ["draft", "proposed", "confirmed", "changed", "deferred", "out_of_scope", "invalidated"] },
         "source": {
           "type": "object",
           "properties": {
@@ -73,7 +73,8 @@
             "evidenceTypes": { "type": "array", "items": { "type": "string" } }
           },
           "additionalProperties": true
-        }
+        },
+        "notes": { "type": "string" }
       },
       "additionalProperties": true
     },

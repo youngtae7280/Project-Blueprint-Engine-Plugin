@@ -130,6 +130,8 @@ Create or update a Change Tree entry when feedback changes any of:
 
 If the feedback changes acceptance criteria or has ambiguous product meaning, set `requiresRevisionRpd: true` on the Change Node and do not create implementation tasks until the affected criteria are resolved.
 
+When feedback modifies, adds, or invalidates criteria, record `criteriaChanges` on the Feedback Item and `criteriaDelta` plus `affectedAcceptanceCriteriaIds` on the Change Node.
+
 Use Change Tree types:
 
 ```text

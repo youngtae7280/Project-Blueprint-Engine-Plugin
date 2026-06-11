@@ -245,6 +245,7 @@ If `expectedFiles` is empty or unknown, the node is not parallel-safe.
 Every selected or foundation Work Tree node must derive from Product/Project nodes unless it is the Work Tree root placeholder.
 Every selected or foundation Work Tree node must not derive from Product nodes with `status: needs_clarification` or `ambiguity.status` of `partial` or `ambiguous`.
 When Product nodes have `acceptanceCriteria`, selected/foundation Work Tree nodes should link `satisfiesAcceptanceCriteriaIds`.
+If selected/foundation Work cannot link criteria, record an explicit no-criteria reason before treating it as execution-ready.
 
 ## VD And Test Tree
 
@@ -252,6 +253,7 @@ VD must derive `.pbe/tree/test-tree.json` from Product, Project, and Work Trees 
 
 Every non-root Test Tree node must verify at least one Product or Work node and declare required evidence.
 When acceptance criteria exist, Test Tree nodes should link `verifiesAcceptanceCriteriaIds`, and Evidence Tree nodes should link `evidenceForAcceptanceCriteriaIds`.
+At submitted-for-review or accepted closure, required confirmed criteria must have fresh Test/Evidence coverage.
 
 ## UI/UX Confirmation
 
@@ -343,7 +345,7 @@ If the user is dissatisfied:
 4. Create or update Change Tree entries when feedback changes product meaning, scope, UX, risk, acceptance, verification, or accepted work.
 5. If feedback is ambiguous or changes acceptance meaning, run Revision RPD for the affected Change Node only. Do not restart full RPD.
 6. Update criteria deltas before revision tasks are created when feedback changes acceptance criteria.
-7. Build or update Impact Tree before revision tasks are created.
+7. Build or update Impact Tree before revision tasks are created. Criteria changes require criteria-specific `affectedAcceptanceCriteriaIds` plus retest, reopen, or replace-evidence impact.
 8. Mark affected completed nodes as `stale`, `invalidated`, or `reopened` when needed.
 9. Create a revision pack under `.pbe/revisions/`.
 10. Run revision tasks only within affected selected/foundation scope.

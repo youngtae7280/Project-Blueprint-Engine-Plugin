@@ -16,6 +16,7 @@ Create a bounded revision instruction pack from user feedback, Change Tree entri
 The revision pack must preserve implementation scope classifications. Feedback may affect selected or foundation work from the current slice. Deferred or out-of-scope work can only enter the revision if the user explicitly changes the scope at a human gate.
 
 If a Change Node has `requiresRevisionRpd: true`, run Revision RPD for that Change Node before generating implementation tasks. Revision RPD updates only affected Product nodes and acceptance criteria.
+If a Change Node has criteria deltas, the revision pack must include a criteria-specific retest/reopen/replace-evidence plan before implementation tasks are issued.
 
 ## Inputs
 

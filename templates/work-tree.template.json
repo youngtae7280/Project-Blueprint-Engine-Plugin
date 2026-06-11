@@ -16,6 +16,7 @@
       "unknownFileTouchRisk": false,
       "dependencies": [],
       "satisfiesAcceptanceCriteriaIds": [],
+      "acceptanceCriteriaNotLinkedReason": "Root placeholder does not satisfy a concrete Product acceptance criterion.",
       "doneCriteria": [],
       "validationHints": []
     }

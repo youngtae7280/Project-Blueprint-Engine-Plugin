@@ -65,7 +65,7 @@
             "type": "object",
             "properties": {
               "required": { "type": "boolean" },
-              "status": { "enum": ["not_required", "pending", "in_progress", "resolved", "blocked"] },
+              "status": { "enum": ["not_required", "required", "pending", "in_progress", "resolved", "blocked"] },
               "questionsAsked": { "type": "array", "items": { "type": "string" } },
               "resolvedAcceptanceCriteriaIds": { "type": "array", "items": { "type": "string" } }
             },

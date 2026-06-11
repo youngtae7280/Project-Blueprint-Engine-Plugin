@@ -263,6 +263,97 @@ describe('PBE v2 tree validator', () => {
     expect(result.status).toBe(1)
     expect(result.output).toContain('changes product/scope/acceptance/verification meaning but lacks Impact Tree entries')
   })
+
+  it('rejects Work Tree references to missing acceptance criteria IDs', () => {
+    const workspace = createTreeValidatorWorkspace()
+    writeProductTree(workspace)
+    writeWorkTree(workspace, 'PT-1', { satisfiesAcceptanceCriteriaIds: ['AC-MISSING'] })
+
+    const result = runTreeValidator(workspace)
+
+    expect(result.status).toBe(1)
+    expect(result.output).toContain('work WT-1 references missing acceptance criteria: AC-MISSING')
+  })
+
+  it('rejects Test Tree references to missing acceptance criteria IDs', () => {
+    const workspace = createTreeValidatorWorkspace()
+    writeProductTree(workspace)
+    writeWorkTree(workspace, 'PT-1')
+    writeTestTree(workspace, 'PT-1', 'WT-1', 'passed', { verifiesAcceptanceCriteriaIds: ['AC-MISSING'] })
+
+    const result = runTreeValidator(workspace)
+
+    expect(result.status).toBe(1)
+    expect(result.output).toContain('test TT-1 references missing acceptance criteria: AC-MISSING')
+  })
+
+  it('rejects Evidence Tree references to missing acceptance criteria IDs', () => {
+    const workspace = createTreeValidatorWorkspace()
+    writeProductTree(workspace)
+    writeEvidenceTree(workspace, [
+      {
+        id: 'EV-1',
+        type: 'test_output',
+        status: 'attached',
+        provesNodeIds: ['PT-1'],
+        evidenceForAcceptanceCriteriaIds: ['AC-MISSING'],
+      },
+    ])
+
+    const result = runTreeValidator(workspace)
+
+    expect(result.status).toBe(1)
+    expect(result.output).toContain('evidence EV-1 references missing acceptance criteria: AC-MISSING')
+  })
+
+  it('rejects Work nodes without Test Tree coverage once tests exist', () => {
+    const workspace = createTreeValidatorWorkspace()
+    writeProductTree(workspace)
+    writeWorkTree(workspace, 'PT-1')
+    writeRootOnlyTestTree(workspace)
+
+    const result = runTreeValidator(workspace)
+
+    expect(result.status).toBe(1)
+    expect(result.output).toContain('work WT-1 lacks Test Tree coverage')
+  })
+
+  it('rejects submitted criteria without attached criteria evidence', () => {
+    const workspace = createTreeValidatorWorkspace()
+    writeProductTree(workspace)
+    writeWorkTree(workspace, 'PT-1')
+    writeTestTree(workspace, 'PT-1', 'WT-1', 'passed')
+    writeEvidenceTree(workspace, [
+      {
+        id: 'EV-1',
+        type: 'test_output',
+        status: 'attached',
+        provesNodeIds: ['TT-1'],
+      },
+    ])
+    writeCycleTree(workspace, {
+      status: 'submitted_for_review',
+      includedWorkNodeIds: ['WT-1'],
+      includedTestNodeIds: ['TT-1'],
+    })
+
+    const result = runTreeValidator(workspace)
+
+    expect(result.status).toBe(1)
+    expect(result.output).toContain('acceptance criteria AC-PT-1-1 lacks attached Evidence Tree evidence')
+  })
+
+  it('rejects criteria changes without criteria-specific retest impact', () => {
+    const workspace = createTreeValidatorWorkspace()
+    writeProductTree(workspace)
+    writeChangeTreeWithCriteriaDelta(workspace)
+    writeImpactTreeWithoutCriteriaRetest(workspace)
+
+    const result = runTreeValidator(workspace)
+
+    expect(result.status).toBe(1)
+    expect(result.output).toContain('changes acceptance criteria AC-PT-1-1 but lacks retest/reopen/replace_evidence impact')
+  })
 })
 
 function createTreeValidatorWorkspace() {
@@ -401,7 +492,11 @@ function writeAmbiguousProductTree(workspace: string) {
   })
 }
 
-function writeWorkTree(workspace: string, productNodeId: string) {
+function writeWorkTree(
+  workspace: string,
+  productNodeId: string,
+  options: { satisfiesAcceptanceCriteriaIds?: string[] } = {},
+) {
   writeJson(join(workspace, '.pbe', 'tree', 'work-tree.json'), {
     version: '0.2.0-tree-control',
     rootNodeId: 'WT-ROOT',
@@ -428,12 +523,32 @@ function writeWorkTree(workspace: string, productNodeId: string) {
         forbiddenFiles: [],
         unknownFileTouchRisk: false,
         dependencies: [],
-        satisfiesAcceptanceCriteriaIds: ['AC-PT-1-1'],
+        satisfiesAcceptanceCriteriaIds: options.satisfiesAcceptanceCriteriaIds ?? ['AC-PT-1-1'],
         doneCriteria: ['Capability implemented'],
         validationHints: ['Run focused tests'],
       },
     ],
     edges: [],
+  })
+}
+
+function writeRootOnlyTestTree(workspace: string) {
+  writeJson(join(workspace, '.pbe', 'tree', 'test-tree.json'), {
+    version: '0.2.0-tree-control',
+    rootNodeId: 'TT-ROOT',
+    nodes: [
+      {
+        id: 'TT-ROOT',
+        type: 'acceptance_check',
+        title: 'Test root',
+        status: 'planned',
+        verifiesProductNodeIds: [],
+        verifiesProjectNodeIds: [],
+        verifiesWorkNodeIds: [],
+        verifiesAcceptanceCriteriaIds: [],
+        evidenceRequired: [],
+      },
+    ],
   })
 }
 
@@ -512,6 +627,8 @@ function writeEvidenceTree(
     type: string
     status: string
     provesNodeIds: string[]
+    evidenceForTestNodeIds?: string[]
+    evidenceForAcceptanceCriteriaIds?: string[]
   }>,
 ) {
   writeJson(join(workspace, '.pbe', 'evidence', 'evidence-tree.json'), {
@@ -566,6 +683,23 @@ function writeChangeTreeWithCriteriaDelta(workspace: string) {
           modified: ['AC-PT-1-1'],
           invalidated: [],
         },
+      },
+    ],
+  })
+}
+
+function writeImpactTreeWithoutCriteriaRetest(workspace: string) {
+  writeJson(join(workspace, '.pbe', 'control', 'impact-tree.json'), {
+    version: '0.2.0-tree-control',
+    impacts: [
+      {
+        id: 'IMP-1',
+        changeId: 'CH-1',
+        affectedNodeId: 'PT-1',
+        affectedAcceptanceCriteriaIds: [],
+        impactType: 'none',
+        requiredAction: 'preserve',
+        reason: 'Incorrectly treats criteria change as non-impacting.',
       },
     ],
   })
