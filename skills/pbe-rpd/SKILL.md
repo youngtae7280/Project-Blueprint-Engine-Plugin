@@ -52,6 +52,7 @@ Every confirmed, deferred, blocked, or out-of-scope requirement node must have a
    - `ask_next_question`
    - `propose_decomposition`
    - `propose_confirmation`
+   - `propose_structure_for_confirmation`
    - `propose_defer`
    - `propose_out_of_scope`
    - `blocked`
@@ -71,7 +72,8 @@ Map RPD compatibility nodes to Product Tree nodes as follows:
 
 - `pending_interview` or `interviewing` -> Product status `draft` or `needs_human_decision`.
 - `ready_to_decompose` or `ready_to_confirm` -> Product status `proposed`.
-- `confirmed` -> Product status `accepted`.
+- `confirmed` -> Product status `confirmed`.
+- Legacy Product status `accepted` may be read as an alias for requirement-confirmed during migration, but do not use it for final product acceptance.
 - `deferred` -> Product status `deferred`.
 - `out_of_scope` -> Product status `out_of_scope`.
 - `blocked` -> Product status `blocked`.
@@ -79,6 +81,34 @@ Map RPD compatibility nodes to Product Tree nodes as follows:
 Use Product node types that match the intent: `goal`, `user`, `outcome`, `capability`, `behavior`, `ui_surface`, `ui_state`, `data`, `constraint`, `non_goal`, `risk`, `acceptance`, `assumption`, or `decision`.
 
 When a lower-risk detail is obvious from the parent and does not alter product meaning, record it as `auto_derived` or `assumed` in the Product Tree. If the assumption affects scope, UX, acceptance, verification, or already accepted work, create a Decision Queue item and stop for the user.
+
+## Clear Request Shortcut
+
+If the user's request is already clear, do not ask a vague "should I interview more?" question. Instead:
+
+1. Draft the Root requirement summary.
+2. Draft the proposed child node structure or explain that the Root can remain a single terminal requirement.
+3. Ask the user to confirm, revise, decompose further, defer, or mark out of scope.
+4. Set `autoflow.state` to `WAITING_ROOT_CONFIRMATION`, `autoflow.currentGate` to `root_confirmation`, and `autoflow.nextStep` to `root_confirmation` until the user answers.
+
+Clear requests may reduce additional interview questions. They do not remove the confirmation gate.
+
+Example:
+
+```text
+I understand the Root requirement as:
+"Create a technical explanation deck about PBE for software seminar attendees."
+
+I propose this child structure:
+1. PBE problem and purpose
+2. Product/Project/Work/Test Tree model
+3. Human gates and approval rules
+4. ACEP execution contracts
+5. Evidence, impact, and revision flow
+6. Usage example and risks
+
+Should I confirm this structure, revise it, or decompose it further?
+```
 
 ## Decision Queue
 
@@ -116,6 +146,8 @@ confirmed
 deferred
 out_of_scope
 ```
+
+Codex must not mark any node terminal from its own confidence alone. User confirmation is required before `confirmed`, `deferred`, or `out_of_scope` is written for the active Root or leaf node.
 
 ## Current Node Selection
 
@@ -190,6 +222,7 @@ When a node is specific enough:
 1. Show the node summary.
 2. Ask the user to confirm it as a terminal requirement.
 3. Do not mark the node `confirmed` until the user confirms.
+4. If the node is clear enough to propose child nodes, show the proposed structure and ask whether to confirm that structure, revise it, or decompose further.
 
 ## Completion Conditions
 
@@ -207,6 +240,7 @@ RPD is complete only when:
 9. Source of Truth Matrix records each terminal requirement.
 10. PBE Invariants have no RPD-level violation.
 11. No blocking item remains in `.pbe/control/decision-queue.json`.
+12. Root confirmation has explicit user approval in the interview log or decision queue resolution.
 
 ## RPD Invariants
 
@@ -215,6 +249,8 @@ RPD is complete only when:
 - A deferred item is not a failure.
 - A confirmed requirement must not be silently dropped by later stages.
 - User intent is the source of truth; inferred implementation tasks must trace back to a requirement or be recorded as foundation work.
+- A clear request may be summarized and structured by Codex, but the user must approve the Root summary and whether decomposition should stop.
+- RPD completion is a hard gate for every downstream stage and every deliverable-producing action, including documents, slide decks, spreadsheets, images, generated files, code, tests, and review reports.
 
 ## Completion Report
 

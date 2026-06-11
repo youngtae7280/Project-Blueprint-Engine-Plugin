@@ -24,6 +24,7 @@
       "run_acep"
     ],
     "humanGates": [
+      "root_confirmation",
       "ui_ux_confirm",
       "implementation_scope",
       "architecture_runway",
@@ -84,5 +85,5 @@
     "review": ".pbe/review/",
     "revisions": ".pbe/revisions/"
   },
-  "deliveryStatus": "implemented"
+  "deliveryStatus": "waiting_root_confirmation"
 }

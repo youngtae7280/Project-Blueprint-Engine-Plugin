@@ -65,8 +65,9 @@ Use `bypass` only when the request is a typo, single-file edit, or clearly bound
    - `nextStep`: `rpd`
 19. Add tree-native artifact paths to `pbe-state.json.artifacts` so later stages can discover Product, Project, Work, Test, Cycle, Decision, Change, Impact, Evidence, and Acceptance trees without guessing paths.
 20. Immediately begin RPD/Product Tree growth unless the selected profile is `bypass`.
-21. If the provided project brief is enough to complete RPD safely, continue automatically until the UI/UX confirmation gate.
-22. If RPD needs more information, ask exactly one RPD question. The user should answer naturally; do not require `@project-blueprint-engine rpd`.
+21. If the provided project brief is clear, propose the Root requirement summary and child structure, then stop at the `root_confirmation` gate.
+22. If RPD needs more information before a safe proposal, ask exactly one RPD question. The user should answer naturally; do not require `@project-blueprint-engine rpd`.
+23. Do not create code, documents, slide decks, spreadsheets, images, generated assets, or review reports until the Root requirement and decomposition decision are user-confirmed.
 
 ## File Contract
 
@@ -120,6 +121,16 @@ Also keep these backward-compatible blueprint paths:
 When both v2 and v1 files exist, prefer the v2 tree file as the source of truth and update the v1 blueprint file as a compatibility view.
 
 The initial root node status is `pending_interview` unless the user already provided enough detail to begin as `interviewing`.
+
+If the user already provided enough detail, clear enough means "ready to propose", not "confirmed". In that case:
+
+- keep the requirement root unconfirmed as `interviewing` or `ready_to_confirm`
+- set the Product root to `proposed`
+- set `pbe-state.json.autoflow.state` to `WAITING_ROOT_CONFIRMATION`
+- set `pbe-state.json.autoflow.currentGate` to `root_confirmation`
+- set `pbe-state.json.autoflow.nextStep` to `root_confirmation`
+- set `pbe-state.json.deliveryStatus` to `waiting_root_confirmation`
+- ask the user to confirm, revise, or decompose the proposed Root structure
 
 ## Startup State
 

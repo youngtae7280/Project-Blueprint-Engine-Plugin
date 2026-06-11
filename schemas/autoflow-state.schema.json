@@ -16,6 +16,8 @@
       "enum": [
         "IDLE",
         "STARTED",
+        "WAITING_ROOT_CONFIRMATION",
+        "DRAFT_CREATED_FROM_ASSUMPTIONS",
         "RPD_DONE",
         "WAITING_UI_UX_CONFIRM",
         "UI_UX_APPROVED",
@@ -48,6 +50,7 @@
       "type": ["string", "null"],
       "enum": [
         "ui_ux_confirm",
+        "root_confirmation",
         "implementation_scope",
         "architecture_runway",
         "review_result",
@@ -79,6 +82,7 @@
         "type": "string",
         "enum": [
           "ui_ux_confirm",
+          "root_confirmation",
           "implementation_scope",
           "architecture_runway",
           "review_result",
@@ -90,6 +94,7 @@
       "type": ["string", "null"],
       "enum": [
         "approve",
+        "approve_root_confirmation",
         "revise",
         "ask",
         "status",

@@ -38,6 +38,42 @@ describe('PBE validator', () => {
     expect(result.status).toBe(0)
     expect(result.output).toContain('PBE validation passed.')
   })
+
+  it('rejects submitted review when the root requirement is still interviewing', () => {
+    const workspace = createValidatorWorkspace()
+    writePbeFixture(
+      workspace,
+      {
+        firstExpectedFile: 'src/features/one.ts',
+        secondExpectedFile: 'src/features/two.ts',
+      },
+      {
+        requirementStatus: 'interviewing',
+        deliveryStatus: 'submitted_for_review',
+      },
+    )
+
+    const result = runValidator(workspace)
+
+    expect(result.status).toBe(1)
+    expect(result.output).toContain('RPD_INCOMPLETE_DOWNSTREAM_BLOCKED')
+    expect(result.output).toContain('Requirement node REQ-1 is interviewing')
+  })
+
+  it('rejects downstream execution while a blocking decision is open', () => {
+    const workspace = createValidatorWorkspace()
+    writePbeFixture(workspace, {
+      firstExpectedFile: 'src/features/one.ts',
+      secondExpectedFile: 'src/features/two.ts',
+    })
+    writeBlockingDecisionQueue(workspace)
+
+    const result = runValidator(workspace)
+
+    expect(result.status).toBe(1)
+    expect(result.output).toContain('RPD_INCOMPLETE_DOWNSTREAM_BLOCKED')
+    expect(result.output).toContain('Decision DEC-ROOT is open with blockingLevel=blocking')
+  })
 })
 
 function createValidatorWorkspace() {
@@ -79,6 +115,10 @@ function writePbeFixture(
     firstExpectedFile: string
     secondExpectedFile: string
   },
+  options: {
+    requirementStatus?: string
+    deliveryStatus?: string
+  } = {},
 ) {
   const blueprintRoot = join(workspace, '.pbe', 'blueprint')
   const acepRoot = join(workspace, '.pbe', 'codex-execution-pack')
@@ -86,7 +126,7 @@ function writePbeFixture(
   mkdirSync(blueprintRoot, { recursive: true })
   mkdirSync(taskRoot, { recursive: true })
 
-  writeJson(join(blueprintRoot, 'pbe-state.json'), {
+  const pbeState = {
     schemaVersion: 1,
     stage: 'acep_ready',
     mode: 'acep_generation',
@@ -130,7 +170,11 @@ function writePbeFixture(
         'next_slice_decision',
       ],
     },
-  })
+  } as Record<string, unknown>
+  if (options.deliveryStatus) {
+    pbeState.deliveryStatus = options.deliveryStatus
+  }
+  writeJson(join(blueprintRoot, 'pbe-state.json'), pbeState)
   writeJson(join(blueprintRoot, 'requirement-tree.json'), {
     schemaVersion: 1,
     rootNodeId: 'REQ-1',
@@ -138,7 +182,7 @@ function writePbeFixture(
       {
         id: 'REQ-1',
         title: 'Example requirement',
-        status: 'confirmed',
+        status: options.requirementStatus || 'confirmed',
         children: [],
         uiImpact: 'none',
       },
@@ -243,6 +287,24 @@ function writePbeFixture(
       },
     ],
     stopConditions: ['parallel_group_same_file_conflict'],
+  })
+}
+
+function writeBlockingDecisionQueue(workspace: string) {
+  const controlRoot = join(workspace, '.pbe', 'control')
+  mkdirSync(controlRoot, { recursive: true })
+  writeJson(join(controlRoot, 'decision-queue.json'), {
+    version: '0.2.0-tree-control',
+    decisions: [
+      {
+        id: 'DEC-ROOT',
+        status: 'open',
+        targetNodeId: 'REQ-1',
+        reason: 'Root confirmation is required before downstream execution.',
+        question: 'Should this Root requirement structure be confirmed?',
+        blockingLevel: 'blocking',
+      },
+    ],
   })
 }
 

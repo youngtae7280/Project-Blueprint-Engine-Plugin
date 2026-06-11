@@ -18,6 +18,7 @@
     "run_acep"
   ],
   "humanGates": [
+    "root_confirmation",
     "ui_ux_confirm",
     "implementation_scope",
     "architecture_runway",
@@ -27,6 +28,12 @@
   "lastUserAction": null,
   "lastFailure": null,
   "downstreamOnApprove": {
+    "WAITING_ROOT_CONFIRMATION": [
+      "rpd"
+    ],
+    "DRAFT_CREATED_FROM_ASSUMPTIONS": [
+      "rpd"
+    ],
     "WAITING_UI_UX_CONFIRM": [
       "wpd",
       "vd",
@@ -59,6 +66,12 @@
     ]
   },
   "downstreamOnRevision": {
+    "WAITING_ROOT_CONFIRMATION": [
+      "rpd"
+    ],
+    "DRAFT_CREATED_FROM_ASSUMPTIONS": [
+      "rpd"
+    ],
     "WAITING_UI_UX_CONFIRM": [
       "ui_ux_confirm",
       "wpd",

@@ -42,14 +42,18 @@ This means PBE may deliberately stop at human gates, may require foundation work
 
 When `.pbe/` exists or the user mentions PBE, ACEP, RPD, WPD, VD, traceability,
 dependency impact, implementation scope, or PBE review, route implementation
-work through PBE before ordinary coding.
+work and deliverable-producing work through PBE before ordinary coding or file generation.
+
+Deliverable-producing work includes code, tests, documents, slide decks, spreadsheets,
+images, generated assets, review reports, and any repository file changes.
 
 1. Read `.pbe/blueprint/pbe-state.json` before implementation or modification work.
 2. If `autoflow.currentGate` is set, do not implement; report the active gate and ask for the user's decision.
 3. If `autoflow.state` is `BLOCKED`, do not continue downstream; report `lastFailure` and repair options.
-4. If `autoflow.nextStep` is deterministic, run that PBE step before ordinary coding.
-5. Use ordinary AI answers only for usage help, explanations, or reviews that do not change PBE workflow state.
-6. Do not bypass PBE when the request touches selected, foundation, deferred, blocked, or out-of-scope work unless the profile is explicitly set to `bypass` and the risk is recorded.
+4. Before any downstream step or deliverable-producing action, verify RPD completion. If any Root or leaf requirement is still `pending_interview`, `interviewing`, `ready_to_confirm`, `ready_to_decompose`, or `blocked`, stop at `root_confirmation` or continue RPD.
+5. If `autoflow.nextStep` is deterministic, run that PBE step before ordinary coding.
+6. Use ordinary AI answers only for usage help, explanations, or reviews that do not change PBE workflow state.
+7. Do not bypass PBE when the request touches selected, foundation, deferred, blocked, or out-of-scope work unless the profile is explicitly set to `bypass` and the risk is recorded.
 
 ## Execution Profiles
 
@@ -74,6 +78,8 @@ Track state in `.pbe/blueprint/pbe-state.json` under `autoflow`.
 ```text
 IDLE
 STARTED
+WAITING_ROOT_CONFIRMATION
+DRAFT_CREATED_FROM_ASSUMPTIONS
 RPD_DONE
 WAITING_UI_UX_CONFIRM
 UI_UX_APPROVED
@@ -125,6 +131,7 @@ Deterministic steps continue automatically. Human gates stop and explain why.
 
 Stop and guide the user at:
 
+- `root_confirmation`
 - `ui_ux_confirm`
 - `implementation_scope`
 - `architecture_runway`
@@ -183,6 +190,7 @@ Map natural language to actions:
 
 ```text
 "approve", "looks good", "continue", "this is okay" -> approve / continue
+"confirm this root", "use this structure" -> approve_root_confirmation
 "select scope: ...", "implement only ..." -> select_scope
 "full scope", "implement everything" -> select_full_scope
 "defer ...", "postpone ..." -> mark_deferred
@@ -287,3 +295,4 @@ Downstream steps to rerun after repair:
 - Blocking Dependency stops automatic progress.
 - If parallel safety cannot be proven, do not parallelize.
 - Codex cannot mark work accepted. Only the user can.
+- Codex cannot treat a clear Root requirement as confirmed until the user approves the Root summary and decomposition decision.

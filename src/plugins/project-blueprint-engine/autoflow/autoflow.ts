@@ -5,6 +5,8 @@ export type PbeExecutionProfile = (typeof PBE_EXECUTION_PROFILES)[number]
 export const AUTOFLOW_STATES = [
   'IDLE',
   'STARTED',
+  'WAITING_ROOT_CONFIRMATION',
+  'DRAFT_CREATED_FROM_ASSUMPTIONS',
   'RPD_DONE',
   'WAITING_UI_UX_CONFIRM',
   'UI_UX_APPROVED',
@@ -34,6 +36,7 @@ export type AutoflowStateName = (typeof AUTOFLOW_STATES)[number]
 export type AutoflowStep =
   | 'start'
   | 'rpd'
+  | 'root_confirmation'
   | 'ui_ux_confirm'
   | 'wpd'
   | 'vd'
@@ -53,6 +56,7 @@ export type AutoflowStep =
   | 'run_revision'
 
 export type HumanGate =
+  | 'root_confirmation'
   | 'ui_ux_confirm'
   | 'implementation_scope'
   | 'architecture_runway'
@@ -61,6 +65,7 @@ export type HumanGate =
 
 export type HumanAction =
   | 'approve'
+  | 'approve_root_confirmation'
   | 'revise'
   | 'ask'
   | 'status'

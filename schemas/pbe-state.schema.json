@@ -20,6 +20,8 @@
       "type": "string",
       "enum": [
         "implemented",
+        "draft_created_from_assumptions",
+        "waiting_root_confirmation",
         "verified",
         "submitted_for_review",
         "revision_requested",

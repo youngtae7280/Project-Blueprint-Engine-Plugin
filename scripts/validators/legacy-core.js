@@ -757,6 +757,15 @@ function validateAutoflowState(autoflow, label) {
   if (autoflow.state === 'WAITING_UI_UX_CONFIRM' && autoflow.currentGate !== 'ui_ux_confirm') {
     errors.push(`${label} WAITING_UI_UX_CONFIRM must set currentGate to ui_ux_confirm`)
   }
+  if (autoflow.state === 'WAITING_ROOT_CONFIRMATION' && autoflow.currentGate !== 'root_confirmation') {
+    errors.push(`${label} WAITING_ROOT_CONFIRMATION must set currentGate to root_confirmation`)
+  }
+  if (
+    autoflow.state === 'DRAFT_CREATED_FROM_ASSUMPTIONS' &&
+    autoflow.currentGate !== 'root_confirmation'
+  ) {
+    errors.push(`${label} DRAFT_CREATED_FROM_ASSUMPTIONS must set currentGate to root_confirmation`)
+  }
   if (autoflow.state === 'WAITING_REVIEW_RESULT' && autoflow.currentGate !== 'review_result') {
     errors.push(`${label} WAITING_REVIEW_RESULT must set currentGate to review_result`)
   }

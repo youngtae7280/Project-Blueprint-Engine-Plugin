@@ -115,6 +115,7 @@ Automatic steps:
 Human gates:
 
 - `ui_ux_confirm`
+- `root_confirmation`
 - `implementation_scope`
 - `architecture_runway`
 - `review_result`
@@ -150,6 +151,7 @@ Rules:
 Natural-language examples:
 
 - "approve", "looks good", "continue" -> approve / continue
+- "confirm this root", "use this structure" -> approve_root_confirmation
 - "select scope: ..." -> select_scope
 - "full scope" -> select_full_scope
 - "defer ..." -> mark_deferred
@@ -204,6 +206,7 @@ When running RPD:
 4. Extract facts after each answer.
 5. Ask before decomposing a node.
 6. Ask before confirming a node.
+6a. If the request is clear, propose the Root summary and child structure, then ask the user to confirm, revise, or decompose further. Do not ask a vague "should I interview more?" question.
 7. Update `.pbe/tree/product-tree.json` after every confirmed decision when v2 files exist.
 8. Update `.pbe/blueprint/requirement-tree.json` as the compatibility view after every confirmed decision.
 9. Update `.pbe/control/decision-queue.json` when a decision is opened or resolved.
@@ -211,6 +214,8 @@ When running RPD:
 11. Update Source of Truth Matrix links when requirements change.
 
 RPD owns user intent, not coding task boundaries.
+
+RPD completion is a hard gate for every downstream stage and every deliverable-producing action. Code, documents, slide decks, spreadsheets, images, generated assets, tests, and review reports must not be created from unconfirmed Root or leaf requirements except as explicitly labeled assumption drafts with `deliveryStatus: draft_created_from_assumptions` or `waiting_root_confirmation`.
 
 ## WPD And WorkGraph
 

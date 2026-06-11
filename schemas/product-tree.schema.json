@@ -22,7 +22,7 @@
         "id": { "type": "string" },
         "type": { "enum": ["goal", "user", "outcome", "capability", "behavior", "ui_surface", "ui_state", "data", "constraint", "non_goal", "risk", "acceptance", "assumption", "decision"] },
         "title": { "type": "string" },
-        "status": { "enum": ["draft", "assumed", "auto_derived", "needs_human_decision", "proposed", "accepted", "covered", "partial_satisfied", "satisfied", "accepted_done", "deferred", "out_of_scope", "blocked", "changed", "reopened"] },
+        "status": { "enum": ["draft", "assumed", "auto_derived", "needs_human_decision", "proposed", "confirmed", "accepted", "covered", "partial_satisfied", "satisfied", "accepted_done", "deferred", "out_of_scope", "blocked", "changed", "reopened"] },
         "parent": { "type": ["string", "null"] },
         "children": { "type": "array", "items": { "type": "string" } },
         "source": { "type": "object" },

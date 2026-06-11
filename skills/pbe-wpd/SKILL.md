@@ -7,7 +7,9 @@ description: Derive Project Tree and Work Tree from completed RPD/Product Tree f
 
 Use this skill to create Work Process Design from completed RPD output.
 
-In PBE v2, WPD derives `.pbe/tree/project-tree.json` and `.pbe/tree/work-tree.json` from accepted Product Tree branches. Existing `.pbe/blueprint/work-design.json` and `.pbe/blueprint/work-graph.json` remain compatibility views and must be generated from the tree-native output, not the other way around.
+In PBE v2, WPD derives `.pbe/tree/project-tree.json` and `.pbe/tree/work-tree.json` from confirmed Product Tree branches. Existing `.pbe/blueprint/work-design.json` and `.pbe/blueprint/work-graph.json` remain compatibility views and must be generated from the tree-native output, not the other way around.
+
+During migration, legacy Product status `accepted` may be read as confirmed requirement intent. It must not be confused with final product acceptance.
 
 WPD is the boundary between user requirements and coding work. It must not copy
 RPD requirement nodes directly into Codex coding tasks. It converts requirement
@@ -51,10 +53,10 @@ Prefer v2 tree files when present. If `.pbe/tree/product-tree.json` and `.pbe/bl
 
 ## Required Actions
 
-1. Verify RPD completion before generating WPD.
+1. Verify RPD completion before generating WPD. If any Root or leaf requirement still needs confirmation, stop and return to RPD/root confirmation.
 2. Verify UI/UX confirmation is complete for UI-required items.
-3. Collect accepted Product Tree branches and their compatibility requirement nodes.
-4. Derive Project Tree module, surface, service, contract, data boundary, integration boundary, and foundation nodes from accepted Product Tree branches.
+3. Collect confirmed Product Tree branches and their compatibility requirement nodes.
+4. Derive Project Tree module, surface, service, contract, data boundary, integration boundary, and foundation nodes from confirmed Product Tree branches.
 5. Run the internal `Module Boundary Check` before creating work units.
 6. Extract shared foundations, feature candidates, integration points, verification links, and parallelization risks.
 7. Derive Work Tree executable nodes from Project Tree nodes and Product Tree branches.

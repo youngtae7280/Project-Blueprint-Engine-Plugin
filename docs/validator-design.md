@@ -17,23 +17,38 @@ npm run validate
 
 ## Expected Report Shape
 
+The CLI may render pass/fail markers with symbols. The ASCII-safe shape is:
+
 ```text
 [PBE Validate]
 
-✓ Plugin structure
-✓ Skills
-✓ Templates
-✓ Schemas
-✓ PBE layout
-✓ Autoflow state
-✓ WorkGraph
-✓ ACEP manifest
-✓ Revision
-✓ Examples
-✓ Compatibility core
+PASS Plugin structure
+PASS Skills
+PASS Templates
+PASS Schemas
+PASS PBE layout
+PASS Autoflow state
+PASS RPD transition guard
+PASS WorkGraph
+PASS ACEP manifest
+PASS Revision
+PASS Examples
+PASS Compatibility core
 
 Result: PASS
 ```
 
 Failures should include the validator name, file, error code, message, and a suggested fix.
 
+## RPD Transition Guard
+
+`scripts/validators/rpd-transition.js` prevents downstream execution, review, or deliverable-producing work while RPD is incomplete.
+
+It fails when:
+
+- any requirement Root or leaf remains `pending_interview`, `interviewing`, `ready_to_confirm`, `ready_to_decompose`, or `blocked`
+- Product Tree root remains `draft`, `proposed`, `needs_human_decision`, or another non-terminal planning state
+- an open `gate` or `blocking` decision remains in `decision-queue.json`
+- `pbe-state.deliveryStatus` is `implemented`, `verified`, `submitted_for_review`, `revision_verified`, or `accepted` before RPD completion
+
+Use `draft_created_from_assumptions` or `waiting_root_confirmation` when an assumption-based draft exists but Root confirmation is still pending.

@@ -8,6 +8,7 @@ import { runExamplesValidator } from './validators/examples.js'
 import { runPbeLayoutValidator } from './validators/pbe-layout.js'
 import { runPluginStructureValidator } from './validators/plugin-structure.js'
 import { runRevisionValidator } from './validators/revision.js'
+import { runRpdTransitionValidator } from './validators/rpd-transition.js'
 import { runSchemasValidator } from './validators/schemas.js'
 import { runSkillsValidator } from './validators/skills.js'
 import { runTemplatesValidator } from './validators/templates.js'
@@ -24,6 +25,7 @@ const validators = [
   ['Schemas', runSchemasValidator, pluginRoot],
   ['PBE layout', runPbeLayoutValidator, targetRoot],
   ['Autoflow state', runAutoflowStateValidator, targetRoot],
+  ['RPD transition guard', runRpdTransitionValidator, targetRoot],
   ['WorkGraph', runWorkgraphValidator, targetRoot],
   ['ACEP manifest', runAcepManifestValidator, targetRoot],
   ['Revision', runRevisionValidator, targetRoot],

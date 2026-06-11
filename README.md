@@ -289,7 +289,7 @@ PBE is easiest to understand as a stateful Codex workflow:
 
 1. Codex reads the target repository and the existing `.pbe/` folder.
 2. PBE stores durable state in `.pbe/blueprint/pbe-state.json`.
-3. PBE routing reads that state before implementation work.
+3. PBE routing reads that state before implementation or deliverable-producing work.
 4. Deterministic stages continue automatically.
 5. Human gates stop the flow only when product judgment is required.
 6. ACEP/Cycle Contract turns the approved plan into a Codex execution contract.
@@ -303,7 +303,9 @@ flowchart TD
     C --> D{"Enough requirement info?"}
     D -- "No" --> E["Ask exactly one requirement question"]
     E --> C
-    D -- "Yes" --> F["RPD_DONE"]
+    D -- "Yes" --> RC["Human Gate<br/>Root confirmation"]
+    RC -- "approve structure" --> F["RPD_DONE"]
+    RC -- "revise or decompose further" --> C
 
     F --> G{"UI/UX work involved?"}
     G -- "Yes" --> H["Human Gate<br/>UI/UX confirmation"]
@@ -349,6 +351,7 @@ PBE stops only where the user has to make a product or delivery decision.
 
 | Gate | Why PBE Stops | Typical User Replies |
 | --- | --- | --- |
+| Root confirmation | Even a clear request must be summarized and structurally confirmed before RPD ends. | `use this structure`, `revise the audience`, `decompose this further` |
 | UI/UX confirmation | UI behavior should not be implemented before the user confirms the flow, wording, states, and exceptions. | `approve`, `change the failure screen`, `what is risky?` |
 | Implementation scope | The user must decide what is selected now, what is deferred, what is foundation, and what is out of scope. | `select the recommended scope`, `defer Ethernet`, `foundation first` |
 | Architecture runway | Future or deferred modules may require foundation work now to avoid rework later. | `approve the foundation`, `interface only`, `skip this foundation` |
@@ -407,7 +410,7 @@ Each PBE module has one job. The workflow is safe because no module silently exp
 | Module | Input | What It Does | Output | User Involvement |
 | --- | --- | --- | --- | --- |
 | `pbe-start` | User request, target repo, existing `.pbe/` | Detects whether PBE is new or continuing, initializes state, chooses an execution profile, and starts RPD unless bypassed. | `pbe-state.json`, project brief, initial blueprint files | Usually one `start` request |
-| `RPD` | User answers, project brief, existing requirement tree | Walks one requirement node at a time, asks one open-ended question when needed, extracts facts, confirms or decomposes nodes. RPD owns user intent, not coding tasks. | `requirement-tree.json`, `rpd-interview-log.md`, `rpd-summary.md` | Answers requirement questions and confirms summaries |
+| `RPD` | User answers, project brief, existing requirement tree | Walks one requirement node at a time, asks one open-ended question when needed, extracts facts, and proposes confirmation or decomposition. If the request is clear, Codex proposes the Root summary and child structure instead of asking whether to interview more. User confirmation is still required. | `requirement-tree.json`, `rpd-interview-log.md`, `rpd-summary.md` | Confirms the Root/leaf summary, revises it, or asks for more decomposition |
 | `UI/UX Confirm` | RPD UI facts, UI-related requirements | Creates a text wireframe, markdown mockup, or prototype-level preview before implementation. Blocks UI work until confirmed, deferred, out of scope, or not required. | `ui-ux-preview.*`, `ui-ux-confirmation.md` | Confirms, revises, or asks about UI/UX |
 | `WPD` | Confirmed RPD, UI/UX confirmation, Source of Truth Matrix | Runs Module Boundary Check internally. Converts requirements into a module-aware WorkGraph instead of copying RPD nodes into coding tasks. Classifies selected, foundation, deferred, blocked, and out-of-scope work. | `work-design.json`, `work-graph.json`, `work-roadmap.md` | Only if a boundary blocker needs a decision |
 | `VD` | WorkDesign, WorkGraph, requirement tree | Creates verification items for selected and foundation work. Records deferred and out-of-scope verification notes without treating them as current failures. | `verification-design.json`, `verification-plan.md` | Only if verification is impossible without a decision |
@@ -430,7 +433,10 @@ The Autoflow state machine lives in `.pbe/blueprint/pbe-state.json` under `autof
 stateDiagram-v2
     [*] --> IDLE
     IDLE --> STARTED: start
-    STARTED --> RPD_DONE: rpd
+    STARTED --> WAITING_ROOT_CONFIRMATION: clear request proposal
+    WAITING_ROOT_CONFIRMATION --> RPD_DONE: approve root
+    WAITING_ROOT_CONFIRMATION --> STARTED: revise/decompose
+    STARTED --> RPD_DONE: all leaves terminal
     RPD_DONE --> WAITING_UI_UX_CONFIRM: UI/UX gate
     WAITING_UI_UX_CONFIRM --> UI_UX_APPROVED: approve
     UI_UX_APPROVED --> WPD_DONE: wpd
@@ -524,6 +530,7 @@ start
 
 Human gates:
 
+- root confirmation
 - UI/UX confirmation
 - implementation scope
 - architecture runway
@@ -534,9 +541,10 @@ Human gates:
 
 Autoflow state is stored in `.pbe/blueprint/pbe-state.json` under `autoflow`.
 
-PBE routing uses that state before implementation work:
+PBE routing uses that state before implementation or deliverable-producing work:
 
 - active `currentGate` means Codex must stop and ask for the user's decision
+- `WAITING_ROOT_CONFIRMATION` means the Root summary or decomposition proposal needs explicit user approval before any downstream step or deliverable-producing action
 - `BLOCKED` means Codex must report `lastFailure` and repair options
 - deterministic `nextStep` means Codex should run the next PBE step before ordinary coding
 - ordinary usage help or conceptual review can be answered without a PBE status card
