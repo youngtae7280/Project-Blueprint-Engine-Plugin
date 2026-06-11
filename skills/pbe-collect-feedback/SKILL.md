@@ -9,6 +9,15 @@ Use this skill when the user says the result is not acceptable, asks for changes
 
 In Autoflow, this skill runs automatically when the user gives a revision request at the Review Result gate.
 
+When feedback changes product meaning, scope, UI/UX behavior, acceptance criteria, verification strategy, or previously completed work, create or update Change Tree and Impact Tree before coding. Then run:
+
+```bash
+pbe trace check
+pbe gate code-start
+```
+
+Do not silently modify completed scope without a Change node and Impact record.
+
 ## Purpose
 
 Turn user feedback into structured feedback items and Change Tree input that can drive bounded Impact/Reopen analysis and Revision Pack creation.

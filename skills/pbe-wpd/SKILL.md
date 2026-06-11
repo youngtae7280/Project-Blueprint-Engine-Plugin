@@ -21,6 +21,15 @@ WPD owns module boundary analysis, selected/deferred/foundation classification r
 WPD is deterministic in Autoflow. If UI/UX gate is approved or not required, run
 WPD automatically without asking the user for a separate command.
 
+After generating or updating Project Tree, Work Tree, WorkGraph, or WorkDesign compatibility artifacts, run:
+
+```bash
+pbe wpd check
+pbe trace check
+```
+
+If either command fails, do not proceed to VD.
+
 ## Inputs
 
 ```text

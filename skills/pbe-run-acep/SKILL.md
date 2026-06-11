@@ -15,6 +15,21 @@ ACEP Runner is deterministic in Autoflow. Run it automatically after ACEP genera
 
 Run ACEP only for selected scope and required foundation scope. Deferred and out-of-scope items are protected scope and must not be implemented unless the user changes the implementation scope through a gate.
 
+Before starting implementation, run:
+
+```bash
+pbe gate code-start
+```
+
+After implementation and verification, run:
+
+```bash
+pbe evidence check
+pbe gate review-submit
+```
+
+Do not mark any scope as accepted. Acceptance requires explicit user approval and must pass `pbe gate accept`.
+
 ## Inputs
 
 Prefer v2 cycle-native inputs:

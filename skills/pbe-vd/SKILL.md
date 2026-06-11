@@ -13,6 +13,15 @@ VD is deterministic in Autoflow. Run it automatically after WPD succeeds.
 
 VD owns verification design. It must preserve selected, deferred, foundation, blocked, and out-of-scope classifications from WPD and must not turn deferred implementation into current-slice verification failure.
 
+After generating or updating Test Tree or VerificationDesign compatibility artifacts, run:
+
+```bash
+pbe vd check
+pbe trace check
+```
+
+If either command fails, do not generate ACEP.
+
 ## Inputs
 
 ```text

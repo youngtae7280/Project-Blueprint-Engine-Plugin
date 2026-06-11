@@ -39,6 +39,15 @@ Use `bypass` only when the request is a typo, single-file edit, or clearly bound
 
 ## Required Actions
 
+Prefer `pbe init --profile <full|lite|bypass> --brief "<user brief>"` when initializing deterministic PBE artifacts. After creating or updating `.pbe` artifacts, run:
+
+```bash
+pbe status
+pbe validate
+```
+
+If either command fails, do not proceed to RPD until the blocking issue is fixed.
+
 1. Inspect the target repository enough to understand whether this is a new project or a change to an existing project.
 2. Create `.pbe/tree/`, `.pbe/execution/node-execution-contracts/`, `.pbe/control/`, `.pbe/evidence/screenshots/`, `.pbe/evidence/test-results/`, `.pbe/evidence/logs/`, and `.pbe/blueprint/` if they do not exist.
 3. Create or update `.pbe/blueprint/pbe-state.json`.

@@ -13,6 +13,14 @@ In PBE v2, ACEP generation packages the selected Cycle Slice. It does not packag
 
 ACEP generation is deterministic in Autoflow. Run it automatically after Coverage Audit and UX Audit pass.
 
+After generating ACEP files and the execution manifest, run:
+
+```bash
+pbe acep check
+```
+
+If the command fails, do not report ACEP as ready.
+
 ## Inputs
 
 Prefer v2 tree and cycle files when present:

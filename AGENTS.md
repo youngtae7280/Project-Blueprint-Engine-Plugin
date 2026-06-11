@@ -73,6 +73,22 @@ Backward-compatible v1 views may also exist:
 - `.pbe/codex-execution-pack/18-execution-strategy.md`
 - `.pbe/codex-execution-pack/execution-manifest.json`
 
+## PBE CLI
+
+Use the deterministic `pbe` CLI for file-judgable gates before relying on prose instructions alone.
+
+```bash
+pbe status
+pbe validate
+pbe rpd check
+pbe rpd close
+pbe gate <stage>
+```
+
+`npm run validate:pbe` builds the CLI and runs `pbe validate`. The CLI must not become a GUI, MCP server, daemon, or OpenAI API caller. It reads and writes `.pbe` artifacts only, while preserving the existing validators as the compatibility layer.
+
+Before WPD/VD/ACEP or implementation starts, the relevant CLI check/gate must pass. If the CLI reports a blocking issue, stop and report the required user or artifact action instead of continuing by judgment.
+
 ## Human Questioning Rule
 
 Ask the user only when the answer changes product meaning, scope, UX, risk, acceptance criteria, verification strategy, or already implemented/verified/accepted work.

@@ -41,6 +41,20 @@ Keep these v1 compatibility views current:
 
 Every confirmed, deferred, blocked, or out-of-scope requirement node must have a Product Tree node or a recorded reason why it cannot yet be represented.
 
+After updating Product Tree or the compatibility requirement-tree, run:
+
+```bash
+pbe rpd check
+```
+
+Before reporting RPD completion or moving to WPD, run:
+
+```bash
+pbe rpd close
+```
+
+If `pbe rpd close` fails, do not proceed to WPD. Report the blocking issue and ask exactly one user-facing clarification question when a human decision is required.
+
 ## RPD Tree Walk Rules
 
 1. Process one current node at a time.

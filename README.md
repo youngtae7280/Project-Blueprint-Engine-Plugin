@@ -610,13 +610,27 @@ boundaries so a narrow revision does not quietly expand into unrelated code.
 
 ## Validation
 
+Build and use the deterministic PBE CLI:
+
+```bash
+npm run build:cli
+node dist/cli/index.js --help
+node dist/cli/index.js status --root /path/to/project
+node dist/cli/index.js validate --root /path/to/project
+node dist/cli/index.js rpd check --root /path/to/project
+node dist/cli/index.js rpd close --root /path/to/project
+node dist/cli/index.js gate wpd --root /path/to/project
+```
+
+The CLI does not replace Codex, call OpenAI APIs, run a daemon, or revive the legacy GUI. It reads and writes `.pbe` artifacts only. `pbe validate` wraps the preserved validators and adds deterministic stage checks where the rule can be judged from files.
+
 Validate plugin structure and JSON files:
 
 ```bash
 npm run validate:pbe
 ```
 
-This validation now compiles the JSON schemas with AJV, validates `.pbe`
+This command builds the CLI and runs `pbe validate`. The validation compiles the JSON schemas with AJV, validates `.pbe`
 artifacts against those schemas when present, checks cross-artifact
 traceability, enforces dependency-impact artifacts, verifies UI impact fields,
 and rejects unsafe parallel or revision boundaries.
