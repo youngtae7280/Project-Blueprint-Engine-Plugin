@@ -22,3 +22,14 @@ Cycle Tree -> Change Tree -> Impact Tree -> Evidence Tree -> Acceptance Tree
 - Change Nodes produce Impact Trees.
 - Impacted completed nodes can become stale, invalidated, or reopened.
 - Product branches close only with evidence and human acceptance.
+
+## Validation
+
+Run:
+
+```bash
+npm run validate:pbe:v2
+```
+
+The v2 validator compiles the tree schemas, validates matching templates, and
+when `.pbe` tree artifacts exist, checks node IDs and cross-tree links.

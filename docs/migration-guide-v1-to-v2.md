@@ -18,7 +18,8 @@ feedback/revision -> change-tree + impact-tree + reopen protocol
 
 1. Reframe README, plugin.json, AGENTS.
 2. Add tree schemas/templates.
-3. Update start/rpd/wpd/vd.
-4. Update plan/generate/run ACEP around cycle contracts.
-5. Update review/feedback/revision around Change/Impact/Reopen.
-6. Add validators and golden scenarios.
+3. Add `validate:pbe:v2` for tree schemas, templates, and optional `.pbe` tree artifacts.
+4. Update start/rpd/wpd/vd.
+5. Update plan/generate/run ACEP around cycle contracts.
+6. Update review/feedback/revision around Change/Impact/Reopen.
+7. Add golden scenarios.

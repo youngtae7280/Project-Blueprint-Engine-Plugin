@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "validate:pbe": "node scripts/validate-pbe-files.js",
+    "validate:pbe:v2": "node scripts/validate-pbe-tree-system.js",
     "typecheck": "tsc -b",
     "test": "vitest run",
     "lint": "eslint .",

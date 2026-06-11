@@ -473,6 +473,16 @@ artifacts against those schemas when present, checks cross-artifact
 traceability, enforces dependency-impact artifacts, verifies UI impact fields,
 and rejects unsafe parallel or revision boundaries.
 
+Validate v2 tree-control schemas, templates, and optional `.pbe` tree artifacts:
+
+```bash
+npm run validate:pbe:v2
+```
+
+This validation is backward compatible. If no `.pbe/tree`, `.pbe/execution`,
+`.pbe/control`, or `.pbe/evidence` artifacts exist yet, it validates only the
+v2 schemas/templates and exits successfully.
+
 Validate the Codex plugin manifest and skills:
 
 ```bash

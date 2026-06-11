@@ -180,3 +180,13 @@ Plugin-local schemas live in `schemas/`:
 The schemas document the contract and are compiled by `npm run validate:pbe`.
 The validator also performs cross-artifact checks for routing, traceability,
 parallel safety, dependency impact, UI impact, and revision file boundaries.
+
+Tree-control schemas and templates are validated by:
+
+```bash
+npm run validate:pbe:v2
+```
+
+When v2 `.pbe` artifacts are present, this command also checks root nodes,
+duplicate IDs, derivation links, cycle membership, change/impact references,
+evidence links, and user acceptance closure.
