@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local/project-blueprint-engine/verification-miss-log.schema.json",
+  "title": "PBE Verification Miss Log",
+  "type": "object",
+  "required": ["version", "misses"],
+  "properties": {
+    "version": { "type": "string" },
+    "misses": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/miss" }
+    }
+  },
+  "$defs": {
+    "miss": {
+      "type": "object",
+      "required": ["id", "missType", "occurrenceCount", "whyPreviousVerificationMissedThis", "promotionDecision", "status"],
+      "properties": {
+        "id": { "type": "string" },
+        "feedbackItemIds": { "type": "array", "items": { "type": "string" } },
+        "affectedNodeIds": { "type": "array", "items": { "type": "string" } },
+        "missType": {
+          "enum": [
+            "legacy_inventory_gap",
+            "visual_runtime_gap",
+            "hardware_state_gap",
+            "test_gap",
+            "scope_gap",
+            "acceptance_gap",
+            "other"
+          ]
+        },
+        "occurrenceCount": { "type": "integer", "minimum": 1 },
+        "whyPreviousVerificationMissedThis": { "type": "string" },
+        "promotionDecision": { "enum": ["not_required", "pending", "promoted", "blocked"] },
+        "promotedTestNodeIds": { "type": "array", "items": { "type": "string" } },
+        "promotedEvidenceNodeIds": { "type": "array", "items": { "type": "string" } },
+        "promotedContractRefs": { "type": "array", "items": { "type": "string" } },
+        "blockingReason": { "type": "string" },
+        "status": { "enum": ["open", "promoted", "resolved", "blocked"] }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

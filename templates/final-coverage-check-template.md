@@ -112,6 +112,25 @@
 - Screenshot/evidence provided:
 - Manual verification notes:
 
+## Parity / Completeness Coverage
+
+- Profile active:
+- Surface completion ledger checked:
+- Technical stable surfaces:
+- Parity reviewed surfaces:
+- Product accepted surfaces:
+- Legacy inventory checked:
+- Required legacy controls missing:
+- Required legacy controls unverified:
+- Visual/runtime profile checked:
+- Visual/runtime checks passed:
+- Visual/runtime checks not runnable:
+- Hardware readiness ledger checked:
+- Hardware certified items with evidence:
+- Hardware verification pending:
+- Verification miss log checked:
+- Repeated misses promoted or blocked:
+
 ## Parallel And Integration Coverage
 
 - Parallel groups:
@@ -127,6 +146,9 @@
 - Work nodes without Test/Evidence:
 - Test nodes without Evidence:
 - Accepted branches with stale/reopened impact:
+- Parity-claimed surfaces without inventory/evidence:
+- Hardware-certified items without certification evidence:
+- Repeated verification misses without promotion/blocking:
 - Selected requirements without tasks:
 - Foundation items without tasks:
 - Tasks without verification:
@@ -144,6 +166,9 @@ The current slice can be submitted for review only if:
 - every included Work node has included Test coverage
 - every included Test node has current Evidence Tree evidence or an explicit not-runnable explanation
 - no required UI/UX state is missing without explanation
+- no parity-critical surface claims parity without inventory and evidence
+- no hardware-dependent feature claims certification without certification evidence
+- no repeated verification miss is ignored without promotion, blocking, or human decision
 - no stale, invalidated, or reopened item is being treated as accepted
 - every parallel group has integration evidence and integration pass
 - deferred and out-of-scope items were not implemented accidentally

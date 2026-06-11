@@ -25,6 +25,10 @@ VD owns verification design. It must preserve selected, deferred, foundation, bl
 .pbe/blueprint/work-roadmap.md
 .pbe/blueprint/source-of-truth-matrix.md
 .pbe/blueprint/foundation-contract.md
+.pbe/control/surface-completion-ledger.json
+.pbe/control/legacy-control-inventory.json
+.pbe/control/hardware-readiness-ledger.json
+.pbe/control/visual-verification-profile.json
 ```
 
 ## Outputs
@@ -33,6 +37,8 @@ VD owns verification design. It must preserve selected, deferred, foundation, bl
 .pbe/tree/test-tree.json
 .pbe/blueprint/verification-design.json
 .pbe/blueprint/verification-plan.md
+.pbe/control/visual-verification-profile.json
+.pbe/control/hardware-readiness-ledger.json
 ```
 
 Prefer v2 tree files when present. If Work Tree scope classifications conflict with WorkGraph or WorkDesign compatibility files, stop and report the mismatch before deriving verification.
@@ -46,6 +52,8 @@ Prefer v2 tree files when present. If Work Tree scope classifications conflict w
 5. Record deferred and out-of-scope verification expectations separately.
 6. Synthesize parent and integration verification bottom-up.
 7. Create a root-level acceptance plan for the current slice.
+7a. When the parity/completeness profile applies, add visual/runtime parity checks for relevant surfaces and update `.pbe/control/visual-verification-profile.json`.
+7b. For hardware-dependent Work nodes, record readiness verification state in `.pbe/control/hardware-readiness-ledger.json`.
 8. Identify validation command candidates.
 9. Identify regression risks, including deferred-module foundation risk.
 10. Save `.pbe/tree/test-tree.json`.
@@ -68,6 +76,9 @@ Prefer v2 tree files when present. If Work Tree scope classifications conflict w
 - Every verification item must link to a requirement ID and task/work ID.
 - Every non-root Test Tree node must link to at least one Product or Work node through `verifiesProductNodeIds` or `verifiesWorkNodeIds`.
 - UI-related work must require UI/UX evidence.
+- Visual parity work must not rely only on build or open smoke. Use screenshot review, popup visual review, runtime coordinate check, resize/DPI review, clipped-control audit, or a not-runnable explanation when relevant.
+- Legacy parity work must require inventory comparison evidence or an explicit parity gap/deferred reason.
+- Hardware-dependent work must separate `implemented_user_testable`, `hardware_verification_pending`, and `hardware_certified`; certification requires explicit evidence.
 - Do not allow a task to reach ACEP without verification links or an explicit explanation.
 - Convert confirmed UI/UX direction into verification checks.
 - Use WorkGraph nodes and edges to identify integration verification and regression checks.
@@ -137,6 +148,14 @@ Every verification item must state its linked requirement and task.
 
 For UI/UX verification, include checks for confirmed states, required elements, accessibility expectations, and evidence requirements.
 
+When the parity/completeness profile is active, include:
+
+- Legacy Inventory Checks
+- Visual/Runtime Parity Checks
+- Hardware Readiness Checks
+- Not Runnable Parity or Hardware Checks
+- Surface Completion Evidence
+
 ## Completion Report
 
 Report with `[PBE 상태 보고]` first, following `templates/stage-completion-status-card-template.md`.
@@ -150,6 +169,8 @@ Include:
 - selected/foundation/deferred verification split
 - validation command candidates
 - known manual checks
+- visual/runtime profile summary, when active
+- hardware readiness verification summary, when active
 - created or updated files
 - next automatic step: dependency impact audit
 - expected human gate after that: implementation scope

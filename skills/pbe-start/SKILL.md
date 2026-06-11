@@ -47,6 +47,7 @@ Use `bypass` only when the request is a typo, single-file edit, or clearly bound
 6. Create `.pbe/tree/work-tree.json` from `templates/work-tree.template.json` if it does not exist.
 7. Create `.pbe/tree/test-tree.json` from `templates/test-tree.template.json` if it does not exist.
 8. Create `.pbe/control/decision-queue.json`, `.pbe/control/change-tree.json`, `.pbe/control/impact-tree.json`, `.pbe/control/acceptance-tree.json`, and `.pbe/evidence/evidence-tree.json` from matching templates if they do not exist.
+8a. When the brief indicates legacy migration, parity-critical UI, UI-heavy surfaces, hardware-dependent work, or repeated verification misses, initialize the parity/completeness control artifacts from matching templates.
 9. Create or update `.pbe/blueprint/project-brief.md`.
 10. Create `.pbe/blueprint/requirement-tree.json` with a root node if it does not exist, treating it as the Product Tree compatibility alias.
 11. Create `.pbe/blueprint/pbe-routing-contract.md` from the PBE Routing Contract template.
@@ -83,6 +84,11 @@ Use these primary tree-native paths:
 .pbe/control/change-tree.json
 .pbe/control/impact-tree.json
 .pbe/control/acceptance-tree.json
+.pbe/control/legacy-control-inventory.json
+.pbe/control/surface-completion-ledger.json
+.pbe/control/hardware-readiness-ledger.json
+.pbe/control/visual-verification-profile.json
+.pbe/control/verification-miss-log.json
 .pbe/evidence/evidence-tree.json
 .pbe/evidence/screenshots/
 .pbe/evidence/test-results/
@@ -138,11 +144,18 @@ changeTree: .pbe/control/change-tree.json
 impactTree: .pbe/control/impact-tree.json
 acceptanceTree: .pbe/control/acceptance-tree.json
 evidenceTree: .pbe/evidence/evidence-tree.json
+legacyControlInventory: .pbe/control/legacy-control-inventory.json
+surfaceCompletionLedger: .pbe/control/surface-completion-ledger.json
+hardwareReadinessLedger: .pbe/control/hardware-readiness-ledger.json
+visualVerificationProfile: .pbe/control/visual-verification-profile.json
+verificationMissLog: .pbe/control/verification-miss-log.json
 requirementTree: .pbe/blueprint/requirement-tree.json
 workDesign: .pbe/blueprint/work-design.json
 workGraph: .pbe/blueprint/work-graph.json
 verificationDesign: .pbe/blueprint/verification-design.json
 ```
+
+Do not force parity/completeness artifacts for small non-UI or non-parity tasks. When they are initialized, treat them as derived controls that may expand audit and verification coverage, not implementation scope.
 
 Do not generate WPD, VD, ACEP, review, feedback, or revision files during start unless RPD is already complete and the next deterministic step can safely continue. Stop at UI/UX confirmation when UI/UX judgment is required.
 

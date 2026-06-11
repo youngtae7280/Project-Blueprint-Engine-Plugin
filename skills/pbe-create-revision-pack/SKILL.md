@@ -28,6 +28,11 @@ Prefer v2 files when present:
 .pbe/control/change-tree.json
 .pbe/control/impact-tree.json
 .pbe/control/acceptance-tree.json
+.pbe/control/legacy-control-inventory.json
+.pbe/control/surface-completion-ledger.json
+.pbe/control/hardware-readiness-ledger.json
+.pbe/control/visual-verification-profile.json
+.pbe/control/verification-miss-log.json
 .pbe/evidence/evidence-tree.json
 ```
 
@@ -71,6 +76,7 @@ Also update:
 .pbe/control/impact-tree.json
 .pbe/control/change-tree.json
 .pbe/control/acceptance-tree.json
+.pbe/control/verification-miss-log.json
 ```
 
 ## Required Actions
@@ -87,8 +93,9 @@ Also update:
 6. Generate bounded revision tasks only for affected selected/foundation nodes.
 7. Preserve deferred/out-of-scope nodes unless user approves mutation.
 8. Include allowed files, forbidden files, non-scope, and regression checks.
-9. Write revision manifest with source feedback IDs, source change IDs, impact IDs, affected nodes, reopened nodes, and stale evidence nodes.
-10. Continue automatically to `pbe-run-revision` when the revision pack is safe and bounded.
+9. Include the verification miss root cause and any promoted validation contract requirements when feedback exposed a missed verification dimension.
+10. Write revision manifest with source feedback IDs, source change IDs, impact IDs, affected nodes, reopened nodes, stale evidence nodes, verification miss IDs, and promoted checks.
+11. Continue automatically to `pbe-run-revision` when the revision pack is safe and bounded.
 
 ## Scope Rules
 
@@ -135,6 +142,12 @@ If an affected completed node remains valid, record `impactType: none` and `requ
 - `maxChangeIntent`
 - `nonScope`
 - `regressionChecks`
+- `verificationMissIds`
+- `whyPreviousVerificationMissedThis`
+- `promotedValidationContractRefs`
+- `surfaceReauditRequired`
+
+If a repeated miss requires broader surface audit, include audit and verification tasks in the revision pack, but keep implementation tasks bounded to affected selected/foundation scope. Scope expansion still requires user approval.
 
 ## Autoflow
 
@@ -164,6 +177,8 @@ Include:
 - allowed files and forbidden files
 - task count
 - regression checks
+- verification miss root-cause and promoted validation checks
+- surface re-audit scope, when relevant
 - next step
 - user reply examples when blocked
 - one recommended reply

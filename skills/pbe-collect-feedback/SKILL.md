@@ -28,6 +28,11 @@ Prefer v2 files when present:
 .pbe/control/change-tree.json
 .pbe/control/impact-tree.json
 .pbe/control/acceptance-tree.json
+.pbe/control/legacy-control-inventory.json
+.pbe/control/surface-completion-ledger.json
+.pbe/control/hardware-readiness-ledger.json
+.pbe/control/visual-verification-profile.json
+.pbe/control/verification-miss-log.json
 .pbe/evidence/evidence-tree.json
 ```
 
@@ -49,6 +54,7 @@ Also read review and compatibility artifacts:
 .pbe/review/user-feedback.md
 .pbe/review/feedback-items.json
 .pbe/control/change-tree.json
+.pbe/control/verification-miss-log.json
 ```
 
 ## Feedback Types
@@ -83,10 +89,22 @@ Each feedback item should map to affected artifacts:
 - `affectedUiUxIds`
 - `affectedVerificationIds`
 - `changeNodeIds`
+- related parity/completion artifact IDs, when present
+- `verificationMissIds`, when the feedback reveals a missed validation dimension
 
 If mapping is impossible, provide an explanation and ask at most one concise clarification question.
 
 Do not reinterpret the entire project. Keep feedback scoped to the affected items.
+
+## Surface Re-Audit And Miss Promotion
+
+When feedback mentions visual mismatch, alignment, clipping, popup mismatch, missing visible controls, legacy parity, hardware readiness, or a repeated failure pattern:
+
+1. Decide whether the feedback should trigger surface re-audit for the related surface.
+2. Map the feedback to `surface-completion-ledger.json`, `legacy-control-inventory.json`, `visual-verification-profile.json`, or `hardware-readiness-ledger.json` entries when they exist.
+3. Add or update `.pbe/control/verification-miss-log.json` with `whyPreviousVerificationMissedThis`.
+4. If the same miss type has occurred at least twice, mark promotion as `pending`, `promoted`, or `blocked`; do not leave the repeated miss as an ordinary local patch.
+5. Do not automatically expand implementation scope. If the re-audit discovers new Product meaning, UX, acceptance, verification, or selected scope, create or request a Change Node.
 
 ## Change Node Classification
 
@@ -164,6 +182,7 @@ When mapping is unclear:
       "affectedUiUxIds": ["SCREEN-001"],
       "affectedVerificationIds": ["TEST-001-UX"],
       "changeNodeIds": ["CH-001"],
+      "verificationMissIds": ["VML-001"],
       "requiresChangeNode": true,
       "severity": "medium",
       "needsClarification": false,
@@ -186,6 +205,8 @@ Include:
 - feedback item count
 - affected Product/Project/Work/Test/Evidence/Cycle nodes
 - Change Tree entries created or updated
+- verification miss entries created or updated
+- surface re-audit trigger decision, when relevant
 - affected compatibility requirement/task/UI/verification IDs
 - clarification questions if needed
 - next step: create revision pack, automatically when scope is clear

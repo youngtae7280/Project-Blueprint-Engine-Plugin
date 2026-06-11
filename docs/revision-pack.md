@@ -34,3 +34,6 @@ Revision Pack turns user feedback into bounded patch work.
 - Validator checks changed, staged, and untracked files against revision boundaries.
 - Regression checks protect unaffected behavior.
 - Scope expansion requires user approval.
+- Each feedback-driven revision should record why previous verification missed the issue when the answer is knowable.
+- Repeated miss types should become future validation contract requirements instead of repeated local patches.
+- Surface re-audit may expand audit and verification scope, but implementation scope still remains bounded by affected Product/Project/Work/Test nodes and Change/Impact approval.

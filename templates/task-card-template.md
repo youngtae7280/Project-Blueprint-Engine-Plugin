@@ -142,6 +142,16 @@ If this task changes UI, list the related `SCREEN-*` IDs from `05-ui-ux-spec.jso
 
 - `.pbe/codex-execution-pack/07-ui-ux-confirmation.md`
 
+## Parity / Completion References
+
+- Surface completion IDs:
+- Legacy inventory IDs:
+- Visual verification profile IDs:
+- Hardware readiness IDs:
+- Verification miss IDs:
+
+Use these only when the parity/completeness profile is active. They may require audit, evidence, or validation updates, but they do not expand implementation scope unless the Cycle Contract or an approved Change Node includes that work.
+
 ## Scope
 
 - Include only the behavior described by this task.
@@ -169,6 +179,9 @@ If this task changes UI, list the related `SCREEN-*` IDs from `05-ui-ux-spec.jso
 - Test command output
 - Validation summary
 - UI manual verification note if UI changed
+- Legacy inventory comparison if parity is claimed
+- Visual/runtime evidence if visual parity is required
+- Hardware readiness or certification evidence if hardware-dependent
 
 ## Coverage Update Required
 

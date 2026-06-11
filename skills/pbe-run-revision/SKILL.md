@@ -20,6 +20,11 @@ Revision execution stays inside affected selected/foundation scope. It must not 
 .pbe/control/change-tree.json
 .pbe/control/impact-tree.json
 .pbe/control/acceptance-tree.json
+.pbe/control/legacy-control-inventory.json
+.pbe/control/surface-completion-ledger.json
+.pbe/control/hardware-readiness-ledger.json
+.pbe/control/visual-verification-profile.json
+.pbe/control/verification-miss-log.json
 .pbe/evidence/evidence-tree.json
 .pbe/tree/product-tree.json
 .pbe/tree/project-tree.json
@@ -39,14 +44,15 @@ Revision execution stays inside affected selected/foundation scope. It must not 
 8. Preserve selected/foundation/deferred/out_of_scope classifications.
 9. Stop if the revision requires scope expansion.
 10. Rerun impacted Test nodes and required regression checks.
-11. Replace or refresh stale evidence when required.
-12. Update Work/Test/Evidence/Acceptance states.
-13. If UI changed, update UI evidence.
-14. Write `revision-result.md`.
-15. Set or report status as `revision_verified` or `submitted_for_review`.
-16. Add `run_revision` to `pbe-state.json.autoflow.completedSteps`.
-17. Set `autoflow.nextStep` to `review_result`.
-18. Continue to `pbe-review-result`.
+11. If the revision has verification miss IDs, update the miss log with root cause and promotion outcome.
+12. Replace or refresh stale evidence when required.
+13. Update Work/Test/Evidence/Acceptance states and parity/completeness ledgers when affected.
+14. If UI changed, update UI evidence and visual verification profile evidence when required.
+15. Write `revision-result.md`.
+16. Set or report status as `revision_verified` or `submitted_for_review`.
+17. Add `run_revision` to `pbe-state.json.autoflow.completedSteps`.
+18. Set `autoflow.nextStep` to `review_result`.
+19. Continue to `pbe-review-result`.
 
 ## Reopen Execution Rules
 
@@ -69,6 +75,8 @@ When Impact Tree says:
 - Do not mark Product branches `accepted_done`; return to Review Result.
 - Do not clear `reopened`, `stale`, or `invalidated` state without refreshed validation/evidence.
 - Do not edit files outside `allowedFiles` unless the manifest explicitly permits it.
+- Do not mark a repeated verification miss as resolved unless the promoted validation contract, Test node, Evidence requirement, or explicit blocked reason is recorded.
+- Do not use surface re-audit as permission to implement adjacent deferred or out-of-scope behavior.
 
 ## Stop Conditions
 
@@ -102,6 +110,8 @@ Include:
 - validation results
 - regression checks
 - evidence refreshed
+- verification miss root-cause and promotion result
+- surface completion, visual profile, or hardware readiness updates when affected
 - remaining stale/invalidated/reopened nodes
 - remaining risks
 - next step: review result gate

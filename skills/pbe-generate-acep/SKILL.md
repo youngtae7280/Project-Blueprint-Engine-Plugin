@@ -24,6 +24,11 @@ Prefer v2 tree and cycle files when present:
 .pbe/tree/test-tree.json
 .pbe/execution/cycle-tree.json
 .pbe/execution/cycle-contract.md
+.pbe/control/legacy-control-inventory.json
+.pbe/control/surface-completion-ledger.json
+.pbe/control/hardware-readiness-ledger.json
+.pbe/control/visual-verification-profile.json
+.pbe/control/verification-miss-log.json
 ```
 
 Also read compatibility, audit, and strategy files:
@@ -117,6 +122,9 @@ Enforce these rules when generating ACEP:
 - No deferred or out-of-scope node implemented by the current ACEP.
 - No foundation task that implements deferred feature behavior.
 - No slice completion recorded as whole-project completion.
+- No technical stability reported as parity review or product acceptance.
+- No parity claim without inventory/evidence when the parity/completeness profile is active.
+- No hardware certification claim without certification evidence.
 - No silent Product Tree edits during execution.
 - Any product/scope/UX/risk/acceptance/verification change must become a Change Node.
 
@@ -322,6 +330,8 @@ Every verification item must identify its linked Product, Work, task, and Test n
 - user acceptance as a separate post-review decision
 
 `17-final-report-template.md` must include cycle ID, included/excluded nodes, requirement, task, verification, UI/UX confirmation, approved UI/UX implemented, traceability, evidence, files changed, deviations, known issues, delivery status, user review, revision history, stop conditions, and remaining manual review sections.
+
+When parity/completeness artifacts exist, final coverage and final report sections must also include surface completion, legacy inventory gaps, visual/runtime verification, hardware readiness, and verification miss promotion status.
 
 ## Manifest Rules
 

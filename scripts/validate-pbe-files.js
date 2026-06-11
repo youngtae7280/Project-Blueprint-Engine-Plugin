@@ -57,6 +57,26 @@ const schemaIdByTargetLabel = new Map([
     '.pbe/review/feedback-items.json',
     'https://local/project-blueprint-engine/feedback-items.schema.json',
   ],
+  [
+    '.pbe/control/legacy-control-inventory.json',
+    'https://local/project-blueprint-engine/legacy-control-inventory.schema.json',
+  ],
+  [
+    '.pbe/control/surface-completion-ledger.json',
+    'https://local/project-blueprint-engine/surface-completion-ledger.schema.json',
+  ],
+  [
+    '.pbe/control/hardware-readiness-ledger.json',
+    'https://local/project-blueprint-engine/hardware-readiness-ledger.schema.json',
+  ],
+  [
+    '.pbe/control/visual-verification-profile.json',
+    'https://local/project-blueprint-engine/visual-verification-profile.schema.json',
+  ],
+  [
+    '.pbe/control/verification-miss-log.json',
+    'https://local/project-blueprint-engine/verification-miss-log.schema.json',
+  ],
 ])
 const schemaFiles = new Map()
 let ajv = null
@@ -120,6 +140,11 @@ const requiredPaths = [
   'templates/feedback-items.template.json',
   'templates/revision-manifest.template.json',
   'templates/revision-task-card-template.md',
+  'templates/legacy-control-inventory.template.json',
+  'templates/surface-completion-ledger.template.json',
+  'templates/hardware-readiness-ledger.template.json',
+  'templates/visual-verification-profile.template.json',
+  'templates/verification-miss-log.template.json',
   'schemas/pbe-state.schema.json',
   'schemas/autoflow-state.schema.json',
   'schemas/source-of-truth-matrix.schema.json',
@@ -140,6 +165,11 @@ const requiredPaths = [
   'schemas/final-coverage-check.schema.json',
   'schemas/feedback-items.schema.json',
   'schemas/revision-manifest.schema.json',
+  'schemas/legacy-control-inventory.schema.json',
+  'schemas/surface-completion-ledger.schema.json',
+  'schemas/hardware-readiness-ledger.schema.json',
+  'schemas/visual-verification-profile.schema.json',
+  'schemas/verification-miss-log.schema.json',
   'docs/usage.md',
   'docs/workflow.md',
   'docs/autoflow.md',
@@ -170,6 +200,7 @@ const requiredPaths = [
   'docs/result-review.md',
   'docs/revision-pack.md',
   'docs/user-acceptance.md',
+  'docs/parity-completeness-profile.md',
   'docs/examples.md',
   'AGENTS.md',
 ]
@@ -344,6 +375,12 @@ function validateOptionalPbeTarget() {
   const executionStrategyPath = path.join(blueprintRoot, 'execution-strategy.json')
   const blueprintTraceabilityPath = path.join(blueprintRoot, 'traceability-matrix.json')
   const feedbackPath = path.join(root, '.pbe', 'review', 'feedback-items.json')
+  const controlRoot = path.join(root, '.pbe', 'control')
+  const legacyInventoryPath = path.join(controlRoot, 'legacy-control-inventory.json')
+  const surfaceCompletionPath = path.join(controlRoot, 'surface-completion-ledger.json')
+  const hardwareReadinessPath = path.join(controlRoot, 'hardware-readiness-ledger.json')
+  const visualVerificationPath = path.join(controlRoot, 'visual-verification-profile.json')
+  const verificationMissPath = path.join(controlRoot, 'verification-miss-log.json')
 
   if (!existsSync(blueprintRoot)) {
     errors.push('.pbe exists but .pbe/blueprint is missing')
@@ -445,8 +482,21 @@ function validateOptionalPbeTarget() {
     }
   }
 
+  parseOptionalControlJson(legacyInventoryPath, '.pbe/control/legacy-control-inventory.json')
+  parseOptionalControlJson(surfaceCompletionPath, '.pbe/control/surface-completion-ledger.json')
+  parseOptionalControlJson(hardwareReadinessPath, '.pbe/control/hardware-readiness-ledger.json')
+  parseOptionalControlJson(visualVerificationPath, '.pbe/control/visual-verification-profile.json')
+  parseOptionalControlJson(verificationMissPath, '.pbe/control/verification-miss-log.json')
+
   validatePbeRouting(targetContext)
   validatePbeCrossArtifacts(targetContext)
+}
+
+function parseOptionalControlJson(absolutePath, label) {
+  if (!existsSync(absolutePath)) {
+    return
+  }
+  parseTargetJson(absolutePath, label)
 }
 
 function validateOptionalAcepTarget() {

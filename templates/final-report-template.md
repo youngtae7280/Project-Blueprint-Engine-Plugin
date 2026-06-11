@@ -60,6 +60,20 @@
 - Deviations:
 - Evidence:
 
+## Parity And Completion Result
+
+- Profile active:
+- Surface completion ledger:
+- Technical stable surfaces:
+- Parity reviewed surfaces:
+- Product accepted surfaces:
+- Legacy inventory gaps:
+- Visual/runtime checks:
+- Popup/clipping/alignment checks:
+- Hardware readiness:
+- Verification miss root causes:
+- Promoted validation contracts:
+
 ## Traceability Matrix Result
 
 - Selected requirements without tasks:
@@ -109,6 +123,10 @@
 - Build logs:
 - Screenshot paths:
 - Manual verification notes:
+- Legacy inventory evidence:
+- Visual/runtime evidence:
+- Hardware readiness evidence:
+- Verification miss root-cause evidence:
 
 ## Deviations From Plan
 

@@ -15,6 +15,11 @@ Evidence can include:
 - validation summaries
 - UI manual verification notes
 - screenshot paths when available
+- legacy inventory comparisons
+- visual/runtime parity notes
+- hardware readiness or certification records
+- not-runnable explanations
+- verification miss root-cause notes
 
 ## Final Coverage Check
 
@@ -26,6 +31,9 @@ It covers:
 - task coverage
 - verification coverage
 - UI/UX coverage
+- surface completion and parity coverage when the profile is active
+- hardware readiness coverage when hardware-dependent work exists
+- verification miss promotion status when feedback exposed a missed validation dimension
 - traceability issues
 - final decision
 

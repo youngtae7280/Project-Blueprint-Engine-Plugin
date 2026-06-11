@@ -21,6 +21,9 @@
 ## Explicitly Excluded Nodes
 {{excludedNodes}}
 
+## Parity / Completion Controls
+{{parityCompletionControls}}
+
 ## Implementation Instructions
 {{implementationInstructions}}
 

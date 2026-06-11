@@ -44,6 +44,11 @@ Prefer v2 files when present:
 - `.pbe/control/change-tree.json`
 - `.pbe/control/impact-tree.json`
 - `.pbe/control/acceptance-tree.json`
+- `.pbe/control/legacy-control-inventory.json`
+- `.pbe/control/surface-completion-ledger.json`
+- `.pbe/control/hardware-readiness-ledger.json`
+- `.pbe/control/visual-verification-profile.json`
+- `.pbe/control/verification-miss-log.json`
 - `.pbe/evidence/evidence-tree.json`
 
 Backward-compatible v1 views may also exist:
@@ -171,6 +176,23 @@ Every requirement, WorkGraph node, task, and coverage entry should distinguish:
 - `out_of_scope`: must not be changed
 
 Deferred items are not current-slice failures. Missing selected or foundation items are failures.
+
+## Parity And Completeness Profile
+
+Use the optional parity/completeness profile for legacy migration, parity-critical UI, UI-heavy surfaces, hardware-dependent capabilities, or repeated review failures.
+
+The profile adds derived control artifacts only. It does not replace Product, Project, Work, Test, Evidence, or Acceptance trees.
+
+When active:
+
+1. Create or update `legacy-control-inventory.json` before claiming parity for a legacy surface.
+2. Create or update `surface-completion-ledger.json` before reporting a surface as complete.
+3. Track hardware-dependent features in `hardware-readiness-ledger.json`.
+4. Add visual/runtime checks in `visual-verification-profile.json` when visual parity matters.
+5. Record why previous verification missed a feedback item in `verification-miss-log.json`.
+6. Do not treat build/open smoke as visual parity evidence.
+7. Do not silently expand implementation scope from a ledger finding. Use Change Tree, Impact Tree, and the relevant human gate when product meaning, UX, acceptance, verification, or selected scope changes.
+8. Separate `technical_stable`, `parity_reviewed`, and user-controlled `product_accepted`.
 
 ## RPD Tree Walk
 

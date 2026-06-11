@@ -35,6 +35,11 @@ Prefer v2 files when present:
 .pbe/control/change-tree.json
 .pbe/control/impact-tree.json
 .pbe/control/acceptance-tree.json
+.pbe/control/legacy-control-inventory.json
+.pbe/control/surface-completion-ledger.json
+.pbe/control/hardware-readiness-ledger.json
+.pbe/control/visual-verification-profile.json
+.pbe/control/verification-miss-log.json
 .pbe/evidence/evidence-tree.json
 ```
 
@@ -102,6 +107,17 @@ Check v2 tree closure:
 13. Impact Tree entries with `reopened`, `invalidated`, `requires_retest`, `requires_new_evidence`, or `requiredAction: human_decision` block completion until handled.
 14. `.pbe/evidence/evidence-tree.json` links each evidence item to real Product, Work, Test, Change, or review nodes.
 
+Check parity/completeness controls when present:
+
+1. Surface completion ledger links each selected/foundation surface to Product, Work, Test, and Evidence nodes or records an explicit gap.
+2. `technical_stable`, `parity_reviewed`, and `product_accepted` are not collapsed into one completion state.
+3. Parity cannot be claimed without a linked legacy inventory for legacy migration or parity-critical surfaces.
+4. Legacy inventory controls with `visible_enabled` and `requiredForParity: true` are not left `missing` or `unverified` while the surface claims `parity_reviewed`.
+5. Hardware features marked `hardware_certified` have certification evidence.
+6. Visual verification profiles marked `required` have passed checks or explicit not-runnable evidence/reasons.
+7. Verification miss log entries with repeated occurrences are promoted, blocked, or waiting on a human decision; they are not ignored as ordinary warnings.
+8. Ledger findings may expand audit and verification scope, but implementation scope still requires Product/Project/Work nodes and approved Change/Impact flow.
+
 When possible, run or mirror:
 
 ```bash
@@ -151,6 +167,9 @@ Include:
 - Evidence Tree result
 - Change/Impact/Reopen result
 - Acceptance Tree guard result
+- parity/completeness ledger result, when active
+- hardware readiness result, when active
+- verification miss promotion result, when active
 - selected/foundation coverage result
 - deferred/out-of-scope documentation result
 - parallel safety coverage result

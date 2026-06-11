@@ -58,6 +58,31 @@ const schemaTargets = {
     target: '.pbe/control/acceptance-tree.json',
     template: 'templates/acceptance-tree.template.json',
   },
+  legacyInventory: {
+    schema: 'schemas/legacy-control-inventory.schema.json',
+    target: '.pbe/control/legacy-control-inventory.json',
+    template: 'templates/legacy-control-inventory.template.json',
+  },
+  surfaceCompletion: {
+    schema: 'schemas/surface-completion-ledger.schema.json',
+    target: '.pbe/control/surface-completion-ledger.json',
+    template: 'templates/surface-completion-ledger.template.json',
+  },
+  hardwareReadiness: {
+    schema: 'schemas/hardware-readiness-ledger.schema.json',
+    target: '.pbe/control/hardware-readiness-ledger.json',
+    template: 'templates/hardware-readiness-ledger.template.json',
+  },
+  visualVerification: {
+    schema: 'schemas/visual-verification-profile.schema.json',
+    target: '.pbe/control/visual-verification-profile.json',
+    template: 'templates/visual-verification-profile.template.json',
+  },
+  verificationMiss: {
+    schema: 'schemas/verification-miss-log.schema.json',
+    target: '.pbe/control/verification-miss-log.json',
+    template: 'templates/verification-miss-log.template.json',
+  },
 }
 
 const jsonNodeTemplates = [
@@ -162,6 +187,11 @@ function validateTreeLinks(data) {
   const cycleIds = collectCycleIds(data.cycle)
   const changeIds = collectChangeIds(data.change)
   const evidenceIds = collectEvidenceIds(data.evidence)
+  const legacyInventoryIds = collectInventoryIds(data.legacyInventory)
+  const surfaceCompletionIds = collectSurfaceIds(data.surfaceCompletion)
+  const hardwareReadinessIds = collectFeatureIds(data.hardwareReadiness)
+  const visualProfileIds = collectProfileIds(data.visualVerification)
+  const verificationMissIds = collectMissIds(data.verificationMiss)
   const productMap = collectNodeMap(data.product)
   const workMap = collectNodeMap(data.work)
   const testMap = collectNodeMap(data.test)
@@ -175,6 +205,11 @@ function validateTreeLinks(data) {
     ...cycleIds,
     ...changeIds,
     ...evidenceIds,
+    ...legacyInventoryIds,
+    ...surfaceCompletionIds,
+    ...hardwareReadinessIds,
+    ...visualProfileIds,
+    ...verificationMissIds,
   ])
 
   validateTreeShape(data.product, 'product')
@@ -186,6 +221,20 @@ function validateTreeLinks(data) {
   validateChangeTree(data.change, knownNodeIds)
   validateImpactTree(data.impact, { knownNodeIds, changeIds })
   validateEvidenceTree(data.evidence, knownNodeIds)
+  validateLegacyControlInventory(data.legacyInventory, { productIds, projectIds, workIds, testIds, evidenceIds })
+  validateSurfaceCompletionLedger(data.surfaceCompletion, {
+    productIds,
+    projectIds,
+    workIds,
+    testIds,
+    evidenceIds,
+    legacyInventoryIds,
+    visualProfileIds,
+    hardwareReadinessIds,
+  })
+  validateHardwareReadinessLedger(data.hardwareReadiness, { productIds, workIds, testIds, evidenceIds })
+  validateVisualVerificationProfile(data.visualVerification, { productIds, projectIds, workIds, testIds, evidenceIds })
+  validateVerificationMissLog(data.verificationMiss, { knownNodeIds, testIds, evidenceIds })
   validateCycleClosure(data.cycle, { workMap, testMap, evidenceMap })
   validateAcceptanceTree(data.acceptance, {
     productIds,
@@ -367,6 +416,131 @@ function validateEvidenceTree(evidenceTree, knownNodeIds) {
   }
 }
 
+function validateLegacyControlInventory(inventoryTree, refs) {
+  if (!inventoryTree) {
+    return
+  }
+  for (const inventory of inventoryTree.inventories || []) {
+    validateKnownIds(inventory.productNodeIds, refs.productIds, `legacy inventory ${inventory.id}`, 'product node')
+    validateKnownIds(inventory.projectNodeIds, refs.projectIds, `legacy inventory ${inventory.id}`, 'project node')
+    validateKnownIds(inventory.workNodeIds, refs.workIds, `legacy inventory ${inventory.id}`, 'work node')
+    validateKnownIds(inventory.testNodeIds, refs.testIds, `legacy inventory ${inventory.id}`, 'test node')
+    validateKnownIds(inventory.evidenceNodeIds, refs.evidenceIds, `legacy inventory ${inventory.id}`, 'evidence node')
+
+    if (inventory.claimStatus !== 'parity_claimed') {
+      continue
+    }
+    if (!hasAny(inventory.evidenceNodeIds)) {
+      errors.push(`legacy inventory ${inventory.id} claims parity but lacks evidenceNodeIds`)
+    }
+    for (const control of inventory.controls || []) {
+      const requiredVisible = control.requiredForParity === true && control.legacyState === 'visible_enabled'
+      if (requiredVisible && control.currentStatus !== 'matched') {
+        errors.push(`legacy inventory ${inventory.id} claims parity but required control ${control.id} is ${control.currentStatus}`)
+      }
+    }
+  }
+}
+
+function validateSurfaceCompletionLedger(ledger, refs) {
+  if (!ledger) {
+    return
+  }
+  for (const surface of ledger.surfaces || []) {
+    validateKnownIds(surface.productNodeIds, refs.productIds, `surface ${surface.id}`, 'product node')
+    validateKnownIds(surface.projectNodeIds, refs.projectIds, `surface ${surface.id}`, 'project node')
+    validateKnownIds(surface.workNodeIds, refs.workIds, `surface ${surface.id}`, 'work node')
+    validateKnownIds(surface.testNodeIds, refs.testIds, `surface ${surface.id}`, 'test node')
+    validateKnownIds(surface.evidenceNodeIds, refs.evidenceIds, `surface ${surface.id}`, 'evidence node')
+    validateKnownIds(surface.legacyInventoryIds, refs.legacyInventoryIds, `surface ${surface.id}`, 'legacy inventory')
+    validateKnownIds(surface.visualProfileIds, refs.visualProfileIds, `surface ${surface.id}`, 'visual verification profile')
+    validateKnownIds(surface.hardwareReadinessIds, refs.hardwareReadinessIds, `surface ${surface.id}`, 'hardware readiness feature')
+
+    if (['selected', 'foundation'].includes(surface.scopeClass)) {
+      if (!hasAny(surface.productNodeIds)) {
+        errors.push(`surface ${surface.id} is ${surface.scopeClass} but lacks Product Tree links`)
+      }
+      if (!hasAny(surface.workNodeIds)) {
+        errors.push(`surface ${surface.id} is ${surface.scopeClass} but lacks Work Tree links`)
+      }
+      if (!hasAny(surface.testNodeIds)) {
+        errors.push(`surface ${surface.id} is ${surface.scopeClass} but lacks Test Tree links`)
+      }
+    }
+
+    if (surface.parityClaim === 'parity_reviewed' && !hasAny(surface.legacyInventoryIds)) {
+      errors.push(`surface ${surface.id} claims parity_reviewed but lacks legacyInventoryIds`)
+    }
+    if (['parity_reviewed', 'product_accepted'].includes(surface.completionLayer) && !hasAny(surface.evidenceNodeIds)) {
+      errors.push(`surface ${surface.id} is ${surface.completionLayer} but lacks evidenceNodeIds`)
+    }
+    if (surface.completionLayer === 'product_accepted' && !hasAny(surface.acceptanceBranchIds)) {
+      errors.push(`surface ${surface.id} is product_accepted but lacks acceptanceBranchIds`)
+    }
+  }
+}
+
+function validateHardwareReadinessLedger(ledger, refs) {
+  if (!ledger) {
+    return
+  }
+  for (const feature of ledger.features || []) {
+    validateKnownIds(feature.productNodeIds, refs.productIds, `hardware readiness ${feature.id}`, 'product node')
+    validateKnownIds(feature.workNodeIds, refs.workIds, `hardware readiness ${feature.id}`, 'work node')
+    validateKnownIds(feature.testNodeIds, refs.testIds, `hardware readiness ${feature.id}`, 'test node')
+    validateKnownIds(feature.evidenceNodeIds, refs.evidenceIds, `hardware readiness ${feature.id}`, 'evidence node')
+    validateKnownIds(feature.certificationEvidenceNodeIds, refs.evidenceIds, `hardware readiness ${feature.id}`, 'certification evidence node')
+
+    if (feature.state === 'implemented_user_testable' && feature.userTestable !== true) {
+      errors.push(`hardware readiness ${feature.id} is implemented_user_testable but userTestable is not true`)
+    }
+    if (feature.state === 'hardware_certified' && !hasAny(feature.certificationEvidenceNodeIds) && !hasAny(feature.evidenceNodeIds)) {
+      errors.push(`hardware readiness ${feature.id} is hardware_certified but lacks certification evidence`)
+    }
+  }
+}
+
+function validateVisualVerificationProfile(profileTree, refs) {
+  if (!profileTree) {
+    return
+  }
+  for (const profile of profileTree.profiles || []) {
+    validateKnownIds(profile.productNodeIds, refs.productIds, `visual profile ${profile.id}`, 'product node')
+    validateKnownIds(profile.projectNodeIds, refs.projectIds, `visual profile ${profile.id}`, 'project node')
+    validateKnownIds(profile.workNodeIds, refs.workIds, `visual profile ${profile.id}`, 'work node')
+    validateKnownIds(profile.testNodeIds, refs.testIds, `visual profile ${profile.id}`, 'test node')
+    validateKnownIds(profile.evidenceNodeIds, refs.evidenceIds, `visual profile ${profile.id}`, 'evidence node')
+
+    for (const check of profile.checks || []) {
+      validateKnownIds(check.evidenceNodeIds, refs.evidenceIds, `visual profile ${profile.id} check ${check.id}`, 'evidence node')
+      if (check.status === 'passed' && !hasAny(check.evidenceNodeIds) && !hasAny(profile.evidenceNodeIds)) {
+        errors.push(`visual profile ${profile.id} check ${check.id} is passed but lacks evidenceNodeIds`)
+      }
+      if (check.status === 'not_runnable' && !check.reason && !profile.notRunnableReason) {
+        errors.push(`visual profile ${profile.id} check ${check.id} is not_runnable but lacks a reason`)
+      }
+    }
+  }
+}
+
+function validateVerificationMissLog(missLog, refs) {
+  if (!missLog) {
+    return
+  }
+  for (const miss of missLog.misses || []) {
+    validateKnownIds(miss.affectedNodeIds, refs.knownNodeIds, `verification miss ${miss.id}`, 'affected node')
+    validateKnownIds(miss.promotedTestNodeIds, refs.testIds, `verification miss ${miss.id}`, 'promoted test node')
+    validateKnownIds(miss.promotedEvidenceNodeIds, refs.evidenceIds, `verification miss ${miss.id}`, 'promoted evidence node')
+
+    if (miss.promotionDecision === 'promoted' && !hasAny(miss.promotedTestNodeIds) && !hasAny(miss.promotedEvidenceNodeIds) && !hasAny(miss.promotedContractRefs)) {
+      errors.push(`verification miss ${miss.id} is promoted but lacks promoted validation references`)
+    }
+    if (miss.occurrenceCount >= 2 && miss.status === 'resolved' && !['promoted', 'blocked'].includes(miss.promotionDecision)) {
+      errors.push(`verification miss ${miss.id} repeated ${miss.occurrenceCount} times but was resolved without promotion or blocking`)
+    }
+  }
+}
+
 function validateAcceptanceTree(acceptanceTree, refs) {
   if (!acceptanceTree) {
     return
@@ -509,6 +683,26 @@ function collectChangeIds(changeTree) {
 
 function collectEvidenceIds(evidenceTree) {
   return new Set((evidenceTree?.evidence || []).map((evidence) => evidence.id).filter(Boolean))
+}
+
+function collectInventoryIds(inventoryTree) {
+  return new Set((inventoryTree?.inventories || []).map((inventory) => inventory.id).filter(Boolean))
+}
+
+function collectSurfaceIds(ledger) {
+  return new Set((ledger?.surfaces || []).map((surface) => surface.id).filter(Boolean))
+}
+
+function collectFeatureIds(ledger) {
+  return new Set((ledger?.features || []).map((feature) => feature.id).filter(Boolean))
+}
+
+function collectProfileIds(profileTree) {
+  return new Set((profileTree?.profiles || []).map((profile) => profile.id).filter(Boolean))
+}
+
+function collectMissIds(missLog) {
+  return new Set((missLog?.misses || []).map((miss) => miss.id).filter(Boolean))
 }
 
 function collectEvidenceMap(evidenceTree) {

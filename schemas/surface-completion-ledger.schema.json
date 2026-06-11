@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local/project-blueprint-engine/surface-completion-ledger.schema.json",
+  "title": "PBE Surface Completion Ledger",
+  "type": "object",
+  "required": ["version", "surfaces"],
+  "properties": {
+    "version": { "type": "string" },
+    "profileApplicability": {
+      "type": "array",
+      "items": {
+        "enum": ["legacy_migration", "parity_critical", "ui_heavy", "hardware_dependent"]
+      }
+    },
+    "surfaces": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/surface" }
+    }
+  },
+  "$defs": {
+    "surface": {
+      "type": "object",
+      "required": ["id", "title", "scopeClass", "completionLayer", "productNodeIds", "workNodeIds", "testNodeIds"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "scopeClass": { "enum": ["selected", "foundation", "deferred", "blocked", "out_of_scope"] },
+        "completionLayer": {
+          "enum": ["not_started", "technical_stable", "parity_reviewed", "product_accepted", "blocked"]
+        },
+        "parityClaim": {
+          "enum": ["not_claimed", "inventory_ready", "parity_reviewed", "parity_gap_known", "not_applicable"]
+        },
+        "productNodeIds": { "type": "array", "items": { "type": "string" } },
+        "projectNodeIds": { "type": "array", "items": { "type": "string" } },
+        "workNodeIds": { "type": "array", "items": { "type": "string" } },
+        "testNodeIds": { "type": "array", "items": { "type": "string" } },
+        "evidenceNodeIds": { "type": "array", "items": { "type": "string" } },
+        "legacyInventoryIds": { "type": "array", "items": { "type": "string" } },
+        "visualProfileIds": { "type": "array", "items": { "type": "string" } },
+        "hardwareReadinessIds": { "type": "array", "items": { "type": "string" } },
+        "acceptanceBranchIds": { "type": "array", "items": { "type": "string" } },
+        "items": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/completionItem" }
+        },
+        "deferredParityDebt": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "completionItem": {
+      "type": "object",
+      "required": ["id", "label", "status"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "status": {
+          "enum": ["implemented", "missing", "deferred", "blocked", "verification_pending", "out_of_scope"]
+        },
+        "productNodeIds": { "type": "array", "items": { "type": "string" } },
+        "workNodeIds": { "type": "array", "items": { "type": "string" } },
+        "testNodeIds": { "type": "array", "items": { "type": "string" } },
+        "evidenceNodeIds": { "type": "array", "items": { "type": "string" } },
+        "reason": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -30,6 +30,11 @@ introduced.
     change-tree.json
     impact-tree.json
     acceptance-tree.json
+    legacy-control-inventory.json
+    surface-completion-ledger.json
+    hardware-readiness-ledger.json
+    visual-verification-profile.json
+    verification-miss-log.json
 
   evidence/
     evidence-tree.json
@@ -162,6 +167,11 @@ Plugin-local schemas live in `schemas/`:
 - `impact-tree.schema.json`
 - `evidence-tree.schema.json`
 - `acceptance-tree.schema.json`
+- `legacy-control-inventory.schema.json`
+- `surface-completion-ledger.schema.json`
+- `hardware-readiness-ledger.schema.json`
+- `visual-verification-profile.schema.json`
+- `verification-miss-log.schema.json`
 - `requirement-tree.schema.json`
 - `ui-ux-preview.schema.json`
 - `ui-ux-confirmation.schema.json`

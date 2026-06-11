@@ -25,6 +25,11 @@ Prefer v2 cycle-native inputs:
 .pbe/evidence/evidence-tree.json
 .pbe/control/change-tree.json
 .pbe/control/impact-tree.json
+.pbe/control/legacy-control-inventory.json
+.pbe/control/surface-completion-ledger.json
+.pbe/control/hardware-readiness-ledger.json
+.pbe/control/visual-verification-profile.json
+.pbe/control/verification-miss-log.json
 .pbe/codex-execution-pack/22-cycle-contract.md
 .pbe/codex-execution-pack/11-node-execution-contracts/
 ```
@@ -75,15 +80,16 @@ Also read ACEP compatibility inputs:
 23. If UI changed, update or complete UI/UX evidence checklist notes.
 24. Fix failures and revalidate.
 25. Run broader validation at phase or pack completion.
-26. Complete `16-final-coverage-check.md`.
-27. Check `13-completion-criteria.md`.
-28. Write the final report using `17-final-report-template.md` only when technical completion criteria are satisfied.
-29. Do not mark the result `accepted` or `accepted_done`.
-30. End as `submitted_for_review` and run or recommend `pbe-review-result`.
-31. Update `pbe-state.json.autoflow.state` to `ACEP_RUN_DONE`.
-32. Add `run_acep` to `autoflow.completedSteps`.
-33. Set `autoflow.nextStep` to `review_result`.
-34. Continue automatically to Result Review gate.
+26. When parity/completeness profile artifacts exist, update surface completion, visual/runtime verification, hardware readiness, and verification miss evidence before final coverage.
+27. Complete `16-final-coverage-check.md`.
+28. Check `13-completion-criteria.md`.
+29. Write the final report using `17-final-report-template.md` only when technical completion criteria are satisfied.
+30. Do not mark the result `accepted` or `accepted_done`.
+31. End as `submitted_for_review` and run or recommend `pbe-review-result`.
+32. Update `pbe-state.json.autoflow.state` to `ACEP_RUN_DONE`.
+33. Add `run_acep` to `autoflow.completedSteps`.
+34. Set `autoflow.nextStep` to `review_result`.
+35. Continue automatically to Result Review gate.
 
 ## Per-Task Loop
 
@@ -112,6 +118,9 @@ For each task:
     - validation summary
     - UI manual verification note if UI changed
     - screenshot path if available
+    - legacy inventory comparison result when parity is claimed
+    - visual/runtime verification result when required
+    - hardware readiness or certification result when relevant
 18. Update traceability, evidence, or coverage notes.
 19. Move to the next task only when task acceptance criteria and evidence requirements are satisfied.
 
@@ -131,6 +140,8 @@ Requires Change Node:
 - permission/security change
 - acceptance criterion change
 - verification strategy change
+- parity/completeness claim change
+- hardware certification claim change
 - changes to excluded/deferred/blocked/out-of-scope nodes
 - implementation that makes previously verified evidence stale
 
@@ -201,8 +212,11 @@ Before final completion:
 6. Verify included Work nodes have Test nodes or explicit not-runnable explanation.
 7. Verify there are no verification items without evidence or not-runnable explanation.
 8. Verify no required UI state is missing without explanation.
-9. Verify no unresolved stop condition remains.
-10. Verify excluded nodes were not changed.
+9. Verify any active surface completion ledger does not claim parity without inventory and evidence.
+10. Verify any hardware-certified feature has certification evidence.
+11. Verify any required visual profile checks passed or have explicit not-runnable evidence/reason.
+12. Verify no unresolved stop condition remains.
+13. Verify excluded nodes were not changed.
 
 If coverage issues remain, continue working or record a stop condition. Do not write the final report first.
 
@@ -254,6 +268,9 @@ Include:
 - evidence tree update result
 - traceability matrix result
 - UI/UX evidence result
+- surface completion and parity result, when active
+- hardware readiness result, when active
+- verification miss promotion result, when active
 - final coverage check result
 - execution strategy result
 - parallel group and integration task result

@@ -26,6 +26,7 @@ Everything executable should be a tree node or a tree-derived view.
 - Impact Tree: affected nodes that become stale, invalidated, or reopened.
 - Evidence Tree: tests, screenshots, logs, diffs, and review artifacts attached to nodes.
 - Acceptance Tree: user-controlled branch closure.
+- Parity/Completeness controls: optional derived ledgers for legacy inventory, surface completion, visual/runtime checks, hardware readiness, and repeated verification misses.
 
 During migration, the existing RPD/WPD/VD/ACEP terms remain supported as compatibility names:
 
@@ -61,6 +62,7 @@ PBE is not only a task-card generator. It creates a traceable tree-linked execut
 - UI/UX confirmation and UI/UX spec
 - Cycle Slice / staged execution strategy
 - Change Tree and Impact Tree for safe revisions
+- parity/completeness ledgers for legacy migration, UI-heavy parity, and hardware-dependent work
 - staged parallel execution strategy
 - traceability matrix
 - evidence requirements
@@ -117,6 +119,11 @@ The v2 target layout is additive. Existing `.pbe/blueprint/*` files stay as comp
     change-tree.json
     impact-tree.json
     acceptance-tree.json
+    legacy-control-inventory.json
+    surface-completion-ledger.json
+    hardware-readiness-ledger.json
+    visual-verification-profile.json
+    verification-miss-log.json
 
   evidence/
     evidence-tree.json
@@ -409,6 +416,7 @@ PBE routing uses that state before implementation work:
 - deterministic `nextStep` means Codex should run the next PBE step before ordinary coding
 - ordinary usage help or conceptual review can be answered without a PBE status card
 - `accepted` requires explicit user acceptance metadata; Codex may submit for review, but only the user can set acceptance
+- parity/completeness controls are optional derived views; they may expand audit and verification coverage, but implementation scope still requires Product/Project/Work nodes and normal PBE gates
 
 `COMPLETED` means the whole project is complete. A single slice completion should use `SLICE_ACCEPTED` or `WAITING_NEXT_SLICE_DECISION`.
 

@@ -1,0 +1,19 @@
+{
+  "version": "0.2.1-parity-completeness",
+  "features": [
+    {
+      "id": "HR-001",
+      "title": "Hardware-dependent feature",
+      "state": "not_implemented",
+      "productNodeIds": ["PT-HW-001"],
+      "workNodeIds": ["WT-HW-001"],
+      "testNodeIds": ["TT-HW-001"],
+      "evidenceNodeIds": [],
+      "userTestable": false,
+      "manualTestInstructions": [],
+      "certificationEvidenceNodeIds": [],
+      "blockedReason": "",
+      "notes": "Implementation readiness and hardware certification are tracked separately."
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "version": "0.2.1-parity-completeness",
+  "profileApplicability": ["legacy_migration", "parity_critical", "ui_heavy"],
+  "surfaces": [
+    {
+      "id": "SURFACE-001",
+      "title": "Primary surface",
+      "scopeClass": "selected",
+      "completionLayer": "not_started",
+      "parityClaim": "not_claimed",
+      "productNodeIds": ["PT-UI-001"],
+      "projectNodeIds": ["PJ-SURFACE-001"],
+      "workNodeIds": ["WT-SURFACE-001"],
+      "testNodeIds": ["TT-SURFACE-001"],
+      "evidenceNodeIds": [],
+      "legacyInventoryIds": ["LCI-001"],
+      "visualProfileIds": ["VVP-001"],
+      "hardwareReadinessIds": [],
+      "acceptanceBranchIds": [],
+      "items": [
+        {
+          "id": "SCI-001",
+          "label": "Visible command or control",
+          "status": "verification_pending",
+          "productNodeIds": ["PT-UI-001"],
+          "workNodeIds": ["WT-SURFACE-001"],
+          "testNodeIds": ["TT-SURFACE-001"],
+          "evidenceNodeIds": [],
+          "reason": "Parity evidence has not been attached yet."
+        }
+      ],
+      "deferredParityDebt": [],
+      "notes": "Surface completion is a derived view. It does not expand implementation scope without a Change Node or scope gate approval."
+    }
+  ]
+}

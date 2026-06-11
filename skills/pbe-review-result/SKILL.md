@@ -29,6 +29,11 @@ Prefer v2 tree/control/evidence files when present:
 .pbe/control/change-tree.json
 .pbe/control/impact-tree.json
 .pbe/control/acceptance-tree.json
+.pbe/control/legacy-control-inventory.json
+.pbe/control/surface-completion-ledger.json
+.pbe/control/hardware-readiness-ledger.json
+.pbe/control/visual-verification-profile.json
+.pbe/control/verification-miss-log.json
 .pbe/evidence/evidence-tree.json
 ```
 
@@ -102,6 +107,11 @@ The review pack must separate:
 - partial satisfaction
 - stale or invalidated evidence
 - reopened nodes
+- surface completion layer: technical stable, parity reviewed, or product accepted
+- legacy inventory gaps, when active
+- visual/runtime verification gaps, when active
+- hardware readiness and certification state, when active
+- verification misses promoted or still pending, when active
 - selected scope completed
 - foundation scope completed
 - deferred scope protected
@@ -134,6 +144,9 @@ Include:
 - coverage audit review
 - UX audit review
 - evidence review
+- surface completion and parity review
+- hardware readiness review
+- verification miss/root-cause review
 - impact/reopen review
 - remaining issues review
 - final decision:
@@ -187,6 +200,7 @@ If the user is dissatisfied:
 
 1. Run `pbe-collect-feedback`.
 2. Map feedback to affected Product, Project, Work, Test, Evidence, UI/UX, Cycle, and compatibility requirement/task/verification IDs.
+2a. If the feedback is visual, parity, hardware, or repeated-failure related, map it to surface completion, legacy inventory, visual profile, hardware readiness, or verification miss entries when present.
 3. Create or update Change Tree entries for feedback that changes product meaning, scope, UX, risk, acceptance, verification, or accepted work.
 4. Run `pbe-create-revision-pack` to build Impact Tree and bounded revision tasks.
 5. Run `pbe-run-revision`.
@@ -206,6 +220,8 @@ Report with `[PBE 상태 보고]` first:
 - coverage and UX audit status
 - Impact Tree and reopened node status
 - Acceptance Tree status
+- surface completion layer summary, when active
+- legacy inventory, visual/runtime, hardware readiness, and verification miss status, when active
 - delivery status: `submitted_for_review`
 - next human choices in natural language
 - recommended reply for the user

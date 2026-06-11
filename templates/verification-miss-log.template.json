@@ -1,0 +1,19 @@
+{
+  "version": "0.2.1-parity-completeness",
+  "misses": [
+    {
+      "id": "VML-001",
+      "feedbackItemIds": ["FB-001"],
+      "affectedNodeIds": ["PT-UI-001", "WT-SURFACE-001", "TT-SURFACE-001"],
+      "missType": "visual_runtime_gap",
+      "occurrenceCount": 1,
+      "whyPreviousVerificationMissedThis": "Build and open smoke did not verify runtime layout parity.",
+      "promotionDecision": "pending",
+      "promotedTestNodeIds": [],
+      "promotedEvidenceNodeIds": [],
+      "promotedContractRefs": [],
+      "blockingReason": "",
+      "status": "open"
+    }
+  ]
+}

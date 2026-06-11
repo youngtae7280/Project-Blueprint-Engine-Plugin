@@ -28,6 +28,9 @@ Prefer v2 files when present:
 .pbe/execution/cycle-tree.json
 .pbe/control/impact-tree.json
 .pbe/control/acceptance-tree.json
+.pbe/control/legacy-control-inventory.json
+.pbe/control/surface-completion-ledger.json
+.pbe/control/visual-verification-profile.json
 .pbe/evidence/evidence-tree.json
 ```
 
@@ -90,6 +93,14 @@ Check v2 UI closure:
 7. Accepted UI branches must not have reopened Product nodes or stale evidence.
 8. Deferred or out-of-scope UI nodes are not included in the active Cycle Slice.
 
+Check parity/completeness UI controls when present:
+
+1. Legacy or parity-critical UI surfaces have visible/enabled inventory before parity is claimed.
+2. Surface completion separates technical stability, parity review, and user acceptance.
+3. Popup, clipping, alignment, resize/DPI, and runtime coordinate concerns are included in the visual verification profile when they matter.
+4. Missing, deferred, blocked, and verification-pending controls remain visible in the surface completion ledger.
+5. A visual mismatch feedback item can trigger surface re-audit and verification expansion, but implementation scope must remain bounded by Change/Impact and selected/foundation Work nodes.
+
 If gaps exist, report them as blocking issues before ACEP generation or final completion.
 
 ## Autoflow
@@ -125,6 +136,8 @@ Include:
 - missing or stale evidence
 - Impact/Reopen UI issues
 - Acceptance Tree UI guard result
+- surface completion ledger result, when active
+- legacy inventory and visual profile result, when active
 - blocking issues
 - pass/fail result
 - next automatic step when passed: Generate ACEP

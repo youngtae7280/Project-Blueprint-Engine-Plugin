@@ -96,6 +96,51 @@ describe('PBE v2 tree validator', () => {
     expect(result.status).toBe(1)
     expect(result.output).toContain('uses non-current evidence EV-1 with status stale_evidence')
   })
+
+  it('rejects parity-reviewed surfaces without legacy inventory links', () => {
+    const workspace = createTreeValidatorWorkspace()
+    writeProductTree(workspace)
+    writeWorkTree(workspace, 'PT-1')
+    writeTestTree(workspace, 'PT-1', 'WT-1', 'passed')
+    writeEvidenceTree(workspace, [
+      {
+        id: 'EV-1',
+        type: 'manual_note',
+        status: 'attached',
+        provesNodeIds: ['TT-1'],
+      },
+    ])
+    writeSurfaceCompletionLedger(workspace)
+
+    const result = runTreeValidator(workspace)
+
+    expect(result.status).toBe(1)
+    expect(result.output).toContain('claims parity_reviewed but lacks legacyInventoryIds')
+  })
+
+  it('rejects hardware certification without certification evidence', () => {
+    const workspace = createTreeValidatorWorkspace()
+    writeProductTree(workspace)
+    writeWorkTree(workspace, 'PT-1')
+    writeTestTree(workspace, 'PT-1', 'WT-1', 'passed')
+    writeHardwareReadinessLedger(workspace)
+
+    const result = runTreeValidator(workspace)
+
+    expect(result.status).toBe(1)
+    expect(result.output).toContain('is hardware_certified but lacks certification evidence')
+  })
+
+  it('rejects repeated verification misses resolved without promotion', () => {
+    const workspace = createTreeValidatorWorkspace()
+    writeProductTree(workspace)
+    writeVerificationMissLog(workspace)
+
+    const result = runTreeValidator(workspace)
+
+    expect(result.status).toBe(1)
+    expect(result.output).toContain('repeated 2 times but was resolved without promotion or blocking')
+  })
 })
 
 function createTreeValidatorWorkspace() {
@@ -278,6 +323,70 @@ function writeAcceptanceTree(workspace: string, productNodeId: string, evidenceN
         evidenceNodeIds: [evidenceNodeId],
         userAcceptedAt: '2026-06-11T00:00:00.000Z',
         notes: 'User accepted the branch.',
+      },
+    ],
+  })
+}
+
+function writeSurfaceCompletionLedger(workspace: string) {
+  writeJson(join(workspace, '.pbe', 'control', 'surface-completion-ledger.json'), {
+    version: '0.2.1-parity-completeness',
+    surfaces: [
+      {
+        id: 'SURFACE-1',
+        title: 'Parity surface',
+        scopeClass: 'selected',
+        completionLayer: 'parity_reviewed',
+        parityClaim: 'parity_reviewed',
+        productNodeIds: ['PT-1'],
+        projectNodeIds: [],
+        workNodeIds: ['WT-1'],
+        testNodeIds: ['TT-1'],
+        evidenceNodeIds: ['EV-1'],
+        legacyInventoryIds: [],
+        visualProfileIds: [],
+        hardwareReadinessIds: [],
+        acceptanceBranchIds: [],
+        items: [],
+      },
+    ],
+  })
+}
+
+function writeHardwareReadinessLedger(workspace: string) {
+  writeJson(join(workspace, '.pbe', 'control', 'hardware-readiness-ledger.json'), {
+    version: '0.2.1-parity-completeness',
+    features: [
+      {
+        id: 'HR-1',
+        title: 'Certified hardware feature',
+        state: 'hardware_certified',
+        productNodeIds: ['PT-1'],
+        workNodeIds: ['WT-1'],
+        testNodeIds: ['TT-1'],
+        evidenceNodeIds: [],
+        certificationEvidenceNodeIds: [],
+      },
+    ],
+  })
+}
+
+function writeVerificationMissLog(workspace: string) {
+  writeJson(join(workspace, '.pbe', 'control', 'verification-miss-log.json'), {
+    version: '0.2.1-parity-completeness',
+    misses: [
+      {
+        id: 'VML-1',
+        feedbackItemIds: ['FB-1'],
+        affectedNodeIds: ['PT-1'],
+        missType: 'visual_runtime_gap',
+        occurrenceCount: 2,
+        whyPreviousVerificationMissedThis: 'The previous validation did not inspect runtime coordinates.',
+        promotionDecision: 'not_required',
+        promotedTestNodeIds: [],
+        promotedEvidenceNodeIds: [],
+        promotedContractRefs: [],
+        status: 'resolved',
       },
     ],
   })

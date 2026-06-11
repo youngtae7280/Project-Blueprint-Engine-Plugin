@@ -29,6 +29,9 @@ WPD automatically without asking the user for a separate command.
 .pbe/blueprint/ui-ux-confirmation.md
 .pbe/blueprint/source-of-truth-matrix.md
 .pbe/blueprint/pbe-invariants.md
+.pbe/control/legacy-control-inventory.json
+.pbe/control/surface-completion-ledger.json
+.pbe/control/hardware-readiness-ledger.json
 ```
 
 ## Outputs
@@ -39,6 +42,9 @@ WPD automatically without asking the user for a separate command.
 .pbe/blueprint/work-design.json
 .pbe/blueprint/work-graph.json
 .pbe/blueprint/work-roadmap.md
+.pbe/control/legacy-control-inventory.json
+.pbe/control/surface-completion-ledger.json
+.pbe/control/hardware-readiness-ledger.json
 ```
 
 Prefer v2 tree files when present. If `.pbe/tree/product-tree.json` and `.pbe/blueprint/requirement-tree.json` disagree about selected, deferred, blocked, or out-of-scope scope, stop and report the mismatch instead of deriving work from stale data.
@@ -54,6 +60,8 @@ Prefer v2 tree files when present. If `.pbe/tree/product-tree.json` and `.pbe/bl
 7. Derive Work Tree executable nodes from Project Tree nodes and Product Tree branches.
 8. Classify every Work Tree and WorkGraph node as `selected`, `deferred`, `foundation`, `blocked`, or `out_of_scope`.
 9. Create module-aware WorkGraph nodes and edges as a compatibility/dependency view around Work Tree nodes.
+9a. When parity/completeness profile applies, derive or update surface completion and legacy inventory placeholders from Product/Project surface nodes before any parity claim can exist.
+9b. When hardware-dependent work exists, derive or update hardware readiness entries and keep software implementation state separate from certification state.
 10. Add required parallel safety metadata to every Work Tree and WorkGraph node.
 11. Create WorkDesign entries from the Work Tree and WorkGraph, not directly from RPD nodes.
 12. Create a root-level implementation roadmap that references Project Tree, Work Tree, and WorkGraph phases.
@@ -92,6 +100,9 @@ Prefer v2 tree files when present. If `.pbe/tree/product-tree.json` and `.pbe/bl
 - Never place foundation work in parallel unless it is documentation or test-fixture only.
 - Never create selected or foundation Work Tree nodes without at least one `derivedFromProductNodeIds` link, except the Work Tree root placeholder.
 - Every Project Tree node must list `derivedFromProductNodeIds` or be a root/container node with an explicit root responsibility.
+- For legacy migration or parity-critical surfaces, do not allow a surface to be reported as parity complete unless `legacy-control-inventory.json` exists and is linked to Product/Project/Work nodes.
+- `surface-completion-ledger.json` is a derived view. It must not silently add implementation work outside selected/foundation scope.
+- Hardware-dependent work must use `not_implemented`, `implemented_user_testable`, `hardware_verification_pending`, or `hardware_certified`; do not collapse implementation readiness and certification.
 
 ## Module Boundary Check
 
@@ -290,6 +301,15 @@ UI/UX Implementation Notes
 
 If the related UI/UX item is not confirmed, deferred, or out_of_scope, stop and run `pbe-ui-ux-confirm`.
 
+## Parity And Completion Profile
+
+When the profile is active, WPD should classify surface work at two levels:
+
+- the selected/foundation implementation slice
+- the broader surface inventory and completion picture
+
+Missing inventory items are not automatically current-slice work. Classify them as `selected`, `foundation`, `deferred`, `blocked`, or `out_of_scope` through normal PBE scope rules. If a missing legacy control changes product meaning or selected scope, create or request a Change Node instead of silently adding implementation work.
+
 ## Completion Report
 
 Report with `[PBE 상태 보고]` first, following `templates/stage-completion-status-card-template.md`.
@@ -306,6 +326,8 @@ Include:
 - boundary blockers, if any
 - shared foundations and integration points identified
 - selected/deferred/foundation/blocked/out_of_scope counts
+- parity/completeness profile artifacts updated, when active
+- surface completion, legacy inventory, and hardware readiness gaps, when active
 - nodes that cannot be parallelized and why
 - major implementation phases
 - created or updated files

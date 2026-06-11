@@ -14,6 +14,7 @@ PBE should help Codex build projects in a way that preserves intent, scope, evid
 - Keep every artifact within its own responsibility.
 - Keep traceability by stable IDs instead of removing useful duplication.
 - Use `COMPLETED` only for whole-project completion, not for a single slice.
+- Separate technical stability, parity review, and user acceptance when a project requires legacy or visual parity.
 
 ## What PBE Is Not
 

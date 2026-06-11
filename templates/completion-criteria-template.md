@@ -9,11 +9,14 @@ Project completion requires:
 5. All required validation commands pass, or failures are documented as environment-limited/non-blocking with reason.
 6. Every required UI screen has UI/UX evidence.
 7. Every required UI state is implemented or explicitly documented as not applicable.
-8. Final Coverage Check is completed.
-9. Final Report is completed.
-10. Result Review Pack is created.
-11. Delivery status is `submitted_for_review`.
-12. No unresolved stop condition remains.
+8. When the parity/completeness profile is active, surface completion, legacy inventory, visual/runtime verification, hardware readiness, and verification miss promotion status are recorded.
+9. No surface claims `parity_reviewed` without inventory/evidence or explicit not-runnable/deferred risk notes.
+10. No hardware feature claims `hardware_certified` without certification evidence.
+11. Final Coverage Check is completed.
+12. Final Report is completed.
+13. Result Review Pack is created.
+14. Delivery status is `submitted_for_review`.
+15. No unresolved stop condition remains.
 
 User acceptance requires:
 

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local/project-blueprint-engine/hardware-readiness-ledger.schema.json",
+  "title": "PBE Hardware Readiness Ledger",
+  "type": "object",
+  "required": ["version", "features"],
+  "properties": {
+    "version": { "type": "string" },
+    "features": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/feature" }
+    }
+  },
+  "$defs": {
+    "feature": {
+      "type": "object",
+      "required": ["id", "title", "state", "productNodeIds", "workNodeIds", "testNodeIds"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "state": {
+          "enum": [
+            "not_implemented",
+            "implemented_user_testable",
+            "hardware_verification_pending",
+            "hardware_certified",
+            "not_applicable"
+          ]
+        },
+        "productNodeIds": { "type": "array", "items": { "type": "string" } },
+        "workNodeIds": { "type": "array", "items": { "type": "string" } },
+        "testNodeIds": { "type": "array", "items": { "type": "string" } },
+        "evidenceNodeIds": { "type": "array", "items": { "type": "string" } },
+        "userTestable": { "type": "boolean" },
+        "manualTestInstructions": { "type": "array", "items": { "type": "string" } },
+        "certificationEvidenceNodeIds": { "type": "array", "items": { "type": "string" } },
+        "blockedReason": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

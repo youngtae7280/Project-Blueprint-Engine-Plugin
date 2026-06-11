@@ -1,0 +1,31 @@
+{
+  "version": "0.2.1-parity-completeness",
+  "inventories": [
+    {
+      "id": "LCI-001",
+      "surfaceId": "SURFACE-001",
+      "title": "Primary legacy surface inventory",
+      "sourceKind": "manual_reference",
+      "sourcePaths": [],
+      "claimStatus": "inventory_only",
+      "productNodeIds": ["PT-UI-001"],
+      "projectNodeIds": ["PJ-SURFACE-001"],
+      "workNodeIds": ["WT-SURFACE-001"],
+      "testNodeIds": ["TT-SURFACE-001"],
+      "evidenceNodeIds": [],
+      "controls": [
+        {
+          "id": "LCI-CTRL-001",
+          "label": "Legacy visible control",
+          "legacyState": "visible_enabled",
+          "currentStatus": "unverified",
+          "requiredForParity": true,
+          "currentImplementationRef": "",
+          "evidenceNodeIds": [],
+          "reason": "Current implementation has not been compared yet."
+        }
+      ],
+      "notes": "Inventory is required before parity is claimed for legacy migration or parity-critical surfaces."
+    }
+  ]
+}

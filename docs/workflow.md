@@ -28,6 +28,8 @@ WPD runs Module Boundary Check internally, identifies shared foundations, featur
 
 VD converts selected and foundation work units into verification items and an acceptance plan. Deferred and out-of-scope items are recorded separately so they are not treated as current-slice failures.
 
+When the parity/completeness profile is active, VD also derives or updates visual/runtime verification requirements. Build and open smoke are minimum checks; they do not close visual parity by themselves.
+
 ## Dependency Impact And Scope
 
 Dependency Impact Audit checks whether deferred or future modules affect the current architecture.
@@ -63,6 +65,8 @@ It submits work as `submitted_for_review`, not `accepted`.
 Result Review prepares `.pbe/review/` for the user. If the user approves, Autoflow moves to Next Slice Decision rather than whole-project completion.
 
 If the user is dissatisfied, Codex collects feedback, maps it to affected requirement/task/UI/verification items, creates a bounded Revision Pack, runs only affected selected/foundation revision tasks, performs regression checks, and submits for review again.
+
+When feedback exposes a missed verification dimension, PBE records why the previous verification missed it. Repeated misses can promote new Test Tree, Evidence, or visual verification requirements, but implementation scope still changes only through normal Change/Impact and human-gate rules.
 
 ## Stage Gates
 

@@ -22,6 +22,7 @@ Cycle Tree -> Change Tree -> Impact Tree -> Evidence Tree -> Acceptance Tree
 - Change Nodes produce Impact Trees.
 - Impacted completed nodes can become stale, invalidated, or reopened.
 - Product branches close only with evidence and human acceptance.
+- Parity/completeness ledgers are derived control views. They can strengthen audit and verification, but they do not replace tree scope or silently expand implementation work.
 
 ## Validation
 
