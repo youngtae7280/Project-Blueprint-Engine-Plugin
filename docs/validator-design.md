@@ -87,6 +87,12 @@ Stage policy:
 - `review`: requires current Evidence. Missing timestamp, stale Evidence, superseded Evidence, and invalidated Evidence are errors.
 - `accept`: applies review strictness and also checks Evidence referenced by accepted Acceptance branches.
 
+Command wiring:
+
+- `pbe execution complete` calls Evidence validation with `stage: "execution"` and `requireVisualAudit: false`.
+- `pbe review submit` calls Evidence validation with `stage: "review"`.
+- `pbe accept` calls Evidence validation with `stage: "accept"`.
+
 To replace old Evidence, add a new current Evidence node, link it to the required Test and Acceptance closure, and mark the old node with `supersededByEvidenceId` or `status: "superseded"`.
 
 ## RPD Transition Guard

@@ -830,6 +830,112 @@ describe('PBE CLI', () => {
     expect(after).toBe(before)
   })
 
+  it('allows execution complete when evidence timestamp is missing under execution warning policy', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'EXECUTION_IN_PROGRESS')
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeExecutionManifest(workspace)
+    writeFinalCoverage(workspace)
+    writeEvidenceTree(workspace, { omitTimestamp: true })
+
+    const result = await runPbeCli(['execution', 'complete', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    const state = readState(workspace)
+    expect(state.autoflow.state).toBe('ACEP_RUN_DONE')
+    expect(state.deliveryStatus).toBe('verified')
+  })
+
+  it('does not mutate state when review submit finds timestamp-missing evidence', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'ACEP_RUN_DONE')
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeEvidenceTree(workspace, { omitTimestamp: true })
+
+    const before = readStateText(workspace)
+    const result = await runPbeCli(['review', 'submit', '--json'], { cwd: workspace, pluginRoot })
+    const after = readStateText(workspace)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'EVIDENCE_TIMESTAMP_MISSING',
+    )
+    expect(after).toBe(before)
+  })
+
+  it('does not mutate state when accept finds timestamp-missing evidence', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'WAITING_REVIEW_RESULT')
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeEvidenceTree(workspace, { omitTimestamp: true })
+    writeUserAcceptance(workspace)
+
+    const before = readStateText(workspace)
+    const result = await runPbeCli(['accept', '--json'], { cwd: workspace, pluginRoot })
+    const after = readStateText(workspace)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'EVIDENCE_TIMESTAMP_MISSING',
+    )
+    expect(after).toBe(before)
+  })
+
+  it('does not mutate state when review submit finds superseded evidence', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'ACEP_RUN_DONE')
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeEvidenceTree(workspace, { status: 'superseded' })
+
+    const before = readStateText(workspace)
+    const result = await runPbeCli(['review', 'submit', '--json'], { cwd: workspace, pluginRoot })
+    const after = readStateText(workspace)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'EVIDENCE_SUPERSEDED',
+    )
+    expect(after).toBe(before)
+  })
+
+  it('does not mutate state when accept finds superseded evidence', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'WAITING_REVIEW_RESULT')
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeEvidenceTree(workspace, { status: 'superseded' })
+    writeUserAcceptance(workspace)
+
+    const before = readStateText(workspace)
+    const result = await runPbeCli(['accept', '--json'], { cwd: workspace, pluginRoot })
+    const after = readStateText(workspace)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'EVIDENCE_SUPERSEDED',
+    )
+    expect(after).toBe(before)
+  })
+
   it('transitions WPD through CLI and records state history', async () => {
     const workspace = createWorkspace()
     writeExecutableProduct(workspace)
