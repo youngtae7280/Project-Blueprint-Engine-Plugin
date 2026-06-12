@@ -125,6 +125,7 @@ export function nextCommandForIssue(code: string): string | undefined {
     REVISION_CHANGE_MISMATCH: 'pbe revision start',
     REVISION_ACTIVE_CONTEXT_EMPTY: 'pbe impact analyze',
     REVISION_CONTEXT_NOT_IN_PROGRESS: 'pbe revision start',
+    REVISION_ARTIFACT_TRANSACTION_FAILED: 'pbe revision start',
     REVISION_CHANGE_NOT_FOUND: 'pbe change create',
     IMPACT_AFFECTED_IDS_MISSING: 'pbe impact analyze',
     IMPACT_CHANGE_NOT_FOUND: 'pbe impact analyze',

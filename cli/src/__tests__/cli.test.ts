@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { runPbeCli } from '../app'
+import { writeJsonArtifactTransaction } from '../core/artifact-transaction'
 import { canTransition, isPbeState, PBE_STATE } from '../core/state-machine'
 import { checkpointPbeState, transitionPbeState } from '../core/state-transition'
 import { ExitCode } from '../core/types'
@@ -1914,6 +1915,77 @@ describe('PBE CLI', () => {
     expect(readControlText(workspace, 'acceptance-tree.json')).toBe(beforeAcceptance)
   })
 
+  it('does not open revision state when affected Evidence Tree is invalid JSON', async () => {
+    const workspace = createWorkspace()
+    writePbeState(workspace, 'DONE', { deliveryStatus: 'accepted', completedSteps: ['complete'], nextStep: null })
+    writeChangeTree(workspace, [
+      { id: 'CH-001', type: 'feedback', status: 'impact_analyzed', summary: 'Adjust collapse' },
+    ])
+    writeImpactTree(workspace, [
+      {
+        id: 'IM-001',
+        changeNodeId: 'CH-001',
+        changeId: 'CH-001',
+        status: 'analyzed',
+        affectedEvidenceNodeIds: ['EV-1'],
+      },
+    ])
+    writeText(join(workspace, '.pbe', 'evidence', 'evidence-tree.json'), '{ invalid json')
+    writeUserAcceptance(workspace)
+
+    const beforeState = readStateText(workspace)
+    const beforeEvidence = readEvidenceText(workspace)
+    const beforeAcceptance = readControlText(workspace, 'acceptance-tree.json')
+    const result = await runPbeCli(['revision', 'start', '--change', 'CH-001', '--json'], {
+      cwd: workspace,
+      pluginRoot,
+    })
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'EVIDENCE_TREE_INVALID_JSON',
+    )
+    expect(readStateText(workspace)).toBe(beforeState)
+    expect(readEvidenceText(workspace)).toBe(beforeEvidence)
+    expect(readControlText(workspace, 'acceptance-tree.json')).toBe(beforeAcceptance)
+  })
+
+  it('does not open revision state or invalidate Evidence when affected Acceptance Tree is invalid JSON', async () => {
+    const workspace = createWorkspace()
+    writePbeState(workspace, 'DONE', { deliveryStatus: 'accepted', completedSteps: ['complete'], nextStep: null })
+    writeChangeTree(workspace, [
+      { id: 'CH-001', type: 'feedback', status: 'impact_analyzed', summary: 'Adjust collapse' },
+    ])
+    writeImpactTree(workspace, [
+      {
+        id: 'IM-001',
+        changeNodeId: 'CH-001',
+        changeId: 'CH-001',
+        status: 'analyzed',
+        affectedEvidenceNodeIds: ['EV-1'],
+        affectedAcceptanceNodeIds: ['AB-1'],
+      },
+    ])
+    writeEvidenceTree(workspace)
+    writeText(join(workspace, '.pbe', 'control', 'acceptance-tree.json'), '{ invalid json')
+
+    const beforeState = readStateText(workspace)
+    const beforeEvidence = readEvidenceText(workspace)
+    const beforeAcceptance = readControlText(workspace, 'acceptance-tree.json')
+    const result = await runPbeCli(['revision', 'start', '--change', 'CH-001', '--json'], {
+      cwd: workspace,
+      pluginRoot,
+    })
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ACCEPTANCE_TREE_INVALID_JSON',
+    )
+    expect(readStateText(workspace)).toBe(beforeState)
+    expect(readEvidenceText(workspace)).toBe(beforeEvidence)
+    expect(readControlText(workspace, 'acceptance-tree.json')).toBe(beforeAcceptance)
+  })
+
   it('starts revision from accepted/done state, records activeRevision, and invalidates affected proof', async () => {
     const workspace = createWorkspace()
     writeExecutableProduct(workspace)
@@ -2115,6 +2187,24 @@ describe('PBE CLI', () => {
       to: 'WPD_IN_PROGRESS',
       command: 'revision complete',
     })
+  })
+
+  it('keeps original artifacts when a JSON artifact transaction cannot prepare every write', async () => {
+    const workspace = createWorkspace()
+    const firstPath = join(workspace, '.pbe', 'blueprint', 'transaction-first.json')
+    const blockingPath = join(workspace, '.pbe', 'blueprint', 'not-a-directory')
+    writeText(firstPath, '{\n  "value": "original"\n}\n')
+    writeText(blockingPath, 'blocks child file writes')
+
+    await expect(
+      writeJsonArtifactTransaction([
+        { filePath: firstPath, value: { value: 'next' } },
+        { filePath: join(blockingPath, 'child.json'), value: { value: 'unreachable' } },
+      ]),
+    ).rejects.toThrow(/Artifact transaction failed/)
+
+    expect(readFileSync(firstPath, 'utf8')).toBe('{\n  "value": "original"\n}\n')
+    expect(readFileSync(blockingPath, 'utf8')).toBe('blocks child file writes')
   })
 
   it('review submit records visual audit transition for visual UI work', async () => {

@@ -1,9 +1,10 @@
 import { existsSync } from 'node:fs'
+import { writeJsonArtifactTransaction } from '../core/artifact-transaction.js'
 import { PBE_STATE } from '../core/state-machine.js'
-import { transitionPbeState } from '../core/state-transition.js'
+import { preparePbeStateTransition, transitionPbeState } from '../core/state-transition.js'
 import type { CommandResult, ValidationIssue } from '../core/types.js'
 import { hasErrors, issue } from '../core/types.js'
-import { readJsonSafe, writeJsonAtomic } from '../core/fs.js'
+import { readJsonSafe } from '../core/fs.js'
 import { artifactPath, defaultArtifacts } from '../core/project.js'
 import {
   buildRevisionContext,
@@ -24,24 +25,51 @@ export async function revisionStartCommand(context: CommandContext): Promise<Com
   if (hasErrors(invalidation.issues)) {
     return transitionFailed('revision start', 'Revision start failed. State was not changed.', invalidation.issues)
   }
-  const result = await transitionPbeState(context.options.root, 'revision start', [PBE_STATE.REVISION_REQUESTED], {
-    completedSteps: ['revision_start'],
-    stage: 'revision',
-    mode: 'revision_control',
-    deliveryStatus: 'revision_requested',
-    currentGate: null,
-    nextStep: 'revision_complete',
-    activeRevision: { ...revisionContext.context },
-    data: {
-      changeId: context.options.change,
+  const preparedTransition = await preparePbeStateTransition(
+    context.options.root,
+    'revision start',
+    [PBE_STATE.REVISION_REQUESTED],
+    {
+      completedSteps: ['revision_start'],
+      stage: 'revision',
+      mode: 'revision_control',
+      deliveryStatus: 'revision_requested',
+      currentGate: null,
+      nextStep: 'revision_complete',
       activeRevision: { ...revisionContext.context },
-      next: 'Revise only affected nodes from Impact Tree, refresh tests/evidence, then run `pbe revision complete --change <id>`.',
+      data: {
+        changeId: context.options.change,
+        activeRevision: { ...revisionContext.context },
+        next: 'Revise only affected nodes from Impact Tree, refresh tests/evidence, then run `pbe revision complete --change <id>`.',
+      },
     },
-  })
-  if (!result.ok) {
-    return result
+  )
+  if (!preparedTransition.ok) {
+    return preparedTransition.result
   }
-  await writeInvalidationArtifacts(invalidation)
+
+  const result = preparedTransition.result
+  try {
+    await writeJsonArtifactTransaction([
+      ...invalidationWrites(invalidation),
+      { filePath: preparedTransition.statePath, value: preparedTransition.state },
+    ])
+  } catch (error) {
+    return transitionFailed('revision start', 'Revision start failed. No revision artifacts were committed.', [
+      issue({
+        validator: 'Revision',
+        code: 'REVISION_ARTIFACT_TRANSACTION_FAILED',
+        severity: 'error',
+        file: defaultArtifacts.pbeState,
+        message: error instanceof Error ? error.message : String(error),
+        suggestedFix:
+          'Fix filesystem or artifact write errors, then rerun `pbe revision start --change <id>` so state and invalidations commit together.',
+        nextCommand: context.options.change
+          ? `pbe revision start --change ${context.options.change}`
+          : 'pbe revision start',
+      }),
+    ])
+  }
   result.data = {
     ...result.data,
     invalidatedEvidenceCount: invalidation.invalidatedEvidenceCount,
@@ -155,13 +183,15 @@ async function prepareRevisionInvalidations(
   return plan
 }
 
-async function writeInvalidationArtifacts(plan: RevisionInvalidationPlan): Promise<void> {
+function invalidationWrites(plan: RevisionInvalidationPlan): Array<{ filePath: string; value: JsonObject }> {
+  const writes: Array<{ filePath: string; value: JsonObject }> = []
   if (plan.evidencePath && plan.evidenceTree && plan.invalidatedEvidenceCount > 0) {
-    await writeJsonAtomic(plan.evidencePath, plan.evidenceTree)
+    writes.push({ filePath: plan.evidencePath, value: plan.evidenceTree })
   }
   if (plan.acceptancePath && plan.acceptanceTree && plan.invalidatedAcceptanceCount > 0) {
-    await writeJsonAtomic(plan.acceptancePath, plan.acceptanceTree)
+    writes.push({ filePath: plan.acceptancePath, value: plan.acceptanceTree })
   }
+  return writes
 }
 
 function invalidateEvidenceNodes(

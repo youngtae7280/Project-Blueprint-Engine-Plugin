@@ -89,6 +89,11 @@ Acceptance ids.
 When revision completes, PBE removes `activeRevision`, appends a completed entry to `revisionHistory`, and returns the
 branch to the normal reverification path.
 
+Revision start prepares the next `pbe-state.json`, `evidence-tree.json`, and `acceptance-tree.json` contents in memory
+before committing any artifact. The artifact write step prepares temporary files first, then writes invalidated
+Evidence, invalidated Acceptance, and finally the new PBE state. If preparation or writing fails, PBE does not open the
+revision state and attempts to preserve the original artifact contents.
+
 `pbe revision complete` does not go to `DONE`. It returns the branch to `WPD_IN_PROGRESS` so the normal closure path
 runs again:
 

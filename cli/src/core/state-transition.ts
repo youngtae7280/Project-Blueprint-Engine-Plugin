@@ -25,30 +25,57 @@ export interface StateTransitionUpdate {
   data?: Record<string, unknown>
 }
 
+export interface PreparedPbeStateTransition {
+  statePath: string
+  state: Record<string, unknown>
+  result: CommandResult
+}
+
 export async function transitionPbeState(
   root: string,
   command: string,
   targets: PbeState[],
   update: StateTransitionUpdate,
 ): Promise<CommandResult> {
+  const prepared = await preparePbeStateTransition(root, command, targets, update)
+  if (!prepared.ok) {
+    return prepared.result
+  }
+
+  await writeJsonAtomic(prepared.statePath, prepared.state)
+  return prepared.result
+}
+
+export async function preparePbeStateTransition(
+  root: string,
+  command: string,
+  targets: PbeState[],
+  update: StateTransitionUpdate,
+): Promise<
+  | { ok: true; statePath: string; state: Record<string, unknown>; result: CommandResult }
+  | { ok: false; result: CommandResult }
+> {
   const statePath = artifactPath(root, 'pbeState')
   const parsed = await readJsonSafe<Record<string, unknown>>(statePath)
   if (!parsed.ok) {
     return {
       ok: false,
-      command,
-      exitCode: ExitCode.SchemaError,
-      message: `${command} failed. pbe-state.json was not changed.`,
-      issues: [
-        issue({
-          validator: 'StateTransition',
-          code: 'PBE_STATE_INVALID_JSON',
-          severity: 'error',
-          file: defaultArtifacts.pbeState,
-          message: parsed.error,
-          suggestedFix: 'Fix pbe-state.json before running state transition commands.',
-        }),
-      ],
+      result: {
+        ok: false,
+        command,
+        exitCode: ExitCode.SchemaError,
+        message: `${command} failed. pbe-state.json was not changed.`,
+        issues: [
+          issue({
+            validator: 'StateTransition',
+            code: 'PBE_STATE_INVALID_JSON',
+            severity: 'error',
+            file: defaultArtifacts.pbeState,
+            message: parsed.error,
+            suggestedFix: 'Fix pbe-state.json before running state transition commands.',
+          }),
+        ],
+      },
     }
   }
 
@@ -59,19 +86,22 @@ export async function transitionPbeState(
   if (!current) {
     return {
       ok: false,
-      command,
-      exitCode: ExitCode.TransitionBlocked,
-      message: `${command} failed. pbe-state.json was not changed.`,
-      issues: [
-        issue({
-          validator: 'StateTransition',
-          code: 'UNKNOWN_STATE',
-          severity: 'error',
-          file: defaultArtifacts.pbeState,
-          message: `Cannot transition from unknown state: ${String(autoflow.state || '<missing>')}.`,
-          suggestedFix: 'Repair autoflow.state to a canonical state or known migration alias.',
-        }),
-      ],
+      result: {
+        ok: false,
+        command,
+        exitCode: ExitCode.TransitionBlocked,
+        message: `${command} failed. pbe-state.json was not changed.`,
+        issues: [
+          issue({
+            validator: 'StateTransition',
+            code: 'UNKNOWN_STATE',
+            severity: 'error',
+            file: defaultArtifacts.pbeState,
+            message: `Cannot transition from unknown state: ${String(autoflow.state || '<missing>')}.`,
+            suggestedFix: 'Repair autoflow.state to a canonical state or known migration alias.',
+          }),
+        ],
+      },
     }
   }
 
@@ -79,10 +109,13 @@ export async function transitionPbeState(
   if (hasErrors(existingStateIssues)) {
     return {
       ok: false,
-      command,
-      exitCode: ExitCode.TransitionBlocked,
-      message: `${command} failed. pbe-state.json was not changed.`,
-      issues: existingStateIssues,
+      result: {
+        ok: false,
+        command,
+        exitCode: ExitCode.TransitionBlocked,
+        message: `${command} failed. pbe-state.json was not changed.`,
+        issues: existingStateIssues,
+      },
     }
   }
 
@@ -127,10 +160,13 @@ export async function transitionPbeState(
   if (hasErrors(transitionIssues)) {
     return {
       ok: false,
-      command,
-      exitCode: ExitCode.TransitionBlocked,
-      message: `${command} failed. pbe-state.json was not changed.`,
-      issues: transitionIssues,
+      result: {
+        ok: false,
+        command,
+        exitCode: ExitCode.TransitionBlocked,
+        message: `${command} failed. pbe-state.json was not changed.`,
+        issues: transitionIssues,
+      },
     }
   }
 
@@ -174,24 +210,27 @@ export async function transitionPbeState(
   state.autoflow = autoflow
   state.updatedAt = now
 
-  await writeJsonAtomic(statePath, state)
-
   return {
     ok: true,
-    command,
-    exitCode: ExitCode.Success,
-    message:
-      appended.length === 0
-        ? `${command} passed. State was already ${cursor}.`
-        : `${command} transitioned PBE state to ${cursor}.`,
-    issues: [],
-    data: {
-      state: cursor,
-      previousState: current,
-      transitionCount: appended.length,
-      currentGate: autoflow.currentGate,
-      nextStep: autoflow.nextStep,
-      ...update.data,
+    statePath,
+    state,
+    result: {
+      ok: true,
+      command,
+      exitCode: ExitCode.Success,
+      message:
+        appended.length === 0
+          ? `${command} passed. State was already ${cursor}.`
+          : `${command} transitioned PBE state to ${cursor}.`,
+      issues: [],
+      data: {
+        state: cursor,
+        previousState: current,
+        transitionCount: appended.length,
+        currentGate: autoflow.currentGate,
+        nextStep: autoflow.nextStep,
+        ...update.data,
+      },
     },
   }
 }
