@@ -1,0 +1,54 @@
+name: PBE CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  quality-gate:
+    name: Quality Gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm run test
+
+      - name: Validate PBE plugin files
+        run: npm run validate:pbe
+
+      - name: Validate PBE tree schemas
+        run: npm run validate:pbe:v2
+
+      - name: Example regression suite
+        run: npm run test:examples
+
+      - name: Build CLI for smoke checks
+        run: npm run build:cli
+
+      - name: CLI help smoke check
+        run: node dist/cli/index.js --help
+
+      - name: CLI JSON validate smoke check
+        run: node dist/cli/index.js validate --json

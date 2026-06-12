@@ -1,5 +1,7 @@
 # Project Blueprint Engine
 
+[![PBE CI](https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/workflows/ci.yml)
+
 Project Blueprint Engine is a Codex Plugin and an evolving tree-based development control system.
 
 It does not provide a GUI, SaaS backend, or separate OpenAI API provider. It runs inside Codex as a set of skills, stores durable artifacts in `.pbe/`, generates execution contracts, and guides Codex through those contracts until a human gate or stop condition.
@@ -794,6 +796,17 @@ The validator checks changed, staged, and untracked files against those
 boundaries so a narrow revision does not quietly expand into unrelated code.
 
 ## Validation
+
+GitHub Actions runs the same quality gate on `push` and `pull_request` to `main`:
+
+```bash
+npm run format:check
+npm run typecheck
+npm run test
+npm run validate:pbe
+npm run validate:pbe:v2
+npm run test:examples
+```
 
 Build and use the deterministic PBE CLI:
 
