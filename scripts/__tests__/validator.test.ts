@@ -137,7 +137,7 @@ function writePbeFixture(
       schemaVersion: 1,
       enabled: true,
       profile: 'full',
-      state: 'ACEP_GENERATED',
+      state: 'ACEP_READY',
       completedSteps: [
         'start',
         'rpd',

@@ -153,7 +153,7 @@ If the user's request is already clear, do not ask a vague "should I interview m
 1. Draft the Root requirement summary.
 2. Draft the proposed child node structure or explain that the Root can remain a single terminal requirement.
 3. Ask the user to confirm, revise, decompose further, defer, or mark out of scope.
-4. Set `autoflow.state` to `WAITING_ROOT_CONFIRMATION`, `autoflow.currentGate` to `root_confirmation`, and `autoflow.nextStep` to `root_confirmation` until the user answers.
+4. Keep `autoflow.state` at `INIT`, set `autoflow.currentGate` to `root_confirmation`, and set `autoflow.nextStep` to `root_confirmation` until the user answers.
 
 Clear requests may reduce additional interview questions. They do not remove the confirmation gate.
 Clear requests also do not bypass EARS acceptance criteria. The Root summary or leaf node must be convertible into structured criteria before it can become executable scope.

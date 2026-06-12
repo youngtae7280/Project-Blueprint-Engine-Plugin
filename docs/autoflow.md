@@ -8,18 +8,20 @@ Autoflow lets a user start Project Blueprint Engine once and then respond in nat
 start
 -> rpd
 -> ui ux confirm gate
+-> visual reference intake, when selected UI work changes visual appearance
+-> design system derive, when visual work is selected
 -> wpd
+-> ui surface inventory, when visual work is selected
 -> vd
 -> dependency impact audit
 -> implementation scope gate
--> architecture runway gate, when needed
 -> plan execution
 -> coverage audit
 -> ux audit
 -> generate acep
 -> run acep
+-> visual implementation audit, when visual work is selected
 -> review result gate
--> next slice decision
 ```
 
 ## Automatic Steps
@@ -28,7 +30,10 @@ These steps continue automatically after the previous step succeeds:
 
 ```text
 rpd
+visual reference intake
+design system derive
 wpd
+ui surface inventory
 vd
 dependency impact audit
 plan execution
@@ -36,6 +41,7 @@ coverage audit
 ux audit
 generate acep
 run acep
+visual implementation audit
 ```
 
 RPD may still ask one requirement question at a time when information is missing. The user does not need to invoke the `rpd` command manually.
@@ -47,9 +53,7 @@ Autoflow stops at:
 ```text
 ui ux confirm
 implementation scope
-architecture runway
 review result
-next slice decision
 ```
 
 At a gate, Codex should explain what the user should review and give natural-language examples for approval, revision, questions, status, or stop.
@@ -95,30 +99,26 @@ Every active human gate must include a `추천 답변`.
 ## State Model
 
 ```text
-IDLE
--> STARTED
+INIT
 -> RPD_DONE
 -> WAITING_UI_UX_CONFIRM
 -> UI_UX_APPROVED
+-> VISUAL_CONTRACT_READY
 -> WPD_DONE
+-> UI_SURFACE_INVENTORY_DONE
 -> VD_DONE
--> DEPENDENCY_IMPACT_AUDITED
 -> WAITING_IMPLEMENTATION_SCOPE
 -> SCOPE_SELECTED
--> WAITING_ARCHITECTURE_RUNWAY_CONFIRM
--> ARCHITECTURE_RUNWAY_APPROVED
--> PLAN_EXECUTED
--> COVERAGE_AUDITED
--> UX_AUDITED
--> ACEP_GENERATED
+-> ACEP_READY
 -> ACEP_RUN_DONE
+-> VISUAL_AUDIT_DONE
 -> WAITING_REVIEW_RESULT
--> WAITING_NEXT_SLICE_DECISION
+-> DONE
 ```
 
-`SLICE_ACCEPTED`, `COMPLETED`, `BLOCKED`, and `STOPPED` are terminal or operational states.
+Visual states are skipped only when selected work does not change visual appearance or has an explicit not-required or waiver record.
 
-`COMPLETED` is whole-project completion only.
+`DONE` requires explicit user approval. Automatic failures do not move to a canonical `BLOCKED` state; they keep the last valid state and record `lastFailure`.
 
 ## Failure Behavior
 

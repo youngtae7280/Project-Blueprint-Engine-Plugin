@@ -13,7 +13,7 @@ answer an ordinary non-state-changing question.
 1. If the user asks for usage, explanation, or a conceptual review, answer normally.
 2. If `.pbe/` exists and the user asks for code changes, inspect PBE state first.
 3. If `currentGate` is active, stop and explain the gate.
-4. If `state` is `BLOCKED`, stop and explain the failure and repair path.
+4. If `lastFailure` is present and unresolved, stop and explain the failure and repair path.
 5. If `nextStep` is deterministic, run that PBE step.
 6. If the user explicitly asks for bypass, classify the request as `bypass`, `lite`, or `full`.
 7. If no PBE state exists, use `@project-blueprint-engine start` to initialize PBE.
@@ -22,7 +22,10 @@ answer an ordinary non-state-changing question.
 
 ```text
 rpd
+visual_reference_intake
+design_system_derive
 wpd
+ui_surface_inventory
 vd
 dependency_impact_audit
 plan_execution
@@ -30,6 +33,7 @@ coverage_audit
 ux_audit
 generate_acep
 run_acep
+visual_implementation_audit
 ```
 
 ## Human Gates
@@ -37,9 +41,7 @@ run_acep
 ```text
 ui_ux_confirm
 implementation_scope
-architecture_runway
 review_result
-next_slice_decision
 ```
 
 At a human gate, Codex should not ask the user to memorize internal commands.

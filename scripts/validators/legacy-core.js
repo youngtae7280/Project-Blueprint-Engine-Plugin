@@ -780,22 +780,8 @@ function validateAutoflowState(autoflow, label) {
   ) {
     errors.push(`${label} WAITING_IMPLEMENTATION_SCOPE must set currentGate to implementation_scope`)
   }
-  if (
-    autoflow.state === 'WAITING_ARCHITECTURE_RUNWAY_CONFIRM' &&
-    autoflow.currentGate !== 'architecture_runway'
-  ) {
-    errors.push(
-      `${label} WAITING_ARCHITECTURE_RUNWAY_CONFIRM must set currentGate to architecture_runway`,
-    )
-  }
-  if (
-    autoflow.state === 'WAITING_NEXT_SLICE_DECISION' &&
-    autoflow.currentGate !== 'next_slice_decision'
-  ) {
-    errors.push(`${label} WAITING_NEXT_SLICE_DECISION must set currentGate to next_slice_decision`)
-  }
-  if (autoflow.state === 'BLOCKED' && !autoflow.lastFailure) {
-    errors.push(`${label} BLOCKED state must include lastFailure`)
+  if (autoflow.lastFailure && typeof autoflow.lastFailure !== 'object') {
+    errors.push(`${label} lastFailure must be an object when present`)
   }
   if (
     autoflow.nextStep !== null &&
@@ -1300,9 +1286,9 @@ function validatePbeRouting(context) {
     context.dependencyImpactAudit?.futureItems?.some(
       (item) => item.decision === 'pending_user_decision',
     ) &&
-    !['WAITING_IMPLEMENTATION_SCOPE', 'WAITING_ARCHITECTURE_RUNWAY_CONFIRM', 'BLOCKED'].includes(
-      autoflow.state,
-    )
+    autoflow.state !== 'WAITING_IMPLEMENTATION_SCOPE' &&
+    autoflow.currentGate !== 'implementation_scope' &&
+    !autoflow.lastFailure
   ) {
     errors.push('PBE routing cannot continue while dependency impact decisions are pending')
   }

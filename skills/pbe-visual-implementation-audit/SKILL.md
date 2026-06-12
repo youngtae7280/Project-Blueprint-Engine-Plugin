@@ -48,7 +48,7 @@ Read compatibility ACEP files when present:
 ## Outputs
 
 ```text
-.pbe/evidence/review-reports/visual-audit.md
+.pbe/evidence/visual-audit.md
 .pbe/control/visual-verification-profile.json
 .pbe/control/verification-miss-log.json
 ```
@@ -83,6 +83,18 @@ acceptance attempted without user-controlled visual decision
 8. Screenshot evidence covers required states.
 9. Visual deviations are recorded with disposition: accepted, revise_required, deferred, out_of_scope, or waived.
 10. Stale evidence blocks closure.
+
+## CLI Gate
+
+Before Review Result for UI visual work, run:
+
+```bash
+pbe visual check
+pbe evidence check
+pbe gate review-result
+```
+
+The audit may set `pbe-state.json.autoflow.state` to `VISUAL_AUDIT_DONE` only when `visual-audit.md` has no unresolved blocking issues, required screenshot/manual evidence is current, and the result is pass, accepted, or explicitly waived by the user.
 
 ## Completion Report
 

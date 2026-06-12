@@ -129,14 +129,14 @@ If gaps exist, report them as blocking issues before ACEP generation or final co
 
 When the audit passes or UI/UX is not required:
 
-- Set `pbe-state.json.autoflow.state` to `UX_AUDITED`.
+- Keep `pbe-state.json.autoflow.state` on `SCOPE_SELECTED` until ACEP is generated.
 - Add `ux_audit` to `autoflow.completedSteps`.
 - Set `autoflow.nextStep` to `generate_acep`.
 - Continue automatically to ACEP generation.
 
 When the audit has blocking issues:
 
-- Set `autoflow.state` to `BLOCKED`.
+- Keep the last valid canonical state and record `autoflow.lastFailure`.
 - Record `autoflow.lastFailure.failedStep` as `ux_audit`.
 - Do not continue to ACEP generation.
 - Show the Autoflow failure guidance.

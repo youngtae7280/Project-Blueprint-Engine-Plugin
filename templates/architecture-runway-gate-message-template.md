@@ -4,7 +4,7 @@
 [PBE 상태 보고]
 
 현재 단계:
-- state: WAITING_ARCHITECTURE_RUNWAY_CONFIRM
+- state: SCOPE_SELECTED
 - currentGate: architecture_runway
 - nextStep: architecture_runway
 

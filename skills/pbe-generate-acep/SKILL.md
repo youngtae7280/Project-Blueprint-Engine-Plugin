@@ -492,14 +492,14 @@ Stop and ask the user when work requires:
 
 When ACEP generation succeeds:
 
-- Set `pbe-state.json.autoflow.state` to `ACEP_GENERATED`.
+- Set `pbe-state.json.autoflow.state` to `ACEP_READY`.
 - Add `generate_acep` to `autoflow.completedSteps`.
 - Set `autoflow.nextStep` to `run_acep`.
 - Continue automatically to ACEP Runner.
 
 When ACEP generation fails:
 
-- Set `autoflow.state` to `BLOCKED`.
+- Keep `autoflow.state` on the last valid canonical state and record `autoflow.lastFailure`.
 - Record `autoflow.lastFailure.failedStep` as `generate_acep`.
 - Do not continue to ACEP Runner.
 - Show the Autoflow failure guidance.

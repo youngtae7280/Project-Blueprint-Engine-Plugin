@@ -3,7 +3,7 @@
 Project Blueprint Engine has an integrated Autoflow planning, execution, review, and revision loop:
 
 ```text
-Start -> RPD -> UI/UX Confirmation Gate -> WPD -> VD -> Dependency Impact Audit -> Implementation Scope Gate -> Architecture Runway Gate -> Execution Planner -> Coverage Auditor -> UX Auditor -> ACEP Generator -> ACEP Runner -> Result Review Gate -> Next Slice Decision
+Start -> RPD -> UI/UX Confirmation Gate -> Visual Reference Intake -> Design System Derive -> WPD -> UI Surface Inventory -> VD -> Dependency Impact Audit -> Implementation Scope Gate -> Execution Planner -> Coverage Auditor -> UX Auditor -> ACEP Generator -> ACEP Runner -> Visual Implementation Audit -> Result Review Gate
 ```
 
 After `start`, deterministic stages continue automatically. Human judgment gates stop and explain what the user should review next.
@@ -18,6 +18,12 @@ RPD owns user intent, not coding task boundaries.
 
 UI/UX work must be confirmed before implementation. Codex presents one screen or flow at a time as a text wireframe, Markdown mockup, or prototype. Unconfirmed UI/UX items block WPD, ACEP, and UI implementation unless they are deferred or out of scope.
 
+## Visual Design Contract
+
+When selected UI work changes visual appearance, UI/UX approval hands off to Visual Reference Intake and Design System Derive before implementation planning. PBE records the visual source, theme spec, design tokens, component style contract, allowed/forbidden changes, waiver/not-required status, and visual evidence requirements.
+
+The visual source can be a reference screenshot, reference app/site, existing project screen, interview-derived direction, default PBE Clean Theme, explicit waiver, or not-required decision. Vague visual words such as clean or modern must be converted into concrete tokens, component rules, states, and verification checks before execution.
+
 ## WPD
 
 WPD converts confirmed requirements into a module-aware WorkGraph and work roadmap. It does not copy RPD nodes directly into Codex coding tasks.
@@ -29,6 +35,8 @@ WPD runs Module Boundary Check internally, identifies shared foundations, featur
 VD converts selected and foundation work units into verification items and an acceptance plan. Deferred and out-of-scope items are recorded separately so they are not treated as current-slice failures.
 
 When the parity/completeness profile is active, VD also derives or updates visual/runtime verification requirements. Build and open smoke are minimum checks; they do not close visual parity by themselves.
+
+For visual UI work, VD must include required UI states, screenshot/manual evidence requirements, and links back to the Visual Design Contract and UI Surface Inventory.
 
 ## Dependency Impact And Scope
 
@@ -42,7 +50,7 @@ Implementation Scope Gate lets the user decide:
 - blocked scope
 - out-of-scope items
 
-Architecture Runway Gate appears when required foundation, blocking dependency, or high-impact future module risk exists.
+Required foundation, blocking dependency, or high-impact future module risk is resolved through the implementation scope gate and recorded in `lastFailure` if it blocks downstream work.
 
 ## Execution Planner
 
@@ -60,9 +68,11 @@ It follows sequential phases in order, handles parallel phases by parallel group
 
 It submits work as `submitted_for_review`, not `accepted`.
 
+For visual UI work, ACEP Runner must capture or reference required screenshot/manual evidence, then Visual Implementation Audit checks visual contract compliance before Review Result.
+
 ## Result Review And Revision
 
-Result Review prepares `.pbe/review/` for the user. If the user approves, Autoflow moves to Next Slice Decision rather than whole-project completion.
+Result Review prepares `.pbe/review/` for the user. If the user approves, Autoflow can use `DONE` for the approved branch or slice. Starting another slice moves back to `WAITING_IMPLEMENTATION_SCOPE`.
 
 If the user is dissatisfied, Codex collects feedback, maps it to affected requirement/task/UI/verification items, creates a bounded Revision Pack, runs only affected selected/foundation revision tasks, performs regression checks, and submits for review again.
 
@@ -74,14 +84,16 @@ RPD must be complete before WPD.
 
 UI/UX confirmation must be complete, deferred, out_of_scope, or not_required before WPD.
 
+Visual Design Contract must be ready, waived, out_of_scope, or not_required before WPD/ACEP/UI implementation for selected visual UI work.
+
 WPD must be complete before VD.
 
 VD and Dependency Impact Audit must be complete before implementation scope is selected.
-
-Architecture runway approval is required when foundation or future-impact risk exists.
 
 Execution planning must be complete before ACEP generation.
 
 ACEP generation must be complete before ACEP running.
 
-If any automatic stage fails, Autoflow stops in `BLOCKED` state and reports the failed step, reason, what the user should inspect, and downstream retry steps.
+Visual Implementation Audit must pass, be explicitly waived, or have all blocking issues resolved before Review Result can close visual UI work.
+
+If any automatic stage fails, Autoflow keeps the last valid canonical state, records `lastFailure`, and reports the failed step, reason, what the user should inspect, and downstream retry steps.

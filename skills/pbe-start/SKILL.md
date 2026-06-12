@@ -68,7 +68,7 @@ If either command fails, do not proceed to RPD until the blocking issue is fixed
 17. Initialize UI/UX confirmation placeholders when UI work may be involved.
 17a. Initialize Visual Design Contract placeholders when visual UI work may be involved: visual reference, theme spec, design tokens, component style contract, UI surface inventory, component style inventory, visual verification profile, and visual audit report path.
 18. Initialize `pbe-state.json.autoflow` with:
-   - `state`: `STARTED`
+   - `state`: `INIT`
    - `enabled`: `true`
    - `profile`: `full`, `lite`, or `bypass`
    - `completedSteps`: `["start"]`
@@ -144,7 +144,7 @@ If the user already provided enough detail, clear enough means "ready to propose
 
 - keep the requirement root unconfirmed as `interviewing` or `ready_to_confirm`
 - set the Product root to `proposed`
-- set `pbe-state.json.autoflow.state` to `WAITING_ROOT_CONFIRMATION`
+- keep `pbe-state.json.autoflow.state` at `INIT`
 - set `pbe-state.json.autoflow.currentGate` to `root_confirmation`
 - set `pbe-state.json.autoflow.nextStep` to `root_confirmation`
 - set `pbe-state.json.deliveryStatus` to `waiting_root_confirmation`
@@ -154,7 +154,7 @@ If the user already provided enough detail, clear enough means "ready to propose
 
 Set `pbe-state.json` stage to `rpd` and mode to `rpd_tree_walk`.
 
-Set `pbe-state.json.autoflow.state` to `STARTED`.
+Set `pbe-state.json.autoflow.state` to `INIT`.
 
 Set `pbe-state.json.autoflow.profile` to the chosen profile. If no profile is explicitly requested, set it to `full`.
 

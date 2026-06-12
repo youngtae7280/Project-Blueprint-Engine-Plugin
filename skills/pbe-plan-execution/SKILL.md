@@ -91,7 +91,7 @@ These outputs are later copied or rendered into:
 21. Save `execution-strategy.md`.
 22. Save `execution-strategy.json`.
 23. Update `pbe-state.json` artifact references when available.
-24. Update `pbe-state.json.autoflow.state` to `PLAN_EXECUTED`.
+24. Keep `pbe-state.json.autoflow.state` on `SCOPE_SELECTED` until ACEP is generated, then advance to `ACEP_READY`.
 25. Add `plan_execution` to `autoflow.completedSteps`.
 26. Set `autoflow.nextStep` to `coverage_audit`.
 27. Continue automatically to Coverage Audit unless a blocker exists.

@@ -22,8 +22,8 @@
 18. Coverage passes selected and foundation scope.
 19. Deferred Ethernet is not treated as failure.
 20. Review separates completed selected scope, completed foundation scope, and deferred scope.
-21. Review approval moves to Next Slice Decision.
-22. `COMPLETED` is not used unless the user explicitly completes the whole project.
+21. Review approval records explicit user approval and moves the reviewed slice to `DONE`.
+22. Starting another slice moves back to `WAITING_IMPLEMENTATION_SCOPE`; `DONE` must not be inferred by Codex without user approval.
 
 ## Required Checks
 

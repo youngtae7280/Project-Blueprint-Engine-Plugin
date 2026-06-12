@@ -5,55 +5,41 @@ PBE gates must not be skipped.
 ## States
 
 ```text
-IDLE
-STARTED
+INIT
 RPD_DONE
 WAITING_UI_UX_CONFIRM
 UI_UX_APPROVED
+VISUAL_CONTRACT_READY
 WPD_DONE
+UI_SURFACE_INVENTORY_DONE
 VD_DONE
-DEPENDENCY_IMPACT_AUDITED
 WAITING_IMPLEMENTATION_SCOPE
 SCOPE_SELECTED
-WAITING_ARCHITECTURE_RUNWAY_CONFIRM
-ARCHITECTURE_RUNWAY_APPROVED
-PLAN_EXECUTED
-COVERAGE_AUDITED
-UX_AUDITED
-ACEP_GENERATED
+ACEP_READY
 ACEP_RUN_DONE
+VISUAL_AUDIT_DONE
 WAITING_REVIEW_RESULT
-PARTIAL_IMPLEMENTATION_DONE
-WAITING_NEXT_SLICE_DECISION
-SLICE_ACCEPTED
-COMPLETED
-BLOCKED
-STOPPED
+DONE
 ```
 
 ## Normal Flow
 
 ```text
-IDLE
--> STARTED
+INIT
 -> RPD_DONE
 -> WAITING_UI_UX_CONFIRM
 -> UI_UX_APPROVED
+-> VISUAL_CONTRACT_READY, when selected UI work changes visual appearance
 -> WPD_DONE
+-> UI_SURFACE_INVENTORY_DONE, when selected UI work changes visual appearance
 -> VD_DONE
--> DEPENDENCY_IMPACT_AUDITED
 -> WAITING_IMPLEMENTATION_SCOPE
 -> SCOPE_SELECTED
--> WAITING_ARCHITECTURE_RUNWAY_CONFIRM
--> ARCHITECTURE_RUNWAY_APPROVED
--> PLAN_EXECUTED
--> COVERAGE_AUDITED
--> UX_AUDITED
--> ACEP_GENERATED
+-> ACEP_READY
 -> ACEP_RUN_DONE
+-> VISUAL_AUDIT_DONE, when selected UI work changes visual appearance
 -> WAITING_REVIEW_RESULT
--> PARTIAL_IMPLEMENTATION_DONE, when only the current slice is implemented
--> WAITING_NEXT_SLICE_DECISION
+-> DONE, when the user explicitly approves the slice, branch, or whole project
 ```
 
 ## Human Gates
@@ -63,7 +49,7 @@ IDLE
 - approve / continue -> `UI_UX_APPROVED`
 - revise -> remain at gate
 - ask -> remain at gate
-- stop -> `STOPPED`
+- stop -> record the stop request without advancing downstream
 
 `WAITING_IMPLEMENTATION_SCOPE` accepts:
 
@@ -71,34 +57,20 @@ IDLE
 - select_full_scope -> `SCOPE_SELECTED`
 - mark_deferred -> remain at gate
 - ask_dependency_impact -> remain at gate
-- stop -> `STOPPED`
-
-`WAITING_ARCHITECTURE_RUNWAY_CONFIRM` accepts:
-
-- approve / continue -> `ARCHITECTURE_RUNWAY_APPROVED`
-- mark_foundation -> `ARCHITECTURE_RUNWAY_APPROVED`
-- revise -> remain at gate
-- stop -> `STOPPED`
+- stop -> record the stop request without advancing downstream
 
 `WAITING_REVIEW_RESULT` accepts:
 
-- approve / continue -> `WAITING_NEXT_SLICE_DECISION`
+- approve / continue -> `DONE`, only when the user explicitly approves the reviewed branch or slice
+- start next slice -> `WAITING_IMPLEMENTATION_SCOPE`
 - revise -> bounded revision flow
 - ask -> remain at gate
-- stop -> `STOPPED`
-
-`WAITING_NEXT_SLICE_DECISION` accepts:
-
-- complete_current_slice -> `SLICE_ACCEPTED`
-- start_next_slice -> `WAITING_IMPLEMENTATION_SCOPE`
-- complete_project -> `COMPLETED`
-- revise -> bounded revision flow
-- stop -> `STOPPED`
+- stop -> record the stop request without advancing downstream
 
 ## Rules
 
-- Architecture runway gate cannot pass without approval when Required Foundation, Blocking Dependency, or High-Impact Future Module exists.
-- `COMPLETED` is used only for whole-project completion.
-- Slice completion uses `SLICE_ACCEPTED` or `WAITING_NEXT_SLICE_DECISION`.
+- Required Foundation, Blocking Dependency, or High-Impact Future Module decisions are handled through the implementation scope gate and `lastFailure` records.
+- `DONE` is used only after explicit user approval for the reviewed branch, slice, or whole project.
 - `accepted` may exist as a delivery status, but only the user can set it and it must include explicit acceptance metadata.
-- Any automatic step failure moves to `BLOCKED` and stops downstream progress.
+- Any automatic step failure records `lastFailure`, keeps the last valid canonical state, and stops downstream progress.
+- Legacy state names may be read as explicit migration aliases, but new artifacts must use the canonical states above.

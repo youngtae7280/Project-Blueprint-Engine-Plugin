@@ -14,7 +14,7 @@
 12. Shared schema/type/config/auth/permission/migration change tasks are forbidden in parallel groups.
 13. A task missing from the execution manifest is not execution-eligible.
 14. Review Result must report selected, foundation, deferred, blocked, and out-of-scope items separately.
-15. `COMPLETED` is used only when the whole project is complete.
+15. `DONE` is used only after explicit user approval for the reviewed branch, slice, or whole project.
 16. Only the user may set `accepted`.
 17. UI tasks must not run without UI/UX confirmation.
 18. Visual UI changes must not run without Visual Design Contract source or explicit user waiver.

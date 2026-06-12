@@ -52,7 +52,7 @@ Commands:
   init                 Initialize .pbe artifacts
   status               Show current PBE status
   validate             Run all PBE validators
-  gate <stage>         Check whether a stage can be entered
+  gate <stage>         Check whether a stage can be entered, including review-result
   rpd check            Check RPD/Product Tree status
   rpd close            Attempt to close RPD
   trace check          Check Product/Work/Test/Evidence traceability

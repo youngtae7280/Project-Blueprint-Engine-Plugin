@@ -8,6 +8,14 @@ const requiredTemplates = [
   'templates/project-tree.template.json',
   'templates/work-tree.template.json',
   'templates/test-tree.template.json',
+  'templates/visual-reference.template.json',
+  'templates/design-tokens.template.json',
+  'templates/component-style-contract.template.json',
+  'templates/ui-surface-inventory.template.json',
+  'templates/component-style-inventory.template.json',
+  'templates/visual-verification-profile.template.json',
+  'templates/visual-audit-template.md',
+  'templates/ui-theme-spec-template.md',
   'templates/cycle-contract-template.md',
   'templates/node-execution-contract-template.md',
   'templates/revision-manifest.template.json',
@@ -48,4 +56,3 @@ export function runTemplatesValidator({ root }) {
 
   return issues
 }
-

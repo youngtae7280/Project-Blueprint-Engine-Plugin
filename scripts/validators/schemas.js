@@ -5,6 +5,15 @@ import { readJson } from '../validator-utils/json-utils.js'
 
 const validator = 'Schemas'
 
+const requiredSchemas = [
+  'schemas/visual-reference.schema.json',
+  'schemas/design-tokens.schema.json',
+  'schemas/component-style-contract.schema.json',
+  'schemas/ui-surface-inventory.schema.json',
+  'schemas/component-style-inventory.schema.json',
+  'schemas/visual-verification-profile.schema.json',
+]
+
 export function runSchemasValidator({ root }) {
   const issues = []
   const ajv = new Ajv2020({ allErrors: true, strict: false })
@@ -21,6 +30,21 @@ export function runSchemasValidator({ root }) {
         suggestedFix: 'Restore schema files under schemas/.',
       }),
     ]
+  }
+
+  const schemaFileSet = new Set(schemaFiles)
+  for (const relativePath of requiredSchemas) {
+    if (!schemaFileSet.has(relativePath)) {
+      issues.push(
+        createIssue({
+          validator,
+          file: relativePath,
+          code: 'REQUIRED_SCHEMA_MISSING',
+          message: `${relativePath} is required by the Visual Design Contract workflow.`,
+          suggestedFix: `Restore ${relativePath}.`,
+        }),
+      )
+    }
   }
 
   for (const relativePath of schemaFiles) {
@@ -66,4 +90,3 @@ export function runSchemasValidator({ root }) {
 
   return issues
 }
-

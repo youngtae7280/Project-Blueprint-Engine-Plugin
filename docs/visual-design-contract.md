@@ -45,7 +45,7 @@ If no source exists, PBE stops and asks the user to choose. It must not ask only
 .pbe/control/component-style-inventory.json
 .pbe/control/visual-verification-profile.json
 .pbe/evidence/screenshots/
-.pbe/evidence/review-reports/visual-audit.md
+.pbe/evidence/visual-audit.md
 ```
 
 ## Invariants
@@ -81,4 +81,4 @@ The default theme must still be materialized into `design-tokens.json` and `comp
 
 ## CLI Guard
 
-`pbe visual check` validates the Visual Design Contract layer when visual UI work is selected. `pbe gate acep`, `pbe acep check`, `pbe evidence check`, and `pbe gate review-submit` also enforce the relevant visual-contract checks.
+`pbe visual check` validates the Visual Design Contract layer when visual UI work is selected. `pbe gate acep`, `pbe acep check`, `pbe evidence check`, and `pbe gate review-result` also enforce the relevant visual-contract checks.

@@ -25,7 +25,7 @@ After implementation and verification, run:
 
 ```bash
 pbe evidence check
-pbe gate review-submit
+pbe gate review-result
 ```
 
 Do not mark any scope as accepted. Acceptance requires explicit user approval and must pass `pbe gate accept`.
@@ -170,7 +170,7 @@ Requires Change Node:
 - changes to excluded/deferred/blocked/out-of-scope nodes
 - implementation that makes previously verified evidence stale
 
-When a Change Node is required, record or request it in `.pbe/control/change-tree.json`, set Autoflow to `BLOCKED` if approval is required, and do not silently continue.
+When a Change Node is required, record or request it in `.pbe/control/change-tree.json`, record `autoflow.lastFailure` if approval is required, and do not silently continue.
 
 ## Phase And Parallel Group Rules
 
@@ -263,7 +263,7 @@ If coverage issues remain, continue working or record a stop condition. Do not w
 
 If ACEP execution cannot continue:
 
-- Set `autoflow.state` to `BLOCKED`.
+- Keep `autoflow.state` on the last valid canonical state, usually `ACEP_READY`.
 - Record `autoflow.lastFailure.failedStep` as `run_acep`.
 - Record downstream steps that would be retried after repair.
 - Do not continue to Result Review.
@@ -293,6 +293,12 @@ Only the user can accept the result. If the user is dissatisfied, continue with 
 When complete, report with `[PBE 상태 보고]` first, following `templates/stage-completion-status-card-template.md`.
 
 The state card must say that ACEP execution ended as `submitted_for_review` and PBE is stopping at the Review Result gate. Include user reply examples for approval, revision, question, and stop.
+
+State transitions:
+
+- After execution completes, set `autoflow.state` to `ACEP_RUN_DONE`.
+- If selected visual UI work changed, run `pbe-visual-implementation-audit` next and set `autoflow.state` to `VISUAL_AUDIT_DONE` only after the visual audit passes or is explicitly waived.
+- Only then set `autoflow.state` to `WAITING_REVIEW_RESULT`, `autoflow.currentGate` to `review_result`, and `autoflow.nextStep` to `review_result`.
 
 Include:
 

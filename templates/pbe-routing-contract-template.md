@@ -9,7 +9,7 @@ review.
 
 1. Before implementation or modification work, read `.pbe/blueprint/pbe-state.json`.
 2. If `autoflow.currentGate` is set, do not implement. Report the gate and ask for the user's decision.
-3. If `autoflow.state` is `BLOCKED`, do not continue downstream. Report `lastFailure` and repair options.
+3. If `autoflow.lastFailure` is set, do not continue downstream. Report `lastFailure` and repair options.
 4. If `autoflow.nextStep` is deterministic, run that PBE step before ordinary coding.
 5. If the user asks for ordinary explanation, usage help, status, or review without changing workflow state, answer normally and do not use a PBE status card unless reporting PBE state.
 6. If the user asks for a bypass/lite/full decision, record the profile choice in `pbe-state.json.autoflow.profile`.

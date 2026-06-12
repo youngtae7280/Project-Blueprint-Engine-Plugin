@@ -47,4 +47,4 @@
 
 - Required screenshots:
 - Manual visual checks:
-- Visual audit path: `.pbe/evidence/review-reports/visual-audit.md`
+- Visual audit path: `.pbe/evidence/visual-audit.md`

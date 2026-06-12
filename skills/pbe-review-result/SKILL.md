@@ -93,7 +93,7 @@ submitted_for_review
 
 Set `pbe-state.json.autoflow.state` to `WAITING_REVIEW_RESULT`, set `autoflow.currentGate` to `review_result`, and set `autoflow.nextStep` to `review_result`.
 
-If the user approves at this gate, move to `WAITING_NEXT_SLICE_DECISION`, not `COMPLETED`. The next gate asks whether to finish the current slice, start another slice, or complete the whole project.
+If the user approves at this gate, move to `DONE` only when the approval explicitly closes the current branch/slice/project. If the user wants another slice, move back to `WAITING_IMPLEMENTATION_SCOPE` with the new selected scope.
 
 ## Branch Review Scope
 
@@ -133,7 +133,7 @@ When the user explicitly approves the current slice:
 4. If coverage is partial, use `partial_satisfied` and explain what remains.
 5. If impact analysis marks a branch `stale`, `invalidated`, or `reopened`, do not close it.
 6. If required dialog/subdialog controls, event handlers, hardware actions, or workflow states are not checked, do not close the branch beyond the supported partial status.
-7. After approval, move to `WAITING_NEXT_SLICE_DECISION`.
+7. After approval, move to `DONE` for the approved branch/slice/project, or to `WAITING_IMPLEMENTATION_SCOPE` when the user starts another slice.
 
 Codex may recommend acceptance status, but the user is the only actor that can grant acceptance.
 

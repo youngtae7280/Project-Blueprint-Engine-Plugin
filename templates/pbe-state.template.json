@@ -6,7 +6,7 @@
   "currentNodeId": "req-root",
   "autoflow": {
     "schemaVersion": 1,
-    "state": "STARTED",
+    "state": "INIT",
     "enabled": true,
     "profile": "full",
     "completedSteps": ["start"],
@@ -15,13 +15,17 @@
     "deterministicSteps": [
       "rpd",
       "wpd",
+      "visual_reference_intake",
+      "design_system_derive",
+      "ui_surface_inventory",
       "vd",
       "dependency_impact_audit",
       "plan_execution",
       "coverage_audit",
       "ux_audit",
       "generate_acep",
-      "run_acep"
+      "run_acep",
+      "visual_implementation_audit"
     ],
     "humanGates": [
       "root_confirmation",
@@ -89,7 +93,7 @@
     "uiUxSpec": ".pbe/codex-execution-pack/05-ui-ux-spec.json",
     "uiUxEvidenceChecklist": ".pbe/codex-execution-pack/15-ui-ux-evidence-checklist.md",
     "finalCoverageCheck": ".pbe/codex-execution-pack/16-final-coverage-check.md",
-    "visualAudit": ".pbe/evidence/review-reports/visual-audit.md",
+    "visualAudit": ".pbe/evidence/visual-audit.md",
     "review": ".pbe/review/",
     "revisions": ".pbe/revisions/"
   },

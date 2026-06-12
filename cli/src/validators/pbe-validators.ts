@@ -1,6 +1,7 @@
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { artifactPath, defaultArtifacts, getOpenBlockingDecisions } from '../core/project.js'
 import { readJsonSafe } from '../core/fs.js'
+import { normalizePbeState } from '../core/state-machine.js'
 import type { ValidationIssue } from '../core/types.js'
 import { issue } from '../core/types.js'
 
@@ -9,6 +10,7 @@ type JsonObject = Record<string, unknown>
 const terminalRpdStatuses = new Set(['confirmed', 'deferred', 'out_of_scope'])
 const executableScopes = new Set(['selected', 'foundation'])
 const nonExecutableTypes = new Set(['non_goal', 'risk', 'assumption', 'decision'])
+const legacyVisualAuditPath = '.pbe/evidence/review-reports/visual-audit.md'
 const abstractQualityTerms = [
   '깔끔하게',
   '보기 좋게',
@@ -489,8 +491,9 @@ export async function validateVd(root: string): Promise<ValidationIssue[]> {
   return issues
 }
 
-export async function validateVisualDesign(root: string, options: { requireEvidence?: boolean } = {}): Promise<ValidationIssue[]> {
+export async function validateVisualDesign(root: string, options: { requireEvidence?: boolean; requireInventory?: boolean } = {}): Promise<ValidationIssue[]> {
   const issues: ValidationIssue[] = []
+  const requireInventory = options.requireInventory !== false
   const product = await readJsonIfExists(root, 'productTree')
   const work = await readJsonIfExists(root, 'workTree')
   const test = await readJsonIfExists(root, 'testTree')
@@ -501,6 +504,7 @@ export async function validateVisualDesign(root: string, options: { requireEvide
   const uiSurfaceInventory = await readJsonIfExists(root, 'uiSurfaceInventory')
   const componentStyleInventory = await readJsonIfExists(root, 'componentStyleInventory')
   const visualVerificationProfile = await readJsonIfExists(root, 'visualVerificationProfile')
+  const pbeState = await readJsonIfExists(root, 'pbeState')
 
   if (!hasSelectedVisualWork(product, work, test, visualReference)) {
     return issues
@@ -511,7 +515,7 @@ export async function validateVisualDesign(root: string, options: { requireEvide
     return issues
   }
 
-  const primarySource = stringValue(visualReference.primarySource)
+  const primarySource = visualSourceOf(visualReference)
   if (primarySource === 'not_required') {
     issues.push(issue({
       validator: 'VisualDesign',
@@ -576,11 +580,14 @@ export async function validateVisualDesign(root: string, options: { requireEvide
       }
     }
   }
-  if (!uiSurfaceInventory) {
-    issues.push(missingIssue('VisualDesign', 'UI_SURFACE_INVENTORY_MISSING', defaultArtifacts.uiSurfaceInventory, 'Selected visual UI work requires ui-surface-inventory.json.'))
+  if (requireInventory && !uiSurfaceInventory) {
+    issues.push(missingIssue('VisualDesign', 'UI_SURFACE_INVENTORY_MISSING', defaultArtifacts.uiSurfaceInventory, 'Selected visual UI work requires ui-surface-inventory.json before VD, ACEP, or review.'))
   }
-  if (!visualVerificationProfile) {
-    issues.push(missingIssue('VisualDesign', 'VISUAL_VERIFICATION_PROFILE_MISSING', defaultArtifacts.visualVerificationProfile, 'Selected visual UI work requires visual-verification-profile.json.'))
+  if (requireInventory && !componentStyleInventory) {
+    issues.push(missingIssue('VisualDesign', 'COMPONENT_STYLE_INVENTORY_MISSING', defaultArtifacts.componentStyleInventory, 'Selected visual UI work requires component-style-inventory.json before VD, ACEP, or review.'))
+  }
+  if (requireInventory && !visualVerificationProfile) {
+    issues.push(missingIssue('VisualDesign', 'VISUAL_VERIFICATION_PROFILE_MISSING', defaultArtifacts.visualVerificationProfile, 'Selected visual UI work requires visual-verification-profile.json before VD, ACEP, or review.'))
   }
 
   for (const component of arrayObjects(componentStyleInventory?.components)) {
@@ -612,6 +619,7 @@ export async function validateVisualDesign(root: string, options: { requireEvide
   if (options.requireEvidence) {
     issues.push(...validateVisualEvidence(root, uiSurfaceInventory, evidence))
   }
+  issues.push(...validateVisualAudit(root, pbeState, options.requireEvidence === true))
 
   return issues
 }
@@ -943,6 +951,134 @@ function validateVisualEvidence(root: string, uiSurfaceInventory: JsonObject | n
     }
   }
   return issues
+}
+
+function validateVisualAudit(root: string, pbeState: JsonObject | null, requirePassingResult: boolean): ValidationIssue[] {
+  const issues: ValidationIssue[] = []
+  const audit = readVisualAudit(root)
+  const auditRequired = requirePassingResult || visualAuditRequiredByState(pbeState)
+
+  if (!audit) {
+    if (auditRequired) {
+      issues.push(missingIssue('VisualDesign', 'VISUAL_AUDIT_MISSING', defaultArtifacts.visualAudit, 'Review Result for selected visual UI work requires visual-audit.md.'))
+    }
+    return issues
+  }
+
+  const requiredHeadings = [
+    '# Visual Implementation Audit',
+    '## Scope',
+    '## Visual Contract Artifacts',
+    '## Screenshot Evidence',
+    '## State Coverage',
+    '## Component Contract Compliance',
+    '## Deviations',
+    '## Blocking Issues',
+    '## Result',
+  ]
+  for (const heading of requiredHeadings) {
+    if (!audit.content.includes(heading)) {
+      issues.push(issue({
+        validator: 'VisualDesign',
+        code: 'VISUAL_AUDIT_HEADING_MISSING',
+        severity: 'error',
+        file: audit.relativePath,
+        nodeId: heading,
+        message: `visual-audit.md is missing required heading: ${heading}.`,
+        suggestedFix: 'Regenerate visual-audit.md from templates/visual-audit-template.md and complete every section.',
+      }))
+    }
+  }
+
+  if (/\[\s\]/.test(audit.content)) {
+    issues.push(issue({
+      validator: 'VisualDesign',
+      code: 'VISUAL_AUDIT_UNCHECKED_EVIDENCE',
+      severity: 'error',
+      file: audit.relativePath,
+      message: 'visual-audit.md still contains unchecked evidence items.',
+      suggestedFix: 'Complete or explicitly defer/block each required screenshot and visual state evidence item.',
+    }))
+  }
+
+  const blockingSection = markdownSection(audit.content, '## Blocking Issues')
+  if (blockingSectionHasUnresolvedItems(blockingSection)) {
+    issues.push(issue({
+      validator: 'VisualDesign',
+      code: 'VISUAL_AUDIT_BLOCKING_ISSUES',
+      severity: 'error',
+      file: audit.relativePath,
+      message: 'visual-audit.md contains unresolved blocking visual issues.',
+      suggestedFix: 'Resolve, revise, defer, mark out-of-scope, or record a user-accepted visual waiver before Review Result can close.',
+    }))
+  }
+
+  const resultSection = markdownSection(audit.content, '## Result')
+  if (requirePassingResult && !/\b(pass|passed|accepted|waived)\b/i.test(resultSection)) {
+    issues.push(issue({
+      validator: 'VisualDesign',
+      code: 'VISUAL_AUDIT_RESULT_NOT_PASSING',
+      severity: 'error',
+      file: audit.relativePath,
+      message: 'visual-audit.md does not record a passing, accepted, or waived result.',
+      suggestedFix: 'Run Visual Implementation Audit and record a pass/accepted waiver result before Review Result.',
+    }))
+  }
+
+  return issues
+}
+
+function readVisualAudit(root: string): { relativePath: string; content: string } | null {
+  for (const relativePath of [defaultArtifacts.visualAudit, legacyVisualAuditPath]) {
+    const filePath = `${root}/${relativePath}`.replaceAll('\\', '/')
+    if (existsSync(filePath)) {
+      return {
+        relativePath,
+        content: readFileSync(filePath, 'utf8'),
+      }
+    }
+  }
+  return null
+}
+
+function visualAuditRequiredByState(pbeState: JsonObject | null): boolean {
+  const state = normalizePbeState(getNestedString(pbeState, ['autoflow', 'state']))
+  if (state && ['ACEP_RUN_DONE', 'VISUAL_AUDIT_DONE', 'WAITING_REVIEW_RESULT', 'DONE'].includes(state)) {
+    return true
+  }
+  return ['submitted_for_review', 'revision_verified', 'accepted'].includes(stringValue(pbeState?.deliveryStatus))
+}
+
+function markdownSection(content: string, heading: string): string {
+  const start = content.indexOf(heading)
+  if (start < 0) {
+    return ''
+  }
+  const afterHeading = content.slice(start + heading.length)
+  const nextHeading = afterHeading.search(/\n##\s+/)
+  return nextHeading >= 0 ? afterHeading.slice(0, nextHeading) : afterHeading
+}
+
+function blockingSectionHasUnresolvedItems(section: string): boolean {
+  const lines = section
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((line) => !/^[-*]\s*(none|n\/a|not applicable)$/i.test(line))
+    .filter((line) => !/\b(resolved|waived|accepted waiver|deferred|out_of_scope)\b/i.test(line))
+  return lines.length > 0
+}
+
+function visualSourceOf(visualReference: JsonObject): string {
+  const primarySource = stringValue(visualReference.primarySource)
+  if (primarySource) {
+    return primarySource
+  }
+  const sourceType = stringValue(visualReference.sourceType)
+  if (sourceType) {
+    return sourceType
+  }
+  return stringValue(arrayObjects(visualReference.sources)[0]?.sourceType)
 }
 
 function validateAcceptanceCriterion(productNode: JsonObject, criterion: JsonObject): ValidationIssue[] {

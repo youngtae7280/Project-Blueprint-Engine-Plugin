@@ -49,7 +49,7 @@ images, generated assets, review reports, and any repository file changes.
 
 1. Read `.pbe/blueprint/pbe-state.json` before implementation or modification work.
 2. If `autoflow.currentGate` is set, do not implement; report the active gate and ask for the user's decision.
-3. If `autoflow.state` is `BLOCKED`, do not continue downstream; report `lastFailure` and repair options.
+3. If `autoflow.lastFailure` is set, do not continue downstream; report the failed step, repair options, and the last valid canonical state.
 4. Before any downstream step or deliverable-producing action, verify RPD completion. If any Root or leaf requirement is still `pending_interview`, `interviewing`, `ready_to_confirm`, `ready_to_decompose`, or `blocked`, stop at `root_confirmation` or continue RPD.
 5. If `autoflow.nextStep` is deterministic, run that PBE step before ordinary coding.
 6. Use ordinary AI answers only for usage help, explanations, or reviews that do not change PBE workflow state.
@@ -76,34 +76,24 @@ If risk grows while in `lite`, propose `full`. If the user explicitly keeps `lit
 Track state in `.pbe/blueprint/pbe-state.json` under `autoflow`.
 
 ```text
-IDLE
-STARTED
-WAITING_ROOT_CONFIRMATION
-DRAFT_CREATED_FROM_ASSUMPTIONS
+INIT
 RPD_DONE
 WAITING_UI_UX_CONFIRM
 UI_UX_APPROVED
+VISUAL_CONTRACT_READY
 WPD_DONE
+UI_SURFACE_INVENTORY_DONE
 VD_DONE
-DEPENDENCY_IMPACT_AUDITED
 WAITING_IMPLEMENTATION_SCOPE
 SCOPE_SELECTED
-WAITING_ARCHITECTURE_RUNWAY_CONFIRM
-ARCHITECTURE_RUNWAY_APPROVED
-PLAN_EXECUTED
-COVERAGE_AUDITED
-UX_AUDITED
-ACEP_GENERATED
+ACEP_READY
 ACEP_RUN_DONE
+VISUAL_AUDIT_DONE
 WAITING_REVIEW_RESULT
-WAITING_NEXT_SLICE_DECISION
-SLICE_ACCEPTED
-COMPLETED
-BLOCKED
-STOPPED
+DONE
 ```
 
-`COMPLETED` means the whole project is complete. A finished slice becomes `SLICE_ACCEPTED` or returns to `WAITING_NEXT_SLICE_DECISION`.
+`DONE` means the user explicitly approved the current branch/slice/project. If the user starts another slice, move back to `WAITING_IMPLEMENTATION_SCOPE` with the new selected scope.
 
 ## Full Flow
 
@@ -111,7 +101,9 @@ STOPPED
 start
 -> rpd
 -> ui ux confirm gate
+-> visual reference intake and design system derive, when visual UI work is selected
 -> wpd
+-> ui surface inventory, when visual UI work is selected
 -> vd
 -> dependency impact audit
 -> implementation scope gate
@@ -121,8 +113,9 @@ start
 -> ux audit
 -> generate acep
 -> run acep
+-> visual implementation audit, when visual UI work is selected
 -> review result gate
--> next slice decision
+-> done or next selected scope
 ```
 
 Deterministic steps continue automatically. Human gates stop and explain why.
@@ -263,7 +256,7 @@ make Ethernet part of this slice too
 
 ## Failure Response
 
-If an automatic step fails, set `autoflow.state` to `BLOCKED`, record `lastFailure`, and do not continue downstream.
+If an automatic step fails, record `lastFailure`, keep the last valid canonical state, and do not continue downstream.
 
 Report:
 

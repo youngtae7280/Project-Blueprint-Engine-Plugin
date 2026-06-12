@@ -31,7 +31,7 @@ export const defaultArtifacts = {
   uiSurfaceInventory: '.pbe/control/ui-surface-inventory.json',
   componentStyleInventory: '.pbe/control/component-style-inventory.json',
   visualVerificationProfile: '.pbe/control/visual-verification-profile.json',
-  visualAudit: '.pbe/evidence/review-reports/visual-audit.md',
+  visualAudit: '.pbe/evidence/visual-audit.md',
   executionManifest: '.pbe/codex-execution-pack/execution-manifest.json',
   finalCoverageCheck: '.pbe/codex-execution-pack/16-final-coverage-check.md',
 } as const

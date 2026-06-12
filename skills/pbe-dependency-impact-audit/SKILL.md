@@ -52,7 +52,7 @@ scope or architecture runway decision.
 7. Save `dependency-impact-audit.md`.
 8. Update Source of Truth Matrix links.
 9. Update `pbe-state.json.artifacts.dependencyImpactAudit`.
-10. Update `pbe-state.json.autoflow.state` to `DEPENDENCY_IMPACT_AUDITED`.
+10. Keep `pbe-state.json.autoflow.state` on the nearest canonical downstream state. If implementation scope selection is needed, use `WAITING_IMPLEMENTATION_SCOPE`.
 11. Add `dependency_impact_audit` to `autoflow.completedSteps`.
 12. Set `autoflow.currentGate` and `autoflow.nextStep` to `implementation_scope`.
 13. Stop at the Implementation Scope gate with friendly guidance.
@@ -62,7 +62,7 @@ scope or architecture runway decision.
 - Do not implement deferred feature behavior.
 - Do not decide user scope silently.
 - Required foundation means structural work only: interfaces, adapters, state models, schemas, events, stubs, fixtures, or contracts.
-- If any item is `blocking_dependency`, set Autoflow to `BLOCKED` unless the next safe action is a human scope decision.
+- If any item is `blocking_dependency`, record `autoflow.lastFailure` unless the next safe action is a human scope decision.
 - If any item is `required_foundation`, `blocking_dependency`, or `high_impact_future_module`, mark `architectureRunwayRequired` as `true`.
 - If all future items are `optional_deferred`, record why no architecture runway is required.
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "state": "IDLE",
+  "state": "INIT",
   "enabled": true,
   "profile": "full",
   "completedSteps": [],
@@ -9,13 +9,17 @@
   "deterministicSteps": [
     "rpd",
     "wpd",
+    "visual_reference_intake",
+    "design_system_derive",
+    "ui_surface_inventory",
     "vd",
     "dependency_impact_audit",
     "plan_execution",
     "coverage_audit",
     "ux_audit",
     "generate_acep",
-    "run_acep"
+    "run_acep",
+    "visual_implementation_audit"
   ],
   "humanGates": [
     "root_confirmation",
@@ -28,14 +32,11 @@
   "lastUserAction": null,
   "lastFailure": null,
   "downstreamOnApprove": {
-    "WAITING_ROOT_CONFIRMATION": [
-      "rpd"
-    ],
-    "DRAFT_CREATED_FROM_ASSUMPTIONS": [
-      "rpd"
-    ],
     "WAITING_UI_UX_CONFIRM": [
+      "visual_reference_intake",
+      "design_system_derive",
       "wpd",
+      "ui_surface_inventory",
       "vd",
       "dependency_impact_audit",
       "implementation_scope"
@@ -47,34 +48,30 @@
       "ux_audit",
       "generate_acep",
       "run_acep",
+      "visual_implementation_audit",
       "review_result"
     ],
-    "WAITING_ARCHITECTURE_RUNWAY_CONFIRM": [
+    "SCOPE_SELECTED": [
       "plan_execution",
       "coverage_audit",
       "ux_audit",
       "generate_acep",
       "run_acep",
+      "visual_implementation_audit",
       "review_result"
     ],
     "WAITING_REVIEW_RESULT": [
-      "next_slice_decision"
-    ],
-    "WAITING_NEXT_SLICE_DECISION": [
       "complete",
       "implementation_scope"
     ]
   },
   "downstreamOnRevision": {
-    "WAITING_ROOT_CONFIRMATION": [
-      "rpd"
-    ],
-    "DRAFT_CREATED_FROM_ASSUMPTIONS": [
-      "rpd"
-    ],
     "WAITING_UI_UX_CONFIRM": [
       "ui_ux_confirm",
+      "visual_reference_intake",
+      "design_system_derive",
       "wpd",
+      "ui_surface_inventory",
       "vd",
       "dependency_impact_audit",
       "implementation_scope"
@@ -87,15 +84,17 @@
       "ux_audit",
       "generate_acep",
       "run_acep",
+      "visual_implementation_audit",
       "review_result"
     ],
-    "WAITING_ARCHITECTURE_RUNWAY_CONFIRM": [
+    "SCOPE_SELECTED": [
       "architecture_runway",
       "plan_execution",
       "coverage_audit",
       "ux_audit",
       "generate_acep",
       "run_acep",
+      "visual_implementation_audit",
       "review_result"
     ],
     "WAITING_REVIEW_RESULT": [

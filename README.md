@@ -215,7 +215,10 @@ skills/
   pbe-start/
   pbe-rpd/
   pbe-ui-ux-confirm/
+  pbe-visual-reference-intake/
+  pbe-design-system-derive/
   pbe-wpd/
+  pbe-ui-surface-inventory/
   pbe-vd/
   pbe-dependency-impact-audit/
   pbe-plan-execution/
@@ -223,6 +226,7 @@ skills/
   pbe-ux-audit/
   pbe-generate-acep/
   pbe-run-acep/
+  pbe-visual-implementation-audit/
   pbe-review-result/
   pbe-collect-feedback/
   pbe-create-revision-pack/
@@ -330,7 +334,7 @@ flowchart TD
     H -- "approve" --> HV{"Visual appearance changes?"}
     H -- "revise" --> C
     H -- "ask" --> H
-    H -- "stop" --> STOP["STOPPED"]
+    H -- "stop" --> STOP["Stop request recorded"]
     HV -- "Yes" --> VDC["Visual Design Contract<br/>source, tokens, component rules"]
     HV -- "No" --> J
     VDC --> J
@@ -360,9 +364,9 @@ flowchart TD
     X --> Y["Run Revision"]
     Y --> U
 
-    V -- "complete current slice" --> Z["SLICE_ACCEPTED"]
+    V -- "complete current slice" --> Z["DONE<br/>current slice closed"]
     V -- "start next slice" --> M
-    V -- "complete project" --> DONE["COMPLETED"]
+    V -- "complete project" --> DONE["DONE<br/>whole project complete"]
 ```
 
 ## Human Gates
@@ -378,6 +382,65 @@ PBE stops only where the user has to make a product or delivery decision.
 | Architecture runway | Future or deferred modules may require foundation work now to avoid rework later. | `approve the foundation`, `interface only`, `skip this foundation` |
 | Review result | Codex can submit work for review, but only the user can accept it. | `looks good`, `fix the failed case`, `is this safe to finish?` |
 | Next slice decision | A reviewed slice is not the same as whole-project completion. | `complete current slice`, `start next slice`, `complete project` |
+
+## Visual Design Contract Workflow
+
+PBE separates UX confirmation from visual design confirmation.
+
+`pbe-ui-ux-confirm` approves the product flow, screen purpose, states, labels, and interaction expectations. It does not by itself approve visual theme, polish, or style consistency.
+
+When selected UI work changes visual appearance, PBE must create a Visual Design Contract before WPD, ACEP, or UI implementation proceeds. The visual source must be one of:
+
+- reference screenshot
+- reference app or website
+- existing project screen
+- short visual preference interview
+- default PBE Clean Theme
+- explicit user waiver
+- not required, when the work does not affect visual appearance
+
+The visual workflow is:
+
+```text
+UI_UX_APPROVED
+-> Visual Reference Intake
+-> Design System Derive
+-> VISUAL_CONTRACT_READY
+-> WPD_DONE
+-> UI Surface Inventory
+-> UI_SURFACE_INVENTORY_DONE
+-> VD_DONE
+-> ACEP_READY
+-> ACEP_RUN_DONE
+-> Visual Implementation Audit
+-> VISUAL_AUDIT_DONE
+-> WAITING_REVIEW_RESULT
+```
+
+Required visual artifacts:
+
+```text
+.pbe/blueprint/visual-reference.json
+.pbe/blueprint/ui-theme-spec.md
+.pbe/blueprint/design-tokens.json
+.pbe/blueprint/component-style-contract.json
+.pbe/control/ui-surface-inventory.json
+.pbe/control/component-style-inventory.json
+.pbe/control/visual-verification-profile.json
+.pbe/evidence/screenshots/
+.pbe/evidence/visual-audit.md
+```
+
+Recommended CLI checks:
+
+```bash
+pbe visual check
+pbe evidence check
+pbe acep check
+pbe gate review-result
+```
+
+Review Result cannot close selected visual UI work when required screenshots are missing, screenshot evidence is stale, `visual-audit.md` is missing, or the audit contains unresolved blocking issues.
 
 ## Artifact Flow
 
@@ -450,9 +513,9 @@ Each PBE module has one job. The workflow is safe because no module silently exp
 | `Plan Execution` | WorkGraph, VD, traceability, foundation and parallel contracts | Builds the staged execution strategy. Foundation runs first, safe independent tasks may become parallel groups, and every parallel group gets an integration task. | `execution-strategy.md/json` | Automatic unless planning is unsafe |
 | `Coverage Audit` | Requirements, WorkGraph, VD, traceability, execution strategy | Checks that selected and foundation scope have work, verification, evidence, and traceability. Deferred and out-of-scope items must be documented but are not failures. | `coverage-audit.md` | Automatic unless blocking gaps exist |
 | `UX Audit` | UI/UX confirmation, WPD, VD, ACEP UI files when present | Checks that confirmed UI/UX direction is represented in work, verification, task cards, states, and evidence requirements. | `ux-audit.md` | Automatic unless UI/UX coverage is missing |
-| `Visual Implementation Audit` | Visual contract, UI surface inventory, evidence, screenshots | Checks that implemented visual UI work follows the contract, tokens, component rules, state coverage, and screenshot/manual evidence requirements. | `visual-audit.md`, updated visual verification profile | Automatic for visual UI work before review |
 | `Generate ACEP` | Blueprint artifacts, audits, execution strategy | Creates the Codex execution contract: manifest, task cards, traceability, UI/UX spec, validation commands, evidence checklist, final coverage check, and report template. | `.pbe/codex-execution-pack/` | Automatic after audits pass |
 | `Run ACEP` | ACEP manifest, task cards, traceability, UI/UX spec | Executes selected and foundation scope only. Runs validation, records evidence, respects parallel strategy, performs final coverage, and submits for review. | Code changes, evidence, final report, review pack | Stops only on stop conditions |
+| `Visual Implementation Audit` | Visual contract, UI surface inventory, evidence, screenshots | Checks that implemented visual UI work follows the contract, tokens, component rules, state coverage, and screenshot/manual evidence requirements. | `visual-audit.md`, updated visual verification profile | Automatic for visual UI work after ACEP execution and before review |
 | `Review Result` | Final report, validation, coverage, UX evidence | Packages the result for the user. Codex reports `submitted_for_review`; it does not mark work as accepted. | `.pbe/review/` | User accepts, asks, revises, or stops |
 | `Revision Flow` | User feedback at review gate | Maps feedback to affected requirement/task/UI/verification items, creates a bounded Revision Pack, runs only affected work, then returns to review. | `.pbe/revisions/rev-*/` and updated review evidence | User describes what is wrong |
 
@@ -462,36 +525,58 @@ The Autoflow state machine lives in `.pbe/blueprint/pbe-state.json` under `autof
 
 ```mermaid
 stateDiagram-v2
-    [*] --> IDLE
-    IDLE --> STARTED: start
-    STARTED --> WAITING_ROOT_CONFIRMATION: clear request proposal
-    WAITING_ROOT_CONFIRMATION --> RPD_DONE: approve root
-    WAITING_ROOT_CONFIRMATION --> STARTED: revise/decompose
-    STARTED --> RPD_DONE: all leaves terminal
+    [*] --> INIT
+    INIT --> RPD_DONE: root and leaves confirmed
     RPD_DONE --> WAITING_UI_UX_CONFIRM: UI/UX gate
     WAITING_UI_UX_CONFIRM --> UI_UX_APPROVED: approve
-    UI_UX_APPROVED --> WPD_DONE: wpd
-    WPD_DONE --> VD_DONE: vd
-    VD_DONE --> DEPENDENCY_IMPACT_AUDITED: dependency audit
-    DEPENDENCY_IMPACT_AUDITED --> WAITING_IMPLEMENTATION_SCOPE: scope gate
+    UI_UX_APPROVED --> VISUAL_CONTRACT_READY: visual source and tokens ready
+    UI_UX_APPROVED --> WPD_DONE: non-visual WPD
+    VISUAL_CONTRACT_READY --> WPD_DONE: WPD
+    WPD_DONE --> UI_SURFACE_INVENTORY_DONE: visual surface inventory
+    WPD_DONE --> VD_DONE: non-visual VD
+    UI_SURFACE_INVENTORY_DONE --> VD_DONE: VD
+    VD_DONE --> WAITING_IMPLEMENTATION_SCOPE: implementation scope gate
     WAITING_IMPLEMENTATION_SCOPE --> SCOPE_SELECTED: select scope
-    SCOPE_SELECTED --> WAITING_ARCHITECTURE_RUNWAY_CONFIRM: runway needed
-    WAITING_ARCHITECTURE_RUNWAY_CONFIRM --> ARCHITECTURE_RUNWAY_APPROVED: approve
-    SCOPE_SELECTED --> PLAN_EXECUTED: no runway needed
-    ARCHITECTURE_RUNWAY_APPROVED --> PLAN_EXECUTED: plan
-    PLAN_EXECUTED --> COVERAGE_AUDITED: coverage
-    COVERAGE_AUDITED --> UX_AUDITED: ux audit
-    UX_AUDITED --> ACEP_GENERATED: generate acep
-    ACEP_GENERATED --> ACEP_RUN_DONE: run acep
-    ACEP_RUN_DONE --> WAITING_REVIEW_RESULT: review gate
-    WAITING_REVIEW_RESULT --> WAITING_NEXT_SLICE_DECISION: approve result
+    SCOPE_SELECTED --> ACEP_READY: generate ACEP after audits pass
+    ACEP_READY --> ACEP_RUN_DONE: run ACEP
+    ACEP_RUN_DONE --> VISUAL_AUDIT_DONE: visual UI work
+    ACEP_RUN_DONE --> WAITING_REVIEW_RESULT: non-visual work
+    VISUAL_AUDIT_DONE --> WAITING_REVIEW_RESULT: review gate
+    WAITING_REVIEW_RESULT --> DONE: explicit user approval
     WAITING_REVIEW_RESULT --> WAITING_REVIEW_RESULT: revise and rerun
-    WAITING_NEXT_SLICE_DECISION --> SLICE_ACCEPTED: complete current slice
-    WAITING_NEXT_SLICE_DECISION --> WAITING_IMPLEMENTATION_SCOPE: start next slice
-    WAITING_NEXT_SLICE_DECISION --> COMPLETED: complete project
-    STARTED --> BLOCKED: automatic failure
-    PLAN_EXECUTED --> BLOCKED: audit or planning failure
-    ACEP_GENERATED --> BLOCKED: execution failure
+```
+
+Canonical states:
+
+```text
+INIT
+RPD_DONE
+WAITING_UI_UX_CONFIRM
+UI_UX_APPROVED
+VISUAL_CONTRACT_READY
+WPD_DONE
+UI_SURFACE_INVENTORY_DONE
+VD_DONE
+WAITING_IMPLEMENTATION_SCOPE
+SCOPE_SELECTED
+ACEP_READY
+ACEP_RUN_DONE
+VISUAL_AUDIT_DONE
+WAITING_REVIEW_RESULT
+DONE
+```
+
+Migration aliases are accepted by the CLI for older `.pbe` folders, but they are not canonical:
+
+```text
+STARTED -> INIT
+WAITING_UI_UX_CONFIRMATION -> WAITING_UI_UX_CONFIRM
+UI_UX_CONFIRMED -> UI_UX_APPROVED
+IMPLEMENTATION_SCOPE_CONFIRMED -> SCOPE_SELECTED
+ACEP_GENERATED -> ACEP_READY
+EXECUTION_DONE -> ACEP_RUN_DONE
+WAITING_REVIEW -> WAITING_REVIEW_RESULT
+COMPLETED -> DONE
 ```
 
 Natural language is mapped to internal actions:
@@ -575,14 +660,14 @@ Autoflow state is stored in `.pbe/blueprint/pbe-state.json` under `autoflow`.
 PBE routing uses that state before implementation or deliverable-producing work:
 
 - active `currentGate` means Codex must stop and ask for the user's decision
-- `WAITING_ROOT_CONFIRMATION` means the Root summary or decomposition proposal needs explicit user approval before any downstream step or deliverable-producing action
-- `BLOCKED` means Codex must report `lastFailure` and repair options
+- `INIT` means PBE is initialized or still resolving the Root requirement before RPD can close
+- `lastFailure` means Codex must report repair options and must not continue downstream
 - deterministic `nextStep` means Codex should run the next PBE step before ordinary coding
 - ordinary usage help or conceptual review can be answered without a PBE status card
 - `accepted` requires explicit user acceptance metadata; Codex may submit for review, but only the user can set acceptance
 - parity/completeness controls are optional derived views; they may expand audit and verification coverage, but implementation scope still requires Product/Project/Work nodes and normal PBE gates
 
-`COMPLETED` means the whole project is complete. A single slice completion should use `SLICE_ACCEPTED` or `WAITING_NEXT_SLICE_DECISION`.
+`DONE` means the user explicitly approved the current branch/slice or project completion. Starting another slice moves back to `WAITING_IMPLEMENTATION_SCOPE` with a new selected scope.
 
 ## Parallel Safety
 

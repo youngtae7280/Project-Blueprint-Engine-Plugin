@@ -9,7 +9,7 @@ import {
   loadProject,
 } from './core/project.js'
 import { ensureDir, readJsonSafe, relativePath, writeJsonAtomic, writeTextAtomic } from './core/fs.js'
-import { isPbeState } from './core/state-machine.js'
+import { isPbeState, normalizePbeState } from './core/state-machine.js'
 import type { CliEnvironment, CliOptions, CommandResult, ValidationIssue } from './core/types.js'
 import { ExitCode, hasErrors, issue } from './core/types.js'
 import {
@@ -173,7 +173,7 @@ async function initCommand(context: CommandContext): Promise<CommandResult> {
       state: {
         autoflow: {
           enabled: true,
-          state: 'STARTED',
+          state: 'INIT',
           nextStep: 'rpd',
         },
       },
@@ -280,8 +280,8 @@ async function validateCommand(context: CommandContext): Promise<CommandResult> 
 }
 
 async function gateCommand(stage: string | undefined, context: CommandContext): Promise<CommandResult> {
-  const allowedStages = new Set(['rpd', 'wpd', 'vd', 'acep', 'code-start', 'review-submit', 'accept'])
-  if (!stage || !allowedStages.has(stage)) {
+  const canonicalStage = normalizeGateStage(stage)
+  if (!canonicalStage) {
     return invalidCommand(`Unsupported gate stage: ${stage || '<missing>'}`)
   }
 
@@ -297,25 +297,29 @@ async function gateCommand(stage: string | undefined, context: CommandContext): 
       suggestedFix: 'Run `pbe init` before entering PBE stages.',
     }))
   }
-  issues.push(...stageStateIssues(stage, loadedProject.project.state))
+  issues.push(...stageStateIssues(canonicalStage, loadedProject.project.state))
 
-  if (stage === 'wpd') {
+  if (canonicalStage === 'wpd') {
     issues.push(...await validateRpd(context.options.root, { completionMode: true }))
-  } else if (stage === 'vd') {
+    issues.push(...uiUxApprovalIssues(context.options.root, loadedProject.project.state))
+    issues.push(...await validateVisualDesign(context.options.root, { requireInventory: false }))
+  } else if (canonicalStage === 'vd') {
     issues.push(...await validateRpd(context.options.root, { completionMode: true }))
     issues.push(...await validateWpd(context.options.root))
-  } else if (stage === 'acep') {
+    issues.push(...await validateVisualDesign(context.options.root))
+  } else if (canonicalStage === 'acep') {
     issues.push(...await validateRpd(context.options.root, { completionMode: true }))
     issues.push(...await validateVd(context.options.root))
     issues.push(...await validateVisualDesign(context.options.root))
-  } else if (stage === 'code-start') {
+  } else if (canonicalStage === 'code-start') {
     issues.push(...await validateAcep(context.options.root))
     issues.push(...implementationScopeIssues(await loadState(context.options.root)))
-  } else if (stage === 'review-submit') {
+  } else if (canonicalStage === 'review-result') {
     issues.push(...await validateEvidence(context.options.root))
     issues.push(...await validateVisualDesign(context.options.root, { requireEvidence: true }))
-  } else if (stage === 'accept') {
+  } else if (canonicalStage === 'accept') {
     issues.push(...await validateAcceptedActors(context.options.root))
+    issues.push(...await validateEvidence(context.options.root))
     if (!await hasUserAcceptedBranch(context.options.root)) {
       issues.push(issue({
         validator: 'Gate',
@@ -330,9 +334,9 @@ async function gateCommand(stage: string | undefined, context: CommandContext): 
 
   return {
     ok: !hasErrors(issues),
-    command: `gate ${stage}`,
+    command: `gate ${canonicalStage}`,
     exitCode: hasErrors(issues) ? ExitCode.TransitionBlocked : ExitCode.Success,
-    message: hasErrors(issues) ? `Cannot enter ${stage}.` : `Gate ${stage} passed.`,
+    message: hasErrors(issues) ? `Cannot enter ${canonicalStage}.` : `Gate ${canonicalStage} passed.`,
     issues,
   }
 }
@@ -475,7 +479,7 @@ function transformPbeState(value: Record<string, unknown>, context: CommandConte
     const autoflow = value.autoflow as Record<string, unknown>
     autoflow.enabled = true
     autoflow.profile = context.options.profile || 'full'
-    autoflow.state = 'STARTED'
+    autoflow.state = 'INIT'
     autoflow.completedSteps = ['start']
     autoflow.currentGate = null
     autoflow.nextStep = 'rpd'
@@ -490,8 +494,9 @@ async function loadState(root: string): Promise<Record<string, unknown> | null> 
 
 function implementationScopeIssues(state: Record<string, unknown> | null): ValidationIssue[] {
   const autoflow = typeof state?.autoflow === 'object' && state.autoflow !== null ? state.autoflow as Record<string, unknown> : {}
-  const stateValue = String(autoflow.state || '')
-  if (['IMPLEMENTATION_SCOPE_CONFIRMED', 'ACEP_GENERATED', 'ACEP_VALIDATED', 'EXECUTION_IN_PROGRESS', 'EXECUTION_DONE'].includes(stateValue)) {
+  const rawStateValue = String(autoflow.state || '')
+  const stateValue = normalizePbeState(rawStateValue)
+  if (stateValue && ['SCOPE_SELECTED', 'ACEP_READY', 'ACEP_RUN_DONE', 'VISUAL_AUDIT_DONE', 'WAITING_REVIEW_RESULT', 'DONE'].includes(stateValue)) {
     return []
   }
   return [issue({
@@ -499,7 +504,7 @@ function implementationScopeIssues(state: Record<string, unknown> | null): Valid
     code: 'IMPLEMENTATION_SCOPE_UNCONFIRMED',
     severity: 'error',
     file: defaultArtifacts.pbeState,
-    message: `Implementation scope is not confirmed. Current state: ${stateValue || 'unknown'}.`,
+    message: `Implementation scope is not confirmed. Current state: ${rawStateValue || 'unknown'}.`,
     suggestedFix: 'Stop at the implementation scope gate and ask the user to select the current slice scope.',
   })]
 }
@@ -509,16 +514,17 @@ function stageStateIssues(stage: string, state: Record<string, unknown> | null):
     return []
   }
   const autoflow = typeof state?.autoflow === 'object' && state.autoflow !== null ? state.autoflow as Record<string, unknown> : {}
-  const currentState = String(autoflow.state || '')
+  const rawState = String(autoflow.state || '')
+  const currentState = normalizePbeState(rawState)
   const allowedByStage: Record<string, string[]> = {
-    wpd: ['RPD_DONE', 'WAITING_UI_UX_CONFIRMATION', 'UI_UX_CONFIRMED', 'WPD_IN_PROGRESS', 'WPD_DONE', 'VD_IN_PROGRESS', 'VD_DONE', 'WAITING_IMPLEMENTATION_SCOPE_CONFIRMATION', 'IMPLEMENTATION_SCOPE_CONFIRMED', 'ACEP_GENERATED', 'ACEP_VALIDATED', 'EXECUTION_IN_PROGRESS', 'EXECUTION_DONE', 'WAITING_REVIEW', 'REVISION_REQUESTED'],
-    vd: ['WPD_DONE', 'VD_IN_PROGRESS', 'VD_DONE', 'WAITING_IMPLEMENTATION_SCOPE_CONFIRMATION', 'IMPLEMENTATION_SCOPE_CONFIRMED', 'ACEP_GENERATED', 'ACEP_VALIDATED', 'EXECUTION_IN_PROGRESS', 'EXECUTION_DONE', 'WAITING_REVIEW', 'REVISION_REQUESTED'],
-    acep: ['VD_DONE', 'WAITING_IMPLEMENTATION_SCOPE_CONFIRMATION', 'IMPLEMENTATION_SCOPE_CONFIRMED', 'ACEP_GENERATED', 'ACEP_VALIDATED', 'EXECUTION_IN_PROGRESS', 'EXECUTION_DONE', 'WAITING_REVIEW', 'REVISION_REQUESTED'],
-    'code-start': ['IMPLEMENTATION_SCOPE_CONFIRMED', 'ACEP_GENERATED', 'ACEP_VALIDATED', 'EXECUTION_IN_PROGRESS', 'EXECUTION_DONE', 'WAITING_REVIEW', 'REVISION_REQUESTED'],
-    'review-submit': ['EXECUTION_DONE', 'WAITING_REVIEW', 'REVISION_REQUESTED'],
-    accept: ['WAITING_REVIEW', 'REVISION_REQUESTED', 'ACCEPTED', 'CLOSED'],
+    wpd: ['RPD_DONE', 'UI_UX_APPROVED', 'VISUAL_CONTRACT_READY', 'WPD_DONE', 'UI_SURFACE_INVENTORY_DONE', 'VD_DONE', 'WAITING_IMPLEMENTATION_SCOPE', 'SCOPE_SELECTED', 'ACEP_READY', 'ACEP_RUN_DONE', 'VISUAL_AUDIT_DONE', 'WAITING_REVIEW_RESULT', 'DONE'],
+    vd: ['WPD_DONE', 'UI_SURFACE_INVENTORY_DONE', 'VD_DONE', 'WAITING_IMPLEMENTATION_SCOPE', 'SCOPE_SELECTED', 'ACEP_READY', 'ACEP_RUN_DONE', 'VISUAL_AUDIT_DONE', 'WAITING_REVIEW_RESULT', 'DONE'],
+    acep: ['VD_DONE', 'WAITING_IMPLEMENTATION_SCOPE', 'SCOPE_SELECTED', 'ACEP_READY', 'ACEP_RUN_DONE', 'VISUAL_AUDIT_DONE', 'WAITING_REVIEW_RESULT', 'DONE'],
+    'code-start': ['SCOPE_SELECTED', 'ACEP_READY', 'ACEP_RUN_DONE', 'VISUAL_AUDIT_DONE', 'WAITING_REVIEW_RESULT', 'DONE'],
+    'review-result': ['ACEP_RUN_DONE', 'VISUAL_AUDIT_DONE', 'WAITING_REVIEW_RESULT', 'DONE'],
+    accept: ['WAITING_REVIEW_RESULT', 'DONE'],
   }
-  if (allowedByStage[stage]?.includes(currentState)) {
+  if (currentState && allowedByStage[stage]?.includes(currentState)) {
     return []
   }
   return [issue({
@@ -526,8 +532,43 @@ function stageStateIssues(stage: string, state: Record<string, unknown> | null):
     code: 'GATE_BLOCKED',
     severity: 'error',
     file: defaultArtifacts.pbeState,
-    message: `Gate ${stage} is blocked from current state ${currentState || 'unknown'}.`,
+    message: `Gate ${stage} is blocked from current state ${rawState || 'unknown'}.`,
     suggestedFix: 'Run the previous required PBE close/check command instead of skipping stages.',
+  })]
+}
+
+function normalizeGateStage(stage: string | undefined): string | null {
+  const aliases: Record<string, string> = {
+    'review-submit': 'review-result',
+    review: 'review-result',
+    'implementation-start': 'code-start',
+    implementation: 'code-start',
+  }
+  if (!stage) {
+    return null
+  }
+  const normalized = aliases[stage] || stage
+  return ['rpd', 'wpd', 'vd', 'acep', 'code-start', 'review-result', 'accept'].includes(normalized) ? normalized : null
+}
+
+function uiUxApprovalIssues(root: string, state: Record<string, unknown> | null): ValidationIssue[] {
+  if (!hasUiWork(root)) {
+    return []
+  }
+  const autoflow = typeof state?.autoflow === 'object' && state.autoflow !== null ? state.autoflow as Record<string, unknown> : {}
+  const rawState = String(autoflow.state || '')
+  const currentState = normalizePbeState(rawState)
+  const statesAfterApproval = ['UI_UX_APPROVED', 'VISUAL_CONTRACT_READY', 'WPD_DONE', 'UI_SURFACE_INVENTORY_DONE', 'VD_DONE', 'WAITING_IMPLEMENTATION_SCOPE', 'SCOPE_SELECTED', 'ACEP_READY', 'ACEP_RUN_DONE', 'VISUAL_AUDIT_DONE', 'WAITING_REVIEW_RESULT', 'DONE']
+  if (currentState && statesAfterApproval.includes(currentState)) {
+    return []
+  }
+  return [issue({
+    validator: 'Gate',
+    code: 'UI_UX_CONFIRM_REQUIRED',
+    severity: 'error',
+    file: defaultArtifacts.pbeState,
+    message: `UI/UX work cannot enter WPD before UI_UX_APPROVED. Current state: ${rawState || 'unknown'}.`,
+    suggestedFix: 'Stop at the UI/UX confirmation gate, get user approval, then continue to Visual Contract or WPD.',
   })]
 }
 

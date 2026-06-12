@@ -52,7 +52,7 @@ describe('PBE CLI', () => {
     expect(secondInit.exitCode).toBe(ExitCode.Success)
     expect(JSON.parse(secondInit.stdout).skipped).toContain('.pbe/tree/product-tree.json')
     expect(status.exitCode).toBe(ExitCode.Success)
-    expect(JSON.parse(status.stdout).state).toBe('STARTED')
+    expect(JSON.parse(status.stdout).state).toBe('INIT')
   })
 
   it('blocks WPD gate before RPD can close', async () => {
@@ -121,7 +121,7 @@ describe('PBE CLI', () => {
     const workspace = createWorkspace()
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
-    writePbeState(workspace, 'WPD_IN_PROGRESS')
+    writePbeState(workspace, 'UI_UX_APPROVED')
     writeDecisionQueue(workspace)
     writeWorkTree(workspace, { dependencyCycle: true })
 
@@ -179,6 +179,36 @@ describe('PBE CLI', () => {
     expect(JSON.parse(result.stdout).ok).toBe(true)
   })
 
+  it('allows WPD gate for visual work after Visual Contract and before UI Surface Inventory', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace, { visualImpact: true })
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'UI_UX_APPROVED')
+    writeVisualContractArtifacts(workspace, { contractOnly: true })
+
+    const result = await runPbeCli(['gate', 'wpd', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(JSON.parse(result.stdout).ok).toBe(true)
+  })
+
+  it('blocks VD gate for visual work before UI Surface Inventory exists', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace, { visualImpact: true })
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'WPD_DONE')
+    writeWorkTree(workspace)
+    writeVisualContractArtifacts(workspace, { contractOnly: true })
+
+    const result = await runPbeCli(['gate', 'vd', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.TransitionBlocked)
+    const payload = JSON.parse(result.stderr)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain('UI_SURFACE_INVENTORY_MISSING')
+  })
+
   it('rejects review evidence when required visual screenshot evidence is missing', async () => {
     const workspace = createWorkspace()
     writeExecutableProduct(workspace, { visualImpact: true })
@@ -218,6 +248,54 @@ describe('PBE CLI', () => {
     expect(result.exitCode).toBe(ExitCode.ValidationFailed)
     const payload = JSON.parse(result.stderr)
     expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain('STALE_VISUAL_EVIDENCE')
+  })
+
+  it('blocks Review Result for visual UI work when visual audit is missing', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace, { visualImpact: true })
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeVisualContractArtifacts(workspace, { requiredScreenshot: true })
+    writePbeState(workspace, 'ACEP_RUN_DONE')
+    writeVisualScreenshotEvidence(workspace)
+
+    const result = await runPbeCli(['gate', 'review-result', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.TransitionBlocked)
+    const payload = JSON.parse(result.stderr)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain('VISUAL_AUDIT_MISSING')
+  })
+
+  it('blocks Review Result when visual audit has unresolved blocking issues', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace, { visualImpact: true })
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeVisualContractArtifacts(workspace, { requiredScreenshot: true })
+    writePbeState(workspace, 'ACEP_RUN_DONE')
+    writeVisualScreenshotEvidence(workspace)
+    writeText(join(workspace, '.pbe', 'evidence', 'visual-audit.md'), [
+      '# Visual Implementation Audit',
+      '',
+      '## Scope',
+      '## Visual Contract Artifacts',
+      '## Screenshot Evidence',
+      '## State Coverage',
+      '## Component Contract Compliance',
+      '## Deviations',
+      '## Blocking Issues',
+      '- Missing selected state screenshot',
+      '',
+      '## Result',
+      '- Status: pass',
+      '',
+    ].join('\n'))
+
+    const result = await runPbeCli(['gate', 'review-result', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.TransitionBlocked)
+    const payload = JSON.parse(result.stderr)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain('VISUAL_AUDIT_BLOCKING_ISSUES')
   })
 
   it('rejects ACEP manifests that include inactive scope tasks', async () => {
@@ -363,7 +441,7 @@ function writeMinimalPbe(
     autoflow: {
       enabled: true,
       profile: 'full',
-      state: 'RPD_IN_PROGRESS',
+      state: 'INIT',
       completedSteps: ['start'],
       currentGate: null,
       nextStep: 'rpd',
@@ -407,6 +485,7 @@ function writeExecutableProduct(
         source: { actor: 'user', type: 'user_interview' },
         scopeClass: 'selected',
         acceptanceCriteria: [],
+        acceptanceNotRequiredReason: 'Root groups child capability acceptance criteria.',
         ambiguity: { status: 'clear', type: 'none', missing: [] },
         ambiguityResolution: { status: 'resolved', resolvedTerms: [] },
       },
@@ -444,7 +523,7 @@ function writeExecutableProduct(
   })
 }
 
-function writeVisualContractArtifacts(workspace: string, options: { requiredScreenshot?: boolean } = {}) {
+function writeVisualContractArtifacts(workspace: string, options: { requiredScreenshot?: boolean; contractOnly?: boolean } = {}) {
   writeJson(join(workspace, '.pbe', 'blueprint', 'visual-reference.json'), {
     schemaVersion: '1.0.0',
     artifactType: 'visual_reference',
@@ -521,6 +600,9 @@ function writeVisualContractArtifacts(workspace: string, options: { requiredScre
     localExceptions: [],
     openQuestions: [],
   })
+  if (options.contractOnly) {
+    return
+  }
   writeJson(join(workspace, '.pbe', 'control', 'ui-surface-inventory.json'), {
     schemaVersion: '1.0.0',
     artifactType: 'ui_surface_inventory',
@@ -725,6 +807,25 @@ function writeEvidenceTree(workspace: string, options: { path?: string } = {}) {
         type: 'test_output',
         status: 'attached',
         path: options.path,
+        provesNodeIds: ['TT-1'],
+        evidenceForTestNodeIds: ['TT-1'],
+        evidenceForAcceptanceCriteriaIds: ['AC-PT-1-1'],
+      },
+    ],
+  })
+}
+
+function writeVisualScreenshotEvidence(workspace: string) {
+  const screenshotPath = join(workspace, '.pbe', 'evidence', 'screenshots', 'surface-1-default.png')
+  writeText(screenshotPath, 'fake screenshot bytes')
+  writeJson(join(workspace, '.pbe', 'evidence', 'evidence-tree.json'), {
+    version: '0.2.0-tree-control',
+    evidence: [
+      {
+        id: 'EV-VISUAL-1',
+        type: 'screenshot',
+        status: 'attached',
+        path: '.pbe/evidence/screenshots/surface-1-default.png',
         provesNodeIds: ['TT-1'],
         evidenceForTestNodeIds: ['TT-1'],
         evidenceForAcceptanceCriteriaIds: ['AC-PT-1-1'],

@@ -4,7 +4,7 @@
 [PBE 상태 보고]
 
 현재 단계:
-- state: WAITING_NEXT_SLICE_DECISION
+- state: DONE
 - currentGate: next_slice_decision
 - nextStep: next_slice_decision
 
@@ -23,7 +23,7 @@
 - 현재 slice만 완료할지, 다음 slice를 시작할지, 전체 프로젝트를 완료할지 사용자가 결정해야 합니다.
 
 다음 동작:
-- 선택에 따라 SLICE_ACCEPTED, WAITING_IMPLEMENTATION_SCOPE, 또는 COMPLETED로 이동합니다.
+- 선택에 따라 DONE 상태를 유지하거나, 다음 slice를 위해 WAITING_IMPLEMENTATION_SCOPE로 이동합니다.
 
 사용자가 답할 수 있는 말:
 - 현재 slice 완료: "현재 slice만 완료 처리해주세요"

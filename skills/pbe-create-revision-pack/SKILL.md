@@ -168,7 +168,7 @@ When the revision pack is created:
 
 When revision scope is unclear or too broad:
 
-- Set `autoflow.state` to `BLOCKED` or keep the user at the Review Result gate with one clarification question.
+- Record `autoflow.lastFailure` or keep the user at the Review Result gate with one clarification question.
 - Do not run revision tasks.
 
 ## Completion Report

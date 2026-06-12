@@ -1,6 +1,6 @@
 {
   "name": "project-blueprint-engine",
-  "version": "0.2.0-alpha+codex.20260612003706",
+  "version": "0.2.0-alpha+codex.20260612011247",
   "description": "A Codex plugin that turns user intent into traceable Product, Project, Work, and Test trees, then controls staged execution, evidence, review, feedback, and revision through compatible PBE contracts.",
   "author": {
     "name": "Local developer"
@@ -9,7 +9,7 @@
   "interface": {
     "displayName": "Project Blueprint Engine",
     "shortDescription": "Tree-based product blueprint, execution, evidence, and revision control for Codex.",
-    "longDescription": "Project Blueprint Engine runs inside Codex as a tree-based development control workflow while preserving the existing RPD, WPD, VD, and ACEP compatibility terms. It grows product intent into a Product Tree, derives Project, Work, and Test views, routes active PBE work through state-aware gates before ordinary coding, confirms UI/UX before implementation, converts visual UI changes into Visual Design Contract artifacts, audits dependency impact before implementation scope, selects staged execution slices, validates schema and cross-artifact traceability, tracks evidence, stops for user review, maps feedback to affected nodes, and creates bounded revision work through change and impact analysis.",
+    "longDescription": "Project Blueprint Engine runs inside Codex as a tree-based development control workflow while preserving the existing RPD, WPD, VD, and ACEP compatibility terms. It grows product intent into a Product Tree, derives Project, Work, and Test views, routes active PBE work through state-aware CLI gates before ordinary coding, confirms UI/UX before implementation, converts visual UI changes into Visual Design Contract artifacts, derives concrete theme tokens and component style contracts from screenshots, references, interviews, existing screens, default theme, or waiver decisions, audits dependency impact before implementation scope, selects staged execution slices, validates schema and cross-artifact traceability, tracks evidence, requires visual audit before UI visual review closure, maps feedback to affected nodes, and creates bounded revision work through change and impact analysis.",
     "developerName": "Local developer",
     "category": "Developer Tools",
     "capabilities": [
@@ -25,9 +25,14 @@
       "Traceability",
       "Evidence tracking",
       "Visual Design Contract",
+      "Visual Design Contract generation for UI visual work",
+      "Screenshot/reference/interview/default-theme based UI theme derivation",
       "Design token derivation",
+      "Design token and component style contract generation",
       "UI surface inventory",
+      "UI surface inventory and visual evidence audit",
       "Visual implementation audit",
+      "CLI-assisted PBE artifact validation and gate checks",
       "Dependency impact auditing",
       "Schema validation",
       "Staged parallel execution planning",

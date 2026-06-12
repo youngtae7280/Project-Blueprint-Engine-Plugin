@@ -4,7 +4,7 @@
 [PBE 상태 보고]
 
 현재 단계:
-- state: BLOCKED
+- state: {{last_valid_canonical_state}}
 - currentGate: null
 - nextStep: {failed_step}
 

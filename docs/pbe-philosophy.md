@@ -13,7 +13,7 @@ PBE should help Codex build projects in a way that preserves intent, scope, evid
 - Prefer sequential execution unless parallel safety is proven.
 - Keep every artifact within its own responsibility.
 - Keep traceability by stable IDs instead of removing useful duplication.
-- Use `COMPLETED` only for whole-project completion, not for a single slice.
+- Use `DONE` only after explicit user approval for the reviewed branch, slice, or whole project.
 - Separate technical stability, parity review, and user acceptance when a project requires legacy or visual parity.
 
 ## What PBE Is Not

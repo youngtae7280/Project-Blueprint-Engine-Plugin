@@ -80,7 +80,7 @@
     "uiThemeSpec": ".pbe/blueprint/ui-theme-spec.md",
     "designTokens": ".pbe/blueprint/design-tokens.json",
     "componentStyleContract": ".pbe/blueprint/component-style-contract.json",
-    "visualAudit": ".pbe/evidence/review-reports/visual-audit.md",
+    "visualAudit": ".pbe/evidence/visual-audit.md",
     "verificationMissLog": ".pbe/control/verification-miss-log.json",
     "nodeExecutionContracts": ".pbe/codex-execution-pack/11-node-execution-contracts/"
   },

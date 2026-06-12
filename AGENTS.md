@@ -126,10 +126,35 @@ Use `pbe-state.json.autoflow` to track:
 - `nextStep`
 - `lastFailure`
 
+Canonical `autoflow.state` values:
+
+```text
+INIT
+RPD_DONE
+WAITING_UI_UX_CONFIRM
+UI_UX_APPROVED
+VISUAL_CONTRACT_READY
+WPD_DONE
+UI_SURFACE_INVENTORY_DONE
+VD_DONE
+WAITING_IMPLEMENTATION_SCOPE
+SCOPE_SELECTED
+ACEP_READY
+ACEP_RUN_DONE
+VISUAL_AUDIT_DONE
+WAITING_REVIEW_RESULT
+DONE
+```
+
+Older state names may be read as migration aliases, but new or updated artifacts must use the canonical names above.
+
 Automatic steps:
 
 - `rpd`
 - `wpd`
+- `visual_reference_intake`
+- `design_system_derive`
+- `ui_surface_inventory`
 - `vd`
 - `dependency_impact_audit`
 - `plan_execution`
@@ -137,6 +162,7 @@ Automatic steps:
 - `ux_audit`
 - `generate_acep`
 - `run_acep`
+- `visual_implementation_audit`
 
 Human gates:
 
@@ -191,7 +217,7 @@ Natural-language examples:
 - "start next slice" -> start_next_slice
 - "complete project" -> complete_project
 
-If an automatic step fails, set Autoflow to `BLOCKED`, record `lastFailure`, and do not continue downstream.
+If an automatic step fails, record `lastFailure`, do not continue downstream, and report the blocked condition. Legacy artifacts may still contain `BLOCKED`, but new canonical state updates should keep the last valid state and use `lastFailure` as the block record.
 
 ## Scope Classification
 
@@ -312,6 +338,23 @@ When selected UI work changes visual appearance:
 14. Missing or stale required screenshot/manual evidence blocks UI closure.
 15. Visual deviations must be recorded and resolved by user acceptance, revision, deferral, out-of-scope classification, or waiver before closure.
 
+Canonical visual states:
+
+```text
+UI_UX_APPROVED
+VISUAL_CONTRACT_READY
+WPD_DONE
+UI_SURFACE_INVENTORY_DONE
+VD_DONE
+ACEP_READY
+ACEP_RUN_DONE
+VISUAL_AUDIT_DONE
+WAITING_REVIEW_RESULT
+DONE
+```
+
+For selected visual UI work, `VISUAL_CONTRACT_READY` must be reached before WPD/ACEP/UI implementation, `VISUAL_AUDIT_DONE` must be reached before Review Result can close, and `.pbe/evidence/visual-audit.md` must have no unresolved blocking issues.
+
 ## Parallel Execution
 
 Default policy:
@@ -406,7 +449,7 @@ When v2 change/impact files exist:
 5. Run only affected or reopened revision tasks.
 6. Do not clear stale/reopened state without refreshed validation and evidence.
 
-After review approval, move to `WAITING_NEXT_SLICE_DECISION`. Do not mark `COMPLETED` unless the user explicitly completes the whole project.
+After review approval, use canonical state `DONE` only for an explicitly user-approved branch/slice/project. If the user wants another slice, move back to `WAITING_IMPLEMENTATION_SCOPE` with the new selected scope instead of inventing a non-canonical state.
 
 ## Stop Conditions
 
