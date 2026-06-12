@@ -24,9 +24,11 @@ Codex controls traversal and keeps state in `.pbe/blueprint/requirement-tree.jso
 
 RPD is not a transcription step. It converts user intent into executable Product Tree nodes.
 
-Before confirmation, classify the current candidate as `CLEAR`, `PARTIAL`, or `AMBIGUOUS` using target, condition/state, expected behavior, completion criteria, exception handling, and verification method.
+Before confirmation, classify the current candidate as `CLEAR`, `PARTIAL`, or `AMBIGUOUS` using target, condition/state,
+expected behavior, completion criteria, exception handling, and verification method.
 
-Abstract quality terms such as `clean`, `nice`, `fast`, `stable`, `intuitive`, `깔끔하게`, `보기 좋게`, `빠르게`, or `안정적으로` make the node `PARTIAL` or `AMBIGUOUS` unless the missing slots are resolved.
+Abstract quality terms such as `clean`, `nice`, `fast`, `stable`, `intuitive`, `깔끔하게`, `보기 좋게`, `빠르게`, or
+`안정적으로` make the node `PARTIAL` or `AMBIGUOUS` unless the missing slots are resolved.
 
 See [Ambiguity Gate](ambiguity-gate.md).
 
@@ -39,7 +41,8 @@ WHEN <condition>,
 THE SYSTEM SHALL <observable response>.
 ```
 
-Keep legacy `acceptance` strings as compatibility summaries. Use `acceptanceNotRequiredReason` only for non-executable document or metadata nodes.
+Keep legacy `acceptance` strings as compatibility summaries. Use `acceptanceNotRequiredReason` only for non-executable
+document or metadata nodes.
 
 See [EARS Acceptance Criteria](ears-acceptance-criteria.md).
 
@@ -82,7 +85,8 @@ out_of_scope
 
 RPD is complete only when every leaf node is terminal and no node is `interviewing`, `ready_to_decompose`, or `blocked`.
 
-Executable confirmed leaves must also have structured acceptance criteria or an explicit non-executable reason. Ambiguous or partial leaves do not unblock WPD.
+Executable confirmed leaves must also have structured acceptance criteria or an explicit non-executable reason.
+Ambiguous or partial leaves do not unblock WPD.
 
 At completion Codex updates:
 

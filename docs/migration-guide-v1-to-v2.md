@@ -2,7 +2,8 @@
 
 ## Keep compatibility
 
-Do not remove `.pbe/blueprint/*` files immediately. Generate v2 tree files and keep v1 files as aliases or human-readable views.
+Do not remove `.pbe/blueprint/*` files immediately. Generate v2 tree files and keep v1 files as aliases or
+human-readable views.
 
 ## Mapping
 

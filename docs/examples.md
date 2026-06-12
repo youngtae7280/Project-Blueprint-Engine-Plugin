@@ -7,7 +7,8 @@
 Project: small inventory tracker with inbound and outbound stock updates.
 ```
 
-Codex creates `.pbe/blueprint/`, enables Autoflow, starts RPD Tree Walk, and asks one question about the root requirement only if more information is needed.
+Codex creates `.pbe/blueprint/`, enables Autoflow, starts RPD Tree Walk, and asks one question about the root
+requirement only if more information is needed.
 
 ## Existing Project Change
 
@@ -16,7 +17,8 @@ Codex creates `.pbe/blueprint/`, enables Autoflow, starts RPD Tree Walk, and ask
 Add order cancellation to this project.
 ```
 
-Codex inspects the repo, writes a project brief, creates a root requirement for the change, enables Autoflow, and starts Tree Walk.
+Codex inspects the repo, writes a project brief, creates a root requirement for the change, enables Autoflow, and starts
+Tree Walk.
 
 ## Status Card
 
@@ -51,7 +53,8 @@ When PBE reports workflow state, it uses:
 괜찮습니다. 다음 단계로 진행해주세요
 ```
 
-Codex reads `.pbe/blueprint/pbe-state.json`, maps the natural language to status or continue, and resumes from the current Autoflow state.
+Codex reads `.pbe/blueprint/pbe-state.json`, maps the natural language to status or continue, and resumes from the
+current Autoflow state.
 
 ## Confirm UI/UX
 
@@ -67,7 +70,8 @@ The user can reply:
 
 ## Generate Work Design
 
-After UI/UX approval, Codex automatically verifies that RPD is complete, then writes `work-design.json`, `work-graph.json`, and `work-roadmap.md`.
+After UI/UX approval, Codex automatically verifies that RPD is complete, then writes `work-design.json`,
+`work-graph.json`, and `work-roadmap.md`.
 
 ## Generate Verification Design
 
@@ -87,13 +91,16 @@ Ethernet도 이번 범위에 포함해주세요
 
 ## Generate ACEP
 
-Codex automatically runs execution planning, coverage audit, UX audit, and ACEP generation, then writes `.pbe/codex-execution-pack/`.
+Codex automatically runs execution planning, coverage audit, UX audit, and ACEP generation, then writes
+`.pbe/codex-execution-pack/`.
 
-The generated pack includes traceability matrix, UI/UX spec, evidence checklist, task cards, completion criteria, and final coverage check.
+The generated pack includes traceability matrix, UI/UX spec, evidence checklist, task cards, completion criteria, and
+final coverage check.
 
 ## Run ACEP
 
-Codex automatically reads the execution manifest, follows the operating loop, implements task cards, validates, and prepares final review.
+Codex automatically reads the execution manifest, follows the operating loop, implements task cards, validates, and
+prepares final review.
 
 Before reporting completion, Codex checks traceability, UI/UX evidence, and final coverage.
 
@@ -117,4 +124,5 @@ At the review gate, the user can say:
 실패한 케이스만 수정해서 다시 실행해주세요
 ```
 
-Codex maps feedback to affected items, creates bounded revision tasks, runs regression checks, and submits for review again.
+Codex maps feedback to affected items, creates bounded revision tasks, runs regression checks, and submits for review
+again.

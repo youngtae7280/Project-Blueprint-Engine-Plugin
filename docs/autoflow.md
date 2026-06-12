@@ -1,6 +1,7 @@
 # Autoflow
 
-Autoflow lets a user start Project Blueprint Engine once and then respond in natural language at the points that require human judgment.
+Autoflow lets a user start Project Blueprint Engine once and then respond in natural language at the points that require
+human judgment.
 
 ## Flow
 
@@ -44,7 +45,8 @@ run acep
 visual implementation audit
 ```
 
-RPD may still ask one requirement question at a time when information is missing. The user does not need to invoke the `rpd` command manually.
+RPD may still ask one requirement question at a time when information is missing. The user does not need to invoke the
+`rpd` command manually.
 
 ## Human Gates
 
@@ -56,7 +58,8 @@ implementation scope
 review result
 ```
 
-At a gate, Codex should explain what the user should review and give natural-language examples for approval, revision, questions, status, or stop.
+At a gate, Codex should explain what the user should review and give natural-language examples for approval, revision,
+questions, status, or stop.
 
 ## Response Format
 
@@ -118,8 +121,7 @@ INIT
 -> DONE
 ```
 
-Inside `SCOPE_SELECTED`, deterministic pre-ACEP work is tracked as checkpoints,
-not as new top-level states:
+Inside `SCOPE_SELECTED`, deterministic pre-ACEP work is tracked as checkpoints, not as new top-level states:
 
 ```text
 dependency_impact_audit
@@ -129,12 +131,13 @@ dependency_impact_audit
 -> generate_acep
 ```
 
-Use the matching CLI commands to record those checkpoints. Do not hand-edit
-`completedSteps`.
+Use the matching CLI commands to record those checkpoints. Do not hand-edit `completedSteps`.
 
-Visual states are skipped only when selected work does not change visual appearance or has an explicit not-required or waiver record.
+Visual states are skipped only when selected work does not change visual appearance or has an explicit not-required or
+waiver record.
 
-`DONE` requires explicit user approval. Automatic failures do not move to a canonical `BLOCKED` state; they keep the last valid state and record `lastFailure`.
+`DONE` requires explicit user approval. Automatic failures do not move to a canonical `BLOCKED` state; they keep the
+last valid state and record `lastFailure`.
 
 ## Failure Behavior
 

@@ -2,7 +2,9 @@
 
 PBE is optimized for safe, reviewable, staged project construction, not for speed.
 
-PBE should help Codex build projects in a way that preserves intent, scope, evidence, reviewability, and future maintainability. It should not rush through implementation when requirements, UI/UX, foundation, or parallel safety are unclear.
+PBE should help Codex build projects in a way that preserves intent, scope, evidence, reviewability, and future
+maintainability. It should not rush through implementation when requirements, UI/UX, foundation, or parallel safety are
+unclear.
 
 ## Principles
 

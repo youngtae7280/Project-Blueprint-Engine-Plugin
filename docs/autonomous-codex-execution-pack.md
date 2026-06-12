@@ -8,6 +8,7 @@ It is stored under:
 .pbe/codex-execution-pack/
 ```
 
-The pack tells Codex how to implement the planned work, what order to follow, how requirements map to tasks and verification, what UI/UX states must exist, what evidence is required, when to stop, and how to report completion.
+The pack tells Codex how to implement the planned work, what order to follow, how requirements map to tasks and
+verification, what UI/UX states must exist, what evidence is required, when to stop, and how to report completion.
 
 See `docs/acep.md` for the active contract.

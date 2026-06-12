@@ -1,9 +1,9 @@
 # Execution Planner
 
-Execution Planner is the PBE step after VD, Dependency Impact Audit, Implementation Scope selection, and Architecture Runway approval when required.
+Execution Planner is the PBE step after VD, Dependency Impact Audit, Implementation Scope selection, and Architecture
+Runway approval when required.
 
-It reads WPD's WorkGraph and creates the execution contract that Codex will
-follow during ACEP execution.
+It reads WPD's WorkGraph and creates the execution contract that Codex will follow during ACEP execution.
 
 ## Inputs
 
@@ -34,10 +34,9 @@ ACEP generation copies the strategy into:
 
 ## Responsibility
 
-Execution Planner creates a Task DAG from WorkGraph nodes and dependencies. It
-decides which tasks are sequential, which tasks are safe parallel candidates,
-which integration tasks are required, and which validation/review tasks close
-the pack.
+Execution Planner creates a Task DAG from WorkGraph nodes and dependencies. It decides which tasks are sequential, which
+tasks are safe parallel candidates, which integration tasks are required, and which validation/review tasks close the
+pack.
 
 It does not use RPD requirement nodes as direct coding tasks.
 
@@ -82,6 +81,5 @@ Execution Planner must verify:
 
 ## Single-Session Fallback
 
-If Codex cannot actually run tasks at the same time, it executes parallel-group
-tasks sequentially while preserving the declared dependencies and integration
-step. The manifest still records that the tasks are parallel-capable.
+If Codex cannot actually run tasks at the same time, it executes parallel-group tasks sequentially while preserving the
+declared dependencies and integration step. The manifest still records that the tasks are parallel-capable.

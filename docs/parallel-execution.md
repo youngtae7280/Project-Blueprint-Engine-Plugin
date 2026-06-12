@@ -1,7 +1,7 @@
 # Parallel Execution
 
-PBE supports a staged parallel execution strategy for Codex, but only after WPD
-has converted requirements into a module-aware WorkGraph.
+PBE supports a staged parallel execution strategy for Codex, but only after WPD has converted requirements into a
+module-aware WorkGraph.
 
 ## RPD Nodes Are Not Coding Tasks
 
@@ -60,15 +60,16 @@ A task can be placed in a parallel group only when:
 - `unknownFileTouchRisk` is `none` or `low`
 - expected files do not overlap with another task in the group
 - expected shared files do not overlap with another task in the group
-- shared types, schemas, build config, auth, permissions, migrations, payment logic, and package configuration are not modified
+- shared types, schemas, build config, auth, permissions, migrations, payment logic, and package configuration are not
+  modified
 - scope and non-scope are clear
 - focused validation is possible
 - conflict risk is low or controlled medium
 - the group has an integration task
 - rollback path is available
 
-`npm run validate:pbe` normalizes path strings before checking conflicts, so
-`src/a.ts` and `./src/a.ts` are treated as the same file.
+`npm run validate:pbe` normalizes path strings before checking conflicts, so `src/a.ts` and `./src/a.ts` are treated as
+the same file.
 
 Default policy:
 
@@ -127,6 +128,5 @@ The integration task:
 
 ## Single-Session Fallback
 
-In a single Codex session, actual simultaneous execution may not be available.
-In that case, Codex runs parallel-group tasks sequentially while preserving the
-declared dependencies and integration step.
+In a single Codex session, actual simultaneous execution may not be available. In that case, Codex runs parallel-group
+tasks sequentially while preserving the declared dependencies and integration step.

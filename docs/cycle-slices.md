@@ -8,8 +8,10 @@ The Cycle Contract must list included Product, Project, Work, and Test nodes.
 
 ## Excluded nodes
 
-The Cycle Contract must explicitly list excluded, deferred, blocked, and out-of-scope nodes. These nodes must not be touched.
+The Cycle Contract must explicitly list excluded, deferred, blocked, and out-of-scope nodes. These nodes must not be
+touched.
 
 ## Partial completion
 
-A cycle can partially satisfy a Product branch. Partial tests or missing evidence produce `partial_satisfied`, not `accepted_done`.
+A cycle can partially satisfy a Product branch. Partial tests or missing evidence produce `partial_satisfied`, not
+`accepted_done`.

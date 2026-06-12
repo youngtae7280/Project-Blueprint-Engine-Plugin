@@ -1,6 +1,7 @@
 # Decision Queue
 
-PBE should not interview the user for every node. It asks only when the decision changes tree meaning, scope, UX, risk, acceptance, verification, or accepted work.
+PBE should not interview the user for every node. It asks only when the decision changes tree meaning, scope, UX, risk,
+acceptance, verification, or accepted work.
 
 ## Decision item
 

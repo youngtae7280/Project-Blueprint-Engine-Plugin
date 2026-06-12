@@ -22,7 +22,8 @@ User feedback
 
 Revision work must stay inside affected selected/foundation scope.
 
-Do not rerun full RPD for normal feedback. Run Revision RPD only for the affected Change Node when feedback changes product meaning, UX, scope, acceptance criteria, verification strategy, or accepted work.
+Do not rerun full RPD for normal feedback. Run Revision RPD only for the affected Change Node when feedback changes
+product meaning, UX, scope, acceptance criteria, verification strategy, or accepted work.
 
 Revision packs should declare:
 

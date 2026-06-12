@@ -29,13 +29,15 @@ Compatibility term: part of `WPD`.
 
 ## Work Tree
 
-Captures executable work nodes derived from Product and Project nodes. Work Tree nodes are not a direct copy of Product Tree nodes.
+Captures executable work nodes derived from Product and Project nodes. Work Tree nodes are not a direct copy of Product
+Tree nodes.
 
 Compatibility term: part of `WPD`.
 
 ## Test Tree
 
-Captures verification nodes that prove Product and Work nodes. Every non-root Test Tree node must declare required evidence.
+Captures verification nodes that prove Product and Work nodes. Every non-root Test Tree node must declare required
+evidence.
 
 Compatibility term: `VD`.
 
@@ -47,4 +49,5 @@ Compatibility term: `ACEP`.
 
 ## Change, Impact, Evidence, And Acceptance Trees
 
-These trees control revision and closure. Codex may submit work for review, but only the user may mark product branches accepted.
+These trees control revision and closure. Codex may submit work for review, but only the user may mark product branches
+accepted.

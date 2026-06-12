@@ -26,6 +26,9 @@ A Node Execution Contract describes a single executable Work node:
 
 ## ACEP Compatibility
 
-ACEP remains the compatibility name for packaging Cycle Contracts and Node Execution Contracts into `.pbe/codex-execution-pack/`.
+ACEP remains the compatibility name for packaging Cycle Contracts and Node Execution Contracts into
+`.pbe/codex-execution-pack/`.
 
-Codex must execute selected and foundation scope only. If implementation discovers scope drift, missing UX confirmation, technical impossibility, or unsafe dependency impact, it should create or request a Change Node instead of silently expanding the contract.
+Codex must execute selected and foundation scope only. If implementation discovers scope drift, missing UX confirmation,
+technical impossibility, or unsafe dependency impact, it should create or request a Change Node instead of silently
+expanding the contract.

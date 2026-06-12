@@ -2,9 +2,8 @@
 
 Result Review prepares Codex output for user review.
 
-Result Review is an Autoflow human gate. Codex should explain what to inspect
-and accept natural-language approval, revision requests, questions, status, or
-stop.
+Result Review is an Autoflow human gate. Codex should explain what to inspect and accept natural-language approval,
+revision requests, questions, status, or stop.
 
 ## Output
 
@@ -48,5 +47,5 @@ At the gate, show:
 - remaining risks
 - items that may need rerun
 
-If the user approves, complete Autoflow. If the user requests changes, map the
-feedback and run the bounded revision workflow.
+If the user approves, complete Autoflow. If the user requests changes, map the feedback and run the bounded revision
+workflow.

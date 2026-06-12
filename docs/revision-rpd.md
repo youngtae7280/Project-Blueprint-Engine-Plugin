@@ -1,6 +1,7 @@
 # Revision RPD
 
-Revision RPD is RPD scoped to a Change Node. It exists so feedback during or after implementation does not restart the whole requirements process.
+Revision RPD is RPD scoped to a Change Node. It exists so feedback during or after implementation does not restart the
+whole requirements process.
 
 ## Flow
 
@@ -21,7 +22,8 @@ User Feedback
 
 ## Rule
 
-Do not rerun full RPD for ordinary revision feedback. Run Revision RPD only for the affected Change Node when feedback changes product meaning, UX, scope, acceptance criteria, verification strategy, or accepted work.
+Do not rerun full RPD for ordinary revision feedback. Run Revision RPD only for the affected Change Node when feedback
+changes product meaning, UX, scope, acceptance criteria, verification strategy, or accepted work.
 
 ## Feedback Routing
 
@@ -39,4 +41,5 @@ Verification strategy change: Revision RPD may be required when it changes compl
 
 ## Boundary
 
-Revision RPD may update only affected Product nodes and acceptance criteria. Scope expansion still requires the relevant human gate. Deferred or out-of-scope work must not enter the revision silently.
+Revision RPD may update only affected Product nodes and acceptance criteria. Scope expansion still requires the relevant
+human gate. Deferred or out-of-scope work must not enter the revision silently.

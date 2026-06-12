@@ -28,7 +28,9 @@ RPD Requirement Tree
 -> root implementation roadmap
 ```
 
-WPD does not copy RPD nodes directly into Codex coding tasks. A single RPD node may split into several WorkGraph nodes. Several RPD nodes may merge into one shared foundation. A parent RPD node may become an integration task. UI/UX requirements may split into UI work, verification work, and evidence work.
+WPD does not copy RPD nodes directly into Codex coding tasks. A single RPD node may split into several WorkGraph nodes.
+Several RPD nodes may merge into one shared foundation. A parent RPD node may become an integration task. UI/UX
+requirements may split into UI work, verification work, and evidence work.
 
 ## Module Boundary Check
 
@@ -82,7 +84,8 @@ Edge types:
 - documents
 - blocks_parallelization
 
-Each node includes related requirement IDs, expected outputs, risk level, expected files when known, and whether it can run in parallel.
+Each node includes related requirement IDs, expected outputs, risk level, expected files when known, and whether it can
+run in parallel.
 
 ## UI/UX Contract
 
@@ -96,4 +99,5 @@ Unconfirmed UI/UX items block WPD unless they are deferred or out of scope.
 
 ## Next Step
 
-After VD, run `pbe-plan-execution` to convert the WorkGraph into `staged_parallel` phases, parallel groups, integration tasks, and final validation strategy.
+After VD, run `pbe-plan-execution` to convert the WorkGraph into `staged_parallel` phases, parallel groups, integration
+tasks, and final validation strategy.

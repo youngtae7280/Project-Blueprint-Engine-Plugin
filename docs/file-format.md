@@ -2,15 +2,13 @@
 
 PBE stores all target-repo state under `.pbe/`.
 
-`pbe-state.json` includes an `autoflow` object that tracks current engine state,
-completed steps, the active human gate, the next automatic step, and the last
-failure.
+`pbe-state.json` includes an `autoflow` object that tracks current engine state, completed steps, the active human gate,
+the next automatic step, and the last failure.
 
 ## Tree-Control Folders
 
-The v2 tree-control layout is additive. Existing `.pbe/blueprint/*` files remain
-compatibility aliases or human-readable views while tree-native artifacts are
-introduced.
+The v2 tree-control layout is additive. Existing `.pbe/blueprint/*` files remain compatibility aliases or human-readable
+views while tree-native artifacts are introduced.
 
 ```text
 .pbe/
@@ -187,9 +185,8 @@ Plugin-local schemas live in `schemas/`:
 - `revision-manifest.schema.json`
 - `final-coverage-check.schema.json`
 
-The schemas document the contract and are compiled by `npm run validate:pbe`.
-The validator also performs cross-artifact checks for routing, traceability,
-parallel safety, dependency impact, UI impact, and revision file boundaries.
+The schemas document the contract and are compiled by `npm run validate:pbe`. The validator also performs cross-artifact
+checks for routing, traceability, parallel safety, dependency impact, UI impact, and revision file boundaries.
 
 Tree-control schemas and templates are validated by:
 
@@ -197,6 +194,5 @@ Tree-control schemas and templates are validated by:
 npm run validate:pbe:v2
 ```
 
-When v2 `.pbe` artifacts are present, this command also checks root nodes,
-duplicate IDs, derivation links, cycle membership, change/impact references,
-evidence links, and user acceptance closure.
+When v2 `.pbe` artifacts are present, this command also checks root nodes, duplicate IDs, derivation links, cycle
+membership, change/impact references, evidence links, and user acceptance closure.

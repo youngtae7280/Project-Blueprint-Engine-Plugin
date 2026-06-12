@@ -1,7 +1,7 @@
 # CLI Output
 
-PBE CLI commands use the same issue shape in text output and `--json` output so both people and
-Codex can understand why a gate failed and what to do next.
+PBE CLI commands use the same issue shape in text output and `--json` output so both people and Codex can understand why
+a gate failed and what to do next.
 
 Each issue keeps its stable `code` and `message`, and may include these fields:
 
@@ -20,9 +20,8 @@ Each issue keeps its stable `code` and `message`, and may include these fields:
 }
 ```
 
-Required fields are `code`, `severity`, and `message`. Optional fields such as `file`, `nodeId`,
-`nodeType`, `stage`, `reason`, `suggestedFix`, and `nextCommand` are included when PBE can infer
-them without changing validator behavior.
+Required fields are `code`, `severity`, and `message`. Optional fields such as `file`, `nodeId`, `nodeType`, `stage`,
+`reason`, `suggestedFix`, and `nextCommand` are included when PBE can infer them without changing validator behavior.
 
 Use `--json` for automation:
 
@@ -31,6 +30,6 @@ pbe validate --json
 pbe trace check --stage wpd --json
 ```
 
-The text reporter includes command name, pass/fail status, issue counts, file/node context, suggested
-fixes, and the next likely PBE command. `nextCommand` is guidance for the next gate or repair action;
-it does not bypass the normal PBE state machine or validation rules.
+The text reporter includes command name, pass/fail status, issue counts, file/node context, suggested fixes, and the
+next likely PBE command. `nextCommand` is guidance for the next gate or repair action; it does not bypass the normal PBE
+state machine or validation rules.

@@ -1,10 +1,12 @@
 # Ambiguity Gate
 
-PBE must not turn vague intent into executable work. Ambiguity Gate is the RPD checkpoint that decides whether a user request is ready to become a confirmed Product Tree node.
+PBE must not turn vague intent into executable work. Ambiguity Gate is the RPD checkpoint that decides whether a user
+request is ready to become a confirmed Product Tree node.
 
 ## Identity
 
-PBE is not an execution engine that tries to do everything. PBE is a requirements-based execution control layer for AI-assisted development.
+PBE is not an execution engine that tries to do everything. PBE is a requirements-based execution control layer for
+AI-assisted development.
 
 The gate protects this sequence:
 
@@ -41,7 +43,8 @@ problem-free
 문제 없게
 ```
 
-Preserve the user intent, but mark the Product node candidate as `needs_clarification` until the intent becomes verifiable.
+Preserve the user intent, but mark the Product node candidate as `needs_clarification` until the intent becomes
+verifiable.
 
 ## Checklist
 
@@ -62,4 +65,5 @@ Preserve the user intent, but mark the Product node candidate as `needs_clarific
 
 ## Hard Rule
 
-Ambiguous or partial Product nodes must not derive selected or foundation Work Tree nodes. Work may start only after ambiguity is resolved into acceptance criteria or the item is deferred, blocked, or out of scope.
+Ambiguous or partial Product nodes must not derive selected or foundation Work Tree nodes. Work may start only after
+ambiguity is resolved into acceptance criteria or the item is deferred, blocked, or out of scope.

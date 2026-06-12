@@ -12,7 +12,9 @@ ACEP is generated under:
 .pbe/codex-execution-pack/
 ```
 
-It contains policy, blueprint summaries, traceability matrix, UI/UX spec, task cards, validation commands, evidence rules, completion criteria, recovery guidance, final coverage check, final report template, execution strategy, and an execution manifest.
+It contains policy, blueprint summaries, traceability matrix, UI/UX spec, task cards, validation commands, evidence
+rules, completion criteria, recovery guidance, final coverage check, final report template, execution strategy, and an
+execution manifest.
 
 ## Required Contract Files
 
@@ -92,4 +94,8 @@ execution-manifest.json
 16-final-coverage-check.md
 ```
 
-It executes manifest phases in order. Sequential phases run task by task. Parallel phases run by declared parallel group, or sequentially as a fallback when actual parallel execution is unavailable. Every parallel group must complete its integration task before Codex moves to the next phase. The runner validates after focused changes, records evidence, updates UI/UX evidence when needed, completes final coverage, and writes a final report only when technical completion criteria are satisfied. It then prepares result review as `submitted_for_review`.
+It executes manifest phases in order. Sequential phases run task by task. Parallel phases run by declared parallel
+group, or sequentially as a fallback when actual parallel execution is unavailable. Every parallel group must complete
+its integration task before Codex moves to the next phase. The runner validates after focused changes, records evidence,
+updates UI/UX evidence when needed, completes final coverage, and writes a final report only when technical completion
+criteria are satisfied. It then prepares result review as `submitted_for_review`.

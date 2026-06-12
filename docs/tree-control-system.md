@@ -2,7 +2,8 @@
 
 PBE v2 treats the whole product development process as connected trees.
 
-PBE is not an execution engine that tries to do everything. PBE is a requirements-based execution control layer for AI-assisted development.
+PBE is not an execution engine that tries to do everything. PBE is a requirements-based execution control layer for
+AI-assisted development.
 
 ## Blueprint layer
 
@@ -27,7 +28,8 @@ Cycle Tree -> Change Tree -> Impact Tree -> Evidence Tree -> Acceptance Tree
 - Change Nodes produce Impact Trees.
 - Impacted completed nodes can become stale, invalidated, or reopened.
 - Product branches close only with evidence and human acceptance.
-- Parity/completeness ledgers are derived control views. They can strengthen audit and verification, but they do not replace tree scope or silently expand implementation work.
+- Parity/completeness ledgers are derived control views. They can strengthen audit and verification, but they do not
+  replace tree scope or silently expand implementation work.
 
 ## Validation
 
@@ -37,5 +39,5 @@ Run:
 npm run validate:pbe:v2
 ```
 
-The v2 validator compiles the tree schemas, validates matching templates, and
-when `.pbe` tree artifacts exist, checks node IDs and cross-tree links.
+The v2 validator compiles the tree schemas, validates matching templates, and when `.pbe` tree artifacts exist, checks
+node IDs and cross-tree links.

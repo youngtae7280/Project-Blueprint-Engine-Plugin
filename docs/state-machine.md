@@ -56,8 +56,7 @@ INIT
 -> DONE, when the user explicitly approves the slice, branch, or whole project
 ```
 
-Pre-ACEP deterministic checkpoints do not create top-level states. While state
-remains `SCOPE_SELECTED`, use:
+Pre-ACEP deterministic checkpoints do not create top-level states. While state remains `SCOPE_SELECTED`, use:
 
 ```bash
 pbe dependency audit complete
@@ -66,9 +65,8 @@ pbe coverage audit complete
 pbe ux audit complete
 ```
 
-These commands record `dependency_impact_audit`, `plan_execution`,
-`coverage_audit`, and `ux_audit` in `autoflow.completedSteps`. `pbe acep ready`
-must not pass until all four checkpoints are complete.
+These commands record `dependency_impact_audit`, `plan_execution`, `coverage_audit`, and `ux_audit` in
+`autoflow.completedSteps`. `pbe acep ready` must not pass until all four checkpoints are complete.
 
 ACEP execution, review submission, and acceptance use this CLI sequence:
 
@@ -80,23 +78,20 @@ pbe review submit
 pbe accept
 ```
 
-`pbe execution start` is the canonical transition from `ACEP_READY` to
-`EXECUTION_IN_PROGRESS`. The direct `ACEP_READY -> ACEP_RUN_DONE` shortcut is
-not canonical and is rejected by the CLI.
+`pbe execution start` is the canonical transition from `ACEP_READY` to `EXECUTION_IN_PROGRESS`. The direct
+`ACEP_READY -> ACEP_RUN_DONE` shortcut is not canonical and is rejected by the CLI.
 
-`pbe execution complete` runs only from `EXECUTION_IN_PROGRESS`. It validates
-ACEP artifacts and required evidence before writing `ACEP_RUN_DONE`.
+`pbe execution complete` runs only from `EXECUTION_IN_PROGRESS`. It validates ACEP artifacts and required evidence
+before writing `ACEP_RUN_DONE`.
 
-`pbe review submit` is not user acceptance. It submits verified work to the
-Review Result gate by moving to `WAITING_REVIEW_RESULT`. If selected work has
-visual impact, required visual evidence and the Visual Implementation Audit must
-pass first; the command then records the `VISUAL_AUDIT_DONE` checkpoint before
-entering `WAITING_REVIEW_RESULT`.
+`pbe review submit` is not user acceptance. It submits verified work to the Review Result gate by moving to
+`WAITING_REVIEW_RESULT`. If selected work has visual impact, required visual evidence and the Visual Implementation
+Audit must pass first; the command then records the `VISUAL_AUDIT_DONE` checkpoint before entering
+`WAITING_REVIEW_RESULT`.
 
-`pbe accept` is the only closure command for user acceptance. It requires
-explicit user acceptance metadata, then records both
-`WAITING_REVIEW_RESULT -> ACCEPTED` and `ACCEPTED -> DONE` in state history.
-`DONE` must not be written by review submission or by Codex inference.
+`pbe accept` is the only closure command for user acceptance. It requires explicit user acceptance metadata, then
+records both `WAITING_REVIEW_RESULT -> ACCEPTED` and `ACCEPTED -> DONE` in state history. `DONE` must not be written by
+review submission or by Codex inference.
 
 ## Human Gates
 
@@ -125,8 +120,10 @@ explicit user acceptance metadata, then records both
 
 ## Rules
 
-- Required Foundation, Blocking Dependency, or High-Impact Future Module decisions are handled through the implementation scope gate and `lastFailure` records.
+- Required Foundation, Blocking Dependency, or High-Impact Future Module decisions are handled through the
+  implementation scope gate and `lastFailure` records.
 - `DONE` is used only after explicit user approval for the reviewed branch, slice, or whole project.
-- `accepted` may exist as a delivery status, but only the user can set it and it must include explicit acceptance metadata.
+- `accepted` may exist as a delivery status, but only the user can set it and it must include explicit acceptance
+  metadata.
 - Any automatic step failure records `lastFailure`, keeps the last valid canonical state, and stops downstream progress.
 - Legacy state names may be read as explicit migration aliases, but new artifacts must use the canonical states above.

@@ -31,6 +31,7 @@ Each screen or UI flow should define:
 
 ## Evidence
 
-For UI changes, Codex records implementation files, tests or manual verification notes, screenshot paths if available, and accessibility notes.
+For UI changes, Codex records implementation files, tests or manual verification notes, screenshot paths if available,
+and accessibility notes.
 
 If screenshots cannot be captured, Codex records the reason and a manual verification note.

@@ -2,7 +2,8 @@
 
 Project Blueprint Engine is now a Codex Plugin.
 
-It does not provide a GUI. It does not call OpenAI APIs directly from a separate app. It runs inside Codex as a set of skills and writes durable planning artifacts to `.pbe/` in the target repository.
+It does not provide a GUI. It does not call OpenAI APIs directly from a separate app. It runs inside Codex as a set of
+skills and writes durable planning artifacts to `.pbe/` in the target repository.
 
 ## Components
 

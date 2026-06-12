@@ -1,6 +1,7 @@
 # Usage
 
-Project Blueprint Engine is a Codex Plugin. It does not provide a GUI, does not run a separate browser app, and does not call the OpenAI API directly from an app.
+Project Blueprint Engine is a Codex Plugin. It does not provide a GUI, does not run a separate browser app, and does not
+call the OpenAI API directly from an app.
 
 It runs inside Codex as a set of skills and writes planning artifacts into the target repository under `.pbe/`.
 
@@ -41,7 +42,8 @@ stop
 
 ## PBE Status Card
 
-When PBE finishes a step, reaches a gate, fails, or receives a status request, it answers with an official state card first:
+When PBE finishes a step, reaches a gate, fails, or receives a status request, it answers with an official state card
+first:
 
 ```text
 [PBE 상태 보고]
@@ -80,7 +82,8 @@ The status card is the workflow status. The Codex memo is explanation.
 9. If the user approves the result, PBE moves to Next Slice Decision.
 10. The user can complete the current slice, start another slice, or complete the whole project.
 
-ACEP is a contract. When `generate acep` runs, Codex creates traceability, UI/UX, evidence, final coverage, execution strategy, and manifest files in addition to task cards.
+ACEP is a contract. When `generate acep` runs, Codex creates traceability, UI/UX, evidence, final coverage, execution
+strategy, and manifest files in addition to task cards.
 
 ## Example Start
 
@@ -100,13 +103,16 @@ Add order cancellation to this project.
 
 At the UI/UX gate, review the preview and reply with approval, a revision request, or a question.
 
-At the Implementation Scope gate, choose what is selected for this slice, what is deferred, what foundation is required, and what is out of scope.
+At the Implementation Scope gate, choose what is selected for this slice, what is deferred, what foundation is required,
+and what is out of scope.
 
 At the Architecture Runway gate, decide whether required foundation should be created before implementation.
 
-At the final review gate, review execution results, failed tests, audit results, remaining risks, and retry items. Reply with approval, a revision request, or a question.
+At the final review gate, review execution results, failed tests, audit results, remaining risks, and retry items. Reply
+with approval, a revision request, or a question.
 
-At the Next Slice Decision gate, choose whether to complete the current slice, start the next slice, or complete the whole project.
+At the Next Slice Decision gate, choose whether to complete the current slice, start the next slice, or complete the
+whole project.
 
 ## What Codex Writes
 

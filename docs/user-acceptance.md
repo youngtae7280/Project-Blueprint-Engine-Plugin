@@ -21,9 +21,8 @@ accepted
 
 Codex must not set `accepted`.
 
-When the user explicitly approves at the final Review Result gate, that user
-message is the acceptance action. PBE may record Autoflow as `DONE` and
-store the approval in review artifacts.
+When the user explicitly approves at the final Review Result gate, that user message is the acceptance action. PBE may
+record Autoflow as `DONE` and store the approval in review artifacts.
 
 ## If The User Is Dissatisfied
 

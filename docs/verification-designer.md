@@ -30,16 +30,18 @@ WPD WorkGraph node
 -> root acceptance plan
 ```
 
-VD should connect verification to WorkGraph nodes and WorkDesign entries. It
-must not assume RPD requirement nodes are direct Codex task boundaries.
+VD should connect verification to WorkGraph nodes and WorkDesign entries. It must not assume RPD requirement nodes are
+direct Codex task boundaries.
 
 ## UI/UX Verification
 
-Confirmed UI/UX direction must become verification checks. UI verification should cover required elements, required states, accessibility expectations, and evidence.
+Confirmed UI/UX direction must become verification checks. UI verification should cover required elements, required
+states, accessibility expectations, and evidence.
 
 ## Parity And Hardware Verification
 
-When a project is legacy migration, parity-critical, UI-heavy, or hardware-dependent, VD should add profile-specific checks without treating deferred work as current-slice failure.
+When a project is legacy migration, parity-critical, UI-heavy, or hardware-dependent, VD should add profile-specific
+checks without treating deferred work as current-slice failure.
 
 Visual/runtime parity can include:
 
@@ -58,4 +60,5 @@ hardware_verification_pending
 hardware_certified
 ```
 
-`hardware_certified` requires explicit evidence. If visual or hardware checks cannot run, record not-runnable evidence instead of silently passing the check.
+`hardware_certified` requires explicit evidence. If visual or hardware checks cannot run, record not-runnable evidence
+instead of silently passing the check.

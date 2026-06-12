@@ -3,7 +3,8 @@
 ## GUI-Oriented Work Removed
 
 - The previous React/Vite GUI source under `src/` was removed.
-- Browser assets under `public/`, `index.html`, Vite config files, app TypeScript configs, and legacy GUI notes under `docs/legacy-gui/` were removed.
+- Browser assets under `public/`, `index.html`, Vite config files, app TypeScript configs, and legacy GUI notes under
+  `docs/legacy-gui/` were removed.
 - React/Vite dependencies and `legacy:*` npm scripts were removed from package metadata.
 - `dist/` now belongs to the CLI build output, not a GUI build.
 - Active PBE work lives in `.codex-plugin/`, `skills/`, `templates/`, `schemas/`, `scripts/`, `cli/`, and current docs.
@@ -37,4 +38,6 @@
 
 ## Contract Hardening Added Later
 
-The ACEP direction was strengthened so PBE is not only a task-card generator. ACEP now includes traceability matrix, UI/UX spec, UI/UX evidence checklist, final coverage check, evidence rules, stronger completion criteria, and a stronger final report template.
+The ACEP direction was strengthened so PBE is not only a task-card generator. ACEP now includes traceability matrix,
+UI/UX spec, UI/UX evidence checklist, final coverage check, evidence rules, stronger completion criteria, and a stronger
+final report template.

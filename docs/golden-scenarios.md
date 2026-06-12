@@ -23,11 +23,13 @@
 19. Deferred Ethernet is not treated as failure.
 20. Review separates completed selected scope, completed foundation scope, and deferred scope.
 21. Review approval records explicit user approval and moves the reviewed slice to `DONE`.
-22. Starting another slice moves back to `WAITING_IMPLEMENTATION_SCOPE`; `DONE` must not be inferred by Codex without user approval.
+22. Starting another slice moves back to `WAITING_IMPLEMENTATION_SCOPE`; `DONE` must not be inferred by Codex without
+    user approval.
 
 ## Required Checks
 
 - Source of Truth Matrix links USB selected scope and Ethernet deferred/foundation scope.
 - Foundation Contract states exactly what Ethernet foundation is allowed to create.
-- Parallel Safety Contract prevents USB and Ethernet foundation work from running in parallel if they touch shared connection files.
+- Parallel Safety Contract prevents USB and Ethernet foundation work from running in parallel if they touch shared
+  connection files.
 - Final Coverage Check does not fail only because Ethernet behavior is deferred.

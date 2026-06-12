@@ -1,8 +1,11 @@
 # Visual Design Contract
 
-PBE UI/UX confirmation approves flow, structure, wording, controls, states, and exception handling. Visual Design Contract adds a second layer for visual appearance: reference source, theme, tokens, component rules, surface inventory, screenshot evidence, and final visual audit.
+PBE UI/UX confirmation approves flow, structure, wording, controls, states, and exception handling. Visual Design
+Contract adds a second layer for visual appearance: reference source, theme, tokens, component rules, surface inventory,
+screenshot evidence, and final visual audit.
 
-This stays inside the Codex Plugin workflow. It is not a GUI app, API provider, SaaS product, MCP server, daemon, or standalone runtime.
+This stays inside the Codex Plugin workflow. It is not a GUI app, API provider, SaaS product, MCP server, daemon, or
+standalone runtime.
 
 ## Flow
 
@@ -51,10 +54,12 @@ If no source exists, PBE stops and asks the user to choose. It must not ask only
 ## Invariants
 
 - Visual UI changes require Visual Design Contract source or explicit user waiver.
-- Reference source requires Theme Spec, Design Tokens, and Component Style Contract before implementation unless waived or not required.
+- Reference source requires Theme Spec, Design Tokens, and Component Style Contract before implementation unless waived
+  or not required.
 - Design tokens must include colors, spacing, radius, typography, border, shadow, and motion.
 - Shared visual component changes require Component Style Contract reference or approved exception.
-- UI Surface Inventory must list selected surfaces, child surfaces, relevant states, and screenshot/manual evidence requirements.
+- UI Surface Inventory must list selected surfaces, child surfaces, relevant states, and screenshot/manual evidence
+  requirements.
 - VD must translate required states into Test Tree evidence requirements.
 - ACEP task cards and Node Execution Contracts must carry visual contract refs for visual UI work.
 - Missing or stale screenshot/manual visual evidence blocks UI closure.
@@ -81,4 +86,5 @@ The default theme must still be materialized into `design-tokens.json` and `comp
 
 ## CLI Guard
 
-`pbe visual check` validates the Visual Design Contract layer when visual UI work is selected. `pbe gate acep`, `pbe acep check`, `pbe evidence check`, and `pbe gate review-result` also enforce the relevant visual-contract checks.
+`pbe visual check` validates the Visual Design Contract layer when visual UI work is selected. `pbe gate acep`,
+`pbe acep check`, `pbe evidence check`, and `pbe gate review-result` also enforce the relevant visual-contract checks.

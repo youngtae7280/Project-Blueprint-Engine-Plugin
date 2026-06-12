@@ -1,6 +1,7 @@
 # Validator Design
 
-PBE validation is split between the CLI validator layer, preserved repository-level compatibility scripts, and example regression fixtures while preserving the historical command:
+PBE validation is split between the CLI validator layer, preserved repository-level compatibility scripts, and example
+regression fixtures while preserving the historical command:
 
 ```text
 node scripts/validate-pbe-files.js
@@ -11,7 +12,8 @@ npm run validate
 ## Layers
 
 - `cli/src/validators/*`: the active CLI validator layer used by `pbe validate`, stage gates, and transition commands.
-- `scripts/validate-pbe-files.js`: repository-level validation wrapper for plugin structure, compatibility artifacts, examples, and preserved checks.
+- `scripts/validate-pbe-files.js`: repository-level validation wrapper for plugin structure, compatibility artifacts,
+  examples, and preserved checks.
 - `scripts/validate-pbe-tree-system.js`: v2 schema/template and optional `.pbe` tree artifact validator.
 - `scripts/validators/*`: legacy repository validation scripts used by `scripts/validate-pbe-files.js`.
 - `scripts/validator-utils/*`: shared file, JSON, markdown, and report helpers for legacy repository validators.
@@ -28,7 +30,11 @@ Run the example regression suite with:
 npm run test:examples
 ```
 
-The runner builds the CLI, materializes `examples/valid/todo-app-pbe-run`, and expects `pbe validate` plus stage-aware `pbe trace check` commands to pass. Invalid fixtures under `examples/invalid/*` are applied as focused mutations to the golden run; each command must fail with its configured `expectedIssueCode`. This keeps the current state machine, structured acceptance criteria, traceability closure, evidence freshness, and Change/Impact/Revision skeleton covered by concrete `.pbe` examples without adding new validator rules.
+The runner builds the CLI, materializes `examples/valid/todo-app-pbe-run`, and expects `pbe validate` plus stage-aware
+`pbe trace check` commands to pass. Invalid fixtures under `examples/invalid/*` are applied as focused mutations to the
+golden run; each command must fail with its configured `expectedIssueCode`. This keeps the current state machine,
+structured acceptance criteria, traceability closure, evidence freshness, and Change/Impact/Revision skeleton covered by
+concrete `.pbe` examples without adding new validator rules.
 
 ## Expected Report Shape
 
@@ -69,15 +75,21 @@ pbe trace check --stage accept
 
 The stage mode decides how much closure is required:
 
-- `wpd`: selected/foundation Product nodes must derive to Work nodes; deferred/out-of-scope Product scope must not leak into Work. Test and Evidence artifacts are not required yet.
-- `vd`: WPD closure must hold, selected/foundation Work nodes and required acceptance criteria must be covered by Test nodes, and Test nodes must declare required evidence. Evidence files are not required yet.
-- `execution`: VD closure must hold and required Test nodes must have linked Evidence nodes. Evidence file existence remains the responsibility of the Evidence validator.
-- `review`: Product -> Work -> Test -> Evidence closure must hold before submitting for review. Acceptance is not required at review submit.
-- `accept`: Product -> Work -> Test -> Evidence -> user Acceptance closure must hold. Accepted/done closure requires user acceptance metadata.
+- `wpd`: selected/foundation Product nodes must derive to Work nodes; deferred/out-of-scope Product scope must not leak
+  into Work. Test and Evidence artifacts are not required yet.
+- `vd`: WPD closure must hold, selected/foundation Work nodes and required acceptance criteria must be covered by Test
+  nodes, and Test nodes must declare required evidence. Evidence files are not required yet.
+- `execution`: VD closure must hold and required Test nodes must have linked Evidence nodes. Evidence file existence
+  remains the responsibility of the Evidence validator.
+- `review`: Product -> Work -> Test -> Evidence closure must hold before submitting for review. Acceptance is not
+  required at review submit.
+- `accept`: Product -> Work -> Test -> Evidence -> user Acceptance closure must hold. Accepted/done closure requires
+  user acceptance metadata.
 
 ## Evidence Freshness
 
-Traceability validation checks whether Product, Work, Test, Evidence, and Acceptance nodes are connected. Evidence validation checks whether linked Evidence is usable as current proof.
+Traceability validation checks whether Product, Work, Test, Evidence, and Acceptance nodes are connected. Evidence
+validation checks whether linked Evidence is usable as current proof.
 
 Evidence timestamp fields are read in this order:
 
@@ -94,12 +106,15 @@ Linked Product, Work, and Test node timestamp fields are read in this order:
 - `lastChangedAt`
 - `createdAt`
 
-If Evidence is older than a linked Product, Work, or Test node, it is stale and cannot close review or acceptance. Evidence with `status` of `stale`, `stale_evidence`, `superseded`, `invalidated`, `obsolete`, or `rejected` is not current proof. Evidence with `supersededByEvidenceId` is also treated as superseded.
+If Evidence is older than a linked Product, Work, or Test node, it is stale and cannot close review or acceptance.
+Evidence with `status` of `stale`, `stale_evidence`, `superseded`, `invalidated`, `obsolete`, or `rejected` is not
+current proof. Evidence with `supersededByEvidenceId` is also treated as superseded.
 
 Stage policy:
 
 - `execution`: requires linked Evidence and file existence; missing Evidence timestamp is a warning for compatibility.
-- `review`: requires current Evidence. Missing timestamp, stale Evidence, superseded Evidence, and invalidated Evidence are errors.
+- `review`: requires current Evidence. Missing timestamp, stale Evidence, superseded Evidence, and invalidated Evidence
+  are errors.
 - `accept`: applies review strictness and also checks Evidence referenced by accepted Acceptance branches.
 
 Command wiring:
@@ -108,17 +123,22 @@ Command wiring:
 - `pbe review submit` calls Evidence validation with `stage: "review"`.
 - `pbe accept` calls Evidence validation with `stage: "accept"`.
 
-To replace old Evidence, add a new current Evidence node, link it to the required Test and Acceptance closure, and mark the old node with `supersededByEvidenceId` or `status: "superseded"`.
+To replace old Evidence, add a new current Evidence node, link it to the required Test and Acceptance closure, and mark
+the old node with `supersededByEvidenceId` or `status: "superseded"`.
 
 ## RPD Transition Guard
 
-`scripts/validators/rpd-transition.js` prevents downstream execution, review, or deliverable-producing work while RPD is incomplete.
+`scripts/validators/rpd-transition.js` prevents downstream execution, review, or deliverable-producing work while RPD is
+incomplete.
 
 It fails when:
 
-- any requirement Root or leaf remains `pending_interview`, `interviewing`, `ready_to_confirm`, `ready_to_decompose`, or `blocked`
+- any requirement Root or leaf remains `pending_interview`, `interviewing`, `ready_to_confirm`, `ready_to_decompose`, or
+  `blocked`
 - Product Tree root remains `draft`, `proposed`, `needs_human_decision`, or another non-terminal planning state
 - an open `gate` or `blocking` decision remains in `decision-queue.json`
-- `pbe-state.deliveryStatus` is `implemented`, `verified`, `submitted_for_review`, `revision_verified`, or `accepted` before RPD completion
+- `pbe-state.deliveryStatus` is `implemented`, `verified`, `submitted_for_review`, `revision_verified`, or `accepted`
+  before RPD completion
 
-Use `draft_created_from_assumptions` or `waiting_root_confirmation` when an assumption-based draft exists but Root confirmation is still pending.
+Use `draft_created_from_assumptions` or `waiting_root_confirmation` when an assumption-based draft exists but Root
+confirmation is still pending.

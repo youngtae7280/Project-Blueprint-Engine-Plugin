@@ -1,17 +1,14 @@
 # PBE Routing
 
-PBE routing prevents Codex from treating an active PBE project as an ordinary
-one-off coding request.
+PBE routing prevents Codex from treating an active PBE project as an ordinary one-off coding request.
 
-When `.pbe/` exists, Codex should inspect `.pbe/blueprint/pbe-state.json`
-before implementation work. The Autoflow state decides whether Codex should
-continue a deterministic step, stop at a human gate, repair a blocked step, or
-answer an ordinary non-state-changing question.
+When `.pbe/` exists, Codex should inspect `.pbe/blueprint/pbe-state.json` before implementation work. The Autoflow state
+decides whether Codex should continue a deterministic step, stop at a human gate, repair a blocked step, or answer an
+ordinary non-state-changing question.
 
-For supported stage transitions, Codex should run the deterministic `pbe` CLI
-transition command instead of hand-editing `.pbe/blueprint/pbe-state.json`.
-The CLI validates artifacts and allowed transitions first, then writes state
-history only when the transition is allowed.
+For supported stage transitions, Codex should run the deterministic `pbe` CLI transition command instead of hand-editing
+`.pbe/blueprint/pbe-state.json`. The CLI validates artifacts and allowed transitions first, then writes state history
+only when the transition is allowed.
 
 ## Routing Order
 
@@ -68,15 +65,13 @@ implementation_scope
 review_result
 ```
 
-At a human gate, Codex should not ask the user to memorize internal commands.
-It should explain why PBE stopped, what risk exists, what to inspect, and give
-natural-language reply examples.
+At a human gate, Codex should not ask the user to memorize internal commands. It should explain why PBE stopped, what
+risk exists, what to inspect, and give natural-language reply examples.
 
 ## Ordinary AI Answers
 
-PBE routing does not mean every answer needs a status card. Do not use
-`[PBE 상태 보고]` for ordinary usage help, conceptual explanations, or reviews
-that do not report or change workflow state.
+PBE routing does not mean every answer needs a status card. Do not use `[PBE 상태 보고]` for ordinary usage help,
+conceptual explanations, or reviews that do not report or change workflow state.
 
 Use the state card for:
 
