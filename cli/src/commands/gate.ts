@@ -9,6 +9,7 @@ import {
   validateAcep,
   validateEvidence,
   validateRpd,
+  validateTraceability,
   validateVd,
   validateVisualDesign,
   validateWpd,
@@ -53,6 +54,7 @@ export async function gateCommand(stage: string | undefined, context: CommandCon
     issues.push(...(await validateRpd(context.options.root, { completionMode: true })))
     issues.push(...(await validateWpd(context.options.root)))
     issues.push(...(await validateVisualDesign(context.options.root)))
+    issues.push(...(await validateTraceability(context.options.root, { stage: 'vd' })))
   } else if (canonicalStage === 'acep') {
     issues.push(...(await validateRpd(context.options.root, { completionMode: true })))
     issues.push(...(await validateVd(context.options.root)))
@@ -61,10 +63,12 @@ export async function gateCommand(stage: string | undefined, context: CommandCon
     issues.push(...(await validateAcep(context.options.root)))
     issues.push(...implementationScopeIssues(await loadState(context.options.root)))
   } else if (canonicalStage === 'review-result') {
+    issues.push(...(await validateTraceability(context.options.root, { stage: 'review' })))
     issues.push(...(await validateEvidence(context.options.root)))
     issues.push(...(await validateVisualDesign(context.options.root, { requireEvidence: true })))
   } else if (canonicalStage === 'accept') {
     issues.push(...(await validateAcceptedActors(context.options.root)))
+    issues.push(...(await validateTraceability(context.options.root, { stage: 'accept' })))
     issues.push(...(await validateEvidence(context.options.root)))
     if (!(await hasUserAcceptedBranch(context.options.root))) {
       issues.push(

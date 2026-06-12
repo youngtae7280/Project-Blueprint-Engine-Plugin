@@ -2,7 +2,13 @@ import { PBE_STATE } from '../core/state-machine.js'
 import { transitionPbeState } from '../core/state-transition.js'
 import type { CommandResult, ValidationIssue } from '../core/types.js'
 import { hasErrors } from '../core/types.js'
-import { validateRpd, validateVd, validateVisualDesign, validateWpd } from '../validators/pbe-validators.js'
+import {
+  validateRpd,
+  validateTraceability,
+  validateVd,
+  validateVisualDesign,
+  validateWpd,
+} from '../validators/pbe-validators.js'
 import { checkResult, type CommandContext, hasVisualWork, transitionFailed } from './shared.js'
 
 export async function vdCheckCommand(context: CommandContext): Promise<CommandResult> {
@@ -16,6 +22,7 @@ export async function vdCloseCommand(context: CommandContext): Promise<CommandRe
   issues.push(...(await validateWpd(context.options.root)))
   issues.push(...(await validateVisualDesign(context.options.root)))
   issues.push(...(await validateVd(context.options.root)))
+  issues.push(...(await validateTraceability(context.options.root, { stage: 'vd' })))
   if (hasErrors(issues)) {
     return transitionFailed('vd close', 'VD close failed. State was not changed.', issues)
   }

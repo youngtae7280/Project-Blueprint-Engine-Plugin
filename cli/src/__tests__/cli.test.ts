@@ -346,6 +346,43 @@ describe('PBE CLI', () => {
     expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain('DEPENDENCY_CYCLE')
   })
 
+  it('stage-aware WPD traceability requires Product to Work links only', async () => {
+    const missingWorkWorkspace = createWorkspace()
+    writeExecutableProduct(missingWorkWorkspace)
+    const missingWork = await runPbeCli(['trace', 'check', '--stage', 'wpd', '--json'], {
+      cwd: missingWorkWorkspace,
+      pluginRoot,
+    })
+
+    expect(missingWork.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(missingWork.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'PRODUCT_WORK_LINK_MISSING',
+    )
+
+    const noTestWorkspace = createWorkspace()
+    writeExecutableProduct(noTestWorkspace)
+    writeWorkTree(noTestWorkspace)
+    const noTest = await runPbeCli(['trace', 'check', '--stage', 'wpd', '--json'], {
+      cwd: noTestWorkspace,
+      pluginRoot,
+    })
+
+    expect(noTest.exitCode).toBe(ExitCode.Success)
+    expect(JSON.parse(noTest.stdout).ok).toBe(true)
+  })
+
+  it('stage-aware WPD traceability rejects inactive Product scope leaks', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace, { scopeClass: 'deferred', status: 'deferred' })
+    writeWorkTree(workspace)
+
+    const result = await runPbeCli(['trace', 'check', '--stage', 'wpd', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    const payload = JSON.parse(result.stderr)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain('DEFERRED_SCOPE_LEAK')
+  })
+
   it('accepts VD coverage when a Test node verifies the Work acceptance criteria', async () => {
     const workspace = createWorkspace()
     writeExecutableProduct(workspace)
@@ -356,6 +393,60 @@ describe('PBE CLI', () => {
 
     expect(result.exitCode).toBe(ExitCode.Success)
     expect(JSON.parse(result.stdout).ok).toBe(true)
+  })
+
+  it('stage-aware VD traceability requires Work and acceptance criteria to be covered by tests', async () => {
+    const missingTestWorkspace = createWorkspace()
+    writeExecutableProduct(missingTestWorkspace)
+    writeWorkTree(missingTestWorkspace)
+    const missingTest = await runPbeCli(['trace', 'check', '--stage', 'vd', '--json'], {
+      cwd: missingTestWorkspace,
+      pluginRoot,
+    })
+
+    expect(missingTest.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(missingTest.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'WORK_TEST_LINK_MISSING',
+    )
+
+    const missingAcWorkspace = createWorkspace()
+    writeExecutableProduct(missingAcWorkspace)
+    writeWorkTree(missingAcWorkspace)
+    writeTestTree(missingAcWorkspace, { verifiesAcceptanceCriteria: false })
+    const missingAc = await runPbeCli(['trace', 'check', '--stage', 'vd', '--json'], {
+      cwd: missingAcWorkspace,
+      pluginRoot,
+    })
+
+    expect(missingAc.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(missingAc.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ACCEPTANCE_NOT_COVERED',
+    )
+  })
+
+  it('stage-aware VD traceability does not require Evidence Tree files yet', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+
+    const result = await runPbeCli(['trace', 'check', '--stage', 'vd', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(JSON.parse(result.stdout).ok).toBe(true)
+  })
+
+  it('stage-aware VD traceability requires tests to declare evidence', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeWorkTree(workspace)
+    writeTestTree(workspace, { evidenceRequired: [] })
+
+    const result = await runPbeCli(['trace', 'check', '--stage', 'vd', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    const payload = JSON.parse(result.stderr)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain('TEST_EVIDENCE_DECLARATION_MISSING')
   })
 
   it('rejects VD close when required acceptance criteria are not covered by Test Tree', async () => {
@@ -903,6 +994,39 @@ describe('PBE CLI', () => {
     expect(after).toBe(before)
   })
 
+  it('stage-aware execution traceability requires Test to Evidence links but not evidence file existence', async () => {
+    const missingEvidenceWorkspace = createWorkspace()
+    writeExecutableProduct(missingEvidenceWorkspace)
+    writeWorkTree(missingEvidenceWorkspace)
+    writeTestTree(missingEvidenceWorkspace)
+    const missingEvidence = await runPbeCli(['trace', 'check', '--stage', 'execution', '--json'], {
+      cwd: missingEvidenceWorkspace,
+      pluginRoot,
+    })
+
+    expect(missingEvidence.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(missingEvidence.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'TEST_EVIDENCE_LINK_MISSING',
+    )
+
+    const missingFileWorkspace = createWorkspace()
+    writeExecutableProduct(missingFileWorkspace)
+    writeWorkTree(missingFileWorkspace)
+    writeTestTree(missingFileWorkspace)
+    writeEvidenceTree(missingFileWorkspace, { path: '.pbe/evidence/test-results/missing.log' })
+    const trace = await runPbeCli(['trace', 'check', '--stage', 'execution', '--json'], {
+      cwd: missingFileWorkspace,
+      pluginRoot,
+    })
+    const evidence = await runPbeCli(['evidence', 'check', '--json'], { cwd: missingFileWorkspace, pluginRoot })
+
+    expect(trace.exitCode).toBe(ExitCode.Success)
+    expect(evidence.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(evidence.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'EVIDENCE_FILE_MISSING',
+    )
+  })
+
   it('does not mutate state when ACEP ready runs from the wrong state', async () => {
     const workspace = createWorkspace()
     writeExecutableProduct(workspace)
@@ -1222,6 +1346,96 @@ describe('PBE CLI', () => {
       'INVALID_TRANSITION',
     )
     expect(after).toBe(before)
+  })
+
+  it('stage-aware review traceability requires Evidence closure but not Acceptance closure', async () => {
+    const missingEvidenceWorkspace = createWorkspace()
+    writeExecutableProduct(missingEvidenceWorkspace)
+    writeWorkTree(missingEvidenceWorkspace)
+    writeTestTree(missingEvidenceWorkspace)
+    const missingEvidence = await runPbeCli(['trace', 'check', '--stage', 'review', '--json'], {
+      cwd: missingEvidenceWorkspace,
+      pluginRoot,
+    })
+
+    expect(missingEvidence.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(missingEvidence.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'TEST_EVIDENCE_LINK_MISSING',
+    )
+
+    const noAcceptanceWorkspace = createWorkspace()
+    writeExecutableProduct(noAcceptanceWorkspace)
+    writeWorkTree(noAcceptanceWorkspace)
+    writeTestTree(noAcceptanceWorkspace)
+    writeEvidenceTree(noAcceptanceWorkspace)
+    const noAcceptance = await runPbeCli(['trace', 'check', '--stage', 'review', '--json'], {
+      cwd: noAcceptanceWorkspace,
+      pluginRoot,
+    })
+
+    expect(noAcceptance.exitCode).toBe(ExitCode.Success)
+    expect(JSON.parse(noAcceptance.stdout).ok).toBe(true)
+  })
+
+  it('stage-aware accept traceability requires user Acceptance closure', async () => {
+    const missingAcceptanceWorkspace = createWorkspace()
+    writeExecutableProduct(missingAcceptanceWorkspace)
+    writeWorkTree(missingAcceptanceWorkspace)
+    writeTestTree(missingAcceptanceWorkspace)
+    writeEvidenceTree(missingAcceptanceWorkspace)
+    writeEmptyAcceptance(missingAcceptanceWorkspace)
+    const missingAcceptance = await runPbeCli(['trace', 'check', '--stage', 'accept', '--json'], {
+      cwd: missingAcceptanceWorkspace,
+      pluginRoot,
+    })
+
+    expect(missingAcceptance.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(missingAcceptance.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ACCEPTANCE_CLOSURE_MISSING',
+    )
+
+    const assistantAcceptanceWorkspace = createWorkspace()
+    writeExecutableProduct(assistantAcceptanceWorkspace)
+    writeWorkTree(assistantAcceptanceWorkspace)
+    writeTestTree(assistantAcceptanceWorkspace)
+    writeEvidenceTree(assistantAcceptanceWorkspace)
+    writeJson(join(assistantAcceptanceWorkspace, '.pbe', 'control', 'acceptance-tree.json'), {
+      version: '0.2.0-tree-control',
+      branches: [
+        {
+          productNodeId: 'PT-1',
+          status: 'accepted_done',
+          decisionSource: {
+            actor: 'assistant',
+            source: 'inferred_by_codex',
+          },
+          evidenceNodeIds: ['EV-1'],
+        },
+      ],
+    })
+    const assistantAcceptance = await runPbeCli(['trace', 'check', '--stage', 'accept', '--json'], {
+      cwd: assistantAcceptanceWorkspace,
+      pluginRoot,
+    })
+
+    expect(assistantAcceptance.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(assistantAcceptance.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ACCEPTANCE_CLOSURE_MISSING',
+    )
+
+    const acceptedWorkspace = createWorkspace()
+    writeExecutableProduct(acceptedWorkspace)
+    writeWorkTree(acceptedWorkspace)
+    writeTestTree(acceptedWorkspace)
+    writeEvidenceTree(acceptedWorkspace)
+    writeUserAcceptance(acceptedWorkspace)
+    const accepted = await runPbeCli(['trace', 'check', '--stage', 'accept', '--json'], {
+      cwd: acceptedWorkspace,
+      pluginRoot,
+    })
+
+    expect(accepted.exitCode).toBe(ExitCode.Success)
+    expect(JSON.parse(accepted.stdout).ok).toBe(true)
   })
 
   it('review submit records visual audit transition for visual UI work', async () => {

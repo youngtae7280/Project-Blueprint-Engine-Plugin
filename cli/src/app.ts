@@ -1,6 +1,6 @@
 import process from 'node:process'
 import { findPluginRoot, resolveRoot } from './core/fs.js'
-import type { CliEnvironment, ParsedArgs } from './core/types.js'
+import type { CliEnvironment, ParsedArgs, TraceabilityStageOption } from './core/types.js'
 import { ExitCode } from './core/types.js'
 import { runCommand } from './commands.js'
 import { helpText, renderResult } from './reporters.js'
@@ -94,6 +94,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     force: false,
     profile: undefined as 'full' | 'lite' | 'bypass' | undefined,
     brief: undefined as string | undefined,
+    stage: undefined as TraceabilityStageOption | undefined,
   }
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -126,6 +127,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--brief requires text.' }
       }
       options.brief = value
+      index += 1
+    } else if (arg === '--stage') {
+      const value = argv[index + 1]
+      if (!value || !['wpd', 'vd', 'execution', 'review', 'accept'].includes(value)) {
+        return { error: '--stage requires one of: wpd, vd, execution, review, accept.' }
+      }
+      options.stage = value as TraceabilityStageOption
       index += 1
     } else if (arg.startsWith('--') && arg !== '--help') {
       return { error: `Unknown option: ${arg}` }

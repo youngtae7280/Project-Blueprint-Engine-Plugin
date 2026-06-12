@@ -90,5 +90,6 @@ Options:
   --force              Allow init to overwrite existing PBE files.
   --profile <value>    init profile: full, lite, or bypass. Defaults to full.
   --brief <text>       init project brief.
+  --stage <value>      trace check stage: wpd, vd, execution, review, or accept.
 `
 }

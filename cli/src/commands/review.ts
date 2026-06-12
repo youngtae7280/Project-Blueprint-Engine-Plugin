@@ -2,11 +2,12 @@ import { PBE_STATE } from '../core/state-machine.js'
 import { transitionPbeState } from '../core/state-transition.js'
 import type { CommandResult, ValidationIssue } from '../core/types.js'
 import { hasErrors } from '../core/types.js'
-import { validateEvidence, validateVisualDesign } from '../validators/pbe-validators.js'
+import { validateEvidence, validateTraceability, validateVisualDesign } from '../validators/pbe-validators.js'
 import { type CommandContext, hasVisualWork, transitionFailed } from './shared.js'
 
 export async function reviewSubmitCommand(context: CommandContext): Promise<CommandResult> {
   const issues: ValidationIssue[] = []
+  issues.push(...(await validateTraceability(context.options.root, { stage: 'review' })))
   issues.push(...(await validateEvidence(context.options.root)))
   issues.push(...(await validateVisualDesign(context.options.root, { requireEvidence: true })))
   if (hasErrors(issues)) {

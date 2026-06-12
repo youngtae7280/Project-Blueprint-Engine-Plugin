@@ -60,6 +60,6 @@ export async function validateWpd(root: string): Promise<ValidationIssue[]> {
     }
   }
   issues.push(...validateWorkDependencyGraph(work))
-  issues.push(...(await validateTraceability(root)))
+  issues.push(...(await validateTraceability(root, { stage: 'wpd' })))
   return issues
 }

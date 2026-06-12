@@ -3,7 +3,12 @@ import { normalizePbeState, PBE_STATE } from '../core/state-machine.js'
 import { transitionPbeState } from '../core/state-transition.js'
 import type { CommandResult, ValidationIssue } from '../core/types.js'
 import { hasErrors, issue } from '../core/types.js'
-import { validateAcceptedActors, validateEvidence, validateVisualDesign } from '../validators/pbe-validators.js'
+import {
+  validateAcceptedActors,
+  validateEvidence,
+  validateTraceability,
+  validateVisualDesign,
+} from '../validators/pbe-validators.js'
 import { type CommandContext, hasUserAcceptedBranch, loadState, transitionBlocked, transitionFailed } from './shared.js'
 
 export async function acceptCommand(context: CommandContext): Promise<CommandResult> {
@@ -27,6 +32,7 @@ export async function acceptCommand(context: CommandContext): Promise<CommandRes
     ])
   }
   issues.push(...(await validateAcceptedActors(context.options.root)))
+  issues.push(...(await validateTraceability(context.options.root, { stage: 'accept' })))
   issues.push(...(await validateEvidence(context.options.root)))
   issues.push(...(await validateVisualDesign(context.options.root, { requireEvidence: true })))
   const userAccepted = await hasUserAcceptedBranch(context.options.root)

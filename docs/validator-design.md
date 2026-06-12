@@ -40,6 +40,26 @@ Result: PASS
 
 Failures should include the validator name, file, error code, message, and a suggested fix.
 
+## Stage-Aware Traceability
+
+`pbe trace check` can run as a general diagnostic, or with a stage mode:
+
+```bash
+pbe trace check --stage wpd
+pbe trace check --stage vd
+pbe trace check --stage execution
+pbe trace check --stage review
+pbe trace check --stage accept
+```
+
+The stage mode decides how much closure is required:
+
+- `wpd`: selected/foundation Product nodes must derive to Work nodes; deferred/out-of-scope Product scope must not leak into Work. Test and Evidence artifacts are not required yet.
+- `vd`: WPD closure must hold, selected/foundation Work nodes and required acceptance criteria must be covered by Test nodes, and Test nodes must declare required evidence. Evidence files are not required yet.
+- `execution`: VD closure must hold and required Test nodes must have linked Evidence nodes. Evidence file existence remains the responsibility of the Evidence validator.
+- `review`: Product -> Work -> Test -> Evidence closure must hold before submitting for review. Acceptance is not required at review submit.
+- `accept`: Product -> Work -> Test -> Evidence -> user Acceptance closure must hold. Accepted/done closure requires user acceptance metadata.
+
 ## RPD Transition Guard
 
 `scripts/validators/rpd-transition.js` prevents downstream execution, review, or deliverable-producing work while RPD is incomplete.

@@ -2,7 +2,7 @@ import { PBE_STATE } from '../core/state-machine.js'
 import { transitionPbeState } from '../core/state-transition.js'
 import type { CommandResult, ValidationIssue } from '../core/types.js'
 import { hasErrors } from '../core/types.js'
-import { validateAcep, validateEvidence } from '../validators/pbe-validators.js'
+import { validateAcep, validateEvidence, validateTraceability } from '../validators/pbe-validators.js'
 import { type CommandContext, hasVisualWork, transitionFailed } from './shared.js'
 
 export async function executionStartCommand(context: CommandContext): Promise<CommandResult> {
@@ -26,6 +26,7 @@ export async function executionStartCommand(context: CommandContext): Promise<Co
 export async function executionCompleteCommand(context: CommandContext): Promise<CommandResult> {
   const issues: ValidationIssue[] = []
   issues.push(...(await validateAcep(context.options.root)))
+  issues.push(...(await validateTraceability(context.options.root, { stage: 'execution' })))
   issues.push(...(await validateEvidence(context.options.root, { requireVisualAudit: false })))
   if (hasErrors(issues)) {
     return transitionFailed('execution complete', 'Execution completion failed. State was not changed.', issues)

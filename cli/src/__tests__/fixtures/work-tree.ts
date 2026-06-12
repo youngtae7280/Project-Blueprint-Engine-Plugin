@@ -5,6 +5,7 @@ export function writeWorkTree(
   workspace: string,
   options: {
     dependencyCycle?: boolean
+    derivedFromProductNodeIds?: string[]
     workScopeClass?: string
     workStatus?: string
   } = {},
@@ -44,7 +45,7 @@ export function writeWorkTree(
         type: 'feature_task',
         title: 'Implement connected status',
         status: options.workStatus || 'ready',
-        derivedFromProductNodeIds: ['PT-1'],
+        derivedFromProductNodeIds: options.derivedFromProductNodeIds || ['PT-1'],
         derivedFromProjectNodeIds: [],
         scopeClass: options.workScopeClass || 'selected',
         expectedFiles: ['src/status.ts'],

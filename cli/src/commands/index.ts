@@ -48,7 +48,10 @@ export async function runCommand(positionals: string[], context: CommandContext)
     return uiApproveCommand(context)
   }
   if (command === 'trace' && subcommand === 'check') {
-    return checkResult('trace check', await validateTraceability(context.options.root))
+    return checkResult(
+      'trace check',
+      await validateTraceability(context.options.root, { stage: context.options.stage }),
+    )
   }
   if (command === 'wpd' && subcommand === 'check') {
     return wpdCheckCommand(context)
