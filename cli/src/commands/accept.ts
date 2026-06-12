@@ -33,7 +33,11 @@ export async function acceptCommand(context: CommandContext): Promise<CommandRes
   }
   issues.push(...(await validateAcceptedActors(context.options.root)))
   issues.push(...(await validateTraceability(context.options.root, { stage: 'accept' })))
-  issues.push(...(await validateEvidence(context.options.root, { stage: 'accept' })))
+  issues.push(
+    ...(await validateEvidence(context.options.root, {
+      stage: 'accept',
+    })),
+  )
   issues.push(...(await validateVisualDesign(context.options.root, { requireEvidence: true })))
   const userAccepted = await hasUserAcceptedBranch(context.options.root)
   if (!userAccepted) {

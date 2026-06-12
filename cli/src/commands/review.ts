@@ -8,7 +8,11 @@ import { type CommandContext, hasVisualWork, transitionFailed } from './shared.j
 export async function reviewSubmitCommand(context: CommandContext): Promise<CommandResult> {
   const issues: ValidationIssue[] = []
   issues.push(...(await validateTraceability(context.options.root, { stage: 'review' })))
-  issues.push(...(await validateEvidence(context.options.root, { stage: 'review' })))
+  issues.push(
+    ...(await validateEvidence(context.options.root, {
+      stage: 'review',
+    })),
+  )
   issues.push(...(await validateVisualDesign(context.options.root, { requireEvidence: true })))
   if (hasErrors(issues)) {
     return transitionFailed('review submit', 'Review submit failed. State was not changed.', issues)
