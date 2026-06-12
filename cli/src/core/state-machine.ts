@@ -1,43 +1,71 @@
 import type { ValidationIssue } from './types.js'
 import { issue } from './types.js'
 
-export const pbeStates = [
+export const PBE_STATES = [
   'INIT',
+  'WAITING_ROOT_CONFIRMATION',
+  'RPD_IN_PROGRESS',
   'RPD_DONE',
   'WAITING_UI_UX_CONFIRM',
   'UI_UX_APPROVED',
   'VISUAL_CONTRACT_READY',
+  'WPD_IN_PROGRESS',
   'WPD_DONE',
   'UI_SURFACE_INVENTORY_DONE',
+  'VD_IN_PROGRESS',
   'VD_DONE',
   'WAITING_IMPLEMENTATION_SCOPE',
   'SCOPE_SELECTED',
   'ACEP_READY',
+  'EXECUTION_IN_PROGRESS',
   'ACEP_RUN_DONE',
   'VISUAL_AUDIT_DONE',
   'WAITING_REVIEW_RESULT',
+  'REVISION_REQUESTED',
+  'ACCEPTED',
   'DONE',
+  'BLOCKED',
 ] as const
 
-export type PbeState = (typeof pbeStates)[number]
+export const pbeStates = PBE_STATES
 
-export const PBE_STATE: { [State in PbeState]: State } = {
-  INIT: 'INIT',
-  RPD_DONE: 'RPD_DONE',
-  WAITING_UI_UX_CONFIRM: 'WAITING_UI_UX_CONFIRM',
-  UI_UX_APPROVED: 'UI_UX_APPROVED',
-  VISUAL_CONTRACT_READY: 'VISUAL_CONTRACT_READY',
-  WPD_DONE: 'WPD_DONE',
-  UI_SURFACE_INVENTORY_DONE: 'UI_SURFACE_INVENTORY_DONE',
-  VD_DONE: 'VD_DONE',
-  WAITING_IMPLEMENTATION_SCOPE: 'WAITING_IMPLEMENTATION_SCOPE',
-  SCOPE_SELECTED: 'SCOPE_SELECTED',
-  ACEP_READY: 'ACEP_READY',
-  ACEP_RUN_DONE: 'ACEP_RUN_DONE',
-  VISUAL_AUDIT_DONE: 'VISUAL_AUDIT_DONE',
-  WAITING_REVIEW_RESULT: 'WAITING_REVIEW_RESULT',
-  DONE: 'DONE',
-} as const
+export type PbeState = (typeof PBE_STATES)[number]
+
+export const PBE_STATE = Object.freeze(
+  Object.fromEntries(PBE_STATES.map((state) => [state, state])) as { [State in PbeState]: State },
+)
+
+export const PBE_TERMINAL_STATES = ['DONE'] as const satisfies readonly PbeState[]
+
+export const PBE_ACTOR_REQUIRED_STATES = ['ACCEPTED'] as const satisfies readonly PbeState[]
+
+export const PBE_STATE_TRANSITIONS: Record<PbeState, readonly PbeState[]> = {
+  INIT: ['WAITING_ROOT_CONFIRMATION', 'RPD_IN_PROGRESS', 'RPD_DONE', 'BLOCKED'],
+  WAITING_ROOT_CONFIRMATION: ['RPD_IN_PROGRESS', 'RPD_DONE', 'BLOCKED'],
+  RPD_IN_PROGRESS: ['WAITING_ROOT_CONFIRMATION', 'RPD_DONE', 'BLOCKED'],
+  RPD_DONE: ['WAITING_UI_UX_CONFIRM', 'UI_UX_APPROVED', 'WPD_IN_PROGRESS', 'WPD_DONE', 'BLOCKED'],
+  WAITING_UI_UX_CONFIRM: ['UI_UX_APPROVED', 'BLOCKED'],
+  UI_UX_APPROVED: ['VISUAL_CONTRACT_READY', 'WPD_IN_PROGRESS', 'WPD_DONE', 'BLOCKED'],
+  VISUAL_CONTRACT_READY: ['WPD_IN_PROGRESS', 'WPD_DONE', 'BLOCKED'],
+  WPD_IN_PROGRESS: ['WPD_DONE', 'BLOCKED'],
+  WPD_DONE: ['UI_SURFACE_INVENTORY_DONE', 'VD_IN_PROGRESS', 'VD_DONE', 'BLOCKED'],
+  UI_SURFACE_INVENTORY_DONE: ['VD_IN_PROGRESS', 'VD_DONE', 'BLOCKED'],
+  VD_IN_PROGRESS: ['VD_DONE', 'BLOCKED'],
+  VD_DONE: ['WAITING_IMPLEMENTATION_SCOPE', 'SCOPE_SELECTED', 'BLOCKED'],
+  WAITING_IMPLEMENTATION_SCOPE: ['SCOPE_SELECTED', 'BLOCKED'],
+  SCOPE_SELECTED: ['ACEP_READY', 'BLOCKED'],
+  ACEP_READY: ['EXECUTION_IN_PROGRESS', 'ACEP_RUN_DONE', 'BLOCKED'],
+  EXECUTION_IN_PROGRESS: ['ACEP_RUN_DONE', 'BLOCKED'],
+  ACEP_RUN_DONE: ['VISUAL_AUDIT_DONE', 'WAITING_REVIEW_RESULT', 'BLOCKED'],
+  VISUAL_AUDIT_DONE: ['WAITING_REVIEW_RESULT', 'BLOCKED'],
+  WAITING_REVIEW_RESULT: ['REVISION_REQUESTED', 'ACCEPTED', 'DONE', 'BLOCKED'],
+  REVISION_REQUESTED: ['RPD_IN_PROGRESS', 'WPD_IN_PROGRESS', 'VD_IN_PROGRESS', 'ACEP_READY', 'BLOCKED'],
+  ACCEPTED: ['DONE'],
+  DONE: [],
+  BLOCKED: ['RPD_IN_PROGRESS', 'WPD_IN_PROGRESS', 'VD_IN_PROGRESS', 'ACEP_READY'],
+}
+
+export const transitions = PBE_STATE_TRANSITIONS
 
 export interface StateHistoryEntry {
   from: PbeState
@@ -47,20 +75,16 @@ export interface StateHistoryEntry {
   actor?: string
 }
 
-export const stateAliases: Record<string, PbeState> = {
+export const PBE_STATE_ALIASES: Record<string, PbeState> = {
   IDLE: 'INIT',
   STARTED: 'INIT',
-  WAITING_ROOT_CONFIRMATION: 'INIT',
-  DRAFT_CREATED_FROM_ASSUMPTIONS: 'INIT',
-  RPD_IN_PROGRESS: 'INIT',
-  WAITING_RPD_DECISION: 'INIT',
+  DRAFT_CREATED_FROM_ASSUMPTIONS: 'WAITING_ROOT_CONFIRMATION',
+  WAITING_RPD_DECISION: 'WAITING_ROOT_CONFIRMATION',
   WAITING_UI_UX_CONFIRMATION: 'WAITING_UI_UX_CONFIRM',
   UI_UX_CONFIRMED: 'UI_UX_APPROVED',
-  WPD_IN_PROGRESS: 'UI_UX_APPROVED',
-  VD_IN_PROGRESS: 'WPD_DONE',
-  DEPENDENCY_IMPACT_AUDITED: 'VD_DONE',
-  WAITING_IMPLEMENTATION_SCOPE_CONFIRMATION: 'WAITING_IMPLEMENTATION_SCOPE',
+  DEPENDENCY_IMPACT_AUDITED: 'SCOPE_SELECTED',
   IMPLEMENTATION_SCOPE_CONFIRMED: 'SCOPE_SELECTED',
+  WAITING_IMPLEMENTATION_SCOPE_CONFIRMATION: 'WAITING_IMPLEMENTATION_SCOPE',
   WAITING_ARCHITECTURE_RUNWAY_CONFIRM: 'SCOPE_SELECTED',
   ARCHITECTURE_RUNWAY_APPROVED: 'SCOPE_SELECTED',
   PLAN_EXECUTED: 'SCOPE_SELECTED',
@@ -68,41 +92,26 @@ export const stateAliases: Record<string, PbeState> = {
   UX_AUDITED: 'SCOPE_SELECTED',
   ACEP_GENERATED: 'ACEP_READY',
   ACEP_VALIDATED: 'ACEP_READY',
-  EXECUTION_IN_PROGRESS: 'ACEP_READY',
   EXECUTION_DONE: 'ACEP_RUN_DONE',
   WAITING_REVIEW: 'WAITING_REVIEW_RESULT',
-  REVISION_REQUESTED: 'WAITING_REVIEW_RESULT',
   WAITING_NEXT_SLICE_DECISION: 'DONE',
-  SLICE_ACCEPTED: 'DONE',
+  SLICE_ACCEPTED: 'ACCEPTED',
   COMPLETED: 'DONE',
-  ACCEPTED: 'DONE',
   CLOSED: 'DONE',
 } as const
 
-export const transitions: Record<PbeState, PbeState[]> = {
-  INIT: ['RPD_DONE'],
-  RPD_DONE: ['WAITING_UI_UX_CONFIRM', 'UI_UX_APPROVED', 'WPD_DONE'],
-  WAITING_UI_UX_CONFIRM: ['UI_UX_APPROVED'],
-  UI_UX_APPROVED: ['VISUAL_CONTRACT_READY', 'WPD_DONE'],
-  VISUAL_CONTRACT_READY: ['WPD_DONE'],
-  WPD_DONE: ['UI_SURFACE_INVENTORY_DONE', 'VD_DONE'],
-  UI_SURFACE_INVENTORY_DONE: ['VD_DONE'],
-  VD_DONE: ['WAITING_IMPLEMENTATION_SCOPE', 'SCOPE_SELECTED'],
-  WAITING_IMPLEMENTATION_SCOPE: ['SCOPE_SELECTED'],
-  SCOPE_SELECTED: ['ACEP_READY'],
-  ACEP_READY: ['ACEP_RUN_DONE'],
-  ACEP_RUN_DONE: ['VISUAL_AUDIT_DONE', 'WAITING_REVIEW_RESULT'],
-  VISUAL_AUDIT_DONE: ['WAITING_REVIEW_RESULT'],
-  WAITING_REVIEW_RESULT: ['DONE'],
-  DONE: [],
-}
+export const stateAliases = PBE_STATE_ALIASES
 
 export function isPbeState(value: unknown): value is PbeState {
-  return typeof value === 'string' && (isCanonicalPbeState(value) || value in stateAliases)
+  return isCanonicalPbeState(value)
 }
 
 export function isCanonicalPbeState(value: unknown): value is PbeState {
-  return typeof value === 'string' && (pbeStates as readonly string[]).includes(value)
+  return typeof value === 'string' && (PBE_STATES as readonly string[]).includes(value)
+}
+
+export function isKnownPbeState(value: unknown): boolean {
+  return normalizePbeState(value) !== null
 }
 
 export function normalizePbeState(value: unknown): PbeState | null {
@@ -112,15 +121,45 @@ export function normalizePbeState(value: unknown): PbeState | null {
   if (isCanonicalPbeState(value)) {
     return value
   }
-  return stateAliases[value] ?? null
+  return PBE_STATE_ALIASES[value] ?? null
+}
+
+export function isTerminalPbeState(value: unknown): value is (typeof PBE_TERMINAL_STATES)[number] {
+  const state = normalizePbeState(value)
+  return !!state && (PBE_TERMINAL_STATES as readonly string[]).includes(state)
+}
+
+export function stateRequiresActor(value: unknown): boolean {
+  const state = normalizePbeState(value)
+  return !!state && (PBE_ACTOR_REQUIRED_STATES as readonly string[]).includes(state)
 }
 
 export function canTransition(from: PbeState, to: PbeState): boolean {
-  return transitions[from].includes(to)
+  return PBE_STATE_TRANSITIONS[from].includes(to)
 }
 
 export function nextStatesFor(state: PbeState): PbeState[] {
-  return transitions[state]
+  return [...PBE_STATE_TRANSITIONS[state]]
+}
+
+export function validatePbeStateValue(value: unknown): ValidationIssue[] {
+  if (normalizePbeState(value)) {
+    return []
+  }
+  return [
+    issue({
+      validator: 'StateMachine',
+      code: 'UNKNOWN_STATE',
+      severity: 'error',
+      file: '.pbe/blueprint/pbe-state.json',
+      message: `Unknown PBE autoflow.state: ${String(value || '<missing>')}.`,
+      suggestedFix: 'Use one of the canonical PBE states from cli/src/core/state-machine.ts.',
+    }),
+  ]
+}
+
+export function validatePbeTransition(from: PbeState, to: PbeState): ValidationIssue[] {
+  return assertTransition(from, to)
 }
 
 export function assertTransition(from: PbeState, to: PbeState): ValidationIssue[] {
@@ -144,18 +183,7 @@ export function stateMachineIssues(state: Record<string, unknown> | null): Valid
   const rawState = autoflow.state
   const currentState = normalizePbeState(rawState)
 
-  if (!currentState) {
-    issues.push(
-      issue({
-        validator: 'StateMachine',
-        code: 'UNKNOWN_STATE',
-        severity: 'error',
-        file: '.pbe/blueprint/pbe-state.json',
-        message: `Unknown PBE autoflow.state: ${String(rawState || '<missing>')}.`,
-        suggestedFix: 'Use one of the canonical PBE states from cli/src/core/state-machine.ts.',
-      }),
-    )
-  }
+  issues.push(...validatePbeStateValue(rawState))
 
   const history = Array.isArray(autoflow.stateHistory) ? autoflow.stateHistory : []
   let previousTo: PbeState | null = null

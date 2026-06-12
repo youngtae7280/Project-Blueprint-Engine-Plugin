@@ -10,14 +10,7 @@ import {
   type ArtifactKey,
 } from './core/project.js'
 import { ensureDir, readJsonSafe, relativePath, writeJsonAtomic, writeTextAtomic } from './core/fs.js'
-import {
-  isPbeState,
-  normalizePbeState,
-  PBE_STATE,
-  pbeStates,
-  stateMachineIssues,
-  type PbeState,
-} from './core/state-machine.js'
+import { isPbeState, normalizePbeState, PBE_STATE, pbeStates, type PbeState } from './core/state-machine.js'
 import { checkpointPbeState, transitionPbeState } from './core/state-transition.js'
 import type { CliEnvironment, CliOptions, CommandResult, ValidationIssue } from './core/types.js'
 import { ExitCode, hasErrors, issue } from './core/types.js'
@@ -27,6 +20,7 @@ import {
   validateEvidence,
   validateRpd,
   validateTraceability,
+  validateState,
   validateVd,
   validateVisualDesign,
   validateWpd,
@@ -351,8 +345,7 @@ async function validateCommand(context: CommandContext): Promise<CommandResult> 
   }
 
   if (existsSync(path.join(context.options.root, '.pbe'))) {
-    const state = await loadState(context.options.root)
-    issues.push(...stateMachineIssues(state))
+    issues.push(...(await validateState(context.options.root)))
     issues.push(...(await validateAcceptedActors(context.options.root)))
     issues.push(...(await validateVisualDesign(context.options.root)))
   }
@@ -1219,8 +1212,9 @@ export function summarizeCreated(root: string, files: string[]): string[] {
 }
 
 function statesFrom(state: PbeState): PbeState[] {
-  const index = pbeStates.indexOf(state)
-  return index === -1 ? [] : [...pbeStates.slice(index)]
+  const progressStates = pbeStates.filter((candidate) => !['BLOCKED', 'REVISION_REQUESTED'].includes(candidate))
+  const index = progressStates.indexOf(state)
+  return index === -1 ? [] : [...progressStates.slice(index)]
 }
 
 export { isPbeState }

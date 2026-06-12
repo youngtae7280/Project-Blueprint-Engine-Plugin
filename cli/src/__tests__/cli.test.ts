@@ -2,7 +2,9 @@ import { readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { runPbeCli } from '../app'
+import { canTransition, isPbeState, PBE_STATE } from '../core/state-machine'
 import { ExitCode } from '../core/types'
+import { validateState } from '../validators/state-validator'
 import {
   writeCoverageAudit,
   writeDependencyImpactAudit,
@@ -31,6 +33,13 @@ afterEach(() => {
 })
 
 describe('PBE CLI', () => {
+  it('recognizes canonical PBE states and transition helpers', () => {
+    expect(isPbeState(PBE_STATE.RPD_DONE)).toBe(true)
+    expect(isPbeState('NOT_A_PBE_STATE')).toBe(false)
+    expect(canTransition(PBE_STATE.RPD_DONE, PBE_STATE.WPD_DONE)).toBe(true)
+    expect(canTransition(PBE_STATE.SCOPE_SELECTED, PBE_STATE.WPD_DONE)).toBe(false)
+  })
+
   it('prints help', async () => {
     const result = await runPbeCli(['--help'], { cwd: pluginRoot, pluginRoot })
 
@@ -663,6 +672,15 @@ describe('PBE CLI', () => {
     const codes = JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)
     expect(codes).toContain('UNKNOWN_STATE')
     expect(codes).toContain('STATE_HISTORY_INVALID_TRANSITION')
+  })
+
+  it('state validator accepts a known canonical state', async () => {
+    const workspace = createWorkspace()
+    writePbeState(workspace, 'RPD_DONE')
+
+    const issues = await validateState(workspace)
+
+    expect(issues).toEqual([])
   })
 })
 
