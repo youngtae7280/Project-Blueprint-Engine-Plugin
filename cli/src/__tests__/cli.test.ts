@@ -5,6 +5,7 @@ import { runPbeCli } from '../app'
 import { canTransition, isPbeState, PBE_STATE } from '../core/state-machine'
 import { checkpointPbeState, transitionPbeState } from '../core/state-transition'
 import { ExitCode } from '../core/types'
+import { validateEvidence } from '../validators/evidence-validator'
 import { validateState } from '../validators/state-validator'
 import {
   writeCoverageAudit,
@@ -670,6 +671,163 @@ describe('PBE CLI', () => {
     expect(result.exitCode).toBe(ExitCode.ValidationFailed)
     const payload = JSON.parse(result.stderr)
     expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain('EVIDENCE_FILE_MISSING')
+  })
+
+  it('accepts current evidence across execution, review, and accept evidence validation stages', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace, { productUpdatedAt: '2026-06-12T10:00:00.000Z' })
+    writeWorkTree(workspace, { workUpdatedAt: '2026-06-12T10:30:00.000Z' })
+    writeTestTree(workspace, { testUpdatedAt: '2026-06-12T11:00:00.000Z' })
+    writeEvidenceTree(workspace, {
+      createdAt: '2026-06-12T12:00:00.000Z',
+      provesProductNodeIds: ['PT-1'],
+      provesWorkNodeIds: ['WT-1'],
+      provesTestNodeIds: ['TT-1'],
+    })
+    writeUserAcceptance(workspace)
+
+    const executionIssues = await validateEvidence(workspace, { stage: 'execution', requireVisualAudit: false })
+    const reviewIssues = await validateEvidence(workspace, { stage: 'review', requireVisualAudit: false })
+    const acceptIssues = await validateEvidence(workspace, { stage: 'accept', requireVisualAudit: false })
+
+    expect(executionIssues.filter((entry) => entry.severity === 'error')).toEqual([])
+    expect(reviewIssues.filter((entry) => entry.severity === 'error')).toEqual([])
+    expect(acceptIssues.filter((entry) => entry.severity === 'error')).toEqual([])
+  })
+
+  it('warns about missing evidence timestamps during execution but fails review and accept', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeEvidenceTree(workspace, { omitTimestamp: true })
+    writeUserAcceptance(workspace)
+
+    const executionIssues = await validateEvidence(workspace, { stage: 'execution', requireVisualAudit: false })
+    const reviewIssues = await validateEvidence(workspace, { stage: 'review', requireVisualAudit: false })
+    const acceptIssues = await validateEvidence(workspace, { stage: 'accept', requireVisualAudit: false })
+
+    expect(executionIssues).toEqual(
+      expect.arrayContaining([expect.objectContaining({ code: 'EVIDENCE_TIMESTAMP_MISSING', severity: 'warning' })]),
+    )
+    expect(reviewIssues).toEqual(
+      expect.arrayContaining([expect.objectContaining({ code: 'EVIDENCE_TIMESTAMP_MISSING', severity: 'error' })]),
+    )
+    expect(acceptIssues).toEqual(
+      expect.arrayContaining([expect.objectContaining({ code: 'EVIDENCE_TIMESTAMP_MISSING', severity: 'error' })]),
+    )
+  })
+
+  it('rejects stale evidence when it is older than linked Work or Test nodes', async () => {
+    const workWorkspace = createWorkspace()
+    writeExecutableProduct(workWorkspace)
+    writeWorkTree(workWorkspace, { workUpdatedAt: '2026-06-12T10:00:00.000Z' })
+    writeTestTree(workWorkspace)
+    writeEvidenceTree(workWorkspace, {
+      createdAt: '2026-06-12T09:00:00.000Z',
+      provesWorkNodeIds: ['WT-1'],
+    })
+
+    const testWorkspace = createWorkspace()
+    writeExecutableProduct(testWorkspace)
+    writeWorkTree(testWorkspace)
+    writeTestTree(testWorkspace, { testUpdatedAt: '2026-06-12T10:00:00.000Z' })
+    writeEvidenceTree(testWorkspace, { createdAt: '2026-06-12T09:00:00.000Z' })
+
+    const workIssues = await validateEvidence(workWorkspace, { stage: 'review', requireVisualAudit: false })
+    const testIssues = await validateEvidence(testWorkspace, { stage: 'review', requireVisualAudit: false })
+
+    expect(workIssues.map((entry) => entry.code)).toContain('EVIDENCE_STALE')
+    expect(testIssues.map((entry) => entry.code)).toContain('EVIDENCE_STALE')
+  })
+
+  it('does not mutate state when review submit finds stale evidence', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'ACEP_RUN_DONE')
+    writeWorkTree(workspace, { workUpdatedAt: '2026-06-12T10:00:00.000Z' })
+    writeTestTree(workspace)
+    writeEvidenceTree(workspace, {
+      createdAt: '2026-06-12T09:00:00.000Z',
+      provesWorkNodeIds: ['WT-1'],
+    })
+
+    const before = readStateText(workspace)
+    const result = await runPbeCli(['review', 'submit', '--json'], { cwd: workspace, pluginRoot })
+    const after = readStateText(workspace)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain('EVIDENCE_STALE')
+    expect(after).toBe(before)
+  })
+
+  it('rejects superseded evidence as current proof unless fresh replacement evidence is linked', async () => {
+    const supersededWorkspace = createWorkspace()
+    writeExecutableProduct(supersededWorkspace)
+    writeWorkTree(supersededWorkspace)
+    writeTestTree(supersededWorkspace)
+    writeEvidenceTree(supersededWorkspace, { status: 'superseded' })
+
+    const supersededByWorkspace = createWorkspace()
+    writeExecutableProduct(supersededByWorkspace)
+    writeWorkTree(supersededByWorkspace)
+    writeTestTree(supersededByWorkspace)
+    writeEvidenceTree(supersededByWorkspace, { supersededByEvidenceId: 'EV-2' })
+
+    const replacedWorkspace = createWorkspace()
+    writeExecutableProduct(replacedWorkspace)
+    writeWorkTree(replacedWorkspace)
+    writeTestTree(replacedWorkspace)
+    writeEvidenceTree(replacedWorkspace, {
+      supersedesEvidenceIds: ['EV-OLD'],
+      extraEvidence: [
+        {
+          id: 'EV-OLD',
+          type: 'test_output',
+          status: 'superseded',
+          createdAt: '2026-06-12T09:00:00.000Z',
+          supersededByEvidenceId: 'EV-1',
+          provesNodeIds: ['TT-1'],
+          evidenceForTestNodeIds: ['TT-1'],
+        },
+      ],
+    })
+
+    const supersededIssues = await validateEvidence(supersededWorkspace, {
+      stage: 'review',
+      requireVisualAudit: false,
+    })
+    const supersededByIssues = await validateEvidence(supersededByWorkspace, {
+      stage: 'review',
+      requireVisualAudit: false,
+    })
+    const replacedIssues = await validateEvidence(replacedWorkspace, { stage: 'review', requireVisualAudit: false })
+
+    expect(supersededIssues.map((entry) => entry.code)).toContain('EVIDENCE_SUPERSEDED')
+    expect(supersededByIssues.map((entry) => entry.code)).toContain('EVIDENCE_SUPERSEDED')
+    expect(replacedIssues.filter((entry) => entry.severity === 'error')).toEqual([])
+  })
+
+  it('does not mutate state when accept finds stale status evidence', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'WAITING_REVIEW_RESULT')
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeEvidenceTree(workspace, { status: 'stale' })
+    writeUserAcceptance(workspace)
+
+    const before = readStateText(workspace)
+    const result = await runPbeCli(['accept', '--json'], { cwd: workspace, pluginRoot })
+    const after = readStateText(workspace)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain('EVIDENCE_STALE')
+    expect(after).toBe(before)
   })
 
   it('transitions WPD through CLI and records state history', async () => {

@@ -112,7 +112,7 @@ export function writeMinimalPbe(
 
 export function writeExecutableProduct(
   workspace: string,
-  options: { scopeClass?: string; status?: string; visualImpact?: boolean } = {},
+  options: { scopeClass?: string; status?: string; visualImpact?: boolean; productUpdatedAt?: string } = {},
 ): void {
   writeJson(join(workspace, '.pbe', 'tree', 'product-tree.json'), {
     version: '0.2.0-tree-control',
@@ -137,6 +137,7 @@ export function writeExecutableProduct(
         type: 'capability',
         title: 'Show connected status',
         status: options.status || 'confirmed',
+        updatedAt: options.productUpdatedAt,
         parent: 'PT-ROOT',
         children: [],
         source: { actor: 'user', type: 'user_interview' },

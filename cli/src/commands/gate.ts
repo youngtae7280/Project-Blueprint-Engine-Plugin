@@ -64,12 +64,12 @@ export async function gateCommand(stage: string | undefined, context: CommandCon
     issues.push(...implementationScopeIssues(await loadState(context.options.root)))
   } else if (canonicalStage === 'review-result') {
     issues.push(...(await validateTraceability(context.options.root, { stage: 'review' })))
-    issues.push(...(await validateEvidence(context.options.root)))
+    issues.push(...(await validateEvidence(context.options.root, { stage: 'review' })))
     issues.push(...(await validateVisualDesign(context.options.root, { requireEvidence: true })))
   } else if (canonicalStage === 'accept') {
     issues.push(...(await validateAcceptedActors(context.options.root)))
     issues.push(...(await validateTraceability(context.options.root, { stage: 'accept' })))
-    issues.push(...(await validateEvidence(context.options.root)))
+    issues.push(...(await validateEvidence(context.options.root, { stage: 'accept' })))
     if (!(await hasUserAcceptedBranch(context.options.root))) {
       issues.push(
         issue({

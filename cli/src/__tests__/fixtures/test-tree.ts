@@ -8,6 +8,7 @@ export function writeTestTree(
     verifiesAcceptanceCriteria?: boolean
     testType?: string
     evidenceRequired?: string[]
+    testUpdatedAt?: string
   } = {},
 ): void {
   writeJson(join(workspace, '.pbe', 'tree', 'test-tree.json'), {
@@ -28,6 +29,7 @@ export function writeTestTree(
         type: options.testType || 'unit_test',
         title: 'Verify connected status',
         status: 'planned',
+        updatedAt: options.testUpdatedAt,
         verifiesProductNodeIds: ['PT-1'],
         verifiesWorkNodeIds: options.verifiesWork === false ? [] : ['WT-1'],
         verifiesAcceptanceCriteriaIds: options.verifiesAcceptanceCriteria === false ? [] : ['AC-PT-1-1'],

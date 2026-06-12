@@ -8,6 +8,7 @@ export function writeWorkTree(
     derivedFromProductNodeIds?: string[]
     workScopeClass?: string
     workStatus?: string
+    workUpdatedAt?: string
   } = {},
 ): void {
   const secondNode = options.dependencyCycle
@@ -45,6 +46,7 @@ export function writeWorkTree(
         type: 'feature_task',
         title: 'Implement connected status',
         status: options.workStatus || 'ready',
+        updatedAt: options.workUpdatedAt,
         derivedFromProductNodeIds: options.derivedFromProductNodeIds || ['PT-1'],
         derivedFromProjectNodeIds: [],
         scopeClass: options.workScopeClass || 'selected',

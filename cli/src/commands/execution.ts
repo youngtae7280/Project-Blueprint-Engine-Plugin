@@ -27,7 +27,7 @@ export async function executionCompleteCommand(context: CommandContext): Promise
   const issues: ValidationIssue[] = []
   issues.push(...(await validateAcep(context.options.root)))
   issues.push(...(await validateTraceability(context.options.root, { stage: 'execution' })))
-  issues.push(...(await validateEvidence(context.options.root, { requireVisualAudit: false })))
+  issues.push(...(await validateEvidence(context.options.root, { stage: 'execution', requireVisualAudit: false })))
   if (hasErrors(issues)) {
     return transitionFailed('execution complete', 'Execution completion failed. State was not changed.', issues)
   }

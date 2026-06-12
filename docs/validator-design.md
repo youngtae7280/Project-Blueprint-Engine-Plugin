@@ -60,6 +60,35 @@ The stage mode decides how much closure is required:
 - `review`: Product -> Work -> Test -> Evidence closure must hold before submitting for review. Acceptance is not required at review submit.
 - `accept`: Product -> Work -> Test -> Evidence -> user Acceptance closure must hold. Accepted/done closure requires user acceptance metadata.
 
+## Evidence Freshness
+
+Traceability validation checks whether Product, Work, Test, Evidence, and Acceptance nodes are connected. Evidence validation checks whether linked Evidence is usable as current proof.
+
+Evidence timestamp fields are read in this order:
+
+- `updatedAt`
+- `createdAt`
+- `recordedAt`
+- `timestamp`
+- `verifiedAt`
+
+Linked Product, Work, and Test node timestamp fields are read in this order:
+
+- `updatedAt`
+- `modifiedAt`
+- `lastChangedAt`
+- `createdAt`
+
+If Evidence is older than a linked Product, Work, or Test node, it is stale and cannot close review or acceptance. Evidence with `status` of `stale`, `stale_evidence`, `superseded`, `invalidated`, `obsolete`, or `rejected` is not current proof. Evidence with `supersededByEvidenceId` is also treated as superseded.
+
+Stage policy:
+
+- `execution`: requires linked Evidence and file existence; missing Evidence timestamp is a warning for compatibility.
+- `review`: requires current Evidence. Missing timestamp, stale Evidence, superseded Evidence, and invalidated Evidence are errors.
+- `accept`: applies review strictness and also checks Evidence referenced by accepted Acceptance branches.
+
+To replace old Evidence, add a new current Evidence node, link it to the required Test and Acceptance closure, and mark the old node with `supersededByEvidenceId` or `status: "superseded"`.
+
 ## RPD Transition Guard
 
 `scripts/validators/rpd-transition.js` prevents downstream execution, review, or deliverable-producing work while RPD is incomplete.

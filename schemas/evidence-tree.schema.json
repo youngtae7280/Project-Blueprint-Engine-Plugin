@@ -25,12 +25,41 @@
             "not_runnable_explanation"
           ]
         },
-        "status": { "enum": ["required", "attached", "stale_evidence", "replaced", "not_available"] },
+        "status": {
+          "enum": [
+            "required",
+            "attached",
+            "current",
+            "stale",
+            "stale_evidence",
+            "superseded",
+            "invalidated",
+            "obsolete",
+            "rejected",
+            "replaced",
+            "not_available"
+          ]
+        },
         "path": { "type": "string" },
         "provesNodeIds": { "type": "array", "items": { "type": "string" } },
+        "provesProductNodeIds": { "type": "array", "items": { "type": "string" } },
+        "provesWorkNodeIds": { "type": "array", "items": { "type": "string" } },
+        "provesTestNodeIds": { "type": "array", "items": { "type": "string" } },
+        "linkedProductNodeIds": { "type": "array", "items": { "type": "string" } },
+        "linkedWorkNodeIds": { "type": "array", "items": { "type": "string" } },
+        "linkedTestNodeIds": { "type": "array", "items": { "type": "string" } },
+        "productNodeIds": { "type": "array", "items": { "type": "string" } },
+        "workNodeIds": { "type": "array", "items": { "type": "string" } },
+        "testNodeIds": { "type": "array", "items": { "type": "string" } },
         "evidenceForTestNodeIds": { "type": "array", "items": { "type": "string" } },
         "evidenceForAcceptanceCriteriaIds": { "type": "array", "items": { "type": "string" } },
-        "createdAt": { "type": "string" }
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "recordedAt": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "verifiedAt": { "type": "string" },
+        "supersedesEvidenceIds": { "type": "array", "items": { "type": "string" } },
+        "supersededByEvidenceId": { "type": ["string", "null"] }
       }
     }
   }

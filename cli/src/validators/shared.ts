@@ -232,9 +232,11 @@ export function validateVisualEvidence(
           stringValue(entry.id) === stringValue(screenshot.evidenceNodeId)
         )
       })
-      const staleEvidence = linkedEvidence.some((entry) => stringValue(entry.status) === 'stale_evidence')
+      const staleEvidence = linkedEvidence.some((entry) =>
+        ['stale', 'stale_evidence'].includes(stringValue(entry.status)),
+      )
       const currentEvidence = linkedEvidence.some((entry) =>
-        ['attached', 'replaced'].includes(stringValue(entry.status)),
+        ['attached', 'replaced', 'current'].includes(stringValue(entry.status)),
       )
       if (staleEvidence) {
         issues.push(
