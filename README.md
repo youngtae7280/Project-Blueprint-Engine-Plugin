@@ -1,6 +1,6 @@
-# Project Blueprint Engine
-
 [![PBE CI](https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/workflows/ci.yml)
+
+# Project Blueprint Engine
 
 Project Blueprint Engine is a Codex Plugin and an evolving tree-based development control system.
 
