@@ -39,6 +39,10 @@ describe('PBE CLI', () => {
     expect(isPbeState('NOT_A_PBE_STATE')).toBe(false)
     expect(canTransition(PBE_STATE.RPD_DONE, PBE_STATE.WPD_DONE)).toBe(true)
     expect(canTransition(PBE_STATE.SCOPE_SELECTED, PBE_STATE.WPD_DONE)).toBe(false)
+    expect(canTransition(PBE_STATE.ACEP_READY, PBE_STATE.ACEP_RUN_DONE)).toBe(false)
+    expect(canTransition(PBE_STATE.WAITING_REVIEW_RESULT, PBE_STATE.DONE)).toBe(false)
+    expect(canTransition(PBE_STATE.WAITING_REVIEW_RESULT, PBE_STATE.ACCEPTED)).toBe(true)
+    expect(canTransition(PBE_STATE.ACCEPTED, PBE_STATE.DONE)).toBe(true)
   })
 
   it('prints help', async () => {
@@ -48,6 +52,7 @@ describe('PBE CLI', () => {
     expect(result.stdout).toContain('Project Blueprint Engine CLI')
     expect(result.stdout).toContain('rpd close')
     expect(result.stdout).toContain('wpd close')
+    expect(result.stdout).toContain('execution start')
     expect(result.stdout).toContain('review submit')
   })
 
@@ -568,6 +573,7 @@ describe('PBE CLI', () => {
     const coverage = await runPbeCli(['coverage', 'audit', 'complete', '--json'], { cwd: workspace, pluginRoot })
     const ux = await runPbeCli(['ux', 'audit', 'complete', '--json'], { cwd: workspace, pluginRoot })
     const acep = await runPbeCli(['acep', 'ready', '--json'], { cwd: workspace, pluginRoot })
+    const executionStart = await runPbeCli(['execution', 'start', '--json'], { cwd: workspace, pluginRoot })
     const execution = await runPbeCli(['execution', 'complete', '--json'], { cwd: workspace, pluginRoot })
     const review = await runPbeCli(['review', 'submit', '--json'], { cwd: workspace, pluginRoot })
 
@@ -577,6 +583,7 @@ describe('PBE CLI', () => {
     expect(coverage.exitCode).toBe(ExitCode.Success)
     expect(ux.exitCode).toBe(ExitCode.Success)
     expect(acep.exitCode).toBe(ExitCode.Success)
+    expect(executionStart.exitCode).toBe(ExitCode.Success)
     expect(execution.exitCode).toBe(ExitCode.Success)
     expect(review.exitCode).toBe(ExitCode.Success)
     const state = readState(workspace)
@@ -586,6 +593,7 @@ describe('PBE CLI', () => {
       'WAITING_IMPLEMENTATION_SCOPE',
       'SCOPE_SELECTED',
       'ACEP_READY',
+      'EXECUTION_IN_PROGRESS',
       'ACEP_RUN_DONE',
       'WAITING_REVIEW_RESULT',
     ])
@@ -628,6 +636,125 @@ describe('PBE CLI', () => {
       to: 'ACEP_READY',
       command: 'acep ready',
     })
+  })
+
+  it('transitions ACEP execution start through the CLI', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'ACEP_READY')
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeExecutionManifest(workspace)
+    writeFinalCoverage(workspace)
+
+    const result = await runPbeCli(['execution', 'start', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    const state = readState(workspace)
+    expect(state.autoflow.state).toBe('EXECUTION_IN_PROGRESS')
+    expect(state.autoflow.completedSteps).toContain('execution_start')
+    expect(state.autoflow.currentGate).toBeNull()
+    expect(state.autoflow.nextStep).toBe('run_acep')
+    expectLastTransition(state, {
+      from: 'ACEP_READY',
+      to: 'EXECUTION_IN_PROGRESS',
+      command: 'execution start',
+    })
+  })
+
+  it('does not mutate state when execution start runs from the wrong state', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'SCOPE_SELECTED')
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeExecutionManifest(workspace)
+    writeFinalCoverage(workspace)
+
+    const before = readStateText(workspace)
+    const result = await runPbeCli(['execution', 'start', '--json'], { cwd: workspace, pluginRoot })
+    const after = readStateText(workspace)
+
+    expect(result.exitCode).toBe(ExitCode.TransitionBlocked)
+    expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'INVALID_TRANSITION',
+    )
+    expect(after).toBe(before)
+  })
+
+  it('transitions execution complete only from EXECUTION_IN_PROGRESS', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'EXECUTION_IN_PROGRESS')
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeExecutionManifest(workspace)
+    writeFinalCoverage(workspace)
+    writeEvidenceTree(workspace)
+
+    const result = await runPbeCli(['execution', 'complete', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    const state = readState(workspace)
+    expect(state.autoflow.state).toBe('ACEP_RUN_DONE')
+    expect(state.deliveryStatus).toBe('verified')
+    expect(state.autoflow.completedSteps).toContain('run_acep')
+    expectLastTransition(state, {
+      from: 'EXECUTION_IN_PROGRESS',
+      to: 'ACEP_RUN_DONE',
+      command: 'execution complete',
+    })
+  })
+
+  it('rejects the direct ACEP_READY to ACEP_RUN_DONE execution shortcut', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'ACEP_READY')
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeExecutionManifest(workspace)
+    writeFinalCoverage(workspace)
+    writeEvidenceTree(workspace)
+
+    const before = readStateText(workspace)
+    const result = await runPbeCli(['execution', 'complete', '--json'], { cwd: workspace, pluginRoot })
+    const after = readStateText(workspace)
+
+    expect(result.exitCode).toBe(ExitCode.TransitionBlocked)
+    expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'INVALID_TRANSITION',
+    )
+    expect(after).toBe(before)
+  })
+
+  it('does not mutate state when execution complete lacks required evidence', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'EXECUTION_IN_PROGRESS')
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeExecutionManifest(workspace)
+    writeFinalCoverage(workspace)
+
+    const before = readStateText(workspace)
+    const result = await runPbeCli(['execution', 'complete', '--json'], { cwd: workspace, pluginRoot })
+    const after = readStateText(workspace)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'EVIDENCE_TREE_MISSING',
+    )
+    expect(after).toBe(before)
   })
 
   it('does not mutate state when ACEP ready runs from the wrong state', async () => {
@@ -864,6 +991,91 @@ describe('PBE CLI', () => {
     expect(state.autoflow.state).toBe('DONE')
     expect(state.deliveryStatus).toBe('accepted')
     expect(state.acceptance.setBy).toBe('user')
+    expect(state.autoflow.stateHistory.map((entry: { to: string }) => entry.to)).toEqual(['ACCEPTED', 'DONE'])
+    expectLastTransition(state, {
+      from: 'ACCEPTED',
+      to: 'DONE',
+      command: 'accept',
+      actor: 'user',
+    })
+  })
+
+  it('does not accept with assistant-only acceptance metadata', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'WAITING_REVIEW_RESULT')
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeEvidenceTree(workspace)
+    writeJson(join(workspace, '.pbe', 'control', 'acceptance-tree.json'), {
+      version: '0.2.0-tree-control',
+      branches: [
+        {
+          productNodeId: 'PT-1',
+          status: 'accepted_done',
+          decisionSource: {
+            actor: 'assistant',
+            source: 'inferred_by_codex',
+          },
+          evidenceNodeIds: ['EV-1'],
+        },
+      ],
+    })
+
+    const before = readStateText(workspace)
+    const result = await runPbeCli(['accept', '--json'], { cwd: workspace, pluginRoot })
+    const after = readStateText(workspace)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toEqual(
+      expect.arrayContaining(['ASSISTANT_ACCEPTED_STATUS', 'USER_APPROVAL_REQUIRED']),
+    )
+    expect(after).toBe(before)
+  })
+
+  it('does not accept before the review result gate', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'ACEP_RUN_DONE')
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeEvidenceTree(workspace)
+    writeUserAcceptance(workspace)
+
+    const before = readStateText(workspace)
+    const result = await runPbeCli(['accept', '--json'], { cwd: workspace, pluginRoot })
+    const after = readStateText(workspace)
+
+    expect(result.exitCode).toBe(ExitCode.TransitionBlocked)
+    expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ACCEPT_STATE_BLOCKED',
+    )
+    expect(after).toBe(before)
+  })
+
+  it('does not submit review before ACEP run is done', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'EXECUTION_IN_PROGRESS')
+    writeWorkTree(workspace)
+    writeTestTree(workspace)
+    writeEvidenceTree(workspace)
+
+    const before = readStateText(workspace)
+    const result = await runPbeCli(['review', 'submit', '--json'], { cwd: workspace, pluginRoot })
+    const after = readStateText(workspace)
+
+    expect(result.exitCode).toBe(ExitCode.TransitionBlocked)
+    expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'INVALID_TRANSITION',
+    )
+    expect(after).toBe(before)
   })
 
   it('review submit records visual audit transition for visual UI work', async () => {
@@ -883,6 +1095,7 @@ describe('PBE CLI', () => {
     expect(result.exitCode).toBe(ExitCode.Success)
     const state = readState(workspace)
     expect(state.autoflow.state).toBe('WAITING_REVIEW_RESULT')
+    expect(state.deliveryStatus).toBe('submitted_for_review')
     expect(state.autoflow.stateHistory.map((entry: { to: string }) => entry.to)).toEqual([
       'VISUAL_AUDIT_DONE',
       'WAITING_REVIEW_RESULT',

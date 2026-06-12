@@ -75,9 +75,10 @@ Commands:
   ux audit complete    Record UX Audit checkpoint
   acep check           Check ACEP execution pack
   acep ready           Validate ACEP manifest and transition to ACEP_READY
+  execution start      Transition from ACEP_READY to EXECUTION_IN_PROGRESS
   execution complete   Validate execution evidence and transition to ACEP_RUN_DONE
   review submit        Submit verified work to Review Result gate
-  accept               Close as DONE only with user acceptance metadata
+  accept               Close as ACCEPTED then DONE only with user acceptance metadata
   evidence check       Check evidence coverage
   visual check         Check Visual Design Contract and UI evidence
 

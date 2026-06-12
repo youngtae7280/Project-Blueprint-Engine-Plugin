@@ -175,6 +175,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   if (command === 'acep' && subcommand === 'ready') {
     return acepReadyCommand(context)
   }
+  if (command === 'execution' && subcommand === 'start') {
+    return executionStartCommand(context)
+  }
   if (command === 'execution' && subcommand === 'complete') {
     return executionCompleteCommand(context)
   }
@@ -625,7 +628,7 @@ async function acepReadyCommand(context: CommandContext): Promise<CommandResult>
     currentGate: null,
     nextStep: 'run_acep',
     data: {
-      next: 'Execute the ACEP, attach evidence, then run `pbe execution complete`.',
+      next: 'Start ACEP execution with `pbe execution start`, attach evidence, then run `pbe execution complete`.',
     },
   })
 }
@@ -755,6 +758,24 @@ async function uxAuditCompleteCommand(context: CommandContext): Promise<CommandR
   })
 }
 
+async function executionStartCommand(context: CommandContext): Promise<CommandResult> {
+  const issues: ValidationIssue[] = []
+  issues.push(...(await validateAcep(context.options.root)))
+  if (hasErrors(issues)) {
+    return transitionFailed('execution start', 'Execution start failed. State was not changed.', issues)
+  }
+  return transitionPbeState(context.options.root, 'execution start', [PBE_STATE.EXECUTION_IN_PROGRESS], {
+    completedSteps: ['execution_start'],
+    stage: 'acep_running',
+    mode: 'acep_execution',
+    currentGate: null,
+    nextStep: 'run_acep',
+    data: {
+      next: 'Execute the ACEP, attach evidence, then run `pbe execution complete`.',
+    },
+  })
+}
+
 async function executionCompleteCommand(context: CommandContext): Promise<CommandResult> {
   const issues: ValidationIssue[] = []
   issues.push(...(await validateAcep(context.options.root)))
@@ -805,6 +826,24 @@ async function reviewSubmitCommand(context: CommandContext): Promise<CommandResu
 
 async function acceptCommand(context: CommandContext): Promise<CommandResult> {
   const issues: ValidationIssue[] = []
+  const state = await loadState(context.options.root)
+  const currentState =
+    typeof state?.autoflow === 'object' && state.autoflow !== null
+      ? normalizePbeState((state.autoflow as Record<string, unknown>).state)
+      : null
+  if (state && currentState !== PBE_STATE.WAITING_REVIEW_RESULT) {
+    return transitionBlocked('accept', 'Accept blocked. State was not changed.', [
+      issue({
+        validator: 'StateTransition',
+        code: 'ACCEPT_STATE_BLOCKED',
+        severity: 'error',
+        file: defaultArtifacts.pbeState,
+        message: `pbe accept can run only from WAITING_REVIEW_RESULT. Current state is ${String(currentState || 'unknown')}.`,
+        suggestedFix:
+          'Submit verified work with `pbe review submit`, then record user approval and rerun `pbe accept`.',
+      }),
+    ])
+  }
   issues.push(...(await validateAcceptedActors(context.options.root)))
   issues.push(...(await validateEvidence(context.options.root)))
   issues.push(...(await validateVisualDesign(context.options.root, { requireEvidence: true })))
@@ -816,7 +855,7 @@ async function acceptCommand(context: CommandContext): Promise<CommandResult> {
         code: 'USER_APPROVAL_REQUIRED',
         severity: 'error',
         file: defaultArtifacts.acceptanceTree,
-        message: 'PBE cannot move to DONE until Acceptance Tree records decisionSource.actor = "user".',
+        message: 'PBE cannot move to ACCEPTED or DONE until Acceptance Tree records decisionSource.actor = "user".',
         suggestedFix: 'Record the explicit user approval in acceptance-tree.json, then rerun `pbe accept`.',
       }),
     )
@@ -824,7 +863,7 @@ async function acceptCommand(context: CommandContext): Promise<CommandResult> {
   if (hasErrors(issues)) {
     return transitionFailed('accept', 'Accept failed. State was not changed.', issues)
   }
-  return transitionPbeState(context.options.root, 'accept', [PBE_STATE.DONE], {
+  return transitionPbeState(context.options.root, 'accept', [PBE_STATE.ACCEPTED, PBE_STATE.DONE], {
     completedSteps: ['complete'],
     stage: 'complete',
     deliveryStatus: 'accepted',
@@ -884,6 +923,16 @@ function transitionFailed(command: string, message: string, issues: ValidationIs
     ok: false,
     command,
     exitCode: ExitCode.ValidationFailed,
+    message,
+    issues,
+  }
+}
+
+function transitionBlocked(command: string, message: string, issues: ValidationIssue[]): CommandResult {
+  return {
+    ok: false,
+    command,
+    exitCode: ExitCode.TransitionBlocked,
     message,
     issues,
   }

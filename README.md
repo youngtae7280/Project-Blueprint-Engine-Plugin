@@ -411,6 +411,7 @@ UI_UX_APPROVED
 -> UI_SURFACE_INVENTORY_DONE
 -> VD_DONE
 -> ACEP_READY
+-> EXECUTION_IN_PROGRESS
 -> ACEP_RUN_DONE
 -> Visual Implementation Audit
 -> VISUAL_AUDIT_DONE
@@ -538,11 +539,13 @@ stateDiagram-v2
     VD_DONE --> WAITING_IMPLEMENTATION_SCOPE: implementation scope gate
     WAITING_IMPLEMENTATION_SCOPE --> SCOPE_SELECTED: select scope
     SCOPE_SELECTED --> ACEP_READY: generate ACEP after audits pass
-    ACEP_READY --> ACEP_RUN_DONE: run ACEP
+    ACEP_READY --> EXECUTION_IN_PROGRESS: start ACEP execution
+    EXECUTION_IN_PROGRESS --> ACEP_RUN_DONE: complete ACEP execution
     ACEP_RUN_DONE --> VISUAL_AUDIT_DONE: visual UI work
     ACEP_RUN_DONE --> WAITING_REVIEW_RESULT: non-visual work
     VISUAL_AUDIT_DONE --> WAITING_REVIEW_RESULT: review gate
-    WAITING_REVIEW_RESULT --> DONE: explicit user approval
+    WAITING_REVIEW_RESULT --> ACCEPTED: explicit user approval
+    ACCEPTED --> DONE: accepted closure
     WAITING_REVIEW_RESULT --> WAITING_REVIEW_RESULT: revise and rerun
 ```
 
@@ -712,6 +715,7 @@ npx pbe plan execution complete
 npx pbe coverage audit complete
 npx pbe ux audit complete
 npx pbe acep ready
+npx pbe execution start
 npx pbe execution complete
 npx pbe review submit
 npx pbe accept
@@ -727,6 +731,18 @@ npx pbe status --json
 Transition commands validate their inputs before writing state. If validation or the allowed-transition check fails, the command exits non-zero and leaves `pbe-state.json` unchanged.
 
 The commands `pbe dependency audit complete`, `pbe plan execution complete`, `pbe coverage audit complete`, and `pbe ux audit complete` are checkpoint commands inside `SCOPE_SELECTED`. They do not create new top-level states. They record deterministic sub-step completion in `autoflow.completedSteps`, advance `autoflow.nextStep`, and block `pbe acep ready` until all four checkpoints are complete.
+
+Execution, review, and acceptance use this canonical CLI flow:
+
+```bash
+npx pbe acep ready
+npx pbe execution start
+npx pbe execution complete
+npx pbe review submit
+npx pbe accept
+```
+
+`pbe review submit` is not user approval; it only moves verified work to the Review Result gate. `pbe accept` requires explicit user acceptance metadata and records both `ACCEPTED` and `DONE` in state history.
 
 ## Parallel Safety
 
@@ -794,6 +810,9 @@ npx pbe dependency audit complete --root /path/to/project
 npx pbe plan execution complete --root /path/to/project
 npx pbe coverage audit complete --root /path/to/project
 npx pbe ux audit complete --root /path/to/project
+npx pbe acep ready --root /path/to/project
+npx pbe execution start --root /path/to/project
+npx pbe execution complete --root /path/to/project
 npx pbe review submit --root /path/to/project
 npx pbe accept --root /path/to/project
 ```

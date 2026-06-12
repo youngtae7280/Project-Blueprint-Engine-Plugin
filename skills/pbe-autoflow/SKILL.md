@@ -73,7 +73,7 @@ If risk grows while in `lite`, propose `full`. If the user explicitly keeps `lit
 
 ## State Model
 
-Track state in `.pbe/blueprint/pbe-state.json` under `autoflow`. Supported stage transitions and checkpoints should be written by the deterministic `pbe` CLI (`pbe rpd close`, `pbe ui approve`, `pbe wpd close`, `pbe vd close`, `pbe scope select`, `pbe dependency audit complete`, `pbe plan execution complete`, `pbe coverage audit complete`, `pbe ux audit complete`, `pbe acep ready`, `pbe execution complete`, `pbe review submit`, `pbe accept`) instead of hand-editing the state file.
+Track state in `.pbe/blueprint/pbe-state.json` under `autoflow`. Supported stage transitions and checkpoints should be written by the deterministic `pbe` CLI (`pbe rpd close`, `pbe ui approve`, `pbe wpd close`, `pbe vd close`, `pbe scope select`, `pbe dependency audit complete`, `pbe plan execution complete`, `pbe coverage audit complete`, `pbe ux audit complete`, `pbe acep ready`, `pbe execution start`, `pbe execution complete`, `pbe review submit`, `pbe accept`) instead of hand-editing the state file.
 
 ```text
 INIT
@@ -87,9 +87,11 @@ VD_DONE
 WAITING_IMPLEMENTATION_SCOPE
 SCOPE_SELECTED
 ACEP_READY
+EXECUTION_IN_PROGRESS
 ACEP_RUN_DONE
 VISUAL_AUDIT_DONE
 WAITING_REVIEW_RESULT
+ACCEPTED
 DONE
 ```
 

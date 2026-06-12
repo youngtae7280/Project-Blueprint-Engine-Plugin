@@ -70,6 +70,34 @@ These commands record `dependency_impact_audit`, `plan_execution`,
 `coverage_audit`, and `ux_audit` in `autoflow.completedSteps`. `pbe acep ready`
 must not pass until all four checkpoints are complete.
 
+ACEP execution, review submission, and acceptance use this CLI sequence:
+
+```bash
+pbe acep ready
+pbe execution start
+pbe execution complete
+pbe review submit
+pbe accept
+```
+
+`pbe execution start` is the canonical transition from `ACEP_READY` to
+`EXECUTION_IN_PROGRESS`. The direct `ACEP_READY -> ACEP_RUN_DONE` shortcut is
+not canonical and is rejected by the CLI.
+
+`pbe execution complete` runs only from `EXECUTION_IN_PROGRESS`. It validates
+ACEP artifacts and required evidence before writing `ACEP_RUN_DONE`.
+
+`pbe review submit` is not user acceptance. It submits verified work to the
+Review Result gate by moving to `WAITING_REVIEW_RESULT`. If selected work has
+visual impact, required visual evidence and the Visual Implementation Audit must
+pass first; the command then records the `VISUAL_AUDIT_DONE` checkpoint before
+entering `WAITING_REVIEW_RESULT`.
+
+`pbe accept` is the only closure command for user acceptance. It requires
+explicit user acceptance metadata, then records both
+`WAITING_REVIEW_RESULT -> ACCEPTED` and `ACCEPTED -> DONE` in state history.
+`DONE` must not be written by review submission or by Codex inference.
+
 ## Human Gates
 
 `WAITING_UI_UX_CONFIRM` accepts:
@@ -89,7 +117,7 @@ must not pass until all four checkpoints are complete.
 
 `WAITING_REVIEW_RESULT` accepts:
 
-- approve / continue -> `DONE`, only when the user explicitly approves the reviewed branch or slice
+- approve / continue -> `ACCEPTED -> DONE`, only when explicit user acceptance metadata exists
 - start next slice -> `WAITING_IMPLEMENTATION_SCOPE`
 - revise -> bounded revision flow
 - ask -> remain at gate
