@@ -34,4 +34,3 @@ The cachebuster step updates the personal plugin copy so newly opened Codex chat
 - Preserve v1 `.pbe/blueprint/*` views as compatibility artifacts.
 - Preserve `RPD`, `WPD`, `VD`, `ACEP`, and `Revision` terms as compatibility names.
 - Do not remove or rename public paths without aliases and migration notes.
-

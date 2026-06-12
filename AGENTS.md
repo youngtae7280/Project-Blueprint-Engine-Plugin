@@ -274,9 +274,9 @@ When running RPD:
 4. Extract facts after each answer.
 5. Ask before decomposing a node.
 6. Ask before confirming a node.
-6a. If the request is clear, propose the Root summary and child structure, then ask the user to confirm, revise, or decompose further. Do not ask a vague "should I interview more?" question.
-6b. Run Ambiguity Gate before confirmation. Abstract quality expressions are not executable until target, condition, expected behavior, completion criteria, exception handling, and verification method are clear enough to write acceptance criteria.
-6c. Confirmed executable Product nodes must include `acceptanceCriteria` or `acceptanceNotRequiredReason`.
+   6a. If the request is clear, propose the Root summary and child structure, then ask the user to confirm, revise, or decompose further. Do not ask a vague "should I interview more?" question.
+   6b. Run Ambiguity Gate before confirmation. Abstract quality expressions are not executable until target, condition, expected behavior, completion criteria, exception handling, and verification method are clear enough to write acceptance criteria.
+   6c. Confirmed executable Product nodes must include `acceptanceCriteria` or `acceptanceNotRequiredReason`.
 7. Update `.pbe/tree/product-tree.json` after every confirmed decision when v2 files exist.
 8. Update `.pbe/blueprint/requirement-tree.json` as the compatibility view after every confirmed decision.
 9. Update `.pbe/control/decision-queue.json` when a decision is opened or resolved.

@@ -303,7 +303,12 @@ function validateTreeLinks(data) {
     if (!isRoot && ['selected', 'foundation'].includes(node.scopeClass) && !hasAny(node.derivedFromProductNodeIds)) {
       errors.push(`work ${node.id} must derive selected/foundation work from Product Tree nodes`)
     }
-    if (!isRoot && data.project && ['selected', 'foundation'].includes(node.scopeClass) && !hasAny(node.derivedFromProjectNodeIds)) {
+    if (
+      !isRoot &&
+      data.project &&
+      ['selected', 'foundation'].includes(node.scopeClass) &&
+      !hasAny(node.derivedFromProjectNodeIds)
+    ) {
       errors.push(`work ${node.id} must derive selected/foundation work from Project Tree nodes`)
     }
     for (const productId of node.derivedFromProductNodeIds || []) {
@@ -311,23 +316,48 @@ function validateTreeLinks(data) {
         errors.push(`work ${node.id} derives from ambiguous or partial Product node ${productId}`)
       }
     }
-    const sourceCriteriaIds = (node.derivedFromProductNodeIds || [])
-      .flatMap((productId) => acceptanceCriteriaByProduct.get(productId) || [])
-    if (!isRoot && ['selected', 'foundation'].includes(node.scopeClass) && hasAny(sourceCriteriaIds) && !hasAny(node.satisfiesAcceptanceCriteriaIds)) {
-      errors.push(`work ${node.id} derives from Product nodes with acceptanceCriteria but lacks satisfiesAcceptanceCriteriaIds`)
+    const sourceCriteriaIds = (node.derivedFromProductNodeIds || []).flatMap(
+      (productId) => acceptanceCriteriaByProduct.get(productId) || [],
+    )
+    if (
+      !isRoot &&
+      ['selected', 'foundation'].includes(node.scopeClass) &&
+      hasAny(sourceCriteriaIds) &&
+      !hasAny(node.satisfiesAcceptanceCriteriaIds)
+    ) {
+      errors.push(
+        `work ${node.id} derives from Product nodes with acceptanceCriteria but lacks satisfiesAcceptanceCriteriaIds`,
+      )
     }
-    if (!isRoot && ['selected', 'foundation'].includes(node.scopeClass) && !hasAny(node.satisfiesAcceptanceCriteriaIds) && !node.acceptanceCriteriaNotLinkedReason) {
-      errors.push(`work ${node.id} must link satisfiesAcceptanceCriteriaIds or record acceptanceCriteriaNotLinkedReason`)
+    if (
+      !isRoot &&
+      ['selected', 'foundation'].includes(node.scopeClass) &&
+      !hasAny(node.satisfiesAcceptanceCriteriaIds) &&
+      !node.acceptanceCriteriaNotLinkedReason
+    ) {
+      errors.push(
+        `work ${node.id} must link satisfiesAcceptanceCriteriaIds or record acceptanceCriteriaNotLinkedReason`,
+      )
     }
     validateKnownIds(node.derivedFromProductNodeIds, productIds, `work ${node.id}`, 'product source')
     validateKnownIds(node.derivedFromProjectNodeIds, projectIds, `work ${node.id}`, 'project source')
-    validateKnownIds(node.satisfiesAcceptanceCriteriaIds, acceptanceCriteriaIds, `work ${node.id}`, 'acceptance criteria')
+    validateKnownIds(
+      node.satisfiesAcceptanceCriteriaIds,
+      acceptanceCriteriaIds,
+      `work ${node.id}`,
+      'acceptance criteria',
+    )
     validateKnownIds(node.dependencies, workIds, `work ${node.id}`, 'work dependency')
   }
 
   for (const node of data.test?.nodes || []) {
     const isRoot = node.id === data.test.rootNodeId
-    if (!isRoot && !hasAny(node.verifiesProductNodeIds) && !hasAny(node.verifiesWorkNodeIds) && !hasAny(node.verifiesAcceptanceCriteriaIds)) {
+    if (
+      !isRoot &&
+      !hasAny(node.verifiesProductNodeIds) &&
+      !hasAny(node.verifiesWorkNodeIds) &&
+      !hasAny(node.verifiesAcceptanceCriteriaIds)
+    ) {
       errors.push(`test ${node.id} must verify Product, Work, or Acceptance Criteria nodes`)
     }
     if (!isRoot && !hasAny(node.evidenceRequired)) {
@@ -336,7 +366,12 @@ function validateTreeLinks(data) {
     validateKnownIds(node.verifiesProductNodeIds, productIds, `test ${node.id}`, 'product verification target')
     validateKnownIds(node.verifiesProjectNodeIds, projectIds, `test ${node.id}`, 'project verification target')
     validateKnownIds(node.verifiesWorkNodeIds, workIds, `test ${node.id}`, 'work verification target')
-    validateKnownIds(node.verifiesAcceptanceCriteriaIds, acceptanceCriteriaIds, `test ${node.id}`, 'acceptance criteria')
+    validateKnownIds(
+      node.verifiesAcceptanceCriteriaIds,
+      acceptanceCriteriaIds,
+      `test ${node.id}`,
+      'acceptance criteria',
+    )
   }
 
   if (data.test) {
@@ -349,9 +384,12 @@ function validateTreeLinks(data) {
       if (isRoot || !['selected', 'foundation'].includes(node.scopeClass)) {
         continue
       }
-      const coveredByTest = testNodes.some((test) =>
-        test.verifiesWorkNodeIds?.includes(node.id) ||
-        (node.satisfiesAcceptanceCriteriaIds || []).some((criteriaId) => test.verifiesAcceptanceCriteriaIds?.includes(criteriaId)),
+      const coveredByTest = testNodes.some(
+        (test) =>
+          test.verifiesWorkNodeIds?.includes(node.id) ||
+          (node.satisfiesAcceptanceCriteriaIds || []).some((criteriaId) =>
+            test.verifiesAcceptanceCriteriaIds?.includes(criteriaId),
+          ),
       )
       if (!coveredByTest) {
         errors.push(`work ${node.id} lacks Test Tree coverage`)
@@ -407,12 +445,7 @@ function validateCycleTree(cycleTree, refs) {
   if (cycleTree.activeCycleId && !cycleIds.has(cycleTree.activeCycleId)) {
     errors.push(`cycle tree activeCycleId is missing from cycles: ${cycleTree.activeCycleId}`)
   }
-  const knownCycleScope = new Set([
-    ...refs.productIds,
-    ...refs.projectIds,
-    ...refs.workIds,
-    ...refs.testIds,
-  ])
+  const knownCycleScope = new Set([...refs.productIds, ...refs.projectIds, ...refs.workIds, ...refs.testIds])
   for (const cycle of cycleTree.cycles || []) {
     validateKnownIds(cycle.includedProductNodeIds, refs.productIds, `cycle ${cycle.id}`, 'included product node')
     validateKnownIds(cycle.includedProjectNodeIds, refs.projectIds, `cycle ${cycle.id}`, 'included project node')
@@ -467,10 +500,13 @@ function validateCycleClosure(cycleTree, refs) {
       if (incompleteTestStatuses.has(test.status)) {
         errors.push(`cycle ${cycle.id} is ${cycle.status} but included test ${testId} is ${test.status}`)
       }
-      const attachedEvidence = evidenceForNode(refs.evidenceMap, testId)
-        .filter((evidence) => ['attached', 'replaced'].includes(evidence.status))
+      const attachedEvidence = evidenceForNode(refs.evidenceMap, testId).filter((evidence) =>
+        ['attached', 'replaced'].includes(evidence.status),
+      )
       if (attachedEvidence.length === 0) {
-        errors.push(`cycle ${cycle.id} is ${cycle.status} but included test ${testId} lacks attached Evidence Tree evidence`)
+        errors.push(
+          `cycle ${cycle.id} is ${cycle.status} but included test ${testId} lacks attached Evidence Tree evidence`,
+        )
       }
     }
   }
@@ -495,7 +531,14 @@ function validateProductReadiness(productTree) {
     const executableStatus = ['confirmed', 'accepted'].includes(node.status)
     const executableType = !['non_goal', 'risk', 'assumption', 'decision'].includes(node.type)
     const executableScope = !['deferred', 'blocked', 'out_of_scope'].includes(node.scopeClass)
-    if (isLeaf && executableStatus && executableType && executableScope && !hasAny(node.acceptanceCriteria) && !node.acceptanceNotRequiredReason) {
+    if (
+      isLeaf &&
+      executableStatus &&
+      executableType &&
+      executableScope &&
+      !hasAny(node.acceptanceCriteria) &&
+      !node.acceptanceNotRequiredReason
+    ) {
       errors.push(`product ${node.id} is ${node.status} but lacks acceptanceCriteria or acceptanceNotRequiredReason`)
     }
 
@@ -511,14 +554,25 @@ function validateProductReadiness(productTree) {
         errors.push(`acceptance criteria ${criteria.id} is defined more than once`)
       }
       seenCriteriaIds.add(criteria.id)
-      if (criteria.format === 'EARS' && criteria.status === 'confirmed' && (!criteria.condition || !criteria.systemResponse)) {
+      if (
+        criteria.format === 'EARS' &&
+        criteria.status === 'confirmed' &&
+        (!criteria.condition || !criteria.systemResponse)
+      ) {
         errors.push(`acceptance criteria ${criteria.id} is confirmed EARS but lacks condition or systemResponse`)
       }
     }
 
     const abstractTerms = collectAbstractTerms(node)
-    if (executableStatus && hasAny(abstractTerms) && node.ambiguityResolution?.status !== 'resolved' && !hasAny(node.acceptanceCriteria)) {
-      errors.push(`product ${node.id} contains abstract quality terms (${abstractTerms.join(', ')}) but lacks resolved ambiguityResolution or acceptanceCriteria`)
+    if (
+      executableStatus &&
+      hasAny(abstractTerms) &&
+      node.ambiguityResolution?.status !== 'resolved' &&
+      !hasAny(node.acceptanceCriteria)
+    ) {
+      errors.push(
+        `product ${node.id} contains abstract quality terms (${abstractTerms.join(', ')}) but lacks resolved ambiguityResolution or acceptanceCriteria`,
+      )
     }
   }
 }
@@ -529,16 +583,44 @@ function validateChangeTree(changeTree, refs) {
   }
   for (const change of changeTree.changes || []) {
     validateKnownIds(change.affectedNodeIds, refs.knownNodeIds, `change ${change.id}`, 'affected node')
-    validateKnownIds(change.affectedAcceptanceCriteriaIds, refs.acceptanceCriteriaIds, `change ${change.id}`, 'acceptance criteria')
-    validateKnownIds(change.criteriaDelta?.modified, refs.acceptanceCriteriaIds, `change ${change.id} criteriaDelta.modified`, 'acceptance criteria')
-    validateKnownIds(change.criteriaDelta?.invalidated, refs.acceptanceCriteriaIds, `change ${change.id} criteriaDelta.invalidated`, 'acceptance criteria')
+    validateKnownIds(
+      change.affectedAcceptanceCriteriaIds,
+      refs.acceptanceCriteriaIds,
+      `change ${change.id}`,
+      'acceptance criteria',
+    )
+    validateKnownIds(
+      change.criteriaDelta?.modified,
+      refs.acceptanceCriteriaIds,
+      `change ${change.id} criteriaDelta.modified`,
+      'acceptance criteria',
+    )
+    validateKnownIds(
+      change.criteriaDelta?.invalidated,
+      refs.acceptanceCriteriaIds,
+      `change ${change.id} criteriaDelta.invalidated`,
+      'acceptance criteria',
+    )
 
     const changesCompletionMeaning =
-      ['missing_requirement', 'design_correction', 'scope_change', 'feedback', 'acceptance_change', 'verification_change'].includes(change.type) ||
+      [
+        'missing_requirement',
+        'design_correction',
+        'scope_change',
+        'feedback',
+        'acceptance_change',
+        'verification_change',
+      ].includes(change.type) ||
       change.requiresRevisionRpd === true ||
       hasCriteriaDelta(change.criteriaDelta)
-    if (['approved', 'applied', 'resolved'].includes(change.status) && changesCompletionMeaning && !hasAny(refs.impactsByChange.get(change.id))) {
-      errors.push(`change ${change.id} changes product/scope/acceptance/verification meaning but lacks Impact Tree entries`)
+    if (
+      ['approved', 'applied', 'resolved'].includes(change.status) &&
+      changesCompletionMeaning &&
+      !hasAny(refs.impactsByChange.get(change.id))
+    ) {
+      errors.push(
+        `change ${change.id} changes product/scope/acceptance/verification meaning but lacks Impact Tree entries`,
+      )
     }
     if (['approved', 'applied', 'resolved'].includes(change.status) && hasCriteriaDelta(change.criteriaDelta)) {
       const changedCriteriaIds = [
@@ -546,12 +628,15 @@ function validateChangeTree(changeTree, refs) {
         ...(change.criteriaDelta?.invalidated || []),
       ]
       for (const criteriaId of changedCriteriaIds) {
-        const hasCriteriaImpact = (refs.impactsByChange.get(change.id) || []).some((impact) =>
-          impact.affectedAcceptanceCriteriaIds?.includes(criteriaId) &&
-          ['reopen', 'retest', 'replace_evidence'].includes(impact.requiredAction),
+        const hasCriteriaImpact = (refs.impactsByChange.get(change.id) || []).some(
+          (impact) =>
+            impact.affectedAcceptanceCriteriaIds?.includes(criteriaId) &&
+            ['reopen', 'retest', 'replace_evidence'].includes(impact.requiredAction),
         )
         if (!hasCriteriaImpact) {
-          errors.push(`change ${change.id} changes acceptance criteria ${criteriaId} but lacks retest/reopen/replace_evidence impact`)
+          errors.push(
+            `change ${change.id} changes acceptance criteria ${criteriaId} but lacks retest/reopen/replace_evidence impact`,
+          )
         }
       }
     }
@@ -565,12 +650,19 @@ function validateImpactTree(impactTree, refs) {
   for (const impact of impactTree.impacts || []) {
     validateKnownIds([impact.changeId], refs.changeIds, `impact ${impact.id}`, 'change')
     validateKnownIds([impact.affectedNodeId], refs.knownNodeIds, `impact ${impact.id}`, 'affected node')
-    validateKnownIds(impact.affectedAcceptanceCriteriaIds, refs.acceptanceCriteriaIds, `impact ${impact.id}`, 'acceptance criteria')
+    validateKnownIds(
+      impact.affectedAcceptanceCriteriaIds,
+      refs.acceptanceCriteriaIds,
+      `impact ${impact.id}`,
+      'acceptance criteria',
+    )
     if (impact.requiredAction === 'reopen') {
       const affected = refs.allNodeMap.get(impact.affectedNodeId)
       const reopenedStates = new Set(['reopened', 'stale', 'invalidated', 'stale_evidence'])
       if (affected && !reopenedStates.has(affected.status)) {
-        errors.push(`impact ${impact.id} requires reopen but affected node ${impact.affectedNodeId} status is ${affected.status}`)
+        errors.push(
+          `impact ${impact.id} requires reopen but affected node ${impact.affectedNodeId} status is ${affected.status}`,
+        )
       }
     }
   }
@@ -583,7 +675,12 @@ function validateEvidenceTree(evidenceTree, refs) {
   for (const evidence of evidenceTree.evidence || []) {
     validateKnownIds(evidence.provesNodeIds, refs.knownNodeIds, `evidence ${evidence.id}`, 'proved node')
     validateKnownIds(evidence.evidenceForTestNodeIds, refs.testIds, `evidence ${evidence.id}`, 'test node')
-    validateKnownIds(evidence.evidenceForAcceptanceCriteriaIds, refs.acceptanceCriteriaIds, `evidence ${evidence.id}`, 'acceptance criteria')
+    validateKnownIds(
+      evidence.evidenceForAcceptanceCriteriaIds,
+      refs.acceptanceCriteriaIds,
+      `evidence ${evidence.id}`,
+      'acceptance criteria',
+    )
     if (!hasAny(evidence.provesNodeIds) && !hasAny(evidence.evidenceForTestNodeIds)) {
       errors.push(`evidence ${evidence.id} must prove at least one Product/Work/Test node or evidenceForTestNodeIds`)
     }
@@ -631,14 +728,22 @@ function validateLegacyControlInventory(inventoryTree, refs) {
     for (const control of inventory.controls || []) {
       const requiredVisible = control.requiredForParity === true && control.legacyState === 'visible_enabled'
       if (requiredVisible && control.currentStatus !== 'matched') {
-        errors.push(`legacy inventory ${inventory.id} claims parity but required control ${control.id} is ${control.currentStatus}`)
+        errors.push(
+          `legacy inventory ${inventory.id} claims parity but required control ${control.id} is ${control.currentStatus}`,
+        )
       }
     }
     for (const handler of inventory.eventHandlers || []) {
       if (handler.requiredForParity === true && handler.currentStatus !== 'matched') {
-        errors.push(`legacy inventory ${inventory.id} claims parity but required event handler ${handler.id} is ${handler.currentStatus}`)
+        errors.push(
+          `legacy inventory ${inventory.id} claims parity but required event handler ${handler.id} is ${handler.currentStatus}`,
+        )
       }
-      if (handler.currentStatus === 'matched' && !hasAny(handler.evidenceNodeIds) && !hasAny(inventory.evidenceNodeIds)) {
+      if (
+        handler.currentStatus === 'matched' &&
+        !hasAny(handler.evidenceNodeIds) &&
+        !hasAny(inventory.evidenceNodeIds)
+      ) {
         errors.push(`legacy inventory ${inventory.id} event handler ${handler.id} is matched but lacks evidenceNodeIds`)
       }
     }
@@ -657,12 +762,42 @@ function validateSurfaceCompletionLedger(ledger, refs) {
     validateKnownIds(surface.evidenceNodeIds, refs.evidenceIds, `surface ${surface.id}`, 'evidence node')
     validateKnownIds(surface.legacyInventoryIds, refs.legacyInventoryIds, `surface ${surface.id}`, 'legacy inventory')
     validateKnownIds(surface.childSurfaceIds, refs.surfaceCompletionIds, `surface ${surface.id}`, 'child surface')
-    validateKnownIds(surface.visualProfileIds, refs.visualProfileIds, `surface ${surface.id}`, 'visual verification profile')
-    validateKnownIds(surface.hardwareReadinessIds, refs.hardwareReadinessIds, `surface ${surface.id}`, 'hardware readiness feature')
-    validateKnownIds(surface.subdialogAudit?.childSurfaceIds, refs.surfaceCompletionIds, `surface ${surface.id} subdialog audit`, 'child surface')
-    validateKnownIds(surface.subdialogAudit?.legacyInventoryIds, refs.legacyInventoryIds, `surface ${surface.id} subdialog audit`, 'legacy inventory')
-    validateKnownIds(surface.subdialogAudit?.testNodeIds, refs.testIds, `surface ${surface.id} subdialog audit`, 'test node')
-    validateKnownIds(surface.subdialogAudit?.evidenceNodeIds, refs.evidenceIds, `surface ${surface.id} subdialog audit`, 'evidence node')
+    validateKnownIds(
+      surface.visualProfileIds,
+      refs.visualProfileIds,
+      `surface ${surface.id}`,
+      'visual verification profile',
+    )
+    validateKnownIds(
+      surface.hardwareReadinessIds,
+      refs.hardwareReadinessIds,
+      `surface ${surface.id}`,
+      'hardware readiness feature',
+    )
+    validateKnownIds(
+      surface.subdialogAudit?.childSurfaceIds,
+      refs.surfaceCompletionIds,
+      `surface ${surface.id} subdialog audit`,
+      'child surface',
+    )
+    validateKnownIds(
+      surface.subdialogAudit?.legacyInventoryIds,
+      refs.legacyInventoryIds,
+      `surface ${surface.id} subdialog audit`,
+      'legacy inventory',
+    )
+    validateKnownIds(
+      surface.subdialogAudit?.testNodeIds,
+      refs.testIds,
+      `surface ${surface.id} subdialog audit`,
+      'test node',
+    )
+    validateKnownIds(
+      surface.subdialogAudit?.evidenceNodeIds,
+      refs.evidenceIds,
+      `surface ${surface.id} subdialog audit`,
+      'evidence node',
+    )
 
     if (['selected', 'foundation'].includes(surface.scopeClass)) {
       if (!hasAny(surface.productNodeIds)) {
@@ -696,20 +831,14 @@ function validateWorkflowParitySurface(surface, refs) {
   }
 
   const requiresNestedInventory =
-    surface.opensDialog === true ||
-    surface.subdialogAudit?.required === true ||
-    surface.surfaceKind === 'workflow'
+    surface.opensDialog === true || surface.subdialogAudit?.required === true || surface.surfaceKind === 'workflow'
   if (requiresNestedInventory) {
-    const childSurfaceIds = [
-      ...(surface.childSurfaceIds || []),
-      ...(surface.subdialogAudit?.childSurfaceIds || []),
-    ]
-    const inventoryIds = [
-      ...(surface.legacyInventoryIds || []),
-      ...(surface.subdialogAudit?.legacyInventoryIds || []),
-    ]
+    const childSurfaceIds = [...(surface.childSurfaceIds || []), ...(surface.subdialogAudit?.childSurfaceIds || [])]
+    const inventoryIds = [...(surface.legacyInventoryIds || []), ...(surface.subdialogAudit?.legacyInventoryIds || [])]
     if (!hasAny(childSurfaceIds) && !hasAny(inventoryIds)) {
-      errors.push(`surface ${surface.id} opens a dialog/workflow but lacks childSurfaceIds or subdialog legacyInventoryIds`)
+      errors.push(
+        `surface ${surface.id} opens a dialog/workflow but lacks childSurfaceIds or subdialog legacyInventoryIds`,
+      )
     }
     if (surface.subdialogAudit?.required === true && surface.subdialogAudit.status !== 'verified') {
       errors.push(`surface ${surface.id} subdialog audit is required but status is ${surface.subdialogAudit.status}`)
@@ -722,16 +851,27 @@ function validateWorkflowParitySurface(surface, refs) {
 
   const commandMappedItems = (surface.items || []).filter((item) => item.status === 'command_mapped')
   const workflowEvidenceItems = (surface.items || []).filter((item) =>
-    ['implemented', 'dialog_surface_complete', 'workflow_behavior_complete', 'mock_verified', 'hardware_user_testable'].includes(item.status),
+    [
+      'implemented',
+      'dialog_surface_complete',
+      'workflow_behavior_complete',
+      'mock_verified',
+      'hardware_user_testable',
+    ].includes(item.status),
   )
   if (hasAny(commandMappedItems) && !hasAny(workflowEvidenceItems) && !hasAny(surface.evidenceNodeIds)) {
-    errors.push(`surface ${surface.id} is ${surface.completionLayer} from command mapping only; workflow/dialog evidence is required`)
+    errors.push(
+      `surface ${surface.id} is ${surface.completionLayer} from command mapping only; workflow/dialog evidence is required`,
+    )
   }
 
   if (surface.hardwareGated === true) {
-    const hasSafeSubstitute = (surface.items || []).some((item) =>
-      ['mock_backed_ui', 'fake_read_result', 'ui_automation_hardware_disabled'].includes(item.substituteEvidenceType) &&
-      (hasAny(item.evidenceNodeIds) || hasAny(surface.evidenceNodeIds)),
+    const hasSafeSubstitute = (surface.items || []).some(
+      (item) =>
+        ['mock_backed_ui', 'fake_read_result', 'ui_automation_hardware_disabled'].includes(
+          item.substituteEvidenceType,
+        ) &&
+        (hasAny(item.evidenceNodeIds) || hasAny(surface.evidenceNodeIds)),
     )
     if (!hasSafeSubstitute) {
       errors.push(`surface ${surface.id} is hardware-gated but lacks mock/fake/UI-automation substitute evidence`)
@@ -745,7 +885,9 @@ function validateWorkflowParitySurface(surface, refs) {
     }
     for (const handler of inventory.eventHandlers || []) {
       if (handler.requiredForParity === true && handler.currentStatus !== 'matched') {
-        errors.push(`surface ${surface.id} cannot close while legacy event handler ${handler.id} is ${handler.currentStatus}`)
+        errors.push(
+          `surface ${surface.id} cannot close while legacy event handler ${handler.id} is ${handler.currentStatus}`,
+        )
       }
     }
   }
@@ -760,12 +902,21 @@ function validateHardwareReadinessLedger(ledger, refs) {
     validateKnownIds(feature.workNodeIds, refs.workIds, `hardware readiness ${feature.id}`, 'work node')
     validateKnownIds(feature.testNodeIds, refs.testIds, `hardware readiness ${feature.id}`, 'test node')
     validateKnownIds(feature.evidenceNodeIds, refs.evidenceIds, `hardware readiness ${feature.id}`, 'evidence node')
-    validateKnownIds(feature.certificationEvidenceNodeIds, refs.evidenceIds, `hardware readiness ${feature.id}`, 'certification evidence node')
+    validateKnownIds(
+      feature.certificationEvidenceNodeIds,
+      refs.evidenceIds,
+      `hardware readiness ${feature.id}`,
+      'certification evidence node',
+    )
 
     if (feature.state === 'implemented_user_testable' && feature.userTestable !== true) {
       errors.push(`hardware readiness ${feature.id} is implemented_user_testable but userTestable is not true`)
     }
-    if (feature.state === 'hardware_certified' && !hasAny(feature.certificationEvidenceNodeIds) && !hasAny(feature.evidenceNodeIds)) {
+    if (
+      feature.state === 'hardware_certified' &&
+      !hasAny(feature.certificationEvidenceNodeIds) &&
+      !hasAny(feature.evidenceNodeIds)
+    ) {
       errors.push(`hardware readiness ${feature.id} is hardware_certified but lacks certification evidence`)
     }
   }
@@ -786,7 +937,9 @@ function validateUiSurfaceInventory(inventory, refs) {
 
     for (const screenshot of surface.requiredScreenshots || []) {
       if (screenshot.required === true && !screenshot.path && !screenshot.deferredReason && !screenshot.blockedReason) {
-        errors.push(`UI surface ${surface.surfaceId} required screenshot for state ${screenshot.state} lacks path, deferredReason, or blockedReason`)
+        errors.push(
+          `UI surface ${surface.surfaceId} required screenshot for state ${screenshot.state} lacks path, deferredReason, or blockedReason`,
+        )
       }
     }
   }
@@ -798,10 +951,18 @@ function validateComponentStyleInventory(inventory) {
   }
   for (const component of inventory.components || []) {
     if (component.visualChangeScope === 'shared' && !component.requiredContractRef && !component.exceptionReason) {
-      errors.push(`component style ${component.componentName} is shared visual scope but lacks requiredContractRef or exceptionReason`)
+      errors.push(
+        `component style ${component.componentName} is shared visual scope but lacks requiredContractRef or exceptionReason`,
+      )
     }
-    if (component.visualChangeScope === 'shared' && component.usesDesignTokens === false && !component.exceptionReason) {
-      errors.push(`component style ${component.componentName} is shared visual scope but is not token-backed and lacks exceptionReason`)
+    if (
+      component.visualChangeScope === 'shared' &&
+      component.usesDesignTokens === false &&
+      !component.exceptionReason
+    ) {
+      errors.push(
+        `component style ${component.componentName} is shared visual scope but is not token-backed and lacks exceptionReason`,
+      )
     }
     if (hasAny(component.hardcodedStyleFindings) && !component.exceptionReason) {
       errors.push(`component style ${component.componentName} has hardcoded style findings but lacks exceptionReason`)
@@ -821,7 +982,12 @@ function validateVisualVerificationProfile(profileTree, refs) {
     validateKnownIds(profile.evidenceNodeIds, refs.evidenceIds, `visual profile ${profile.id}`, 'evidence node')
 
     for (const check of profile.checks || []) {
-      validateKnownIds(check.evidenceNodeIds, refs.evidenceIds, `visual profile ${profile.id} check ${check.id}`, 'evidence node')
+      validateKnownIds(
+        check.evidenceNodeIds,
+        refs.evidenceIds,
+        `visual profile ${profile.id} check ${check.id}`,
+        'evidence node',
+      )
       if (check.status === 'passed' && !hasAny(check.evidenceNodeIds) && !hasAny(profile.evidenceNodeIds)) {
         errors.push(`visual profile ${profile.id} check ${check.id} is passed but lacks evidenceNodeIds`)
       }
@@ -833,7 +999,9 @@ function validateVisualVerificationProfile(profileTree, refs) {
 
   for (const check of profileTree.contractChecks || []) {
     if (check.required === true && ['failed', 'blocked'].includes(check.status)) {
-      errors.push(`visual contract check ${check.checkId} is ${check.status}: ${check.reason || check.description || 'no reason recorded'}`)
+      errors.push(
+        `visual contract check ${check.checkId} is ${check.status}: ${check.reason || check.description || 'no reason recorded'}`,
+      )
     }
     if (check.status === 'passed' && !hasAny(check.evidenceRefs) && check.required === true) {
       errors.push(`visual contract check ${check.checkId} passed but lacks evidenceRefs`)
@@ -855,7 +1023,9 @@ function validateVisualDesignContractArtifacts(data) {
 
   if (primarySource === 'visual_quality_waived') {
     if (visualReference.waiver?.isWaived !== true || visualReference.waiver?.riskAcceptedByUser !== true) {
-      errors.push('visual-reference.json uses visual_quality_waived but lacks waiver.isWaived=true and riskAcceptedByUser=true')
+      errors.push(
+        'visual-reference.json uses visual_quality_waived but lacks waiver.isWaived=true and riskAcceptedByUser=true',
+      )
     }
     return
   }
@@ -884,7 +1054,9 @@ function validateVisualDesignContractArtifacts(data) {
     }
   }
 
-  const componentNames = new Set((data.componentStyleContract?.components || []).map((component) => component.componentName))
+  const componentNames = new Set(
+    (data.componentStyleContract?.components || []).map((component) => component.componentName),
+  )
   for (const requiredComponent of ['Button', 'Panel']) {
     if (!componentNames.has(requiredComponent)) {
       errors.push(`component-style-contract.json lacks required base component contract: ${requiredComponent}`)
@@ -902,16 +1074,34 @@ function validateVerificationMissLog(missLog, refs) {
     const missType = miss.missType || miss.type
     validateKnownIds(miss.affectedNodeIds, refs.knownNodeIds, `verification miss ${miss.id}`, 'affected node')
     validateKnownIds(miss.promotedTestNodeIds, refs.testIds, `verification miss ${miss.id}`, 'promoted test node')
-    validateKnownIds(miss.promotedEvidenceNodeIds, refs.evidenceIds, `verification miss ${miss.id}`, 'promoted evidence node')
+    validateKnownIds(
+      miss.promotedEvidenceNodeIds,
+      refs.evidenceIds,
+      `verification miss ${miss.id}`,
+      'promoted evidence node',
+    )
 
-    if (promotionDecision === 'promoted' && !hasAny(miss.promotedTestNodeIds) && !hasAny(miss.promotedEvidenceNodeIds) && !hasAny(miss.promotedContractRefs)) {
+    if (
+      promotionDecision === 'promoted' &&
+      !hasAny(miss.promotedTestNodeIds) &&
+      !hasAny(miss.promotedEvidenceNodeIds) &&
+      !hasAny(miss.promotedContractRefs)
+    ) {
       errors.push(`verification miss ${miss.id} is promoted but lacks promoted validation references`)
     }
     if (occurrenceCount >= 2 && miss.status === 'resolved' && !['promoted', 'blocked'].includes(promotionDecision)) {
-      errors.push(`verification miss ${miss.id} repeated ${occurrenceCount} times but was resolved without promotion or blocking`)
+      errors.push(
+        `verification miss ${miss.id} repeated ${occurrenceCount} times but was resolved without promotion or blocking`,
+      )
     }
-    if (missType === 'legacy_subdialog_control_miss' && !['proposed', 'promoted', 'blocked'].includes(promotionDecision) && miss.status !== 'reported_for_pbe_improvement') {
-      errors.push(`verification miss ${miss.id} is a legacy subdialog control miss but lacks promotion or blocking decision`)
+    if (
+      missType === 'legacy_subdialog_control_miss' &&
+      !['proposed', 'promoted', 'blocked'].includes(promotionDecision) &&
+      miss.status !== 'reported_for_pbe_improvement'
+    ) {
+      errors.push(
+        `verification miss ${miss.id} is a legacy subdialog control miss but lacks promotion or blocking decision`,
+      )
     }
   }
 }
@@ -921,8 +1111,18 @@ function validateAcceptanceTree(acceptanceTree, refs) {
     return
   }
   for (const branch of acceptanceTree.branches || []) {
-    validateKnownIds([branch.productNodeId], refs.productIds, `acceptance branch ${branch.productNodeId}`, 'product node')
-    validateKnownIds(branch.evidenceNodeIds, refs.evidenceIds, `acceptance branch ${branch.productNodeId}`, 'evidence node')
+    validateKnownIds(
+      [branch.productNodeId],
+      refs.productIds,
+      `acceptance branch ${branch.productNodeId}`,
+      'product node',
+    )
+    validateKnownIds(
+      branch.evidenceNodeIds,
+      refs.evidenceIds,
+      `acceptance branch ${branch.productNodeId}`,
+      'evidence node',
+    )
     if (branch.status === 'accepted_done') {
       if (!branch.userAcceptedAt) {
         errors.push(`acceptance branch ${branch.productNodeId} is accepted_done but lacks userAcceptedAt`)
@@ -937,8 +1137,9 @@ function validateAcceptanceTree(acceptanceTree, refs) {
       if (product?.status === 'reopened') {
         errors.push(`acceptance branch ${branch.productNodeId} is accepted_done but product node is reopened`)
       }
-      const blockingImpacts = (refs.impactsByAffected.get(branch.productNodeId) || [])
-        .filter((impact) => impact.impactType !== 'none')
+      const blockingImpacts = (refs.impactsByAffected.get(branch.productNodeId) || []).filter(
+        (impact) => impact.impactType !== 'none',
+      )
       if (blockingImpacts.length > 0) {
         errors.push(`acceptance branch ${branch.productNodeId} is accepted_done but has unresolved impact entries`)
       }
@@ -949,7 +1150,9 @@ function validateAcceptanceTree(acceptanceTree, refs) {
           continue
         }
         if (!['attached', 'replaced'].includes(evidence.status)) {
-          errors.push(`acceptance branch ${branch.productNodeId} uses non-current evidence ${evidenceId} with status ${evidence.status}`)
+          errors.push(
+            `acceptance branch ${branch.productNodeId} uses non-current evidence ${evidenceId} with status ${evidence.status}`,
+          )
         }
       }
     }
@@ -980,8 +1183,9 @@ function validateProductClosure(productTree, refs) {
       if (!branch) {
         errors.push(`product ${node.id} is accepted_done but lacks accepted Acceptance Tree branch`)
       }
-      const blockingImpacts = (refs.impactsByAffected.get(node.id) || [])
-        .filter((impact) => impact.impactType !== 'none')
+      const blockingImpacts = (refs.impactsByAffected.get(node.id) || []).filter(
+        (impact) => impact.impactType !== 'none',
+      )
       if (blockingImpacts.length > 0) {
         errors.push(`product ${node.id} is accepted_done but has unresolved impact entries`)
       }
@@ -1093,7 +1297,10 @@ function collectAcceptanceCriteriaByProduct(productTree) {
   const criteriaByProduct = new Map()
   for (const node of productTree?.nodes || []) {
     const criteriaIds = (node.acceptanceCriteria || [])
-      .filter((criteria) => criteria.status !== 'deferred' && criteria.status !== 'out_of_scope' && criteria.status !== 'invalidated')
+      .filter(
+        (criteria) =>
+          criteria.status !== 'deferred' && criteria.status !== 'out_of_scope' && criteria.status !== 'invalidated',
+      )
       .map((criteria) => criteria.id)
       .filter(Boolean)
     if (criteriaIds.length > 0) {
@@ -1132,7 +1339,11 @@ function collectInventoryIds(inventoryTree) {
 }
 
 function collectInventoryMap(inventoryTree) {
-  return new Map((inventoryTree?.inventories || []).filter((inventory) => inventory.id).map((inventory) => [inventory.id, inventory]))
+  return new Map(
+    (inventoryTree?.inventories || [])
+      .filter((inventory) => inventory.id)
+      .map((inventory) => [inventory.id, inventory]),
+  )
 }
 
 function collectSurfaceIds(ledger) {
@@ -1140,7 +1351,11 @@ function collectSurfaceIds(ledger) {
 }
 
 function collectUiSurfaceIds(inventory) {
-  return new Set([...(inventory?.surfaces || []), ...(inventory?.childSurfaces || [])].map((surface) => surface.surfaceId).filter(Boolean))
+  return new Set(
+    [...(inventory?.surfaces || []), ...(inventory?.childSurfaces || [])]
+      .map((surface) => surface.surfaceId)
+      .filter(Boolean),
+  )
 }
 
 function collectComponentStyleNames(inventory) {
@@ -1160,7 +1375,9 @@ function collectMissIds(missLog) {
 }
 
 function collectEvidenceMap(evidenceTree) {
-  return new Map((evidenceTree?.evidence || []).filter((evidence) => evidence.id).map((evidence) => [evidence.id, evidence]))
+  return new Map(
+    (evidenceTree?.evidence || []).filter((evidence) => evidence.id).map((evidence) => [evidence.id, evidence]),
+  )
 }
 
 function collectImpactsByAffected(impactTree) {
@@ -1194,8 +1411,10 @@ function collectImpactsByChange(impactTree) {
 function requiresClosureEvidence(cycleTree, acceptanceTree) {
   const closureCycleStatuses = new Set(['submitted_for_review', 'accepted'])
   const closureBranchStatuses = new Set(['submitted_for_review', 'accepted_done'])
-  return (cycleTree?.cycles || []).some((cycle) => closureCycleStatuses.has(cycle.status)) ||
+  return (
+    (cycleTree?.cycles || []).some((cycle) => closureCycleStatuses.has(cycle.status)) ||
     (acceptanceTree?.branches || []).some((branch) => closureBranchStatuses.has(branch.status))
+  )
 }
 
 function evidenceForNode(evidenceMap, nodeId) {
@@ -1203,10 +1422,7 @@ function evidenceForNode(evidenceMap, nodeId) {
 }
 
 function collectAbstractTerms(node) {
-  const terms = new Set([
-    ...(node.ambiguity?.terms || []),
-    ...(node.ambiguity?.abstractTerms || []),
-  ])
+  const terms = new Set([...(node.ambiguity?.terms || []), ...(node.ambiguity?.abstractTerms || [])])
   const text = `${node.title || ''} ${node.why || ''}`.toLowerCase()
   const abstractTerms = [
     'clean',

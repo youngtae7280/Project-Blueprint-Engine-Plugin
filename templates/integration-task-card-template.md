@@ -12,23 +12,28 @@ Parallel Group Integrated:
 PG-001
 
 Tasks Integrated:
+
 - TASK-010
 - TASK-011
 
 Must Run After:
+
 - TASK-010
 - TASK-011
 
 Must Run Before:
+
 - final validation tasks
 
 Conflict Risk:
 medium
 
 Expected Shared Files:
+
 - none unless explicitly listed in the execution manifest
 
 Forbidden Changes:
+
 - new shared schema/type changes outside the group contract
 - package or build configuration changes
 - auth, permission, migration, payment, deployment, billing, or secret handling changes

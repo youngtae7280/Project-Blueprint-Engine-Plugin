@@ -33,4 +33,3 @@ Compatibility view: `.pbe/blueprint/verification-design.json`.
   "coverageRule": "Every selected Product node must map to at least one Test node and one evidence item."
 }
 ```
-

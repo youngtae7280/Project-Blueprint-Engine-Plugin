@@ -48,4 +48,3 @@ Compatibility term: `ACEP`.
 ## Change, Impact, Evidence, And Acceptance Trees
 
 These trees control revision and closure. Codex may submit work for review, but only the user may mark product branches accepted.
-

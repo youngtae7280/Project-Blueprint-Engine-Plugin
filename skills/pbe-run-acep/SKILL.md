@@ -99,7 +99,7 @@ Also read ACEP compatibility inputs:
 21. Attach or update evidence in `.pbe/evidence/evidence-tree.json` when evidence can be represented.
 22. Run focused validation after each task when feasible.
 23. If UI changed, update or complete UI/UX evidence checklist notes.
-23a. If visual UI changed, follow Visual Design Contract references from the task card or Node Execution Contract, update screenshot/manual visual evidence, and run Visual Implementation Audit before review.
+    23a. If visual UI changed, follow Visual Design Contract references from the task card or Node Execution Contract, update screenshot/manual visual evidence, and run Visual Implementation Audit before review.
 24. Fix failures and revalidate.
 25. Run broader validation at phase or pack completion.
 26. When parity/completeness profile artifacts exist, update surface completion, visual/runtime verification, hardware readiness, and verification miss evidence before final coverage.
@@ -251,9 +251,9 @@ Before final completion:
 13. Verify the final report lists every not-checked dialog, control, event handler, hardware action, and workflow state.
 14. Verify any hardware-certified feature has certification evidence.
 15. Verify any required visual profile checks passed or have explicit not-runnable evidence/reason.
-15a. Verify Visual Design Contract artifacts exist or are explicitly waived for selected visual UI work.
-15b. Verify required UI surface states have current screenshot/manual evidence or explicit deferral/blocker.
-15c. Verify no stale screenshot evidence is used for review submission.
+    15a. Verify Visual Design Contract artifacts exist or are explicitly waived for selected visual UI work.
+    15b. Verify required UI surface states have current screenshot/manual evidence or explicit deferral/blocker.
+    15c. Verify no stale screenshot evidence is used for review submission.
 16. Verify no unresolved stop condition remains.
 17. Verify excluded nodes were not changed.
 

@@ -15,4 +15,3 @@ Duplication across PBE documents is allowed when it preserves traceability.
 
 Trace IDs connect artifacts. They do not transfer ownership. For example, VD may
 reference a requirement ID, but it does not own the requirement meaning.
-

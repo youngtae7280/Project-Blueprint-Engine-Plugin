@@ -38,4 +38,3 @@ export function readOptionalJson(root, relativePath, validator) {
 
   return readJson(root, relativePath, validator)
 }
-

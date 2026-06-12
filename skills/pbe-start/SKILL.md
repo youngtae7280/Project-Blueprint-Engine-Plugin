@@ -56,7 +56,7 @@ If either command fails, do not proceed to RPD until the blocking issue is fixed
 6. Create `.pbe/tree/work-tree.json` from `templates/work-tree.template.json` if it does not exist.
 7. Create `.pbe/tree/test-tree.json` from `templates/test-tree.template.json` if it does not exist.
 8. Create `.pbe/control/decision-queue.json`, `.pbe/control/change-tree.json`, `.pbe/control/impact-tree.json`, `.pbe/control/acceptance-tree.json`, and `.pbe/evidence/evidence-tree.json` from matching templates if they do not exist.
-8a. When the brief indicates legacy migration, parity-critical UI, UI-heavy surfaces, hardware-dependent work, or repeated verification misses, initialize the parity/completeness control artifacts from matching templates.
+   8a. When the brief indicates legacy migration, parity-critical UI, UI-heavy surfaces, hardware-dependent work, or repeated verification misses, initialize the parity/completeness control artifacts from matching templates.
 9. Create or update `.pbe/blueprint/project-brief.md`.
 10. Create `.pbe/blueprint/requirement-tree.json` with a root node if it does not exist, treating it as the Product Tree compatibility alias.
 11. Create `.pbe/blueprint/pbe-routing-contract.md` from the PBE Routing Contract template.
@@ -66,13 +66,15 @@ If either command fails, do not proceed to RPD until the blocking issue is fixed
 15. Create dependency impact placeholders for `.pbe/blueprint/dependency-impact-audit.json` and `.pbe/blueprint/dependency-impact-audit.md`.
 16. Create `.pbe/blueprint/requirement-tree.md`, `.pbe/blueprint/rpd-interview-log.md`, and `.pbe/blueprint/rpd-summary.md`.
 17. Initialize UI/UX confirmation placeholders when UI work may be involved.
-17a. Initialize Visual Design Contract placeholders when visual UI work may be involved: visual reference, theme spec, design tokens, component style contract, UI surface inventory, component style inventory, visual verification profile, and visual audit report path.
+    17a. Initialize Visual Design Contract placeholders when visual UI work may be involved: visual reference, theme spec, design tokens, component style contract, UI surface inventory, component style inventory, visual verification profile, and visual audit report path.
 18. Confirm `pbe init` initialized `pbe-state.json.autoflow` with:
-   - `state`: `INIT`
-   - `enabled`: `true`
-   - `profile`: `full`, `lite`, or `bypass`
-   - `completedSteps`: `["start"]`
-   - `nextStep`: `rpd`
+
+- `state`: `INIT`
+- `enabled`: `true`
+- `profile`: `full`, `lite`, or `bypass`
+- `completedSteps`: `["start"]`
+- `nextStep`: `rpd`
+
 19. Confirm tree-native artifact paths exist in `pbe-state.json.artifacts` so later stages can discover Product, Project, Work, Test, Cycle, Decision, Change, Impact, Evidence, and Acceptance trees without guessing paths.
 20. Immediately begin RPD/Product Tree growth unless the selected profile is `bypass`.
 21. If the provided project brief is clear, propose the Root requirement summary and child structure, then stop at the `root_confirmation` gate.

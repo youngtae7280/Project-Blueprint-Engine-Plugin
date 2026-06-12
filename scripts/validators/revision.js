@@ -45,4 +45,3 @@ export function runRevisionValidator({ root }) {
 
   return issues
 }
-

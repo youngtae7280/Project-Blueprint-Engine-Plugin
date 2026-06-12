@@ -75,14 +75,7 @@ const downstreamStates = new Set([
   'COMPLETED',
 ])
 
-const downstreamStages = new Set([
-  'wpd',
-  'vd',
-  'execution_planning',
-  'acep_ready',
-  'acep_running',
-  'complete',
-])
+const downstreamStages = new Set(['wpd', 'vd', 'execution_planning', 'acep_ready', 'acep_running', 'complete'])
 
 const reviewDeliveryStatuses = new Set([
   'implemented',

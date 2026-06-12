@@ -33,4 +33,3 @@ Boundary decision:
 
 - UI components may render and dispatch actions.
 - State module owns todo mutation and localStorage serialization.
-

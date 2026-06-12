@@ -76,4 +76,3 @@ export function runWorkgraphValidator({ root }) {
 
   return issues
 }
-

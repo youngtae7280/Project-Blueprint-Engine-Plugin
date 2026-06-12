@@ -203,7 +203,7 @@ If the user is dissatisfied:
 
 1. Run `pbe-collect-feedback`.
 2. Map feedback to affected Product, Project, Work, Test, Evidence, UI/UX, Cycle, and compatibility requirement/task/verification IDs.
-2a. If the feedback is visual, parity, hardware, or repeated-failure related, map it to surface completion, legacy inventory, visual profile, hardware readiness, or verification miss entries when present.
+   2a. If the feedback is visual, parity, hardware, or repeated-failure related, map it to surface completion, legacy inventory, visual profile, hardware readiness, or verification miss entries when present.
 3. Create or update Change Tree entries for feedback that changes product meaning, scope, UX, risk, acceptance, verification, or accepted work.
 4. Run `pbe-create-revision-pack` to build Impact Tree and bounded revision tasks.
 5. Run `pbe-run-revision`.

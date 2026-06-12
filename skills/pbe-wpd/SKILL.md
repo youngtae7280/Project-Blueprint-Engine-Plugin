@@ -72,7 +72,7 @@ Prefer v2 tree files when present. If `.pbe/tree/product-tree.json` and `.pbe/bl
 
 1. Verify RPD completion before generating WPD. If any Root or leaf requirement still needs confirmation, stop and return to RPD/root confirmation.
 2. Verify UI/UX confirmation is complete for UI-required items.
-2a. If selected UI work changes visual appearance, verify the Visual Design Contract source is recorded. If the source is not waived or not_required, verify Theme Spec, Design Tokens, and Component Style Contract exist before creating visual work.
+   2a. If selected UI work changes visual appearance, verify the Visual Design Contract source is recorded. If the source is not waived or not_required, verify Theme Spec, Design Tokens, and Component Style Contract exist before creating visual work.
 3. Collect confirmed Product Tree branches and their compatibility requirement nodes.
 4. Derive Project Tree module, surface, service, contract, data boundary, integration boundary, and foundation nodes from confirmed Product Tree branches.
 5. Run the internal `Module Boundary Check` before creating work units.
@@ -80,10 +80,10 @@ Prefer v2 tree files when present. If `.pbe/tree/product-tree.json` and `.pbe/bl
 7. Derive Work Tree executable nodes from Project Tree nodes and Product Tree branches.
 8. Classify every Work Tree and WorkGraph node as `selected`, `deferred`, `foundation`, `blocked`, or `out_of_scope`.
 9. Create module-aware WorkGraph nodes and edges as a compatibility/dependency view around Work Tree nodes.
-9a. When parity/completeness profile applies, derive or update surface completion and legacy inventory placeholders from Product/Project surface nodes before any parity claim can exist.
-9b. When hardware-dependent work exists, derive or update hardware readiness entries and keep software implementation state separate from certification state.
-9c. When a command opens a dialog, popup, subdialog, or secondary workflow, create child Project/Work nodes for that opened surface instead of treating the command mapping as surface completion.
-9d. When visual UI work is selected, run `pbe-ui-surface-inventory` inside WPD or immediately after WPD. Populate UI surface inventory, component style inventory, required UI states, screenshot requirements, and shared component ownership before VD.
+   9a. When parity/completeness profile applies, derive or update surface completion and legacy inventory placeholders from Product/Project surface nodes before any parity claim can exist.
+   9b. When hardware-dependent work exists, derive or update hardware readiness entries and keep software implementation state separate from certification state.
+   9c. When a command opens a dialog, popup, subdialog, or secondary workflow, create child Project/Work nodes for that opened surface instead of treating the command mapping as surface completion.
+   9d. When visual UI work is selected, run `pbe-ui-surface-inventory` inside WPD or immediately after WPD. Populate UI surface inventory, component style inventory, required UI states, screenshot requirements, and shared component ownership before VD.
 10. Add required parallel safety metadata to every Work Tree and WorkGraph node.
 11. Create WorkDesign entries from the Work Tree and WorkGraph, not directly from RPD nodes.
 12. Create a root-level implementation roadmap that references Project Tree, Work Tree, and WorkGraph phases.

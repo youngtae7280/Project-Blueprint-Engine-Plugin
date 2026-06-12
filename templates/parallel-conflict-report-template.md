@@ -23,4 +23,3 @@
 - Decision:
 - Reason:
 - Follow-up validation:
-

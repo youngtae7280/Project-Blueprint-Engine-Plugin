@@ -68,12 +68,12 @@ Prefer v2 tree files when present. If Work Tree scope classifications conflict w
 5. Record deferred and out-of-scope verification expectations separately.
 6. Synthesize parent and integration verification bottom-up.
 7. Create a root-level acceptance plan for the current slice.
-7a. When the parity/completeness profile applies, add visual/runtime parity checks for relevant surfaces and update `.pbe/control/visual-verification-profile.json`.
-7b. For hardware-dependent Work nodes, record readiness verification state in `.pbe/control/hardware-readiness-ledger.json`.
-7c. For commands that open dialogs, popups, subdialogs, or secondary workflows, add Test Tree coverage for the opened surface, visible controls, default values, enabled/disabled states, event handlers, repeated/async behavior, error handling, busy state, and cancel/retry behavior.
-7d. For hardware-gated dialogs or actions, require substitute evidence such as mock-backed UI validation, fake read/result validation, UI automation with hardware disabled, or an explicit `manual_not_verified` entry that blocks closure.
-7e. When visual UI work is selected, derive screenshot/manual visual evidence checks from `ui-surface-inventory.json`, `design-tokens.json`, and `component-style-contract.json`.
-7f. Update `visual-verification-profile.json` with Visual Design Contract checks: contract exists, required states have screenshot/manual evidence, component contract compliance, and visual deviation log coverage.
+   7a. When the parity/completeness profile applies, add visual/runtime parity checks for relevant surfaces and update `.pbe/control/visual-verification-profile.json`.
+   7b. For hardware-dependent Work nodes, record readiness verification state in `.pbe/control/hardware-readiness-ledger.json`.
+   7c. For commands that open dialogs, popups, subdialogs, or secondary workflows, add Test Tree coverage for the opened surface, visible controls, default values, enabled/disabled states, event handlers, repeated/async behavior, error handling, busy state, and cancel/retry behavior.
+   7d. For hardware-gated dialogs or actions, require substitute evidence such as mock-backed UI validation, fake read/result validation, UI automation with hardware disabled, or an explicit `manual_not_verified` entry that blocks closure.
+   7e. When visual UI work is selected, derive screenshot/manual visual evidence checks from `ui-surface-inventory.json`, `design-tokens.json`, and `component-style-contract.json`.
+   7f. Update `visual-verification-profile.json` with Visual Design Contract checks: contract exists, required states have screenshot/manual evidence, component contract compliance, and visual deviation log coverage.
 8. Identify validation command candidates.
 9. Identify regression risks, including deferred-module foundation risk.
 10. Save `.pbe/tree/test-tree.json`.

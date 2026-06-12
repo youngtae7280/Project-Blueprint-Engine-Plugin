@@ -29,4 +29,3 @@ export function formatValidationReport(results) {
 
   return lines.join('\n')
 }
-

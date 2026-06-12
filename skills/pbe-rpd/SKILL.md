@@ -295,19 +295,19 @@ RPD is complete only when:
 
 1. `requirement-tree.json` exists.
 1. `.pbe/tree/product-tree.json` exists and has a root node.
-2. The root node exists.
-3. Every leaf node is `confirmed`, `deferred`, or `out_of_scope`.
-4. No node is `interviewing`.
-5. No node is `ready_to_decompose`.
-6. No node is `blocked`.
-7. `requirement-tree.md` is current.
-8. `rpd-summary.md` exists.
-9. Source of Truth Matrix records each terminal requirement.
-10. PBE Invariants have no RPD-level violation.
-11. No blocking item remains in `.pbe/control/decision-queue.json`.
-12. Root confirmation has explicit user approval in the interview log or decision queue resolution.
-13. Every executable confirmed Product node has `acceptanceCriteria` or `acceptanceNotRequiredReason`.
-14. No `needs_clarification`, `partial`, or `ambiguous` Product node is selected for downstream WPD.
+1. The root node exists.
+1. Every leaf node is `confirmed`, `deferred`, or `out_of_scope`.
+1. No node is `interviewing`.
+1. No node is `ready_to_decompose`.
+1. No node is `blocked`.
+1. `requirement-tree.md` is current.
+1. `rpd-summary.md` exists.
+1. Source of Truth Matrix records each terminal requirement.
+1. PBE Invariants have no RPD-level violation.
+1. No blocking item remains in `.pbe/control/decision-queue.json`.
+1. Root confirmation has explicit user approval in the interview log or decision queue resolution.
+1. Every executable confirmed Product node has `acceptanceCriteria` or `acceptanceNotRequiredReason`.
+1. No `needs_clarification`, `partial`, or `ambiguous` Product node is selected for downstream WPD.
 
 ## RPD Invariants
 

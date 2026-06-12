@@ -23,4 +23,3 @@ Deferred:
 ## Acceptance Notes
 
 The user must be able to review the app manually and confirm whether the behavior is acceptable. Codex may submit results for review, but cannot mark the product accepted.
-

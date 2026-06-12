@@ -25,4 +25,3 @@ Open decision:
   "affects": ["P-TODO-PERSIST"]
 }
 ```
-

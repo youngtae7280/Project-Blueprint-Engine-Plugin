@@ -3,7 +3,7 @@
 PBE supports three execution profiles:
 
 ```ts
-type PbeExecutionProfile = "bypass" | "lite" | "full";
+type PbeExecutionProfile = 'bypass' | 'lite' | 'full'
 ```
 
 ## bypass
@@ -43,4 +43,3 @@ Default recommendation:
 - Small after-the-fact edits: `lite` or `bypass`.
 - User-requested full process: `full`.
 - User-requested lite with understood risk: continue `lite`, but record the risk.
-

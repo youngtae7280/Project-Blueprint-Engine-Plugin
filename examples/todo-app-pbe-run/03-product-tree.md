@@ -47,4 +47,3 @@ Compatibility term: RPD.
   ]
 }
 ```
-

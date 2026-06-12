@@ -16,12 +16,11 @@ If a parallel group fails during integration:
 
 ```ts
 type ParallelGroupStatus =
-  | "not_started"
-  | "running"
-  | "integration_pending"
-  | "integration_passed"
-  | "integration_failed"
-  | "downgraded_to_sequential"
-  | "blocked";
+  | 'not_started'
+  | 'running'
+  | 'integration_pending'
+  | 'integration_passed'
+  | 'integration_failed'
+  | 'downgraded_to_sequential'
+  | 'blocked'
 ```
-

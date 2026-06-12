@@ -49,4 +49,3 @@ Compatibility view: `.pbe/blueprint/work-graph.json`.
 ```
 
 Default is sequential because the first slice touches shared UI and state boundaries.
-

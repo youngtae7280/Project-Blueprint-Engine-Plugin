@@ -16,48 +16,61 @@ Scope Class:
 selected
 
 WorkGraph Node IDs:
+
 - WG-001
 
 Product Tree Node IDs:
+
 - PT-001
 
 Project Tree Node IDs:
+
 - PJ-001
 
 Work Tree Node IDs:
+
 - WT-001
 
 Test Tree Node IDs:
+
 - TT-001
 
 Node Execution Contract:
+
 - `.pbe/codex-execution-pack/11-node-execution-contracts/nec-task-001.md`
 
 Parallel Group:
 none
 
 Can Run In Parallel With:
+
 - none
 
 Must Run After:
+
 - none
 
 Must Run Before:
+
 - none
 
 Conflict Risk:
 medium
 
 Expected Files:
+
 - path/to/expected-file.ext
 
 Expected Shared Files:
+
 - none
 
 Forbidden Files:
+
 - none
 
 Forbidden Changes:
+
 - shared type/schema changes unless this task is explicitly the sequential foundation task
 - package or build configuration changes unless explicitly in scope
 - auth, permission, migration, payment, deployment, billing, or secret handling changes
@@ -75,9 +88,11 @@ Included in active cycle:
 yes
 
 Explicitly excluded nodes that must not be touched:
+
 - none
 
 Changes requiring a Change Node:
+
 - product behavior not listed in this task
 - UI flow or state not approved in the UI/UX contract
 - API, permission, verification, or acceptance changes outside this task

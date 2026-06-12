@@ -69,4 +69,3 @@ export function runPluginStructureValidator({ root }) {
 
   return issues
 }
-

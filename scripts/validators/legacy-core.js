@@ -9,38 +9,17 @@ const errors = []
 const targetContext = {}
 const schemaIdByTargetLabel = new Map([
   ['.pbe/blueprint/pbe-state.json', 'https://local/project-blueprint-engine/pbe-state.schema.json'],
-  [
-    '.pbe/blueprint/requirement-tree.json',
-    'https://local/project-blueprint-engine/requirement-tree.schema.json',
-  ],
-  [
-    '.pbe/blueprint/ui-ux-preview.json',
-    'https://local/project-blueprint-engine/ui-ux-preview.schema.json',
-  ],
-  [
-    '.pbe/blueprint/work-design.json',
-    'https://local/project-blueprint-engine/work-design.schema.json',
-  ],
-  [
-    '.pbe/blueprint/work-graph.json',
-    'https://local/project-blueprint-engine/work-graph.schema.json',
-  ],
-  [
-    '.pbe/blueprint/verification-design.json',
-    'https://local/project-blueprint-engine/verification-design.schema.json',
-  ],
+  ['.pbe/blueprint/requirement-tree.json', 'https://local/project-blueprint-engine/requirement-tree.schema.json'],
+  ['.pbe/blueprint/ui-ux-preview.json', 'https://local/project-blueprint-engine/ui-ux-preview.schema.json'],
+  ['.pbe/blueprint/work-design.json', 'https://local/project-blueprint-engine/work-design.schema.json'],
+  ['.pbe/blueprint/work-graph.json', 'https://local/project-blueprint-engine/work-graph.schema.json'],
+  ['.pbe/blueprint/verification-design.json', 'https://local/project-blueprint-engine/verification-design.schema.json'],
   [
     '.pbe/blueprint/dependency-impact-audit.json',
     'https://local/project-blueprint-engine/dependency-impact-audit.schema.json',
   ],
-  [
-    '.pbe/blueprint/execution-strategy.json',
-    'https://local/project-blueprint-engine/execution-strategy.schema.json',
-  ],
-  [
-    '.pbe/blueprint/traceability-matrix.json',
-    'https://local/project-blueprint-engine/traceability-matrix.schema.json',
-  ],
+  ['.pbe/blueprint/execution-strategy.json', 'https://local/project-blueprint-engine/execution-strategy.schema.json'],
+  ['.pbe/blueprint/traceability-matrix.json', 'https://local/project-blueprint-engine/traceability-matrix.schema.json'],
   [
     '.pbe/codex-execution-pack/execution-manifest.json',
     'https://local/project-blueprint-engine/execution-manifest.schema.json',
@@ -49,14 +28,8 @@ const schemaIdByTargetLabel = new Map([
     '.pbe/codex-execution-pack/04-traceability-matrix.json',
     'https://local/project-blueprint-engine/traceability-matrix.schema.json',
   ],
-  [
-    '.pbe/codex-execution-pack/05-ui-ux-spec.json',
-    'https://local/project-blueprint-engine/ui-ux-spec.schema.json',
-  ],
-  [
-    '.pbe/review/feedback-items.json',
-    'https://local/project-blueprint-engine/feedback-items.schema.json',
-  ],
+  ['.pbe/codex-execution-pack/05-ui-ux-spec.json', 'https://local/project-blueprint-engine/ui-ux-spec.schema.json'],
+  ['.pbe/review/feedback-items.json', 'https://local/project-blueprint-engine/feedback-items.schema.json'],
   [
     '.pbe/control/legacy-control-inventory.json',
     'https://local/project-blueprint-engine/legacy-control-inventory.schema.json',
@@ -437,10 +410,7 @@ function validateOptionalPbeTarget() {
   }
 
   if (existsSync(verificationDesignPath)) {
-    const verificationDesign = parseTargetJson(
-      verificationDesignPath,
-      '.pbe/blueprint/verification-design.json',
-    )
+    const verificationDesign = parseTargetJson(verificationDesignPath, '.pbe/blueprint/verification-design.json')
     if (verificationDesign) {
       targetContext.verificationDesign = verificationDesign
       validateVerificationDesign(verificationDesign)
@@ -459,10 +429,7 @@ function validateOptionalPbeTarget() {
   }
 
   if (existsSync(executionStrategyPath)) {
-    const executionStrategy = parseTargetJson(
-      executionStrategyPath,
-      '.pbe/blueprint/execution-strategy.json',
-    )
+    const executionStrategy = parseTargetJson(executionStrategyPath, '.pbe/blueprint/execution-strategy.json')
     if (executionStrategy) {
       targetContext.executionStrategy = executionStrategy
       validateExecutionStrategy(executionStrategy, '.pbe/blueprint/execution-strategy.json')
@@ -470,10 +437,7 @@ function validateOptionalPbeTarget() {
   }
 
   if (existsSync(blueprintTraceabilityPath)) {
-    const traceability = parseTargetJson(
-      blueprintTraceabilityPath,
-      '.pbe/blueprint/traceability-matrix.json',
-    )
+    const traceability = parseTargetJson(blueprintTraceabilityPath, '.pbe/blueprint/traceability-matrix.json')
     if (traceability) {
       targetContext.blueprintTraceability = traceability
       validateTraceabilityMatrix(traceability, '.pbe/blueprint/traceability-matrix.json')
@@ -709,26 +673,15 @@ function validatePbeState(state) {
 }
 
 function validateAutoflowState(autoflow, label) {
-  const allowedStates = new Set(
-    getSchemaEnum('schemas/autoflow-state.schema.json', ['properties', 'state', 'enum']),
-  )
+  const allowedStates = new Set(getSchemaEnum('schemas/autoflow-state.schema.json', ['properties', 'state', 'enum']))
   const allowedGates = new Set(
-    getSchemaEnum('schemas/autoflow-state.schema.json', [
-      'properties',
-      'currentGate',
-      'enum',
-    ]).filter(Boolean),
+    getSchemaEnum('schemas/autoflow-state.schema.json', ['properties', 'currentGate', 'enum']).filter(Boolean),
   )
   const allowedProfiles = new Set(
     getSchemaEnum('schemas/autoflow-state.schema.json', ['properties', 'profile', 'enum']),
   )
   const allowedSteps = new Set([
-    ...getSchemaEnum('schemas/autoflow-state.schema.json', [
-      'properties',
-      'deterministicSteps',
-      'items',
-      'enum',
-    ]),
+    ...getSchemaEnum('schemas/autoflow-state.schema.json', ['properties', 'deterministicSteps', 'items', 'enum']),
     ...allowedGates,
     'start',
     'complete',
@@ -752,11 +705,7 @@ function validateAutoflowState(autoflow, label) {
       }
     }
   }
-  if (
-    autoflow.currentGate !== null &&
-    autoflow.currentGate !== undefined &&
-    !allowedGates.has(autoflow.currentGate)
-  ) {
+  if (autoflow.currentGate !== null && autoflow.currentGate !== undefined && !allowedGates.has(autoflow.currentGate)) {
     errors.push(`${label} has invalid currentGate: ${autoflow.currentGate}`)
   }
   if (autoflow.state === 'WAITING_UI_UX_CONFIRM' && autoflow.currentGate !== 'ui_ux_confirm') {
@@ -765,29 +714,19 @@ function validateAutoflowState(autoflow, label) {
   if (autoflow.state === 'WAITING_ROOT_CONFIRMATION' && autoflow.currentGate !== 'root_confirmation') {
     errors.push(`${label} WAITING_ROOT_CONFIRMATION must set currentGate to root_confirmation`)
   }
-  if (
-    autoflow.state === 'DRAFT_CREATED_FROM_ASSUMPTIONS' &&
-    autoflow.currentGate !== 'root_confirmation'
-  ) {
+  if (autoflow.state === 'DRAFT_CREATED_FROM_ASSUMPTIONS' && autoflow.currentGate !== 'root_confirmation') {
     errors.push(`${label} DRAFT_CREATED_FROM_ASSUMPTIONS must set currentGate to root_confirmation`)
   }
   if (autoflow.state === 'WAITING_REVIEW_RESULT' && autoflow.currentGate !== 'review_result') {
     errors.push(`${label} WAITING_REVIEW_RESULT must set currentGate to review_result`)
   }
-  if (
-    autoflow.state === 'WAITING_IMPLEMENTATION_SCOPE' &&
-    autoflow.currentGate !== 'implementation_scope'
-  ) {
+  if (autoflow.state === 'WAITING_IMPLEMENTATION_SCOPE' && autoflow.currentGate !== 'implementation_scope') {
     errors.push(`${label} WAITING_IMPLEMENTATION_SCOPE must set currentGate to implementation_scope`)
   }
   if (autoflow.lastFailure && typeof autoflow.lastFailure !== 'object') {
     errors.push(`${label} lastFailure must be an object when present`)
   }
-  if (
-    autoflow.nextStep !== null &&
-    autoflow.nextStep !== undefined &&
-    !allowedSteps.has(autoflow.nextStep)
-  ) {
+  if (autoflow.nextStep !== null && autoflow.nextStep !== undefined && !allowedSteps.has(autoflow.nextStep)) {
     errors.push(`${label} nextStep is not a known PBE step or gate: ${autoflow.nextStep}`)
   }
 }
@@ -808,9 +747,7 @@ function validateWorkDesign(workDesign) {
   }
 
   if (!workDesign.moduleBoundaryCheck && !workDesign.workGraph) {
-    errors.push(
-      'work-design.json should include moduleBoundaryCheck or workGraph before execution planning',
-    )
+    errors.push('work-design.json should include moduleBoundaryCheck or workGraph before execution planning')
   }
 
   if (workDesign.moduleBoundaryCheck) {
@@ -884,9 +821,7 @@ function validateWorkGraph(workGraph, label) {
         )
       }
       if (node.type === 'foundation') {
-        const docsOnly = node.affectedDomains?.every((domain) =>
-          ['documentation', 'test-fixture'].includes(domain),
-        )
+        const docsOnly = node.affectedDomains?.every((domain) => ['documentation', 'test-fixture'].includes(domain))
         if (!docsOnly) {
           errors.push(`${label} foundation node ${nodeId} must be sequential unless documentation/test-fixture only`)
         }
@@ -963,9 +898,7 @@ function validateDependencyImpactAudit(audit) {
       errors.push(`dependency-impact-audit.json item ${itemId} decision ${item.decision} must be decisionBy user`)
     }
     if (
-      ['required_foundation', 'blocking_dependency', 'high_impact_future_module'].includes(
-        item.classification,
-      ) &&
+      ['required_foundation', 'blocking_dependency', 'high_impact_future_module'].includes(item.classification) &&
       item.decision === 'deferred_with_no_current_impact'
     ) {
       errors.push(
@@ -1017,7 +950,10 @@ function validateExecutionManifest(manifest, acepRoot) {
     if (!Array.isArray(task.evidenceRequired) || task.evidenceRequired.length === 0) {
       errors.push(`Task ${taskId} must include evidenceRequired`)
     }
-    if (task.scopeClass && !['selected', 'foundation', 'deferred', 'blocked', 'out_of_scope'].includes(task.scopeClass)) {
+    if (
+      task.scopeClass &&
+      !['selected', 'foundation', 'deferred', 'blocked', 'out_of_scope'].includes(task.scopeClass)
+    ) {
       errors.push(`Task ${taskId} has invalid scopeClass: ${task.scopeClass}`)
     }
     if (task.executionMode !== 'review_only' && !hasAny(task.workGraphNodeIds)) {
@@ -1267,13 +1203,7 @@ function validatePbeRouting(context) {
     )
   }
 
-  const deterministicPastDependency = [
-    'plan_execution',
-    'coverage_audit',
-    'ux_audit',
-    'generate_acep',
-    'run_acep',
-  ]
+  const deterministicPastDependency = ['plan_execution', 'coverage_audit', 'ux_audit', 'generate_acep', 'run_acep']
   const needsDependencyAudit =
     autoflow.completedSteps?.includes('dependency_impact_audit') ||
     deterministicPastDependency.includes(autoflow.nextStep)
@@ -1283,9 +1213,7 @@ function validatePbeRouting(context) {
   }
 
   if (
-    context.dependencyImpactAudit?.futureItems?.some(
-      (item) => item.decision === 'pending_user_decision',
-    ) &&
+    context.dependencyImpactAudit?.futureItems?.some((item) => item.decision === 'pending_user_decision') &&
     autoflow.state !== 'WAITING_IMPLEMENTATION_SCOPE' &&
     autoflow.currentGate !== 'implementation_scope' &&
     !autoflow.lastFailure
@@ -1352,14 +1280,10 @@ function validatePbeCrossArtifacts(context) {
   }
 
   if (context.blueprintTraceability) {
-    validateTraceabilityReferences(
-      context.blueprintTraceability,
-      '.pbe/blueprint/traceability-matrix.json',
-      {
-        requirementIds,
-        verificationIds,
-      },
-    )
+    validateTraceabilityReferences(context.blueprintTraceability, '.pbe/blueprint/traceability-matrix.json', {
+      requirementIds,
+      verificationIds,
+    })
   }
 }
 
@@ -1374,9 +1298,7 @@ function validateAcepCrossArtifacts(context) {
   const workGraphNodeIds = collectWorkGraphNodeIds(context.workGraph)
   const verificationIds = collectVerificationIds(context.verificationDesign)
   const taskIds = new Set((manifest.tasks || []).map((task) => task.id).filter(Boolean))
-  const tracedRequirementIds = new Set(
-    (traceability.items || []).map((item) => item.requirementNodeId).filter(Boolean),
-  )
+  const tracedRequirementIds = new Set((traceability.items || []).map((item) => item.requirementNodeId).filter(Boolean))
 
   for (const task of manifest.tasks || []) {
     for (const requirementId of task.requirementIds || []) {
@@ -1459,8 +1381,7 @@ function validateFeedbackItems(feedback) {
       hasAny(item.affectedTaskIds) ||
       hasAny(item.affectedUiUxIds) ||
       hasAny(item.affectedVerificationIds)
-    const hasExplanation =
-      typeof item.mappingExplanation === 'string' && item.mappingExplanation.trim().length > 0
+    const hasExplanation = typeof item.mappingExplanation === 'string' && item.mappingExplanation.trim().length > 0
     if (!hasMapping && !hasExplanation) {
       errors.push(`Feedback item ${id} must include affected item mapping or mappingExplanation`)
     }
@@ -1581,7 +1502,9 @@ function pathPatternMatches(file, pattern) {
 }
 
 function normalizePathForMatch(value) {
-  return String(value || '').replaceAll('\\', '/').replace(/^\.\//, '')
+  return String(value || '')
+    .replaceAll('\\', '/')
+    .replace(/^\.\//, '')
 }
 
 function isBroadOrUnknownPath(file) {
@@ -1613,10 +1536,7 @@ function validateUiImpactContract(item, label, options) {
   if (item.uiUxConfirmationRequired === true && !item.uiUxReason) {
     errors.push(`${label} requires UI/UX confirmation but lacks uiUxReason`)
   }
-  const hasReference =
-    Boolean(item.uiUxConfirmationId) ||
-    hasAny(item.uiUxIds) ||
-    hasAny(item.uiUxCandidateIds)
+  const hasReference = Boolean(item.uiUxConfirmationId) || hasAny(item.uiUxIds) || hasAny(item.uiUxCandidateIds)
   if (item.uiImpact === 'direct' && options.requireReference && !hasReference) {
     errors.push(`${label} has direct UI impact and must link a UI/UX confirmation item`)
   }
@@ -1660,9 +1580,7 @@ function collectWorkUnitIds(workDesign) {
 }
 
 function collectVerificationIds(verificationDesign) {
-  return new Set(
-    (verificationDesign?.verificationItems || []).map((item) => item.id).filter(Boolean),
-  )
+  return new Set((verificationDesign?.verificationItems || []).map((item) => item.id).filter(Boolean))
 }
 
 function collectSelectedAndFoundationRequirementIds(workGraph) {

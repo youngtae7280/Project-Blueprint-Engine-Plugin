@@ -261,7 +261,9 @@ describe('PBE v2 tree validator', () => {
     const result = runTreeValidator(workspace)
 
     expect(result.status).toBe(1)
-    expect(result.output).toContain('changes product/scope/acceptance/verification meaning but lacks Impact Tree entries')
+    expect(result.output).toContain(
+      'changes product/scope/acceptance/verification meaning but lacks Impact Tree entries',
+    )
   })
 
   it('rejects Work Tree references to missing acceptance criteria IDs', () => {
@@ -352,7 +354,9 @@ describe('PBE v2 tree validator', () => {
     const result = runTreeValidator(workspace)
 
     expect(result.status).toBe(1)
-    expect(result.output).toContain('changes acceptance criteria AC-PT-1-1 but lacks retest/reopen/replace_evidence impact')
+    expect(result.output).toContain(
+      'changes acceptance criteria AC-PT-1-1 but lacks retest/reopen/replace_evidence impact',
+    )
   })
 })
 
@@ -369,15 +373,11 @@ function createTreeValidatorWorkspace() {
 
 function runTreeValidator(workspace: string) {
   try {
-    const output = execFileSync(
-      process.execPath,
-      [resolve(process.cwd(), 'scripts/validate-pbe-tree-system.js')],
-      {
-        cwd: workspace,
-        encoding: 'utf8',
-        stdio: ['ignore', 'pipe', 'pipe'],
-      },
-    )
+    const output = execFileSync(process.execPath, [resolve(process.cwd(), 'scripts/validate-pbe-tree-system.js')], {
+      cwd: workspace,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    })
     return { status: 0, output }
   } catch (error) {
     const failure = error as { status?: number; stdout?: Buffer; stderr?: Buffer }
@@ -958,9 +958,7 @@ function writeWindowsUtilityStyleVerificationMissLog(workspace: string) {
           'Validation checked command availability but did not open the dialog.',
           'No child surface inventory existed for controls or event handlers.',
         ],
-        requiredPbeImprovements: [
-          'Promote commands that open dialogs into child surface inventory and tests.',
-        ],
+        requiredPbeImprovements: ['Promote commands that open dialogs into child surface inventory and tests.'],
         promotion: {
           status: 'proposed',
           reason: 'Subdialog controls must become explicit Work/Test nodes.',

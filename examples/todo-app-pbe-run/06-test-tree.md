@@ -50,4 +50,3 @@ Compatibility term: VD.
   ]
 }
 ```
-

@@ -90,15 +90,11 @@ function createValidatorWorkspace() {
 
 function runValidator(workspace: string) {
   try {
-    const output = execFileSync(
-      process.execPath,
-      [resolve(process.cwd(), 'scripts/validate-pbe-files.js')],
-      {
-        cwd: workspace,
-        encoding: 'utf8',
-        stdio: ['ignore', 'pipe', 'pipe'],
-      },
-    )
+    const output = execFileSync(process.execPath, [resolve(process.cwd(), 'scripts/validate-pbe-files.js')], {
+      cwd: workspace,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    })
     return { status: 0, output }
   } catch (error) {
     const failure = error as { status?: number; stdout?: Buffer; stderr?: Buffer }
@@ -205,11 +201,7 @@ function writePbeFixture(
   })
   writeJson(join(blueprintRoot, 'verification-design.json'), {
     schemaVersion: 1,
-    verificationItems: [
-      verificationItem('V-A'),
-      verificationItem('V-B'),
-      verificationItem('V-INT'),
-    ],
+    verificationItems: [verificationItem('V-A'), verificationItem('V-B'), verificationItem('V-INT')],
   })
   writeJson(join(blueprintRoot, 'dependency-impact-audit.json'), {
     schemaVersion: 1,

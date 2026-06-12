@@ -43,4 +43,3 @@ Example approval:
 ```text
 approve this first slice
 ```
-

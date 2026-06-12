@@ -24,4 +24,3 @@ Impact summary:
 - `W-TODO-COMPLETE` is reopened.
 - `T-TODO-COMPLETE` must verify Completed section behavior.
 - Existing add, delete, and persistence tests remain regression checks.
-

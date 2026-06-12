@@ -60,4 +60,3 @@ export function listFiles(root, relativePath, predicate = () => true) {
     }
   }
 }
-

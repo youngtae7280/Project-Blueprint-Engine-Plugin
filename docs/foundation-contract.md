@@ -31,4 +31,3 @@ Foundation is not implementation of deferred behavior.
 - If a foundation task adds external SDK calls, fail or require human review.
 - If a foundation stub has real side effects, fail.
 - If foundation implements deferred feature business logic, fail.
-

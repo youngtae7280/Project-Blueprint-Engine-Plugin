@@ -20,7 +20,7 @@
 ## Screenshot Evidence
 
 | Surface | State | Required | Evidence | Status |
-| --- | --- | --- | --- | --- |
+| ------- | ----- | -------- | -------- | ------ |
 
 ## State Coverage
 

@@ -34,4 +34,3 @@ After bounded revision execution:
 ```
 
 PBE can report that all selected branches are implemented and verified. The final product state becomes accepted only after the user approves the review result.
-

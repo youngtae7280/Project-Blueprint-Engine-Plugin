@@ -17,4 +17,3 @@ Foundation must not:
 - create production side effects
 - perform real external connection
 - silently promote deferred to selected
-

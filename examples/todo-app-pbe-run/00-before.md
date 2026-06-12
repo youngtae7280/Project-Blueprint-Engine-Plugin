@@ -15,4 +15,3 @@ PBE starts with:
 ```text
 @project-blueprint-engine start
 ```
-

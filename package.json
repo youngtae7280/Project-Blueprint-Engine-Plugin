@@ -16,8 +16,8 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "lint": "eslint .",
-    "format": "prettier --write \"cli/src/**/*.ts\" \"*.json\" \"schemas/**/*.json\" \"templates/**/*.json\"",
-    "format:check": "prettier --check \"cli/src/**/*.ts\" \"*.json\" \"schemas/**/*.json\" \"templates/**/*.json\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "build": "npm run validate:pbe",
     "validate": "npm run validate:pbe"
   },

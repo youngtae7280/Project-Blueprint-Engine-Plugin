@@ -23,14 +23,7 @@ const requiredExampleFiles = [
   'examples/todo-app-pbe-run/14-final-state.md',
 ]
 
-const requiredReadmeTerms = [
-  'Product',
-  'Work',
-  'Test',
-  'Evidence',
-  'Change',
-  'Revision',
-]
+const requiredReadmeTerms = ['Product', 'Work', 'Test', 'Evidence', 'Change', 'Revision']
 
 export function runExamplesValidator({ root }) {
   const issues = []
@@ -67,4 +60,3 @@ export function runExamplesValidator({ root }) {
 
   return issues
 }
-

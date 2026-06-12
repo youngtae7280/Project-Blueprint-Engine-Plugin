@@ -8,8 +8,8 @@
 
 ## Future Or Deferred Items
 
-| ID | Title | Classification | Current Slice Impact | Risk If Skipped | Decision |
-| --- | --- | --- | --- | --- | --- |
+| ID         | Title                     | Classification      | Current Slice Impact                                                           | Risk If Skipped                                                | Decision              |
+| ---------- | ------------------------- | ------------------- | ------------------------------------------------------------------------------ | -------------------------------------------------------------- | --------------------- |
 | FUTURE-001 | Future or deferred module | required_foundation | Requires a stable interface, adapter, state model, event, schema, or stub now. | Selected slice may hard-code a transport or module assumption. | pending_user_decision |
 
 ## Classifications

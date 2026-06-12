@@ -37,4 +37,3 @@ State:
   "acceptedBy": null
 }
 ```
-
