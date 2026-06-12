@@ -115,6 +115,114 @@ describe('PBE CLI', () => {
     expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain('ABSTRACT_QUALITY_TERM')
   })
 
+  it.each([
+    [
+      'id',
+      'AC_ID_MISSING',
+      (criterion: Record<string, any>) => {
+        delete criterion.id
+      },
+    ],
+    [
+      'condition',
+      'AC_CONDITION_MISSING',
+      (criterion: Record<string, any>) => {
+        delete criterion.condition
+        criterion.statement = 'THE SYSTEM SHALL show the updated status text.'
+      },
+    ],
+    [
+      'observable result',
+      'AC_OBSERVABLE_RESULT_MISSING',
+      (criterion: Record<string, any>) => {
+        delete criterion.observableResult
+      },
+    ],
+    [
+      'verification method',
+      'AC_VERIFICATION_METHOD_MISSING',
+      (criterion: Record<string, any>) => {
+        delete criterion.verificationMethod
+        delete criterion.verification.method
+      },
+    ],
+    [
+      'required evidence',
+      'AC_EVIDENCE_REQUIREMENT_MISSING',
+      (criterion: Record<string, any>) => {
+        delete criterion.requiredEvidence
+        criterion.verification.evidenceTypes = []
+      },
+    ],
+  ])('rejects RPD close when structured acceptance criterion lacks %s', async (_field, code, mutate) => {
+    const workspace = createWorkspace()
+    writeMinimalPbe(workspace, {
+      productTitle: 'Show connected status',
+      ambiguityResolved: true,
+      includeAcceptanceCriteria: true,
+      rootUserConfirmed: true,
+    })
+    mutateFirstAcceptanceCriterion(workspace, mutate)
+
+    const result = await runPbeCli(['rpd', 'close', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    const payload = JSON.parse(result.stderr)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain(code)
+  })
+
+  it('rejects RPD close when acceptance criterion contains an abstract quality term', async () => {
+    const workspace = createWorkspace()
+    writeMinimalPbe(workspace, {
+      productTitle: 'Show connected status',
+      ambiguityResolved: true,
+      includeAcceptanceCriteria: true,
+      rootUserConfirmed: true,
+    })
+    mutateFirstAcceptanceCriterion(workspace, (criterion) => {
+      criterion.observableResult = 'The status is shown 깔끔하게.'
+    })
+
+    const result = await runPbeCli(['rpd', 'close', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    const payload = JSON.parse(result.stderr)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain('AC_ABSTRACT_TERM')
+  })
+
+  it('allows acceptanceNotRequiredReason for a non-executable foundation Product node', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, '.pbe', 'tree', 'product-tree.json'), {
+      version: '0.2.0-tree-control',
+      rootNodeId: 'PT-ROOT',
+      nodes: [
+        {
+          id: 'PT-ROOT',
+          type: 'non_goal',
+          title: 'Foundation grouping node',
+          status: 'confirmed',
+          parent: null,
+          children: [],
+          source: { actor: 'user', type: 'user_interview' },
+          scopeClass: 'foundation',
+          acceptanceCriteria: [],
+          acceptanceNotRequiredReason:
+            'This node groups implementation foundation and has no user-observable behavior.',
+          ambiguity: { status: 'clear', type: 'none', missing: [] },
+          ambiguityResolution: { status: 'resolved', resolvedTerms: [] },
+        },
+      ],
+    })
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'INIT')
+
+    const result = await runPbeCli(['rpd', 'close', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(JSON.parse(result.stdout).state).toBe('RPD_DONE')
+  })
+
   it('closes RPD and updates state when root and leaf are user-confirmed', async () => {
     const workspace = createWorkspace()
     writeMinimalPbe(workspace, {
@@ -248,6 +356,44 @@ describe('PBE CLI', () => {
 
     expect(result.exitCode).toBe(ExitCode.Success)
     expect(JSON.parse(result.stdout).ok).toBe(true)
+  })
+
+  it('rejects VD close when required acceptance criteria are not covered by Test Tree', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace)
+    writeRequirementCompat(workspace)
+    writeDecisionQueue(workspace)
+    writePbeState(workspace, 'WPD_DONE')
+    writeWorkTree(workspace)
+    writeTestTree(workspace, { verifiesAcceptanceCriteria: false })
+
+    const before = readStateText(workspace)
+    const result = await runPbeCli(['vd', 'close', '--json'], { cwd: workspace, pluginRoot })
+    const after = readStateText(workspace)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    const payload = JSON.parse(result.stderr)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain('ACCEPTANCE_NOT_COVERED')
+    expect(after).toBe(before)
+  })
+
+  it('rejects VD check when UI acceptance criteria lack screenshot or manual evidence coverage', async () => {
+    const workspace = createWorkspace()
+    writeExecutableProduct(workspace, { visualImpact: true })
+    mutateFirstAcceptanceCriterion(workspace, (criterion) => {
+      criterion.verificationMethod = 'test_log'
+      criterion.requiredEvidence = ['test_output']
+      criterion.verification.method = 'test_log'
+      criterion.verification.evidenceTypes = ['test_output']
+    })
+    writeWorkTree(workspace)
+    writeTestTree(workspace, { evidenceRequired: ['test output'] })
+
+    const result = await runPbeCli(['vd', 'check', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    const payload = JSON.parse(result.stderr)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain('UI_ACCEPTANCE_EVIDENCE_NOT_COVERED')
   })
 
   it('rejects UI Test nodes without screenshot or manual evidence requirement', async () => {
@@ -1132,6 +1278,17 @@ function readState(workspace: string): Record<string, any> {
 
 function readStateText(workspace: string): string {
   return readFileSync(join(workspace, '.pbe', 'blueprint', 'pbe-state.json'), 'utf8')
+}
+
+function mutateFirstAcceptanceCriterion(
+  workspace: string,
+  mutate: (criterion: Record<string, any>, productTree: Record<string, any>) => void,
+): void {
+  const productTreePath = join(workspace, '.pbe', 'tree', 'product-tree.json')
+  const productTree = JSON.parse(readFileSync(productTreePath, 'utf8'))
+  const node = productTree.nodes.find((entry: Record<string, any>) => entry.acceptanceCriteria?.length > 0)
+  mutate(node.acceptanceCriteria[0], productTree)
+  writeJson(productTreePath, productTree)
 }
 
 function expectLastTransition(

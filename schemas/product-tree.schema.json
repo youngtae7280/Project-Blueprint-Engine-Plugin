@@ -97,7 +97,16 @@
           ]
         },
         "condition": { "type": "string" },
+        "trigger": { "type": "string" },
+        "system": { "type": "string" },
+        "shall": { "type": "string" },
+        "expectedBehavior": { "type": "string" },
         "systemResponse": { "type": "string" },
+        "observableResult": { "type": "string" },
+        "expectedResult": { "type": "string" },
+        "verificationMethod": { "type": "string" },
+        "requiredEvidence": { "type": "array", "items": { "type": "string" } },
+        "evidenceRequired": { "type": "array", "items": { "type": "string" } },
         "statement": { "type": "string" },
         "status": { "enum": ["draft", "proposed", "confirmed", "changed", "deferred", "out_of_scope", "invalidated"] },
         "source": {
@@ -117,8 +126,12 @@
           "type": "object",
           "properties": {
             "required": { "type": "boolean" },
+            "method": { "type": "string" },
+            "verificationMethod": { "type": "string" },
             "suggestedTestNodeIds": { "type": "array", "items": { "type": "string" } },
-            "evidenceTypes": { "type": "array", "items": { "type": "string" } }
+            "evidenceTypes": { "type": "array", "items": { "type": "string" } },
+            "requiredEvidence": { "type": "array", "items": { "type": "string" } },
+            "evidenceRequired": { "type": "array", "items": { "type": "string" } }
           },
           "additionalProperties": true
         },

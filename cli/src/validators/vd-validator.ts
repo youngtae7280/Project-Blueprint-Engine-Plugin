@@ -3,13 +3,17 @@ import { artifactPath, defaultArtifacts } from '../core/project.js'
 import type { ValidationIssue } from '../core/types.js'
 import { issue } from '../core/types.js'
 import {
+  acceptanceCriterionEvidenceEntries,
+  acceptanceCriterionVerificationMethod,
   acceptanceCriteriaOf,
   arrayStrings,
-  getNestedBoolean,
+  hasScreenshotOrManualEvidence,
+  isUiRelatedAcceptanceCriterion,
   missingIssue,
   nodesOf,
   readJsonIfExists,
   stringValue,
+  type JsonObject,
 } from './shared.js'
 
 export async function validateVd(root: string): Promise<ValidationIssue[]> {
@@ -49,23 +53,62 @@ export async function validateVd(root: string): Promise<ValidationIssue[]> {
   }
 
   const verifiedCriteria = new Set(testNodes.flatMap((node) => arrayStrings(node.verifiesAcceptanceCriteriaIds)))
+  const testsByCriterionId = new Map<string, JsonObject[]>()
+  for (const testNode of testNodes) {
+    for (const criterionId of arrayStrings(testNode.verifiesAcceptanceCriteriaIds)) {
+      const entries = testsByCriterionId.get(criterionId) || []
+      entries.push(testNode)
+      testsByCriterionId.set(criterionId, entries)
+    }
+  }
   for (const productNode of nodesOf(product)) {
     for (const criterion of acceptanceCriteriaOf(productNode)) {
-      if (
-        getNestedBoolean(criterion, ['verification', 'required']) === true &&
-        !verifiedCriteria.has(stringValue(criterion.id))
-      ) {
+      const criterionId = stringValue(criterion.id)
+      if (stringValue(criterion.status) !== 'confirmed') {
+        continue
+      }
+      if (!verifiedCriteria.has(criterionId)) {
         issues.push(
           issue({
             validator: 'VD',
             code: 'ACCEPTANCE_NOT_COVERED',
             severity: 'error',
             file: defaultArtifacts.testTree,
-            nodeId: stringValue(criterion.id),
-            message: `Required acceptance criterion ${String(criterion.id)} has no Test Tree coverage.`,
+            nodeId: criterionId,
+            message: `Required acceptance criterion ${criterionId} has no Test Tree coverage.`,
             suggestedFix: 'Create or link a Test Tree node with verifiesAcceptanceCriteriaIds.',
           }),
         )
+        continue
+      }
+
+      if (isUiRelatedAcceptanceCriterion(productNode, criterion)) {
+        const linkedTestEvidence = (testsByCriterionId.get(criterionId) || []).flatMap((testNode) => [
+          stringValue(testNode.type),
+          stringValue(testNode.verificationMethod),
+          ...arrayStrings(testNode.evidenceRequired),
+          ...arrayStrings(testNode.requiredEvidence),
+        ])
+        if (
+          !hasScreenshotOrManualEvidence([
+            ...linkedTestEvidence,
+            ...acceptanceCriterionEvidenceEntries(criterion),
+            acceptanceCriterionVerificationMethod(criterion),
+          ])
+        ) {
+          issues.push(
+            issue({
+              validator: 'VD',
+              code: 'UI_ACCEPTANCE_EVIDENCE_NOT_COVERED',
+              severity: 'error',
+              file: defaultArtifacts.testTree,
+              nodeId: criterionId,
+              message: `UI acceptance criterion ${criterionId} is covered by tests, but lacks screenshot/manual evidence coverage.`,
+              suggestedFix:
+                'Add screenshot, manual_screenshot, manual_check, or equivalent UI evidence to the linked Test Tree node.',
+            }),
+          )
+        }
       }
     }
   }

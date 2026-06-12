@@ -433,16 +433,45 @@ export function validateAcceptanceCriterion(productNode: JsonObject, criterion: 
   const issues: ValidationIssue[] = []
   const criterionId = stringValue(criterion.id)
   const productId = stringValue(productNode.id)
-  const hasCondition = Boolean(stringValue(criterion.condition) || stringValue(criterion.trigger))
+  const status = stringValue(criterion.status)
+  const statement = stringValue(criterion.statement)
+  const evidenceEntries = acceptanceCriterionEvidenceEntries(criterion)
+  const verificationMethod = acceptanceCriterionVerificationMethod(criterion)
+  const hasStatementTrigger = /\b(when|if|while|where)\b/i.test(statement)
+  const hasCondition = Boolean(
+    firstString(
+      criterion.condition,
+      criterion.trigger,
+      criterion.event,
+      criterion.state,
+      getNestedValue(criterion, ['ears', 'condition']),
+      getNestedValue(criterion, ['verification', 'condition']),
+    ) || hasStatementTrigger,
+  )
   const hasBehavior = Boolean(
-    stringValue(criterion.systemResponse) || stringValue(criterion.shall) || stringValue(criterion.expectedBehavior),
+    firstString(
+      criterion.shall,
+      criterion.expectedBehavior,
+      criterion.systemResponse,
+      criterion.behavior,
+      getNestedValue(criterion, ['ears', 'shall']),
+      getNestedValue(criterion, ['verification', 'expectedBehavior']),
+    ) || /\bshall\b/i.test(statement),
   )
-  const hasEvidence =
-    arrayStrings(criterion.requiredEvidence).length > 0 ||
-    arrayStrings(getNestedValue(criterion, ['verification', 'evidenceTypes'])).length > 0
-  const hasVerification = Boolean(
-    stringValue(criterion.verificationMethod) || getNestedBoolean(criterion, ['verification', 'required']) === true,
+  const hasObservableResult = Boolean(
+    firstString(
+      criterion.observableResult,
+      criterion.expectedResult,
+      criterion.expectedOutcome,
+      criterion.result,
+      getNestedValue(criterion, ['verification', 'observableResult']),
+      getNestedValue(criterion, ['verification', 'expectedResult']),
+    ),
   )
+  const hasEvidence = evidenceEntries.length > 0
+  const hasVerification = Boolean(verificationMethod)
+  const uiRelated = isUiRelatedAcceptanceCriterion(productNode, criterion)
+  const hasUiEvidence = hasScreenshotOrManualEvidence([...evidenceEntries, verificationMethod])
 
   if (!criterionId) {
     issues.push(
@@ -455,7 +484,7 @@ export function validateAcceptanceCriterion(productNode: JsonObject, criterion: 
       ),
     )
   }
-  if (stringValue(criterion.status) === 'confirmed' && !hasCondition) {
+  if (status === 'confirmed' && !hasCondition) {
     issues.push(
       criteriaIssue(
         'AC_CONDITION_MISSING',
@@ -466,7 +495,7 @@ export function validateAcceptanceCriterion(productNode: JsonObject, criterion: 
       ),
     )
   }
-  if (stringValue(criterion.status) === 'confirmed' && !hasBehavior) {
+  if (status === 'confirmed' && !hasBehavior) {
     issues.push(
       criteriaIssue(
         'AC_BEHAVIOR_MISSING',
@@ -477,18 +506,29 @@ export function validateAcceptanceCriterion(productNode: JsonObject, criterion: 
       ),
     )
   }
-  if (stringValue(criterion.status) === 'confirmed' && !hasVerification) {
+  if (status === 'confirmed' && !hasObservableResult) {
+    issues.push(
+      criteriaIssue(
+        'AC_OBSERVABLE_RESULT_MISSING',
+        criterionId,
+        productId,
+        `Acceptance criterion ${criterionId} lacks observable result.`,
+        'Add observableResult or expectedResult describing the pass/fail visible outcome.',
+      ),
+    )
+  }
+  if (status === 'confirmed' && !hasVerification) {
     issues.push(
       criteriaIssue(
         'AC_VERIFICATION_METHOD_MISSING',
         criterionId,
         productId,
         `Acceptance criterion ${criterionId} lacks verification method.`,
-        'Add verificationMethod or verification.required metadata.',
+        'Add verificationMethod or verification.method metadata.',
       ),
     )
   }
-  if (stringValue(criterion.status) === 'confirmed' && !hasEvidence) {
+  if (status === 'confirmed' && !hasEvidence) {
     issues.push(
       criteriaIssue(
         'AC_EVIDENCE_REQUIREMENT_MISSING',
@@ -496,6 +536,17 @@ export function validateAcceptanceCriterion(productNode: JsonObject, criterion: 
         productId,
         `Acceptance criterion ${criterionId} lacks required evidence metadata.`,
         'Add requiredEvidence or verification.evidenceTypes.',
+      ),
+    )
+  }
+  if (status === 'confirmed' && uiRelated && !hasUiEvidence) {
+    issues.push(
+      criteriaIssue(
+        'AC_UI_EVIDENCE_REQUIREMENT_MISSING',
+        criterionId,
+        productId,
+        `UI acceptance criterion ${criterionId} lacks screenshot/manual evidence requirement.`,
+        'Add manual_screenshot, screenshot, manual_check, or equivalent UI evidence to requiredEvidence.',
       ),
     )
   }
@@ -514,6 +565,52 @@ export function validateAcceptanceCriterion(productNode: JsonObject, criterion: 
   }
 
   return issues
+}
+
+export function acceptanceCriterionEvidenceEntries(criterion: JsonObject): string[] {
+  return [
+    ...stringsFromStringOrArray(criterion.requiredEvidence),
+    ...stringsFromStringOrArray(criterion.evidenceRequired),
+    ...stringsFromStringOrArray(getNestedValue(criterion, ['verification', 'requiredEvidence'])),
+    ...stringsFromStringOrArray(getNestedValue(criterion, ['verification', 'evidenceRequired'])),
+    ...stringsFromStringOrArray(getNestedValue(criterion, ['verification', 'evidenceTypes'])),
+  ]
+}
+
+export function acceptanceCriterionVerificationMethod(criterion: JsonObject): string {
+  return firstString(
+    criterion.verificationMethod,
+    criterion.method,
+    getNestedValue(criterion, ['verification', 'method']),
+    getNestedValue(criterion, ['verification', 'verificationMethod']),
+    getNestedValue(criterion, ['verification', 'type']),
+  )
+}
+
+export function isUiRelatedAcceptanceCriterion(productNode: JsonObject, criterion: JsonObject): boolean {
+  const productType = stringValue(productNode.type)
+  const criterionType = stringValue(criterion.type)
+  const text = [productType, criterionType, stringValue(productNode.title), criterionText(criterion)]
+    .join(' ')
+    .toLowerCase()
+  return (
+    productType.startsWith('ui_') ||
+    getNestedBoolean(productNode, ['visualImpact']) === true ||
+    getNestedBoolean(productNode, ['ux', 'visualAffected']) === true ||
+    getNestedBoolean(productNode, ['ux', 'visualWorkRequired']) === true ||
+    getNestedBoolean(criterion, ['ui', 'required']) === true ||
+    /\b(ui|ux|screen|visual|button|dialog|modal|panel|layout|state)\b/.test(text)
+  )
+}
+
+export function hasScreenshotOrManualEvidence(entries: string[]): boolean {
+  const haystack = entries.join(' ').toLowerCase()
+  return (
+    haystack.includes('screenshot') ||
+    haystack.includes('manual') ||
+    haystack.includes('visual') ||
+    haystack.includes('ui_evidence')
+  )
 }
 
 export function criteriaIssue(
@@ -630,10 +727,16 @@ export function criterionText(criterion: JsonObject): string {
   return [
     criterion.statement,
     criterion.condition,
+    criterion.trigger,
     criterion.systemResponse,
     criterion.shall,
     criterion.expectedBehavior,
     criterion.observableResult,
+    criterion.expectedResult,
+    criterion.expectedOutcome,
+    criterion.result,
+    ...acceptanceCriterionEvidenceEntries(criterion),
+    acceptanceCriterionVerificationMethod(criterion),
   ]
     .map(stringValue)
     .join(' ')
@@ -684,8 +787,17 @@ export function arrayStrings(value: unknown): string[] {
   return value.map(stringValue).filter(Boolean)
 }
 
+export function stringsFromStringOrArray(value: unknown): string[] {
+  const scalar = stringValue(value)
+  return scalar ? [scalar] : arrayStrings(value)
+}
+
 export function stringValue(value: unknown): string {
   return typeof value === 'string' ? value : ''
+}
+
+function firstString(...values: unknown[]): string {
+  return values.map(stringValue).find(Boolean) || ''
 }
 
 export function isObject(value: unknown): value is JsonObject {

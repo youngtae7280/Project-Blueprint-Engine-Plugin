@@ -29,7 +29,12 @@ THE SYSTEM SHALL <safe/error/retry behavior>.
   "format": "EARS",
   "type": "event_driven",
   "condition": "",
+  "system": "THE SYSTEM",
+  "shall": "SHALL <observable response>",
   "systemResponse": "",
+  "observableResult": "",
+  "verificationMethod": "manual_check",
+  "requiredEvidence": ["manual_check"],
   "statement": "",
   "status": "confirmed",
   "source": {
@@ -39,8 +44,9 @@ THE SYSTEM SHALL <safe/error/retry behavior>.
   },
   "verification": {
     "required": true,
+    "method": "manual_check",
     "suggestedTestNodeIds": [],
-    "evidenceTypes": []
+    "evidenceTypes": ["manual_check"]
   }
 }
 ```
@@ -48,5 +54,8 @@ THE SYSTEM SHALL <safe/error/retry behavior>.
 ## Rules
 
 - A confirmed executable Product node must have at least one structured criterion unless `acceptanceNotRequiredReason` explains why not.
+- A confirmed criterion must include a condition/trigger, expected behavior, observable result, verification method, and required evidence.
+- UI criteria must require screenshot or manual UI evidence.
+- Abstract quality terms such as `clean`, `nice`, `fast`, `stable`, `intuitive`, `깔끔하게`, `보기 좋게`, `빠르게`, `안정적으로`, or `직관적으로` must be resolved before RPD closes.
 - Keep legacy `acceptance` strings only as compatibility summaries.
 - Work, Test, and Evidence trees should link to the criterion ID whenever possible.

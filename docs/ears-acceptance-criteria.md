@@ -46,7 +46,12 @@ THE SYSTEM SHALL show an error state and a retry-capable action.
       "format": "EARS",
       "type": "event_driven",
       "condition": "USB device is connected",
+      "system": "THE SYSTEM",
+      "shall": "SHALL show Connected in the status panel",
       "systemResponse": "show Connected in the status panel",
+      "observableResult": "Connected is visible in the status panel",
+      "verificationMethod": "manual_screenshot",
+      "requiredEvidence": ["test_log", "screenshot"],
       "statement": "WHEN USB device is connected, THE SYSTEM SHALL show Connected in the status panel.",
       "status": "confirmed",
       "source": {
@@ -56,6 +61,7 @@ THE SYSTEM SHALL show an error state and a retry-capable action.
       },
       "verification": {
         "required": true,
+        "method": "manual_screenshot",
         "suggestedTestNodeIds": [],
         "evidenceTypes": ["test_log", "screenshot"]
       }
@@ -63,6 +69,21 @@ THE SYSTEM SHALL show an error state and a retry-capable action.
   ]
 }
 ```
+
+## Structured Gate Requirements
+
+For confirmed executable Product nodes, PBE treats acceptance criteria as pass/fail contracts, not prose summaries. Each required criterion must include:
+
+- `id`
+- condition or trigger information, such as `condition`, `trigger`, or an EARS `WHEN`/`IF`/`WHILE` statement
+- expected behavior, such as `shall`, `expectedBehavior`, or existing `systemResponse`
+- observable result, such as `observableResult` or `expectedResult`
+- verification method, such as `verificationMethod` or `verification.method`
+- required evidence, such as `requiredEvidence`, `evidenceRequired`, or existing `verification.evidenceTypes`
+
+Abstract quality terms such as `clean`, `nice`, `fast`, `stable`, `intuitive`, `깔끔하게`, `보기 좋게`, `빠르게`, `안정적으로`, or `직관적으로` block RPD close until converted into observable target, condition, behavior, result, exception, and verification details.
+
+UI-related criteria must require screenshot or manual UI evidence, such as `manual_screenshot`, `screenshot`, or `manual_check`.
 
 ## Traceability
 

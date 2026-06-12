@@ -47,7 +47,12 @@
           "format": "EARS",
           "type": "event_driven",
           "condition": "USB device is connected",
+          "system": "THE SYSTEM",
+          "shall": "SHALL show Connected in the status panel",
           "systemResponse": "the status panel shows Connected",
+          "observableResult": "Connected is visible in the status panel",
+          "verificationMethod": "manual_screenshot",
+          "requiredEvidence": ["test_log", "screenshot"],
           "statement": "WHEN USB device is connected, THE SYSTEM SHALL show Connected in the status panel.",
           "status": "confirmed",
           "source": {
@@ -56,6 +61,7 @@
           },
           "verification": {
             "required": true,
+            "method": "manual_screenshot",
             "suggestedTestNodeIds": [],
             "evidenceTypes": ["test_log", "screenshot"]
           }
