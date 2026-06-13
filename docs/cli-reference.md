@@ -10,6 +10,9 @@ Use `pbe status` when unsure. Use `pbe validate` for full repository and `.pbe` 
 
 See also: [Install PBE locally](install.md) and [Troubleshooting](troubleshooting.md).
 
+Run local verification commands sequentially, especially on Windows, because validation commands that rebuild the CLI
+can touch `clean-dist` / `dist`.
+
 When the user's request is vague, PBE should draft a Product Tree candidate first, ask only the highest-impact question,
 and wait for user confirmation before closing RPD.
 

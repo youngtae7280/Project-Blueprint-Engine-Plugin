@@ -87,6 +87,29 @@ npm.cmd run validate:pbe
 node dist/cli/index.js validate --json
 ```
 
+## Windows `EPERM` Involving `clean-dist` During Validation
+
+Symptom:
+
+Windows reports an `EPERM` file locking error while `clean-dist` removes or rebuilds `dist`.
+
+Cause:
+
+If `validate:pbe` and `test:examples` are started at the same time, they may both touch the generated `dist` /
+`clean-dist` area. On Windows this can occasionally surface as an `EPERM` file locking error.
+
+Fix:
+
+Run the verification commands sequentially:
+
+```powershell
+npm.cmd run validate:pbe
+npm.cmd run test:examples
+```
+
+If the commands pass when rerun sequentially, this is a local command scheduling issue rather than a PBE validation
+failure.
+
 ## `test:examples` Fails
 
 The example regression suite checks `examples/valid` and `examples/invalid`.

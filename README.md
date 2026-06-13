@@ -66,6 +66,8 @@ Useful entry points:
 - Complete golden example run: [examples/valid/todo-app-pbe-run](examples/valid/todo-app-pbe-run/README.md)
 - Dogfooding PBE on an existing project: [docs/dogfooding-existing-project.md](docs/dogfooding-existing-project.md)
 - Todo search adoption example: [examples/adoption/todo-search-slice](examples/adoption/todo-search-slice/README.md)
+- Self-dogfooding:
+  [Windows sequential validation guidance](examples/dogfooding/windows-validation-sequential-run/README.md)
 - Invalid regression fixtures: [examples/invalid](examples/invalid)
 
 ## Learn The Model

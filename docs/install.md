@@ -67,7 +67,8 @@ npm.cmd run build:cli
 
 ## Recommended Local Verification
 
-Run this before committing or pushing:
+Run this before committing or pushing. Run the commands sequentially. On Windows, do not start `validate:pbe` and
+`test:examples` in parallel because both commands build the CLI and may touch `clean-dist` / `dist` at the same time.
 
 ```bash
 npm.cmd run format:check
