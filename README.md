@@ -67,6 +67,7 @@ Useful entry points:
 ## Learn The Model
 
 - [Core concepts](docs/core-concepts.md)
+- [RPD Interview Mode](docs/rpd-interview-mode.md)
 - [Tree model](docs/tree-model.md)
 - [Human gates](docs/human-gates.md)
 - [Execution contracts](docs/execution-contracts.md)

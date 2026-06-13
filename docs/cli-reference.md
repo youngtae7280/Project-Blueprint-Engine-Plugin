@@ -8,6 +8,9 @@ commands.
 
 Use `pbe status` when unsure. Use `pbe validate` for full repository and `.pbe` artifact validation.
 
+When the user's request is vague, PBE should draft a Product Tree candidate first, ask only the highest-impact question,
+and wait for user confirmation before closing RPD.
+
 Most commands follow this pattern:
 
 - read `.pbe` artifacts

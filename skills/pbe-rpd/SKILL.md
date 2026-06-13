@@ -23,6 +23,32 @@ Update Source of Truth Matrix references whenever RPD creates, confirms, defers,
 
 RPD must not treat abstract quality expressions as executable requirements. PBE is a requirements-based execution control layer, so RPD converts user intent into verifiable Product Tree nodes before any Work Tree derivation.
 
+## RPD Interview / Draft UX
+
+When the user gives a rough request, do not ask the user to write a Product Tree. Codex must draft a Product Tree candidate first, then ask for confirmation or the single most important missing decision.
+
+Draft behavior:
+
+1. Preserve the raw user request.
+2. Draft Product branch candidates from the request.
+3. Mark the candidate as draft/proposed, not confirmed.
+4. Present ambiguity, risk, and missing decisions alongside the draft.
+5. Suggest a first slice when the request implies a practical starting scope.
+6. Ask only the highest-impact question when a human decision is needed.
+7. If the request is already clear, skip unnecessary interview turns and ask for confirmation of the summary/structure.
+
+Question priority:
+
+1. Scope decision.
+2. Risky product meaning decision.
+3. Acceptance or verification decision.
+4. UI/UX direction decision.
+5. Edge, error, or permission state decision.
+
+Use `templates/rpd-interview-summary-template.md` for durable summaries when helpful. Optional draft notes may follow `templates/rpd-interview-draft.template.json`. Codex must not mark Product nodes as `confirmed` without user confirmation.
+
+If user feedback changes Product Tree meaning after RPD, do not quietly edit `.pbe/tree/product-tree.json`. Route it through Change/Impact/Revision and, when a Product Tree patch is required, Product Patch Proposal.
+
 ## Inputs And Outputs
 
 Prefer these v2 files when present:
