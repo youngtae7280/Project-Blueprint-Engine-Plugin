@@ -5,6 +5,10 @@ description: Derive Project Tree and Work Tree from completed RPD/Product Tree f
 
 # PBE WPD
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill to create Work Process Design from completed RPD output.
 
 In PBE v2, WPD derives `.pbe/tree/project-tree.json` and `.pbe/tree/work-tree.json` from confirmed Product Tree branches. Existing `.pbe/blueprint/work-design.json` and `.pbe/blueprint/work-graph.json` remain compatibility views and must be generated from the tree-native output, not the other way around.
@@ -210,6 +214,8 @@ Every non-root Work Tree node must include:
 - `validationHints`
 
 If a Work Tree node has unknown write scope, set `unknownFileTouchRisk` to `true` and ensure the compatibility WorkGraph marks it not parallel-safe.
+
+File Change Guard uses Work and Revision scope to explain source file changes before review and accept transitions. WPD must keep `expectedFiles`, `expectedSharedFiles`, `forbiddenFiles`, and `unknownFileTouchRisk` accurate enough for `pbe files check`, `pbe review submit`, and `pbe accept`. If implementation later touches files outside Work scope, do not widen WPD silently; open Change/Impact/Revision with `pbe change create`, `pbe impact analyze`, and `pbe revision start`.
 
 ## Scope Classification
 

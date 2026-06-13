@@ -5,6 +5,10 @@ description: Collect user review feedback and map it to Product, Project, Work, 
 
 # PBE Collect Feedback
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill when the user says the result is not acceptable, asks for changes, or gives review feedback after `submitted_for_review`.
 
 In Autoflow, this skill runs automatically when the user gives a revision request at the Review Result gate.
@@ -12,11 +16,12 @@ In Autoflow, this skill runs automatically when the user gives a revision reques
 When feedback changes product meaning, scope, UI/UX behavior, acceptance criteria, verification strategy, or previously completed work, create or update Change Tree and Impact Tree before coding. Then run:
 
 ```bash
-pbe trace check
-pbe gate code-start
+pbe change create
+pbe impact analyze
+pbe revision start
 ```
 
-Do not silently modify completed scope without a Change node and Impact record.
+Do not silently modify completed scope without a Change node and Impact record. Product Tree changes requested by feedback must be recorded through Change/Impact first and may require user confirmation before affected Product nodes or acceptance criteria change.
 
 ## Purpose
 
@@ -170,13 +175,10 @@ Do not ask when the feedback maps cleanly to an existing affected selected/found
 
 When feedback is mapped clearly:
 
-- Set `pbe-state.json.autoflow.lastUserAction` to `revise`.
-- Keep `autoflow.state` at `WAITING_REVIEW_RESULT` while revision is being prepared, or set `deliveryStatus` to `revision_requested`.
-- Add or update downstream retry steps:
-  - `create_revision_pack`
-  - `run_revision`
-  - `review_result`
-- Continue automatically to `pbe-create-revision-pack`.
+- Run `pbe change create` for each product/scope/UX/risk/acceptance/verification change.
+- Run `pbe impact analyze` for each created Change node.
+- Run `pbe revision start` only after Impact analysis is available and the revision boundary is clear.
+- Continue automatically to bounded revision preparation only if the CLI commands succeed.
 
 When mapping is unclear:
 

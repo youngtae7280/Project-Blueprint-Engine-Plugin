@@ -5,6 +5,10 @@ description: Select a safe Cycle Slice from Product, Project, Work, and Test Tre
 
 # PBE Plan Execution
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill after WPD and VD, and before ACEP generation.
 
 Execution planning is deterministic in Autoflow. Run it automatically after VD succeeds, dependency impact is audited, implementation scope is selected, and architecture runway is approved when required.
@@ -90,9 +94,9 @@ These outputs are later copied or rendered into:
 20. Save `.pbe/execution/cycle-contract.md`.
 21. Save `execution-strategy.md`.
 22. Save `execution-strategy.json`.
-23. Update `pbe-state.json` artifact references when available.
+23. Ensure generated artifact paths are referenced by the relevant tree, blueprint, and execution artifacts.
 24. Run `pbe plan execution complete`.
-25. Let the CLI keep state on `SCOPE_SELECTED`, record `plan_execution` in `completedSteps`, and advance `nextStep` to `coverage_audit`.
+25. Let the CLI keep state on the current valid workflow point, record the execution-planning checkpoint, and report the next command; do not edit `.pbe/blueprint/pbe-state.json` directly.
 26. Continue automatically to Coverage Audit only if the CLI command succeeds.
 
 ## Cycle Slice Rules

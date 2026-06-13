@@ -5,6 +5,10 @@ description: Determine and record the source of visual design direction for UI w
 
 # PBE Visual Reference Intake
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill after UI/UX confirmation and before WPD or ACEP when selected work changes visual appearance.
 
 PBE remains a Codex Plugin workflow. Do not create a GUI app, API provider, SaaS backend, MCP server, daemon, or standalone runtime.

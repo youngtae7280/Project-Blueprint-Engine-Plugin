@@ -5,7 +5,11 @@ description: Review executed PBE cycle results, present Product branch coverage,
 
 # PBE Review Result
 
-Use this skill after `pbe-run-acep` or `pbe-run-revision`.
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
+Use this skill after ACEP execution or revision execution has been closed by the CLI.
 
 ## Purpose
 
@@ -63,7 +67,7 @@ Also inspect current changed files and validation results when available.
 .pbe/review/user-feedback.md
 ```
 
-When user approval is explicit, update `.pbe/control/acceptance-tree.json` only as a user-driven acceptance record. Do not infer acceptance from passing tests or silence.
+When user approval is explicit, record the approval only as a user-driven acceptance record and use `pbe accept` for the transition. Do not infer acceptance from passing tests or silence.
 
 ## Delivery Status
 
@@ -91,9 +95,9 @@ When this skill completes without explicit user approval, set or report status a
 submitted_for_review
 ```
 
-Use `pbe review submit` to enter `WAITING_REVIEW_RESULT`; do not hand-edit `pbe-state.json` for review submission.
+Use `pbe review submit` to enter `WAITING_REVIEW_RESULT`; do not hand-edit `pbe-state.json` for review submission. `pbe review submit` runs File Change Guard, so unexplained source file changes must be resolved through Work or Revision scope before review.
 
-If the user approves at this gate, record the explicit user approval in Acceptance Tree and run `pbe accept` to move to `DONE` only when the approval closes the current branch/slice/project. If the user wants another slice, use implementation scope selection for the next slice instead of silently editing state.
+If the user approves at this gate, record the explicit user approval in Acceptance Tree and run `pbe accept` to move to `DONE` only when the approval closes the current branch/slice/project. `pbe accept` also runs File Change Guard. If source file changes are not explained by active Work or Revision scope, do not accept; open Change/Impact/Revision instead. If the user wants another slice, use implementation scope selection for the next slice instead of silently editing state.
 
 ## Branch Review Scope
 
@@ -204,10 +208,12 @@ If the user is dissatisfied:
 1. Run `pbe-collect-feedback`.
 2. Map feedback to affected Product, Project, Work, Test, Evidence, UI/UX, Cycle, and compatibility requirement/task/verification IDs.
    2a. If the feedback is visual, parity, hardware, or repeated-failure related, map it to surface completion, legacy inventory, visual profile, hardware readiness, or verification miss entries when present.
-3. Create or update Change Tree entries for feedback that changes product meaning, scope, UX, risk, acceptance, verification, or accepted work.
-4. Run `pbe-create-revision-pack` to build Impact Tree and bounded revision tasks.
-5. Run `pbe-run-revision`.
-6. Return to this Review Result gate.
+3. Run `pbe change create` for feedback that changes product meaning, scope, UX, risk, acceptance, verification, or accepted work.
+4. Run `pbe impact analyze` to create Impact Tree links.
+5. Run `pbe revision start` before coding revision work.
+6. Perform the bounded revision work inside the active Revision scope.
+7. Run `pbe revision complete`.
+8. Return through the normal WPD/VD/ACEP/Execution/Review/Accept closure path as required by CLI output.
 
 Revision must stay inside affected selected/foundation scope unless the user explicitly changes implementation scope.
 

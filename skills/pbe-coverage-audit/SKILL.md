@@ -5,6 +5,10 @@ description: Audit Product, Project, Work, Test, Cycle, traceability, evidence, 
 
 # PBE Coverage Audit
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill before ACEP generation and before final completion.
 
 Coverage Audit is deterministic in Autoflow. Run it automatically after Execution Planner succeeds.
@@ -146,13 +150,13 @@ Do not allow ACEP generation or final completion while blocking coverage gaps re
 When the audit passes:
 
 - Run `pbe coverage audit complete`.
-- Let the CLI keep state on `SCOPE_SELECTED`, record `coverage_audit` in `completedSteps`, and advance `nextStep` to `ux_audit`.
+- Let the CLI keep state on the current valid workflow point, record the coverage-audit checkpoint, and report the next command.
 - Continue automatically to UX Audit.
 
 When the audit has blocking issues:
 
-- Keep the last valid canonical state and record `autoflow.lastFailure`.
-- Record `autoflow.lastFailure.failedStep` as `coverage_audit`.
+- Keep the workflow on the last valid canonical state reported by the CLI.
+- Do not write `autoflow.lastFailure` by hand; follow the CLI issue output, `suggestedFix`, and `nextCommand`.
 - Do not continue to UX Audit.
 - Show the Autoflow failure guidance.
 

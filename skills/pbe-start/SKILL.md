@@ -5,6 +5,10 @@ description: Start Project Blueprint Engine in a target repo, enable autoflow, c
 
 # PBE Start
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill when the user asks to start Project Blueprint Engine, for example:
 
 ```text
@@ -67,15 +71,9 @@ If either command fails, do not proceed to RPD until the blocking issue is fixed
 16. Create `.pbe/blueprint/requirement-tree.md`, `.pbe/blueprint/rpd-interview-log.md`, and `.pbe/blueprint/rpd-summary.md`.
 17. Initialize UI/UX confirmation placeholders when UI work may be involved.
     17a. Initialize Visual Design Contract placeholders when visual UI work may be involved: visual reference, theme spec, design tokens, component style contract, UI surface inventory, component style inventory, visual verification profile, and visual audit report path.
-18. Confirm `pbe init` initialized `pbe-state.json.autoflow` with:
+18. Confirm `pbe init` initialized Autoflow with the chosen profile and a CLI-reported first next action.
 
-- `state`: `INIT`
-- `enabled`: `true`
-- `profile`: `full`, `lite`, or `bypass`
-- `completedSteps`: `["start"]`
-- `nextStep`: `rpd`
-
-19. Confirm tree-native artifact paths exist in `pbe-state.json.artifacts` so later stages can discover Product, Project, Work, Test, Cycle, Decision, Change, Impact, Evidence, and Acceptance trees without guessing paths.
+19. Confirm tree-native artifact paths are discoverable through the initialized PBE state so later stages can find Product, Project, Work, Test, Cycle, Decision, Change, Impact, Evidence, and Acceptance trees without guessing paths.
 20. Immediately begin RPD/Product Tree growth unless the selected profile is `bypass`.
 21. If the provided project brief is clear, propose the Root requirement summary and child structure, then stop at the `root_confirmation` gate.
 22. If RPD needs more information before a safe proposal, ask exactly one RPD question. The user should answer naturally; do not require `@project-blueprint-engine rpd`.
@@ -146,9 +144,7 @@ If the user already provided enough detail, clear enough means "ready to propose
 
 - keep the requirement root unconfirmed as `interviewing` or `ready_to_confirm`
 - set the Product root to `proposed`
-- keep the initial Autoflow state at `INIT` through `pbe init`
-- record `root_confirmation` as the current gate through the initialized PBE state
-- record `root_confirmation` as the next step through the initialized PBE state
+- keep the initial workflow at the Root confirmation gate through `pbe init` output and the Decision Queue
 - keep delivery status as `waiting_root_confirmation`
 - ask the user to confirm, revise, or decompose the proposed Root structure
 
@@ -156,13 +152,13 @@ If the user already provided enough detail, clear enough means "ready to propose
 
 Prefer `pbe init --profile <profile> --brief "<user request>"` for initial `.pbe` bootstrap. If bootstrapping manually for compatibility, create the same artifacts and then run `pbe status` and `pbe validate`.
 
-`pbe init` should create `pbe-state.json` with stage `rpd` and mode `rpd_tree_walk`.
+`pbe init` should create the initial PBE state for the RPD tree-walk workflow.
 
-Use `pbe init` so `pbe-state.json.autoflow.state` starts as `INIT`.
+Use `pbe init` so the CLI creates the initial Autoflow state.
 
-`pbe init` should set `pbe-state.json.autoflow.profile` to the chosen profile. If no profile is explicitly requested, use `full`.
+`pbe init` should use the chosen profile. If no profile is explicitly requested, use `full`.
 
-`pbe init` should set `pbe-state.json.artifacts` to include at least:
+`pbe init` should make these artifact paths discoverable:
 
 ```text
 productTree: .pbe/tree/product-tree.json
@@ -235,7 +231,7 @@ The state card must include:
 - current stage
 - execution profile
 - current node id and title
-- autoflow state
+- workflow state
 - next action
 - the single next RPD question, if RPD needs more input
 - UI/UX confirmation guidance, if RPD completed and UI/UX confirmation is required

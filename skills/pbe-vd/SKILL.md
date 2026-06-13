@@ -5,6 +5,10 @@ description: Derive Test Tree from Product, Project, and Work Trees while preser
 
 # PBE VD
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill to create Verification Design from WPD output.
 
 In PBE v2, VD derives `.pbe/tree/test-tree.json` from Product, Project, and Work Trees. Existing `.pbe/blueprint/verification-design.json` and `.pbe/blueprint/verification-plan.md` remain compatibility views and must be generated from the Test Tree.

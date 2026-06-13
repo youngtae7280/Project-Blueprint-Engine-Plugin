@@ -5,6 +5,10 @@ description: Execute the selected PBE Cycle Contract and Node Execution Contract
 
 # PBE Run ACEP
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill to execute an existing Autonomous Codex Execution Pack.
 
 ACEP execution is contract execution, not only task execution. Codex must keep Product, Project, Work, Test, requirement, task, verification, UI/UX, evidence, and coverage links intact.
@@ -18,17 +22,19 @@ Run ACEP only for selected scope and required foundation scope. Deferred and out
 Before starting implementation, run:
 
 ```bash
-pbe gate code-start
+pbe execution start
 ```
 
 After implementation and verification, run:
 
 ```bash
+pbe files check
+pbe execution complete
 pbe evidence check
-pbe gate review-result
+pbe review submit
 ```
 
-Do not mark any scope as accepted. Acceptance requires explicit user approval and must pass `pbe gate accept`.
+Do not mark any scope as accepted. Acceptance requires explicit user approval and must pass `pbe accept`.
 
 ## Inputs
 
@@ -108,12 +114,13 @@ Also read ACEP compatibility inputs:
 29. Check `13-completion-criteria.md`.
 30. Write the final report using `17-final-report-template.md` only when technical completion criteria are satisfied.
 31. Do not mark the result `accepted` or `accepted_done`.
-32. End as `submitted_for_review` and run or recommend `pbe-review-result`.
+32. End as `submitted_for_review` and stop at the Review Result gate.
 33. Run `pbe execution start` before ACEP implementation begins.
-34. Run `pbe execution complete` after required evidence is attached.
-35. If visual UI work changed, complete Visual Implementation Audit before review submission.
-36. Run `pbe review submit`.
-37. Continue to Result Review gate only if the CLI commands succeed.
+34. Run `pbe files check` after source file changes and before review submission.
+35. Run `pbe execution complete` after required evidence is attached.
+36. If visual UI work changed, complete Visual Implementation Audit before review submission.
+37. Run `pbe review submit`; it also runs File Change Guard before entering review.
+38. Continue to Result Review gate only if the CLI commands succeed.
 
 ## Per-Task Loop
 
@@ -171,7 +178,7 @@ Requires Change Node:
 - changes to excluded/deferred/blocked/out-of-scope nodes
 - implementation that makes previously verified evidence stale
 
-When a Change Node is required, record or request it in `.pbe/control/change-tree.json`, record `autoflow.lastFailure` if approval is required, and do not silently continue.
+When a Change Node is required, run `pbe change create` and then `pbe impact analyze`. If the change requires implementation, enter the bounded revision flow with `pbe revision start`; do not silently continue or edit workflow state by hand.
 
 ## Phase And Parallel Group Rules
 
@@ -264,8 +271,8 @@ If coverage issues remain, continue working or record a stop condition. Do not w
 
 If ACEP execution cannot continue:
 
-- Keep `autoflow.state` on the last valid canonical state, usually `ACEP_READY` before start or `EXECUTION_IN_PROGRESS` during execution.
-- Record `autoflow.lastFailure.failedStep` as `run_acep`.
+- Keep the workflow on the last valid canonical state reported by the CLI, usually `ACEP_READY` before start or `EXECUTION_IN_PROGRESS` during execution.
+- Do not write `autoflow.lastFailure` by hand; follow the CLI issue output, `suggestedFix`, and `nextCommand`.
 - Record downstream steps that would be retried after repair.
 - Do not continue to Result Review.
 - Show the Autoflow failure guidance.
@@ -287,7 +294,7 @@ accepted
 accepted_done
 ```
 
-Only the user can accept the result. If the user is dissatisfied, continue with `pbe-collect-feedback`, `pbe-create-revision-pack`, and `pbe-run-revision`.
+Only the user can accept the result. If the user is dissatisfied, structure the feedback, then continue with `pbe change create`, `pbe impact analyze`, `pbe revision start`, bounded revision work, and `pbe revision complete`.
 
 ## Completion Report
 
@@ -298,9 +305,10 @@ The state card must say that ACEP execution ended as `submitted_for_review` and 
 State transitions:
 
 - Before implementation begins, run `pbe execution start`.
+- Before review submission after source file changes, run `pbe files check`.
 - After execution completes, run `pbe execution complete`.
 - If selected visual UI work changed, run `pbe-visual-implementation-audit` next.
-- Only after required evidence and visual audit pass or are explicitly waived, run `pbe review submit` so the CLI records `WAITING_REVIEW_RESULT`, the Review Result gate, and state history.
+- Only after required evidence and visual audit pass or are explicitly waived, run `pbe review submit` so the CLI runs File Change Guard, records `WAITING_REVIEW_RESULT`, the Review Result gate, and state history.
 
 Include:
 

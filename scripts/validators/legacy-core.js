@@ -284,18 +284,13 @@ function validateSkillFrontmatter() {
     }
 
     const contents = readFileSync(skillPath, 'utf8')
-    if (!contents.startsWith('---\n')) {
+    const frontmatterMatch = contents.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/)
+    if (!frontmatterMatch) {
       errors.push(`Skill lacks frontmatter: ${skillName}`)
       continue
     }
 
-    const end = contents.indexOf('\n---', 4)
-    if (end === -1) {
-      errors.push(`Skill frontmatter is not closed: ${skillName}`)
-      continue
-    }
-
-    const frontmatter = contents.slice(4, end)
+    const frontmatter = frontmatterMatch[1]
     if (!/^name:\s+\S+/m.test(frontmatter)) {
       errors.push(`Skill frontmatter lacks name: ${skillName}`)
     }

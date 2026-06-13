@@ -5,6 +5,10 @@ description: Run RPD/Product Tree growth by interviewing one product requirement
 
 # PBE RPD
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Run Recursive Program Designer as RPD Tree Walk Mode.
 
 In PBE v2, RPD means Product Tree growth. RPD owns product meaning, user intent, scope, non-scope, UX intent, risk, and acceptance language. It writes `.pbe/tree/product-tree.json` as the source of truth and keeps `.pbe/blueprint/requirement-tree.json` as the backward-compatible view.
@@ -153,7 +157,7 @@ If the user's request is already clear, do not ask a vague "should I interview m
 1. Draft the Root requirement summary.
 2. Draft the proposed child node structure or explain that the Root can remain a single terminal requirement.
 3. Ask the user to confirm, revise, decompose further, defer, or mark out of scope.
-4. Keep `autoflow.state` at `INIT`, set `autoflow.currentGate` to `root_confirmation`, and set `autoflow.nextStep` to `root_confirmation` until the user answers.
+4. Keep the workflow at the Root confirmation gate through the Decision Queue and status card; do not edit workflow state directly.
 
 Clear requests may reduce additional interview questions. They do not remove the confirmation gate.
 Clear requests also do not bypass EARS acceptance criteria. The Root summary or leaf node must be convertible into structured criteria before it can become executable scope.

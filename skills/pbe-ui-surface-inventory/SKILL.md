@@ -5,6 +5,10 @@ description: Inventory UI surfaces, components, states, files, and screenshot ev
 
 # PBE UI Surface Inventory
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill during WPD or immediately after WPD when visual UI work is selected.
 
 PBE remains a Codex Plugin workflow. Do not create a GUI app, API provider, SaaS backend, MCP server, daemon, or standalone runtime.

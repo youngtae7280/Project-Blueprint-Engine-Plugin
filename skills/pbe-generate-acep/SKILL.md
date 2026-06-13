@@ -5,6 +5,10 @@ description: Generate Cycle Contract and Node Execution Contracts from selected 
 
 # PBE Generate ACEP
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill to generate `.pbe/codex-execution-pack/` from completed blueprint artifacts.
 
 ACEP is not only a task-card bundle. It is a Codex execution contract that links Product, Project, Work, Test, Cycle, traceability, UI/UX expectations, evidence, and final coverage checks.
@@ -498,8 +502,8 @@ When ACEP generation succeeds:
 
 When ACEP generation fails:
 
-- Keep `autoflow.state` on the last valid canonical state and record `autoflow.lastFailure`.
-- Record `autoflow.lastFailure.failedStep` as `generate_acep`.
+- Keep the workflow on the last valid canonical state reported by the CLI.
+- Do not write `autoflow.lastFailure` by hand; follow the CLI issue output, `suggestedFix`, and `nextCommand`.
 - Do not continue to ACEP Runner.
 - Show the Autoflow failure guidance.
 

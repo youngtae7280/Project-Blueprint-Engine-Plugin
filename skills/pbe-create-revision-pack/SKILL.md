@@ -5,6 +5,10 @@ description: Create a bounded revision pack from Change Nodes, Feedback Items, I
 
 # PBE Create Revision Pack
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill after `pbe-collect-feedback`.
 
 In Autoflow, run this skill automatically after feedback is mapped clearly.
@@ -15,7 +19,7 @@ Create a bounded revision instruction pack from user feedback, Change Tree entri
 
 The revision pack must preserve implementation scope classifications. Feedback may affect selected or foundation work from the current slice. Deferred or out-of-scope work can only enter the revision if the user explicitly changes the scope at a human gate.
 
-If a Change Node has `requiresRevisionRpd: true`, run Revision RPD for that Change Node before generating implementation tasks. Revision RPD updates only affected Product nodes and acceptance criteria.
+If a Change Node has `requiresRevisionRpd: true`, run Revision RPD for that Change Node before generating implementation tasks. Product Tree or acceptance criteria changes must be tied to `pbe change create`, `pbe impact analyze`, and user-confirmed revision scope; do not quietly edit Product Tree meaning from feedback.
 If a Change Node has criteria deltas, the revision pack must include a criteria-specific retest/reopen/replace-evidence plan before implementation tasks are issued.
 
 ## Inputs
@@ -100,7 +104,7 @@ Also update:
 10. Include allowed files, forbidden files, non-scope, and regression checks.
 11. Include the verification miss root cause and any promoted validation contract requirements when feedback exposed a missed verification dimension.
 12. Write revision manifest with source feedback IDs, source change IDs, impact IDs, affected nodes, reopened nodes, stale evidence nodes, verification miss IDs, criteria deltas, and promoted checks.
-13. Continue automatically to `pbe-run-revision` when the revision pack is safe and bounded.
+13. Run `pbe revision start` before implementation if it has not already succeeded, then execute the bounded revision work and close it with `pbe revision complete` when the revision pack is safe and bounded.
 
 ## Scope Rules
 
@@ -162,13 +166,13 @@ If a repeated miss requires broader surface audit, include audit and verificatio
 
 When the revision pack is created:
 
-- Add `create_revision_pack` to `pbe-state.json.autoflow.completedSteps`.
-- Set `autoflow.nextStep` to `run_revision`.
-- Continue automatically to `pbe-run-revision`.
+- Ensure the related Change nodes have Impact analysis from `pbe impact analyze`.
+- Run `pbe revision start` to enter revision workflow state.
+- Continue to bounded revision execution only if the CLI command succeeds.
 
 When revision scope is unclear or too broad:
 
-- Record `autoflow.lastFailure` or keep the user at the Review Result gate with one clarification question.
+- Keep the user at the Review Result gate with one clarification question, or follow the CLI failure output.
 - Do not run revision tasks.
 
 ## Completion Report

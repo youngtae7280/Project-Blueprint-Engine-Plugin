@@ -5,6 +5,10 @@ description: Audit Product-linked UI/UX preview, confirmation, Work/Test linkage
 
 # PBE UX Audit
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill after UI/UX confirmation, before ACEP generation, and before final completion when UI is involved.
 
 UX Audit is deterministic in Autoflow. Run it automatically after Coverage Audit succeeds.
@@ -130,13 +134,13 @@ If gaps exist, report them as blocking issues before ACEP generation or final co
 When the audit passes or UI/UX is not required:
 
 - Run `pbe ux audit complete`.
-- Let the CLI keep state on `SCOPE_SELECTED`, record `ux_audit` in `completedSteps`, and advance `nextStep` to `generate_acep`.
+- Let the CLI keep state on the current valid workflow point, record the UX-audit checkpoint, and report the next command.
 - Continue automatically to ACEP generation.
 
 When the audit has blocking issues:
 
-- Keep the last valid canonical state and record `autoflow.lastFailure`.
-- Record `autoflow.lastFailure.failedStep` as `ux_audit`.
+- Keep the workflow on the last valid canonical state reported by the CLI.
+- Do not write `autoflow.lastFailure` by hand; follow the CLI issue output, `suggestedFix`, and `nextCommand`.
 - Do not continue to ACEP generation.
 - Show the Autoflow failure guidance.
 

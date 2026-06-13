@@ -5,6 +5,10 @@ description: Create UI/UX previews from RPD output and require user confirmation
 
 # PBE UI/UX Confirm
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill after RPD and before WPD when the project includes UI-facing screens, forms, flows, navigation, status messages, or visual states.
 
 PBE remains a Codex Plugin workflow. Do not create a GUI app, API provider, or SaaS backend for confirmation.
@@ -176,7 +180,7 @@ Report with `[PBE 상태 보고]` first:
 - deferred or out_of_scope screens/flows
 - blocked items
 - whether WPD may proceed
-- autoflow state
+- workflow state
 - next automatic downstream steps
 - user reply examples
 - recommended reply

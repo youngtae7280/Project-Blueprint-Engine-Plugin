@@ -5,6 +5,10 @@ description: Execute a bounded PBE revision pack against affected reopened nodes
 
 # PBE Run Revision
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill to execute the latest revision pack.
 
 In Autoflow, run this skill automatically after a revision pack is created, then return to the Review Result gate.
@@ -49,10 +53,10 @@ Revision execution stays inside affected selected/foundation scope. It must not 
 13. Update Work/Test/Evidence/Acceptance states and parity/completeness ledgers when affected.
 14. If UI changed, update UI evidence and visual verification profile evidence when required.
 15. Write `revision-result.md`.
-16. Set or report status as `revision_verified` or `submitted_for_review`.
-17. Add `run_revision` to `pbe-state.json.autoflow.completedSteps`.
-18. Set `autoflow.nextStep` to `review_result`.
-19. Continue to `pbe-review-result`.
+16. Run `pbe files check` before closing revision if source files changed.
+17. Run `pbe revision complete`.
+18. Follow the CLI `nextCommand`; rerun WPD, VD, ACEP, execution, or review closure as requested.
+19. Continue to the Review Result gate only after the required CLI closure path succeeds.
 
 ## Reopen Execution Rules
 
@@ -72,6 +76,7 @@ When Impact Tree says:
 
 - If revision work discovers new scope, create a new Change Node. Do not expand the revision silently.
 - If revision work discovers ambiguous product meaning, pause implementation and route only that Change Node through Revision RPD.
+- If revision work discovers unexplained source file changes, do not close the revision; run `pbe change create`, `pbe impact analyze`, and `pbe revision start` for the new scope.
 - If acceptance criteria changed, rerun or update affected Test Tree and Evidence Tree links before resubmitting.
 - Do not report the revision as verified until modified or invalidated criteria have fresh Test/Evidence coverage or an explicit blocked reason.
 - Do not touch deferred or out-of-scope nodes without explicit user scope approval.

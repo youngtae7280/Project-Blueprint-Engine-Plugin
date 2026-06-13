@@ -5,6 +5,10 @@ description: Audit deferred and future module impact before implementation scope
 
 # PBE Dependency Impact Audit
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill after VD completes and before the Implementation Scope gate.
 
 Dependency Impact Audit is deterministic in Autoflow. Run it automatically after
@@ -51,9 +55,9 @@ scope or architecture runway decision.
 6. Save `dependency-impact-audit.json`.
 7. Save `dependency-impact-audit.md`.
 8. Update Source of Truth Matrix links.
-9. Update `pbe-state.json.artifacts.dependencyImpactAudit`.
+9. Ensure `dependency-impact-audit.json` is saved at the expected artifact path.
 10. After implementation scope is selected and state is `SCOPE_SELECTED`, run `pbe dependency audit complete`.
-11. Do not hand-edit `pbe-state.json.autoflow.state`; the CLI records `dependency_impact_audit` in `completedSteps` and advances `nextStep` to `plan_execution`.
+11. Do not hand-edit workflow state; the CLI records the dependency-audit checkpoint and reports the next command.
 12. If the CLI fails, stop and report the missing artifact or prerequisite instead of continuing.
 
 ## Rules
@@ -61,7 +65,7 @@ scope or architecture runway decision.
 - Do not implement deferred feature behavior.
 - Do not decide user scope silently.
 - Required foundation means structural work only: interfaces, adapters, state models, schemas, events, stubs, fixtures, or contracts.
-- If any item is `blocking_dependency`, record `autoflow.lastFailure` unless the next safe action is a human scope decision.
+- If any item is `blocking_dependency`, stop at the appropriate human decision or CLI failure output; do not write `autoflow.lastFailure` by hand.
 - If any item is `required_foundation`, `blocking_dependency`, or `high_impact_future_module`, mark `architectureRunwayRequired` as `true`.
 - If all future items are `optional_deferred`, record why no architecture runway is required.
 

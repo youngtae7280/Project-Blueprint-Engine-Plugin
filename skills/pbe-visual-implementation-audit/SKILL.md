@@ -5,6 +5,10 @@ description: Audit implemented UI visual work against Visual Design Contract, de
 
 # PBE Visual Implementation Audit
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill after Run ACEP for UI visual work and before Review Result or branch closure.
 
 It may also run before ACEP generation as a preflight audit if artifacts are missing.
@@ -91,10 +95,11 @@ Before Review Result for UI visual work, run:
 ```bash
 pbe visual check
 pbe evidence check
-pbe gate review-result
+pbe files check
+pbe review submit
 ```
 
-The audit does not hand-edit `pbe-state.json`. After `visual-audit.md` has no unresolved blocking issues, required screenshot/manual evidence is current, and the result is pass, accepted, or explicitly waived by the user, run `pbe review submit` so the CLI records `VISUAL_AUDIT_DONE` and `WAITING_REVIEW_RESULT`.
+The audit does not hand-edit `pbe-state.json`. After `visual-audit.md` has no unresolved blocking issues, required screenshot/manual evidence is current, and the result is pass, accepted, or explicitly waived by the user, run `pbe review submit` so the CLI runs File Change Guard and records `VISUAL_AUDIT_DONE` and `WAITING_REVIEW_RESULT`.
 
 ## Completion Report
 

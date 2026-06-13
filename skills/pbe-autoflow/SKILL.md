@@ -5,6 +5,10 @@ description: Orchestrate PBE execution profiles, staged Autoflow, natural-langua
 
 # PBE Autoflow
 
+## CLI Transition Rule
+
+Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
+
 Use this skill for:
 
 ```text
@@ -51,7 +55,7 @@ images, generated assets, review reports, and any repository file changes.
 2. If `autoflow.currentGate` is set, do not implement; report the active gate and ask for the user's decision.
 3. If `autoflow.lastFailure` is set, do not continue downstream; report the failed step, repair options, and the last valid canonical state.
 4. Before any downstream step or deliverable-producing action, verify RPD completion. If any Root or leaf requirement is still `pending_interview`, `interviewing`, `ready_to_confirm`, `ready_to_decompose`, or `blocked`, stop at `root_confirmation` or continue RPD.
-5. If `autoflow.nextStep` is deterministic, run that PBE step before ordinary coding.
+5. If the CLI-reported next step is deterministic, run that PBE step before ordinary coding.
 6. Use ordinary AI answers only for usage help, explanations, or reviews that do not change PBE workflow state.
 7. Do not bypass PBE when the request touches selected, foundation, deferred, blocked, or out-of-scope work unless the profile is explicitly set to `bypass` and the risk is recorded.
 
@@ -73,7 +77,7 @@ If risk grows while in `lite`, propose `full`. If the user explicitly keeps `lit
 
 ## State Model
 
-Track state in `.pbe/blueprint/pbe-state.json` under `autoflow`. Supported stage transitions and checkpoints should be written by the deterministic `pbe` CLI (`pbe rpd close`, `pbe ui approve`, `pbe wpd close`, `pbe vd close`, `pbe scope select`, `pbe dependency audit complete`, `pbe plan execution complete`, `pbe coverage audit complete`, `pbe ux audit complete`, `pbe acep ready`, `pbe execution start`, `pbe execution complete`, `pbe review submit`, `pbe accept`) instead of hand-editing the state file.
+Track state in `.pbe/blueprint/pbe-state.json` under `autoflow`, but do not write transition state by hand. Supported stage transitions and checkpoints must go through the deterministic `pbe` CLI (`pbe rpd close`, `pbe ui approve`, `pbe wpd close`, `pbe vd close`, `pbe scope select`, `pbe dependency audit complete`, `pbe plan execution complete`, `pbe coverage audit complete`, `pbe ux audit complete`, `pbe acep ready`, `pbe execution start`, `pbe execution complete`, `pbe review submit`, `pbe accept`, `pbe change create`, `pbe impact analyze`, `pbe revision start`, `pbe revision complete`, `pbe files check`).
 
 ```text
 INIT
@@ -258,7 +262,7 @@ make Ethernet part of this slice too
 
 ## Failure Response
 
-If an automatic step fails, record `lastFailure`, keep the last valid canonical state, and do not continue downstream.
+If an automatic step fails, do not edit `autoflow.lastFailure` manually. Use the CLI failure output as the source of truth, follow its `suggestedFix` and `nextCommand`, keep the last valid canonical state, and do not continue downstream.
 
 Report:
 
@@ -289,5 +293,7 @@ Downstream steps to rerun after repair:
 - Required Foundation requires approval before execution.
 - Blocking Dependency stops automatic progress.
 - If parallel safety cannot be proven, do not parallelize.
+- Review and accept transitions must pass File Change Guard. `pbe review submit` and `pbe accept` run the guard; use `pbe files check` before those transitions when source files changed.
+- Source file changes that are not explained by active Work or Revision scope must open Change/Impact/Revision flow instead of advancing state.
 - Codex cannot mark work accepted. Only the user can.
 - Codex cannot treat a clear Root requirement as confirmed until the user approves the Root summary and decomposition decision.
