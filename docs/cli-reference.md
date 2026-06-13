@@ -8,6 +8,8 @@ commands.
 
 Use `pbe status` when unsure. Use `pbe validate` for full repository and `.pbe` artifact validation.
 
+See also: [Install PBE locally](install.md) and [Troubleshooting](troubleshooting.md).
+
 When the user's request is vague, PBE should draft a Product Tree candidate first, ask only the highest-impact question,
 and wait for user confirmation before closing RPD.
 

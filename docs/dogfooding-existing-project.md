@@ -189,3 +189,5 @@ The revision should update only the changed meaning:
 - The first question should resolve the highest-impact ambiguity.
 - Deferred ideas are useful because they prevent scope creep.
 - Product meaning feedback after acceptance belongs in Change/Impact/Product Patch/Revision, not silent edits.
+
+See also: [Install PBE locally](install.md) and [Troubleshooting](troubleshooting.md).

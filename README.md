@@ -60,7 +60,9 @@ stop
 
 Useful entry points:
 
+- Install PBE locally: [docs/install.md](docs/install.md)
 - Detailed installation and use guide: [docs/usage.md](docs/usage.md)
+- Troubleshooting: [docs/troubleshooting.md](docs/troubleshooting.md)
 - Complete golden example run: [examples/valid/todo-app-pbe-run](examples/valid/todo-app-pbe-run/README.md)
 - Dogfooding PBE on an existing project: [docs/dogfooding-existing-project.md](docs/dogfooding-existing-project.md)
 - Todo search adoption example: [examples/adoption/todo-search-slice](examples/adoption/todo-search-slice/README.md)
@@ -81,6 +83,7 @@ Useful entry points:
 - [Validator design](docs/validator-design.md)
 - [CLI reference](docs/cli-reference.md)
 - [CLI output](docs/cli-output.md)
+- [Troubleshooting](docs/troubleshooting.md)
 - [Release policy](RELEASE.md)
 
 ## What Gets Created
