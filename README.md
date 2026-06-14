@@ -78,6 +78,7 @@ Useful entry points:
 - [Dogfooding PBE on an existing project](docs/dogfooding-existing-project.md)
 - [Tree model](docs/tree-model.md)
 - [PBE Complexity Governance](docs/complexity-governance.md)
+- [Migration / Compatibility Policy](docs/migration-policy.md)
 - [VD Quality Rubric](docs/vd-quality-rubric.md)
 - [Evidence Quality Rubric](docs/evidence-quality-rubric.md)
 - [Parallel Safety Policy](docs/parallel-safety.md)
