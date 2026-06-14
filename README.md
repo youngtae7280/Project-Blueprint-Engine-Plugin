@@ -77,6 +77,8 @@ Useful entry points:
 - [Ambiguity Taxonomy](docs/ambiguity-taxonomy.md)
 - [Dogfooding PBE on an existing project](docs/dogfooding-existing-project.md)
 - [Tree model](docs/tree-model.md)
+- [PBE v0.5.0-beta Readiness](docs/beta-readiness.md)
+- [Known Limits](docs/known-limits.md)
 - [PBE Complexity Governance](docs/complexity-governance.md)
 - [Migration / Compatibility Policy](docs/migration-policy.md)
 - [VD Quality Rubric](docs/vd-quality-rubric.md)

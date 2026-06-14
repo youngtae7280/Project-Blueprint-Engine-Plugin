@@ -11,6 +11,9 @@ Use `pbe status` when unsure. Use `pbe validate` for full repository and `.pbe` 
 See also: [Install PBE locally](install.md), [Troubleshooting](troubleshooting.md), and
 [PBE Complexity Governance](complexity-governance.md).
 
+For beta readiness and current limits, see [PBE v0.5.0-beta Readiness](beta-readiness.md) and
+[Known Limits](known-limits.md).
+
 For beta migration and optional artifact compatibility, see [Migration / Compatibility Policy](migration-policy.md).
 
 For RPD question selection, see [Ambiguity Taxonomy](ambiguity-taxonomy.md).
