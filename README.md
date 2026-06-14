@@ -63,6 +63,7 @@ Useful entry points:
 - Install PBE locally: [docs/install.md](docs/install.md)
 - CLI Reference: [docs/cli-reference.md](docs/cli-reference.md)
 - Documentation Index: [docs/index.md](docs/index.md)
+- Examples Index: [examples/README.md](examples/README.md)
 - Todo search adoption example: [examples/adoption/todo-search-slice](examples/adoption/todo-search-slice/README.md)
 - PBE v0.5.0-beta Readiness: [docs/beta-readiness.md](docs/beta-readiness.md)
 - Known Limits: [docs/known-limits.md](docs/known-limits.md)

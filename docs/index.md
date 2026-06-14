@@ -45,5 +45,6 @@
 
 ## Examples
 
+- [Examples Index](../examples/README.md)
 - [Todo search adoption example](../examples/adoption/todo-search-slice/README.md)
 - [Self-dogfooding: Windows sequential validation guidance](../examples/dogfooding/windows-validation-sequential-run/README.md)
