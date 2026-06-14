@@ -15,6 +15,8 @@ For RPD question selection, see [Ambiguity Taxonomy](ambiguity-taxonomy.md).
 
 For verification planning quality, see [VD Quality Rubric](vd-quality-rubric.md).
 
+For evidence reviewability and proof strength, see [Evidence Quality Rubric](evidence-quality-rubric.md).
+
 For parallel execution and validation safety, see [Parallel Safety Policy](parallel-safety.md).
 
 For repeated review rejection and realignment, see [Review Failure Recovery](review-failure-recovery.md).

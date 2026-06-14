@@ -127,6 +127,16 @@ The review pack must separate:
 - remaining risks
 - recommended next slice
 
+## Evidence Quality Review
+
+- During review, check whether evidence proves the linked Test/AC, not only whether evidence exists.
+- Treat vague evidence such as "확인함" or "문제 없음" as weak.
+- If evidence is weak, request stronger evidence before acceptance or create Change/Impact if verification strategy is
+  wrong.
+- If evidence proves the wrong thing, classify it as verification mismatch.
+- Use `docs/evidence-quality-rubric.md` and `templates/evidence-quality-checklist-template.md` for weak or contested
+  evidence.
+
 ## Acceptance Tree Rules
 
 When the user explicitly approves the current slice:

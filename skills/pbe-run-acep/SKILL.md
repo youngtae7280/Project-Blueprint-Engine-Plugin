@@ -157,6 +157,19 @@ For each task:
 18. Update traceability, evidence, or coverage notes.
 19. Move to the next task only when task acceptance criteria and evidence requirements are satisfied.
 
+## Evidence Quality During Execution
+
+- Do not record evidence as only "checked", "passed", or "works".
+- Evidence must be observable and reviewable.
+- Link evidence to the Test and AC it proves.
+- For CLI work, include command output.
+- For UI work, include screenshot or manual visual result.
+- For docs work, include changed section or excerpt.
+- For hardware/environment-limited work, record manual log, mock/fake result, or manual_not_verified blocker.
+- Evidence must be specific enough for a reviewer to judge pass/fail.
+- Use `docs/evidence-quality-rubric.md` and `templates/evidence-quality-checklist-template.md` when evidence quality is
+  non-obvious.
+
 ## Scope Enforcement
 
 Allowed:
