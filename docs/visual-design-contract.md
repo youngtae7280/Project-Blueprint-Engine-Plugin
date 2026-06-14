@@ -86,5 +86,9 @@ The default theme must still be materialized into `design-tokens.json` and `comp
 
 ## CLI Guard
 
-`pbe visual check` validates the Visual Design Contract layer when visual UI work is selected. `pbe gate acep`,
-`pbe acep check`, `pbe evidence check`, and `pbe gate review-result` also enforce the relevant visual-contract checks.
+`pbe visual check` validates the Visual Design Contract layer when visual UI work is selected. In the primary workflow,
+use stage-specific commands such as `pbe acep ready`, `pbe execution complete`, `pbe evidence check`, and
+`pbe review submit` to enforce the relevant visual-contract checks.
+
+`pbe gate <stage>` is retained as a compatibility/helper check for older workflows. Prefer the stage-specific transition
+commands in normal workflows.

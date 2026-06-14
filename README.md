@@ -460,7 +460,7 @@ Recommended CLI checks:
 pbe visual check
 pbe evidence check
 pbe acep check
-pbe gate review-result
+pbe review submit
 ```
 
 Review Result cannot close selected visual UI work when required screenshots are missing, screenshot evidence is stale,

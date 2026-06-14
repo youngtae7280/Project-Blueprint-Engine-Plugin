@@ -83,6 +83,9 @@ Most commands follow this pattern:
 ### `pbe gate <stage>`
 
 - Purpose: Compatibility gate check for a named stage.
+- Positioning: `pbe gate` is retained as a compatibility/helper check. The preferred primary workflow is to use
+  stage-specific transition commands such as `pbe rpd close`, `pbe wpd close`, `pbe vd close`, `pbe acep ready`,
+  `pbe execution start`, `pbe review submit`, and `pbe accept`.
 - Typical state before running: Before entering a stage, especially older workflows that still call gate checks.
 - What it checks: Stage-specific readiness and transition guard compatibility.
 - What it writes: Nothing.
