@@ -9,6 +9,16 @@ description: Orchestrate PBE execution profiles, staged Autoflow, natural-langua
 
 Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
 
+## Agent Context Rule
+
+Do not read all PBE docs by default.
+
+Read `agent-context/README.md` first. Then read only the smallest matching context card. Load full docs only when the card says they are needed.
+
+If the task is unclear, ask one concise question instead of broad repository or documentation scanning.
+
+Do not start broad workflow adaptation or repo-wide conversion before user confirmation.
+
 ## Role
 
 `pbe-autoflow` is an orchestration/helper skill.

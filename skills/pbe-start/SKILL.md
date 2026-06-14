@@ -9,6 +9,22 @@ description: Start Project Blueprint Engine in a target repo, enable autoflow, c
 
 Use PBE CLI transition commands for workflow state changes. Do not edit `.pbe/blueprint/pbe-state.json` directly. If a CLI command fails, follow the reported `suggestedFix` and `nextCommand`, and do not advance to the next stage while the failure remains. Codex must not replace explicit user acceptance.
 
+## Agent Context Rule
+
+Do not read all PBE docs by default.
+
+Read `agent-context/README.md` first. Then read only the smallest matching context card. Load full docs only when the card says they are needed.
+
+If the task is unclear, ask one concise question instead of broad repository or documentation scanning.
+
+Do not start broad workflow adaptation or repo-wide conversion before user confirmation.
+
+For start specifically:
+
+- `start` alone is valid.
+- Do not require a `Brief:` label.
+- If no task is provided, inspect minimal repo signals and ask what task or slice to manage if unclear.
+
 Use this skill when the user asks to start Project Blueprint Engine, for example:
 
 ```text

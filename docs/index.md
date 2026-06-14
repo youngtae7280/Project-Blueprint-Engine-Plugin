@@ -28,6 +28,7 @@
 
 ## CLI / Reference
 
+- [Agent Context Router](../agent-context/README.md)
 - [CLI Reference](cli-reference.md)
 - [CLI Output](cli-output.md)
 - [Validator Design](validator-design.md)
