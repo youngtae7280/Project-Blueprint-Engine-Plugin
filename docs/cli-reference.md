@@ -28,6 +28,9 @@ For repeated review rejection and realignment, see [Review Failure Recovery](rev
 
 For Lite profile expectations and escalation rules, see [Lite Mode Policy](lite-mode-policy.md).
 
+Current limitation: `--profile lite` records Lite metadata, but the CLI does not yet provide dedicated `pbe lite`
+commands, profile-aware status behavior, or reduced artifact initialization.
+
 Run local verification commands sequentially, especially on Windows, because validation commands that rebuild the CLI
 can touch `clean-dist` / `dist`.
 

@@ -148,6 +148,9 @@ Poor Lite examples:
 
 ## Future Implementation Candidates
 
+Current limitation: `--profile lite` is currently recorded as profile metadata and policy guidance. It does not yet
+provide a dedicated `pbe lite` command, profile-aware status path, or reduced artifact initialization behavior.
+
 These are candidates only. Do not implement them until they satisfy the Complexity Governance criteria:
 
 - `pbe lite check`
