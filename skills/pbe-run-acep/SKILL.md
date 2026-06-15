@@ -183,6 +183,9 @@ Do not skip evidence because the profile is Lite. If execution reveals broader f
 or risk beyond the expectedFiles scope, stop and escalate through Change/Impact/Product Patch or the Full flow before
 continuing.
 
+For Lite work, keep evidence and review but avoid long reports. Do not run full validation/test/build by default during
+interactive execution. Use target/stage checks unless checkpoint/release or user request requires full verification.
+
 ## Scope Enforcement
 
 Allowed:

@@ -24,6 +24,10 @@ For start specifically:
 - `start` alone is valid.
 - Do not require a `Brief:` label.
 - If no task is provided, inspect minimal repo signals and ask what task or slice to manage if unclear.
+- `start` alone must not imply repo-wide workflow adoption.
+- Do not create or modify AGENTS.md, workflow docs, reports, or broad project process docs during start unless explicitly requested.
+- First identify the target task/slice.
+- Before any broad adoption or process-doc change, ask for explicit confirmation.
 
 Use this skill when the user asks to start Project Blueprint Engine, for example:
 

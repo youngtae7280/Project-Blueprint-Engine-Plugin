@@ -105,6 +105,16 @@ Lite may reduce:
 
 Reduce does not mean skip all. Lite should still leave a minimal summary, expectedFiles, and reviewable evidence.
 
+## Workload Cap
+
+Lite is workload-limited. It should not create repo-wide process docs, modify AGENTS.md, or run full
+validation/test/build by default unless explicitly approved.
+
+Expected files should normally be 1 to 3 files. Keep default Lite artifacts to a mini Product/AC summary, expectedFiles,
+minimal Test/Evidence, files check, and compact review summary.
+
+See [Workload Cap and Artifact Minimalism](workload-cap-and-artifact-minimalism.md).
+
 ## Escalation To Full
 
 Escalate to Full when any of these appear:

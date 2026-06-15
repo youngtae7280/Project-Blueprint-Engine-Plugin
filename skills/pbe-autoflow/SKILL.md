@@ -19,6 +19,14 @@ If the task is unclear, ask one concise question instead of broad repository or 
 
 Do not start broad workflow adaptation or repo-wide conversion before user confirmation.
 
+## Workload Cap Rule
+
+- Do not expand a small request into repo-wide PBE adaptation.
+- Prefer the smallest matching scope.
+- Use compact summaries by default.
+- Full workflow adaptation requires explicit user confirmation.
+- PBE tracks decisions, scope, tests, evidence, changes, and acceptance records; it does not persist every explanation.
+
 ## Role
 
 `pbe-autoflow` is an orchestration/helper skill.

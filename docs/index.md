@@ -23,6 +23,7 @@
 - [Review Failure Recovery](review-failure-recovery.md)
 - [Parallel Safety Policy](parallel-safety.md)
 - [Lite Mode Policy](lite-mode-policy.md)
+- [Workload Cap and Artifact Minimalism](workload-cap-and-artifact-minimalism.md)
 - [Migration / Compatibility Policy](migration-policy.md)
 - [Dogfooding PBE on an Existing Project](dogfooding-existing-project.md)
 
