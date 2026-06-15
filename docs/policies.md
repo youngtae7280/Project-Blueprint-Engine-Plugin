@@ -44,6 +44,40 @@ Read the original when choosing or defending the profile boundary:
 
 - [Lite Mode Policy](lite-mode-policy.md)
 
+## Lite Fast Path and Compact Reporting
+
+Lite Fast Path is not a shortcut around PBE controls. It is a compact execution path that preserves traceability while
+reducing explanation length, context loading, reporting volume, and validation scope.
+
+Lite work must still preserve:
+
+- task intent
+- expectedFiles
+- minimal AC
+- evidence
+- review result
+- user acceptance
+- change/impact/revision when needed
+
+For Lite work, prefer:
+
+- `pbe context pack` before opening long-form docs
+- target/stage checks over full validation by default
+- compact evidence summaries
+- final reports around 10 to 15 lines when possible
+- no long RPD/WPD/VD explanation unless the task requires it
+
+Escalate or expand reporting when:
+
+- product meaning changes
+- selected files exceed the Lite cap
+- evidence is high-risk or manual-only
+- repeated rejection occurs
+- release/checkpoint validation is requested
+- CI/package/schema/template/auth/security/data migration areas are touched
+
+Compact does not mean incomplete. Reduce explanation length, not traceability.
+
 ## Workload Cap and Artifact Minimalism
 
 PBE should control work, not generate process material for its own sake.

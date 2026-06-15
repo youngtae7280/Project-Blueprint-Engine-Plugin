@@ -115,6 +115,21 @@ Interactive report:
 - validation summary
 - next action
 
+### Compact Lite Completion Report
+
+A normal Lite completion report should usually include:
+
+- changed files
+- AC result
+- evidence summary
+- validation summary
+- next action or review need
+
+Avoid long narrative reports unless the task is a release/checkpoint, audit/dogfooding run, repeated failure recovery,
+high-risk change, or the user explicitly asks for a full report.
+
+Compact reporting must not omit AC, evidence, review, or acceptance.
+
 Checkpoint report:
 
 - changed files

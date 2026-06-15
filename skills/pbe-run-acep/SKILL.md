@@ -186,6 +186,24 @@ continuing.
 For Lite work, keep evidence and review but avoid long reports. Do not run full validation/test/build by default during
 interactive execution. Use target/stage checks unless checkpoint/release or user request requires full verification.
 
+Lite Fast Path:
+
+- Use `pbe context pack` or the smallest available recommended context before opening long docs.
+- Preserve AC, evidence, review, and acceptance.
+- Do not skip PBE gates.
+- Prefer target/stage validation over full validation by default.
+- Produce compact final reports.
+- Avoid long RPD/WPD/VD explanations unless needed.
+- Do not create separate long reports unless requested or required by release/checkpoint/audit/high-risk/repeated-failure context.
+
+Lite completion report shape:
+
+- Changed: `<files>`
+- AC: pass/fail summary
+- Evidence: key checks or diff summary
+- Validation: target/stage checks
+- Review: waiting / accepted / needs revision
+
 ## Scope Enforcement
 
 Allowed:
