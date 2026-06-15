@@ -17,6 +17,8 @@
 
 ## Workflow Guides
 
+- [PBE Policies](policies.md) — Compact policy index for Lite mode, workload cap, complexity, parallel safety,
+  migration, and review recovery.
 - [RPD Interview Mode](rpd-interview-mode.md)
 - [Ambiguity Taxonomy](ambiguity-taxonomy.md)
 - [Product Patch Proposals](product-patch-proposals.md)

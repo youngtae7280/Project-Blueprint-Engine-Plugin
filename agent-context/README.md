@@ -51,6 +51,12 @@ Documentation / troubleshooting / install docs:
 - [lite.md](lite.md)
 - [evidence.md](evidence.md)
 
+## Policy Reading Rule
+
+For policy decisions, read `docs/policies.md` before opening long-form policy documents. Use the original policy
+documents only when the compact policy index is insufficient, the task directly touches that risk area, or
+validation/user instructions require the original source.
+
 ## Rule
 
 Start with the smallest matching card.
