@@ -10,7 +10,7 @@ PowerShell reports an execution policy error when running `npm`.
 
 Recommended fix:
 
-Use `npm.cmd` instead of `npm` from PowerShell or CMD:
+On Windows PowerShell, prefer `npm.cmd` instead of `npm` when `npm` is blocked by the script execution policy:
 
 ```bash
 npm.cmd run validate:pbe
