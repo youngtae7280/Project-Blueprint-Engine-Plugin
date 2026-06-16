@@ -6,7 +6,7 @@ import { changeCreateCommand } from './change.js'
 import { contextPackCommand, contextRecommendCommand } from './context.js'
 import { executionCompleteCommand, executionStartCommand } from './execution.js'
 import { filesCheckCommand } from './files.js'
-import { gateCommand } from './gate.js'
+import { gateAssessCommand, gateCommand } from './gate.js'
 import { impactAnalyzeCommand } from './impact.js'
 import { initCommand } from './init.js'
 import { profileRecommendCommand } from './profile.js'
@@ -43,6 +43,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
     return validateCommand(context)
   }
   if (command === 'gate') {
+    if (subcommand === 'assess') {
+      return gateAssessCommand(context)
+    }
     return gateCommand(positionals[1], context)
   }
   if (command === 'rpd' && subcommand === 'check') {

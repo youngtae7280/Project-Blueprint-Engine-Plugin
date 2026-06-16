@@ -21,6 +21,10 @@ export function renderResult(result: CommandResult, json: boolean): string {
     return `${result.message}\n`
   }
 
+  if (result.command === 'gate assess' && result.ok && result.message) {
+    return `${result.message}\n`
+  }
+
   const lines: string[] = []
   if (result.message) {
     lines.push(result.message)
@@ -95,6 +99,7 @@ Commands:
   status               Show current PBE status
   validate             Run all PBE validators
   gate <stage>         Check whether a stage can be entered, including review-result
+  gate assess          Assess Human Gate clarity and hard triggers without changing state
   profile recommend    Recommend full, lite, or bypass from a task brief
   context recommend    Recommend skills, agent-context cards, and optional full docs
   context pack         Create a prompt-ready bundle from recommended readFirst context
@@ -140,6 +145,8 @@ Options:
   --profile <value>    init profile: full, lite, or bypass. Defaults to full.
   --brief <text>       init project brief.
   --max-chars <n>      Maximum context pack bundle characters. Defaults to 12000.
+  --text <text>        Text to assess for Human Gate clarity.
+  --transition <value> Human Gate transition being assessed.
   --files <list>       Candidate changed/expected files for profile recommend, comma-separated.
   --stage <value>      trace/context stage. Trace uses wpd, vd, execution, review, or accept.
   --summary <text>     change create summary.

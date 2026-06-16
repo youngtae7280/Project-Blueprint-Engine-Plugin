@@ -1,5 +1,11 @@
 import { existsSync } from 'node:fs'
 import path from 'node:path'
+import {
+  assessHumanGateClarity,
+  humanGateTransitions,
+  isHumanGateTransition,
+  type HumanGateAssessment,
+} from '../core/human-gate-assessment.js'
 import { defaultArtifacts, loadProject } from '../core/project.js'
 import { normalizePbeState, PBE_STATE, type PbeState } from '../core/state-machine.js'
 import type { CommandResult, ValidationIssue } from '../core/types.js'
@@ -23,6 +29,60 @@ import {
   statesFrom,
   uiUxApprovalIssues,
 } from './shared.js'
+
+export async function gateAssessCommand(context: CommandContext): Promise<CommandResult> {
+  const text = context.options.text?.trim()
+  const transition = context.options.transition || 'product-to-work'
+  if (!text) {
+    return {
+      ok: false,
+      command: 'gate assess',
+      exitCode: ExitCode.InvalidArguments,
+      message: 'Missing required option: --text.',
+      issues: [
+        issue({
+          validator: 'CLI',
+          code: 'HUMAN_GATE_TEXT_REQUIRED',
+          severity: 'error',
+          message: 'Missing required option: --text.',
+          suggestedFix: 'Run `pbe gate assess --text "..."` with the decision or assumption to assess.',
+        }),
+      ],
+    }
+  }
+  if (!isHumanGateTransition(transition)) {
+    return {
+      ok: false,
+      command: 'gate assess',
+      exitCode: ExitCode.InvalidArguments,
+      message: `Unsupported Human Gate transition: ${transition}.`,
+      issues: [
+        issue({
+          validator: 'CLI',
+          code: 'HUMAN_GATE_TRANSITION_UNSUPPORTED',
+          severity: 'error',
+          message: `Unsupported Human Gate transition: ${transition}.`,
+          suggestedFix: `Use one of: ${humanGateTransitions.join(', ')}.`,
+        }),
+      ],
+    }
+  }
+
+  const assessment = assessHumanGateClarity({
+    text,
+    transition,
+    profile: context.options.profile,
+  })
+
+  return {
+    ok: true,
+    command: 'gate assess',
+    exitCode: ExitCode.Success,
+    message: formatHumanGateAssessment(assessment),
+    issues: [],
+    data: { ...assessment },
+  }
+}
 
 export async function gateCommand(stage: string | undefined, context: CommandContext): Promise<CommandResult> {
   const canonicalStage = normalizeGateStage(stage)
@@ -91,6 +151,39 @@ export async function gateCommand(stage: string | undefined, context: CommandCon
     message: hasErrors(issues) ? `Cannot enter ${canonicalStage}.` : `Gate ${canonicalStage} passed.`,
     issues,
   }
+}
+
+function formatHumanGateAssessment(assessment: HumanGateAssessment): string {
+  const dimensions = assessment.clarity.dimensions
+  return [
+    'Human Gate Assessment',
+    '',
+    `Transition: ${assessment.transition}`,
+    `Profile: ${assessment.profile}`,
+    `Clarity: ${assessment.clarity.score.toFixed(2)} ${assessment.clarity.level}`,
+    `Requires Human Gate: ${assessment.requiresHumanGate ? 'yes' : 'no'}`,
+    '',
+    'Dimension scores:',
+    `- intent: ${dimensions.intent}`,
+    `- scope: ${dimensions.scope}`,
+    `- testability: ${dimensions.testability}`,
+    `- implementationSpecificity: ${dimensions.implementationSpecificity}`,
+    `- evidenceFit: ${dimensions.evidenceFit}`,
+    `- riskReversibility: ${dimensions.riskReversibility}`,
+    '',
+    'Hard triggers:',
+    ...formatHumanGateList(assessment.hardTriggers),
+    '',
+    'Reasons:',
+    ...formatHumanGateList(assessment.reasons),
+    '',
+    'Recommended question:',
+    assessment.recommendedQuestion,
+  ].join('\n')
+}
+
+function formatHumanGateList(values: string[]): string[] {
+  return values.length > 0 ? values.map((value) => `- ${value}`) : ['- none']
 }
 
 function stageStateIssues(stage: string, state: Record<string, unknown> | null): ValidationIssue[] {

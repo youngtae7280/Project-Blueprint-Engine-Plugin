@@ -143,6 +143,9 @@ else:
 
 Compact does not mean opaque. If PBE proceeds without a Human Gate, record the assumption and rationale.
 
+Use `pbe gate assess` for a read-only CLI assessment of clarity score, hard triggers, and the recommended Human Gate
+question. The command is advisory; it does not change state or replace user confirmation.
+
 Example:
 
 ```text

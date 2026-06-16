@@ -56,6 +56,8 @@ export interface CliOptions {
   profile?: 'full' | 'lite' | 'bypass'
   brief?: string
   maxChars?: number
+  text?: string
+  transition?: string
   files?: string[]
   stage?: CliStageOption
   summary?: string

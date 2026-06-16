@@ -56,6 +56,7 @@ describe('PBE CLI', () => {
 
     expect(result.exitCode).toBe(ExitCode.Success)
     expect(result.stdout).toContain('Project Blueprint Engine CLI')
+    expect(result.stdout).toContain('gate assess')
     expect(result.stdout).toContain('profile recommend')
     expect(result.stdout).toContain('context recommend')
     expect(result.stdout).toContain('context pack')
@@ -63,6 +64,159 @@ describe('PBE CLI', () => {
     expect(result.stdout).toContain('wpd close')
     expect(result.stdout).toContain('execution start')
     expect(result.stdout).toContain('review submit')
+  })
+
+  it('assesses Product to Work UI ambiguity and recommends a Human Gate', async () => {
+    const result = await runPbeCli(
+      [
+        'gate',
+        'assess',
+        '--text',
+        'choices should be displayed',
+        '--transition',
+        'product-to-work',
+        '--profile',
+        'lite',
+        '--json',
+      ],
+      { cwd: createWorkspace(), pluginRoot },
+    )
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    const payload = JSON.parse(result.stdout)
+    expect(payload.requiresHumanGate).toBe(true)
+    expect(payload.hardTriggers).toEqual(
+      expect.arrayContaining(['user-facing-ui-choice', 'multiple-implementation-options']),
+    )
+    expect(payload.clarity.dimensions.implementationSpecificity).toBe(0)
+    expect(payload.recommendedQuestion).toContain('Selection UI is unspecified')
+    expect(payload.readOnly).toBe(true)
+  })
+
+  it('raises clarity when Product to Work implementation is specified', async () => {
+    const ambiguous = await runPbeCli(
+      ['gate', 'assess', '--text', 'choices should be displayed', '--transition', 'product-to-work', '--json'],
+      { cwd: createWorkspace(), pluginRoot },
+    )
+    const specified = await runPbeCli(
+      [
+        'gate',
+        'assess',
+        '--text',
+        'choices should be displayed as a Combobox with 2 to 3 options',
+        '--transition',
+        'product-to-work',
+        '--profile',
+        'lite',
+        '--json',
+      ],
+      { cwd: createWorkspace(), pluginRoot },
+    )
+
+    expect(ambiguous.exitCode).toBe(ExitCode.Success)
+    expect(specified.exitCode).toBe(ExitCode.Success)
+    const ambiguousPayload = JSON.parse(ambiguous.stdout)
+    const specifiedPayload = JSON.parse(specified.stdout)
+    expect(specifiedPayload.clarity.dimensions.implementationSpecificity).toBe(2)
+    expect(specifiedPayload.clarity.score).toBeGreaterThan(ambiguousPayload.clarity.score)
+    expect(specifiedPayload.hardTriggers).not.toContain('user-facing-ui-choice')
+    expect(specifiedPayload.hardTriggers).not.toContain('multiple-implementation-options')
+  })
+
+  it('assesses subjective quality as requiring a Human Gate', async () => {
+    const result = await runPbeCli(
+      [
+        'gate',
+        'assess',
+        '--text',
+        'make the UI clean and natural',
+        '--transition',
+        'product-tree',
+        '--profile',
+        'lite',
+        '--json',
+      ],
+      { cwd: createWorkspace(), pluginRoot },
+    )
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    const payload = JSON.parse(result.stdout)
+    expect(payload.requiresHumanGate).toBe(true)
+    expect(payload.hardTriggers).toContain('subjective-quality')
+    expect(payload.recommendedQuestion).toContain('quality target is subjective')
+  })
+
+  it('assesses restricted and high-risk file scope as requiring a Human Gate', async () => {
+    const result = await runPbeCli(
+      [
+        'gate',
+        'assess',
+        '--text',
+        'update package.json and schema for auth migration',
+        '--transition',
+        'work-scope',
+        '--profile',
+        'lite',
+        '--json',
+      ],
+      { cwd: createWorkspace(), pluginRoot },
+    )
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    const payload = JSON.parse(result.stdout)
+    expect(payload.requiresHumanGate).toBe(true)
+    expect(payload.hardTriggers).toEqual(expect.arrayContaining(['restricted-file-change', 'high-risk-area']))
+    expect(payload.recommendedQuestion).toContain('exceed the Lite scope')
+  })
+
+  it('always requires a Human Gate for acceptance assessment', async () => {
+    const result = await runPbeCli(
+      ['gate', 'assess', '--text', 'all tests passed', '--transition', 'acceptance', '--profile', 'lite', '--json'],
+      { cwd: createWorkspace(), pluginRoot },
+    )
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    const payload = JSON.parse(result.stdout)
+    expect(payload.requiresHumanGate).toBe(true)
+    expect(payload.hardTriggers).toContain('final-acceptance')
+    expect(payload.recommendedQuestion).toContain('Do you accept this result')
+  })
+
+  it('prints Human Gate assessment text output', async () => {
+    const result = await runPbeCli(
+      [
+        'gate',
+        'assess',
+        '--text',
+        'choices should be displayed',
+        '--transition',
+        'product-to-work',
+        '--profile',
+        'lite',
+      ],
+      { cwd: createWorkspace(), pluginRoot },
+    )
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(result.stdout).toContain('Human Gate Assessment')
+    expect(result.stdout).toContain('Requires Human Gate: yes')
+    expect(result.stdout).toContain('Recommended question:')
+  })
+
+  it('does not create .pbe or mutate files when assessing Human Gate clarity', async () => {
+    const workspace = createWorkspace()
+    const readmePath = join(workspace, 'README.md')
+    writeText(readmePath, 'Before assessment\n')
+    const before = readFileSync(readmePath, 'utf8')
+
+    const result = await runPbeCli(
+      ['gate', 'assess', '--text', 'choices should be displayed', '--transition', 'product-to-work'],
+      { cwd: workspace, pluginRoot },
+    )
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(existsSync(join(workspace, '.pbe'))).toBe(false)
+    expect(readFileSync(readmePath, 'utf8')).toBe(before)
   })
 
   it('recommends lite for docs-only briefs and files', async () => {

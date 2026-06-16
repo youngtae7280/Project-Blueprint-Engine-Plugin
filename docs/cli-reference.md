@@ -67,6 +67,8 @@ Most commands follow this pattern:
 - `--profile <full|lite|bypass>`: execution profile for init and recommendation commands.
 - `--stage <stage>`: traceability/evidence stage mode for `pbe trace check`, or context stage for
   `pbe context recommend`.
+- `--text <text>`: text to assess for `pbe gate assess`.
+- `--transition <transition>`: Human Gate transition context for `pbe gate assess`.
 - `--max-chars <number>`: maximum generated bundle length for `pbe context pack`. Defaults to `12000`.
 - `--change <id>`: Change node id for Impact, Revision, and Product Patch commands.
 - `--product <id>`: Product node id. May be repeated or comma-separated.
@@ -120,6 +122,32 @@ Most commands follow this pattern:
 - Common failures: transition blocked, missing prerequisite artifacts, incomplete upstream stage.
 - Next command: Prefer modern transition commands such as `pbe wpd close`, `pbe execution start`, or
   `pbe review submit`.
+
+### `pbe gate assess`
+
+- Purpose: Assess whether an assumption or transition should stop for a Human Gate using clarity score plus hard
+  triggers.
+- Positioning: This is advisory and read-only. It does not block transitions, change validator policy, create `.pbe`, or
+  modify state/artifacts.
+- Typical state before running: Any time a Product, Work, Test, Evidence, ACEP, review, product patch, or acceptance
+  decision may be ambiguous.
+- Options: `--text <text>` is required. `--transition <transition>` defaults to `product-to-work`. `--profile` defaults
+  to `lite`.
+- Supported transitions: `product-tree`, `product-to-work`, `work-scope`, `work-to-test`, `test-to-evidence`,
+  `acep-preflight`, `review-revision`, `product-patch`, and `acceptance`.
+- What it checks: deterministic heuristics for `clarityScore`, `ambiguityLevel`, hard triggers, `requiresHumanGate`,
+  reasons, and a concise recommended question.
+- What it writes: Nothing.
+- Acceptance rule: `--transition acceptance` always requires a Human Gate because final acceptance is user-only.
+- JSON output: Includes `transition`, `profile`, `inputText`, `clarity`, `hardTriggers`, `requiresHumanGate`, `reasons`,
+  `recommendedQuestion`, and `readOnly: true`.
+
+Examples:
+
+```bash
+pbe gate assess --text "choices should be displayed" --transition product-to-work --profile lite
+pbe gate assess --text "make the UI clean" --transition product-tree --profile lite --json
+```
 
 ### `pbe profile recommend`
 

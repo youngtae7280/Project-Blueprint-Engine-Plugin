@@ -49,6 +49,9 @@ human or Codex judgment about semantic relevance.
 `pbe context pack` creates a prompt-ready bundle from recommended `readFirst` context, but it does not automatically
 analyze every task-specific project file.
 
+`pbe gate assess` uses deterministic heuristics. It helps surface ambiguity and hard triggers, but it does not replace
+human judgment or project-specific context.
+
 Documentation routing is based on keyword and file path signals such as `docs/`, README, troubleshooting, install, and
 PowerShell/npm help text.
 
