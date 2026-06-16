@@ -686,6 +686,8 @@ describe('PBE CLI', () => {
     expect(result.exitCode).toBe(ExitCode.Success)
     expect(result.stdout).toContain('# PBE Context Pack')
     expect(result.stdout).toContain('## Recommendation Summary')
+    expect(result.stdout).toContain('## Suggested Human Gate Assessment')
+    expect(result.stdout).toContain('pbe gate assess')
     expect(result.stdout).toContain('## Included Context')
     expect(result.stdout).toContain('## Read Only If Needed')
     expect(result.stdout).toContain('## Do Not Read By Default')
@@ -706,8 +708,13 @@ describe('PBE CLI', () => {
     const payload = JSON.parse(result.stdout)
     expect(payload.recommendation.detectedStage).toBe('documentation')
     expect(payload).toHaveProperty('includedFiles')
+    expect(payload).toHaveProperty('suggestedGateAssessment')
     expect(payload).toHaveProperty('bundle')
     expect(payload.readOnly).toBe(true)
+    expect(payload.suggestedGateAssessment.enabled).toBe(true)
+    expect(payload.suggestedGateAssessment.transition).toBe('work-scope')
+    expect(payload.suggestedGateAssessment.profile).toBe('lite')
+    expect(payload.suggestedGateAssessment.command).toContain('pbe gate assess')
     const includedPaths = payload.includedFiles.map((entry: { path: string }) => entry.path)
     expect(includedPaths).toEqual(payload.recommendation.readFirst)
     expect(includedPaths).toContain('agent-context/lite.md')
@@ -729,6 +736,52 @@ describe('PBE CLI', () => {
     const payload = JSON.parse(result.stdout)
     expect(payload.bundle.length).toBeLessThanOrEqual(500)
     expect(payload.warnings.some((entry: string) => entry.includes('bundle was truncated'))).toBe(true)
+  })
+
+  it('suggests a gate assessment command from context pack JSON when brief is provided', async () => {
+    const brief = '\uC120\uD0DD\uC9C0\uAC00 \uD45C\uC2DC\uB418\uC5B4\uC57C \uD55C\uB2E4'
+    const result = await runPbeCli(['context', 'pack', '--brief', brief, '--profile', 'lite', '--json'], {
+      cwd: createWorkspace(),
+      pluginRoot,
+    })
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    const payload = JSON.parse(result.stdout)
+    expect(payload.suggestedGateAssessment.enabled).toBe(true)
+    expect(payload.suggestedGateAssessment.command).toContain('pbe gate assess')
+    expect(payload.suggestedGateAssessment.command).toContain(brief)
+    expect(payload.suggestedGateAssessment.profile).toBe('lite')
+    expect(payload.suggestedGateAssessment.transition).toBeTruthy()
+  })
+
+  it('maps documentation context pack gate assessment to work-scope', async () => {
+    const result = await runPbeCli(
+      ['context', 'pack', '--brief', 'docs/known-limits.md wording update', '--profile', 'lite', '--json'],
+      {
+        cwd: createWorkspace(),
+        pluginRoot,
+      },
+    )
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    const payload = JSON.parse(result.stdout)
+    expect(payload.recommendation.detectedStage).toBe('documentation')
+    expect(payload.suggestedGateAssessment.enabled).toBe(true)
+    expect(payload.suggestedGateAssessment.transition).toBe('work-scope')
+  })
+
+  it('maps VD stage context pack gate assessment to work-to-test without brief command generation', async () => {
+    const result = await runPbeCli(['context', 'pack', '--stage', 'vd', '--profile', 'lite', '--json'], {
+      cwd: createWorkspace(),
+      pluginRoot,
+    })
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    const payload = JSON.parse(result.stdout)
+    expect(payload.recommendation.detectedStage).toBe('vd')
+    expect(payload.suggestedGateAssessment.enabled).toBe(false)
+    expect(payload.suggestedGateAssessment.transition).toBe('work-to-test')
+    expect(payload.suggestedGateAssessment.reason).toContain('No brief/text was provided')
   })
 
   it('does not create .pbe, mutate state, or change git status when packing context', async () => {

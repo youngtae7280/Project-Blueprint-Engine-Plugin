@@ -49,6 +49,9 @@ human or Codex judgment about semantic relevance.
 `pbe context pack` creates a prompt-ready bundle from recommended `readFirst` context, but it does not automatically
 analyze every task-specific project file.
 
+The suggested gate assessment in `pbe context pack` is advisory. It recommends a follow-up command but does not
+automatically validate or block the workflow.
+
 `pbe gate assess` uses deterministic heuristics. It helps surface ambiguity and hard triggers, but it does not replace
 human judgment or project-specific context.
 

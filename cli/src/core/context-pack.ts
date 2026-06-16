@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { recommendContext, type ContextProfileOption, type ContextRecommendation } from './context-recommendation.js'
+import type { HumanGateTransition } from './human-gate-assessment.js'
 import type { ContextStageOption } from './types.js'
 
 export const DEFAULT_CONTEXT_PACK_MAX_CHARS = 12000
@@ -24,9 +25,18 @@ export interface ContextPackIncludedFile {
 export interface ContextPack {
   recommendation: ContextRecommendation
   includedFiles: ContextPackIncludedFile[]
+  suggestedGateAssessment: SuggestedGateAssessment
   bundle: string
   warnings: string[]
   readOnly: true
+}
+
+export interface SuggestedGateAssessment {
+  enabled: boolean
+  transition?: HumanGateTransition
+  profile?: ContextProfileOption
+  command?: string
+  reason: string
 }
 
 export function createContextPack(input: ContextPackInput): ContextPack {
@@ -36,20 +46,25 @@ export function createContextPack(input: ContextPackInput): ContextPack {
     stage: input.stage,
     profile: input.profile,
   })
+  const suggestedGateAssessment = buildSuggestedGateAssessment(recommendation, input.brief?.trim(), input.profile)
   const warnings: string[] = []
   const includedFiles = recommendation.readFirst.map((relativePath) =>
     readContextFile(input.pluginRoot, relativePath, warnings),
   )
 
-  let bundle = formatContextPackMarkdown(recommendation, includedFiles, warnings)
+  let bundle = formatContextPackMarkdown(recommendation, includedFiles, suggestedGateAssessment, warnings)
   if (bundle.length > maxChars) {
     warnings.push(`Context pack exceeded --max-chars ${maxChars}; bundle was truncated.`)
-    bundle = truncateText(formatContextPackMarkdown(recommendation, includedFiles, warnings), maxChars)
+    bundle = truncateText(
+      formatContextPackMarkdown(recommendation, includedFiles, suggestedGateAssessment, warnings),
+      maxChars,
+    )
   }
 
   return {
     recommendation,
     includedFiles,
+    suggestedGateAssessment,
     bundle,
     warnings,
     readOnly: true,
@@ -82,6 +97,7 @@ function readContextFile(pluginRoot: string, relativePath: string, warnings: str
 function formatContextPackMarkdown(
   recommendation: ContextRecommendation,
   includedFiles: ContextPackIncludedFile[],
+  suggestedGateAssessment: SuggestedGateAssessment,
   warnings: string[],
 ): string {
   return [
@@ -93,6 +109,10 @@ function formatContextPackMarkdown(
     `- profile: ${recommendation.profile || 'not specified'}`,
     '- skills:',
     ...formatList(recommendation.skills, '  '),
+    '',
+    '## Suggested Human Gate Assessment',
+    '',
+    ...formatSuggestedGateAssessment(suggestedGateAssessment),
     '',
     '## Operating Rules',
     '',
@@ -117,6 +137,71 @@ function formatContextPackMarkdown(
     '',
     ...formatList(warnings.length > 0 ? warnings : ['none']),
   ].join('\n')
+}
+
+export function buildSuggestedGateAssessment(
+  recommendation: ContextRecommendation,
+  brief: string | undefined,
+  requestedProfile?: ContextProfileOption,
+): SuggestedGateAssessment {
+  const transition = mapDetectedStageToGateTransition(recommendation.detectedStage)
+  const profile = requestedProfile || recommendation.profile || 'lite'
+
+  if (!brief) {
+    return {
+      enabled: false,
+      transition,
+      profile,
+      reason: 'No brief/text was provided for gate assessment.',
+    }
+  }
+
+  return {
+    enabled: true,
+    transition,
+    profile,
+    command: `pbe gate assess --text "${escapeGateAssessText(brief)}" --transition ${transition} --profile ${profile}`,
+    reason: 'Run this before allowing AI assumptions to become implementation decisions.',
+  }
+}
+
+export function mapDetectedStageToGateTransition(stage: ContextRecommendation['detectedStage']): HumanGateTransition {
+  const transitionByStage: Record<ContextRecommendation['detectedStage'], HumanGateTransition> = {
+    start: 'product-tree',
+    rpd: 'product-tree',
+    documentation: 'work-scope',
+    wpd: 'product-to-work',
+    vd: 'work-to-test',
+    execution: 'acep-preflight',
+    review: 'review-revision',
+    revision: 'review-revision',
+    'product-patch': 'product-patch',
+    parallel: 'work-scope',
+  }
+
+  return transitionByStage[stage] || 'product-to-work'
+}
+
+function escapeGateAssessText(value: string): string {
+  return value.replace(/(["\\])/g, '\\$1')
+}
+
+function formatSuggestedGateAssessment(suggestedGateAssessment: SuggestedGateAssessment): string[] {
+  if (!suggestedGateAssessment.enabled) {
+    return ['No gate assessment command was suggested because no brief/text was provided.']
+  }
+
+  return [
+    'Before turning the request into implementation work, run:',
+    '',
+    '```bash',
+    suggestedGateAssessment.command || '',
+    '```',
+    '',
+    'Reason:',
+    '',
+    `- ${suggestedGateAssessment.reason}`,
+  ]
 }
 
 function formatIncludedContext(includedFiles: ContextPackIncludedFile[]): string[] {

@@ -234,7 +234,10 @@ Example JSON shape:
   artifacts, source files, or docs.
 - Success result: Prints a Markdown context pack with recommendation summary, operating rules, included context,
   read-only-if-needed paths, do-not-read-by-default paths, and warnings.
-- JSON output: Includes `recommendation`, `includedFiles`, `bundle`, `warnings`, and `readOnly: true`.
+- Suggested gate assessment: When a brief is available, context pack also suggests a follow-up `pbe gate assess`
+  command. This is advisory and read-only; it does not run the assessment automatically or block state transitions.
+- JSON output: Includes `recommendation`, `includedFiles`, `suggestedGateAssessment`, `bundle`, `warnings`, and
+  `readOnly: true`.
 - Missing files: Missing recommended `readFirst` files are reported as warnings instead of failing the command.
 - Truncation: If the generated bundle exceeds `--max-chars`, the bundle is truncated and a warning is recorded.
 
@@ -243,6 +246,8 @@ Examples:
 ```bash
 pbe context pack --brief "검색 기능 검증 설계" --profile lite
 pbe context pack --stage vd --profile lite --json
+pbe context pack --brief "choices should be displayed" --profile lite
+pbe gate assess --text "choices should be displayed" --transition product-to-work --profile lite
 pbe context pack --brief "docs/known-limits.md 한 줄 수정" --profile lite --max-chars 8000
 ```
 

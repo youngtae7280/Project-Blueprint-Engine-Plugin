@@ -50,6 +50,7 @@ export async function contextPackCommand(context: CommandContext): Promise<Comma
     data: {
       recommendation: pack.recommendation,
       includedFiles: pack.includedFiles,
+      suggestedGateAssessment: pack.suggestedGateAssessment,
       bundle: pack.bundle,
       warnings: pack.warnings,
       readOnly: pack.readOnly,

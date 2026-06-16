@@ -80,5 +80,7 @@ Suggested routing flow:
 
 1. `pbe context recommend`: choose the smallest relevant context.
 2. `pbe context pack`: create a compact prompt-ready bundle from `readFirst`.
-3. Agent works from the pack first.
-4. Read full docs only when the pack or task requires it.
+3. Agent works from the included context first.
+4. If a suggested gate assessment is shown, run or consider it before turning Product intent into Work/Test decisions.
+5. Ask the Human Gate question only when the assessment requires it.
+6. Read full docs only when the pack or task requires it.
