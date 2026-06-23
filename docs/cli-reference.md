@@ -28,6 +28,9 @@ For repeated review rejection and realignment, see [Review Failure Recovery](rev
 
 For Lite profile expectations and escalation rules, see [Lite Mode Policy](lite-mode-policy.md).
 
+For the experimental Graph-first foundation, see [PBE Knowledge Graph](pbe-knowledge-graph.md),
+[Tree as Graph View](pbe-tree-as-view.md), [Graph Operation](pbe-graph-operation.md), and [Sync Diff](pbe-sync-diff.md).
+
 `pbe status` is profile-aware: for `lite`, it shows must-keep guards and escalation triggers. This is guidance only; it
 does not create a separate `pbe lite` command or reduced artifact initialization.
 
@@ -78,7 +81,8 @@ Most commands follow this pattern:
 - `--acceptance <id>`: Acceptance branch/node id. May be repeated or comma-separated.
 - `--patch <id>`: Product Patch node id for `pbe product patch apply`.
 - `--operation <value>`: Product Patch operation, such as `update_acceptance_criteria`.
-- `--files <list>`: comma-separated candidate changed/expected files for `pbe profile recommend`.
+- `--type <value>`: Graph view type for `pbe graph view`.
+- `--files <list>`: comma-separated candidate changed/expected files for `pbe profile recommend` or `pbe sync diff`.
 
 ## Status And Validation Commands
 
@@ -108,6 +112,50 @@ Most commands follow this pattern:
 - Common failures: `LEGACY_PBE_VALIDATOR_FAILED`, `V2_TREE_VALIDATOR_FAILED`, `UNKNOWN_STATE`,
   `PRODUCT_PATCH_OPERATION_INVALID`, acceptance/evidence/visual closure issues.
 - Next command: Follow issue `nextCommand`; otherwise fix reported artifacts and rerun `pbe validate`.
+
+### `pbe graph validate`
+
+- Purpose: Build an experimental Graph snapshot from existing Tree-first artifacts and run the Graph validator skeleton.
+- Positioning: This is additive. It does not replace `pbe validate`, `pbe trace check`, or any stage closure validator.
+- Typical state before running: Any initialized project, or exploratory local checks before Graph-first migration work.
+- What it reads: Product Tree, Project Tree, Work Tree, Test Tree, and Evidence Tree when present.
+- What it writes: Nothing.
+- Success result: Prints node/edge counts and reports zero Graph error issues.
+- Common warnings: confirmed Product without Flow/Work, confirmed Work without Test, Test without Evidence metadata.
+- Next command: Treat warnings as migration guidance; continue using existing Tree-first gates for closure.
+
+### `pbe graph view`
+
+- Purpose: Show the default Graph View Definition skeleton.
+- Positioning: View rendering is not implemented in this first foundation pass. This command exposes typed definitions
+  for Product Intent, Flow Behavior, Work Implementation, Test Coverage, Change Impact, Risk/Unknown, and Legacy
+  Onboarding views.
+- Options: `--type <view>` is optional. Examples: `product-intent`, `product-intent-view`, `work-implementation-view`.
+- What it writes: Nothing.
+- Success result: Prints root node types and traversal rules.
+
+### `pbe operation plan`
+
+- Purpose: Create a typed Graph Operation Plan skeleton from user request text.
+- Positioning: This is not an automatic planning engine yet. It records the target structure for future orchestration.
+- Options: `--text <text>` is required.
+- What it writes: Nothing.
+- Success result: Prints an operation id, inferred operation kind, summary, and required default view ids.
+
+### `pbe sync diff`
+
+- Purpose: Show the incremental Graph impact detection skeleton.
+- Positioning: The actual file-node-index lookup and actionable report are intentionally deferred.
+- Options: `--files <comma-separated paths>` may be supplied for early experiments.
+- What it writes: Nothing.
+- Success result: Prints the planned changed-file impact pipeline.
+
+### `pbe ingest baseline`
+
+- Purpose: Show the baseline reconstruction skeleton for existing-code onboarding.
+- Positioning: Actual code/runtime analysis is intentionally deferred.
+- What it writes: Nothing.
+- Success result: Prints the planned observed Flow / Product Candidate / Unknown / Risk baseline pipeline.
 
 ### `pbe gate <stage>`
 

@@ -98,6 +98,11 @@ Commands:
   init                 Initialize .pbe artifacts
   status               Show current PBE status
   validate             Run all PBE validators
+  graph validate       Build an experimental Graph snapshot from Tree artifacts and validate it
+  graph view           Show an experimental Graph View Definition skeleton
+  operation plan       Create a typed Graph Operation Plan skeleton from request text
+  sync diff            Show the incremental Graph impact detection skeleton
+  ingest baseline      Show the baseline reconstruction skeleton
   gate <stage>         Check whether a stage can be entered, including review-result
   gate assess          Assess Human Gate clarity and hard triggers without changing state
   profile recommend    Recommend full, lite, or bypass from a task brief
@@ -154,6 +159,7 @@ Options:
   --change <id>        Change node id for impact/revision commands.
   --patch <id>         Product Patch node id for product patch apply.
   --operation <value>  Product Patch operation.
+  --type <value>       Graph view type.
   --product <id>       Affected Product node id. May be repeated or comma-separated.
   --work <id>          Affected Work node id. May be repeated or comma-separated.
   --test <id>          Affected Test node id. May be repeated or comma-separated.

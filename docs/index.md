@@ -12,6 +12,13 @@
 
 - [Core Concepts](core-concepts.md)
 - [Tree Model](tree-model.md)
+- [PBE Knowledge Graph](pbe-knowledge-graph.md)
+- [Tree as Graph View](pbe-tree-as-view.md)
+- [Flow Node](pbe-flow-node.md)
+- [Graph Operation](pbe-graph-operation.md)
+- [Minimal Clarification](pbe-minimal-clarification.md)
+- [Baseline Reconstruction](pbe-baseline-reconstruction.md)
+- [Sync Diff](pbe-sync-diff.md)
 - [State Machine](state-machine.md)
 - [PBE Philosophy](pbe-philosophy.md)
 
