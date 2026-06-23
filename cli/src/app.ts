@@ -104,7 +104,6 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     change: undefined as string | undefined,
     patch: undefined as string | undefined,
     operation: undefined as string | undefined,
-    type: undefined as string | undefined,
     product: [] as string[],
     work: [] as string[],
     test: [] as string[],
@@ -206,13 +205,6 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--operation requires a Product Patch operation.' }
       }
       options.operation = value
-      index += 1
-    } else if (arg === '--type') {
-      const value = argv[index + 1]
-      if (!value) {
-        return { error: '--type requires a value.' }
-      }
-      options.type = value
       index += 1
     } else if (arg === '--product') {
       const value = argv[index + 1]

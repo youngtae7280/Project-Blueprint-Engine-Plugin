@@ -7,11 +7,8 @@ import { contextPackCommand, contextRecommendCommand } from './context.js'
 import { executionCompleteCommand, executionStartCommand } from './execution.js'
 import { filesCheckCommand } from './files.js'
 import { gateAssessCommand, gateCommand } from './gate.js'
-import { graphValidateCommand, graphViewCommand } from './graph.js'
 import { impactAnalyzeCommand } from './impact.js'
-import { ingestBaselineCommand } from './ingest.js'
 import { initCommand } from './init.js'
-import { operationPlanCommand } from './operation.js'
 import { profileRecommendCommand } from './profile.js'
 import { productPatchApplyCommand, productPatchProposeCommand } from './product.js'
 import { reviewSubmitCommand } from './review.js'
@@ -26,7 +23,6 @@ import {
 } from './scope.js'
 import { checkResult, type CommandContext, invalidCommand } from './shared.js'
 import { statusCommand } from './status.js'
-import { syncDiffCommand } from './sync.js'
 import { uiApproveCommand } from './ui.js'
 import { validateCommand } from './validate.js'
 import { vdCheckCommand, vdCloseCommand } from './vd.js'
@@ -45,21 +41,6 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'validate') {
     return validateCommand(context)
-  }
-  if (command === 'graph' && subcommand === 'validate') {
-    return graphValidateCommand(context)
-  }
-  if (command === 'graph' && subcommand === 'view') {
-    return graphViewCommand(context)
-  }
-  if (command === 'operation' && subcommand === 'plan') {
-    return operationPlanCommand(context)
-  }
-  if (command === 'sync' && subcommand === 'diff') {
-    return syncDiffCommand(context)
-  }
-  if (command === 'ingest' && subcommand === 'baseline') {
-    return ingestBaselineCommand()
   }
   if (command === 'gate') {
     if (subcommand === 'assess') {

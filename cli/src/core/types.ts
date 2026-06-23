@@ -65,7 +65,6 @@ export interface CliOptions {
   change?: string
   patch?: string
   operation?: string
-  type?: string
   product?: string[]
   work?: string[]
   test?: string[]
