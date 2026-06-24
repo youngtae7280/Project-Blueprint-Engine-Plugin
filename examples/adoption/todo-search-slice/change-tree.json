@@ -17,12 +17,15 @@
     "Change CH-001 is referenced by Product Patch PP-001.",
     "The change summary is derived from the README and dogfooding docs: search should include todo note content.",
     "PP-001 was user-confirmed in the parent orchestration chat on 2026-06-24.",
-    "The change is applied to demo-support snapshots but still requires refreshed Work/Test/Evidence and renewed Acceptance."
+    "The change is applied to demo-support snapshots.",
+    "A bounded runtime fixture now provides fresh Evidence for title + note/content matching.",
+    "Renewed Acceptance remains user-controlled and open."
   ],
   "limitations": [
     "This is a manual demo-support Change Tree snapshot.",
     "It records Product Patch confirmation for demo-support evidence only.",
-    "It does not execute revision work."
+    "It does not execute full product feature work.",
+    "It does not close renewed Acceptance."
   ],
   "changes": [
     {
@@ -30,7 +33,7 @@
       "type": "feedback",
       "source": "user_feedback",
       "summary": "Search should include todo note content.",
-      "status": "product_patch_confirmed_revision_required",
+      "status": "product_patch_confirmed_runtime_evidence_refreshed_waiting_acceptance",
       "createdAt": "2026-06-13T00:00:00.000Z",
       "confirmedAt": "2026-06-24T00:00:00.000Z",
       "confirmationSource": "user approved PP-001 in parent orchestration chat on 2026-06-24",
@@ -42,8 +45,8 @@
       "affectedProductNodeIds": ["PT-SEARCH-001"],
       "affectedProjectNodeIds": ["PJ-TODO-LIST-SURFACE", "PJ-TODO-SEARCH-HELPER"],
       "affectedWorkNodeIds": ["WT-SEARCH-001"],
-      "affectedTestNodeIds": ["TT-SEARCH-001", "TT-SEARCH-003"],
-      "affectedEvidenceNodeIds": ["EV-SEARCH-TEST", "EV-SEARCH-REVIEW"],
+      "affectedTestNodeIds": ["TT-SEARCH-001", "TT-SEARCH-003", "TT-SEARCH-004"],
+      "affectedEvidenceNodeIds": ["EV-SEARCH-TEST", "EV-SEARCH-REVIEW", "EV-SEARCH-NOTE-TEST"],
       "affectedAcceptanceNodeIds": ["AT-ROOT"],
       "affectedAcceptanceCriteriaIds": ["AC-SEARCH-001", "AC-SEARCH-003"],
       "notCurrentlyAffectedNodeIds": ["TT-SEARCH-002"],
@@ -55,18 +58,18 @@
         },
         {
           "family": "Impact Control Node",
-          "status": "Active",
-          "reason": "Accepted title-only Work/Test/Evidence/Acceptance are now stale, reopened, or require refreshed review after PP-001 confirmation."
+          "status": "Resolved for runtime fixture; warning remains",
+          "reason": "Fresh runtime fixture Evidence exists for title + note/content behavior, while visual review and user Acceptance remain open."
         },
         {
           "family": "Evidence Control Node",
-          "status": "Active",
-          "reason": "Refreshed note/content test output and renewed review evidence are missing."
+          "status": "Resolved for EV-SEARCH-NOTE-TEST; warning remains",
+          "reason": "EV-SEARCH-NOTE-TEST is now present/fresh from a bounded Vitest fixture; screenshot/generated graph exceptions remain visible."
         },
         {
           "family": "Acceptance Control Node",
           "status": "Waiting for human",
-          "reason": "Renewed Acceptance cannot close until refreshed Evidence is available and submitted for user review."
+          "reason": "Renewed Acceptance cannot close until the user reviews the refreshed Evidence and remaining warnings."
         }
       ]
     }

@@ -11,11 +11,12 @@ Status: strengthened manual Evidence pack / review result
 | Original demo basis commit     | `8948db79f3acb331c13bed7ecfb78e2a71d4231c`                            |
 | Evidence strengthening basis   | `88e8f4b4650c8da0694d809cfe3b313b3fe26a99`                            |
 | Compatibility supplement basis | `6fa469ca68317e7719b37a63f68dbb1c574a1a53`                            |
+| Runtime fixture evidence basis | `33bab9c1f35fbd31cb85d1b5e0725d37815bb862`                            |
 | Selected slice                 | `Todo Search Adoption + Product Meaning Feedback`                     |
 | Result type                    | Manual Evidence pack and review result, not generated artifact design |
 
 This result is not Graph-source promotion. It does not change source authority, promote Maintainability Graph to current
-source, retire tree-native artifacts, implement runtime behavior, define schemas, implement validators, or create
+source, retire tree-native artifacts, implement PBE runtime behavior, define schemas, implement validators, or create
 migration/rollback mechanics.
 
 Tree-native artifacts remain the current operational source of truth until a later promotion readiness review and
@@ -40,8 +41,8 @@ Confirmed revision scope after PP-001:
 - selected Product node: `PT-SEARCH-001`
 - selected Project nodes: `PJ-TODO-LIST-SURFACE`, `PJ-TODO-SEARCH-HELPER`
 - selected Work node: `WT-SEARCH-001`
-- selected Tests: `TT-SEARCH-001`, `TT-SEARCH-002`, `TT-SEARCH-003`
-- selected Evidence: `EV-SEARCH-TEST`, `EV-SEARCH-REVIEW`
+- selected Tests: `TT-SEARCH-001`, `TT-SEARCH-002`, `TT-SEARCH-003`, `TT-SEARCH-004`
+- selected Evidence: `EV-SEARCH-TEST`, `EV-SEARCH-REVIEW`, `EV-SEARCH-NOTE-TEST`
 - accepted title-only slice: `AT-ROOT`
 
 Observed deferred / non-scope examples:
@@ -64,8 +65,9 @@ Observed stale/reopen state after confirmation:
 - `product-patch-tree.json` confirms expanding the search target from title-only to title + note/content.
 - The patch is `confirmed_revision_required`, `requiresUserConfirmation: true`, and `userConfirmed: true`.
 - `change-tree.json` records that feedback as `CH-001` with the Decision Control Node resolved.
-- `impact-tree.json` classifies affected selected-slice nodes as stale, reopened, missing, or requiring refresh.
-- Revised implementation, refreshed runtime Evidence, and renewed Acceptance are not demonstrated.
+- `impact-tree.json` classifies affected selected-slice nodes as refreshed, partial, or ready for renewed Acceptance.
+- Bounded runtime fixture Evidence is present for title + note/content behavior.
+- Renewed Acceptance is not closed; it is ready for user review with warnings.
 
 Supplemental compatibility slice:
 
@@ -80,30 +82,33 @@ product slice, does not clean up public docs, and does not change source authori
 
 Source discovery used observable repository files and command output only.
 
-| Observation                          | Evidence                                                                                                                                                         | Status  |
-| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| Current source before strengthening  | `git log -1 --oneline` returned `88e8f4b Record representative runtime feasibility demo result`.                                                                 | present |
-| Root `.pbe` folder                   | `Test-Path .pbe` returned no root `.pbe` directory in this repository checkout.                                                                                  | present |
-| Original slice artifact list         | `examples/adoption/todo-search-slice` contained Product, Work, Test, Evidence, Acceptance, Product Patch, README, and RPD summary snapshots.                     | present |
-| Strengthened artifact list           | This update adds Project Tree, Cycle Contract, Node Execution Contract, Change Tree, Impact Tree, Compatibility Review, Approval Brief, and Evidence Exceptions. | present |
-| Supplemental compatibility artifacts | `examples/adoption/compatibility-mismatch-slice` records a real ACEP task-card-only wording mismatch and applies compatibility policy.                           | present |
-| Source-authority boundary            | New files are marked `demo_support_snapshot`, non-authoritative, or demo-support evidence snapshots.                                                             | present |
+| Observation                           | Evidence                                                                                                                                                            | Status  |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| Current source before runtime fixture | `git log -1 --oneline` returned `33bab9c Record PP-001 confirmation evidence`.                                                                                      | present |
+| Root `.pbe` folder                    | `Test-Path .pbe` returned no root `.pbe` directory in this repository checkout.                                                                                     | present |
+| Original slice artifact list          | `examples/adoption/todo-search-slice` contained Product, Work, Test, Evidence, Acceptance, Product Patch, README, and RPD summary snapshots.                        | present |
+| Strengthened artifact list            | Prior updates added Project Tree, Cycle Contract, Node Execution Contract, Change Tree, Impact Tree, Compatibility Review, Approval Brief, and Evidence Exceptions. | present |
+| Supplemental compatibility artifacts  | `examples/adoption/compatibility-mismatch-slice` records a real ACEP task-card-only wording mismatch and applies compatibility policy.                              | present |
+| Runtime fixture command               | `npx vitest run examples/adoption/todo-search-slice/runtime-fixture` passed 1 file and 6 tests.                                                                     | present |
+| Source-authority boundary             | New files are marked `demo_support_snapshot`, non-authoritative, or demo-support evidence snapshots.                                                                | present |
 
 Because the repo root has no `.pbe` directory, this demo result does not claim a live project `.pbe` run. It records a
 manual feasibility review over public docs, illustrative adoption snapshots, and selected-slice demo-support artifacts.
 
 ## 4. Added Selected-Slice Support Artifacts
 
-| Artifact                                                                        | Role                                                             | Source references / derivation note                                                              | Limitation                                                                               |
-| ------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| `examples/adoption/todo-search-slice/project-tree.json`                         | Product -> Project -> Work trace.                                | Derived from Product `PT-SEARCH-001`, Work `WT-SEARCH-001`, README, and tree model docs.         | Manual demo-support snapshot; not CLI generated.                                         |
-| `examples/adoption/todo-search-slice/cycle-contract.md`                         | Selected cycle scope and boundary.                               | Uses Product/Project/Work/Test/Evidence/Acceptance snapshots and execution contract docs.        | Manual evidence snapshot; not `pbe acep ready` output.                                   |
-| `examples/adoption/todo-search-slice/node-execution-contracts/wt-search-001.md` | Node-level selected/forbidden scope.                             | Uses Work Tree expected/forbidden files, tests, evidence, and confirmed Product Patch scope.     | Does not prove source code exists or commands ran.                                       |
-| `examples/adoption/todo-search-slice/change-tree.json`                          | Product meaning feedback as Change node.                         | Derives `CH-001` from confirmed `PP-001`, README, dogfooding docs, and Product Patch policy.     | Does not execute revision work or produce refreshed Evidence.                            |
-| `examples/adoption/todo-search-slice/impact-tree.json`                          | Affected node classification for confirmed title + note meaning. | Derives impact from Product Patch, selected node links, and revision docs.                       | Refreshed implementation/test Evidence and renewed Acceptance remain missing.            |
-| `examples/adoption/todo-search-slice/compatibility-review.md`                   | Real mismatch check and compatibility path judgment.             | Inspects selected-slice files and Legacy Compatibility Map boundary.                             | Finds no real selected-slice mismatch; supplemental slice covers the real mismatch path. |
-| `examples/adoption/todo-search-slice/approval-brief.md`                         | Demo-support user judgment surface.                              | Summarizes strengthened evidence under Approval Brief policy.                                    | Does not accept product results or mutate Acceptance Tree.                               |
-| `examples/adoption/todo-search-slice/evidence-exceptions.md`                    | Missing/partial/stale/not-applicable evidence records.           | Uses Evidence Tree, Product Patch, Impact Tree, compatibility review, and Check/Evidence policy. | Exceptions are visible limitations, not proof.                                           |
+| Artifact                                                                        | Role                                                             | Source references / derivation note                                                                                    | Limitation                                                                               |
+| ------------------------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `examples/adoption/todo-search-slice/project-tree.json`                         | Product -> Project -> Work trace.                                | Derived from Product `PT-SEARCH-001`, Work `WT-SEARCH-001`, README, and tree model docs.                               | Manual demo-support snapshot; not CLI generated.                                         |
+| `examples/adoption/todo-search-slice/cycle-contract.md`                         | Selected cycle scope and boundary.                               | Uses Product/Project/Work/Test/Evidence/Acceptance snapshots and execution contract docs.                              | Manual evidence snapshot; not `pbe acep ready` output.                                   |
+| `examples/adoption/todo-search-slice/node-execution-contracts/wt-search-001.md` | Node-level selected/forbidden scope.                             | Uses Work Tree expected/forbidden files, tests, evidence, and confirmed Product Patch scope.                           | Does not prove source code exists or commands ran.                                       |
+| `examples/adoption/todo-search-slice/change-tree.json`                          | Product meaning feedback as Change node.                         | Derives `CH-001` from confirmed `PP-001`, README, dogfooding docs, Product Patch policy, and runtime fixture evidence. | Does not execute full product feature work or close renewed Acceptance.                  |
+| `examples/adoption/todo-search-slice/impact-tree.json`                          | Affected node classification for confirmed title + note meaning. | Derives impact from Product Patch, selected node links, revision docs, and `EV-SEARCH-NOTE-TEST`.                      | Renewed Acceptance remains user-controlled and open.                                     |
+| `examples/adoption/todo-search-slice/compatibility-review.md`                   | Real mismatch check and compatibility path judgment.             | Inspects selected-slice files and Legacy Compatibility Map boundary.                                                   | Finds no real selected-slice mismatch; supplemental slice covers the real mismatch path. |
+| `examples/adoption/todo-search-slice/approval-brief.md`                         | Demo-support user judgment surface.                              | Summarizes strengthened evidence under Approval Brief policy.                                                          | Does not accept product results or mutate Acceptance Tree.                               |
+| `examples/adoption/todo-search-slice/evidence-exceptions.md`                    | Resolved/partial/not-applicable evidence records.                | Uses Evidence Tree, Product Patch, Impact Tree, runtime evidence, compatibility review, and Check/Evidence policy.     | Exceptions are visible limitations, not proof.                                           |
+| `examples/adoption/todo-search-slice/runtime-fixture/`                          | Bounded runnable Todo search fixture.                            | Implements title + note/content matching only for representative evidence.                                             | Not a full Todo app or PBE runtime implementation.                                       |
+| `examples/adoption/todo-search-slice/runtime-evidence.md`                       | Fresh command Evidence for `EV-SEARCH-NOTE-TEST`.                | Records passing Vitest output for 1 file and 6 tests.                                                                  | Does not close renewed user Acceptance.                                                  |
 
 Supplemental compatibility support artifacts:
 
@@ -146,18 +151,19 @@ Supplemental compatibility support artifacts:
 | `examples/adoption/todo-search-slice/README.md`                                          | Names title-only scope, deferred search variants, flow commands, and post-acceptance note-content feedback path.               | Selected scope, non-scope, change pressure.               | present         |
 | `examples/adoption/todo-search-slice/product-tree.json`                                  | Contains confirmed `PT-SEARCH-001` with acceptance criteria `AC-SEARCH-001..003` and title-only assumption.                    | Product intent and acceptance criteria.                   | present         |
 | `examples/adoption/todo-search-slice/project-tree.json`                                  | Adds selected-slice Project boundary derived from Product/Work snapshots.                                                      | Product -> Project -> Work trace.                         | present         |
-| `examples/adoption/todo-search-slice/work-tree.json`                                     | Contains implemented `WT-SEARCH-001`, expected files, forbidden files, done criteria, and validation hint.                     | Work scope and file boundary.                             | present         |
+| `examples/adoption/todo-search-slice/work-tree.json`                                     | Contains `WT-SEARCH-001`, expected/forbidden files, done criteria, demo fixture references, and validation hints.              | Work scope and file boundary.                             | present         |
 | `examples/adoption/todo-search-slice/cycle-contract.md`                                  | Adds selected cycle scope, deferred/non-scope, validation, evidence, and stop/change rules.                                    | Cycle Contract boundary.                                  | present         |
 | `examples/adoption/todo-search-slice/node-execution-contracts/wt-search-001.md`          | Adds node-level allowed/forbidden files, tests, evidence, freshness rule, and stop conditions.                                 | Node-level execution boundary.                            | present         |
-| `examples/adoption/todo-search-slice/test-tree.json`                                     | Contains passed tests linked to Product, Work, acceptance criteria, and Evidence nodes.                                        | Test coverage.                                            | present         |
-| `examples/adoption/todo-search-slice/evidence-tree.json`                                 | Contains current test-output and review-note Evidence linked to Product, Work, Test, and criteria.                             | Evidence links and Check/Evidence separation.             | present         |
-| `examples/adoption/todo-search-slice/acceptance-tree.json`                               | Contains user `accepted` title-only slice with Evidence/Test/Product/Work links.                                               | Durable user acceptance state.                            | present         |
+| `examples/adoption/todo-search-slice/test-tree.json`                                     | Contains refreshed runtime fixture tests linked to Product, Work, acceptance criteria, and Evidence nodes.                     | Test coverage.                                            | present         |
+| `examples/adoption/todo-search-slice/evidence-tree.json`                                 | Contains present/fresh `EV-SEARCH-NOTE-TEST` plus historical/partial Evidence records.                                         | Evidence links and Check/Evidence separation.             | present         |
+| `examples/adoption/todo-search-slice/acceptance-tree.json`                               | Contains prior title-only acceptance and ready-for-renewed-acceptance state with warnings.                                     | Durable user acceptance state.                            | present         |
 | `examples/adoption/todo-search-slice/product-patch-tree.json`                            | Records user-confirmed `PP-001` expanding search from title to title + note/content.                                           | Product-meaning decision resolved.                        | present         |
-| `examples/adoption/todo-search-slice/change-tree.json`                                   | Records `CH-001` as confirmed revision-required change linked to `PP-001`.                                                     | Change node evidence.                                     | present         |
-| `examples/adoption/todo-search-slice/impact-tree.json`                                   | Classifies affected Product/Project/Work/Test/Evidence/Acceptance nodes after `PP-001` confirmation.                           | Impact/stale/reopen evidence.                             | present         |
+| `examples/adoption/todo-search-slice/change-tree.json`                                   | Records `CH-001` as confirmed change with runtime evidence refreshed and Acceptance waiting for human review.                  | Change node evidence.                                     | present         |
+| `examples/adoption/todo-search-slice/impact-tree.json`                                   | Classifies affected Product/Project/Work/Test/Evidence/Acceptance nodes after `PP-001` and fixture Evidence.                   | Impact/stale/reopen evidence.                             | present         |
 | `examples/adoption/todo-search-slice/compatibility-review.md`                            | Records no real selected-slice mismatch found; no simulated mismatch treated as proof.                                         | Compatibility honesty.                                    | present         |
-| `examples/adoption/todo-search-slice/approval-brief.md`                                  | Summarizes PP-001 confirmation and missing refreshed Evidence under `Blocked`.                                                 | Approval Brief surface.                                   | present         |
-| `examples/adoption/todo-search-slice/evidence-exceptions.md`                             | Records fresh command output, screenshot, freshness, compatibility, and generated graph exceptions.                            | Evidence exception visibility.                            | present         |
+| `examples/adoption/todo-search-slice/approval-brief.md`                                  | Summarizes PP-001 confirmation and runtime fixture Evidence under `Review with warning`.                                       | Approval Brief surface.                                   | present         |
+| `examples/adoption/todo-search-slice/evidence-exceptions.md`                             | Records resolved note/content command Evidence plus remaining screenshot, compatibility, and generated graph exceptions.       | Evidence exception visibility.                            | present         |
+| `examples/adoption/todo-search-slice/runtime-evidence.md`                                | Records passing `npx vitest run examples/adoption/todo-search-slice/runtime-fixture` output.                                   | Fresh runtime fixture Evidence.                           | present         |
 | `examples/adoption/todo-search-slice/rpd-interview-summary.md`                           | Records rough request, title-only slice, ambiguity, risks, and non-scope candidates.                                           | Minimal clarification and risk context.                   | present         |
 | `examples/adoption/compatibility-mismatch-slice/source-observations.md`                  | Records the real ACEP task-card-only mismatch and safer canonical counterweights.                                              | Supplemental compatibility mismatch Evidence.             | present         |
 | `examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md`           | Records candidate `CCN-ACEP-TASK-CARD-AUTHORITY-001`.                                                                          | Compatibility Control Node visibility.                    | present         |
@@ -167,27 +173,27 @@ Supplemental compatibility support artifacts:
 
 ## 6. Scenario Coverage Matrix
 
-| Scenario                     | Required observation                                                                                                                        | Actual evidence found                                                                                                                     | Feasibility status     | Gap / next action                                                                                          |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Happy path                   | Selected Product branch traces through Project, Work, Test, Evidence, Approval Brief, and Acceptance.                                       | Product, Project, Work, Cycle/Node Contract, Test, Evidence, Acceptance, and Approval Brief support artifacts exist.                      | demonstrated           | Demo-support artifacts are manual; a future generated/runtime run could strengthen repeatability.          |
-| Stale evidence / reopen path | Post-acceptance feedback causes affected nodes to become stale, invalidated, reopened, or refreshed.                                        | Confirmed `PP-001`, Change Tree, and Impact Tree show decision resolved plus reopened Work/Test/Evidence/Acceptance refresh requirements. | partially demonstrated | Confirmation and impact are present; refreshed tests/evidence and renewed acceptance are not demonstrated. |
-| Decision required path       | User judgment is required for scope, Product Patch confirmation, risk acceptance, or evidence exception.                                    | `PP-001` confirmation resolves the Product meaning decision; remaining judgment is about missing Evidence and renewed Acceptance timing.  | demonstrated           | Product decision is resolved, but product approval remains blocked by missing refreshed Evidence.          |
-| Evidence exception path      | Missing, stale, partial, or exception Evidence is visible and not treated as proof.                                                         | `evidence-exceptions.md` records fresh command, screenshot, freshness, compatibility, and generated graph limitations.                    | demonstrated           | Exceptions still need later remedy if they become promotion-blocking.                                      |
-| Compatibility mismatch path  | Legacy/canonical mismatch is interpreted through Legacy Compatibility Map and becomes Control Node candidate only when it affects judgment. | Supplemental compatibility slice records a real ACEP task-card-only mismatch and candidate `CCN-ACEP-TASK-CARD-AUTHORITY-001`.            | demonstrated           | Public-doc cleanup remains deferred; this is supplemental evidence, not Todo Search product behavior.      |
-| Scope boundary path          | Out-of-contract discovery or forbidden scope does not silently expand selected work.                                                        | README, Work Tree, Cycle Contract, and Node Execution Contract now bound the approved title + note/content revision scope.                | demonstrated           | Tag/date/fuzzy/server/saved search remain out of scope.                                                    |
+| Scenario                     | Required observation                                                                                                                        | Actual evidence found                                                                                                                                             | Feasibility status     | Gap / next action                                                                                     |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------- |
+| Happy path                   | Selected Product branch traces through Project, Work, Test, Evidence, Approval Brief, and Acceptance.                                       | Product, Project, Work, Cycle/Node Contract, Test, Evidence, Acceptance, and Approval Brief support artifacts exist.                                              | demonstrated           | Demo-support artifacts are manual; a future generated/runtime run could strengthen repeatability.     |
+| Stale evidence / reopen path | Post-acceptance feedback causes affected nodes to become stale, invalidated, reopened, or refreshed.                                        | Confirmed `PP-001`, Change Tree, Impact Tree, and `EV-SEARCH-NOTE-TEST` show decision resolved, runtime Evidence refreshed, and Acceptance ready for user review. | partially demonstrated | Renewed user Acceptance is not closed; screenshot/generated graph/public-doc cleanup warnings remain. |
+| Decision required path       | User judgment is required for scope, Product Patch confirmation, risk acceptance, or evidence exception.                                    | `PP-001` confirmation resolves the Product meaning decision; remaining judgment is renewed Acceptance with warnings.                                              | demonstrated           | Product decision is resolved; product approval remains user-controlled.                               |
+| Evidence exception path      | Missing, stale, partial, or exception Evidence is visible and not treated as proof.                                                         | `evidence-exceptions.md` records resolved note/content command Evidence plus screenshot, compatibility, and generated graph limitations.                          | demonstrated           | Exceptions still need later remedy if they become promotion-blocking.                                 |
+| Compatibility mismatch path  | Legacy/canonical mismatch is interpreted through Legacy Compatibility Map and becomes Control Node candidate only when it affects judgment. | Supplemental compatibility slice records a real ACEP task-card-only mismatch and candidate `CCN-ACEP-TASK-CARD-AUTHORITY-001`.                                    | demonstrated           | Public-doc cleanup remains deferred; this is supplemental evidence, not Todo Search product behavior. |
+| Scope boundary path          | Out-of-contract discovery or forbidden scope does not silently expand selected work.                                                        | README, Work Tree, Cycle Contract, and Node Execution Contract now bound the approved title + note/content revision scope.                                        | demonstrated           | Tag/date/fuzzy/server/saved search remain out of scope.                                               |
 
 ## 7. Minimum Feasibility Claim Result
 
-| Minimum claim                                                                                                | Evidence found                                                                                                                                                                      | Feasibility status     | Notes                                                                                                           |
-| ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------------- |
-| Tree-native artifacts remain current operational source while Maintainability Graph is read/alignment model. | Concept docs and all new support artifacts state non-promotion/source-authority boundaries.                                                                                         | demonstrated           | Manual graph interpretation remains read-only.                                                                  |
-| Product intent -> Project/Work/Test/Evidence/Acceptance trace.                                               | Product, Project, Work, Test, Evidence, Acceptance, and support contracts are linked.                                                                                               | demonstrated           | Project trace is now supported by `project-tree.json`.                                                          |
-| Cycle Contract / Node Execution Contract boundary.                                                           | `cycle-contract.md` and `node-execution-contracts/wt-search-001.md` record selected/deferred/forbidden scope.                                                                       | demonstrated           | Artifacts are manual demo support, not CLI output.                                                              |
-| Check/Evidence separation and Evidence status/freshness/exception.                                           | Test/Evidence trees plus `evidence-exceptions.md` distinguish confirmed decision, stale/partial evidence, missing note/content evidence, and exceptions.                            | demonstrated           | Refreshed runtime Evidence remains missing.                                                                     |
-| Approval Brief user judgment surface.                                                                        | `approval-brief.md` summarizes result under `Blocked`.                                                                                                                              | demonstrated           | It blocks renewed Acceptance because refreshed Evidence is missing.                                             |
-| Control Node blocker/decision/stale/reopen/compatibility visibility.                                         | Change/Impact/Approval/Evidence exception artifacts and supplemental `compatibility-control-node.md` identify Decision, Evidence, Impact, Compatibility, and Acceptance candidates. | partially demonstrated | Candidates are visible, but no runtime Control Node implementation is created.                                  |
-| Legacy Compatibility Map mismatch interpretation.                                                            | Supplemental compatibility slice applies the policy to real ACEP task-card-only wording.                                                                                            | demonstrated           | Public-doc cleanup remains deferred.                                                                            |
-| Change Lifecycle affected node stale/invalidated/reopened/closed explanation.                                | `change-tree.json` and `impact-tree.json` classify confirmed affected nodes and required refresh actions.                                                                           | partially demonstrated | Decision is resolved, but revised implementation, refreshed Evidence, and renewed Acceptance are not performed. |
+| Minimum claim                                                                                                | Evidence found                                                                                                                                                                      | Feasibility status     | Notes                                                                                                       |
+| ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Tree-native artifacts remain current operational source while Maintainability Graph is read/alignment model. | Concept docs and all new support artifacts state non-promotion/source-authority boundaries.                                                                                         | demonstrated           | Manual graph interpretation remains read-only.                                                              |
+| Product intent -> Project/Work/Test/Evidence/Acceptance trace.                                               | Product, Project, Work, Test, Evidence, Acceptance, and support contracts are linked.                                                                                               | demonstrated           | Project trace is now supported by `project-tree.json`.                                                      |
+| Cycle Contract / Node Execution Contract boundary.                                                           | `cycle-contract.md` and `node-execution-contracts/wt-search-001.md` record selected/deferred/forbidden scope.                                                                       | demonstrated           | Artifacts are manual demo support, not CLI output.                                                          |
+| Check/Evidence separation and Evidence status/freshness/exception.                                           | Test/Evidence trees, runtime evidence, and `evidence-exceptions.md` distinguish confirmed decision, present/fresh fixture evidence, partial UI evidence, and exceptions.            | demonstrated           | Refreshed runtime fixture Evidence is present; full-product and generated graph Evidence remain exceptions. |
+| Approval Brief user judgment surface.                                                                        | `approval-brief.md` summarizes result under `Review with warning`.                                                                                                                  | demonstrated           | It presents renewed Acceptance as user-controlled with remaining warnings.                                  |
+| Control Node blocker/decision/stale/reopen/compatibility visibility.                                         | Change/Impact/Approval/Evidence exception artifacts and supplemental `compatibility-control-node.md` identify Decision, Evidence, Impact, Compatibility, and Acceptance candidates. | demonstrated           | Candidates are visible; no runtime Control Node implementation is required for this manual evidence pack.   |
+| Legacy Compatibility Map mismatch interpretation.                                                            | Supplemental compatibility slice applies the policy to real ACEP task-card-only wording.                                                                                            | demonstrated           | Public-doc cleanup remains deferred.                                                                        |
+| Change Lifecycle affected node stale/invalidated/reopened/closed explanation.                                | `change-tree.json` and `impact-tree.json` classify confirmed affected nodes, refreshed fixture Evidence, and renewed Acceptance pending user review.                                | partially demonstrated | Evidence refresh is demonstrated; renewed Acceptance closure remains open by policy.                        |
 
 ## 8. Maintainability Graph Read / Alignment Interpretation
 
@@ -195,19 +201,19 @@ This is a manual read/alignment interpretation. It does not create a graph artif
 
 ### Node Categories Inferred From Existing Docs
 
-| Graph category | Inferred records                                                                  | Evidence status |
-| -------------- | --------------------------------------------------------------------------------- | --------------- |
-| Product        | `PT-ROOT`, `PT-SEARCH-001`, acceptance criteria `AC-SEARCH-001..003`              | present         |
-| Project        | `PJ-ROOT`, `PJ-TODO-LIST-SURFACE`, `PJ-TODO-SEARCH-HELPER`                        | present         |
-| Work           | `WT-ROOT`, `WT-SEARCH-001`                                                        | present         |
-| Test / Check   | `TT-SEARCH-001`, `TT-SEARCH-002`, `TT-SEARCH-003`, `TT-SEARCH-004`                | present         |
-| Evidence       | `EV-SEARCH-TEST`, `EV-SEARCH-REVIEW`, `EV-SEARCH-NOTE-TEST`, `EX-SEARCH-001..007` | present         |
-| Acceptance     | `AT-ROOT` reopened; renewed Acceptance is not ready                               | present         |
-| Change         | `CH-001` and confirmed `PP-001`                                                   | present         |
-| Impact         | `IM-SEARCH-001`                                                                   | present         |
-| Decision       | Product Patch confirmation resolved for `PP-001`                                  | present         |
-| Compatibility  | `CCN-ACEP-TASK-CARD-AUTHORITY-001` supplemental mismatch candidate                | present         |
-| Scope boundary | deferred search variants, forbidden files, Cycle/Node Contract stop rules         | present         |
+| Graph category | Inferred records                                                                    | Evidence status |
+| -------------- | ----------------------------------------------------------------------------------- | --------------- |
+| Product        | `PT-ROOT`, `PT-SEARCH-001`, acceptance criteria `AC-SEARCH-001..003`                | present         |
+| Project        | `PJ-ROOT`, `PJ-TODO-LIST-SURFACE`, `PJ-TODO-SEARCH-HELPER`                          | present         |
+| Work           | `WT-ROOT`, `WT-SEARCH-001`                                                          | present         |
+| Test / Check   | `TT-SEARCH-001`, `TT-SEARCH-002`, `TT-SEARCH-003`, `TT-SEARCH-004`                  | present         |
+| Evidence       | `EV-SEARCH-TEST`, `EV-SEARCH-REVIEW`, `EV-SEARCH-NOTE-TEST`, `EX-SEARCH-001..007`   | present         |
+| Acceptance     | `AT-ROOT` ready for renewed Acceptance with warnings; user acceptance is not closed | present         |
+| Change         | `CH-001` and confirmed `PP-001`                                                     | present         |
+| Impact         | `IM-SEARCH-001`                                                                     | present         |
+| Decision       | Product Patch confirmation resolved for `PP-001`                                    | present         |
+| Compatibility  | `CCN-ACEP-TASK-CARD-AUTHORITY-001` supplemental mismatch candidate                  | present         |
+| Scope boundary | deferred search variants, forbidden files, Cycle/Node Contract stop rules           | present         |
 
 ### Observable Edges / Links
 
@@ -234,23 +240,23 @@ This is a manual read/alignment interpretation. It does not create a graph artif
 - No source file was rewritten to a graph model.
 - No tree-native artifact was marked superseded.
 - No projection, graph file, validator, CLI command, or runtime source model was created.
-- Remaining gaps are recorded as warnings, not inferred into `demonstrated` status.
+- Remaining gaps are recorded as warnings, not inferred into acceptance closure or source promotion.
 
 ## 9. Check / Evidence Review
 
-| Required Check                                                         | Evidence found                                                                   | Evidence status | Review note                                                                      |
-| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------- | --------------- | -------------------------------------------------------------------------------- |
-| Behavior check: title query filters visible todos.                     | `TT-SEARCH-001` and `EV-SEARCH-TEST`.                                            | partial / stale | Supports historical title behavior; partial for revised `AC-SEARCH-001`.         |
-| Behavior check: note/content query filters visible todos.              | `TT-SEARCH-004` and `EV-SEARCH-NOTE-TEST`.                                       | missing         | Required after PP-001; no implementation or test output exists.                  |
-| Behavior check: empty query restores full list.                        | `TT-SEARCH-002` and `EV-SEARCH-TEST`.                                            | present         | Supports `AC-SEARCH-002`.                                                        |
-| Visual / manual check: no-result empty state.                          | `TT-SEARCH-003`, `EV-SEARCH-REVIEW`, `EX-SEARCH-002`.                            | partial         | Human review note exists for title-only behavior; refreshed review is required.  |
-| Scope boundary check: tag/date/fuzzy/server/saved search not included. | README, Work Tree, Cycle Contract, Node Execution Contract.                      | present         | Boundaries are reviewable as demo support for title + note/content scope.        |
-| Evidence freshness check after note-content feedback.                  | Product Patch, Change Tree, Impact Tree, Evidence Exceptions.                    | stale / missing | Existing title-only Evidence is stale/partial; note/content Evidence is missing. |
-| Acceptance check for expanded title + note/content slice.              | Acceptance Tree reopened node links Product/Work/Test/Evidence.                  | blocked         | Renewed Acceptance is not ready because refreshed Evidence is missing.           |
-| Product Patch decision check.                                          | `product-patch-tree.json` and `change-tree.json` record user confirmation.       | present         | Decision is resolved; evidence refresh remains pending.                          |
-| Contract-boundary check.                                               | Cycle Contract and Node Execution Contract.                                      | present         | Manual demo-support artifacts, not CLI-generated contract output.                |
-| Compatibility mismatch check.                                          | Todo Search Compatibility Review plus supplemental compatibility mismatch slice. | present         | Real mismatch is supplemental to Todo Search; cleanup remains deferred.          |
-| Generated graph output check.                                          | `EX-SEARCH-005`.                                                                 | exception       | Manual read/alignment only; no generated graph output exists.                    |
+| Required Check                                                         | Evidence found                                                                    | Evidence status   | Review note                                                                        |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------- | ---------------------------------------------------------------------------------- |
+| Behavior check: title query filters visible todos.                     | `TT-SEARCH-001`, `EV-SEARCH-TEST`, and `EV-SEARCH-NOTE-TEST`.                     | present / fresh   | Bounded runtime fixture reruns title matching.                                     |
+| Behavior check: note/content query filters visible todos.              | `TT-SEARCH-004`, `EV-SEARCH-NOTE-TEST`, and `runtime-evidence.md`.                | present / fresh   | `npx vitest run examples/adoption/todo-search-slice/runtime-fixture` passed.       |
+| Behavior check: empty query restores full list.                        | `TT-SEARCH-002`, `EV-SEARCH-TEST`, and `EV-SEARCH-NOTE-TEST`.                     | present / fresh   | Runtime fixture covers blank query behavior.                                       |
+| Visual / manual check: no-result empty state.                          | `TT-SEARCH-003`, `EV-SEARCH-REVIEW`, `EX-SEARCH-002`, and runtime no-match test.  | partial           | Runtime data behavior is present; UI screenshot/manual visual review is pending.   |
+| Scope boundary check: tag/date/fuzzy/server/saved search not included. | README, Work Tree, Cycle Contract, Node Execution Contract.                       | present           | Boundaries are reviewable as demo support for title + note/content scope.          |
+| Evidence freshness check after note-content feedback.                  | Product Patch, Change Tree, Impact Tree, Evidence Exceptions, runtime evidence.   | present / warning | Note/content Evidence is fresh; full-product/generated graph warnings remain.      |
+| Acceptance check for expanded title + note/content slice.              | Acceptance Tree links Product/Work/Test/Evidence and is ready for renewed review. | waiting           | Renewed Acceptance is not closed because only the user may accept product results. |
+| Product Patch decision check.                                          | `product-patch-tree.json` and `change-tree.json` record user confirmation.        | present           | Decision is resolved; renewed acceptance remains pending.                          |
+| Contract-boundary check.                                               | Cycle Contract and Node Execution Contract.                                       | present           | Manual demo-support artifacts, not CLI-generated contract output.                  |
+| Compatibility mismatch check.                                          | Todo Search Compatibility Review plus supplemental compatibility mismatch slice.  | present           | Real mismatch is supplemental to Todo Search; cleanup remains deferred.            |
+| Generated graph output check.                                          | `EX-SEARCH-005`.                                                                  | exception         | Manual read/alignment only; no generated graph output exists.                      |
 
 AI self-report is not Evidence in this result. Feasibility status is based only on observable source files, command
 outputs, linked records, demo-support artifacts, and explicit gap records.
@@ -266,7 +272,7 @@ examples/adoption/todo-search-slice/approval-brief.md
 Draft state label:
 
 ```text
-Blocked
+Review with warning
 ```
 
 Reason:
@@ -274,36 +280,35 @@ Reason:
 - selected-slice evidence is materially stronger
 - Product Patch `PP-001` confirmation is present
 - stale/reopen tracking is materially stronger
-- refreshed note/content runtime Evidence is missing
-- renewed Acceptance is blocked
+- refreshed note/content runtime Evidence is present/fresh from a bounded fixture
+- renewed Acceptance is ready for user review with warnings
 - compatibility mismatch path is now exercised by a supplemental real mismatch and bounded by policy
 - public-doc cleanup for that mismatch remains deferred
-- fresh product test command output, screenshot evidence, and generated graph output remain exceptions
+- historical product command output, screenshot evidence, generated graph output, and public-doc cleanup remain exceptions or warnings
 
-The brief does not accept product results, close renewed Acceptance, create refreshed Evidence, or promote
-Maintainability Graph.
+The brief does not accept product results, close renewed Acceptance, or promote Maintainability Graph.
 
 ## 11. Control Node Review
 
 No runtime Control Node artifact is created by this result. The following are visible candidates:
 
-| Candidate                            | Evidence                                                                                                             | Suggested status                     |
-| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
-| Decision Control Node candidate      | `PP-001`, `change-tree.json`, `approval-brief.md` record user confirmation before changing Product meaning.          | Resolved                             |
-| Evidence Control Node candidate      | `evidence-exceptions.md` records stale/partial/missing/exception Evidence limits.                                    | Active / Blocked                     |
-| Impact Control Node candidate        | `impact-tree.json` classifies affected nodes for confirmed `PP-001`.                                                 | Active until refresh evidence exists |
-| Compatibility Control Node candidate | Supplemental `CCN-ACEP-TASK-CARD-AUTHORITY-001` records ACEP task-card-only authority wording as a bounded mismatch. | Active / Review with warning         |
-| Acceptance Control Node candidate    | `acceptance-tree.json` and `impact-tree.json` reopen `AT-ROOT` for renewed Acceptance.                               | Waiting for refreshed Evidence       |
+| Candidate                            | Evidence                                                                                                             | Suggested status                      |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| Decision Control Node candidate      | `PP-001`, `change-tree.json`, `approval-brief.md` record user confirmation before changing Product meaning.          | Resolved                              |
+| Evidence Control Node candidate      | `evidence-exceptions.md` records resolved fixture Evidence and remaining partial/exception Evidence limits.          | Resolved with warnings                |
+| Impact Control Node candidate        | `impact-tree.json` classifies affected nodes for confirmed `PP-001` and refreshed fixture Evidence.                  | Resolved for fixture; acceptance open |
+| Compatibility Control Node candidate | Supplemental `CCN-ACEP-TASK-CARD-AUTHORITY-001` records ACEP task-card-only authority wording as a bounded mismatch. | Active / Review with warning          |
+| Acceptance Control Node candidate    | `acceptance-tree.json` and `impact-tree.json` prepare `AT-ROOT` for renewed Acceptance with warnings.                | Waiting for human                     |
 
 ## 12. Rollback / Compatibility Readiness Note
 
 Concept labels only:
 
-| Label                      | Scoped meaning for this demo                                                                                                                                                       |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `rollback-not-needed`      | No source authority was changed during this demo result. No rollback action is needed for this document.                                                                           |
-| `compatibility-maintained` | Legacy/compatibility terms remain mapped through Legacy Compatibility Map; no compatibility artifact was retired.                                                                  |
-| `rollback-blocked`         | Any future promotion/rollback readiness claim still needs authority/projection strategy, generated/parity expectations, user approval, and unresolved evidence exception handling. |
+| Label                      | Scoped meaning for this demo                                                                                                                                                    |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `rollback-not-needed`      | No source authority was changed during this demo result. No rollback action is needed for this document.                                                                        |
+| `compatibility-maintained` | Legacy/compatibility terms remain mapped through Legacy Compatibility Map; no compatibility artifact was retired.                                                               |
+| `rollback-blocked`         | Any future promotion/rollback readiness claim still needs authority/projection strategy, generated/parity expectations, user approval, and explicit warning/exception judgment. |
 
 No rollback, fallback, retirement, migration, or source-authority action was performed.
 
@@ -323,30 +328,32 @@ Strengthened from prior result:
 - Evidence exceptions are explicit rather than implicit.
 - Approval Brief surface is now present as a support artifact.
 - Product Patch `PP-001` confirmation is now recorded with user approval source.
-- Affected Work/Test/Evidence/Acceptance snapshots are reopened, stale, missing, or blocked as appropriate.
+- Affected Work/Test/Evidence/Acceptance snapshots are refreshed, partial, or waiting for user Acceptance as appropriate.
+- `EV-SEARCH-NOTE-TEST` is now present/fresh from a bounded runtime fixture.
 - Todo Search selected-slice compatibility review remains honest: no real mismatch is faked inside that slice.
 - Supplemental compatibility mismatch path is now demonstrated with real ACEP task-card-only wording and a Control Node
   candidate.
 
 Remaining blockers / gaps:
 
-1. Refreshed title + note/content implementation, tests, Evidence, and renewed Acceptance do not exist.
-2. `EV-SEARCH-NOTE-TEST` is missing, so expanded behavior cannot be accepted.
-3. Public-doc cleanup for the observed ACEP task-card-only mismatch remains deferred.
-4. Fresh product command output and screenshot evidence are explicit exceptions.
-5. Generated graph/read-model output is not present.
+1. Renewed user Acceptance is not closed and must remain user-controlled.
+2. The runtime fixture is bounded representative Evidence, not a full Todo app implementation.
+3. UI screenshot/manual visual evidence for no-result empty state remains partial.
+4. Public-doc cleanup for the observed ACEP task-card-only mismatch remains deferred.
+5. Historical product command output and generated graph/read-model output remain explicit exceptions.
 6. New artifacts are manual demo-support snapshots, not CLI-generated runtime artifacts.
 
 Promotion blocker:
 
 ```text
-Graph-source promotion readiness review should not proceed as "ready" from this result alone.
+Graph-source promotion readiness review should not proceed as promotion. A readiness review may be useful only after the
+user explicitly reviews renewed Acceptance and the remaining warnings.
 ```
 
 Next evidence strengthening should decide:
 
-1. whether to create actual implementation/test Evidence for title + note/content search, or
-2. whether renewed Acceptance should stay blocked until a runnable Todo fixture can provide that Evidence, or
+1. whether the user accepts the refreshed title + note/content representative Evidence,
+2. whether generated graph/read-model output is required before promotion readiness review, or
 3. whether public-doc cleanup for the ACEP task-card-only mismatch is required before promotion readiness review.
 
 ## 14. Explicit Non-Promotion Statement

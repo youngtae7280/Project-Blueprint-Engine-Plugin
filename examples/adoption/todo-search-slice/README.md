@@ -43,8 +43,8 @@ pbe accept
 ```
 
 The accepted title-only slice later receives Product meaning feedback: search should include todo note content. PP-001 is
-now confirmed in the demo-support artifacts, and the affected Work/Test/Evidence/Acceptance snapshots are reopened or
-marked stale/missing until refreshed Evidence exists.
+now confirmed in the demo-support artifacts, and a bounded runtime fixture provides fresh Evidence for title +
+note/content search. Renewed Acceptance remains open for user review with warnings.
 
 Demo-support evidence strengthening adds manual, non-authoritative selected-slice snapshots:
 
@@ -56,6 +56,8 @@ Demo-support evidence strengthening adds manual, non-authoritative selected-slic
 - `compatibility-review.md`
 - `approval-brief.md`
 - `evidence-exceptions.md`
+- `runtime-fixture/`
+- `runtime-evidence.md`
 
 These files make the representative demo more reviewable. They are not CLI-generated runtime artifacts, not product
 feature implementation, and not Graph-source promotion.

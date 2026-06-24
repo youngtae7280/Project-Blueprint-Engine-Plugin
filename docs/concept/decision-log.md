@@ -32,6 +32,7 @@ This log is the source of truth for confirmed concept decisions in the PBE runti
 | DEC-024 | active | Selected-slice evidence strengthening may add manual demo-support artifacts only when they include source references, derivation notes, limitations, and explicit non-promotion/source-authority boundaries. Such artifacts strengthen feasibility Evidence but do not become runtime source authority.                                                   | Representative Demo Evidence Strengthening                                        |
 | DEC-025 | active | Supplemental compatibility mismatch Evidence may strengthen the compatibility path when it uses real repository wording and maps it through Legacy Compatibility Map and Control Node policy. Observing such a mismatch does not require immediate public-doc cleanup, does not change source authority, and does not promote Maintainability Graph.      | Compatibility Mismatch Supplemental Slice                                         |
 | DEC-026 | active | User-confirmed PP-001 resolves the product-meaning decision for the representative Todo Search slice, but it does not by itself provide refreshed implementation/test Evidence or renewed Acceptance. Product Patch confirmation strengthens stale/reopen feasibility only when affected Work, Test, Evidence, Acceptance, and exceptions remain visible. | PP-001 Confirmation Evidence                                                      |
+| DEC-027 | active | Bounded runtime fixture tests can provide representative refreshed Evidence for the selected Todo Search slice when linked to Product, Work, Test, Evidence, command output, and explicit limitations. Passing fixture Evidence does not close renewed Acceptance, implement PBE runtime, change source authority, or promote Maintainability Graph.      | Todo Search Runtime Evidence Fixture                                              |
 
 ## Supersede Relationships
 
@@ -95,6 +96,11 @@ and source authority remains tree-native until explicit promotion.
 DEC-026 does not supersede DEC-007, DEC-016, DEC-023, DEC-024, or DEC-025. It resolves the PP-001 product-meaning
 decision for the manual demo-support slice, while Evidence remains observable-artifact based, Acceptance remains
 user-controlled, compatibility cleanup remains deferred, and source authority remains unchanged.
+
+DEC-027 does not supersede DEC-007, DEC-016, DEC-019, DEC-023, DEC-024, or DEC-026. It records fresh bounded runtime
+fixture Evidence for the representative slice, while user Acceptance remains separate, AI self-report remains
+non-evidence, Runtime Feasibility Demonstration remains a readiness gate, manual demo-support artifacts remain
+non-authoritative, and source authority remains tree-native until explicit promotion.
 
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in

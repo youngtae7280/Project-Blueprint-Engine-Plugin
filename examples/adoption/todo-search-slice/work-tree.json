@@ -20,7 +20,7 @@
       "id": "WT-SEARCH-001",
       "type": "feature_task",
       "title": "Revise Todo search for title and note content",
-      "status": "reopened_requires_revision_evidence",
+      "status": "revision_evidence_refreshed_ready_for_review",
       "previousStatus": "implemented_title_only",
       "reopenedByProductPatchId": "PP-001",
       "reopenedAt": "2026-06-24T00:00:00.000Z",
@@ -39,9 +39,17 @@
         "Empty query restores all todos.",
         "No title or note/content match shows an empty search result state."
       ],
-      "validationHints": ["npm test -- todo-search"],
-      "evidenceRefreshStatus": "missing_runtime_test_output",
-      "renewedAcceptanceStatus": "not_ready_missing_refreshed_evidence"
+      "validationHints": [
+        "npm test -- todo-search",
+        "npx vitest run examples/adoption/todo-search-slice/runtime-fixture"
+      ],
+      "demoSupportFiles": [
+        "examples/adoption/todo-search-slice/runtime-fixture/todo-search.js",
+        "examples/adoption/todo-search-slice/runtime-fixture/todo-search.test.js",
+        "examples/adoption/todo-search-slice/runtime-evidence.md"
+      ],
+      "evidenceRefreshStatus": "runtime_fixture_passed_with_visual_review_exception",
+      "renewedAcceptanceStatus": "ready_for_user_review_with_warnings"
     }
   ],
   "edges": []

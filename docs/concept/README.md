@@ -117,19 +117,18 @@ The following manual demo result is recorded:
 
 - [actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md)
 
-The actual result reviews `Todo Search Adoption + Product Meaning Feedback` against observable docs and selected-slice
-demo-support artifacts. Its final feasibility judgment remains `partially demonstrated`, but Project/Contract and
-Change/Impact gaps are strengthened with manual evidence snapshots. A supplemental compatibility mismatch slice now
-records real ACEP task-card-only wording and maps it through Compatibility Control Node policy. PP-001 confirmation is
-now recorded in the selected-slice artifacts. Refreshed runtime Evidence, renewed Acceptance, generated graph output, and
-public-doc cleanup judgment remain unresolved before promotion readiness.
+The actual result reviews `Todo Search Adoption + Product Meaning Feedback` against observable docs, selected-slice
+demo-support artifacts, supplemental compatibility evidence, and a bounded runtime fixture. Its final feasibility
+judgment remains `partially demonstrated`, but Project/Contract, Change/Impact, compatibility mismatch, PP-001
+confirmation, and `EV-SEARCH-NOTE-TEST` runtime Evidence are now strengthened. Renewed user Acceptance, generated graph
+output, full-product/runtime scope judgment, and public-doc cleanup judgment remain unresolved before promotion
+readiness.
 
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.
-Further evidence strengthening after the partial actual demo result, rollback mechanics, compatibility artifact
-generation, type models, CLI command design, validators, migration scripts, and Graph-source promotion are next-phase
-candidates only.
+Further user acceptance review, generated read-model support, rollback mechanics, compatibility artifact generation, type
+models, CLI command design, validators, migration scripts, and Graph-source promotion are next-phase candidates only.
 
 If a later outline-only concept file is added, use the outline gate criteria below until it is promoted.
 

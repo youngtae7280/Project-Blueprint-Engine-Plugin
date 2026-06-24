@@ -203,9 +203,9 @@ The representative slice and Evidence review checklist are selected in
 demo execution but does not execute it.
 
 The current manual result is recorded in
-[actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md). That result is
-`partially demonstrated`, so it records useful Evidence, selected-slice demo-support artifacts, and visible gaps but
-does not satisfy promotion readiness by itself.
+[actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md). That result remains
+`partially demonstrated`, but now includes bounded runtime fixture Evidence for `EV-SEARCH-NOTE-TEST`. It records useful
+Evidence, selected-slice demo-support artifacts, and visible gaps but does not satisfy promotion readiness by itself.
 
 ## Promotion Boundary
 
@@ -290,8 +290,9 @@ representative slice and defines the demo Evidence review checklist. It does not
 [actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md) records the current manual
 Evidence pack for the selected slice. Its strengthened `partially demonstrated` result now includes Project/Contract,
 Change/Impact, Approval Brief, Compatibility Review, Evidence Exception support artifacts, a supplemental real
-compatibility mismatch slice, and PP-001 confirmation. Refreshed title + note/content runtime Evidence, renewed
-Acceptance, generated graph output, and public-doc cleanup judgment remain visible as remaining gaps.
+compatibility mismatch slice, PP-001 confirmation, and fresh bounded runtime fixture Evidence for title + note/content
+search. Renewed Acceptance, generated graph output, full-product/runtime scope judgment, and public-doc cleanup judgment
+remain visible as remaining gaps.
 
 ### Rollback / Compatibility Strategy
 
@@ -320,11 +321,11 @@ Those remain later concept or implementation questions.
 
 - Should future demo results become a generated artifact?
 - How should future demo results connect to CI or validators?
-- Should actual implementation/test Evidence for title + note/content search be created before promotion readiness
-  review?
+- Should the user renew Acceptance for the representative title + note/content demo-support slice?
+- Is bounded fixture Evidence enough for promotion readiness review, or is full-product/runtime Evidence required?
 - Must the observed ACEP task-card-only wording be cleaned up before promotion readiness review, or is warning plus
   deferred cleanup sufficient?
-- What fallback slice should be used if the Todo Search slice cannot produce runtime Evidence during actual execution?
+- Should generated graph/read-model output be created before promotion readiness review?
 
 ## Related Gate
 

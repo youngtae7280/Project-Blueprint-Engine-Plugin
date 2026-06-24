@@ -6,7 +6,7 @@
       "id": "AT-ROOT",
       "type": "acceptance_group",
       "title": "Todo search acceptance",
-      "status": "reopened_requires_renewed_acceptance",
+      "status": "ready_for_renewed_acceptance_with_warnings",
       "previousStatus": "accepted",
       "actor": "user",
       "acceptedAt": "2026-06-13T00:00:00.000Z",
@@ -21,12 +21,13 @@
       "decisionSource": "User approved the title-only search slice after review.",
       "currentMeaning": "title + note/content search after PP-001 confirmation",
       "renewedAcceptance": {
-        "status": "not_ready_missing_refreshed_evidence",
+        "status": "ready_for_user_review_with_warnings",
+        "refreshedEvidenceNodeIds": ["EV-SEARCH-NOTE-TEST"],
+        "refreshedEvidenceArtifact": "examples/adoption/todo-search-slice/runtime-evidence.md",
         "requiredBeforeClosure": [
-          "Implement or otherwise evidence title + note/content search behavior.",
-          "Provide fresh automated evidence for note/content query matching.",
-          "Refresh no-result review evidence for title + note/content semantics.",
-          "Submit expanded behavior for user review."
+          "User reviews the bounded runtime fixture Evidence and remaining exceptions.",
+          "User decides whether the remaining UI screenshot/generated graph/public-doc cleanup exceptions are acceptable for this representative demo.",
+          "User explicitly renews or rejects Acceptance for the expanded title + note/content demo-support slice."
         ],
         "selfAcceptanceProhibited": true
       }

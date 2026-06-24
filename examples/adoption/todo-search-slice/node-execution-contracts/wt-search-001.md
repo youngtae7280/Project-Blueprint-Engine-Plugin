@@ -29,9 +29,9 @@ CLI-generated contract, not a task-card-only authority, and not Graph-source pro
 
 - This is a manual demo-support Node Execution Contract.
 - It does not run commands.
-- It does not prove actual source code exists in the repository.
+- It does not prove a full Todo application exists in the repository.
 - It does not authorize implementation outside title + note/content search.
-- It does not provide refreshed runtime Evidence or renewed Acceptance by itself.
+- It does not close renewed Acceptance by itself.
 
 ## Work Node
 
@@ -62,18 +62,19 @@ CLI-generated contract, not a task-card-only authority, and not Graph-source pro
 
 ## Required Tests And Evidence
 
-| Test node       | Check                                             | Evidence                            |
-| --------------- | ------------------------------------------------- | ----------------------------------- |
-| `TT-SEARCH-001` | Query filters Todo titles.                        | `EV-SEARCH-TEST` partial/stale      |
-| `TT-SEARCH-004` | Query filters Todo note/content.                  | `EV-SEARCH-NOTE-TEST` missing       |
-| `TT-SEARCH-002` | Empty query restores full Todo list.              | `EV-SEARCH-TEST`                    |
-| `TT-SEARCH-003` | No title or note/content match shows empty state. | `EV-SEARCH-REVIEW` requires refresh |
+| Test node       | Check                                             | Evidence                                    |
+| --------------- | ------------------------------------------------- | ------------------------------------------- |
+| `TT-SEARCH-001` | Query filters Todo titles.                        | `EV-SEARCH-NOTE-TEST` present/fresh         |
+| `TT-SEARCH-004` | Query filters Todo note/content.                  | `EV-SEARCH-NOTE-TEST` present/fresh         |
+| `TT-SEARCH-002` | Empty query restores full Todo list.              | `EV-SEARCH-NOTE-TEST` present/fresh         |
+| `TT-SEARCH-003` | No title or note/content match shows empty state. | Runtime behavior present; UI review pending |
 
 ## Evidence Freshness Rule
 
-Evidence remains current only for historical title-only behavior and empty-query behavior. Because Product Patch
-`PP-001` is confirmed, existing title-only test and review evidence is stale or partial for the expanded title +
-note/content meaning until revised tests and evidence are produced.
+Evidence from `EV-SEARCH-NOTE-TEST` is current for the bounded runtime fixture and covers title, note/content, no-match
+data behavior, non-scope tag/date exclusion, and blank query behavior. Historical `EV-SEARCH-TEST` remains useful as a
+title-only snapshot but is supplemented by the fresh fixture command. UI screenshot/manual visual evidence for the
+no-result empty state remains a warning.
 
 ## Stop Conditions
 
@@ -84,7 +85,7 @@ Stop and create or use a Change/Impact path if:
 - a required Test or Evidence node is missing
 - acceptance criteria change
 - evidence freshness cannot be established after Product Patch confirmation
-- renewed Acceptance is requested before note/content evidence exists
+- renewed Acceptance is closed without user review
 
 ## Output Obligations
 
@@ -96,7 +97,8 @@ For selected title + note/content revision work, review must show:
 - Test coverage
 - Evidence links
 - stale/partial Evidence exception for prior title-only evidence
-- missing Evidence exception for note/content search until runtime proof exists
+- present/fresh runtime fixture Evidence for title + note/content search
+- remaining warning for UI screenshot/manual visual evidence
 
 ## Non-Promotion Statement
 

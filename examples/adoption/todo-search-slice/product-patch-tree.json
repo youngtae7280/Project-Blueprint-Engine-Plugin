@@ -6,7 +6,7 @@
       "changeNodeId": "CH-001",
       "targetProductNodeId": "PT-SEARCH-001",
       "operation": "update_acceptance_criteria",
-      "status": "confirmed_revision_required",
+      "status": "confirmed_runtime_evidence_refreshed_waiting_acceptance",
       "requiresUserConfirmation": true,
       "userConfirmed": true,
       "confirmedAt": "2026-06-24T00:00:00.000Z",
@@ -28,8 +28,10 @@
       "createdAt": "2026-06-13T00:00:00.000Z",
       "appliedAt": "2026-06-24T00:00:00.000Z",
       "applicationScope": "demo-support selected-slice snapshots only",
-      "requiresRefreshedEvidence": true,
-      "renewedAcceptanceStatus": "not_ready_missing_refreshed_evidence"
+      "requiresRefreshedEvidence": false,
+      "refreshedEvidenceNodeIds": ["EV-SEARCH-NOTE-TEST"],
+      "refreshedEvidenceArtifact": "examples/adoption/todo-search-slice/runtime-evidence.md",
+      "renewedAcceptanceStatus": "ready_for_user_review_with_warnings"
     }
   ]
 }

@@ -29,7 +29,7 @@
       "id": "PT-SEARCH-001",
       "type": "capability",
       "title": "Todo title and note search",
-      "status": "confirmed_revision_required",
+      "status": "confirmed_runtime_evidence_refreshed_waiting_acceptance",
       "parent": "PT-ROOT",
       "children": [],
       "source": {
@@ -41,12 +41,12 @@
       "scopeClass": "selected",
       "productPatchIds": ["PP-001"],
       "meaningRevision": {
-        "status": "confirmed_requires_work_test_evidence_refresh",
+        "status": "confirmed_runtime_evidence_refreshed",
         "previousSearchTarget": "title",
         "confirmedSearchTarget": "title_and_note",
         "confirmedAt": "2026-06-24T00:00:00.000Z",
         "confirmationSource": "user approved PP-001 in parent orchestration chat on 2026-06-24",
-        "renewedAcceptanceStatus": "not_ready_missing_refreshed_evidence"
+        "renewedAcceptanceStatus": "ready_for_user_review_with_warnings"
       },
       "acceptanceCriteria": [
         {
@@ -60,7 +60,7 @@
           "verificationMethod": "automated_test",
           "requiredEvidence": ["test_output"],
           "statement": "WHEN the user enters a search query, THE SYSTEM SHALL show todos whose title or note content contains the query.",
-          "status": "confirmed_requires_refreshed_evidence",
+          "status": "confirmed_runtime_evidence_present",
           "changedByProductPatchId": "PP-001"
         },
         {
@@ -87,7 +87,7 @@
           "verificationMethod": "manual_review",
           "requiredEvidence": ["review_note"],
           "statement": "WHEN no Todo title or note content matches the query, THE SYSTEM SHALL show an empty search result state.",
-          "status": "confirmed_requires_review_refresh",
+          "status": "confirmed_runtime_behavior_present_visual_review_pending",
           "changedByProductPatchId": "PP-001"
         }
       ],

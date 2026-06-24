@@ -214,10 +214,11 @@ successful feasibility demo is required before promotion review, but it is not s
 for future demo execution. It is a readiness artifact and does not count as observable demo Evidence by itself.
 
 [actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md) records the current manual demo
-Evidence result. Its strengthened `partially demonstrated` status means the feasibility prerequisite remains unmet until
-refreshed title + note/content Evidence, renewed Acceptance, generated/parity expectations, and compatibility
-cleanup/defer judgment are resolved or explicitly accepted for promotion review. PP-001 confirmation and supplemental
-compatibility mismatch Evidence now exist, but they do not clean up public docs or change source authority.
+Evidence result. Its strengthened `partially demonstrated` status now includes fresh bounded runtime fixture Evidence for
+title + note/content search, but the feasibility prerequisite remains unmet until renewed Acceptance,
+generated/parity expectations, full-product/runtime scope judgment, and compatibility cleanup/defer judgment are resolved
+or explicitly accepted for promotion review. PP-001 confirmation and supplemental compatibility mismatch Evidence now
+exist, but they do not clean up public docs or change source authority.
 
 ### Rollback / Compatibility Strategy
 
@@ -281,8 +282,8 @@ Those remain later concept or implementation questions.
 
 - How formal should projection/parity expectations be before promotion review?
 - Does promotion review need a specialized Approval Brief template?
-- Should actual implementation/test Evidence for title + note/content search be created before promotion readiness
-  review?
+- Should the user renew Acceptance for the representative title + note/content demo-support slice?
+- Is bounded fixture Evidence enough for promotion readiness review, or is full-product/runtime Evidence required?
 - Must the observed ACEP task-card-only wording be cleaned up before promotion readiness review, or is warning plus
   deferred cleanup sufficient?
 - How long should a post-promotion compatibility period last?
