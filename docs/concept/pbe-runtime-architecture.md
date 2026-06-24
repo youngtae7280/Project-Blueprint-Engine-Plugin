@@ -88,6 +88,10 @@ document's current operational architecture.
 [representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md) selects the recommended slice
 for future demo execution. It does not execute the demo or create runtime authority.
 
+[actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md) records the current manual demo
+result for that slice. It is `partially demonstrated`, so it provides evidence and gap visibility without changing
+runtime authority.
+
 [rollback-compatibility-strategy.md](rollback-compatibility-strategy.md) defines the recovery and compatibility safety
 policy required before any future promotion review. That policy does not change current source authority or implement
 rollback behavior.
@@ -121,7 +125,7 @@ PBE is a requirements-based execution control layer for AI-assisted development.
 - Whether Maintainability Graph later gains generated/read-model artifact support.
 - Whether View Tree Pack remains a conceptual projection or becomes a concrete artifact pack.
 - Which older public docs still need terminology cleanup after this concept baseline is reviewed.
-- When the actual representative runtime feasibility demo should be executed.
+- Which missing selected-slice artifacts should be strengthened before promotion readiness review.
 - Which compatibility views must remain maintained after a future promotion.
 
 ## Related Gate

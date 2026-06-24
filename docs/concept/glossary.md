@@ -66,6 +66,7 @@ Terms are classified as `canonical`, `active-operational`, `compatibility`, `leg
 | Source Transition Path                  | canonical | Concept-level authority transition policy describing prerequisites and invariants before Maintainability Graph can be promoted to source model.        |
 | Rollback / Compatibility Strategy       | canonical | Concept-level safety policy defining recovery and compatibility boundaries required before Graph-source promotion can be considered.                   |
 | Representative Runtime Feasibility Demo | canonical | Readiness artifact selecting the representative slice and Evidence review criteria before actual runtime feasibility demo execution.                   |
+| Actual Runtime Feasibility Demo Result  | canonical | Manual Evidence pack / review result recording observed feasibility Evidence, gaps, and non-promotion status for the selected representative slice.    |
 
 ## Source Transition Terms
 
@@ -102,16 +103,17 @@ Terms are classified as `canonical`, `active-operational`, `compatibility`, `leg
 
 ## Runtime Feasibility Terms
 
-| Term                                       | Status    | Meaning                                                                                               |
-| ------------------------------------------ | --------- | ----------------------------------------------------------------------------------------------------- |
-| Feasibility status: demonstrated           | canonical | Required feasibility claim or scenario has observable Evidence and no unresolved blocker.             |
-| Feasibility status: partially demonstrated | canonical | Some Evidence exists, but coverage, freshness, or scenario breadth is limited.                        |
-| Feasibility status: blocked                | canonical | A required feasibility claim or scenario cannot be judged safely with current artifacts.              |
-| Feasibility status: deferred               | canonical | A claim or scenario is intentionally postponed with reason, risk, and later remedy condition.         |
-| Feasibility status: not-applicable         | canonical | A claim or scenario does not apply to the selected representative feasibility slice.                  |
-| Representative slice                       | canonical | Bounded lifecycle slice selected to demonstrate runtime feasibility without proving all PBE behavior. |
-| Demo Evidence review checklist             | canonical | Review criteria for whether a future demo result has observable Evidence and linked records.          |
-| Demo output shape                          | canonical | Concept-level reporting shape for a future demo result; not a generated artifact specification.       |
+| Term                                       | Status    | Meaning                                                                                                         |
+| ------------------------------------------ | --------- | --------------------------------------------------------------------------------------------------------------- |
+| Feasibility status: demonstrated           | canonical | Required feasibility claim or scenario has observable Evidence and no unresolved blocker.                       |
+| Feasibility status: partially demonstrated | canonical | Some Evidence exists, but coverage, freshness, or scenario breadth is limited.                                  |
+| Feasibility status: blocked                | canonical | A required feasibility claim or scenario cannot be judged safely with current artifacts.                        |
+| Feasibility status: deferred               | canonical | A claim or scenario is intentionally postponed with reason, risk, and later remedy condition.                   |
+| Feasibility status: not-applicable         | canonical | A claim or scenario does not apply to the selected representative feasibility slice.                            |
+| Representative slice                       | canonical | Bounded lifecycle slice selected to demonstrate runtime feasibility without proving all PBE behavior.           |
+| Demo Evidence review checklist             | canonical | Review criteria for whether a future demo result has observable Evidence and linked records.                    |
+| Demo output shape                          | canonical | Concept-level reporting shape for a future demo result; not a generated artifact specification.                 |
+| Manual Evidence pack                       | canonical | Reviewable evidence result assembled from observable files, commands, linked records, and explicit gap records. |
 
 ## Approval Brief Terms
 

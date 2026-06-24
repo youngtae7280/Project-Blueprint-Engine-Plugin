@@ -251,6 +251,10 @@ exceptions, or promotion blockers.
 requires rollback/compatibility readiness notes in future demo output. Those notes use concept labels only and do not
 implement rollback mechanics.
 
+[actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md) records the current manual demo
+result. Its rollback/compatibility notes use concept labels only: no rollback action, fallback action, compatibility
+retirement, migration, or source-authority change is performed.
+
 ### Maintainability Graph
 
 [maintainability-graph.md](maintainability-graph.md) remains the canonical read/alignment model and long-term
@@ -323,7 +327,7 @@ Those remain later concept or implementation questions.
 - How should a future validator or CI check rollback readiness without over-automating source authority decisions?
 - Does rollback review need a specialized Approval Brief template?
 - Who approves compatibility retirement, and at what review point?
-- When should the actual representative runtime feasibility demo be executed?
+- Which missing selected-slice artifacts should be strengthened before promotion readiness review?
 
 ## Related Gate
 
@@ -331,4 +335,4 @@ This policy satisfies the Rollback / Compatibility Strategy concept-policy compl
 promotion readiness.
 
 It does not complete actual rollback mechanics, compatibility artifact generation, migration mechanics, actual runtime
-feasibility demo execution, projection/parity implementation, or Graph-source promotion itself.
+feasibility evidence strengthening, projection/parity implementation, or Graph-source promotion itself.

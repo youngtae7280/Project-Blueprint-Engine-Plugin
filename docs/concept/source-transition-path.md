@@ -103,7 +103,7 @@ Graph-source promotion may not be requested as ready unless all of these are tru
 
 1. Concept policies through Rollback / Compatibility Strategy are complete.
 2. Representative Runtime Feasibility Demo slice selection is complete and actual Runtime Feasibility Demonstration has
-   passed with observable Evidence.
+   passed with observable Evidence and no hidden partial/blocking gaps.
 3. No `partially demonstrated`, `blocked`, or `deferred` feasibility result is hidden from promotion review.
 4. Active decisions have no unresolved conflict with the proposed authority change.
 5. Rollback/fallback triggers, compatibility-retirement conditions, Evidence obligations, and control-record handling
@@ -213,6 +213,10 @@ successful feasibility demo is required before promotion review, but it is not s
 [representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md) selects the recommended slice
 for future demo execution. It is a readiness artifact and does not count as observable demo Evidence by itself.
 
+[actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md) records the current manual demo
+Evidence result. Its `partially demonstrated` status means the feasibility prerequisite remains unmet until missing
+selected-slice evidence is strengthened or otherwise resolved.
+
 ### Rollback / Compatibility Strategy
 
 [rollback-compatibility-strategy.md](rollback-compatibility-strategy.md) defines the recovery and compatibility safety
@@ -275,6 +279,7 @@ Those remain later concept or implementation questions.
 
 - How formal should projection/parity expectations be before promotion review?
 - Does promotion review need a specialized Approval Brief template?
+- Which missing selected-slice artifacts should be strengthened before promotion readiness review?
 - How long should a post-promotion compatibility period last?
 - Where is the boundary between automatic recovery and manual judgment when tree-native artifacts and graph records
   conflict?
@@ -285,4 +290,4 @@ This policy satisfies the Source Transition Path concept-policy completion condi
 readiness.
 
 It does not complete rollback mechanics, compatibility artifact generation, projection/parity implementation, migration
-mechanics, actual demo execution, or Graph-source promotion itself.
+mechanics, evidence strengthening after a partial actual demo result, or Graph-source promotion itself.

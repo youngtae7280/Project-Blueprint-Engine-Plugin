@@ -56,8 +56,8 @@ Graph-source promotion requires a separate phase and explicit user approval afte
 2. Check / Evidence policy is complete.
 3. Control Node lifecycle policy is complete.
 4. Legacy Compatibility Map is complete.
-5. Runtime Feasibility Demonstration policy is complete, the representative demo slice is selected, and a representative
-   future demo has passed with observable Evidence.
+5. Runtime Feasibility Demonstration policy is complete, the representative demo slice is selected, and an actual
+   representative demo result has passed with observable Evidence and no hidden partial/blocking gaps.
 6. Source Transition Path policy is complete and the source authority matrix is agreed.
 7. Rollback / Compatibility Strategy policy is complete.
 
@@ -113,11 +113,19 @@ This artifact selects the recommended representative slice and demo Evidence rev
 feasibility demo execution. It does not execute the demo, create fixtures, define generated output, or promote
 Maintainability Graph.
 
+The following manual demo result is recorded:
+
+- [actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md)
+
+The actual result reviews `Todo Search Adoption + Product Meaning Feedback` against observable docs and snapshots. Its
+final feasibility judgment is `partially demonstrated`, so it records evidence and gaps but does not satisfy promotion
+readiness by itself.
+
 ## Outline-Only Later-Phase Docs
 
-No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection. Actual
-demo execution, rollback mechanics, compatibility artifact generation, type models, CLI command design, validators,
-migration scripts, and Graph-source promotion are next-phase candidates only.
+No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.
+Evidence strengthening after the partial actual demo result, rollback mechanics, compatibility artifact generation, type
+models, CLI command design, validators, migration scripts, and Graph-source promotion are next-phase candidates only.
 
 If a later outline-only concept file is added, use the outline gate criteria below until it is promoted.
 

@@ -202,6 +202,11 @@ The representative slice and Evidence review checklist are selected in
 [representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md). That readiness artifact prepares
 demo execution but does not execute it.
 
+The current manual result is recorded in
+[actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md). That result is
+`partially demonstrated`, so it records useful Evidence and visible gaps but does not satisfy promotion readiness by
+itself.
+
 ## Promotion Boundary
 
 Runtime Feasibility Demonstration is a Graph-source promotion readiness gate. It is not Graph-source promotion.
@@ -280,6 +285,12 @@ representative feasibility is demonstrated.
 [representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md) selects the recommended
 representative slice and defines the demo Evidence review checklist. It does not provide demo Evidence by itself.
 
+### Actual Runtime Feasibility Demo Result
+
+[actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md) records the current manual
+Evidence pack for the selected slice. Its `partially demonstrated` result keeps Project/Contract/Change/Impact and
+compatibility evidence gaps visible for later strengthening.
+
 ### Rollback / Compatibility Strategy
 
 [rollback-compatibility-strategy.md](rollback-compatibility-strategy.md) defines recovery, fallback, compatibility view,
@@ -307,7 +318,7 @@ Those remain later concept or implementation questions.
 
 - Should future demo results become a generated artifact?
 - How should future demo results connect to CI or validators?
-- When should the actual representative runtime feasibility demo be executed?
+- Which missing selected-slice artifacts should be strengthened before promotion readiness review?
 - What fallback slice should be used if the Todo Search slice cannot produce Project/Contract, compatibility, or
   stale/reopen Evidence during actual execution?
 
@@ -316,5 +327,5 @@ Those remain later concept or implementation questions.
 This policy satisfies the Runtime Feasibility Demonstration concept-policy completion condition for Graph-source
 promotion readiness.
 
-It does not complete actual demo execution, rollback mechanics, compatibility artifact generation, or Graph-source
-promotion itself.
+The separate actual demo result records a partial manual Evidence pack. It does not complete rollback mechanics,
+compatibility artifact generation, or Graph-source promotion itself.
