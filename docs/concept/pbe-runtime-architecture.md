@@ -111,7 +111,7 @@ PBE is a requirements-based execution control layer for AI-assisted development.
 
 ## Remaining Open Questions
 
-- Whether Maintainability Graph becomes only a conceptual view or later gains generated artifact support.
+- Whether Maintainability Graph later gains generated/read-model artifact support.
 - Whether View Tree Pack remains a conceptual projection or becomes a concrete artifact pack.
 - Which older public docs still need terminology cleanup after this concept baseline is reviewed.
 - Which representative runtime feasibility fixture or slice should be used before promotion review.

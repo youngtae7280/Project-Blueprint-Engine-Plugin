@@ -54,11 +54,12 @@ Graph-source promotion requires explicit user approval after:
 4. Legacy Compatibility Map is complete.
 5. Runtime Feasibility Demonstration policy is complete and a representative future demo has passed with observable
    Evidence.
-6. Tree-native artifacts to Graph-source transition path is defined.
+6. Source Transition Path policy is complete and the source authority matrix is agreed.
 7. Rollback or compatibility strategy is defined.
 
 The concept-level feasibility standard is defined in
 [runtime-feasibility-demonstration.md](runtime-feasibility-demonstration.md).
+The concept-level authority transition policy is defined in [source-transition-path.md](source-transition-path.md).
 
 ## Confirmed Decisions
 

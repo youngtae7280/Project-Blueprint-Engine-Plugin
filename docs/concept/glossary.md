@@ -63,6 +63,22 @@ Terms are classified as `canonical`, `active-operational`, `compatibility`, `leg
 | Graph-Source Promotion            | canonical | The future transition where Maintainability Graph becomes the source model and tree-native artifacts become projections, compatibility, or view files. |
 | Legacy Compatibility Map          | canonical | Transition interpretation policy mapping older terms/artifacts to canonical concepts without runtime migration or Graph-source promotion.              |
 | Runtime Feasibility Demonstration | canonical | Graph-source promotion readiness gate that requires representative observable Evidence before source promotion can be considered.                      |
+| Source Transition Path            | canonical | Concept-level authority transition policy describing prerequisites and invariants before Maintainability Graph can be promoted to source model.        |
+
+## Source Transition Terms
+
+| Term                                | Status        | Meaning                                                                                                   |
+| ----------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------- |
+| Current tree-native source          | canonical     | Stage where Product/Project/Work/Test/Evidence/Acceptance Trees remain current operational source.        |
+| Graph read-model alignment          | canonical     | Stage where Maintainability Graph explains and cross-checks tree-native artifacts without authority move. |
+| Transition candidate                | canonical     | Candidate state where promotion review may be considered after prerequisites are prepared.                |
+| Explicit promotion decision         | canonical     | User-approved source authority decision through Approval Brief or equivalent judgment surface.            |
+| Graph-source promoted               | future-target | Future state where Maintainability Graph is source model; not current operational state.                  |
+| Post-promotion compatibility period | future-target | Future transition period where prior tree-native artifacts may remain as projections or compatibility.    |
+| Source authority change             | canonical     | Explicit user-approved change to which artifact/model is treated as operational source.                   |
+| Projection                          | canonical     | View derived from a source model; not product truth by itself.                                            |
+| Maintained compatibility view       | future-target | Future compatibility artifact kept for transition, review, or rollback after explicit promotion.          |
+| Migration boundary                  | canonical     | Concept boundary separating source-authority policy from actual artifact/model migration mechanics.       |
 
 ## Runtime Feasibility Terms
 

@@ -438,5 +438,5 @@ The boundary between Compatibility Control Node, Legacy Compatibility Map, and `
 This policy satisfies the Control Node lifecycle policy completion condition for Graph-source promotion readiness at
 concept level.
 
-It does not complete actual runtime feasibility demo execution, source transition path, rollback/compatibility strategy,
-or Graph-source promotion itself.
+It does not complete actual runtime feasibility demo execution, rollback/compatibility strategy, or Graph-source
+promotion itself.

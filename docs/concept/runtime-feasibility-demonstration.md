@@ -205,7 +205,7 @@ Runtime Feasibility Demonstration is a Graph-source promotion readiness gate. It
 Even if a representative demo is `demonstrated`, Maintainability Graph does not become the source model until a later
 phase also defines and receives explicit approval for:
 
-- source transition path
+- Source Transition Path authority requirements
 - rollback or compatibility strategy
 - required generated or maintained projections
 - validator and CLI implications
@@ -263,7 +263,12 @@ renewed acceptance flow. A future demo must include at least one stale/reopen pa
 ### Open Questions
 
 [open-questions.md](open-questions.md) records remaining unknowns such as fixture selection, generated demo result
-artifact, CI/validator connection, source transition path, and rollback/compatibility strategy.
+artifact, CI/validator connection, projection/parity detail, and rollback/compatibility strategy.
+
+### Source Transition Path
+
+[source-transition-path.md](source-transition-path.md) defines the authority transition path that remains required after
+representative feasibility is demonstrated.
 
 ## Scope Boundaries
 
@@ -275,7 +280,6 @@ This policy does not implement:
 - a schema or TypeScript model
 - a generated artifact
 - a migration script
-- a source transition path
 - rollback or compatibility strategy
 - Graph-source promotion
 
@@ -286,7 +290,6 @@ Those remain later concept or implementation questions.
 - Which representative fixture or slice should the future demo use?
 - Should future demo results become a generated artifact?
 - How should future demo results connect to CI or validators?
-- Should Source Transition Path become a separate concept policy?
 - How much rollback or compatibility strategy must be defined before promotion can be considered?
 
 ## Related Gate
@@ -294,5 +297,4 @@ Those remain later concept or implementation questions.
 This policy satisfies the Runtime Feasibility Demonstration concept-policy completion condition for Graph-source
 promotion readiness.
 
-It does not complete source transition path, rollback/compatibility strategy, actual demo execution, or Graph-source
-promotion itself.
+It does not complete rollback/compatibility strategy, actual demo execution, or Graph-source promotion itself.

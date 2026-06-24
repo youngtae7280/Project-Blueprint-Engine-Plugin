@@ -213,5 +213,5 @@ Those remain later implementation or cleanup questions.
 This policy satisfies the Legacy Compatibility Map completion condition for Graph-source promotion readiness at concept
 level.
 
-It does not complete actual runtime feasibility demo execution, source transition path, rollback/compatibility strategy,
-or Graph-source promotion itself.
+It does not complete actual runtime feasibility demo execution, rollback/compatibility strategy, or Graph-source
+promotion itself.

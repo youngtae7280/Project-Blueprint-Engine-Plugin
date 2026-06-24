@@ -279,5 +279,5 @@ exists. The Approval Brief must not offer the result as ready for approval.
 This policy satisfies the Check / Evidence policy completion condition for Graph-source promotion readiness at concept
 level.
 
-It does not complete actual runtime feasibility demo execution, source transition path, rollback/compatibility strategy,
-or Graph-source promotion itself.
+It does not complete actual runtime feasibility demo execution, rollback/compatibility strategy, or Graph-source
+promotion itself.
