@@ -19,13 +19,13 @@
     "PP-001 was user-confirmed in the parent orchestration chat on 2026-06-24.",
     "The change is applied to demo-support snapshots.",
     "A bounded runtime fixture now provides fresh Evidence for title + note/content matching.",
-    "Renewed Acceptance remains user-controlled and open."
+    "Renewed Acceptance was user-approved with retained warnings on 2026-06-24."
   ],
   "limitations": [
     "This is a manual demo-support Change Tree snapshot.",
     "It records Product Patch confirmation for demo-support evidence only.",
     "It does not execute full product feature work.",
-    "It does not close renewed Acceptance."
+    "It records renewed Acceptance for the representative demo-support slice only."
   ],
   "changes": [
     {
@@ -33,7 +33,7 @@
       "type": "feedback",
       "source": "user_feedback",
       "summary": "Search should include todo note content.",
-      "status": "product_patch_confirmed_runtime_evidence_refreshed_waiting_acceptance",
+      "status": "closed_with_retained_warnings",
       "createdAt": "2026-06-13T00:00:00.000Z",
       "confirmedAt": "2026-06-24T00:00:00.000Z",
       "confirmationSource": "user approved PP-001 in parent orchestration chat on 2026-06-24",
@@ -68,8 +68,8 @@
         },
         {
           "family": "Acceptance Control Node",
-          "status": "Waiting for human",
-          "reason": "Renewed Acceptance cannot close until the user reviews the refreshed Evidence and remaining warnings."
+          "status": "Closed with retained warnings",
+          "reason": "User approved renewed Acceptance in the parent orchestration chat on 2026-06-24; warnings are carried into Graph-source Promotion Readiness Review."
         }
       ]
     }

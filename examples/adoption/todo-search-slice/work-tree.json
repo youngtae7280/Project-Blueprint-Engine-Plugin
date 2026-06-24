@@ -20,7 +20,7 @@
       "id": "WT-SEARCH-001",
       "type": "feature_task",
       "title": "Revise Todo search for title and note content",
-      "status": "revision_evidence_refreshed_ready_for_review",
+      "status": "accepted_with_warnings",
       "previousStatus": "implemented_title_only",
       "reopenedByProductPatchId": "PP-001",
       "reopenedAt": "2026-06-24T00:00:00.000Z",
@@ -49,7 +49,7 @@
         "examples/adoption/todo-search-slice/runtime-evidence.md"
       ],
       "evidenceRefreshStatus": "runtime_fixture_passed_with_visual_review_exception",
-      "renewedAcceptanceStatus": "ready_for_user_review_with_warnings"
+      "renewedAcceptanceStatus": "approved_with_retained_warnings"
     }
   ],
   "edges": []

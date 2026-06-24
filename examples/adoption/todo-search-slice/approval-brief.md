@@ -2,8 +2,9 @@
 
 Status: demo-support evidence snapshot
 
-This Approval Brief is a review surface for the representative demo evidence pack after PP-001 confirmation and refreshed
-runtime fixture Evidence. It is not user acceptance, not renewed Acceptance closure, and not Graph-source promotion.
+This Approval Brief records the user-approved renewed Acceptance for the representative demo evidence pack after PP-001
+confirmation and refreshed runtime fixture Evidence. It is not Graph-source promotion, not source authority change, and
+not public-doc cleanup completion.
 
 ## Source References
 
@@ -42,51 +43,58 @@ Updated demo-support evidence snapshots show:
 - Evidence exceptions
 - Bounded runtime fixture Evidence
 
-These artifacts are evidence snapshots only. They do not implement a full Todo app, renew Acceptance, or promote
-Maintainability Graph.
+These artifacts are evidence snapshots only. They do not implement a full Todo app or promote Maintainability Graph.
 
 ## Verification Summary
 
-| Check                                  | Evidence status   | Summary                                                                                                                                           |
-| -------------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| PP-001 user confirmation               | present           | `product-patch-tree.json` records parent orchestration chat approval on 2026-06-24.                                                               |
-| Product -> Project -> Work trace       | present           | Product/Project/Work snapshots now reflect title + note/content revision scope.                                                                   |
-| Cycle/Node Contract boundary           | present           | `cycle-contract.md` and `node-execution-contracts/wt-search-001.md` bound the expanded scope to title + note/content.                             |
-| Change/Impact visibility               | present           | `change-tree.json` and `impact-tree.json` classify decision resolved, runtime fixture Evidence refreshed, and Acceptance waiting for user review. |
-| Evidence freshness after note feedback | present / warning | `EV-SEARCH-NOTE-TEST` is present/fresh from the bounded Vitest fixture; UI screenshot/generated graph exceptions remain visible.                  |
-| Compatibility mismatch                 | present           | Supplemental compatibility slice demonstrates a real ACEP task-card-only mismatch; selected Todo slice remains not-applicable.                    |
-| AI self-report exclusion               | present           | All strengthened evidence points to files and explicit exceptions, not AI self-report.                                                            |
+| Check                                  | Evidence status   | Summary                                                                                                                                                           |
+| -------------------------------------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| PP-001 user confirmation               | present           | `product-patch-tree.json` records parent orchestration chat approval on 2026-06-24.                                                                               |
+| Product -> Project -> Work trace       | present           | Product/Project/Work snapshots now reflect title + note/content revision scope.                                                                                   |
+| Cycle/Node Contract boundary           | present           | `cycle-contract.md` and `node-execution-contracts/wt-search-001.md` bound the expanded scope to title + note/content.                                             |
+| Change/Impact visibility               | present           | `change-tree.json` and `impact-tree.json` classify decision resolved, runtime fixture Evidence refreshed, and renewed Acceptance approved with retained warnings. |
+| Evidence freshness after note feedback | present / warning | `EV-SEARCH-NOTE-TEST` is present/fresh from the bounded Vitest fixture; UI screenshot/generated graph exceptions remain visible.                                  |
+| Compatibility mismatch                 | present           | Supplemental compatibility slice demonstrates a real ACEP task-card-only mismatch; selected Todo slice remains not-applicable.                                    |
+| AI self-report exclusion               | present           | All strengthened evidence points to files and explicit exceptions, not AI self-report.                                                                            |
+| Renewed Acceptance approval            | present           | User approved renewed Acceptance in the parent orchestration chat on 2026-06-24 with warnings retained.                                                           |
 
-## Remaining Judgment
+## Approval Outcome
 
 - Product Patch `PP-001` is confirmed, so the product-meaning decision is resolved.
 - Refreshed runtime fixture Evidence for note/content search is present.
-- Renewed Acceptance must remain open until the user reviews the refreshed Evidence and remaining warnings.
+- Renewed Acceptance is user-approved for the representative demo-support slice with retained warnings.
 - Compatibility path is demonstrated by the supplemental mismatch slice, but public-doc cleanup remains deferred.
 
-## Approval Choice
+## Retained Warnings
 
-This demo-support evidence pack can be reviewed as strengthened evidence.
+- Bounded fixture Evidence is representative demo evidence, not full Todo app implementation.
+- UI screenshot/manual visual evidence for no-result empty state remains partial.
+- Generated Maintainability Graph/read-model output is missing.
+- ACEP task-card public-doc cleanup remains deferred.
 
-Available choices:
-
-- approve the PP-001 confirmation trace as recorded
-- approve renewed Acceptance for the representative title + note/content demo-support slice
-- request additional UI screenshot/manual review or generated graph/read-model evidence
-- keep renewed Acceptance open with warnings
-- defer promotion readiness review
-
-## State Label
+## Approval Action
 
 ```text
-Review with warning
+Renewed Acceptance approved with retained warnings
 ```
 
-The PP-001 decision is resolved and `EV-SEARCH-NOTE-TEST` is present/fresh from a bounded runtime fixture. Renewed
-Acceptance is ready for user review with visible warnings for UI screenshot/manual visual evidence, generated graph
-output, and deferred public-doc cleanup.
+Approval source:
+
+```text
+user approved renewed acceptance in parent orchestration chat on 2026-06-24
+```
+
+## Post-Review Outcome
+
+```text
+Accepted with warnings
+```
+
+The PP-001 decision is resolved, `EV-SEARCH-NOTE-TEST` is present/fresh from a bounded runtime fixture, and the user
+approved renewed Acceptance for the representative demo-support slice. The retained warnings must be carried into
+Graph-source Promotion Readiness Review.
 
 ## Non-Promotion Statement
 
-This Approval Brief does not accept product results, does not close renewed Acceptance, and does not promote
-Maintainability Graph.
+This Approval Brief records representative demo-support slice acceptance only. It does not promote Maintainability Graph,
+change source authority, or complete public-doc cleanup.

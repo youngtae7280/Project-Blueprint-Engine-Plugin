@@ -6,7 +6,7 @@
       "id": "EV-ROOT",
       "type": "evidence_group",
       "title": "Todo search evidence root",
-      "status": "refreshed_with_exceptions",
+      "status": "accepted_with_retained_warnings",
       "provesProductNodeIds": ["PT-ROOT"],
       "provesWorkNodeIds": ["WT-ROOT"],
       "provesTestNodeIds": ["TT-ROOT"]
@@ -53,7 +53,8 @@
       "limitations": [
         "Bounded representative fixture only; not full Todo app runtime.",
         "Does not provide UI screenshot evidence for the no-result empty state.",
-        "Does not close renewed Acceptance or promote Maintainability Graph."
+        "Fixture Evidence did not close renewed Acceptance by itself; user approval is recorded in acceptance-tree.json.",
+        "Does not promote Maintainability Graph."
       ],
       "requiredForRenewedAcceptance": true
     }

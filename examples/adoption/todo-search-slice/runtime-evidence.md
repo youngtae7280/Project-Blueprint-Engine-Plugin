@@ -4,7 +4,8 @@ Status: bounded representative fixture evidence
 
 This evidence record supports the `Todo Search Adoption + Product Meaning Feedback` representative runtime feasibility
 demo after `PP-001` confirmation. It is a bounded fixture result, not a full Todo application implementation, not PBE
-runtime implementation, not Graph-source promotion, and not renewed user Acceptance.
+runtime implementation and not Graph-source promotion. Renewed user Acceptance is recorded separately in
+`acceptance-tree.json`.
 
 ## Context
 
@@ -68,7 +69,7 @@ Duration    796ms
 - It does not implement UI rendering or screenshot evidence for the no-result empty state.
 - It does not run the historical `npm test -- todo-search` command named in the earlier evidence snapshot.
 - It does not create generated Maintainability Graph read-model output.
-- It does not close renewed Acceptance; only the user can accept product results.
+- It did not close renewed Acceptance by itself; the later user approval is recorded in `acceptance-tree.json`.
 - It does not change source authority or promote Maintainability Graph.
 
 ## Evidence Status Update

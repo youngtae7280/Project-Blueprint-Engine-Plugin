@@ -62,11 +62,11 @@ The concept-level feasibility standard is defined in
 The representative slice and Evidence review criteria are defined in
 [representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md).
 The current manual actual demo result is recorded in
-[actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md). Its `partially demonstrated`
-judgment records evidence gaps and does not satisfy promotion readiness by itself. Supplemental compatibility mismatch
-Evidence, PP-001 confirmation, and bounded runtime fixture Evidence strengthen the compatibility and stale/reopen paths,
-but renewed Acceptance, generated read-model output, full-product/runtime scope judgment, and cleanup judgment remain
-unresolved.
+[actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md). Its `demonstrated` judgment for
+the representative demo slice records retained warnings and does not satisfy promotion readiness by itself. Supplemental
+compatibility mismatch Evidence, PP-001 confirmation, bounded runtime fixture Evidence, and user-renewed Acceptance
+strengthen the compatibility and stale/reopen paths, but generated read-model output, full-product/runtime scope
+judgment, cleanup judgment, and retained-warning classification remain unresolved.
 The concept-level authority transition policy is defined in [source-transition-path.md](source-transition-path.md).
 The concept-level recovery and compatibility safety policy is defined in
 [rollback-compatibility-strategy.md](rollback-compatibility-strategy.md).

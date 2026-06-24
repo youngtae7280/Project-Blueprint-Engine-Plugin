@@ -27,7 +27,7 @@ runtime source artifact, and not Graph-source promotion.
 - Product Patch `PP-001` was user-confirmed in the parent orchestration chat on 2026-06-24.
 - The selected revision scope now includes title + note/content search.
 - A bounded runtime fixture now provides fresh Evidence for title + note/content search.
-- Renewed Acceptance remains open and user-controlled.
+- Renewed Acceptance was user-approved with retained warnings on 2026-06-24.
 
 ## Limitations
 
@@ -35,21 +35,21 @@ runtime source artifact, and not Graph-source promotion.
 - It was not produced by `pbe acep ready`.
 - It does not prove a full Todo application was implemented in this repository.
 - It does not authorize tag, date, fuzzy, server-side, or saved search behavior.
-- It does not close renewed Acceptance for the expanded title + note/content behavior.
+- It records renewed Acceptance only for the representative demo-support slice.
 
 ## Selected Cycle Scope
 
-| Category         | Nodes / Scope                                                                 |
-| ---------------- | ----------------------------------------------------------------------------- |
-| Product          | `PT-SEARCH-001` Todo title and note search                                    |
-| Project          | `PJ-TODO-LIST-SURFACE`, `PJ-TODO-SEARCH-HELPER`                               |
-| Work             | `WT-SEARCH-001` Revise Todo search for title and note content                 |
-| Tests            | `TT-SEARCH-001`, `TT-SEARCH-002`, `TT-SEARCH-003`, `TT-SEARCH-004`            |
-| Evidence         | `EV-SEARCH-TEST`, `EV-SEARCH-REVIEW`, `EV-SEARCH-NOTE-TEST`                   |
-| Acceptance       | `AT-ROOT` ready for renewed Acceptance with warnings; user acceptance is open |
-| Product Patch    | `PP-001` is confirmed and included as selected revision scope                 |
-| Change pressure  | `CH-001` note-content feedback is confirmed; runtime evidence is refreshed    |
-| Demo result role | Evidence strengthening for runtime feasibility review                         |
+| Category         | Nodes / Scope                                                              |
+| ---------------- | -------------------------------------------------------------------------- |
+| Product          | `PT-SEARCH-001` Todo title and note search                                 |
+| Project          | `PJ-TODO-LIST-SURFACE`, `PJ-TODO-SEARCH-HELPER`                            |
+| Work             | `WT-SEARCH-001` Revise Todo search for title and note content              |
+| Tests            | `TT-SEARCH-001`, `TT-SEARCH-002`, `TT-SEARCH-003`, `TT-SEARCH-004`         |
+| Evidence         | `EV-SEARCH-TEST`, `EV-SEARCH-REVIEW`, `EV-SEARCH-NOTE-TEST`                |
+| Acceptance       | `AT-ROOT` renewed Acceptance approved with retained warnings               |
+| Product Patch    | `PP-001` is confirmed and included as selected revision scope              |
+| Change pressure  | `CH-001` note-content feedback is confirmed; runtime evidence is refreshed |
+| Demo result role | Evidence strengthening for runtime feasibility review                      |
 
 ## Foundation Scope
 
@@ -118,7 +118,7 @@ Stop and create or use a Change/Impact path if:
 - forbidden files or boundaries are touched
 - required test output or review note is missing
 - evidence becomes stale after Product Patch confirmation
-- renewed Acceptance is closed without user review
+- renewed Acceptance is treated as Graph-source promotion or source authority change
 - implementation discovers behavior outside the selected title + note/content scope
 
 ## Non-Promotion Statement

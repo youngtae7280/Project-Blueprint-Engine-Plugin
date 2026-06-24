@@ -6,7 +6,7 @@
       "id": "AT-ROOT",
       "type": "acceptance_group",
       "title": "Todo search acceptance",
-      "status": "ready_for_renewed_acceptance_with_warnings",
+      "status": "renewed_acceptance_approved_with_warnings",
       "previousStatus": "accepted",
       "actor": "user",
       "acceptedAt": "2026-06-13T00:00:00.000Z",
@@ -14,6 +14,9 @@
       "reopenedAt": "2026-06-24T00:00:00.000Z",
       "reopenedByProductPatchId": "PP-001",
       "reopenSource": "user approved PP-001 in parent orchestration chat on 2026-06-24",
+      "renewedAcceptedAt": "2026-06-24T00:00:00.000Z",
+      "renewedAcceptanceSource": "user approved renewed acceptance in parent orchestration chat on 2026-06-24",
+      "renewedAcceptedScope": "representative demo-support title + note/content search slice with retained warnings",
       "productNodeIds": ["PT-SEARCH-001"],
       "workNodeIds": ["WT-SEARCH-001"],
       "testNodeIds": ["TT-SEARCH-001", "TT-SEARCH-002", "TT-SEARCH-003", "TT-SEARCH-004"],
@@ -21,14 +24,21 @@
       "decisionSource": "User approved the title-only search slice after review.",
       "currentMeaning": "title + note/content search after PP-001 confirmation",
       "renewedAcceptance": {
-        "status": "ready_for_user_review_with_warnings",
+        "status": "approved_with_retained_warnings",
+        "actor": "user",
+        "approvedAt": "2026-06-24T00:00:00.000Z",
+        "approvalSource": "user approved renewed acceptance in parent orchestration chat on 2026-06-24",
+        "approvalScope": "Todo Search Adoption + Product Meaning Feedback representative demo-support slice",
         "refreshedEvidenceNodeIds": ["EV-SEARCH-NOTE-TEST"],
         "refreshedEvidenceArtifact": "examples/adoption/todo-search-slice/runtime-evidence.md",
-        "requiredBeforeClosure": [
-          "User reviews the bounded runtime fixture Evidence and remaining exceptions.",
-          "User decides whether the remaining UI screenshot/generated graph/public-doc cleanup exceptions are acceptable for this representative demo.",
-          "User explicitly renews or rejects Acceptance for the expanded title + note/content demo-support slice."
+        "retainedWarnings": [
+          "Bounded fixture Evidence is representative demo evidence, not full Todo app implementation.",
+          "UI screenshot/manual visual evidence for no-result empty state remains partial.",
+          "Generated Maintainability Graph/read-model output is missing.",
+          "ACEP task-card public-doc cleanup remains deferred."
         ],
+        "carriedToNextReview": "Graph-source Promotion Readiness Review",
+        "nonPromotionStatement": "This renewed Acceptance approves the representative demo-support slice with retained warnings only. It is not Graph-source promotion, source authority change, or public-doc cleanup completion.",
         "selfAcceptanceProhibited": true
       }
     }

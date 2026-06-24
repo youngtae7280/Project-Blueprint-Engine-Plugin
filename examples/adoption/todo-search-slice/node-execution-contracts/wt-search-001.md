@@ -31,7 +31,7 @@ CLI-generated contract, not a task-card-only authority, and not Graph-source pro
 - It does not run commands.
 - It does not prove a full Todo application exists in the repository.
 - It does not authorize implementation outside title + note/content search.
-- It does not close renewed Acceptance by itself.
+- It records renewed Acceptance only after explicit user approval.
 
 ## Work Node
 
@@ -85,7 +85,7 @@ Stop and create or use a Change/Impact path if:
 - a required Test or Evidence node is missing
 - acceptance criteria change
 - evidence freshness cannot be established after Product Patch confirmation
-- renewed Acceptance is closed without user review
+- renewed Acceptance is treated as Graph-source promotion or source authority change
 
 ## Output Obligations
 

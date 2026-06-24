@@ -89,11 +89,11 @@ document's current operational architecture.
 for future demo execution. It does not execute the demo or create runtime authority.
 
 [actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md) records the current manual demo
-result for that slice. It is `partially demonstrated`, so it provides evidence and gap visibility without changing
-runtime authority. A supplemental compatibility mismatch slice now demonstrates a real ACEP task-card-only wording
-mismatch as a bounded warning, PP-001 confirmation is recorded for the Todo Search slice, and bounded runtime fixture
-Evidence is present for title + note/content search. None of this is public-doc cleanup, renewed Acceptance, or source
-promotion.
+result for that slice. It is now `demonstrated` for the representative demo slice with retained warnings, while still
+preserving source authority. A supplemental compatibility mismatch slice demonstrates a real ACEP task-card-only wording
+mismatch as a bounded warning, PP-001 confirmation is recorded for the Todo Search slice, bounded runtime fixture Evidence
+is present for title + note/content search, and renewed Acceptance is user-approved. None of this is public-doc cleanup or
+source promotion.
 
 [rollback-compatibility-strategy.md](rollback-compatibility-strategy.md) defines the recovery and compatibility safety
 policy required before any future promotion review. That policy does not change current source authority or implement
@@ -128,10 +128,10 @@ PBE is a requirements-based execution control layer for AI-assisted development.
 - Whether Maintainability Graph later gains generated/read-model artifact support.
 - Whether View Tree Pack remains a conceptual projection or becomes a concrete artifact pack.
 - Which older public docs still need terminology cleanup after this concept baseline is reviewed.
-- Whether the user will renew Acceptance for the representative title + note/content demo-support slice.
 - Whether bounded fixture Evidence is enough for promotion readiness review, or full-product/runtime Evidence is needed.
 - Whether the observed ACEP task-card-only wording must be cleaned up before promotion readiness review, or warning plus
   deferred cleanup is sufficient.
+- Which retained warnings are blockers, acceptable warnings, deferred cleanup, or later implementation requirements.
 - Which compatibility views must remain maintained after a future promotion.
 
 ## Related Gate

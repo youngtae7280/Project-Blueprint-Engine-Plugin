@@ -6,7 +6,7 @@
       "changeNodeId": "CH-001",
       "targetProductNodeId": "PT-SEARCH-001",
       "operation": "update_acceptance_criteria",
-      "status": "confirmed_runtime_evidence_refreshed_waiting_acceptance",
+      "status": "confirmed_renewed_acceptance_approved_with_warnings",
       "requiresUserConfirmation": true,
       "userConfirmed": true,
       "confirmedAt": "2026-06-24T00:00:00.000Z",
@@ -31,7 +31,14 @@
       "requiresRefreshedEvidence": false,
       "refreshedEvidenceNodeIds": ["EV-SEARCH-NOTE-TEST"],
       "refreshedEvidenceArtifact": "examples/adoption/todo-search-slice/runtime-evidence.md",
-      "renewedAcceptanceStatus": "ready_for_user_review_with_warnings"
+      "renewedAcceptanceStatus": "approved_with_retained_warnings",
+      "renewedAcceptanceSource": "user approved renewed acceptance in parent orchestration chat on 2026-06-24",
+      "retainedWarnings": [
+        "Bounded fixture Evidence is representative demo evidence, not full Todo app implementation.",
+        "UI screenshot/manual visual evidence for no-result empty state remains partial.",
+        "Generated Maintainability Graph/read-model output is missing.",
+        "ACEP task-card public-doc cleanup remains deferred."
+      ]
     }
   ]
 }

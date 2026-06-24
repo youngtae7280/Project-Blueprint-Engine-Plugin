@@ -22,13 +22,13 @@
     "PP-001 was user-confirmed in the parent orchestration chat on 2026-06-24.",
     "Existing title-only evidence remains current for historical title-only acceptance but stale or partial for the confirmed expanded meaning.",
     "EV-SEARCH-NOTE-TEST now provides bounded runtime fixture evidence for title + note/content matching.",
-    "Renewed Acceptance remains user-controlled and open."
+    "Renewed Acceptance was user-approved with retained warnings on 2026-06-24."
   ],
   "limitations": [
     "This is not the output of `pbe impact analyze`.",
     "It does not mark real runtime Evidence or Acceptance nodes invalidated.",
     "It does not prove a full Todo application implementation exists.",
-    "It does not close renewed Acceptance."
+    "It records renewed Acceptance for the representative demo-support slice only."
   ],
   "impacts": [
     {
@@ -36,11 +36,11 @@
       "changeNodeId": "CH-001",
       "changeId": "CH-001",
       "productPatchId": "PP-001",
-      "status": "confirmed_impact_analyzed_runtime_evidence_refreshed",
+      "status": "closed_with_retained_warnings",
       "userConfirmed": true,
       "confirmedAt": "2026-06-24T00:00:00.000Z",
       "confirmationSource": "user approved PP-001 in parent orchestration chat on 2026-06-24",
-      "overallImpact": "runtime_fixture_evidence_refreshed_acceptance_pending",
+      "overallImpact": "runtime_fixture_evidence_refreshed_acceptance_approved_with_warnings",
       "affectedProductNodeIds": ["PT-SEARCH-001"],
       "affectedProjectNodeIds": ["PJ-TODO-LIST-SURFACE", "PJ-TODO-SEARCH-HELPER"],
       "affectedWorkNodeIds": ["WT-SEARCH-001"],
@@ -66,7 +66,7 @@
           "nodeId": "WT-SEARCH-001",
           "nodeType": "work",
           "classification": "refreshed-ready-for-review",
-          "reason": "A bounded runtime fixture now provides fresh Evidence for title + note/content search; renewed Acceptance remains open."
+          "reason": "A bounded runtime fixture now provides fresh Evidence for title + note/content search; renewed Acceptance is approved with retained warnings."
         },
         {
           "nodeId": "TT-SEARCH-001",
@@ -113,15 +113,15 @@
         {
           "nodeId": "AT-ROOT",
           "nodeType": "acceptance",
-          "classification": "ready-for-renewed-acceptance-with-warnings",
-          "reason": "Fresh fixture Evidence exists, but the user must review remaining exceptions before renewed Acceptance closes."
+          "classification": "accepted-with-warnings",
+          "reason": "User approved renewed Acceptance with retained warnings in the parent orchestration chat on 2026-06-24."
         }
       ],
       "requiredActions": [
         "Update Product acceptance criteria for title + note/content search.",
         "Revise Work scope for note/content matching.",
         "Keep runtime fixture Evidence attached to EV-SEARCH-NOTE-TEST.",
-        "Submit expanded behavior and remaining warnings for user renewed Acceptance."
+        "Carry retained warnings into Graph-source Promotion Readiness Review."
       ]
     }
   ]

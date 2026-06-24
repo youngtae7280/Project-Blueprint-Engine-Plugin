@@ -118,11 +118,10 @@ The following manual demo result is recorded:
 - [actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md)
 
 The actual result reviews `Todo Search Adoption + Product Meaning Feedback` against observable docs, selected-slice
-demo-support artifacts, supplemental compatibility evidence, and a bounded runtime fixture. Its final feasibility
-judgment remains `partially demonstrated`, but Project/Contract, Change/Impact, compatibility mismatch, PP-001
-confirmation, and `EV-SEARCH-NOTE-TEST` runtime Evidence are now strengthened. Renewed user Acceptance, generated graph
-output, full-product/runtime scope judgment, and public-doc cleanup judgment remain unresolved before promotion
-readiness.
+demo-support artifacts, supplemental compatibility evidence, a bounded runtime fixture, and user-renewed Acceptance. Its
+final feasibility judgment is now `demonstrated` for the representative demo slice with retained warnings. Generated
+graph output, full-product/runtime scope judgment, public-doc cleanup judgment, and retained-warning classification
+remain unresolved before promotion readiness.
 
 ## Outline-Only Later-Phase Docs
 

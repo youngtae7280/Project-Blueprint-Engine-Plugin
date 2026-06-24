@@ -44,7 +44,8 @@ pbe accept
 
 The accepted title-only slice later receives Product meaning feedback: search should include todo note content. PP-001 is
 now confirmed in the demo-support artifacts, and a bounded runtime fixture provides fresh Evidence for title +
-note/content search. Renewed Acceptance remains open for user review with warnings.
+note/content search. The user approved renewed Acceptance for this representative demo-support slice with retained
+warnings on 2026-06-24.
 
 Demo-support evidence strengthening adds manual, non-authoritative selected-slice snapshots:
 

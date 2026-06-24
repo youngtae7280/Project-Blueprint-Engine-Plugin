@@ -203,9 +203,10 @@ The representative slice and Evidence review checklist are selected in
 demo execution but does not execute it.
 
 The current manual result is recorded in
-[actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md). That result remains
-`partially demonstrated`, but now includes bounded runtime fixture Evidence for `EV-SEARCH-NOTE-TEST`. It records useful
-Evidence, selected-slice demo-support artifacts, and visible gaps but does not satisfy promotion readiness by itself.
+[actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md). That result is now
+`demonstrated` for the representative demo slice with retained warnings. It records useful Evidence, selected-slice
+demo-support artifacts, user-renewed Acceptance, and visible warnings, but it does not perform promotion readiness review
+or source promotion by itself.
 
 ## Promotion Boundary
 
@@ -288,11 +289,11 @@ representative slice and defines the demo Evidence review checklist. It does not
 ### Actual Runtime Feasibility Demo Result
 
 [actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md) records the current manual
-Evidence pack for the selected slice. Its strengthened `partially demonstrated` result now includes Project/Contract,
-Change/Impact, Approval Brief, Compatibility Review, Evidence Exception support artifacts, a supplemental real
-compatibility mismatch slice, PP-001 confirmation, and fresh bounded runtime fixture Evidence for title + note/content
-search. Renewed Acceptance, generated graph output, full-product/runtime scope judgment, and public-doc cleanup judgment
-remain visible as remaining gaps.
+Evidence pack for the selected slice. Its `demonstrated` result now includes Project/Contract, Change/Impact, Approval
+Brief, Compatibility Review, Evidence Exception support artifacts, a supplemental real compatibility mismatch slice,
+PP-001 confirmation, fresh bounded runtime fixture Evidence for title + note/content search, and user-renewed
+Acceptance with retained warnings. Generated graph output, full-product/runtime scope judgment, public-doc cleanup
+judgment, and retained-warning classification remain visible as readiness review items.
 
 ### Rollback / Compatibility Strategy
 
@@ -321,11 +322,11 @@ Those remain later concept or implementation questions.
 
 - Should future demo results become a generated artifact?
 - How should future demo results connect to CI or validators?
-- Should the user renew Acceptance for the representative title + note/content demo-support slice?
 - Is bounded fixture Evidence enough for promotion readiness review, or is full-product/runtime Evidence required?
 - Must the observed ACEP task-card-only wording be cleaned up before promotion readiness review, or is warning plus
   deferred cleanup sufficient?
 - Should generated graph/read-model output be created before promotion readiness review?
+- Which retained warnings are blockers, acceptable warnings, deferred cleanup, or later implementation requirements?
 
 ## Related Gate
 

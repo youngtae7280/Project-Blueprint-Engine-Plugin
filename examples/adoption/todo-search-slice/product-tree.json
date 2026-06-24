@@ -29,7 +29,7 @@
       "id": "PT-SEARCH-001",
       "type": "capability",
       "title": "Todo title and note search",
-      "status": "confirmed_runtime_evidence_refreshed_waiting_acceptance",
+      "status": "confirmed_renewed_acceptance_approved_with_warnings",
       "parent": "PT-ROOT",
       "children": [],
       "source": {
@@ -46,7 +46,7 @@
         "confirmedSearchTarget": "title_and_note",
         "confirmedAt": "2026-06-24T00:00:00.000Z",
         "confirmationSource": "user approved PP-001 in parent orchestration chat on 2026-06-24",
-        "renewedAcceptanceStatus": "ready_for_user_review_with_warnings"
+        "renewedAcceptanceStatus": "approved_with_retained_warnings"
       },
       "acceptanceCriteria": [
         {
