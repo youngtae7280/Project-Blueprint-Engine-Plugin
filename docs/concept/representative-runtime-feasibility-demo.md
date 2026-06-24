@@ -449,8 +449,8 @@ readiness artifact selects the representative slice and Evidence review checklis
 The current manual result is recorded in
 [actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md). It confirms the selected slice is
 useful but partial: selected-slice Project/Contract/Change/Impact evidence has been strengthened, while Product Patch
-confirmation, refreshed revision Evidence, generated graph output, and real compatibility mismatch coverage remain
-unresolved.
+confirmation, refreshed revision Evidence, generated graph output, and public-doc cleanup judgment remain unresolved. A
+supplemental compatibility mismatch slice now covers the real mismatch path outside the Todo Search product slice.
 
 ### Source Transition Path
 
@@ -509,9 +509,10 @@ Those remain later concept or implementation questions.
 - Does promotion review need a specialized Approval Brief template?
 - Does Product Patch `PP-001` need actual user confirmation plus refreshed revision Evidence before stale/reopen can be
   called `demonstrated`?
-- Is a supplemental compatibility mismatch slice needed when the selected slice has no real compatibility mismatch?
-- What fallback slice should be used if the Todo Search slice cannot produce Project/Contract, compatibility, or
-  stale/reopen Evidence during actual execution?
+- Must the observed ACEP task-card-only wording be cleaned up before promotion readiness review, or is warning plus
+  deferred cleanup sufficient?
+- What fallback slice should be used if the Todo Search slice cannot produce stale/reopen Evidence during actual
+  execution?
 
 ## Related Gate
 
