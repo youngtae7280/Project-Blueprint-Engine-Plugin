@@ -70,6 +70,10 @@ Typical contract-level obligations include:
 The contract is not the user-facing approval surface. Approval Brief summarizes contract-relevant Check/Evidence status
 in Verification Summary and Remaining Judgment. Acceptance Tree remains the durable acceptance record.
 
+Rollback / Compatibility Strategy does not loosen contract obligations. Future promotion, fallback, rollback, or
+compatibility review must still preserve selected/foundation scope, forbidden scope, required Checks, and required
+Evidence.
+
 ## Control Node Relationship
 
 Execution Contract facts become Control Nodes when they affect workflow control, user judgment, warning, block, reopen,

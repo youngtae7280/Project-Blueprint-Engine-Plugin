@@ -59,7 +59,7 @@ Graph-source promotion requires a separate phase and explicit user approval afte
 5. Runtime Feasibility Demonstration policy is complete and a representative future demo has passed with observable
    Evidence.
 6. Source Transition Path policy is complete and the source authority matrix is agreed.
-7. Rollback or compatibility strategy is defined.
+7. Rollback / Compatibility Strategy policy is complete.
 
 ## Phase 1 Repository Files
 
@@ -98,15 +98,16 @@ The following concept policies are complete at documentation level:
 - [legacy-compatibility-map.md](legacy-compatibility-map.md)
 - [runtime-feasibility-demonstration.md](runtime-feasibility-demonstration.md)
 - [source-transition-path.md](source-transition-path.md)
+- [rollback-compatibility-strategy.md](rollback-compatibility-strategy.md)
 
 Concept policy completion does not create CLI commands, schemas, validators, templates, runtime artifacts, or durable
 acceptance storage by itself.
 
 ## Outline-Only Later-Phase Docs
 
-No `docs/concept` policy file remains outline-only after Source Transition Path policy promotion. Actual demo execution,
-rollback strategy, type models, CLI command design, validators, migration scripts, and Graph-source promotion are
-next-phase candidates only.
+No `docs/concept` policy file remains outline-only after Rollback / Compatibility Strategy policy promotion. Actual demo
+execution, rollback mechanics, compatibility artifact generation, type models, CLI command design, validators, migration
+scripts, and Graph-source promotion are next-phase candidates only.
 
 If a later outline-only concept file is added, use the outline gate criteria below until it is promoted.
 

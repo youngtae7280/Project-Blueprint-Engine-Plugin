@@ -76,6 +76,10 @@ Impact Control Nodes explain which affected nodes are unaffected, stale, invalid
 verification. Acceptance Control Nodes explain whether user-controlled closure is open, deferred, invalidated, renewed,
 or closed.
 
+Rollback / Compatibility Strategy is separate from this lifecycle. It governs future source-authority recovery and
+compatibility behavior. If rollback or fallback affects completed, verified, or accepted product work, this Change
+Lifecycle still handles the affected-node impact, refreshed Evidence, and renewed acceptance path.
+
 ## Confirmed Decisions
 
 - Codex does not silently edit accepted or completed work when feedback changes meaning or verification.

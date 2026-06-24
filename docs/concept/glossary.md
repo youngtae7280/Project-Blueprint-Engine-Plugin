@@ -64,6 +64,7 @@ Terms are classified as `canonical`, `active-operational`, `compatibility`, `leg
 | Legacy Compatibility Map          | canonical | Transition interpretation policy mapping older terms/artifacts to canonical concepts without runtime migration or Graph-source promotion.              |
 | Runtime Feasibility Demonstration | canonical | Graph-source promotion readiness gate that requires representative observable Evidence before source promotion can be considered.                      |
 | Source Transition Path            | canonical | Concept-level authority transition policy describing prerequisites and invariants before Maintainability Graph can be promoted to source model.        |
+| Rollback / Compatibility Strategy | canonical | Concept-level safety policy defining recovery and compatibility boundaries required before Graph-source promotion can be considered.                   |
 
 ## Source Transition Terms
 
@@ -79,6 +80,24 @@ Terms are classified as `canonical`, `active-operational`, `compatibility`, `leg
 | Projection                          | canonical     | View derived from a source model; not product truth by itself.                                            |
 | Maintained compatibility view       | future-target | Future compatibility artifact kept for transition, review, or rollback after explicit promotion.          |
 | Migration boundary                  | canonical     | Concept boundary separating source-authority policy from actual artifact/model migration mechanics.       |
+
+## Rollback / Compatibility Terms
+
+| Term                                 | Status        | Meaning                                                                                                                                |
+| ------------------------------------ | ------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| rollback                             | future-target | User-governed recovery concept that returns source authority to a previous safe point after future promotion.                          |
+| fallback                             | canonical     | Safe judgment or recovery concept that defers to current operational source or a scoped compatibility view.                            |
+| compatibility period                 | future-target | Period after explicit promotion when older artifacts may remain as projections, review aids, or rollback references.                   |
+| archival snapshot                    | canonical     | Historical state preserved for rollback, reference, audit, or comparison; not current source authority by default.                     |
+| retired artifact                     | canonical     | Artifact no longer used as an active compatibility bridge after explicit cleanup decision.                                             |
+| Rollback status: rollback-not-needed | canonical     | Scoped review found no rollback need with Evidence or explicit not-applicable reason.                                                  |
+| Rollback status: rollback-ready      | canonical     | Rollback could be performed if approved because authority, snapshots, affected views, and risks are clear.                             |
+| Rollback status: rollback-required   | canonical     | Safe progress or approval requires rollback or equivalent user-approved recovery.                                                      |
+| Rollback status: rollback-blocked    | canonical     | Rollback is needed or requested, but required Evidence, authority clarity, snapshot, or user decision is missing.                      |
+| Rollback status: rollback-complete   | canonical     | User-approved rollback/recovery is complete and source authority, projections, Evidence, Acceptance, and Control Nodes are reviewable. |
+| Compatibility status: maintained     | canonical     | A compatibility view remains active as an explicitly marked bridge, projection, review aid, or rollback reference.                     |
+| Compatibility status: expiring       | canonical     | A compatibility view is planned for retirement but still has active dependency, review, or unresolved condition.                       |
+| Compatibility status: retired        | canonical     | Artifact is no longer an active bridge after explicit cleanup decision and satisfied retirement conditions.                            |
 
 ## Runtime Feasibility Terms
 

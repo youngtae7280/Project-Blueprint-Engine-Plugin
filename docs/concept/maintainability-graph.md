@@ -55,11 +55,13 @@ Graph-source promotion requires explicit user approval after:
 5. Runtime Feasibility Demonstration policy is complete and a representative future demo has passed with observable
    Evidence.
 6. Source Transition Path policy is complete and the source authority matrix is agreed.
-7. Rollback or compatibility strategy is defined.
+7. Rollback / Compatibility Strategy policy is complete.
 
 The concept-level feasibility standard is defined in
 [runtime-feasibility-demonstration.md](runtime-feasibility-demonstration.md).
 The concept-level authority transition policy is defined in [source-transition-path.md](source-transition-path.md).
+The concept-level recovery and compatibility safety policy is defined in
+[rollback-compatibility-strategy.md](rollback-compatibility-strategy.md).
 
 ## Confirmed Decisions
 

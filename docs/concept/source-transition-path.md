@@ -39,32 +39,32 @@ The path exists to prevent accidental promotion. It does not move source authori
 
 Use these terms narrowly:
 
-| Term                              | Boundary                                                                                                                            |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| source authority change           | A user-approved change to which artifact/model is treated as operational source. This policy describes prerequisites only.          |
-| promotion readiness               | A state where prerequisites are reviewable. It is not promotion approval.                                                           |
-| promotion                         | Explicit user-approved source authority change. This document does not declare promotion.                                           |
-| projection                        | A view derived from a source model. It is not product truth by itself.                                                              |
-| generated projection              | Future possible projection produced by tooling. This policy does not design that tooling.                                           |
-| maintained compatibility view     | Future possible compatibility artifact kept for transition, review, or rollback. It is not automatically source.                    |
-| rollback / compatibility strategy | Required later policy explaining recovery and compatibility behavior. This document only names it as a prerequisite.                |
-| migration boundary                | The line between conceptual authority change and actual artifact/model migration work. Actual migration mechanics are out of scope. |
-| non-migration boundary            | A decision that some artifacts may remain views or compatibility records rather than being migrated. The decision is future-phase.  |
+| Term                              | Boundary                                                                                                                                                   |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| source authority change           | A user-approved change to which artifact/model is treated as operational source. This policy describes prerequisites only.                                 |
+| promotion readiness               | A state where prerequisites are reviewable. It is not promotion approval.                                                                                  |
+| promotion                         | Explicit user-approved source authority change. This document does not declare promotion.                                                                  |
+| projection                        | A view derived from a source model. It is not product truth by itself.                                                                                     |
+| generated projection              | Future possible projection produced by tooling. This policy does not design that tooling.                                                                  |
+| maintained compatibility view     | Future possible compatibility artifact kept for transition, review, or rollback. It is not automatically source.                                           |
+| rollback / compatibility strategy | Required policy explaining recovery and compatibility behavior. It is defined in [rollback-compatibility-strategy.md](rollback-compatibility-strategy.md). |
+| migration boundary                | The line between conceptual authority change and actual artifact/model migration work. Actual migration mechanics are out of scope.                        |
+| non-migration boundary            | A decision that some artifacts may remain views or compatibility records rather than being migrated. The decision is future-phase.                         |
 
 ## Transition Stages
 
 These stages are concept labels. They are not CLI commands, migration steps, Autoflow states, schema states, or an
 implementation roadmap.
 
-| Stage                                   | Source Authority Meaning                                                                                                                                                                                                |
-| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| current tree-native source              | Product, Project, Work, Test, Evidence, and Acceptance Trees remain the current operational source. Maintainability Graph is only a read/alignment model.                                                               |
-| graph read-model alignment              | Maintainability Graph explains and cross-checks tree-native artifacts. No source authority changes.                                                                                                                     |
-| representative feasibility demonstrated | Runtime Feasibility Demonstration criteria are satisfied for a representative lifecycle slice with observable Evidence. No source authority changes.                                                                    |
-| transition candidate                    | Graph-source promotion can be evaluated as a candidate only if projection/parity expectations, conflict handling, rollback/compatibility strategy, source authority matrix, and promotion review Evidence are prepared. |
-| explicit promotion decision             | The user explicitly approves source promotion through Approval Brief or an equivalent user judgment surface. Codex/PBE cannot self-approve.                                                                             |
-| graph-source promoted                   | Future target state where Maintainability Graph is the source model and trees/views may be projected from it. This document describes the state but does not declare it active.                                         |
-| post-promotion compatibility period     | Tree-native artifacts may remain as projections, views, compatibility artifacts, or transitional records according to the approved promotion and rollback/compatibility policy.                                         |
+| Stage                                   | Source Authority Meaning                                                                                                                                                                                                  |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| current tree-native source              | Product, Project, Work, Test, Evidence, and Acceptance Trees remain the current operational source. Maintainability Graph is only a read/alignment model.                                                                 |
+| graph read-model alignment              | Maintainability Graph explains and cross-checks tree-native artifacts. No source authority changes.                                                                                                                       |
+| representative feasibility demonstrated | Runtime Feasibility Demonstration criteria are satisfied for a representative lifecycle slice with observable Evidence. No source authority changes.                                                                      |
+| transition candidate                    | Graph-source promotion can be evaluated as a candidate only if projection/parity expectations, conflict handling, Rollback / Compatibility Strategy, source authority matrix, and promotion review Evidence are prepared. |
+| explicit promotion decision             | The user explicitly approves source promotion through Approval Brief or an equivalent user judgment surface. Codex/PBE cannot self-approve.                                                                               |
+| graph-source promoted                   | Future target state where Maintainability Graph is the source model and trees/views may be projected from it. This document describes the state but does not declare it active.                                           |
+| post-promotion compatibility period     | Tree-native artifacts may remain as projections, views, compatibility artifacts, or transitional records according to the approved promotion and rollback/compatibility policy.                                           |
 
 Current state:
 
@@ -101,11 +101,12 @@ This matrix is conceptual. It does not define files, generators, validators, or 
 
 Graph-source promotion may not be requested as ready unless all of these are true:
 
-1. Concept policies through Source Transition Path are complete.
+1. Concept policies through Rollback / Compatibility Strategy are complete.
 2. Representative Runtime Feasibility Demonstration has passed with observable Evidence.
 3. No `partially demonstrated`, `blocked`, or `deferred` feasibility result is hidden from promotion review.
 4. Active decisions have no unresolved conflict with the proposed authority change.
-5. Rollback or compatibility strategy is defined.
+5. Rollback/fallback triggers, compatibility-retirement conditions, Evidence obligations, and control-record handling
+   are reviewable under Rollback / Compatibility Strategy.
 6. Source authority matrix is agreed for current, transition candidate, and post-promotion roles.
 7. Projection/parity expectations are defined at the level needed for promotion review.
 8. Conflict resolution rules are defined for tree-native/graph mismatch.
@@ -173,8 +174,8 @@ exists, what remains uncertain, and who must decide.
 ### Post-Promotion Compatibility Period
 
 If a future explicit promotion occurs, remaining tree-native artifacts, compatibility views, and older packages must be
-handled according to the approved compatibility/rollback strategy. They must not be silently deleted, silently treated as
-source, or silently ignored when they affect user judgment.
+handled according to the approved Rollback / Compatibility Strategy. They must not be silently deleted, silently treated
+as source, or silently ignored when they affect user judgment.
 
 ## Promotion Review Surface
 
@@ -187,7 +188,7 @@ That surface must show:
 - feasibility Evidence summary
 - projection/parity status
 - conflict and mismatch summary
-- rollback/compatibility strategy summary
+- Rollback / Compatibility Strategy summary
 - remaining risks, Unknowns, and deferred issues
 - explicit approval choice
 
@@ -205,6 +206,12 @@ authority path required before that candidate can be promoted.
 
 [runtime-feasibility-demonstration.md](runtime-feasibility-demonstration.md) defines the observable readiness gate. A
 successful feasibility demo is required before promotion review, but it is not sufficient by itself.
+
+### Rollback / Compatibility Strategy
+
+[rollback-compatibility-strategy.md](rollback-compatibility-strategy.md) defines the recovery and compatibility safety
+policy required before promotion review. Source transition uses that policy for rollback/fallback triggers,
+compatibility views, retirement boundaries, Evidence requirements, and user judgment.
 
 ### Legacy Compatibility Map
 
@@ -265,12 +272,11 @@ Those remain later concept or implementation questions.
 - How long should a post-promotion compatibility period last?
 - Where is the boundary between automatic recovery and manual judgment when tree-native artifacts and graph records
   conflict?
-- Should Rollback / Compatibility Strategy become a separate concept policy?
 
 ## Related Gate
 
 This policy satisfies the Source Transition Path concept-policy completion condition for Graph-source promotion
 readiness.
 
-It does not complete rollback/compatibility strategy, projection/parity implementation, migration mechanics, actual demo
-execution, or Graph-source promotion itself.
+It does not complete rollback mechanics, compatibility artifact generation, projection/parity implementation, migration
+mechanics, actual demo execution, or Graph-source promotion itself.

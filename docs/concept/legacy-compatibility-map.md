@@ -169,13 +169,13 @@ old evidence wording could affect approval readiness
 
 Maintainability Graph remains the canonical read/alignment model and long-term source-model candidate.
 
-This map does not promote Graph-source. Before promotion, a later phase must define:
+This map does not promote Graph-source. Before promotion, later review must account for:
 
 - source authority change
 - generated or maintained projections
 - compatibility behavior
 - migration path
-- rollback or compatibility strategy
+- Rollback / Compatibility Strategy policy
 - validator and CLI implications
 - explicit user approval
 
@@ -213,5 +213,5 @@ Those remain later implementation or cleanup questions.
 This policy satisfies the Legacy Compatibility Map completion condition for Graph-source promotion readiness at concept
 level.
 
-It does not complete actual runtime feasibility demo execution, rollback/compatibility strategy, or Graph-source
-promotion itself.
+It does not complete actual runtime feasibility demo execution, rollback mechanics, compatibility artifact generation,
+or Graph-source promotion itself.

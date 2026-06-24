@@ -55,6 +55,13 @@ artifact.
 
 `AI Context Pack` is compatibility shorthand for the context portion of execution contract packaging.
 
+## Rollback / Compatibility Relationship
+
+[rollback-compatibility-strategy.md](rollback-compatibility-strategy.md) defines when a projected view may remain as a
+maintained compatibility view, rollback reference, or retirement candidate after a future promotion. A View Tree Pack
+remains a projection/read view with explicit source references. If an artifact is ever promoted as source, it must be
+reclassified by the approved source policy rather than left under the compatibility-view category.
+
 ## Remaining Open Questions
 
 - Should View Tree Pack stay a documentation concept or later become a generated pack?

@@ -206,7 +206,7 @@ Even if a representative demo is `demonstrated`, Maintainability Graph does not 
 phase also defines and receives explicit approval for:
 
 - Source Transition Path authority requirements
-- rollback or compatibility strategy
+- Rollback / Compatibility Strategy safety requirements
 - required generated or maintained projections
 - validator and CLI implications
 - migration or non-migration boundary
@@ -216,8 +216,8 @@ If the demo is `partially demonstrated`, `blocked`, or `deferred`, that result m
 question, or visible risk until resolved.
 
 A successful demo may support a future Approval Brief for Graph-source promotion readiness. It does not mutate runtime
-authority, close Acceptance Tree state, retire compatibility terms, or resolve source transition and rollback questions
-by itself.
+authority, close Acceptance Tree state, retire compatibility terms, resolve source transition, or perform rollback by
+itself.
 
 ## Relationship To Other Concept Docs
 
@@ -263,12 +263,19 @@ renewed acceptance flow. A future demo must include at least one stale/reopen pa
 ### Open Questions
 
 [open-questions.md](open-questions.md) records remaining unknowns such as fixture selection, generated demo result
-artifact, CI/validator connection, projection/parity detail, and rollback/compatibility strategy.
+artifact, CI/validator connection, projection/parity detail, rollback readiness automation, and compatibility period
+rules.
 
 ### Source Transition Path
 
 [source-transition-path.md](source-transition-path.md) defines the authority transition path that remains required after
 representative feasibility is demonstrated.
+
+### Rollback / Compatibility Strategy
+
+[rollback-compatibility-strategy.md](rollback-compatibility-strategy.md) defines recovery, fallback, compatibility view,
+and retirement safety rules. A partial, blocked, or deferred feasibility result can become a rollback readiness blocker,
+compatibility exception, or promotion blocker under that policy.
 
 ## Scope Boundaries
 
@@ -280,7 +287,8 @@ This policy does not implement:
 - a schema or TypeScript model
 - a generated artifact
 - a migration script
-- rollback or compatibility strategy
+- rollback mechanics
+- compatibility artifact generation
 - Graph-source promotion
 
 Those remain later concept or implementation questions.
@@ -290,11 +298,12 @@ Those remain later concept or implementation questions.
 - Which representative fixture or slice should the future demo use?
 - Should future demo results become a generated artifact?
 - How should future demo results connect to CI or validators?
-- How much rollback or compatibility strategy must be defined before promotion can be considered?
+- When should the actual representative runtime feasibility demo be executed?
 
 ## Related Gate
 
 This policy satisfies the Runtime Feasibility Demonstration concept-policy completion condition for Graph-source
 promotion readiness.
 
-It does not complete rollback/compatibility strategy, actual demo execution, or Graph-source promotion itself.
+It does not complete actual demo execution, rollback mechanics, compatibility artifact generation, or Graph-source
+promotion itself.

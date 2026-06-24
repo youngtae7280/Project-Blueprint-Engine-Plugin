@@ -85,6 +85,10 @@ not reject the long-term Graph-source target, and it does not make Maintainabili
 that a future demo must satisfy before Graph-source promotion can be considered. That policy does not change this
 document's current operational architecture.
 
+[rollback-compatibility-strategy.md](rollback-compatibility-strategy.md) defines the recovery and compatibility safety
+policy required before any future promotion review. That policy does not change current source authority or implement
+rollback behavior.
+
 ## Runtime Boundaries
 
 PBE is not:
@@ -115,6 +119,7 @@ PBE is a requirements-based execution control layer for AI-assisted development.
 - Whether View Tree Pack remains a conceptual projection or becomes a concrete artifact pack.
 - Which older public docs still need terminology cleanup after this concept baseline is reviewed.
 - Which representative runtime feasibility fixture or slice should be used before promotion review.
+- Which compatibility views must remain maintained after a future promotion.
 
 ## Related Gate
 
