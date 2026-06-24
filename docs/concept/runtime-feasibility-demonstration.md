@@ -198,6 +198,10 @@ A future demonstration result should summarize:
 This result shape is conceptual only. It does not define a file format, CLI output, schema, validator, or generated
 artifact.
 
+The representative slice and Evidence review checklist are selected in
+[representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md). That readiness artifact prepares
+demo execution but does not execute it.
+
 ## Promotion Boundary
 
 Runtime Feasibility Demonstration is a Graph-source promotion readiness gate. It is not Graph-source promotion.
@@ -262,14 +266,19 @@ renewed acceptance flow. A future demo must include at least one stale/reopen pa
 
 ### Open Questions
 
-[open-questions.md](open-questions.md) records remaining unknowns such as fixture selection, generated demo result
-artifact, CI/validator connection, projection/parity detail, rollback readiness automation, and compatibility period
-rules.
+[open-questions.md](open-questions.md) records remaining unknowns such as fallback or supplemental slice selection,
+generated demo result artifact, CI/validator connection, projection/parity detail, rollback readiness automation, and
+compatibility period rules.
 
 ### Source Transition Path
 
 [source-transition-path.md](source-transition-path.md) defines the authority transition path that remains required after
 representative feasibility is demonstrated.
+
+### Representative Runtime Feasibility Demo
+
+[representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md) selects the recommended
+representative slice and defines the demo Evidence review checklist. It does not provide demo Evidence by itself.
 
 ### Rollback / Compatibility Strategy
 
@@ -281,7 +290,8 @@ compatibility exception, or promotion blocker under that policy.
 
 This policy does not implement:
 
-- a demo fixture
+- actual demo execution
+- a concrete demo fixture artifact
 - a CLI command
 - a validator
 - a schema or TypeScript model
@@ -295,10 +305,11 @@ Those remain later concept or implementation questions.
 
 ## Remaining Open Questions
 
-- Which representative fixture or slice should the future demo use?
 - Should future demo results become a generated artifact?
 - How should future demo results connect to CI or validators?
 - When should the actual representative runtime feasibility demo be executed?
+- What fallback slice should be used if the Todo Search slice cannot produce Project/Contract, compatibility, or
+  stale/reopen Evidence during actual execution?
 
 ## Related Gate
 

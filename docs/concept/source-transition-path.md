@@ -102,7 +102,8 @@ This matrix is conceptual. It does not define files, generators, validators, or 
 Graph-source promotion may not be requested as ready unless all of these are true:
 
 1. Concept policies through Rollback / Compatibility Strategy are complete.
-2. Representative Runtime Feasibility Demonstration has passed with observable Evidence.
+2. Representative Runtime Feasibility Demo slice selection is complete and actual Runtime Feasibility Demonstration has
+   passed with observable Evidence.
 3. No `partially demonstrated`, `blocked`, or `deferred` feasibility result is hidden from promotion review.
 4. Active decisions have no unresolved conflict with the proposed authority change.
 5. Rollback/fallback triggers, compatibility-retirement conditions, Evidence obligations, and control-record handling
@@ -206,6 +207,11 @@ authority path required before that candidate can be promoted.
 
 [runtime-feasibility-demonstration.md](runtime-feasibility-demonstration.md) defines the observable readiness gate. A
 successful feasibility demo is required before promotion review, but it is not sufficient by itself.
+
+### Representative Runtime Feasibility Demo
+
+[representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md) selects the recommended slice
+for future demo execution. It is a readiness artifact and does not count as observable demo Evidence by itself.
 
 ### Rollback / Compatibility Strategy
 

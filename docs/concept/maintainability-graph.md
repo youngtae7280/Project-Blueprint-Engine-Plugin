@@ -52,13 +52,15 @@ Graph-source promotion requires explicit user approval after:
 2. Check / Evidence policy is complete.
 3. Control Node lifecycle policy is complete.
 4. Legacy Compatibility Map is complete.
-5. Runtime Feasibility Demonstration policy is complete and a representative future demo has passed with observable
-   Evidence.
+5. Runtime Feasibility Demonstration policy is complete, the representative demo slice is selected, and a representative
+   future demo has passed with observable Evidence.
 6. Source Transition Path policy is complete and the source authority matrix is agreed.
 7. Rollback / Compatibility Strategy policy is complete.
 
 The concept-level feasibility standard is defined in
 [runtime-feasibility-demonstration.md](runtime-feasibility-demonstration.md).
+The representative slice and Evidence review criteria are defined in
+[representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md).
 The concept-level authority transition policy is defined in [source-transition-path.md](source-transition-path.md).
 The concept-level recovery and compatibility safety policy is defined in
 [rollback-compatibility-strategy.md](rollback-compatibility-strategy.md).

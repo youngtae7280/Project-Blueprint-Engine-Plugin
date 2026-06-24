@@ -245,6 +245,12 @@ authority.
 `partially demonstrated`, `blocked`, or `deferred` demo results may become rollback readiness blockers, compatibility
 exceptions, or promotion blockers.
 
+### Representative Runtime Feasibility Demo
+
+[representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md) selects the demo slice and
+requires rollback/compatibility readiness notes in future demo output. Those notes use concept labels only and do not
+implement rollback mechanics.
+
 ### Maintainability Graph
 
 [maintainability-graph.md](maintainability-graph.md) remains the canonical read/alignment model and long-term
