@@ -67,7 +67,8 @@ Change Tree remains the current tree-native artifact or compatibility view for r
 not identical:
 
 ```text
-Change Tree / Change artifact = operational or compatibility view
+Change Tree = current canonical / active-operational change artifact
+older change artifact or view = compatibility artifact only
 Change Control Node = conceptual control record
 ```
 
@@ -86,9 +87,9 @@ or closed.
 
 ## Remaining Open Questions
 
-- Which change classes should become CLI-assisted first?
-- How much impact analysis can be file-judged without semantic inference?
-- How should compatibility views show stale or reopened status without becoming the source of truth?
+- OQ-028: Which change lifecycle classes should become CLI-assisted first?
+- OQ-029: How much impact analysis can be file-judged without semantic inference?
+- OQ-030: How should compatibility views show stale or reopened status without becoming source of truth?
 
 ## Related Gate
 

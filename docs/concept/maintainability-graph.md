@@ -41,7 +41,7 @@ The graph is maintainability-focused because it answers questions such as:
 Maintainability Graph is currently a canonical read model over tree-native source artifacts.
 
 The long-term target is to promote it into the source model after the required policies, compatibility mapping, and
-feasibility demonstration are complete.
+representative feasibility demonstration are complete.
 
 Until then, it must not silently override Product Tree, Work Tree, Test Tree, Evidence Tree, Acceptance Tree, or
 confirmed user decisions.
@@ -52,9 +52,13 @@ Graph-source promotion requires explicit user approval after:
 2. Check / Evidence policy is complete.
 3. Control Node lifecycle policy is complete.
 4. Legacy Compatibility Map is complete.
-5. Representative runtime feasibility demonstration is complete.
+5. Runtime Feasibility Demonstration policy is complete and a representative future demo has passed with observable
+   Evidence.
 6. Tree-native artifacts to Graph-source transition path is defined.
 7. Rollback or compatibility strategy is defined.
+
+The concept-level feasibility standard is defined in
+[runtime-feasibility-demonstration.md](runtime-feasibility-demonstration.md).
 
 ## Confirmed Decisions
 
@@ -84,9 +88,9 @@ traceability view.
 
 ## Remaining Open Questions
 
-- When should Maintainability Graph be promoted from canonical read model to source model?
-- If generated, which existing tree files are sufficient inputs?
-- Should graph checks become validators, evidence reports, or documentation-only review aids?
+- OQ-001: When should Maintainability Graph be promoted from canonical read model to source model?
+- OQ-026: Which existing tree-native artifacts are sufficient inputs for future generated/read-model support?
+- OQ-027: Should graph checks become validators, evidence reports, documentation-only review aids, or a combination?
 
 ## Related Gate
 

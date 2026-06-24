@@ -81,6 +81,10 @@ promotion.
 In this document, "Product Tree is the source of product truth" describes the current operational architecture. It does
 not reject the long-term Graph-source target, and it does not make Maintainability Graph the operational source now.
 
+[runtime-feasibility-demonstration.md](runtime-feasibility-demonstration.md) defines the representative readiness policy
+that a future demo must satisfy before Graph-source promotion can be considered. That policy does not change this
+document's current operational architecture.
+
 ## Runtime Boundaries
 
 PBE is not:
@@ -110,6 +114,7 @@ PBE is a requirements-based execution control layer for AI-assisted development.
 - Whether Maintainability Graph becomes only a conceptual view or later gains generated artifact support.
 - Whether View Tree Pack remains a conceptual projection or becomes a concrete artifact pack.
 - Which older public docs still need terminology cleanup after this concept baseline is reviewed.
+- Which representative runtime feasibility fixture or slice should be used before promotion review.
 
 ## Related Gate
 

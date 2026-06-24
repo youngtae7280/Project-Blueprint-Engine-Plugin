@@ -467,4 +467,5 @@ marks the state as `Blocked` and explains the blocker instead of offering approv
 This policy satisfies the Approval Brief policy completion condition for Graph-source promotion readiness at concept
 level.
 
-It does not complete Legacy Compatibility Map, runtime feasibility demonstration, or Graph-source promotion itself.
+It does not complete actual runtime feasibility demo execution, source transition path, rollback/compatibility strategy,
+or Graph-source promotion itself.
