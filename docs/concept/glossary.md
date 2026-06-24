@@ -20,6 +20,8 @@ Terms are classified as `canonical`, `legacy`, `compatibility`, `deprecated`, or
 | Visual Design Contract  | canonical | Visual source, tokens, component rules, state coverage, evidence requirements, and waiver/not-required decisions for visual UI work. |
 | Maintainability Graph   | canonical | Current canonical read model / alignment model over tree-native artifacts and long-term target source model candidate.               |
 | View Tree Pack          | canonical | Conceptual projection pack that lets Codex read selected tree views without treating compatibility views as product truth.           |
+| Approval Brief          | canonical | User-facing judgment surface for interpreted intent, result, verification, remaining judgment, and approval choice.                  |
+| Human Gate              | canonical | Control mechanism used when PBE needs human judgment, authority, risk acceptance, or intent confirmation before safe progress.       |
 
 ## Transition Terms
 
@@ -30,6 +32,20 @@ Terms are classified as `canonical`, `legacy`, `compatibility`, `deprecated`, or
 | Canonical Read Model        | canonical | A stable conceptual model used to align, inspect, and reason over current artifacts without yet replacing them.                                        |
 | Target Source Model         | canonical | The intended future source model after explicit promotion approval.                                                                                    |
 | Graph-Source Promotion      | canonical | The future transition where Maintainability Graph becomes the source model and tree-native artifacts become projections, compatibility, or view files. |
+
+## Approval Brief Terms
+
+| Term                 | Status    | Meaning                                                                                                                            |
+| -------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Approval Brief State | canonical | The user-facing approval situation: Ready for approval, Review with warning, Decision required, or Blocked.                        |
+| Approval Action      | canonical | The user choice available in the brief: Approve this step, Request revision, Resolve required item, or Defer approval.             |
+| Ready for approval   | canonical | State where required checks have sufficient fresh evidence or no check applies, and no required user judgment or blocker remains.  |
+| Review with warning  | canonical | State where result may be approvable but a visible low-risk warning, explicit low-risk exception, or non-blocking unknown remains. |
+| Decision required    | canonical | State where approval or progress requires a user answer, choice, confirmation, or risk acceptance.                                 |
+| Blocked              | canonical | State where PBE cannot safely continue or present the result as approvable until a blocker is resolved or reframed.                |
+| Trace Detail         | canonical | Trigger-scoped trace shown only for high-risk triggers or explicit user requests; it must not become a full Graph dump.            |
+| Remaining judgment   | canonical | The visible assumptions, unknowns, risks, conflicts, Human Gate reasons, and accepted or deferred risks that affect user judgment. |
+| Verification summary | canonical | The Approval Brief section that reports required Checks, Evidence status, missing/stale/scope-mismatched Evidence, and exceptions. |
 
 ## Compatibility Terms
 

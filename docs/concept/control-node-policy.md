@@ -23,6 +23,7 @@ This future document should cover:
 - Feedback or drift that changes meaning, scope, UX, risk, acceptance, or verification becomes a Change Node.
 - Impact analysis maps affected nodes before revision work starts.
 - User acceptance is separate from Codex technical completion.
+- Approval Brief displays Control Nodes only when they affect user judgment, warnings, Human Gate, or Blocked status.
 
 ## 4. Still Undefined
 

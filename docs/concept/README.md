@@ -86,11 +86,19 @@ The current canonical candidate docs are:
 These documents define concept structure only. They do not define TypeScript models, CLI commands, validators, migration
 scripts, or implementation tasks.
 
+## Concept Policies
+
+The following concept policy is complete at documentation level:
+
+- [approval-brief.md](approval-brief.md)
+
+Concept policy completion does not create CLI commands, schemas, validators, templates, runtime artifacts, or durable
+acceptance storage by itself.
+
 ## Outline-Only Later-Phase Docs
 
 The following files intentionally stay as outlines in this phase:
 
-- [approval-brief.md](approval-brief.md)
 - [check-evidence-policy.md](check-evidence-policy.md)
 - [control-node-policy.md](control-node-policy.md)
 - [legacy-compatibility-map.md](legacy-compatibility-map.md)

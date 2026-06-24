@@ -23,6 +23,8 @@ This future document should cover:
 - Build success alone is not product evidence unless the Test Tree says it verifies the requirement.
 - Visual UI work requires screenshot or manual visual evidence unless waived, not required, deferred, or out of scope.
 - Submitted-for-review and accepted closure require fresh required evidence.
+- Approval Brief consumes Check and Evidence status in its Verification summary, but this document remains the detailed
+  policy source in the next phase.
 
 ## 4. Still Undefined
 

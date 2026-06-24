@@ -49,6 +49,8 @@ Codex must not execute:
 - Contract execution ends as submitted for review, not accepted.
 - Missing scope, design drift, unsafe dependency impact, or technical impossibility is a stop/change condition.
 - Evidence must attach back to Product, Work, Test, criteria, or review requirements as applicable.
+- Approval Brief maps contract-relevant facts into user-facing sections without exposing Execution Contract internals by
+  default.
 
 ## Remaining Open Questions
 
