@@ -333,7 +333,9 @@ cleanup remain separate.
 - Generated graph builder, CLI-backed parity, and local validator-backed Evidence now exist for the Todo Search scoped
   pilot.
 - Todo Search read-model assumptions are now isolated into an explicit profile/config without intended behavior change.
-- Broader/multi-slice validation, CI enforcement, and full-promotion waiver policy remain future questions.
+- `examples/valid/todo-app-pbe-run` now has structure-only generated/validation Evidence as a second profile/fixture.
+- Multi-slice aggregation, CI-backed Evidence for additional slices, CI enforcement, and full-promotion waiver policy
+  remain future questions.
 
 ### Decisions Needed Before Promotion Approval
 
@@ -346,16 +348,16 @@ cleanup remain separate.
 
 ## Gate Self-Check
 
-| Gate                         | Result | Notes                                                                                                                                    |
-| ---------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Non-Promotion Gate           | PASS   | This review does not promote Maintainability Graph or change source authority.                                                           |
-| Warning Classification Gate  | PASS   | All retained warnings are classified as blocker, acceptable warning, deferred cleanup, or later requirement.                             |
-| Evidence Reality Gate        | PASS   | Findings cite existing docs, selected-slice artifacts, compatibility slice records, and command Evidence.                                |
-| Source Authority Safety Gate | PASS   | Tree-native artifacts remain current operational source.                                                                                 |
-| Approval Boundary Gate       | PASS   | Readiness review, promotion decision, and promotion approval remain separate.                                                            |
-| Control Node Visibility Gate | PASS   | Decision, Evidence, Compatibility, Acceptance, and Impact/Change control candidates are identified.                                      |
-| Gap Honesty Gate             | PASS   | CI-backed Evidence, public-doc cleanup, full-product Evidence, and pilot/full distinction remain visible.                                |
-| Implementation Boundary Gate | PASS   | Scoped builder and validator exist for Todo Search only; no CI, schema, runtime, model, migration, or full Todo implementation is added. |
+| Gate                         | Result | Notes                                                                                                                                                                                                                        |
+| ---------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Non-Promotion Gate           | PASS   | This review does not promote Maintainability Graph or change source authority.                                                                                                                                               |
+| Warning Classification Gate  | PASS   | All retained warnings are classified as blocker, acceptable warning, deferred cleanup, or later requirement.                                                                                                                 |
+| Evidence Reality Gate        | PASS   | Findings cite existing docs, selected-slice artifacts, compatibility slice records, and command Evidence.                                                                                                                    |
+| Source Authority Safety Gate | PASS   | Tree-native artifacts remain current operational source.                                                                                                                                                                     |
+| Approval Boundary Gate       | PASS   | Readiness review, promotion decision, and promotion approval remain separate.                                                                                                                                                |
+| Control Node Visibility Gate | PASS   | Decision, Evidence, Compatibility, Acceptance, and Impact/Change control candidates are identified.                                                                                                                          |
+| Gap Honesty Gate             | PASS   | Public-doc cleanup, full-product Evidence, additional-slice CI-backed Evidence, aggregation, and pilot/full distinction remain visible.                                                                                      |
+| Implementation Boundary Gate | PASS   | Scoped builder/validator exist for Todo Search and structure-only generation/validation exists for one canonical `.pbe` fixture; no CI enforcement, schema, runtime, model, migration, or full Todo implementation is added. |
 
 ## Final Non-Promotion Statement
 

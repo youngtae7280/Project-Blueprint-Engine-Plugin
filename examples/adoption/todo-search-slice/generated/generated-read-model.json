@@ -2,9 +2,9 @@
   "version": "0.1.0-generated-read-model-evidence",
   "metadata": {
     "artifactRole": "generated_read_model_evidence",
-    "generatedAt": "2026-06-25T07:13:25.120Z",
+    "generatedAt": "2026-06-25T07:28:11.264Z",
     "commandIdentity": "pbe graph read-model generate --slice examples/adoption/todo-search-slice",
-    "sourceCommit": "eaaee15",
+    "sourceCommit": "17c5a97",
     "sourceSlice": "examples/adoption/todo-search-slice",
     "sliceProfile": "todo-search-selected-slice",
     "sliceProfileDisplayName": "Todo Search Adoption + Product Meaning Feedback",
@@ -33,7 +33,7 @@
     ],
     "generatedStatus": "generated-present",
     "sourceAuthority": "Tree-native selected-slice artifacts remain current operational source.",
-    "nonPromotionStatement": "This generated read-model is Evidence only. It does not promote Maintainability Graph, change source authority, retire tree-native artifacts, approve scoped source-authority execution, or clean up public docs.",
+    "nonPromotionStatement": "Generated output is reviewable Evidence only and cannot change source authority without later explicit user approval.",
     "taxonomyBasis": "docs/concept/graph-node-edge-tag-policy.md",
     "coreViewBasis": "docs/concept/view-tree-pack.md 7 Core Views",
     "viewMembershipBoundary": "View membership is represented by includedInViewIds and coreViewCoverage. viewScopedTags contains only role tags."

@@ -192,6 +192,10 @@ The next major decision should be one of:
 Recommended current stance: continue active observation with validator-backed and reviewed CI-backed Evidence until the
 user wants PR integration, broader use, enforcement, cleanup, promotion review, or rollback/defer.
 
+Multi-slice follow-up status: `examples/valid/todo-app-pbe-run` now has structure-only generated/validation Evidence.
+That fixture does not expand this active Todo Search pilot, does not create a second pilot marker, and does not add
+CI-backed Evidence or source-authority claims outside `examples/adoption/todo-search-slice`.
+
 ## Gate Self-Check
 
 | Gate                              | Result | Notes                                                           |

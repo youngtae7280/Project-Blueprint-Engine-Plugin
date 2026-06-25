@@ -1,6 +1,6 @@
 # Multi-Slice Read-Model Validation Design
 
-Status: multi-slice-read-model-validation-design / design-recorded / implementation-not-started
+Status: multi-slice-read-model-validation-design / second-structure-only-profile-implemented / aggregation-not-started
 
 ## Design Purpose
 
@@ -63,13 +63,13 @@ level visible.
 
 ## Candidate Slice Analysis
 
-| Candidate                                               | Role                                                    | Strengths                                                                                                                                                                 | Gaps / risks                                                                                                            | Design decision                                                                         |
-| ------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| `examples/adoption/todo-search-slice`                   | Current baseline slice                                  | Full generated/manual read-model shape, View Instance Manifest, pilot marker, local validator, reviewed CI artifact.                                                      | Todo-shaped hardcoding in builder and validator policy.                                                                 | Remains first profile and regression baseline.                                          |
-| `examples/valid/todo-app-pbe-run`                       | Next structural validation candidate                    | Canonical `.pbe` layout; Product/Project/Work/Test/Evidence/Acceptance/Change/Impact/Cycle Tree, Cycle Contract, WorkGraph, source-of-truth matrix, evidence text output. | No generated/manual read-model, no View Instance Manifest, no pilot marker, no flat-layout adapter, no runtime fixture. | Selected as next structural validation target, not yet implementation target.           |
-| `examples/dogfooding/windows-validation-sequential-run` | Medium later candidate                                  | Useful dogfooding example and Windows validation context.                                                                                                                 | Missing or weaker Project/Cycle/Change/Impact coverage for first multi-slice expansion.                                 | Defer until after the canonical `.pbe` layout candidate is understood.                  |
-| `examples/adoption/compatibility-mismatch-slice`        | Supplemental compatibility warning/control-node fixture | Real ACEP/task-card wording mismatch and compatibility boundary Evidence.                                                                                                 | Not a full Product/Project/Work/Test/Evidence/Acceptance slice.                                                         | Keep as warning/control-node supplemental fixture only.                                 |
-| `examples/invalid/*`                                    | Later negative validation fixture family                | Useful for proving failure modes and error messages.                                                                                                                      | Invalid by design; not a read-model generation target.                                                                  | Use later for negative validation tests, not for first positive multi-slice generation. |
+| Candidate                                               | Role                                                    | Strengths                                                                                                                                                                 | Gaps / risks                                                                                                               | Design decision                                                                            |
+| ------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `examples/adoption/todo-search-slice`                   | Current baseline slice                                  | Full generated/manual read-model shape, View Instance Manifest, pilot marker, local validator, reviewed CI artifact.                                                      | Todo-shaped hardcoding in builder and validator policy.                                                                    | Remains first profile and regression baseline.                                             |
+| `examples/valid/todo-app-pbe-run`                       | Second structure-only validation fixture                | Canonical `.pbe` layout; Product/Project/Work/Test/Evidence/Acceptance/Change/Impact/Cycle Tree, Cycle Contract, WorkGraph, source-of-truth matrix, evidence text output. | No manual parity artifact, no View Instance Manifest, no pilot marker, no CI-backed Evidence, no runnable runtime fixture. | Implemented as a `structure-only` profile/fixture, not parity-backed or authority-bearing. |
+| `examples/dogfooding/windows-validation-sequential-run` | Medium later candidate                                  | Useful dogfooding example and Windows validation context.                                                                                                                 | Missing or weaker Project/Cycle/Change/Impact coverage for first multi-slice expansion.                                    | Defer until after the canonical `.pbe` layout candidate is understood.                     |
+| `examples/adoption/compatibility-mismatch-slice`        | Supplemental compatibility warning/control-node fixture | Real ACEP/task-card wording mismatch and compatibility boundary Evidence.                                                                                                 | Not a full Product/Project/Work/Test/Evidence/Acceptance slice.                                                            | Keep as warning/control-node supplemental fixture only.                                    |
+| `examples/invalid/*`                                    | Later negative validation fixture family                | Useful for proving failure modes and error messages.                                                                                                                      | Invalid by design; not a read-model generation target.                                                                     | Use later for negative validation tests, not for first positive multi-slice generation.    |
 
 ## Selected Next Candidate
 
@@ -79,20 +79,34 @@ The next candidate is:
 examples/valid/todo-app-pbe-run
 ```
 
-Design stance:
+Implemented stance:
 
 - treat it as a structural validation target
 - read its canonical `.pbe` layout as source inputs
-- do not generate or validate it in this task
+- generate and validate structure-only read-model Evidence only
 - do not make it a scoped source-authority pilot
 - do not treat it as a full Graph-source promotion candidate
 - do not require a runtime fixture before structural validation design
+- do not require a manual parity artifact, View Instance Manifest, pilot marker, or CI-backed Evidence
 
 Expected first validation level for this candidate:
 
 ```text
 structure-only
 ```
+
+Current implementation summary:
+
+| Item              | Status                                                                                         |
+| ----------------- | ---------------------------------------------------------------------------------------------- |
+| Profile id        | `todo-app-pbe-run-structure-only`                                                              |
+| Source layout     | `canonical-pbe`                                                                                |
+| Generated output  | `examples/valid/todo-app-pbe-run/generated/generated-read-model.json`                          |
+| Evidence manifest | `examples/valid/todo-app-pbe-run/generated/read-model-evidence-manifest.json`                  |
+| Validation report | `examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json`                  |
+| Node / edge count | 22 nodes / 38 edges                                                                            |
+| Validation status | `validation-pass`, 16 checks, 0 warning / 0 blocking / 0 decision-required                     |
+| Boundary          | Structure-only Evidence; no parity-backed, pilot-marker-backed, CI-backed, or authority claim. |
 
 ## Non-Candidate Roles
 
@@ -184,8 +198,10 @@ Recommended implementation sequence:
 2. Prove Todo Search generated output, parity report, validation report, and CI-backed manifest semantics remain
    unchanged. Status: local generated/parity/validation checks remain 40 nodes, 59 edges, `comparison-pass`,
    `validation-pass`, and 20 validation checks.
-3. Add/read `examples/valid/todo-app-pbe-run` as a second `structure-only` fixture. Status: not started.
-4. Add per-slice validation report independence. Status: not started.
+3. Add/read `examples/valid/todo-app-pbe-run` as a second `structure-only` fixture. Status: complete for one canonical
+   `.pbe` fixture, with generated structure-only output and validation report.
+4. Add per-slice validation report independence. Status: partially prepared by independent per-slice reports; no
+   aggregate command or `validate --all` exists yet.
 5. Add aggregation only after per-slice validation is stable. Status: not started.
 
 ## Validation Policy Levels
@@ -262,13 +278,13 @@ Design stance:
 
 ## Next Implementation Path
 
-When the user approves implementation later, proceed in this order:
+When the user approves implementation later, continue in this order:
 
-1. Extract Todo Search profile/config without behavior change.
-2. Prove outputs unchanged with focused tests and existing generate/compare/validate commands.
-3. Add `examples/valid/todo-app-pbe-run` as a second `structure-only` profile.
-4. Generate/validate per-slice reports independently.
-5. Add aggregate summary only after per-slice validation is stable.
+1. Keep Todo Search as the regression baseline and active scoped pilot.
+2. Keep `examples/valid/todo-app-pbe-run` at `structure-only` until a later user decision adds parity, pilot marker, or
+   CI-backed Evidence.
+3. Strengthen per-slice validation report independence and profile boundaries.
+4. Add aggregate summary only after per-slice validation is stable.
 
 Do not start with `validate --all`, PR triggers, required checks, or broad CI changes.
 
@@ -287,53 +303,56 @@ defines validation policy levels, and defines conservative aggregation rules.
 
 ### Verification Summary
 
-| Check                     | Status          | Summary                                                                                   |
-| ------------------------- | --------------- | ----------------------------------------------------------------------------------------- |
-| Todo Search baseline      | present         | Local validator-backed and reviewed CI-backed Evidence exist.                             |
-| Next candidate            | selected        | `examples/valid/todo-app-pbe-run` selected for structural design, not implementation.     |
-| Todo hardcoding           | visible         | Current builder remains Todo-shaped and needs profile extraction before second slice.     |
-| Aggregation rules         | design-recorded | Blocking and decision-required statuses propagate; warnings remain slice-specific.        |
-| Source authority boundary | preserved       | Multi-slice validation is Evidence-only.                                                  |
-| Public-doc cleanup        | deferred        | Not required before design; prerequisite/caveat before broader promotion.                 |
-| Implementation            | not started     | No CLI, validator, CI, workflow, or generated artifact changes are made by this document. |
+| Check                     | Status          | Summary                                                                                 |
+| ------------------------- | --------------- | --------------------------------------------------------------------------------------- |
+| Todo Search baseline      | present         | Local validator-backed and reviewed CI-backed Evidence exist.                           |
+| Next candidate            | selected        | `examples/valid/todo-app-pbe-run` selected for structural design, not implementation.   |
+| Todo hardcoding           | visible         | Current builder remains Todo-shaped and needs profile extraction before second slice.   |
+| Aggregation rules         | design-recorded | Blocking and decision-required statuses propagate; warnings remain slice-specific.      |
+| Source authority boundary | preserved       | Multi-slice validation is Evidence-only.                                                |
+| Public-doc cleanup        | deferred        | Not required before design; prerequisite/caveat before broader promotion.               |
+| Second structure fixture  | implemented     | `examples/valid/todo-app-pbe-run` now has structure-only generated/validation Evidence. |
+| Aggregation               | not started     | No multi-slice aggregate command, `validate --all`, CI change, or enforcement exists.   |
 
 ### Remaining Judgment
 
-The user must decide whether to approve the first implementation step:
+The user must decide the next implementation branch:
 
 ```text
-Extract Todo Search profile/config without behavior change
+strengthen per-slice report independence before aggregation
 ```
 
-or choose cleanup, enforcement design, multi-slice scope redesign, or continued observation first.
+or choose a different branch such as parity design for `todo-app-pbe-run`, negative fixtures, cleanup, enforcement
+design, multi-slice scope redesign, or continued observation.
 
 ## Control Node Summary
 
-| Control record                      | Family                     | Status                        | Reason                                                                                  |
-| ----------------------------------- | -------------------------- | ----------------------------- | --------------------------------------------------------------------------------------- |
-| Multi-slice validation design       | Decision Control Node      | design-recorded               | The next expansion strategy is documented but not approved for implementation.          |
-| Todo Search hardcoding              | Evidence / Impact Control  | active implementation warning | Hardcoding must be isolated before a second slice can be trusted.                       |
-| `todo-app-pbe-run` candidate        | Evidence Control Node      | candidate / structure-only    | It has canonical `.pbe` source inputs but no read-model generated artifacts yet.        |
-| Compatibility mismatch supplemental | Compatibility Control Node | retained warning              | Public-doc cleanup remains deferred and warning-only.                                   |
-| Aggregate validation                | Decision Control Node      | deferred                      | Aggregation should wait until per-slice reports are independent.                        |
-| CI enforcement / PR triggers        | Decision Control Node      | not approved                  | Reviewed CI-backed Evidence exists, but enforcement and PR triggers remain future-only. |
+| Control record                      | Family                     | Status                       | Reason                                                                                  |
+| ----------------------------------- | -------------------------- | ---------------------------- | --------------------------------------------------------------------------------------- |
+| Multi-slice validation design       | Decision Control Node      | design-recorded              | The expansion strategy is documented; aggregation remains unimplemented.                |
+| Todo Search hardcoding              | Evidence / Impact Control  | resolved for first profile   | Todo assumptions are isolated into an explicit profile/config.                          |
+| `todo-app-pbe-run` candidate        | Evidence Control Node      | implemented / structure-only | It has canonical `.pbe` source inputs plus structure-only generated/validation output.  |
+| Compatibility mismatch supplemental | Compatibility Control Node | retained warning             | Public-doc cleanup remains deferred and warning-only.                                   |
+| Aggregate validation                | Decision Control Node      | deferred                     | Aggregation should wait until per-slice reports are independent.                        |
+| CI enforcement / PR triggers        | Decision Control Node      | not approved                 | Reviewed CI-backed Evidence exists, but enforcement and PR triggers remain future-only. |
 
 ## Gate Self-Check
 
-| Gate                               | Status | Result                                                                                  |
-| ---------------------------------- | ------ | --------------------------------------------------------------------------------------- |
-| Design-Only Gate                   | pass   | This document defines design only.                                                      |
-| Multi-Slice Evidence Boundary Gate | pass   | Multi-slice validation is Evidence-only.                                                |
-| Source Authority Boundary Gate     | pass   | No source authority expansion or tree-native retirement is proposed.                    |
-| Non-CI-Enforcement Gate            | pass   | No required checks, branch protection, PR/push triggers, or enforcement are introduced. |
-| Non-Full-Promotion Gate            | pass   | Full Graph-source promotion remains unapproved.                                         |
-| Candidate Slice Clarity Gate       | pass   | `todo-app-pbe-run` is a structural candidate; other examples keep bounded roles.        |
-| Todo Hardcoding Honesty Gate       | pass   | Todo-shaped assumptions are listed and must be isolated before expansion.               |
-| Aggregation Rule Clarity Gate      | pass   | Pass/warning/blocking/decision-required propagation rules are explicit.                 |
-| Public-Doc Cleanup Boundary Gate   | pass   | Cleanup remains deferred and visible.                                                   |
-| User Approval Boundary Gate        | pass   | User approval remains required before implementation or broader authority changes.      |
+| Gate                               | Status | Result                                                                                   |
+| ---------------------------------- | ------ | ---------------------------------------------------------------------------------------- |
+| Design-Only Gate                   | pass   | The design remains non-authority; the referenced implementation is bounded fixture work. |
+| Multi-Slice Evidence Boundary Gate | pass   | Multi-slice validation is Evidence-only.                                                 |
+| Source Authority Boundary Gate     | pass   | No source authority expansion or tree-native retirement is proposed.                     |
+| Non-CI-Enforcement Gate            | pass   | No required checks, branch protection, PR/push triggers, or enforcement are introduced.  |
+| Non-Full-Promotion Gate            | pass   | Full Graph-source promotion remains unapproved.                                          |
+| Candidate Slice Clarity Gate       | pass   | `todo-app-pbe-run` is a structural candidate; other examples keep bounded roles.         |
+| Todo Hardcoding Honesty Gate       | pass   | Todo-shaped assumptions are listed and must be isolated before expansion.                |
+| Aggregation Rule Clarity Gate      | pass   | Pass/warning/blocking/decision-required propagation rules are explicit.                  |
+| Public-Doc Cleanup Boundary Gate   | pass   | Cleanup remains deferred and visible.                                                    |
+| User Approval Boundary Gate        | pass   | User approval remains required before implementation or broader authority changes.       |
 
 ## Final Statement
 
-This design does not implement multi-slice validation. It records the evidence boundary, candidate strategy, hardcoding
-risks, profile direction, aggregation rules, and next implementation path for a later user-approved task.
+This design now records the completed Todo Search profile extraction and the second structure-only fixture. It still
+does not implement aggregation, CI enforcement, parity-backed validation for the second fixture, source authority
+expansion, public-doc cleanup, or full Graph-source promotion.

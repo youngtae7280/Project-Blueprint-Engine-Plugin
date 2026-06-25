@@ -223,9 +223,11 @@ Recommended next step:
 Keep workflow manual/non-enforcing and observe, unless the user wants the next major branch: PR informational trigger, enforcement policy, multi-slice validation, cleanup, broader promotion review, or rollback/defer.
 ```
 
-Follow-up status: multi-slice validation design is now recorded, and the first implementation step extracted an explicit
-Todo Search `SliceReadModelConfig` profile without intended behavior change. This does not alter the reviewed CI-backed
-run result and does not add PR triggers, enforcement, or a second slice.
+Follow-up status: multi-slice validation design is now recorded, the first implementation step extracted an explicit Todo
+Search `SliceReadModelConfig` profile without intended behavior change, and `examples/valid/todo-app-pbe-run` is now
+implemented as a second `structure-only` profile/fixture. This does not alter the reviewed CI-backed run result, which
+still applies only to Todo Search, and it does not add PR triggers, enforcement, CI-backed Evidence for the second
+fixture, aggregation, or source authority expansion.
 
 ## Gate Self-Check
 

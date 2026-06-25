@@ -340,6 +340,13 @@ approval through that surface or an equivalent review mechanism.
 [pbe-runtime-architecture.md](pbe-runtime-architecture.md) defines current runtime authority. This policy does not change
 that authority; it defines the conceptual path that would be required before a future change.
 
+### Multi-Slice Follow-Up Status
+
+Todo Search remains the only scoped source-authority pilot and the only reviewed CI-backed slice. A second profile,
+`examples/valid/todo-app-pbe-run`, now exists at `structure-only` level with generated/validation Evidence from
+canonical `.pbe` inputs. That follow-up does not expand source authority, does not add a pilot marker, does not require
+manual parity, and does not implement aggregation or `validate --all`.
+
 ## Scope Boundaries
 
 This policy does not implement:
@@ -347,9 +354,9 @@ This policy does not implement:
 - migration scripts
 - CLI commands
 - schemas or TypeScript models
-- validators
+- broader validators or aggregate validation
 - runtime source-model conversion
-- generated graph or projection artifacts
+- authority-bearing generated graph or projection artifacts
 - rollback mechanics
 - actual Graph-source promotion
 

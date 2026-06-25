@@ -1,0 +1,923 @@
+{
+  "version": "0.1.0-generated-read-model-evidence",
+  "metadata": {
+    "artifactRole": "generated_read_model_evidence",
+    "generatedAt": "2026-06-25T07:28:11.310Z",
+    "commandIdentity": "pbe graph read-model generate --slice examples/valid/todo-app-pbe-run",
+    "sourceCommit": "17c5a97",
+    "sourceSlice": "examples/valid/todo-app-pbe-run",
+    "sliceProfile": "todo-app-pbe-run-structure-only",
+    "sliceProfileDisplayName": "Todo App PBE Golden Run",
+    "slicePolicyLevel": "structure-only",
+    "sourceLayout": "canonical-pbe",
+    "inputArtifactList": [
+      "examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json",
+      "examples/valid/todo-app-pbe-run/.pbe/tree/project-tree.json",
+      "examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json",
+      "examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json",
+      "examples/valid/todo-app-pbe-run/.pbe/evidence/evidence-tree.json",
+      "examples/valid/todo-app-pbe-run/.pbe/control/acceptance-tree.json",
+      "examples/valid/todo-app-pbe-run/.pbe/control/change-tree.json",
+      "examples/valid/todo-app-pbe-run/.pbe/control/impact-tree.json",
+      "examples/valid/todo-app-pbe-run/.pbe/execution/cycle-tree.json",
+      "examples/valid/todo-app-pbe-run/.pbe/execution/cycle-contract.md",
+      "examples/valid/todo-app-pbe-run/.pbe/blueprint/work-graph.json",
+      "examples/valid/todo-app-pbe-run/.pbe/blueprint/source-of-truth-matrix.md",
+      "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt",
+      "examples/valid/todo-app-pbe-run/.pbe/blueprint/pbe-state.json"
+    ],
+    "generatedStatus": "generated-present",
+    "sourceAuthority": "Canonical .pbe tree/control/execution/evidence artifacts remain current operational source for this structure-only fixture.",
+    "nonPromotionStatement": "Generated structure-only output is reviewable Evidence only. It does not change source authority, create a pilot marker, require parity, introduce CI enforcement, retire .pbe artifacts, or approve promotion.",
+    "taxonomyBasis": "docs/concept/graph-node-edge-tag-policy.md",
+    "coreViewBasis": "docs/concept/view-tree-pack.md 7 Core Views",
+    "viewMembershipBoundary": "View membership is represented by includedInViewIds and coreViewCoverage. viewScopedTags contains only role tags."
+  },
+  "sourceInputs": [
+    {
+      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\valid\\todo-app-pbe-run\\.pbe\\tree\\product-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/tree/project-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\valid\\todo-app-pbe-run\\.pbe\\tree\\project-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\valid\\todo-app-pbe-run\\.pbe\\tree\\work-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\valid\\todo-app-pbe-run\\.pbe\\tree\\test-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/evidence/evidence-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\valid\\todo-app-pbe-run\\.pbe\\evidence\\evidence-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/control/acceptance-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\valid\\todo-app-pbe-run\\.pbe\\control\\acceptance-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/control/change-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\valid\\todo-app-pbe-run\\.pbe\\control\\change-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/control/impact-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\valid\\todo-app-pbe-run\\.pbe\\control\\impact-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/execution/cycle-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\valid\\todo-app-pbe-run\\.pbe\\execution\\cycle-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/execution/cycle-contract.md",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\valid\\todo-app-pbe-run\\.pbe\\execution\\cycle-contract.md",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/blueprint/work-graph.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\valid\\todo-app-pbe-run\\.pbe\\blueprint\\work-graph.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/blueprint/source-of-truth-matrix.md",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\valid\\todo-app-pbe-run\\.pbe\\blueprint\\source-of-truth-matrix.md",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\valid\\todo-app-pbe-run\\.pbe\\evidence\\test-results\\todo-add.txt",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/blueprint/pbe-state.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\valid\\todo-app-pbe-run\\.pbe\\blueprint\\pbe-state.json",
+      "status": "present"
+    }
+  ],
+  "taxonomy": {
+    "nodeKindsUsed": [
+      "requirement",
+      "code",
+      "task",
+      "check",
+      "evidence",
+      "decision",
+      "change",
+      "finding",
+      "document",
+      "log",
+      "view-instance"
+    ],
+    "edgeTypesUsed": [
+      "targets",
+      "requires",
+      "satisfies",
+      "touches",
+      "verifies",
+      "evidences",
+      "approves",
+      "preserves",
+      "reports-on",
+      "derives-view"
+    ],
+    "viewScopedTagsAllowed": ["target", "context", "candidate", "guard", "required", "stale", "blocked", "output"],
+    "tagBoundary": "Tags describe temporary roles inside a View Instance only. Durable semantic meaning is represented by edges, not tags."
+  },
+  "nodes": [
+    {
+      "id": "PT-ROOT",
+      "nodeKind": "requirement",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json",
+      "title": "Todo app accepted slice",
+      "status": "confirmed",
+      "confidence": "user-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["context"],
+      "includedInViewIds": ["intent-view", "behavior-view"],
+      "viewRoles": { "intent-view": ["context"], "behavior-view": ["context"] }
+    },
+    {
+      "id": "PT-1",
+      "nodeKind": "requirement",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json",
+      "title": "Add a todo item",
+      "status": "confirmed",
+      "confidence": "user-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["target", "required"],
+      "includedInViewIds": ["intent-view", "behavior-view"],
+      "viewRoles": { "intent-view": ["target", "required"], "behavior-view": ["target", "required"] }
+    },
+    {
+      "id": "AC-PT-1-1",
+      "nodeKind": "requirement",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json",
+      "title": "WHEN the user submits a todo title, THE SYSTEM SHALL persist and display the todo item.",
+      "status": "confirmed",
+      "confidence": "user-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["required"],
+      "includedInViewIds": ["intent-view", "verification-view"],
+      "viewRoles": { "intent-view": ["required"], "verification-view": ["required"] }
+    },
+    {
+      "id": "PJ-ROOT",
+      "nodeKind": "code",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/tree/project-tree.json",
+      "title": "Todo app project",
+      "status": "derived",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["context"],
+      "includedInViewIds": ["structure-view"],
+      "viewRoles": { "structure-view": ["context"] }
+    },
+    {
+      "id": "PJ-1",
+      "nodeKind": "code",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/tree/project-tree.json",
+      "title": "Todo item module",
+      "status": "module_verified",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["context"],
+      "includedInViewIds": ["structure-view"],
+      "viewRoles": { "structure-view": ["context"] }
+    },
+    {
+      "id": "WT-ROOT",
+      "nodeKind": "task",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json",
+      "title": "Todo work root",
+      "status": "implemented",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["context"],
+      "includedInViewIds": ["scope-execution-view", "impact-view"],
+      "viewRoles": { "scope-execution-view": ["context"], "impact-view": ["context"] }
+    },
+    {
+      "id": "WT-1",
+      "nodeKind": "task",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json",
+      "title": "Implement add todo behavior",
+      "status": "implemented",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["target", "required"],
+      "includedInViewIds": ["scope-execution-view", "impact-view"],
+      "viewRoles": { "scope-execution-view": ["target", "required"], "impact-view": ["target", "required"] }
+    },
+    {
+      "id": "TT-ROOT",
+      "nodeKind": "check",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json",
+      "title": "Todo test root",
+      "status": "passed",
+      "confidence": "tool-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["required"],
+      "includedInViewIds": ["verification-view"],
+      "viewRoles": { "verification-view": ["required"] }
+    },
+    {
+      "id": "TT-1",
+      "nodeKind": "check",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json",
+      "title": "Add todo acceptance check",
+      "status": "passed",
+      "confidence": "tool-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["required"],
+      "includedInViewIds": ["verification-view"],
+      "viewRoles": { "verification-view": ["required"] }
+    },
+    {
+      "id": "EV-1",
+      "nodeKind": "evidence",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/evidence/evidence-tree.json",
+      "title": ".pbe/evidence/test-results/todo-add.txt",
+      "status": "attached",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["output", "required"],
+      "includedInViewIds": ["verification-view", "evidence-acceptance-view"],
+      "viewRoles": { "verification-view": ["output", "required"], "evidence-acceptance-view": ["output", "required"] }
+    },
+    {
+      "id": "ACCEPT-PT-1",
+      "nodeKind": "decision",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/control/acceptance-tree.json",
+      "title": "Product PT-1, Work WT-1, Test TT-1, Evidence EV-1, and AC-PT-1-1 are closed.",
+      "status": "accepted_done",
+      "confidence": "user-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["output"],
+      "includedInViewIds": ["intent-view", "evidence-acceptance-view"],
+      "viewRoles": { "intent-view": ["output"], "evidence-acceptance-view": ["output"] }
+    },
+    {
+      "id": "CH-001",
+      "nodeKind": "change",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/control/change-tree.json",
+      "title": "Preserve completed add-todo behavior while future revisions are assessed.",
+      "status": "impact_analyzed",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["context"],
+      "includedInViewIds": ["impact-view"],
+      "viewRoles": { "impact-view": ["context"] }
+    },
+    {
+      "id": "IM-001",
+      "nodeKind": "finding",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/control/impact-tree.json",
+      "title": "Golden run includes a non-blocking analyzed change skeleton.",
+      "status": "analyzed",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["context"],
+      "includedInViewIds": ["impact-view"],
+      "viewRoles": { "impact-view": ["context"] }
+    },
+    {
+      "id": "CY-1",
+      "nodeKind": "task",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/execution/cycle-tree.json",
+      "title": "Close the selected add-todo capability.",
+      "status": "accepted",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["required"],
+      "includedInViewIds": ["scope-execution-view"],
+      "viewRoles": { "scope-execution-view": ["required"] }
+    },
+    {
+      "id": "CY-1-CONTRACT",
+      "nodeKind": "document",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/execution/cycle-contract.md",
+      "title": "Cycle Contract for add-todo golden run",
+      "status": "present",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["required", "guard"],
+      "includedInViewIds": ["scope-execution-view"],
+      "viewRoles": { "scope-execution-view": ["required", "guard"] }
+    },
+    {
+      "id": "WG-TODO-1",
+      "nodeKind": "document",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/blueprint/work-graph.json",
+      "title": "Todo App WorkGraph compatibility view",
+      "status": "present",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["context"],
+      "includedInViewIds": ["structure-view", "scope-execution-view"],
+      "viewRoles": { "structure-view": ["context"], "scope-execution-view": ["context"] }
+    },
+    {
+      "id": "WG-NODE-WT-1",
+      "nodeKind": "task",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/blueprint/work-graph.json",
+      "title": "Implement add todo behavior",
+      "status": "selected",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["context"],
+      "includedInViewIds": ["structure-view", "scope-execution-view"],
+      "viewRoles": { "structure-view": ["context"], "scope-execution-view": ["context"] }
+    },
+    {
+      "id": "DOC-SOURCE-OF-TRUTH-MATRIX",
+      "nodeKind": "document",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/blueprint/source-of-truth-matrix.md",
+      "title": "Todo App source-of-truth matrix",
+      "status": "present",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["guard"],
+      "includedInViewIds": ["scope-execution-view"],
+      "viewRoles": { "scope-execution-view": ["guard"] }
+    },
+    {
+      "id": "LOG-TODO-ADD-EVIDENCE",
+      "nodeKind": "log",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt",
+      "title": "Attached todo-add test output",
+      "status": "present",
+      "confidence": "tool-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["output"],
+      "includedInViewIds": ["verification-view", "evidence-acceptance-view"],
+      "viewRoles": { "verification-view": ["output"], "evidence-acceptance-view": ["output"] }
+    },
+    {
+      "id": "VIEW-TODO-APP-PBE-RUN-STRUCTURE",
+      "nodeKind": "view-instance",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/generated/generated-read-model.json",
+      "title": "Todo App structure-only 7 Core View projection",
+      "status": "generated_present",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["output"],
+      "includedInViewIds": [
+        "intent-view",
+        "behavior-view",
+        "structure-view",
+        "scope-execution-view",
+        "impact-view",
+        "verification-view",
+        "evidence-acceptance-view"
+      ],
+      "viewRoles": {
+        "intent-view": ["output"],
+        "behavior-view": ["output"],
+        "structure-view": ["output"],
+        "scope-execution-view": ["output"],
+        "impact-view": ["output"],
+        "verification-view": ["output"],
+        "evidence-acceptance-view": ["output"]
+      }
+    },
+    {
+      "id": "FIND-STRUCTURE-ONLY-LIMITATION",
+      "nodeKind": "finding",
+      "sourceArtifact": "docs/concept/multi-slice-read-model-validation-design.md",
+      "title": "Structure-only profile is not parity-backed, pilot-marker-backed, or CI-backed",
+      "status": "retained_limitation",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["context"],
+      "includedInViewIds": ["evidence-acceptance-view"],
+      "viewRoles": { "evidence-acceptance-view": ["context"] }
+    },
+    {
+      "id": "FIND-NO-RUNTIME-FIXTURE",
+      "nodeKind": "finding",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt",
+      "title": "Attached evidence exists, but no runnable runtime fixture is required for structure-only validation",
+      "status": "structure_only_limitation",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["context"],
+      "includedInViewIds": ["verification-view", "evidence-acceptance-view"],
+      "viewRoles": { "verification-view": ["context"], "evidence-acceptance-view": ["context"] }
+    }
+  ],
+  "edges": [
+    {
+      "id": "E-PT-ROOT-TARGETS-PT-1",
+      "from": "PT-ROOT",
+      "to": "PT-1",
+      "edgeType": "targets",
+      "confidence": "user-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json"
+    },
+    {
+      "id": "E-PT-ROOT-TARGETS-PJ-1",
+      "from": "PT-ROOT",
+      "to": "PJ-1",
+      "edgeType": "targets",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json"
+    },
+    {
+      "id": "E-PT-ROOT-TARGETS-WT-1",
+      "from": "PT-ROOT",
+      "to": "WT-1",
+      "edgeType": "targets",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json"
+    },
+    {
+      "id": "E-PT-1-TARGETS-PJ-1",
+      "from": "PT-1",
+      "to": "PJ-1",
+      "edgeType": "targets",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json"
+    },
+    {
+      "id": "E-PT-1-TARGETS-WT-1",
+      "from": "PT-1",
+      "to": "WT-1",
+      "edgeType": "targets",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json"
+    },
+    {
+      "id": "E-PT-1-REQUIRES-TT-1",
+      "from": "PT-1",
+      "to": "TT-1",
+      "edgeType": "requires",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json"
+    },
+    {
+      "id": "E-PT-1-REQUIRES-AC-PT-1-1",
+      "from": "PT-1",
+      "to": "AC-PT-1-1",
+      "edgeType": "requires",
+      "confidence": "user-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json"
+    },
+    {
+      "id": "E-WT-ROOT-SATISFIES-PT-ROOT",
+      "from": "WT-ROOT",
+      "to": "PT-ROOT",
+      "edgeType": "satisfies",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json"
+    },
+    {
+      "id": "E-WT-ROOT-TOUCHES-PJ-ROOT",
+      "from": "WT-ROOT",
+      "to": "PJ-ROOT",
+      "edgeType": "touches",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json"
+    },
+    {
+      "id": "E-WT-1-SATISFIES-PT-1",
+      "from": "WT-1",
+      "to": "PT-1",
+      "edgeType": "satisfies",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json"
+    },
+    {
+      "id": "E-WT-1-TOUCHES-PJ-1",
+      "from": "WT-1",
+      "to": "PJ-1",
+      "edgeType": "touches",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json"
+    },
+    {
+      "id": "E-WT-1-SATISFIES-AC-PT-1-1",
+      "from": "WT-1",
+      "to": "AC-PT-1-1",
+      "edgeType": "satisfies",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json"
+    },
+    {
+      "id": "E-TT-ROOT-VERIFIES-PT-ROOT",
+      "from": "TT-ROOT",
+      "to": "PT-ROOT",
+      "edgeType": "verifies",
+      "confidence": "tool-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json"
+    },
+    {
+      "id": "E-TT-ROOT-VERIFIES-WT-ROOT",
+      "from": "TT-ROOT",
+      "to": "WT-ROOT",
+      "edgeType": "verifies",
+      "confidence": "tool-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json"
+    },
+    {
+      "id": "E-TT-1-VERIFIES-PT-1",
+      "from": "TT-1",
+      "to": "PT-1",
+      "edgeType": "verifies",
+      "confidence": "tool-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json"
+    },
+    {
+      "id": "E-TT-1-VERIFIES-WT-1",
+      "from": "TT-1",
+      "to": "WT-1",
+      "edgeType": "verifies",
+      "confidence": "tool-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json"
+    },
+    {
+      "id": "E-TT-1-VERIFIES-AC-PT-1-1",
+      "from": "TT-1",
+      "to": "AC-PT-1-1",
+      "edgeType": "verifies",
+      "confidence": "tool-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json"
+    },
+    {
+      "id": "E-EV-1-EVIDENCES-TT-1",
+      "from": "EV-1",
+      "to": "TT-1",
+      "edgeType": "evidences",
+      "confidence": "tool-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/evidence/evidence-tree.json"
+    },
+    {
+      "id": "E-EV-1-EVIDENCES-AC-PT-1-1",
+      "from": "EV-1",
+      "to": "AC-PT-1-1",
+      "edgeType": "evidences",
+      "confidence": "tool-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/evidence/evidence-tree.json"
+    },
+    {
+      "id": "E-LOG-EVIDENCES-EV-1",
+      "from": "LOG-TODO-ADD-EVIDENCE",
+      "to": "EV-1",
+      "edgeType": "evidences",
+      "confidence": "tool-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt"
+    },
+    {
+      "id": "E-ACCEPT-PT-1-APPROVES-PT-1",
+      "from": "ACCEPT-PT-1",
+      "to": "PT-1",
+      "edgeType": "approves",
+      "confidence": "user-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/control/acceptance-tree.json"
+    },
+    {
+      "id": "E-ACCEPT-PT-1-APPROVES-EV-1",
+      "from": "ACCEPT-PT-1",
+      "to": "EV-1",
+      "edgeType": "approves",
+      "confidence": "user-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/control/acceptance-tree.json"
+    },
+    {
+      "id": "E-CH-001-TOUCHES-WT-1",
+      "from": "CH-001",
+      "to": "WT-1",
+      "edgeType": "touches",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/control/change-tree.json"
+    },
+    {
+      "id": "E-CH-001-PRESERVES-TT-1",
+      "from": "CH-001",
+      "to": "TT-1",
+      "edgeType": "preserves",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/control/change-tree.json"
+    },
+    {
+      "id": "E-CH-001-PRESERVES-EV-1",
+      "from": "CH-001",
+      "to": "EV-1",
+      "edgeType": "preserves",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/control/change-tree.json"
+    },
+    {
+      "id": "E-IM-001-REPORTS-ON-CH-001",
+      "from": "IM-001",
+      "to": "CH-001",
+      "edgeType": "reports-on",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/control/impact-tree.json"
+    },
+    {
+      "id": "E-IM-001-REPORTS-ON-WT-1",
+      "from": "IM-001",
+      "to": "WT-1",
+      "edgeType": "reports-on",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/control/impact-tree.json"
+    },
+    {
+      "id": "E-CY-1-REQUIRES-WT-1",
+      "from": "CY-1",
+      "to": "WT-1",
+      "edgeType": "requires",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/execution/cycle-tree.json"
+    },
+    {
+      "id": "E-CY-1-REQUIRES-TT-1",
+      "from": "CY-1",
+      "to": "TT-1",
+      "edgeType": "requires",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/execution/cycle-tree.json"
+    },
+    {
+      "id": "E-CY-1-REQUIRES-EV-1",
+      "from": "CY-1",
+      "to": "EV-1",
+      "edgeType": "requires",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/execution/cycle-tree.json"
+    },
+    {
+      "id": "E-CYCLE-CONTRACT-REPORTS-ON-CY-1",
+      "from": "CY-1-CONTRACT",
+      "to": "CY-1",
+      "edgeType": "reports-on",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/execution/cycle-contract.md"
+    },
+    {
+      "id": "E-WORKGRAPH-DERIVES-WT-1",
+      "from": "WG-TODO-1",
+      "to": "WT-1",
+      "edgeType": "derives-view",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/blueprint/work-graph.json"
+    },
+    {
+      "id": "E-SOT-PRESERVES-SOURCE-BOUNDARY",
+      "from": "DOC-SOURCE-OF-TRUTH-MATRIX",
+      "to": "PT-1",
+      "edgeType": "preserves",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/blueprint/source-of-truth-matrix.md"
+    },
+    {
+      "id": "E-VIEW-DERIVES-PT-1",
+      "from": "VIEW-TODO-APP-PBE-RUN-STRUCTURE",
+      "to": "PT-1",
+      "edgeType": "derives-view",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/generated/generated-read-model.json"
+    },
+    {
+      "id": "E-VIEW-DERIVES-WT-1",
+      "from": "VIEW-TODO-APP-PBE-RUN-STRUCTURE",
+      "to": "WT-1",
+      "edgeType": "derives-view",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/generated/generated-read-model.json"
+    },
+    {
+      "id": "E-VIEW-DERIVES-TT-1",
+      "from": "VIEW-TODO-APP-PBE-RUN-STRUCTURE",
+      "to": "TT-1",
+      "edgeType": "derives-view",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/generated/generated-read-model.json"
+    },
+    {
+      "id": "E-FIND-STRUCTURE-ONLY-REPORTS-ON-VIEW",
+      "from": "FIND-STRUCTURE-ONLY-LIMITATION",
+      "to": "VIEW-TODO-APP-PBE-RUN-STRUCTURE",
+      "edgeType": "reports-on",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "docs/concept/multi-slice-read-model-validation-design.md"
+    },
+    {
+      "id": "E-FIND-NO-RUNTIME-REPORTS-ON-EV",
+      "from": "FIND-NO-RUNTIME-FIXTURE",
+      "to": "EV-1",
+      "edgeType": "reports-on",
+      "confidence": "inferred",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt"
+    }
+  ],
+  "coreViewCoverage": [
+    {
+      "viewId": "intent-view",
+      "name": "Intent View",
+      "coverageStatus": "present",
+      "includedNodeIds": ["PT-ROOT", "PT-1", "AC-PT-1-1", "ACCEPT-PT-1"],
+      "includedEdgeIds": ["E-PT-ROOT-TARGETS-PT-1", "E-PT-1-REQUIRES-AC-PT-1-1", "E-ACCEPT-PT-1-APPROVES-PT-1"],
+      "viewScopedTags": ["target", "required", "output"],
+      "boundaryNotes": "Shows the accepted add-todo product meaning and user-controlled acceptance."
+    },
+    {
+      "viewId": "behavior-view",
+      "name": "Behavior View",
+      "coverageStatus": "present",
+      "includedNodeIds": ["PT-1", "AC-PT-1-1", "WT-1", "TT-1"],
+      "includedEdgeIds": ["E-WT-1-SATISFIES-PT-1", "E-WT-1-SATISFIES-AC-PT-1-1", "E-TT-1-VERIFIES-AC-PT-1-1"],
+      "viewScopedTags": ["target", "required"],
+      "boundaryNotes": "Shows add-todo behavior through requirement, work, and acceptance-check structure."
+    },
+    {
+      "viewId": "structure-view",
+      "name": "Structure View",
+      "coverageStatus": "present",
+      "includedNodeIds": ["PJ-ROOT", "PJ-1", "WG-TODO-1", "WG-NODE-WT-1", "DOC-SOURCE-OF-TRUTH-MATRIX"],
+      "includedEdgeIds": ["E-WT-1-TOUCHES-PJ-1", "E-WORKGRAPH-DERIVES-WT-1", "E-SOT-PRESERVES-SOURCE-BOUNDARY"],
+      "viewScopedTags": ["context"],
+      "boundaryNotes": "Shows canonical .pbe project/workgraph/source-of-truth structure."
+    },
+    {
+      "viewId": "scope-execution-view",
+      "name": "Scope / Execution View",
+      "coverageStatus": "present",
+      "includedNodeIds": ["WT-ROOT", "WT-1", "CY-1", "CY-1-CONTRACT", "WG-TODO-1"],
+      "includedEdgeIds": ["E-CY-1-REQUIRES-WT-1", "E-CY-1-REQUIRES-TT-1", "E-CYCLE-CONTRACT-REPORTS-ON-CY-1"],
+      "viewScopedTags": ["target", "required", "guard"],
+      "boundaryNotes": "Shows selected Work/Test/Evidence scope without creating a source-authority pilot marker."
+    },
+    {
+      "viewId": "impact-view",
+      "name": "Impact View",
+      "coverageStatus": "present",
+      "includedNodeIds": ["CH-001", "IM-001", "WT-1", "TT-1", "EV-1"],
+      "includedEdgeIds": ["E-CH-001-TOUCHES-WT-1", "E-IM-001-REPORTS-ON-CH-001", "E-IM-001-REPORTS-ON-WT-1"],
+      "viewScopedTags": ["context"],
+      "boundaryNotes": "Shows analyzed non-blocking change/impact skeleton from the fixture."
+    },
+    {
+      "viewId": "verification-view",
+      "name": "Verification View",
+      "coverageStatus": "present",
+      "includedNodeIds": ["TT-ROOT", "TT-1", "EV-1", "LOG-TODO-ADD-EVIDENCE", "FIND-NO-RUNTIME-FIXTURE"],
+      "includedEdgeIds": [
+        "E-TT-1-VERIFIES-PT-1",
+        "E-TT-1-VERIFIES-WT-1",
+        "E-EV-1-EVIDENCES-TT-1",
+        "E-LOG-EVIDENCES-EV-1"
+      ],
+      "viewScopedTags": ["required", "output", "context"],
+      "boundaryNotes": "Shows Check/Evidence mapping and the structure-only no-runtime-fixture limitation."
+    },
+    {
+      "viewId": "evidence-acceptance-view",
+      "name": "Evidence / Acceptance View",
+      "coverageStatus": "present",
+      "includedNodeIds": ["EV-1", "LOG-TODO-ADD-EVIDENCE", "ACCEPT-PT-1", "FIND-STRUCTURE-ONLY-LIMITATION"],
+      "includedEdgeIds": [
+        "E-EV-1-EVIDENCES-AC-PT-1-1",
+        "E-ACCEPT-PT-1-APPROVES-EV-1",
+        "E-FIND-STRUCTURE-ONLY-REPORTS-ON-VIEW"
+      ],
+      "viewScopedTags": ["output", "context"],
+      "boundaryNotes": "Shows attached evidence, accepted branch, and non-promotion structure-only boundary."
+    }
+  ],
+  "checkEvidenceMapping": [
+    {
+      "checkNodeId": "TT-1",
+      "checkTitle": "Add todo acceptance check",
+      "evidenceNodeIds": [],
+      "evidenceStatuses": [],
+      "checkEvidenceSeparation": "Check node records the verification obligation; Evidence nodes record observable proof."
+    }
+  ],
+  "retainedWarnings": [
+    {
+      "id": "RW-STRUCTURE-ONLY",
+      "findingNodeId": "FIND-STRUCTURE-ONLY-LIMITATION",
+      "status": "structure-only-limitation",
+      "summary": "This profile validates canonical .pbe structure only; no manual parity artifact, pilot marker, CI-backed Evidence, or source-authority pilot is required or claimed."
+    },
+    {
+      "id": "RW-NO-RUNTIME-FIXTURE",
+      "findingNodeId": "FIND-NO-RUNTIME-FIXTURE",
+      "status": "accepted-structure-only-limitation",
+      "summary": "The fixture contains attached test-output Evidence but no runnable app/runtime fixture is required for structure-only validation."
+    }
+  ],
+  "compatibilityWarnings": [],
+  "sourceAuthorityBoundary": "Canonical .pbe tree/control/execution/evidence artifacts remain current operational source for this structure-only fixture.",
+  "nonPromotionStatement": "Generated structure-only output is reviewable Evidence only. It does not change source authority, create a pilot marker, require parity, introduce CI enforcement, retire .pbe artifacts, or approve promotion."
+}

@@ -247,9 +247,10 @@ choose one of:
 6. `Defer or reject broader execution/enforcement path`
 
 Recommended next step: keep the workflow manual/non-enforcing and observe, or proceed through the multi-slice path by
-first extracting the Todo Search profile/config without behavior change. That extraction is now complete for Todo Search
-only; second-slice validation, aggregation, PR triggers, enforcement, cleanup, broader promotion review, and rollback/defer
-remain separate decisions.
+strengthening per-slice report independence before aggregation. The Todo Search profile extraction is complete, and
+`examples/valid/todo-app-pbe-run` is now implemented as a second `structure-only` profile with local generated and
+validation Evidence. It is not parity-backed, pilot-marker-backed, CI-backed, or source-authority bearing. Aggregation,
+PR triggers, enforcement, cleanup, broader promotion review, and rollback/defer remain separate decisions.
 
 ## Gate Self-Check
 

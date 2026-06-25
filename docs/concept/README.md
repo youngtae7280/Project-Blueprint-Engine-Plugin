@@ -314,6 +314,20 @@ now exposes an explicit Todo Search `SliceReadModelConfig` profile. Generated ou
 semantics remain bounded to `examples/adoption/todo-search-slice`; no second slice, aggregate validation, CI enforcement,
 source authority expansion, or full promotion is implemented.
 
+The second profile/fixture is now implemented at structure-only level:
+
+- slice: `examples/valid/todo-app-pbe-run`
+- profile: `todo-app-pbe-run-structure-only`
+- command: `pbe graph read-model generate --slice examples/valid/todo-app-pbe-run`
+- command: `pbe graph read-model validate --slice examples/valid/todo-app-pbe-run`
+- generated output: 22 nodes / 38 edges
+- validation status: `validation-pass` with 16 checks
+
+This second fixture reads the canonical `.pbe` layout and creates reviewable structure-only Evidence. It is not
+parity-backed, pilot-marker-backed, CI-backed, source-authority bearing, or a scoped pilot. Todo Search remains the only
+active scoped source-authority pilot and the only reviewed CI-backed slice. Multi-slice aggregation, `validate --all`,
+CI enforcement, public-doc cleanup, and full Graph-source promotion remain unimplemented.
+
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.

@@ -373,6 +373,13 @@ authority, evidence, acceptance, scope, or user trust.
 [pbe-runtime-architecture.md](pbe-runtime-architecture.md) defines current runtime authority as tree-native artifacts
 plus contracts, evidence, acceptance, skills, and CLI gates. This policy preserves that current authority.
 
+### Multi-Slice Follow-Up Status
+
+The Todo Search scoped pilot keeps fallback/reference artifacts retained. The new
+`examples/valid/todo-app-pbe-run` profile is structure-only Evidence over a canonical `.pbe` fixture; it is not a
+rollback/fallback retirement event, does not create a second scoped authority pilot, and does not remove compatibility
+or fallback obligations.
+
 ## Scope Boundaries
 
 This policy does not implement:
@@ -381,7 +388,7 @@ This policy does not implement:
 - migration commands
 - source-model conversion
 - schemas or TypeScript models
-- validators
+- broader validators or aggregate validation
 - runtime behavior
 - generated compatibility artifacts
 - generated rollback reports

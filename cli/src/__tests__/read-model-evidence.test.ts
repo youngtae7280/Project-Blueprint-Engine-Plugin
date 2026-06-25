@@ -6,6 +6,7 @@ import {
   compareReadModelEvidence,
   generateReadModelEvidence,
   getSliceReadModelProfile,
+  todoAppPbeRunStructureOnlyProfile,
   todoSearchReadModelProfile,
   validateReadModelEvidence,
 } from '../core/read-model-evidence'
@@ -31,6 +32,16 @@ describe('read-model Evidence builder', () => {
     expect(profile.expectedCounts).toEqual({ nodes: 40, edges: 59, validationChecks: 20 })
     expect(profile.artifacts.nodeExecutionContract).toBe('node-execution-contracts/wt-search-001.md')
     expect(profile.artifacts.compatibilitySlice).toBe('examples/adoption/compatibility-mismatch-slice')
+  })
+
+  it('uses the Todo App PBE run structure-only profile for the canonical fixture slice', () => {
+    const profile = getSliceReadModelProfile('examples/valid/todo-app-pbe-run')
+
+    expect(profile).toBe(todoAppPbeRunStructureOnlyProfile)
+    expect(profile.profileId).toBe('todo-app-pbe-run-structure-only')
+    expect(profile.policyLevel).toBe('structure-only')
+    expect(profile.sourceLayout).toBe('canonical-pbe')
+    expect(profile.expectedCounts).toEqual({ nodes: 22, edges: 38, validationChecks: 16 })
   })
 
   afterEach(async () => {
@@ -118,6 +129,48 @@ describe('read-model Evidence builder', () => {
     expect(report.summary.decisionRequiredCount).toBe(0)
     expect(report.sourceAuthorityBoundary).toContain('does not change source authority')
     expect(report.nonPromotionStatement).toContain('Validation pass is Evidence only')
+  })
+
+  it('generates and validates Todo App PBE run as structure-only without parity or pilot marker', async () => {
+    const workspace = await createExampleWorkspace()
+
+    const generated = await generateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    const generatedJson = JSON.parse(await readFile(generated.generatedJsonPath, 'utf8')) as {
+      nodes: unknown[]
+      edges: unknown[]
+      metadata: { slicePolicyLevel?: string; sliceProfile?: string }
+      coreViewCoverage: Array<{ name: string; viewScopedTags?: string[] }>
+      sourceAuthorityBoundary: string
+      nonPromotionStatement: string
+    }
+
+    expect(generatedJson.metadata.sliceProfile).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
+    expect(generatedJson.metadata.slicePolicyLevel).toBe('structure-only')
+    expect(generatedJson.nodes).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes)
+    expect(generatedJson.edges).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.edges)
+    expect(generatedJson.coreViewCoverage.map((entry) => entry.name)).toEqual(coreViews)
+    expect(generatedJson.sourceAuthorityBoundary).toContain('Canonical .pbe')
+    expect(generatedJson.nonPromotionStatement).toContain('does not change source authority')
+    const tags = generatedJson.coreViewCoverage.flatMap((entry) => entry.viewScopedTags || [])
+    expect(tags.every((tag) => allowedTags.has(tag))).toBe(true)
+
+    const result = await validateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
+      status: string
+      summary: { checkCount: number; warningCount: number; blockingCount: number; decisionRequiredCount: number }
+      metadata: { parityReport?: string; pilotMarker?: string; sliceProfile?: string }
+      sourceAuthorityBoundary: string
+    }
+
+    expect(report.status).toBe('validation-pass')
+    expect(report.summary.checkCount).toBe(todoAppPbeRunStructureOnlyProfile.expectedCounts.validationChecks)
+    expect(report.summary.warningCount).toBe(0)
+    expect(report.summary.blockingCount).toBe(0)
+    expect(report.summary.decisionRequiredCount).toBe(0)
+    expect(report.metadata.sliceProfile).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
+    expect(report.metadata.parityReport).toBe('not-required-for-structure-only')
+    expect(report.metadata.pilotMarker).toBe('not-required-for-structure-only')
+    expect(report.sourceAuthorityBoundary).toContain('structure-only')
   })
 
   it('blocks validation when viewScopedTags or Core View coverage are invalid', async () => {

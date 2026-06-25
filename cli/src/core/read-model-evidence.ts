@@ -183,8 +183,8 @@ export interface SliceReadModelConfig {
   profileId: string
   displayName: string
   supportedSlice: string
-  policyLevel: 'pilot-marker-backed'
-  sourceLayout: 'flat-demo-support'
+  policyLevel: 'pilot-marker-backed' | 'structure-only'
+  sourceLayout: 'flat-demo-support' | 'canonical-pbe'
   expectedCounts: {
     nodes: number
     edges: number
@@ -209,27 +209,34 @@ export interface SliceReadModelConfig {
     acceptanceTree: string
     changeTree: string
     impactTree: string
-    productPatchTree: string
+    productPatchTree?: string
     cycleContract: string
-    nodeExecutionContract: string
-    runtimeEvidence: string
-    approvalBrief: string
-    evidenceExceptions: string
-    runtimeHelper: string
-    runtimeTest: string
-    viewManifest: string
+    cycleTree?: string
+    nodeExecutionContract?: string
+    runtimeEvidence?: string
+    approvalBrief?: string
+    evidenceExceptions?: string
+    runtimeHelper?: string
+    runtimeTest?: string
+    viewManifest?: string
     generatedReadModel: string
-    generatedParityReport: string
-    scopedPilotMarker: string
-    limitedPilotTransitionRecord: string
-    limitedPilotPackage: string
-    scopedPilotExecutionRecord: string
-    scopedPilotReview: string
-    scopedPilotActiveObservation: string
-    generatedEvidenceRequirement: string
-    compatibilitySlice: string
-    compatibilityControlNode: string
-    compatibilityEvidenceExceptions: string
+    generatedParityReport?: string
+    validationReport?: string
+    evidenceManifest?: string
+    scopedPilotMarker?: string
+    limitedPilotTransitionRecord?: string
+    limitedPilotPackage?: string
+    scopedPilotExecutionRecord?: string
+    scopedPilotReview?: string
+    scopedPilotActiveObservation?: string
+    generatedEvidenceRequirement?: string
+    compatibilitySlice?: string
+    compatibilityControlNode?: string
+    compatibilityEvidenceExceptions?: string
+    workGraph?: string
+    sourceOfTruthMatrix?: string
+    evidenceOutput?: string
+    pbeState?: string
   }
   sourceArtifactRelativePaths: string[]
   retainedWarnings: Array<Record<string, unknown>>
@@ -346,13 +353,94 @@ export const todoSearchReadModelProfile: SliceReadModelConfig = {
   ],
 }
 
+export const todoAppPbeRunStructureOnlyProfile: SliceReadModelConfig = {
+  profileId: 'todo-app-pbe-run-structure-only',
+  displayName: 'Todo App PBE Golden Run',
+  supportedSlice: 'examples/valid/todo-app-pbe-run',
+  policyLevel: 'structure-only',
+  sourceLayout: 'canonical-pbe',
+  expectedCounts: {
+    nodes: 22,
+    edges: 38,
+    validationChecks: 16,
+  },
+  ids: {
+    product: 'PT-1',
+    work: 'WT-1',
+    testRoot: 'TT-ROOT',
+    evidenceRoot: 'EV-ROOT',
+    acceptanceRoot: 'ACCEPT-PT-1',
+    cycleContract: 'CY-1',
+    nodeExecutionContract: 'CY-1-CONTRACT',
+    viewInstance: 'VIEW-TODO-APP-PBE-RUN-STRUCTURE',
+  },
+  artifacts: {
+    productTree: '.pbe/tree/product-tree.json',
+    projectTree: '.pbe/tree/project-tree.json',
+    workTree: '.pbe/tree/work-tree.json',
+    testTree: '.pbe/tree/test-tree.json',
+    evidenceTree: '.pbe/evidence/evidence-tree.json',
+    acceptanceTree: '.pbe/control/acceptance-tree.json',
+    changeTree: '.pbe/control/change-tree.json',
+    impactTree: '.pbe/control/impact-tree.json',
+    cycleContract: '.pbe/execution/cycle-contract.md',
+    cycleTree: '.pbe/execution/cycle-tree.json',
+    generatedReadModel: 'generated/generated-read-model.json',
+    validationReport: 'generated/read-model-validation-report.json',
+    evidenceManifest: 'generated/read-model-evidence-manifest.json',
+    workGraph: '.pbe/blueprint/work-graph.json',
+    sourceOfTruthMatrix: '.pbe/blueprint/source-of-truth-matrix.md',
+    evidenceOutput: '.pbe/evidence/test-results/todo-add.txt',
+    pbeState: '.pbe/blueprint/pbe-state.json',
+  },
+  sourceArtifactRelativePaths: [
+    '.pbe/tree/product-tree.json',
+    '.pbe/tree/project-tree.json',
+    '.pbe/tree/work-tree.json',
+    '.pbe/tree/test-tree.json',
+    '.pbe/evidence/evidence-tree.json',
+    '.pbe/control/acceptance-tree.json',
+    '.pbe/control/change-tree.json',
+    '.pbe/control/impact-tree.json',
+    '.pbe/execution/cycle-tree.json',
+    '.pbe/execution/cycle-contract.md',
+    '.pbe/blueprint/work-graph.json',
+    '.pbe/blueprint/source-of-truth-matrix.md',
+    '.pbe/evidence/test-results/todo-add.txt',
+    '.pbe/blueprint/pbe-state.json',
+  ],
+  retainedWarnings: [
+    {
+      id: 'RW-STRUCTURE-ONLY',
+      findingNodeId: 'FIND-STRUCTURE-ONLY-LIMITATION',
+      status: 'structure-only-limitation',
+      summary:
+        'This profile validates canonical .pbe structure only; no manual parity artifact, pilot marker, CI-backed Evidence, or source-authority pilot is required or claimed.',
+    },
+    {
+      id: 'RW-NO-RUNTIME-FIXTURE',
+      findingNodeId: 'FIND-NO-RUNTIME-FIXTURE',
+      status: 'accepted-structure-only-limitation',
+      summary:
+        'The fixture contains attached test-output Evidence but no runnable app/runtime fixture is required for structure-only validation.',
+    },
+  ],
+  compatibilityWarnings: [],
+}
+
 export function getSliceReadModelProfile(slice: string): SliceReadModelConfig {
   const normalized = normalizePath(slice)
   if (normalized === todoSearchReadModelProfile.supportedSlice) {
     return todoSearchReadModelProfile
   }
+  if (normalized === todoAppPbeRunStructureOnlyProfile.supportedSlice) {
+    return todoAppPbeRunStructureOnlyProfile
+  }
   throw new Error(
-    `No read-model profile is configured for slice "${slice}". Currently supported profile: ${todoSearchReadModelProfile.supportedSlice}`,
+    `No read-model profile is configured for slice "${slice}". Currently supported profiles: ${[
+      todoSearchReadModelProfile.supportedSlice,
+      todoAppPbeRunStructureOnlyProfile.supportedSlice,
+    ].join(', ')}`,
   )
 }
 
@@ -366,7 +454,7 @@ export async function generateReadModelEvidence(root: string, slice: string): Pr
   const generatedAt = new Date().toISOString()
   const sourceCommit = resolveSourceCommit(root)
   const nodes = buildNodes(data, profile)
-  const edges = buildEdges(profile)
+  const edges = buildEdges(data, profile)
   const coreViewCoverage = buildCoreViewCoverage(profile)
   const model: GeneratedReadModel = {
     version: '0.1.0-generated-read-model-evidence',
@@ -382,9 +470,8 @@ export async function generateReadModelEvidence(root: string, slice: string): Pr
       sourceLayout: profile.sourceLayout,
       inputArtifactList: sourceInputs.map((entry) => entry.relativePath),
       generatedStatus: 'generated-present',
-      sourceAuthority: 'Tree-native selected-slice artifacts remain current operational source.',
-      nonPromotionStatement:
-        'This generated read-model is Evidence only. It does not promote Maintainability Graph, change source authority, retire tree-native artifacts, approve scoped source-authority execution, or clean up public docs.',
+      sourceAuthority: sourceAuthorityBoundaryForProfile(profile),
+      nonPromotionStatement: nonPromotionStatementForProfile(profile),
       taxonomyBasis: 'docs/concept/graph-node-edge-tag-policy.md',
       coreViewBasis: 'docs/concept/view-tree-pack.md 7 Core Views',
       viewMembershipBoundary:
@@ -404,9 +491,8 @@ export async function generateReadModelEvidence(root: string, slice: string): Pr
     checkEvidenceMapping: buildCheckEvidenceMapping(data, profile),
     retainedWarnings: buildRetainedWarnings(profile),
     compatibilityWarnings: buildCompatibilityWarnings(profile),
-    sourceAuthorityBoundary: 'Tree-native selected-slice artifacts remain current operational source.',
-    nonPromotionStatement:
-      'Generated output is reviewable Evidence only and cannot change source authority without later explicit user approval.',
+    sourceAuthorityBoundary: sourceAuthorityBoundaryForProfile(profile),
+    nonPromotionStatement: nonPromotionStatementForProfile(profile),
   }
   assertAllowedTags(model)
   const generatedJsonPath = path.join(outputDir, 'generated-read-model.json')
@@ -442,13 +528,23 @@ export async function validateReadModelEvidence(root: string, slice: string): Pr
   const sliceDir = path.resolve(root, slice)
   const outputDir = path.join(sliceDir, 'generated')
   const generatedPath = path.join(outputDir, 'generated-read-model.json')
-  const parityPath = path.join(outputDir, 'read-model-parity-report.json')
   const manifestPath = path.join(outputDir, 'read-model-evidence-manifest.json')
-  const markerPath = path.join(outputDir, 'scoped-source-authority-pilot-marker.json')
   const generated = await readRequiredJson<GeneratedReadModel>(generatedPath, 'generated read-model')
-  const parity = await readRequiredJson<ParityReport>(parityPath, 'read-model parity report')
   const manifest = await readRequiredJson<Record<string, unknown>>(manifestPath, 'read-model evidence manifest')
-  const marker = await readRequiredJson<Record<string, unknown>>(markerPath, 'scoped source-authority pilot marker')
+  const parity =
+    profile.policyLevel === 'pilot-marker-backed'
+      ? await readRequiredJson<ParityReport>(
+          path.join(outputDir, 'read-model-parity-report.json'),
+          'read-model parity report',
+        )
+      : undefined
+  const marker =
+    profile.policyLevel === 'pilot-marker-backed'
+      ? await readRequiredJson<Record<string, unknown>>(
+          path.join(outputDir, 'scoped-source-authority-pilot-marker.json'),
+          'scoped source-authority pilot marker',
+        )
+      : undefined
   const report = buildValidationReport(root, slice, profile, generated, parity, manifest, marker)
   const reportJsonPath = path.join(outputDir, 'read-model-validation-report.json')
   const reportMarkdownPath = path.join(outputDir, 'read-model-validation-report.md')
@@ -486,25 +582,52 @@ async function loadSliceData(sliceDir: string, profile: SliceReadModelConfig): P
       artifactPath(profile.artifacts.impactTree),
       'impact tree',
     ),
-    productPatchTree: await readRequiredJson<Record<string, unknown>>(
-      artifactPath(profile.artifacts.productPatchTree),
-      'product patch tree',
+    productPatchTree: await readOptionalJson<Record<string, unknown>>(
+      profile.artifacts.productPatchTree ? artifactPath(profile.artifacts.productPatchTree) : undefined,
+      { patches: [] },
     ),
     cycleContract: await readRequiredText(artifactPath(profile.artifacts.cycleContract), 'cycle contract'),
-    nodeExecutionContract: await readRequiredText(
-      artifactPath(profile.artifacts.nodeExecutionContract),
-      'node execution contract',
+    cycleTree: await readOptionalJson<Record<string, unknown>>(
+      profile.artifacts.cycleTree ? artifactPath(profile.artifacts.cycleTree) : undefined,
+      { cycles: [] },
     ),
-    runtimeEvidence: await readRequiredText(artifactPath(profile.artifacts.runtimeEvidence), 'runtime evidence'),
-    approvalBrief: await readRequiredText(artifactPath(profile.artifacts.approvalBrief), 'approval brief'),
-    evidenceExceptions: await readRequiredText(
-      artifactPath(profile.artifacts.evidenceExceptions),
-      'evidence exceptions',
+    nodeExecutionContract: await readOptionalText(
+      profile.artifacts.nodeExecutionContract ? artifactPath(profile.artifacts.nodeExecutionContract) : undefined,
+    ),
+    runtimeEvidence: await readOptionalText(
+      profile.artifacts.runtimeEvidence ? artifactPath(profile.artifacts.runtimeEvidence) : undefined,
+    ),
+    approvalBrief: await readOptionalText(
+      profile.artifacts.approvalBrief ? artifactPath(profile.artifacts.approvalBrief) : undefined,
+    ),
+    evidenceExceptions: await readOptionalText(
+      profile.artifacts.evidenceExceptions ? artifactPath(profile.artifacts.evidenceExceptions) : undefined,
+    ),
+    workGraph: await readOptionalJson<Record<string, unknown>>(
+      profile.artifacts.workGraph ? artifactPath(profile.artifacts.workGraph) : undefined,
+      { nodes: [], edges: [] },
+    ),
+    sourceOfTruthMatrix: await readOptionalText(
+      profile.artifacts.sourceOfTruthMatrix ? artifactPath(profile.artifacts.sourceOfTruthMatrix) : undefined,
+    ),
+    evidenceOutput: await readOptionalText(
+      profile.artifacts.evidenceOutput ? artifactPath(profile.artifacts.evidenceOutput) : undefined,
+    ),
+    pbeState: await readOptionalJson<Record<string, unknown>>(
+      profile.artifacts.pbeState ? artifactPath(profile.artifacts.pbeState) : undefined,
+      {},
     ),
   }
 }
 
 function buildNodes(data: Record<string, unknown>, profile: SliceReadModelConfig): GraphNode[] {
+  if (profile.sourceLayout === 'canonical-pbe') {
+    return buildCanonicalPbeStructureNodes(data, profile)
+  }
+  return buildTodoSearchNodes(data, profile)
+}
+
+function buildTodoSearchNodes(data: Record<string, unknown>, profile: SliceReadModelConfig): GraphNode[] {
   const productNodes = getArray<TreeNode>(data.productTree, 'nodes')
   const projectNodes = getArray<TreeNode>(data.projectTree, 'nodes')
   const workNodes = getArray<TreeNode>(data.workTree, 'nodes')
@@ -520,7 +643,7 @@ function buildNodes(data: Record<string, unknown>, profile: SliceReadModelConfig
     node(
       'TASK-TODO-SEARCH-PILOT',
       'task',
-      profile.artifacts.limitedPilotTransitionRecord,
+      sliceArtifact(profile, 'limitedPilotTransitionRecord'),
       'Todo Search generated read-model Evidence task',
       'generated_evidence_prepared',
       'inferred',
@@ -781,7 +904,7 @@ function buildNodes(data: Record<string, unknown>, profile: SliceReadModelConfig
     node(
       'CCN-ACEP-TASK-CARD-AUTHORITY-001',
       'finding',
-      profile.artifacts.compatibilityControlNode,
+      sliceArtifact(profile, 'compatibilityControlNode'),
       'ACEP task-card compatibility cleanup deferred',
       'deferred_warning',
       'inferred',
@@ -814,7 +937,7 @@ function buildNodes(data: Record<string, unknown>, profile: SliceReadModelConfig
     node(
       'FIND-GENERATED-BUILDER-MISSING',
       'finding',
-      profile.artifacts.generatedEvidenceRequirement,
+      sliceArtifact(profile, 'generatedEvidenceRequirement'),
       'Generated builder was missing before this command',
       'resolved_by_generated_output_for_bounded_slice',
       'tool-confirmed',
@@ -825,7 +948,7 @@ function buildNodes(data: Record<string, unknown>, profile: SliceReadModelConfig
     node(
       'FIND-ACEP-CLEANUP-DEFERRED',
       'finding',
-      profile.artifacts.compatibilityEvidenceExceptions,
+      sliceArtifact(profile, 'compatibilityEvidenceExceptions'),
       'ACEP public-doc cleanup deferred',
       'deferred_warning',
       'inferred',
@@ -858,7 +981,7 @@ function buildNodes(data: Record<string, unknown>, profile: SliceReadModelConfig
     node(
       'DOC-LIMITED-PILOT-PACKAGE',
       'document',
-      profile.artifacts.limitedPilotPackage,
+      sliceArtifact(profile, 'limitedPilotPackage'),
       'Limited Pilot Promotion Decision Package',
       'approved_option_recorded',
       'user-confirmed',
@@ -869,7 +992,7 @@ function buildNodes(data: Record<string, unknown>, profile: SliceReadModelConfig
     node(
       'DEC-SCOPED-PILOT-EXECUTION',
       'decision',
-      profile.artifacts.scopedPilotExecutionRecord,
+      sliceArtifact(profile, 'scopedPilotExecutionRecord'),
       'Actual scoped source-authority pilot execution approved for Todo Search',
       'scoped_pilot_executed_with_fallback_ready',
       'user-confirmed',
@@ -880,7 +1003,7 @@ function buildNodes(data: Record<string, unknown>, profile: SliceReadModelConfig
     node(
       'DOC-LIMITED-PILOT-TRANSITION-RECORD',
       'document',
-      profile.artifacts.limitedPilotTransitionRecord,
+      sliceArtifact(profile, 'limitedPilotTransitionRecord'),
       'Limited Pilot Transition Record',
       'recorded_non_executing',
       'user-confirmed',
@@ -911,14 +1034,661 @@ function buildNodes(data: Record<string, unknown>, profile: SliceReadModelConfig
   return nodes
 }
 
-function buildEdges(profile: SliceReadModelConfig): GraphEdge[] {
+function buildCanonicalPbeStructureNodes(data: Record<string, unknown>, profile: SliceReadModelConfig): GraphNode[] {
+  const productNodes = getArray<TreeNode>(data.productTree, 'nodes')
+  const projectNodes = getArray<TreeNode>(data.projectTree, 'nodes')
+  const workNodes = getArray<TreeNode>(data.workTree, 'nodes')
+  const testNodes = getArray<TreeNode>(data.testTree, 'nodes')
+  const evidenceRecords = getArray<TreeNode>(data.evidenceTree, 'evidence')
+  const acceptanceBranches = getArray<TreeNode>(data.acceptanceTree, 'branches')
+  const changes = getArray<TreeNode>(data.changeTree, 'changes')
+  const impacts = getArray<TreeNode>(data.impactTree, 'impacts')
+  const cycles = getArray<TreeNode>(data.cycleTree, 'cycles')
+  const workGraphNodes = getArray<TreeNode>(data.workGraph, 'nodes')
+  const criteria = productNodes.flatMap((entry) => entry.acceptanceCriteria || [])
+  return [
+    ...productNodes.map((entry) =>
+      node(
+        entry.id,
+        'requirement',
+        sliceArtifact(profile, 'productTree'),
+        entry.title || entry.id,
+        entry.status || 'confirmed',
+        confidenceForStatus(entry.status),
+        statusFreshness(entry.status),
+        entry.id === profile.ids.product ? ['target', 'required'] : ['context'],
+        ['intent-view', 'behavior-view'],
+      ),
+    ),
+    ...criteria.map((criterion) =>
+      node(
+        criterion.id,
+        'requirement',
+        sliceArtifact(profile, 'productTree'),
+        criterion.statement || criterion.id,
+        criterion.status || 'confirmed',
+        'user-confirmed',
+        requirementFreshness(criterion.status),
+        ['required'],
+        ['intent-view', 'verification-view'],
+      ),
+    ),
+    ...projectNodes.map((entry) =>
+      node(
+        entry.id,
+        'code',
+        sliceArtifact(profile, 'projectTree'),
+        entry.title || entry.id,
+        entry.status || 'derived',
+        'inferred',
+        statusFreshness(entry.status),
+        ['context'],
+        ['structure-view'],
+      ),
+    ),
+    ...workNodes.map((entry) =>
+      node(
+        entry.id,
+        'task',
+        sliceArtifact(profile, 'workTree'),
+        entry.title || entry.id,
+        entry.status || 'implemented',
+        'inferred',
+        statusFreshness(entry.status),
+        entry.id === profile.ids.work ? ['target', 'required'] : ['context'],
+        ['scope-execution-view', 'impact-view'],
+      ),
+    ),
+    ...testNodes.map((entry) =>
+      node(
+        entry.id,
+        'check',
+        sliceArtifact(profile, 'testTree'),
+        entry.title || entry.id,
+        entry.status || 'passed',
+        confidenceForStatus(entry.status),
+        checkFreshness(entry.status),
+        ['required'],
+        ['verification-view'],
+      ),
+    ),
+    ...evidenceRecords.map((entry) =>
+      node(
+        entry.id,
+        'evidence',
+        sliceArtifact(profile, 'evidenceTree'),
+        String(entry.title || entry.path || entry.id),
+        entry.status || 'attached',
+        confidenceForStatus(entry.status),
+        statusFreshness(entry.status),
+        ['output', 'required'],
+        ['verification-view', 'evidence-acceptance-view'],
+      ),
+    ),
+    ...acceptanceBranches.map((entry) =>
+      node(
+        `ACCEPT-${String(entry.productNodeId || profile.ids.product)}`,
+        'decision',
+        sliceArtifact(profile, 'acceptanceTree'),
+        textField(entry, 'coverageSummary', `Acceptance for ${String(entry.productNodeId || profile.ids.product)}`),
+        entry.status || 'accepted_done',
+        'user-confirmed',
+        statusFreshness(entry.status),
+        ['output'],
+        ['intent-view', 'evidence-acceptance-view'],
+      ),
+    ),
+    ...changes.map((entry) =>
+      node(
+        entry.id,
+        'change',
+        sliceArtifact(profile, 'changeTree'),
+        textField(entry, 'summary', entry.title || entry.id),
+        entry.status || 'impact_analyzed',
+        'inferred',
+        statusFreshness(entry.status),
+        ['context'],
+        ['impact-view'],
+      ),
+    ),
+    ...impacts.map((entry) =>
+      node(
+        entry.id,
+        'finding',
+        sliceArtifact(profile, 'impactTree'),
+        textField(entry, 'reason', entry.title || entry.id),
+        entry.status || 'analyzed',
+        'inferred',
+        statusFreshness(entry.status),
+        ['context'],
+        ['impact-view'],
+      ),
+    ),
+    ...cycles.map((entry) =>
+      node(
+        entry.id,
+        'task',
+        sliceArtifact(profile, 'cycleTree'),
+        String(entry.goal || entry.title || entry.id),
+        entry.status || 'accepted',
+        'inferred',
+        statusFreshness(entry.status),
+        ['required'],
+        ['scope-execution-view'],
+      ),
+    ),
+    node(
+      profile.ids.nodeExecutionContract,
+      'document',
+      sliceArtifact(profile, 'cycleContract'),
+      'Cycle Contract for add-todo golden run',
+      'present',
+      'inferred',
+      'fresh',
+      ['required', 'guard'],
+      ['scope-execution-view'],
+    ),
+    node(
+      'WG-TODO-1',
+      'document',
+      sliceArtifact(profile, 'workGraph'),
+      'Todo App WorkGraph compatibility view',
+      'present',
+      'inferred',
+      'fresh',
+      ['context'],
+      ['structure-view', 'scope-execution-view'],
+    ),
+    ...workGraphNodes.map((entry) =>
+      node(
+        `WG-NODE-${entry.id}`,
+        'task',
+        sliceArtifact(profile, 'workGraph'),
+        entry.title || entry.id,
+        String(entry.scopeClass || 'selected'),
+        'inferred',
+        'fresh',
+        ['context'],
+        ['structure-view', 'scope-execution-view'],
+      ),
+    ),
+    node(
+      'DOC-SOURCE-OF-TRUTH-MATRIX',
+      'document',
+      sliceArtifact(profile, 'sourceOfTruthMatrix'),
+      'Todo App source-of-truth matrix',
+      'present',
+      'inferred',
+      'fresh',
+      ['guard'],
+      ['scope-execution-view'],
+    ),
+    node(
+      'LOG-TODO-ADD-EVIDENCE',
+      'log',
+      sliceArtifact(profile, 'evidenceOutput'),
+      'Attached todo-add test output',
+      'present',
+      'tool-confirmed',
+      'fresh',
+      ['output'],
+      ['verification-view', 'evidence-acceptance-view'],
+    ),
+    node(
+      profile.ids.viewInstance,
+      'view-instance',
+      sliceArtifact(profile, 'generatedReadModel'),
+      'Todo App structure-only 7 Core View projection',
+      'generated_present',
+      'inferred',
+      'fresh',
+      ['output'],
+      [
+        'intent-view',
+        'behavior-view',
+        'structure-view',
+        'scope-execution-view',
+        'impact-view',
+        'verification-view',
+        'evidence-acceptance-view',
+      ],
+    ),
+    node(
+      'FIND-STRUCTURE-ONLY-LIMITATION',
+      'finding',
+      'docs/concept/multi-slice-read-model-validation-design.md',
+      'Structure-only profile is not parity-backed, pilot-marker-backed, or CI-backed',
+      'retained_limitation',
+      'inferred',
+      'fresh',
+      ['context'],
+      ['evidence-acceptance-view'],
+    ),
+    node(
+      'FIND-NO-RUNTIME-FIXTURE',
+      'finding',
+      sliceArtifact(profile, 'evidenceOutput'),
+      'Attached evidence exists, but no runnable runtime fixture is required for structure-only validation',
+      'structure_only_limitation',
+      'inferred',
+      'fresh',
+      ['context'],
+      ['verification-view', 'evidence-acceptance-view'],
+    ),
+  ]
+}
+
+function buildEdges(data: Record<string, unknown>, profile: SliceReadModelConfig): GraphEdge[] {
+  if (profile.sourceLayout === 'canonical-pbe') {
+    return buildCanonicalPbeStructureEdges(data, profile)
+  }
+  return buildTodoSearchEdges(profile)
+}
+
+function buildCanonicalPbeStructureEdges(data: Record<string, unknown>, profile: SliceReadModelConfig): GraphEdge[] {
+  const productNodes = getArray<TreeNode>(data.productTree, 'nodes')
+  const workNodes = getArray<TreeNode>(data.workTree, 'nodes')
+  const testNodes = getArray<TreeNode>(data.testTree, 'nodes')
+  const evidenceRecords = getArray<TreeNode>(data.evidenceTree, 'evidence')
+  const acceptanceBranches = getArray<TreeNode>(data.acceptanceTree, 'branches')
+  const changes = getArray<TreeNode>(data.changeTree, 'changes')
+  const impacts = getArray<TreeNode>(data.impactTree, 'impacts')
+  const cycles = getArray<TreeNode>(data.cycleTree, 'cycles')
+  const edges: GraphEdge[] = []
+  for (const productNode of productNodes) {
+    for (const child of stringArray(productNode.children)) {
+      edges.push(
+        edge(
+          `E-${productNode.id}-TARGETS-${child}`,
+          productNode.id,
+          child,
+          'targets',
+          sliceArtifact(profile, 'productTree'),
+          'user-confirmed',
+        ),
+      )
+    }
+    for (const projectId of stringArray(productNode.derivedTo).filter((entry) => entry.startsWith('PJ-'))) {
+      edges.push(
+        edge(
+          `E-${productNode.id}-TARGETS-${projectId}`,
+          productNode.id,
+          projectId,
+          'targets',
+          sliceArtifact(profile, 'productTree'),
+          'inferred',
+        ),
+      )
+    }
+    for (const workId of stringArray(productNode.derivedTo).filter((entry) => entry.startsWith('WT-'))) {
+      edges.push(
+        edge(
+          `E-${productNode.id}-TARGETS-${workId}`,
+          productNode.id,
+          workId,
+          'targets',
+          sliceArtifact(profile, 'productTree'),
+          'inferred',
+        ),
+      )
+    }
+    for (const testId of stringArray(productNode.derivedTo).filter((entry) => entry.startsWith('TT-'))) {
+      edges.push(
+        edge(
+          `E-${productNode.id}-REQUIRES-${testId}`,
+          productNode.id,
+          testId,
+          'requires',
+          sliceArtifact(profile, 'productTree'),
+          'inferred',
+        ),
+      )
+    }
+    for (const criterion of productNode.acceptanceCriteria || []) {
+      edges.push(
+        edge(
+          `E-${productNode.id}-REQUIRES-${criterion.id}`,
+          productNode.id,
+          criterion.id,
+          'requires',
+          sliceArtifact(profile, 'productTree'),
+          'user-confirmed',
+        ),
+      )
+    }
+  }
+  for (const workNode of workNodes) {
+    for (const productId of stringArray(workNode.derivedFromProductNodeIds)) {
+      edges.push(
+        edge(
+          `E-${workNode.id}-SATISFIES-${productId}`,
+          workNode.id,
+          productId,
+          'satisfies',
+          sliceArtifact(profile, 'workTree'),
+          'inferred',
+        ),
+      )
+    }
+    for (const projectId of stringArray(workNode.derivedFromProjectNodeIds)) {
+      edges.push(
+        edge(
+          `E-${workNode.id}-TOUCHES-${projectId}`,
+          workNode.id,
+          projectId,
+          'touches',
+          sliceArtifact(profile, 'workTree'),
+          'inferred',
+        ),
+      )
+    }
+    for (const criterionId of stringArray(workNode.satisfiesAcceptanceCriteriaIds)) {
+      edges.push(
+        edge(
+          `E-${workNode.id}-SATISFIES-${criterionId}`,
+          workNode.id,
+          criterionId,
+          'satisfies',
+          sliceArtifact(profile, 'workTree'),
+          'inferred',
+        ),
+      )
+    }
+  }
+  for (const testNode of testNodes) {
+    for (const productId of stringArray(testNode.verifiesProductNodeIds)) {
+      edges.push(
+        edge(
+          `E-${testNode.id}-VERIFIES-${productId}`,
+          testNode.id,
+          productId,
+          'verifies',
+          sliceArtifact(profile, 'testTree'),
+          'tool-confirmed',
+        ),
+      )
+    }
+    for (const workId of stringArray(testNode.verifiesWorkNodeIds)) {
+      edges.push(
+        edge(
+          `E-${testNode.id}-VERIFIES-${workId}`,
+          testNode.id,
+          workId,
+          'verifies',
+          sliceArtifact(profile, 'testTree'),
+          'tool-confirmed',
+        ),
+      )
+    }
+    for (const criterionId of stringArray(testNode.verifiesAcceptanceCriteriaIds)) {
+      edges.push(
+        edge(
+          `E-${testNode.id}-VERIFIES-${criterionId}`,
+          testNode.id,
+          criterionId,
+          'verifies',
+          sliceArtifact(profile, 'testTree'),
+          'tool-confirmed',
+        ),
+      )
+    }
+  }
+  for (const evidenceRecord of evidenceRecords) {
+    for (const testId of stringArray(evidenceRecord.evidenceForTestNodeIds)) {
+      edges.push(
+        edge(
+          `E-${evidenceRecord.id}-EVIDENCES-${testId}`,
+          evidenceRecord.id,
+          testId,
+          'evidences',
+          sliceArtifact(profile, 'evidenceTree'),
+          'tool-confirmed',
+        ),
+      )
+    }
+    for (const criterionId of stringArray(evidenceRecord.evidenceForAcceptanceCriteriaIds)) {
+      edges.push(
+        edge(
+          `E-${evidenceRecord.id}-EVIDENCES-${criterionId}`,
+          evidenceRecord.id,
+          criterionId,
+          'evidences',
+          sliceArtifact(profile, 'evidenceTree'),
+          'tool-confirmed',
+        ),
+      )
+    }
+    edges.push(
+      edge(
+        `E-LOG-EVIDENCES-${evidenceRecord.id}`,
+        'LOG-TODO-ADD-EVIDENCE',
+        evidenceRecord.id,
+        'evidences',
+        sliceArtifact(profile, 'evidenceOutput'),
+        'tool-confirmed',
+      ),
+    )
+  }
+  for (const branch of acceptanceBranches) {
+    const acceptanceId = `ACCEPT-${String(branch.productNodeId || profile.ids.product)}`
+    if (branch.productNodeId) {
+      edges.push(
+        edge(
+          `E-${acceptanceId}-APPROVES-${String(branch.productNodeId)}`,
+          acceptanceId,
+          String(branch.productNodeId),
+          'approves',
+          sliceArtifact(profile, 'acceptanceTree'),
+          'user-confirmed',
+        ),
+      )
+    }
+    for (const evidenceId of stringArray(branch.evidenceNodeIds)) {
+      edges.push(
+        edge(
+          `E-${acceptanceId}-APPROVES-${evidenceId}`,
+          acceptanceId,
+          evidenceId,
+          'approves',
+          sliceArtifact(profile, 'acceptanceTree'),
+          'user-confirmed',
+        ),
+      )
+    }
+  }
+  for (const change of changes) {
+    for (const workId of stringArray(change.affectedWorkNodeIds)) {
+      edges.push(
+        edge(
+          `E-${change.id}-TOUCHES-${workId}`,
+          change.id,
+          workId,
+          'touches',
+          sliceArtifact(profile, 'changeTree'),
+          'inferred',
+        ),
+      )
+    }
+    for (const testId of stringArray(change.affectedTestNodeIds)) {
+      edges.push(
+        edge(
+          `E-${change.id}-PRESERVES-${testId}`,
+          change.id,
+          testId,
+          'preserves',
+          sliceArtifact(profile, 'changeTree'),
+          'inferred',
+        ),
+      )
+    }
+    for (const evidenceId of stringArray(change.affectedEvidenceNodeIds)) {
+      edges.push(
+        edge(
+          `E-${change.id}-PRESERVES-${evidenceId}`,
+          change.id,
+          evidenceId,
+          'preserves',
+          sliceArtifact(profile, 'changeTree'),
+          'inferred',
+        ),
+      )
+    }
+  }
+  for (const impact of impacts) {
+    if (impact.changeId) {
+      edges.push(
+        edge(
+          `E-${impact.id}-REPORTS-ON-${String(impact.changeId)}`,
+          impact.id,
+          String(impact.changeId),
+          'reports-on',
+          sliceArtifact(profile, 'impactTree'),
+          'inferred',
+        ),
+      )
+    }
+    if (impact.affectedNodeId) {
+      edges.push(
+        edge(
+          `E-${impact.id}-REPORTS-ON-${String(impact.affectedNodeId)}`,
+          impact.id,
+          String(impact.affectedNodeId),
+          'reports-on',
+          sliceArtifact(profile, 'impactTree'),
+          'inferred',
+        ),
+      )
+    }
+  }
+  for (const cycle of cycles) {
+    for (const workId of stringArray(cycle.includedWorkNodeIds)) {
+      edges.push(
+        edge(
+          `E-${cycle.id}-REQUIRES-${workId}`,
+          cycle.id,
+          workId,
+          'requires',
+          sliceArtifact(profile, 'cycleTree'),
+          'inferred',
+        ),
+      )
+    }
+    for (const testId of stringArray(cycle.includedTestNodeIds)) {
+      edges.push(
+        edge(
+          `E-${cycle.id}-REQUIRES-${testId}`,
+          cycle.id,
+          testId,
+          'requires',
+          sliceArtifact(profile, 'cycleTree'),
+          'inferred',
+        ),
+      )
+    }
+    for (const evidenceId of stringArray(cycle.requiredEvidence)) {
+      edges.push(
+        edge(
+          `E-${cycle.id}-REQUIRES-${evidenceId}`,
+          cycle.id,
+          evidenceId,
+          'requires',
+          sliceArtifact(profile, 'cycleTree'),
+          'inferred',
+        ),
+      )
+    }
+  }
+  edges.push(
+    edge(
+      'E-CYCLE-CONTRACT-REPORTS-ON-CY-1',
+      profile.ids.nodeExecutionContract,
+      profile.ids.cycleContract,
+      'reports-on',
+      sliceArtifact(profile, 'cycleContract'),
+      'inferred',
+    ),
+  )
+  edges.push(
+    edge(
+      'E-WORKGRAPH-DERIVES-WT-1',
+      'WG-TODO-1',
+      profile.ids.work,
+      'derives-view',
+      sliceArtifact(profile, 'workGraph'),
+      'inferred',
+    ),
+  )
+  edges.push(
+    edge(
+      'E-SOT-PRESERVES-SOURCE-BOUNDARY',
+      'DOC-SOURCE-OF-TRUTH-MATRIX',
+      profile.ids.product,
+      'preserves',
+      sliceArtifact(profile, 'sourceOfTruthMatrix'),
+      'inferred',
+    ),
+  )
+  edges.push(
+    edge(
+      'E-VIEW-DERIVES-PT-1',
+      profile.ids.viewInstance,
+      profile.ids.product,
+      'derives-view',
+      sliceArtifact(profile, 'generatedReadModel'),
+      'inferred',
+    ),
+  )
+  edges.push(
+    edge(
+      'E-VIEW-DERIVES-WT-1',
+      profile.ids.viewInstance,
+      profile.ids.work,
+      'derives-view',
+      sliceArtifact(profile, 'generatedReadModel'),
+      'inferred',
+    ),
+  )
+  edges.push(
+    edge(
+      'E-VIEW-DERIVES-TT-1',
+      profile.ids.viewInstance,
+      'TT-1',
+      'derives-view',
+      sliceArtifact(profile, 'generatedReadModel'),
+      'inferred',
+    ),
+  )
+  edges.push(
+    edge(
+      'E-FIND-STRUCTURE-ONLY-REPORTS-ON-VIEW',
+      'FIND-STRUCTURE-ONLY-LIMITATION',
+      profile.ids.viewInstance,
+      'reports-on',
+      'docs/concept/multi-slice-read-model-validation-design.md',
+      'inferred',
+    ),
+  )
+  edges.push(
+    edge(
+      'E-FIND-NO-RUNTIME-REPORTS-ON-EV',
+      'FIND-NO-RUNTIME-FIXTURE',
+      'EV-1',
+      'reports-on',
+      sliceArtifact(profile, 'evidenceOutput'),
+      'inferred',
+    ),
+  )
+  return edges
+}
+
+function buildTodoSearchEdges(profile: SliceReadModelConfig): GraphEdge[] {
   return [
     edge(
       'E-TASK-TARGETS-REQ',
       'TASK-TODO-SEARCH-PILOT',
       profile.ids.product,
       'targets',
-      profile.artifacts.limitedPilotTransitionRecord,
+      sliceArtifact(profile, 'limitedPilotTransitionRecord'),
       'inferred',
     ),
     edge(
@@ -1323,7 +2093,7 @@ function buildEdges(profile: SliceReadModelConfig): GraphEdge[] {
       'FIND-GENERATED-BUILDER-MISSING',
       'DOC-READ-MODEL',
       'reports-on',
-      profile.artifacts.generatedEvidenceRequirement,
+      sliceArtifact(profile, 'generatedEvidenceRequirement'),
       'tool-confirmed',
     ),
     edge(
@@ -1331,7 +2101,7 @@ function buildEdges(profile: SliceReadModelConfig): GraphEdge[] {
       'FIND-ACEP-CLEANUP-DEFERRED',
       'CCN-ACEP-TASK-CARD-AUTHORITY-001',
       'reports-on',
-      profile.artifacts.compatibilityControlNode,
+      sliceArtifact(profile, 'compatibilityControlNode'),
       'inferred',
       'unknown',
     ),
@@ -1340,7 +2110,7 @@ function buildEdges(profile: SliceReadModelConfig): GraphEdge[] {
       'CCN-ACEP-TASK-CARD-AUTHORITY-001',
       'DOC-LIMITED-PILOT-PACKAGE',
       'reports-on',
-      profile.artifacts.compatibilityControlNode,
+      sliceArtifact(profile, 'compatibilityControlNode'),
       'inferred',
     ),
     edge(
@@ -1388,13 +2158,97 @@ function buildEdges(profile: SliceReadModelConfig): GraphEdge[] {
       'DEC-SCOPED-PILOT-EXECUTION',
       'DOC-LIMITED-PILOT-TRANSITION-RECORD',
       'approves',
-      profile.artifacts.scopedPilotExecutionRecord,
+      sliceArtifact(profile, 'scopedPilotExecutionRecord'),
       'user-confirmed',
     ),
   ]
 }
 
 function buildCoreViewCoverage(profile: SliceReadModelConfig): CoreViewCoverage[] {
+  if (profile.sourceLayout === 'canonical-pbe') {
+    return buildCanonicalPbeStructureCoreViewCoverage(profile)
+  }
+  return buildTodoSearchCoreViewCoverage(profile)
+}
+
+function buildCanonicalPbeStructureCoreViewCoverage(profile: SliceReadModelConfig): CoreViewCoverage[] {
+  return [
+    view(
+      'intent-view',
+      'Intent View',
+      ['PT-ROOT', profile.ids.product, 'AC-PT-1-1', profile.ids.acceptanceRoot],
+      [
+        `E-PT-ROOT-TARGETS-${profile.ids.product}`,
+        `E-${profile.ids.product}-REQUIRES-AC-PT-1-1`,
+        `E-${profile.ids.acceptanceRoot}-APPROVES-${profile.ids.product}`,
+      ],
+      ['target', 'required', 'output'],
+      'Shows the accepted add-todo product meaning and user-controlled acceptance.',
+    ),
+    view(
+      'behavior-view',
+      'Behavior View',
+      [profile.ids.product, 'AC-PT-1-1', profile.ids.work, 'TT-1'],
+      [
+        `E-${profile.ids.work}-SATISFIES-${profile.ids.product}`,
+        `E-${profile.ids.work}-SATISFIES-AC-PT-1-1`,
+        'E-TT-1-VERIFIES-AC-PT-1-1',
+      ],
+      ['target', 'required'],
+      'Shows add-todo behavior through requirement, work, and acceptance-check structure.',
+    ),
+    view(
+      'structure-view',
+      'Structure View',
+      ['PJ-ROOT', 'PJ-1', 'WG-TODO-1', 'WG-NODE-WT-1', 'DOC-SOURCE-OF-TRUTH-MATRIX'],
+      ['E-WT-1-TOUCHES-PJ-1', 'E-WORKGRAPH-DERIVES-WT-1', 'E-SOT-PRESERVES-SOURCE-BOUNDARY'],
+      ['context'],
+      'Shows canonical .pbe project/workgraph/source-of-truth structure.',
+    ),
+    view(
+      'scope-execution-view',
+      'Scope / Execution View',
+      ['WT-ROOT', profile.ids.work, profile.ids.cycleContract, profile.ids.nodeExecutionContract, 'WG-TODO-1'],
+      [
+        `E-${profile.ids.cycleContract}-REQUIRES-${profile.ids.work}`,
+        `E-${profile.ids.cycleContract}-REQUIRES-TT-1`,
+        'E-CYCLE-CONTRACT-REPORTS-ON-CY-1',
+      ],
+      ['target', 'required', 'guard'],
+      'Shows selected Work/Test/Evidence scope without creating a source-authority pilot marker.',
+    ),
+    view(
+      'impact-view',
+      'Impact View',
+      ['CH-001', 'IM-001', profile.ids.work, 'TT-1', 'EV-1'],
+      ['E-CH-001-TOUCHES-WT-1', 'E-IM-001-REPORTS-ON-CH-001', 'E-IM-001-REPORTS-ON-WT-1'],
+      ['context'],
+      'Shows analyzed non-blocking change/impact skeleton from the fixture.',
+    ),
+    view(
+      'verification-view',
+      'Verification View',
+      ['TT-ROOT', 'TT-1', 'EV-1', 'LOG-TODO-ADD-EVIDENCE', 'FIND-NO-RUNTIME-FIXTURE'],
+      ['E-TT-1-VERIFIES-PT-1', 'E-TT-1-VERIFIES-WT-1', 'E-EV-1-EVIDENCES-TT-1', 'E-LOG-EVIDENCES-EV-1'],
+      ['required', 'output', 'context'],
+      'Shows Check/Evidence mapping and the structure-only no-runtime-fixture limitation.',
+    ),
+    view(
+      'evidence-acceptance-view',
+      'Evidence / Acceptance View',
+      ['EV-1', 'LOG-TODO-ADD-EVIDENCE', profile.ids.acceptanceRoot, 'FIND-STRUCTURE-ONLY-LIMITATION'],
+      [
+        'E-EV-1-EVIDENCES-AC-PT-1-1',
+        `E-${profile.ids.acceptanceRoot}-APPROVES-EV-1`,
+        'E-FIND-STRUCTURE-ONLY-REPORTS-ON-VIEW',
+      ],
+      ['output', 'context'],
+      'Shows attached evidence, accepted branch, and non-promotion structure-only boundary.',
+    ),
+  ]
+}
+
+function buildTodoSearchCoreViewCoverage(profile: SliceReadModelConfig): CoreViewCoverage[] {
   return [
     view(
       'intent-view',
@@ -1686,9 +2540,9 @@ function buildValidationReport(
   slice: string,
   profile: SliceReadModelConfig,
   generated: GeneratedReadModel,
-  parity: ParityReport,
+  parity: ParityReport | undefined,
   manifest: Record<string, unknown>,
-  marker: Record<string, unknown>,
+  marker: Record<string, unknown> | undefined,
 ): ValidationReport {
   const commandIdentity = `pbe graph read-model validate --slice ${slice}`
   const checks = buildValidationChecks(root, slice, profile, generated, parity, manifest, marker)
@@ -1714,17 +2568,21 @@ function buildValidationReport(
       sliceProfile: profile.profileId,
       scopeLevel: 'scoped-slice-validation',
       generatedReadModel: `${slice}/generated/generated-read-model.json`,
-      parityReport: `${slice}/generated/read-model-parity-report.json`,
+      parityReport:
+        profile.policyLevel === 'pilot-marker-backed'
+          ? `${slice}/generated/read-model-parity-report.json`
+          : 'not-required-for-structure-only',
       evidenceManifest: `${slice}/generated/read-model-evidence-manifest.json`,
-      pilotMarker: `${slice}/generated/scoped-source-authority-pilot-marker.json`,
+      pilotMarker:
+        profile.policyLevel === 'pilot-marker-backed'
+          ? `${slice}/generated/scoped-source-authority-pilot-marker.json`
+          : 'not-required-for-structure-only',
     },
     status,
     evidenceLevel: 'validator-backed',
     scopeLevel: 'scoped-slice-validation',
-    sourceAuthorityBoundary:
-      'Validator-backed Evidence checks the bounded Todo Search read-model outputs only. It does not change source authority.',
-    nonPromotionStatement:
-      'Validation pass is Evidence only. It does not promote Maintainability Graph, expand pilot scope, retire tree-native artifacts, introduce CI enforcement, or replace user approval.',
+    sourceAuthorityBoundary: validationBoundaryForProfile(profile),
+    nonPromotionStatement: validationNonPromotionStatementForProfile(profile),
     summary: {
       checkCount: checks.length,
       passCount,
@@ -1735,7 +2593,7 @@ function buildValidationReport(
     },
     checks,
     retainedWarnings: generated.retainedWarnings,
-    fallbackReferenceStatus: buildFallbackReferenceStatus(root, marker),
+    fallbackReferenceStatus: buildFallbackReferenceStatus(root, marker, generated),
     recommendedNextDecisionSurface: [
       'Continue active observation',
       'Design CI workflow integration before broader enforcement',
@@ -1752,10 +2610,16 @@ function buildValidationChecks(
   slice: string,
   profile: SliceReadModelConfig,
   generated: GeneratedReadModel,
-  parity: ParityReport,
+  parity: ParityReport | undefined,
   manifest: Record<string, unknown>,
-  marker: Record<string, unknown>,
+  marker: Record<string, unknown> | undefined,
 ): ValidationCheck[] {
+  if (profile.policyLevel === 'structure-only') {
+    return buildStructureOnlyValidationChecks(root, slice, profile, generated, manifest)
+  }
+  if (!parity || !marker) {
+    throw new Error(`Profile ${profile.profileId} requires parity report and scoped pilot marker validation inputs.`)
+  }
   const outputPrefix = `${slice}/generated`
   const sourceInputs = generated.sourceInputs || []
   const markerScope = getPath(marker, ['pilotScope', 'primary'])
@@ -1922,6 +2786,143 @@ function buildValidationChecks(
   ]
 }
 
+function buildStructureOnlyValidationChecks(
+  root: string,
+  slice: string,
+  profile: SliceReadModelConfig,
+  generated: GeneratedReadModel,
+  manifest: Record<string, unknown>,
+): ValidationCheck[] {
+  const outputPrefix = `${slice}/generated`
+  const sourceInputs = generated.sourceInputs || []
+  return [
+    check(
+      'generated-read-model-exists',
+      'Generated read-model exists and parses',
+      Boolean(generated.version && Array.isArray(generated.nodes) && Array.isArray(generated.edges)),
+      'blocking',
+      `${outputPrefix}/generated-read-model.json`,
+    ),
+    check(
+      'evidence-manifest-exists',
+      'Evidence manifest exists and parses',
+      Boolean(manifest.version && manifest.sourceInputs),
+      'blocking',
+      `${outputPrefix}/read-model-evidence-manifest.json`,
+    ),
+    check(
+      'source-input-artifacts-present',
+      'Canonical .pbe source input artifacts exist',
+      sourceInputs.length > 0 && sourceInputs.every((entry) => entry.status === 'present'),
+      'blocking',
+      'generated sourceInputs',
+    ),
+    check(
+      'node-edge-tag-taxonomy-valid',
+      'Node/Edge/Tag taxonomy is valid',
+      hasTaxonomy(generated),
+      'blocking',
+      `${outputPrefix}/generated-read-model.json`,
+    ),
+    check(
+      'view-scoped-tags-allowed',
+      'viewScopedTags uses allowed role tags only',
+      invalidViewScopedTags(generated).length === 0,
+      'blocking',
+      `${outputPrefix}/generated-read-model.json`,
+      invalidViewScopedTags(generated),
+    ),
+    check(
+      'view-membership-separated',
+      'View membership is separated from tags',
+      viewMembershipSeparated(generated),
+      'blocking',
+      `${outputPrefix}/generated-read-model.json`,
+    ),
+    check(
+      'core-view-coverage-present',
+      '7 Core View coverage is present for structure-only validation',
+      missingCoreViews(generated).length === 0,
+      'blocking',
+      `${outputPrefix}/generated-read-model.json`,
+      missingCoreViews(generated),
+    ),
+    check(
+      'confidence-freshness-separated',
+      'Confidence and freshness/status are separated',
+      confidenceFreshnessSeparated(generated),
+      'blocking',
+      `${outputPrefix}/generated-read-model.json`,
+    ),
+    check(
+      'check-evidence-mapping-present',
+      'Check/Evidence mapping is present where source inputs support it',
+      Array.isArray(generated.checkEvidenceMapping) && generated.checkEvidenceMapping.length > 0,
+      'blocking',
+      `${outputPrefix}/generated-read-model.json`,
+    ),
+    check(
+      'source-authority-boundary-bounded',
+      'Source authority boundary is present and bounded',
+      /current operational source/i.test(generated.sourceAuthorityBoundary) &&
+        String(generated.metadata.sourceSlice || '') === slice &&
+        String(generated.metadata.sliceProfile || '') === profile.profileId,
+      'blocking',
+      `${outputPrefix}/generated-read-model.json`,
+    ),
+    check(
+      'non-promotion-statement-present',
+      'Non-promotion statement is present',
+      /does not promote|cannot change source authority|does not change source authority/i.test(
+        generated.nonPromotionStatement,
+      ),
+      'blocking',
+      `${outputPrefix}/generated-read-model.json`,
+    ),
+    check(
+      'retained-limitations-visible',
+      'Structure-only limitations are visible',
+      Array.isArray(generated.retainedWarnings) &&
+        generated.retainedWarnings.some((entry) => entry.id === 'RW-STRUCTURE-ONLY'),
+      'blocking',
+      `${outputPrefix}/generated-read-model.json`,
+    ),
+    check(
+      'fallback-reference-artifacts-present',
+      'Fallback/reference source artifacts are present',
+      buildFallbackReferenceStatus(root, undefined, generated).every((entry) => entry.status === 'present'),
+      'blocking',
+      `${outputPrefix}/generated-read-model.json`,
+    ),
+    check(
+      'user-acceptance-authority-preserved',
+      'User acceptance authority is not replaced by Codex/PBE',
+      !/codex\/pbe self-acceptance|replace user acceptance/i.test(
+        `${generated.sourceAuthorityBoundary} ${generated.nonPromotionStatement}`,
+      ) &&
+        generated.nodes.some(
+          (entry) => entry.id === profile.ids.acceptanceRoot && entry.confidence === 'user-confirmed',
+        ),
+      'blocking',
+      `${outputPrefix}/generated-read-model.json`,
+    ),
+    check(
+      'supplemental-compatibility-not-source-scope',
+      'Supplemental compatibility slice is not source scope for structure-only validation',
+      generated.compatibilityWarnings.length === 0,
+      'blocking',
+      `${outputPrefix}/generated-read-model.json`,
+    ),
+    check(
+      'no-repo-wide-promotion-or-retirement',
+      'No statement implies repo-wide promotion or tree-native retirement',
+      noRepoWidePromotionOrRetirement(generated),
+      'blocking',
+      `${outputPrefix}/generated-read-model.json`,
+    ),
+  ]
+}
+
 function check(
   id: string,
   title: string,
@@ -1941,9 +2942,17 @@ function check(
   }
 }
 
-function buildFallbackReferenceStatus(root: string, marker: Record<string, unknown>): Array<Record<string, unknown>> {
-  const fallbackReferences = getPath(marker, ['pilotAuthority', 'fallbackReference'])
-  const paths = Array.isArray(fallbackReferences) ? fallbackReferences.map(String) : []
+function buildFallbackReferenceStatus(
+  root: string,
+  marker: Record<string, unknown> | undefined,
+  generated?: GeneratedReadModel,
+): Array<Record<string, unknown>> {
+  const fallbackReferences = marker ? getPath(marker, ['pilotAuthority', 'fallbackReference']) : undefined
+  const paths = Array.isArray(fallbackReferences)
+    ? fallbackReferences.map(String)
+    : generated
+      ? generated.sourceInputs.map((entry) => entry.relativePath)
+      : []
   return paths.map((entry) => ({
     path: entry,
     status: existsSync(path.resolve(root, entry)) ? 'present' : 'missing',
@@ -1998,13 +3007,13 @@ function confidenceFreshnessSeparated(model: GeneratedReadModel): boolean {
   )
 }
 
-function noRepoWidePromotionOrRetirement(model: GeneratedReadModel, marker: Record<string, unknown>): boolean {
+function noRepoWidePromotionOrRetirement(model: GeneratedReadModel, marker?: Record<string, unknown>): boolean {
   const text = JSON.stringify({
     generatedBoundary: model.sourceAuthorityBoundary,
     generatedNonPromotion: model.nonPromotionStatement,
-    markerStatus: marker.status,
-    markerNonPromotion: marker.nonPromotionStatement,
-    activeObservation: marker.activeObservation,
+    markerStatus: marker?.status,
+    markerNonPromotion: marker?.nonPromotionStatement,
+    activeObservation: marker?.activeObservation,
   }).toLowerCase()
   return ![
     'full graph-source promotion approved',
@@ -2383,7 +3392,11 @@ function isSliceRelativeArtifact(relativePathFromProfile: string): boolean {
 }
 
 function sliceArtifact(profile: SliceReadModelConfig, artifactKey: keyof SliceReadModelConfig['artifacts']): string {
-  return `${profile.supportedSlice}/${profile.artifacts[artifactKey]}`
+  const artifact = profile.artifacts[artifactKey]
+  if (!artifact) {
+    throw new Error(`Profile ${profile.profileId} does not define artifact ${String(artifactKey)}`)
+  }
+  return isSliceRelativeArtifact(artifact) ? `${profile.supportedSlice}/${artifact}` : artifact
 }
 
 async function readRequiredJson<T>(filePath: string, label: string): Promise<T> {
@@ -2400,6 +3413,22 @@ async function readRequiredText(filePath: string, label: string): Promise<string
     throw new Error(`Could not read ${label} at ${filePath}: ${parsed.error}`)
   }
   return parsed.value
+}
+
+async function readOptionalJson<T>(filePath: string | undefined, fallback: T): Promise<T> {
+  if (!filePath) {
+    return fallback
+  }
+  const parsed = await readJsonSafe<T>(filePath)
+  return parsed.ok ? parsed.value : fallback
+}
+
+async function readOptionalText(filePath: string | undefined): Promise<string> {
+  if (!filePath) {
+    return ''
+  }
+  const parsed = await readTextSafe(filePath)
+  return parsed.ok ? parsed.value : ''
 }
 
 function node(
@@ -2500,6 +3529,34 @@ function statusFreshness(status: unknown): FreshnessStatus {
   return 'fresh'
 }
 
+function sourceAuthorityBoundaryForProfile(profile: SliceReadModelConfig): string {
+  if (profile.policyLevel === 'structure-only') {
+    return 'Canonical .pbe tree/control/execution/evidence artifacts remain current operational source for this structure-only fixture.'
+  }
+  return 'Tree-native selected-slice artifacts remain current operational source.'
+}
+
+function nonPromotionStatementForProfile(profile: SliceReadModelConfig): string {
+  if (profile.policyLevel === 'structure-only') {
+    return 'Generated structure-only output is reviewable Evidence only. It does not change source authority, create a pilot marker, require parity, introduce CI enforcement, retire .pbe artifacts, or approve promotion.'
+  }
+  return 'Generated output is reviewable Evidence only and cannot change source authority without later explicit user approval.'
+}
+
+function validationBoundaryForProfile(profile: SliceReadModelConfig): string {
+  if (profile.policyLevel === 'structure-only') {
+    return 'Validator-backed Evidence checks structure-only generated read-model outputs for this canonical .pbe fixture. It does not change source authority.'
+  }
+  return 'Validator-backed Evidence checks the bounded Todo Search read-model outputs only. It does not change source authority.'
+}
+
+function validationNonPromotionStatementForProfile(profile: SliceReadModelConfig): string {
+  if (profile.policyLevel === 'structure-only') {
+    return 'Structure-only validation pass is Evidence only. It does not promote Maintainability Graph, create a source-authority pilot, require parity, introduce CI enforcement, retire .pbe artifacts, or replace user approval.'
+  }
+  return 'Validation pass is Evidence only. It does not promote Maintainability Graph, expand pilot scope, retire tree-native artifacts, introduce CI enforcement, or replace user approval.'
+}
+
 function requirementFreshness(status: unknown): FreshnessStatus {
   const value = String(status || '')
   if (/confirmed_runtime_behavior_present_visual_review_pending/i.test(value)) {
@@ -2562,6 +3619,10 @@ function isString(value: unknown): value is string {
 
 function formatList(value: unknown): string {
   return Array.isArray(value) ? value.map(String).join(', ') : String(value || '')
+}
+
+function stringArray(value: unknown): string[] {
+  return Array.isArray(value) ? value.map(String) : []
 }
 
 function normalizePath(value: string): string {
