@@ -22,9 +22,15 @@ This refresh keeps those legacy meanings traceable but adds the new Graph-first 
 
 - durable targets use `nodeKind`
 - durable semantic relationships use `edgeType`
-- view-local roles use `viewScopedTags`
+- view membership uses `includedInViewIds`
+- per-view role assignments use `viewRoles`
+- flattened view-local role tags use `viewScopedTags`
 - confidence and freshness/status are separate fields
 - 7 Core View coverage is represented through `coreViewCoverage` and `view-instance-manifest.json`
+
+`viewScopedTags` contains only the eight allowed role tags: `target`, `context`, `candidate`, `guard`, `required`,
+`stale`, `blocked`, and `output`. Core View ids such as `behavior-view` or `scope-execution-view` are membership ids,
+not tags, and are stored in `includedInViewIds` / `viewRoles` instead.
 
 ## Source Inputs
 
@@ -103,6 +109,12 @@ Durable semantic relationships are represented as `edgeType`, not tags.
 ## View-Scoped Tag Summary
 
 View-scoped tags are temporary roles inside a View Instance only.
+
+This artifact separates view membership from view role tags:
+
+- `includedInViewIds` records which Core View instances include the node.
+- `viewRoles` records the node's allowed role tags per Core View id.
+- `viewScopedTags` is a flat role-tag summary and never contains Core View ids.
 
 Allowed tags used here:
 

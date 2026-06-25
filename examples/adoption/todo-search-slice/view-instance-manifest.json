@@ -8,7 +8,8 @@
     "nonPromotionStatement": "This manifest describes task-scoped projections for review. It does not promote Maintainability Graph, does not change source authority, and does not implement a view renderer, generator, CLI, schema, runtime, or validator.",
     "taxonomyBasis": "docs/concept/graph-node-edge-tag-policy.md",
     "coreViewBasis": "docs/concept/view-tree-pack.md",
-    "readModelArtifact": "examples/adoption/todo-search-slice/maintainability-graph-read-model.json"
+    "readModelArtifact": "examples/adoption/todo-search-slice/maintainability-graph-read-model.json",
+    "viewMembershipBoundary": "Each object in viewInstances is the view membership record. Its viewScopedTags map contains node ids as keys and allowed role tags as values; Core View ids are never tag values."
   },
   "allowedViewScopedTags": ["target", "context", "candidate", "guard", "required", "stale", "blocked", "output"],
   "tagBoundary": "Tags in this manifest are temporary roles inside the listed view instance. They do not encode durable semantic relationships.",

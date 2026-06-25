@@ -32,19 +32,21 @@ builder implementation.
 
 ## Parity Questions
 
-| Question                                                                                | Result | Evidence / reason                                                                                                                                       |
-| --------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Can tree-native selected-slice artifacts be interpreted under the Node/Edge/Tag policy? | yes    | JSON nodes use `nodeKind`, edges use `edgeType`, and view-local roles use `viewScopedTags`.                                                             |
-| Are durable semantic relationships represented as Edges rather than Tags?               | yes    | `implements`, `verifies`, `evidences`, `invalidates`, `preserves`, and `approves` appear only as `edgeType`.                                            |
-| Are view-local roles represented as Tags only?                                          | yes    | Tags are limited to `target`, `context`, `candidate`, `guard`, `required`, `stale`, `blocked`, and `output`.                                            |
-| Are node-kind-specific tags avoided?                                                    | yes    | The artifact does not use tags such as `code.target`, `check.required`, `implements`, `verifies`, or `evidences`.                                       |
-| Are confidence and freshness/status separated?                                          | yes    | Nodes and edges use separate `confidence` and `freshnessStatus` fields; `stale` is never a confidence value.                                            |
-| Are all 7 Core Views represented?                                                       | yes    | `coreViewCoverage` and `view-instance-manifest.json` cover Intent, Behavior, Structure, Scope/Execution, Impact, Verification, and Evidence/Acceptance. |
-| Does Scope / Execution View expose Cycle/Node Contract boundaries?                      | yes    | `CYCLE-TODO-SEARCH`, `NEC-WT-SEARCH-001`, required Evidence, and non-scope guard behavior are included.                                                 |
-| Are missing/partial/deferred warnings retained?                                         | yes    | Partial UI Evidence, bounded fixture warning, generated-builder absence, and ACEP cleanup deferral remain visible.                                      |
-| Does the artifact avoid source authority change?                                        | yes    | Metadata states tree-native artifacts remain source and no promotion/generator/schema/runtime is implemented.                                           |
-| Is limited pilot approval now ready to be requested again?                              | yes    | The package can return to user decision surface after refresh, but approval remains `Decision required`.                                                |
-| Is full promotion ready?                                                                | no     | Full promotion still has generated-builder/repeatability, broader parity, and cleanup judgment questions.                                               |
+| Question                                                                                | Result | Evidence / reason                                                                                                                                        |
+| --------------------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Can tree-native selected-slice artifacts be interpreted under the Node/Edge/Tag policy? | yes    | JSON nodes use `nodeKind`, edges use `edgeType`, view membership uses `includedInViewIds` / `viewRoles`, and view-local roles use `viewScopedTags`.      |
+| Are durable semantic relationships represented as Edges rather than Tags?               | yes    | `implements`, `verifies`, `evidences`, `invalidates`, `preserves`, and `approves` appear only as `edgeType`.                                             |
+| Are view-local roles represented as Tags only?                                          | yes    | Tags are limited to `target`, `context`, `candidate`, `guard`, `required`, `stale`, `blocked`, and `output`.                                             |
+| Are Core View ids separated from view-scoped tags?                                      | yes    | Core View ids are stored in `includedInViewIds`, `viewRoles`, `coreViewCoverage.viewId`, and the View Instance Manifest, not as `viewScopedTags` values. |
+| Does the explicit invalid tag check pass?                                               | yes    | `invalidTags: []` and `missingCore: []`; no Core View id appears as a flattened `viewScopedTags` value.                                                  |
+| Are node-kind-specific tags avoided?                                                    | yes    | The artifact does not use tags such as `code.target`, `check.required`, `implements`, `verifies`, or `evidences`.                                        |
+| Are confidence and freshness/status separated?                                          | yes    | Nodes and edges use separate `confidence` and `freshnessStatus` fields; `stale` is never a confidence value.                                             |
+| Are all 7 Core Views represented?                                                       | yes    | `coreViewCoverage` and `view-instance-manifest.json` cover Intent, Behavior, Structure, Scope/Execution, Impact, Verification, and Evidence/Acceptance.  |
+| Does Scope / Execution View expose Cycle/Node Contract boundaries?                      | yes    | `CYCLE-TODO-SEARCH`, `NEC-WT-SEARCH-001`, required Evidence, and non-scope guard behavior are included.                                                  |
+| Are missing/partial/deferred warnings retained?                                         | yes    | Partial UI Evidence, bounded fixture warning, generated-builder absence, and ACEP cleanup deferral remain visible.                                       |
+| Does the artifact avoid source authority change?                                        | yes    | Metadata states tree-native artifacts remain source and no promotion/generator/schema/runtime is implemented.                                            |
+| Is limited pilot approval now ready to be requested again?                              | yes    | The package can return to user decision surface after refresh, but approval remains `Decision required`.                                                 |
+| Is full promotion ready?                                                                | no     | Full promotion still has generated-builder/repeatability, broader parity, and cleanup judgment questions.                                                |
 
 ## Node / Edge / Tag Parity Judgment
 
@@ -56,7 +58,8 @@ Reason:
 
 - durable targets are represented as `nodeKind`
 - durable semantic relationships are represented as `edgeType`
-- view-scoped temporary roles are represented as `viewScopedTags`
+- view membership is represented as `includedInViewIds` and `viewRoles`
+- view-scoped temporary roles are represented as allowed `viewScopedTags`
 - 7 Core Views are explicitly covered
 - warnings and source-authority boundaries remain visible
 

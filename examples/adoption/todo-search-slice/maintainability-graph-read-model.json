@@ -13,7 +13,8 @@
     "taxonomyBasis": "docs/concept/graph-node-edge-tag-policy.md",
     "coreViewBasis": "docs/concept/view-tree-pack.md 7 Core Views",
     "viewInstanceManifest": "examples/adoption/todo-search-slice/view-instance-manifest.json",
-    "readinessUse": "Node/Edge/Tag parity evidence for limited pilot promotion decision review only."
+    "readinessUse": "Node/Edge/Tag parity evidence for limited pilot promotion decision review only.",
+    "viewMembershipBoundary": "View membership is represented by includedInViewIds and viewRoles. viewScopedTags contains only allowed role tags and never stores Core View ids."
   },
   "sourceInputs": [
     "examples/adoption/todo-search-slice/product-tree.json",
@@ -82,11 +83,13 @@
       "confidence": "inferred",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "intent-view", "tags": ["target"] },
-        { "viewId": "scope-execution-view", "tags": ["target", "required"] }
-      ],
-      "notes": "This is a review task node for the limited pilot decision surface; it is not source authority."
+      "viewScopedTags": ["target", "required"],
+      "notes": "This is a review task node for the limited pilot decision surface; it is not source authority.",
+      "includedInViewIds": ["intent-view", "scope-execution-view"],
+      "viewRoles": {
+        "intent-view": ["target"],
+        "scope-execution-view": ["target", "required"]
+      }
     },
     {
       "id": "PT-SEARCH-001",
@@ -98,11 +101,13 @@
       "confidence": "user-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "intent-view", "tags": ["target"] },
-        { "viewId": "behavior-view", "tags": ["context"] }
-      ],
-      "notes": "Product meaning includes title + note/content search after PP-001."
+      "viewScopedTags": ["target", "context"],
+      "notes": "Product meaning includes title + note/content search after PP-001.",
+      "includedInViewIds": ["intent-view", "behavior-view"],
+      "viewRoles": {
+        "intent-view": ["target"],
+        "behavior-view": ["context"]
+      }
     },
     {
       "id": "AC-SEARCH-001",
@@ -114,10 +119,12 @@
       "confidence": "user-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "intent-view", "tags": ["required"] },
-        { "viewId": "verification-view", "tags": ["target"] }
-      ]
+      "viewScopedTags": ["target", "required"],
+      "includedInViewIds": ["intent-view", "verification-view"],
+      "viewRoles": {
+        "intent-view": ["required"],
+        "verification-view": ["target"]
+      }
     },
     {
       "id": "AC-SEARCH-002",
@@ -129,10 +136,12 @@
       "confidence": "user-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "intent-view", "tags": ["required"] },
-        { "viewId": "verification-view", "tags": ["target"] }
-      ]
+      "viewScopedTags": ["target", "required"],
+      "includedInViewIds": ["intent-view", "verification-view"],
+      "viewRoles": {
+        "intent-view": ["required"],
+        "verification-view": ["target"]
+      }
     },
     {
       "id": "AC-SEARCH-003",
@@ -144,11 +153,13 @@
       "confidence": "user-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "partial",
-      "viewScopedTags": [
-        { "viewId": "intent-view", "tags": ["required"] },
-        { "viewId": "evidence-acceptance-view", "tags": ["stale"] }
-      ],
-      "notes": "Runtime no-match data behavior is covered, but UI screenshot/manual visual evidence remains partial."
+      "viewScopedTags": ["required", "stale"],
+      "notes": "Runtime no-match data behavior is covered, but UI screenshot/manual visual evidence remains partial.",
+      "includedInViewIds": ["intent-view", "evidence-acceptance-view"],
+      "viewRoles": {
+        "intent-view": ["required"],
+        "evidence-acceptance-view": ["stale"]
+      }
     },
     {
       "id": "BEH-SEARCH-TITLE-NOTE",
@@ -160,10 +171,12 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "behavior-view", "tags": ["target"] },
-        { "viewId": "verification-view", "tags": ["target"] }
-      ]
+      "viewScopedTags": ["target"],
+      "includedInViewIds": ["behavior-view", "verification-view"],
+      "viewRoles": {
+        "behavior-view": ["target"],
+        "verification-view": ["target"]
+      }
     },
     {
       "id": "BEH-EMPTY-QUERY",
@@ -175,10 +188,12 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "behavior-view", "tags": ["target"] },
-        { "viewId": "verification-view", "tags": ["target"] }
-      ]
+      "viewScopedTags": ["target"],
+      "includedInViewIds": ["behavior-view", "verification-view"],
+      "viewRoles": {
+        "behavior-view": ["target"],
+        "verification-view": ["target"]
+      }
     },
     {
       "id": "BEH-NO-RESULT",
@@ -190,11 +205,13 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "partial",
-      "viewScopedTags": [
-        { "viewId": "behavior-view", "tags": ["target"] },
-        { "viewId": "evidence-acceptance-view", "tags": ["stale"] }
-      ],
-      "notes": "The data behavior is verified by fixture tests; visual empty-state evidence remains partial."
+      "viewScopedTags": ["target", "stale"],
+      "notes": "The data behavior is verified by fixture tests; visual empty-state evidence remains partial.",
+      "includedInViewIds": ["behavior-view", "evidence-acceptance-view"],
+      "viewRoles": {
+        "behavior-view": ["target"],
+        "evidence-acceptance-view": ["stale"]
+      }
     },
     {
       "id": "BEH-NON-SCOPE-GUARD",
@@ -206,10 +223,12 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "behavior-view", "tags": ["guard"] },
-        { "viewId": "scope-execution-view", "tags": ["guard"] }
-      ]
+      "viewScopedTags": ["guard"],
+      "includedInViewIds": ["behavior-view", "scope-execution-view"],
+      "viewRoles": {
+        "behavior-view": ["guard"],
+        "scope-execution-view": ["guard"]
+      }
     },
     {
       "id": "PJ-TODO-LIST-SURFACE",
@@ -221,11 +240,13 @@
       "confidence": "inferred",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "structure-view", "tags": ["context"] },
-        { "viewId": "scope-execution-view", "tags": ["guard"] }
-      ],
-      "notes": "Architecture/code boundary anchor derived from selected tree artifacts; not proof of full app implementation."
+      "viewScopedTags": ["context", "guard"],
+      "notes": "Architecture/code boundary anchor derived from selected tree artifacts; not proof of full app implementation.",
+      "includedInViewIds": ["structure-view", "scope-execution-view"],
+      "viewRoles": {
+        "structure-view": ["context"],
+        "scope-execution-view": ["guard"]
+      }
     },
     {
       "id": "PJ-TODO-SEARCH-HELPER",
@@ -237,11 +258,13 @@
       "confidence": "inferred",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "structure-view", "tags": ["target"] },
-        { "viewId": "scope-execution-view", "tags": ["guard"] }
-      ],
-      "notes": "Boundary points to expected source files and bounded fixture helper."
+      "viewScopedTags": ["target", "guard"],
+      "notes": "Boundary points to expected source files and bounded fixture helper.",
+      "includedInViewIds": ["structure-view", "scope-execution-view"],
+      "viewRoles": {
+        "structure-view": ["target"],
+        "scope-execution-view": ["guard"]
+      }
     },
     {
       "id": "WT-SEARCH-001",
@@ -253,10 +276,12 @@
       "confidence": "user-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "scope-execution-view", "tags": ["target"] },
-        { "viewId": "structure-view", "tags": ["target"] }
-      ]
+      "viewScopedTags": ["target"],
+      "includedInViewIds": ["scope-execution-view", "structure-view"],
+      "viewRoles": {
+        "scope-execution-view": ["target"],
+        "structure-view": ["target"]
+      }
     },
     {
       "id": "CODE-RUNTIME-SEARCH-HELPER",
@@ -268,11 +293,13 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "structure-view", "tags": ["target"] },
-        { "viewId": "verification-view", "tags": ["context"] }
-      ],
-      "notes": "Representative fixture only; not full Todo app implementation."
+      "viewScopedTags": ["target", "context"],
+      "notes": "Representative fixture only; not full Todo app implementation.",
+      "includedInViewIds": ["structure-view", "verification-view"],
+      "viewRoles": {
+        "structure-view": ["target"],
+        "verification-view": ["context"]
+      }
     },
     {
       "id": "CODE-RUNTIME-SEARCH-TEST",
@@ -284,10 +311,12 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "verification-view", "tags": ["context"] },
-        { "viewId": "evidence-acceptance-view", "tags": ["context"] }
-      ]
+      "viewScopedTags": ["context"],
+      "includedInViewIds": ["verification-view", "evidence-acceptance-view"],
+      "viewRoles": {
+        "verification-view": ["context"],
+        "evidence-acceptance-view": ["context"]
+      }
     },
     {
       "id": "DATA-TODO-ITEM",
@@ -299,8 +328,12 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "structure-view", "tags": ["context"] }],
-      "notes": "Fixture data includes title, note, content, tag, and dueDate; selected search targets are title/note/content only."
+      "viewScopedTags": ["context"],
+      "notes": "Fixture data includes title, note, content, tag, and dueDate; selected search targets are title/note/content only.",
+      "includedInViewIds": ["structure-view"],
+      "viewRoles": {
+        "structure-view": ["context"]
+      }
     },
     {
       "id": "TT-SEARCH-001",
@@ -312,7 +345,11 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "verification-view", "tags": ["required"] }]
+      "viewScopedTags": ["required"],
+      "includedInViewIds": ["verification-view"],
+      "viewRoles": {
+        "verification-view": ["required"]
+      }
     },
     {
       "id": "TT-SEARCH-002",
@@ -324,7 +361,11 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "verification-view", "tags": ["required"] }]
+      "viewScopedTags": ["required"],
+      "includedInViewIds": ["verification-view"],
+      "viewRoles": {
+        "verification-view": ["required"]
+      }
     },
     {
       "id": "TT-SEARCH-003",
@@ -336,10 +377,12 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "partial",
-      "viewScopedTags": [
-        { "viewId": "verification-view", "tags": ["required"] },
-        { "viewId": "evidence-acceptance-view", "tags": ["stale"] }
-      ]
+      "viewScopedTags": ["required", "stale"],
+      "includedInViewIds": ["verification-view", "evidence-acceptance-view"],
+      "viewRoles": {
+        "verification-view": ["required"],
+        "evidence-acceptance-view": ["stale"]
+      }
     },
     {
       "id": "TT-SEARCH-004",
@@ -351,10 +394,12 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "verification-view", "tags": ["required"] },
-        { "viewId": "evidence-acceptance-view", "tags": ["target"] }
-      ]
+      "viewScopedTags": ["target", "required"],
+      "includedInViewIds": ["verification-view", "evidence-acceptance-view"],
+      "viewRoles": {
+        "verification-view": ["required"],
+        "evidence-acceptance-view": ["target"]
+      }
     },
     {
       "id": "EV-SEARCH-TEST",
@@ -366,8 +411,12 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "stale",
       "parityStatus": "partial",
-      "viewScopedTags": [{ "viewId": "evidence-acceptance-view", "tags": ["stale"] }],
-      "notes": "Historical title-only evidence is supplemented by fresh fixture evidence for the expanded scope."
+      "viewScopedTags": ["stale"],
+      "notes": "Historical title-only evidence is supplemented by fresh fixture evidence for the expanded scope.",
+      "includedInViewIds": ["evidence-acceptance-view"],
+      "viewRoles": {
+        "evidence-acceptance-view": ["stale"]
+      }
     },
     {
       "id": "EV-SEARCH-REVIEW",
@@ -379,7 +428,11 @@
       "confidence": "inferred",
       "freshnessStatus": "stale",
       "parityStatus": "partial",
-      "viewScopedTags": [{ "viewId": "evidence-acceptance-view", "tags": ["stale"] }]
+      "viewScopedTags": ["stale"],
+      "includedInViewIds": ["evidence-acceptance-view"],
+      "viewRoles": {
+        "evidence-acceptance-view": ["stale"]
+      }
     },
     {
       "id": "EV-SEARCH-NOTE-TEST",
@@ -391,10 +444,12 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "evidence-acceptance-view", "tags": ["output"] },
-        { "viewId": "verification-view", "tags": ["output"] }
-      ]
+      "viewScopedTags": ["output"],
+      "includedInViewIds": ["evidence-acceptance-view", "verification-view"],
+      "viewRoles": {
+        "evidence-acceptance-view": ["output"],
+        "verification-view": ["output"]
+      }
     },
     {
       "id": "PP-001",
@@ -406,7 +461,11 @@
       "confidence": "user-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "impact-view", "tags": ["target"] }]
+      "viewScopedTags": ["target"],
+      "includedInViewIds": ["impact-view"],
+      "viewRoles": {
+        "impact-view": ["target"]
+      }
     },
     {
       "id": "CH-001",
@@ -418,7 +477,11 @@
       "confidence": "user-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "impact-view", "tags": ["target"] }]
+      "viewScopedTags": ["target"],
+      "includedInViewIds": ["impact-view"],
+      "viewRoles": {
+        "impact-view": ["target"]
+      }
     },
     {
       "id": "IM-SEARCH-001",
@@ -430,8 +493,12 @@
       "confidence": "inferred",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "impact-view", "tags": ["output"] }],
-      "notes": "Impact classification is a manual finding/control record derived from selected-slice artifacts."
+      "viewScopedTags": ["output"],
+      "notes": "Impact classification is a manual finding/control record derived from selected-slice artifacts.",
+      "includedInViewIds": ["impact-view"],
+      "viewRoles": {
+        "impact-view": ["output"]
+      }
     },
     {
       "id": "AT-ROOT",
@@ -443,7 +510,11 @@
       "confidence": "user-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "evidence-acceptance-view", "tags": ["output"] }]
+      "viewScopedTags": ["output"],
+      "includedInViewIds": ["evidence-acceptance-view"],
+      "viewRoles": {
+        "evidence-acceptance-view": ["output"]
+      }
     },
     {
       "id": "CYCLE-TODO-SEARCH",
@@ -455,7 +526,11 @@
       "confidence": "inferred",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "scope-execution-view", "tags": ["required", "guard"] }]
+      "viewScopedTags": ["guard", "required"],
+      "includedInViewIds": ["scope-execution-view"],
+      "viewRoles": {
+        "scope-execution-view": ["required", "guard"]
+      }
     },
     {
       "id": "NEC-WT-SEARCH-001",
@@ -467,7 +542,11 @@
       "confidence": "inferred",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "scope-execution-view", "tags": ["required", "guard"] }]
+      "viewScopedTags": ["guard", "required"],
+      "includedInViewIds": ["scope-execution-view"],
+      "viewRoles": {
+        "scope-execution-view": ["required", "guard"]
+      }
     },
     {
       "id": "AB-TODO-SEARCH",
@@ -479,7 +558,11 @@
       "confidence": "user-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "evidence-acceptance-view", "tags": ["output"] }]
+      "viewScopedTags": ["output"],
+      "includedInViewIds": ["evidence-acceptance-view"],
+      "viewRoles": {
+        "evidence-acceptance-view": ["output"]
+      }
     },
     {
       "id": "CCN-ACEP-TASK-CARD-AUTHORITY-001",
@@ -491,10 +574,12 @@
       "confidence": "inferred",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "impact-view", "tags": ["context"] },
-        { "viewId": "evidence-acceptance-view", "tags": ["stale"] }
-      ]
+      "viewScopedTags": ["context", "stale"],
+      "includedInViewIds": ["impact-view", "evidence-acceptance-view"],
+      "viewRoles": {
+        "impact-view": ["context"],
+        "evidence-acceptance-view": ["stale"]
+      }
     },
     {
       "id": "FIND-BOUNDED-FIXTURE",
@@ -506,7 +591,11 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "evidence-acceptance-view", "tags": ["stale"] }]
+      "viewScopedTags": ["stale"],
+      "includedInViewIds": ["evidence-acceptance-view"],
+      "viewRoles": {
+        "evidence-acceptance-view": ["stale"]
+      }
     },
     {
       "id": "FIND-PARTIAL-UI",
@@ -518,7 +607,11 @@
       "confidence": "inferred",
       "freshnessStatus": "stale",
       "parityStatus": "partial",
-      "viewScopedTags": [{ "viewId": "evidence-acceptance-view", "tags": ["stale"] }]
+      "viewScopedTags": ["stale"],
+      "includedInViewIds": ["evidence-acceptance-view"],
+      "viewRoles": {
+        "evidence-acceptance-view": ["stale"]
+      }
     },
     {
       "id": "FIND-GENERATED-BUILDER-MISSING",
@@ -530,10 +623,12 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "partial",
-      "viewScopedTags": [
-        { "viewId": "scope-execution-view", "tags": ["blocked"] },
-        { "viewId": "evidence-acceptance-view", "tags": ["stale"] }
-      ]
+      "viewScopedTags": ["stale", "blocked"],
+      "includedInViewIds": ["scope-execution-view", "evidence-acceptance-view"],
+      "viewRoles": {
+        "scope-execution-view": ["blocked"],
+        "evidence-acceptance-view": ["stale"]
+      }
     },
     {
       "id": "FIND-ACEP-CLEANUP-DEFERRED",
@@ -545,7 +640,11 @@
       "confidence": "inferred",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "impact-view", "tags": ["stale"] }]
+      "viewScopedTags": ["stale"],
+      "includedInViewIds": ["impact-view"],
+      "viewRoles": {
+        "impact-view": ["stale"]
+      }
     },
     {
       "id": "DOC-READ-MODEL",
@@ -557,7 +656,11 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "evidence-acceptance-view", "tags": ["output"] }]
+      "viewScopedTags": ["output"],
+      "includedInViewIds": ["evidence-acceptance-view"],
+      "viewRoles": {
+        "evidence-acceptance-view": ["output"]
+      }
     },
     {
       "id": "DOC-PARITY-CHECK",
@@ -569,7 +672,11 @@
       "confidence": "tool-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "evidence-acceptance-view", "tags": ["output"] }]
+      "viewScopedTags": ["output"],
+      "includedInViewIds": ["evidence-acceptance-view"],
+      "viewRoles": {
+        "evidence-acceptance-view": ["output"]
+      }
     },
     {
       "id": "DOC-LIMITED-PILOT-PACKAGE",
@@ -581,7 +688,11 @@
       "confidence": "inferred",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "intent-view", "tags": ["output"] }]
+      "viewScopedTags": ["output"],
+      "includedInViewIds": ["intent-view"],
+      "viewRoles": {
+        "intent-view": ["output"]
+      }
     },
     {
       "id": "DEC-LIMITED-PILOT-PENDING",
@@ -593,10 +704,12 @@
       "confidence": "inferred",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [
-        { "viewId": "intent-view", "tags": ["required"] },
-        { "viewId": "evidence-acceptance-view", "tags": ["blocked"] }
-      ]
+      "viewScopedTags": ["required", "blocked"],
+      "includedInViewIds": ["intent-view", "evidence-acceptance-view"],
+      "viewRoles": {
+        "intent-view": ["required"],
+        "evidence-acceptance-view": ["blocked"]
+      }
     },
     {
       "id": "VIEW-TODO-SEARCH-CORE-VIEWS",
@@ -608,8 +721,12 @@
       "confidence": "inferred",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": [{ "viewId": "scope-execution-view", "tags": ["output"] }],
-      "notes": "This manifest is a review artifact, not source authority."
+      "viewScopedTags": ["output"],
+      "notes": "This manifest is a review artifact, not source authority.",
+      "includedInViewIds": ["scope-execution-view"],
+      "viewRoles": {
+        "scope-execution-view": ["output"]
+      }
     }
   ],
   "edges": [

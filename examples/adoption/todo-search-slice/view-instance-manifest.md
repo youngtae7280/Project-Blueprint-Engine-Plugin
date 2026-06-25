@@ -27,6 +27,10 @@ target, context, candidate, guard, required, stale, blocked, output
 These tags describe a node's temporary role inside one view. Durable meaning is carried by edges such as `targets`,
 `implements`, `verifies`, `evidences`, `invalidates`, `preserves`, `approves`, and `derives-view`.
 
+View membership is separate from these tags. Each object in `viewInstances` is the membership record for that Core View
+id. Its `viewScopedTags` map uses node ids as keys and allowed role tags as values; Core View ids such as
+`behavior-view` and `scope-execution-view` are never tag values.
+
 ## 7 Core View Coverage
 
 | View                       | Purpose                                                                                       | Coverage |
