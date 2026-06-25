@@ -40,6 +40,9 @@ approve full Graph-source promotion.
 | Workflow runtime             | Node 24 action/runtime settings reviewed in run `28157938343`                                          |
 | Authority boundary           | CI-backed Evidence is Evidence only; no source authority expansion, enforcement, or promotion approval |
 
+Temporary smoke note: this line exists only on the PR informational workflow smoke branch and must not be merged to
+`main`.
+
 ## Mode Comparison
 
 | Mode                                     | Trigger                | Purpose                                                | Current status | Enforcement boundary                                                |
