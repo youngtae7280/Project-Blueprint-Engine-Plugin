@@ -230,20 +230,21 @@ This design and bounded implementation result do not include:
 ## Recommended Next User Decision Surface
 
 After this design, the user approved and Codex implemented the bounded builder task, approved actual scoped
-source-authority pilot execution for Todo Search, and approved scoped validator-backed Evidence implementation. The next
-user decision surface is now:
+source-authority pilot execution for Todo Search, approved scoped validator-backed Evidence implementation, and approved
+the first non-enforcing manual CI workflow implementation. The next user decision surface is now:
 
-1. `Approve non-enforcing CI workflow implementation for read-model Evidence`
-2. `Refine CI workflow design before implementation`
-3. `Keep scoped pilot active and observe with validator-backed Evidence`
-4. `Require public-doc cleanup before broader promotion`
-5. `Prepare broader Graph-source promotion review`
-6. `Rollback / defer scoped source-authority pilot`
+1. `Run manual CI-backed Evidence workflow and review artifact result`
+2. `Keep workflow manual/non-enforcing and continue observation`
+3. `Design PR informational trigger`
+4. `Design CI enforcement / required check policy`
+5. `Require public-doc cleanup before broader promotion`
+6. `Prepare broader Graph-source promotion review`
+7. `Rollback / defer scoped source-authority pilot`
 
-Recommended option after scoped validator-backed Evidence:
+Recommended option after the first non-enforcing workflow implementation:
 
 ```text
-Approve non-enforcing CI workflow implementation only if the user wants durable CI-backed Evidence; otherwise keep observing the scoped pilot.
+Run manual CI-backed Evidence workflow and review artifact result before considering PR triggers, enforcement, or broader scope.
 ```
 
 Reason:
@@ -253,7 +254,8 @@ Reason:
   `examples/adoption/todo-search-slice/generated/parity-warning-resolution.md`.
 - The current parity report is `comparison-pass` with no mismatch, blocking, or decision-required entries.
 - Scoped pilot execution is recorded for Todo Search only; broader source authority remains unchanged.
-- Scoped validator-backed Evidence is `validation-pass`; CI-backed Evidence remains future.
+- Scoped validator-backed Evidence is `validation-pass`; manual CI-backed Evidence workflow exists, but CI artifact review
+  is still future.
 
 The user later gave that explicit bounded execution approval for the Todo Search selected slice. The execution is
 recorded in [scoped-source-authority-pilot-execution-record.md](scoped-source-authority-pilot-execution-record.md). This
@@ -265,8 +267,8 @@ That stricter repeatability design is now recorded in
 the scoped validator-backed Evidence implementation while keeping CI enforcement unimplemented.
 
 The CI workflow integration design is recorded in
-[ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md). It defines a future
-non-enforcing CI Evidence path without adding a workflow.
+[ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md). It records the
+manual `workflow_dispatch` implementation without PR/push triggers, required checks, branch protection, or enforcement.
 
 ## Approval Brief Draft
 
@@ -293,20 +295,22 @@ builder now creates generated output for Todo Search only.
 | Generated output                | present      | Bounded Todo Search generated read-model and parity report are created under `generated/`.     |
 | Source authority change         | not approved | Generated output remains Evidence rather than automatic source.                                |
 | Validator-backed Evidence       | present      | Scoped Todo Search validator report is `validation-pass`.                                      |
-| CI-backed Evidence              | open         | CI-backed Evidence remains a stronger future level.                                            |
+| CI-backed Evidence              | implemented  | Manual workflow exists; reviewed CI run artifact remains future.                               |
 | Comparison warning resolution   | present      | The five freshness warnings were reviewed and resolved; current parity status is pass.         |
 
 ### Remaining Judgment
 
-The user approved bounded scoped source-authority pilot execution with generated Evidence and scoped validator-backed
-Evidence. The remaining decision is whether to design CI backing, keep observing the pilot, require public-doc cleanup,
-prepare broader promotion review, or rollback/defer the pilot.
+The user approved bounded scoped source-authority pilot execution with generated Evidence, scoped validator-backed
+Evidence, and a manual non-enforcing CI workflow. The remaining decision is whether to run/review the manual CI artifact,
+keep observing the pilot, design PR informational triggers or enforcement policy, require public-doc cleanup, prepare
+broader promotion review, or rollback/defer the pilot.
 
 ### Approval Choice Candidates
 
-- `Approve non-enforcing CI workflow implementation for read-model Evidence`
-- `Refine CI workflow design before implementation`
-- `Keep scoped pilot active and observe with validator-backed Evidence`
+- `Run manual CI-backed Evidence workflow and review artifact result`
+- `Keep workflow manual/non-enforcing and continue observation`
+- `Design PR informational trigger`
+- `Design CI enforcement / required check policy`
 - `Require public-doc cleanup before broader promotion`
 - `Prepare broader Graph-source promotion review`
 - `Rollback / defer scoped source-authority pilot`
@@ -317,8 +321,8 @@ prepare broader promotion review, or rollback/defer the pilot.
 Decision required
 ```
 
-Reason: bounded generated Evidence, scoped pilot execution, and scoped validator-backed Evidence are recorded, but
-CI-backed Evidence and broader promotion remain unapproved.
+Reason: bounded generated Evidence, scoped pilot execution, scoped validator-backed Evidence, and manual workflow
+implementation are recorded, but reviewed CI run artifact, enforcement, and broader promotion remain unapproved.
 
 ## Control Node Summary
 
@@ -326,7 +330,8 @@ CI-backed Evidence and broader promotion remain unapproved.
 | ------------------------------------ | ---------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------- |
 | Output design selected               | Decision Control Node        | resolved                           | User selected design-first work.                                                              |
 | Bounded generated output             | Evidence Control Node        | present with warnings              | Todo Search generated output exists.                                                          |
-| Scoped validator-backed Evidence     | Evidence Control Node        | present                            | Local validation report is `validation-pass`; CI-backed repeatability remains open.           |
+| Scoped validator-backed Evidence     | Evidence Control Node        | present                            | Local validation report is `validation-pass`.                                                 |
+| Manual CI-backed workflow            | Evidence Control Node        | implemented / artifact review open | Manual dispatch exists; reviewed CI artifact remains a later Evidence step.                   |
 | Public-doc cleanup                   | Compatibility Control Node   | deferred / active warning          | ACEP cleanup remains separate and can still be required by user before implementation.        |
 | Scoped source authority change       | Impact / Change Control Node | not started                        | No source transition or scoped execution is performed.                                        |
 | Demo-support Acceptance with warning | Acceptance Control Node      | closed with warnings               | Demo-support acceptance remains separate from source-transition approval.                     |

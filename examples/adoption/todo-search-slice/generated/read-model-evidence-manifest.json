@@ -1,8 +1,8 @@
 {
   "version": "0.1.0-read-model-evidence-manifest",
-  "generatedAt": "2026-06-25T05:05:32.212Z",
+  "generatedAt": "2026-06-25T06:10:05.557Z",
   "commandIdentity": "pbe graph read-model generate --slice examples/adoption/todo-search-slice",
-  "sourceCommit": "3ee75c2",
+  "sourceCommit": "bc9bb24",
   "sourceSlice": "examples/adoption/todo-search-slice",
   "generatedArtifacts": [
     "examples/adoption/todo-search-slice/generated/generated-read-model.json",

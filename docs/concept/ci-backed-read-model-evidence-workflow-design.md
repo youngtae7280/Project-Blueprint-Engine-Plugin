@@ -1,19 +1,19 @@
 # CI-Backed Read-Model Evidence Workflow Design
 
-Status: ci-backed-read-model-evidence-workflow-design / design-recorded / workflow-not-implemented
+Status: ci-backed-read-model-evidence-workflow-design / non-enforcing-workflow-implemented / manual-dispatch-only
 
 ## Document Purpose
 
-This document defines the concept-level CI workflow design for read-model Evidence after the Todo Search scoped
-read-model validator became available.
+This document defines the CI workflow design for read-model Evidence after the Todo Search scoped read-model validator
+became available. The first bounded non-enforcing workflow is now implemented as manual dispatch only.
 
-It explains how CI-backed Evidence could be produced later, how that differs from local validator-backed Evidence, what
-commands and artifacts a future workflow should use, and how CI results should relate to Approval Briefs, Control Nodes,
-Source Transition Path, rollback/fallback, and user judgment.
+It explains how CI-backed Evidence can be produced by the manual workflow, how that differs from local
+validator-backed Evidence, what commands and artifacts the workflow uses, and how CI results should relate to Approval
+Briefs, Control Nodes, Source Transition Path, rollback/fallback, and user judgment.
 
-This document does not add or modify `.github/workflows`, does not implement CI enforcement, does not expand pilot
-scope, does not change source authority, does not retire tree-native artifacts, does not clean up public docs, and does
-not approve full Graph-source promotion.
+This document records that `.github/workflows/read-model-evidence.yml` exists for non-enforcing manual CI-backed
+Evidence. It does not implement CI enforcement, does not expand pilot scope, does not change source authority, does not
+retire tree-native artifacts, does not clean up public docs, and does not approve full Graph-source promotion.
 
 ## Current Local Validator-Backed Baseline
 
@@ -26,14 +26,14 @@ not approve full Graph-source promotion.
 | Validator-backed status    | `validation-pass`                                                            |
 | Validator check count      | 20                                                                           |
 | Warning/blocking/decision  | 0 / 0 / 0                                                                    |
-| CI-backed Evidence         | not implemented                                                              |
+| CI-backed Evidence         | manual workflow implemented; CI run artifact not reviewed yet                |
 | Tree-native fallback       | retained and usable                                                          |
 | Supplemental compatibility | warning-only, not pilot source scope                                         |
 | Current authority boundary | bounded Todo Search scoped pilot; no repository-wide source authority change |
 
-The local validator baseline is enough to keep the scoped pilot active under observation. It is not the same as
-CI-backed Evidence because it does not prove repeatability in an independent CI run, does not create a CI artifact, and
-does not provide branch/PR/main status.
+The local validator baseline is enough to keep the scoped pilot active under observation. The non-enforcing manual CI
+workflow can now produce CI-backed Evidence when manually dispatched. PR/push triggers, required checks, branch
+protection, and enforcement remain unimplemented.
 
 ## CI-Backed Evidence Definition
 
@@ -75,12 +75,23 @@ CI-backed Evidence is still Evidence. It is not source promotion, not user appro
 | `main-post-merge-evidence`      | Produce Evidence after merge to main.                                     | Useful for audit trail              | Evidence-only; does not validate the PR before merge.                                                   |
 | `main-scheduled-observation`    | Periodically verify the active scoped pilot remains stable.               | Optional later observation mode     | Evidence-only unless enforcement is approved.                                                           |
 
-The first recommended CI design target is `manual-workflow-dispatch` in non-enforcement mode for
-`examples/adoption/todo-search-slice`.
+Implemented CI target:
+
+```text
+.github/workflows/read-model-evidence.yml
+```
+
+Implemented trigger:
+
+```text
+workflow_dispatch
+```
+
+PR, push, scheduled, and required-check modes remain future-only.
 
 ## Proposed CI Command Sequence
 
-A future CI workflow for the current scoped slice should run the same bounded commands that local validation uses:
+The implemented CI workflow for the current scoped slice runs the same bounded commands that local validation uses:
 
 ```text
 npm run build:cli
@@ -89,7 +100,7 @@ node dist/cli/index.js graph read-model compare --generated examples/adoption/to
 node dist/cli/index.js graph read-model validate --slice examples/adoption/todo-search-slice --json
 ```
 
-Optional supporting commands:
+Implemented supporting commands:
 
 ```text
 npx vitest run cli/src/__tests__/read-model-evidence.test.ts
@@ -107,19 +118,19 @@ pbe graph read-model validate --slice <path> --ci-manifest <file>
 
 Those future surfaces are not implemented by this design.
 
-## Proposed CI Artifact Outputs
+## Implemented And Proposed CI Artifact Outputs
 
-| Artifact output                              | Role                                                                                       | Required now? |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------ | ------------- |
-| `generated-read-model.json`                  | Generated Graph-first read-model Evidence.                                                 | yes           |
-| `generated-read-model.md`                    | Human-readable generated read-model summary.                                               | yes           |
-| `read-model-parity-report.json`              | Machine-readable generated/manual comparison report.                                       | yes           |
-| `read-model-parity-report.md`                | Human-readable parity summary.                                                             | yes           |
-| `read-model-validation-report.json`          | Machine-readable validator-backed Evidence report.                                         | yes           |
-| `read-model-validation-report.md`            | Human-readable validation report.                                                          | yes           |
-| `read-model-ci-evidence-manifest.json`       | Future CI manifest linking workflow, run id, source commit, commands, outputs, and status. | future design |
-| `read-model-ci-summary.md`                   | Future CI run summary for Approval Brief / review packages.                                | future design |
-| uploaded read-model Evidence artifact bundle | Future CI artifact containing all generated outputs and logs.                              | future design |
+| Artifact output                              | Role                                                                                | Required now?          |
+| -------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------- |
+| `generated-read-model.json`                  | Generated Graph-first read-model Evidence.                                          | yes                    |
+| `generated-read-model.md`                    | Human-readable generated read-model summary.                                        | yes                    |
+| `read-model-parity-report.json`              | Machine-readable generated/manual comparison report.                                | yes                    |
+| `read-model-parity-report.md`                | Human-readable parity summary.                                                      | yes                    |
+| `read-model-validation-report.json`          | Machine-readable validator-backed Evidence report.                                  | yes                    |
+| `read-model-validation-report.md`            | Human-readable validation report.                                                   | yes                    |
+| `read-model-ci-evidence-manifest.json`       | CI manifest linking workflow, run id, source commit, commands, outputs, and status. | runtime artifact in CI |
+| GitHub Step Summary                          | CI run summary for review.                                                          | yes                    |
+| uploaded read-model Evidence artifact bundle | CI artifact containing generated outputs and reports.                               | yes                    |
 
 CI artifacts should preserve:
 
@@ -133,7 +144,7 @@ CI artifacts should preserve:
 
 ## Status Semantics
 
-Concept status labels for future CI-backed Evidence:
+Concept status labels for CI-backed Evidence:
 
 | Status label          | Meaning                                                                                   |
 | --------------------- | ----------------------------------------------------------------------------------------- |
@@ -233,14 +244,14 @@ It does not replace the Approval Brief or the user approval surface.
 
 Possible control candidates:
 
-| Candidate                              | Family                     | Trigger                                                                 |
-| -------------------------------------- | -------------------------- | ----------------------------------------------------------------------- |
-| CI evidence missing                    | Evidence Control Node      | Broader execution asks for CI-backed Evidence before CI exists.         |
-| CI evidence blocked                    | Evidence Control Node      | `ci-evidence-blocked` or `decision-required`.                           |
-| Enforcement mode request               | Decision Control Node      | User or project asks to make CI validation a required gate.             |
-| Generated/manual mismatch              | Evidence / Impact Control  | CI output differs from committed generated/manual parity.               |
-| Compatibility warning affects approval | Compatibility Control Node | ACEP cleanup warning affects broader review or promotion judgment.      |
-| Source boundary ambiguity              | Impact / Decision Control  | CI output or docs imply broader authority than the scoped pilot allows. |
+| Candidate                              | Family                     | Trigger                                                                  |
+| -------------------------------------- | -------------------------- | ------------------------------------------------------------------------ |
+| CI artifact missing                    | Evidence Control Node      | Broader execution asks for reviewed CI-backed Evidence before it exists. |
+| CI evidence blocked                    | Evidence Control Node      | `ci-evidence-blocked` or `decision-required`.                            |
+| Enforcement mode request               | Decision Control Node      | User or project asks to make CI validation a required gate.              |
+| Generated/manual mismatch              | Evidence / Impact Control  | CI output differs from committed generated/manual parity.                |
+| Compatibility warning affects approval | Compatibility Control Node | ACEP cleanup warning affects broader review or promotion judgment.       |
+| Source boundary ambiguity              | Impact / Decision Control  | CI output or docs imply broader authority than the scoped pilot allows.  |
 
 ### Source Transition Path
 
@@ -277,10 +288,10 @@ Codex/PBE cannot create a waiver by self-approval. Waiver does not retire tree-n
 
 ## Explicit Non-Scope
 
-This design does not:
+This implementation and design do not:
 
-- add or modify `.github/workflows`
-- implement CI manifest generation
+- add PR/push/scheduled workflows beyond the manual workflow
+- commit CI runtime-generated manifests to the repository
 - introduce CI enforcement
 - implement `validate --all`
 - change source authority
@@ -293,17 +304,17 @@ This design does not:
 
 ## Recommended Next Decision Surface
 
-After this design, the next user decision should choose one of:
+After this non-enforcing manual workflow implementation, the next user decision should choose one of:
 
-1. `Approve non-enforcing CI workflow implementation for Todo Search read-model Evidence`
-2. `Refine CI workflow design before implementation`
-3. `Keep local validator-backed observation only`
-4. `Require public-doc cleanup before CI work`
-5. `Prepare multi-slice validation design first`
-6. `Defer or reject CI-backed Evidence path`
+1. `Run manual CI-backed Evidence workflow and review artifact result`
+2. `Keep workflow manual/non-enforcing and observe`
+3. `Design PR informational trigger`
+4. `Design CI enforcement / required check policy`
+5. `Prepare multi-slice validation design`
+6. `Require public-doc cleanup before broader CI or promotion work`
 
-Recommended next step: approve a non-enforcing CI workflow implementation only if the user wants durable CI-backed
-Evidence for broader execution/enforcement discussions. Keep it scoped to Todo Search first.
+Recommended next step: run the manual workflow once and review the uploaded artifact result before considering PR
+informational triggers, enforcement, or broader scope.
 
 ## Approval Brief Draft
 
@@ -323,17 +334,17 @@ and compatibility.
 | Check                      | Status       | Summary                                                                 |
 | -------------------------- | ------------ | ----------------------------------------------------------------------- |
 | Local validator baseline   | present      | Todo Search scoped validation is `validation-pass` with 20 checks.      |
-| CI workflow implementation | not started  | No `.github/workflows` file is added or modified.                       |
+| CI workflow implementation | implemented  | `.github/workflows/read-model-evidence.yml` exists as manual dispatch.  |
 | CI enforcement             | not approved | Enforcement mode remains future-only.                                   |
 | Source authority boundary  | preserved    | CI Evidence would remain Evidence only.                                 |
 | Retained warnings          | visible      | Bounded fixture, partial UI, CI gap, and ACEP cleanup remain visible.   |
-| Next user decision         | required     | User must choose whether to implement non-enforcing CI workflow design. |
+| Next user decision         | required     | User must choose whether to run/review CI Evidence or design next mode. |
 
 ### Remaining Judgment
 
-The user must decide whether to implement a non-enforcing CI workflow for the Todo Search scoped read-model Evidence,
-refine the design first, keep observing locally, require public-doc cleanup first, design multi-slice validation, or
-defer/reject CI-backed Evidence.
+The user must decide whether to run the manual workflow and review the CI-backed artifact result, keep observing locally,
+design PR informational triggers, design enforcement policy, prepare multi-slice validation, or require public-doc
+cleanup before broader work.
 
 ### State Label
 
@@ -341,24 +352,25 @@ defer/reject CI-backed Evidence.
 Decision required
 ```
 
-Reason: CI workflow integration is designed, but workflow implementation and enforcement remain unapproved.
+Reason: non-enforcing manual CI workflow implementation exists, but running/reviewing the CI artifact result, PR
+triggers, enforcement, and broader scope remain separate decisions.
 
 ## Gate Self-Check
 
-| Gate                                   | Result | Notes                                                                            |
-| -------------------------------------- | ------ | -------------------------------------------------------------------------------- |
-| Design-Only Boundary Gate              | PASS   | This document defines CI workflow design only.                                   |
-| Non-Workflow Gate                      | PASS   | No `.github/workflows` files are added or modified.                              |
-| Non-CI-Enforcement Gate                | PASS   | Enforcement mode remains future-only.                                            |
-| Source Authority Boundary Gate         | PASS   | CI-backed Evidence is Evidence only and does not change source authority.        |
-| Non-Full-Promotion Gate                | PASS   | Full Graph-source promotion remains unapproved.                                  |
-| Local-vs-CI Evidence Separation Gate   | PASS   | Local validator-backed Evidence and CI-backed Evidence are separate.             |
-| User Approval Boundary Gate            | PASS   | CI pass is not user approval.                                                    |
-| Retained Warning Visibility Gate       | PASS   | Retained warnings remain explicit.                                               |
-| Scope Strategy Gate                    | PASS   | Scoped Todo Search CI is first; multi-slice/repo-wide validation remains future. |
-| Waiver / Manual Override Boundary Gate | PASS   | Waivers require explicit user judgment and cannot be Codex/PBE self-approved.    |
+| Gate                                   | Result | Notes                                                                                |
+| -------------------------------------- | ------ | ------------------------------------------------------------------------------------ |
+| Design / Implementation Boundary Gate  | PASS   | Non-enforcing manual workflow is implemented; enforcement and broader scope are not. |
+| Workflow Boundary Gate                 | PASS   | Only `.github/workflows/read-model-evidence.yml` is added for manual dispatch.       |
+| Non-CI-Enforcement Gate                | PASS   | Enforcement mode remains future-only.                                                |
+| Source Authority Boundary Gate         | PASS   | CI-backed Evidence is Evidence only and does not change source authority.            |
+| Non-Full-Promotion Gate                | PASS   | Full Graph-source promotion remains unapproved.                                      |
+| Local-vs-CI Evidence Separation Gate   | PASS   | Local validator-backed Evidence and CI-backed Evidence are separate.                 |
+| User Approval Boundary Gate            | PASS   | CI pass is not user approval.                                                        |
+| Retained Warning Visibility Gate       | PASS   | Retained warnings remain explicit.                                                   |
+| Scope Strategy Gate                    | PASS   | Scoped Todo Search CI is first; multi-slice/repo-wide validation remains future.     |
+| Waiver / Manual Override Boundary Gate | PASS   | Waivers require explicit user judgment and cannot be Codex/PBE self-approved.        |
 
 ## Final Non-Implementation Statement
 
-This CI workflow design does not implement CI, does not introduce enforcement, does not expand the scoped pilot, does not
+This non-enforcing CI workflow implementation does not introduce enforcement, does not expand the scoped pilot, does not
 change source authority, does not retire tree-native artifacts, and does not approve full Graph-source promotion.

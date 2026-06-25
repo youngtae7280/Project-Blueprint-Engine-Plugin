@@ -149,8 +149,9 @@ The concept-level design for that decision is recorded in
 validator command is implemented for Todo Search only; CI workflows and enforcement remain unimplemented.
 
 The CI workflow integration design is recorded in
-[ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md). It defines future
-trigger modes, commands, artifacts, status labels, and waiver boundaries without adding a workflow or enforcement.
+[ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md). It defines trigger
+modes, commands, artifacts, status labels, and waiver boundaries. The non-enforcing manual workflow is implemented in
+`.github/workflows/read-model-evidence.yml`; PR/push triggers and enforcement remain future-only.
 
 ## Triggers For Public-Doc Cleanup Decision
 
@@ -176,7 +177,7 @@ of these is true:
 The next major decision should be one of:
 
 1. `Continue active observation`
-2. `Approve non-enforcing CI workflow implementation for read-model Evidence`
+2. `Run manual CI-backed Evidence workflow and review artifact result`
 3. `Perform public-doc cleanup`
 4. `Prepare broader Graph-source promotion review`
 5. `Rollback or defer scoped pilot`

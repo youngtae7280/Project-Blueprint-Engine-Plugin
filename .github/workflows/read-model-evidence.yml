@@ -1,0 +1,173 @@
+name: PBE Read-Model Evidence
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  todo-search-read-model-evidence:
+    name: Todo Search Read-Model Evidence
+    runs-on: ubuntu-latest
+    env:
+      PBE_READ_MODEL_SLICE: examples/adoption/todo-search-slice
+      PBE_GENERATED_DIR: examples/adoption/todo-search-slice/generated
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build CLI
+        run: npm run build:cli
+
+      - name: Generate read-model Evidence
+        run: node dist/cli/index.js graph read-model generate --slice "$PBE_READ_MODEL_SLICE" --json
+
+      - name: Compare generated and manual read-model Evidence
+        run: >
+          node dist/cli/index.js graph read-model compare
+          --generated "$PBE_GENERATED_DIR/generated-read-model.json"
+          --manual "$PBE_READ_MODEL_SLICE/maintainability-graph-read-model.json"
+          --json
+
+      - name: Validate read-model Evidence
+        run: node dist/cli/index.js graph read-model validate --slice "$PBE_READ_MODEL_SLICE" --json
+
+      - name: Focused read-model Evidence tests
+        run: npx vitest run cli/src/__tests__/read-model-evidence.test.ts
+
+      - name: Todo Search runtime fixture tests
+        run: npx vitest run "$PBE_READ_MODEL_SLICE/runtime-fixture"
+
+      - name: Validate PBE plugin files
+        run: npm run validate:pbe
+
+      - name: Validate PBE tree schemas
+        run: npm run validate:pbe:v2
+
+      - name: Write CI evidence manifest
+        if: always()
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs')
+          const path = require('node:path')
+
+          const slice = process.env.PBE_READ_MODEL_SLICE
+          const generatedDir = process.env.PBE_GENERATED_DIR
+          const validationPath = path.join(generatedDir, 'read-model-validation-report.json')
+          const parityPath = path.join(generatedDir, 'read-model-parity-report.json')
+
+          function readJson(filePath) {
+            if (!fs.existsSync(filePath)) return null
+            return JSON.parse(fs.readFileSync(filePath, 'utf8'))
+          }
+
+          const validation = readJson(validationPath)
+          const parity = readJson(parityPath)
+          const manifest = {
+            version: '1.0',
+            evidenceLevel: 'ci-backed',
+            workflowName: process.env.GITHUB_WORKFLOW || 'PBE Read-Model Evidence',
+            triggerMode: process.env.GITHUB_EVENT_NAME || 'workflow_dispatch',
+            runId: process.env.GITHUB_RUN_ID || 'unavailable',
+            runAttempt: process.env.GITHUB_RUN_ATTEMPT || 'unavailable',
+            sourceCommit: process.env.GITHUB_SHA || 'unavailable',
+            sourceRef: process.env.GITHUB_REF || 'unavailable',
+            sourceSlice: slice,
+            generatedAt: new Date().toISOString(),
+            status: validation?.status === 'validation-pass' ? 'ci-evidence-pass' : 'ci-evidence-blocked',
+            validatorStatus: validation?.status || 'missing',
+            parityStatus: parity?.summary?.status || 'missing',
+            counts: {
+              validationWarnings: validation?.summary?.warningCount ?? null,
+              validationBlocking: validation?.summary?.blockingCount ?? null,
+              validationDecisionRequired: validation?.summary?.decisionRequiredCount ?? null,
+              parityMismatches: parity?.summary?.mismatchCount ?? null,
+              parityBlocking: parity?.summary?.blockingCount ?? null,
+              parityDecisionRequired: parity?.summary?.decisionRequiredCount ?? null,
+            },
+            artifactPaths: [
+              `${generatedDir}/generated-read-model.json`,
+              `${generatedDir}/generated-read-model.md`,
+              `${generatedDir}/read-model-evidence-manifest.json`,
+              `${generatedDir}/read-model-parity-report.json`,
+              `${generatedDir}/read-model-parity-report.md`,
+              `${generatedDir}/read-model-validation-report.json`,
+              `${generatedDir}/read-model-validation-report.md`,
+              `${generatedDir}/scoped-source-authority-pilot-marker.json`,
+            ],
+            sourceAuthorityBoundary:
+              'CI-backed Evidence is Evidence only for the Todo Search selected slice. It does not change source authority.',
+            nonPromotionStatement:
+              'This workflow is non-enforcing and does not approve full Graph-source promotion, branch protection, tree-native retirement, public-doc cleanup, or user acceptance.',
+            retainedWarningsRemainVisible: true,
+          }
+
+          fs.mkdirSync(generatedDir, { recursive: true })
+          fs.writeFileSync(path.join(generatedDir, 'read-model-ci-evidence-manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+          NODE
+
+      - name: Write evidence summary
+        if: always()
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs')
+          const path = require('node:path')
+
+          const summaryPath = process.env.GITHUB_STEP_SUMMARY
+          if (!summaryPath) process.exit(0)
+
+          const generatedDir = process.env.PBE_GENERATED_DIR
+          const manifestPath = path.join(generatedDir, 'read-model-ci-evidence-manifest.json')
+          let manifest = null
+          if (fs.existsSync(manifestPath)) {
+            manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
+          }
+
+          const status = manifest?.status || 'ci-evidence-blocked'
+          const validatorStatus = manifest?.validatorStatus || 'missing'
+          const parityStatus = manifest?.parityStatus || 'missing'
+          const slice = manifest?.sourceSlice || process.env.PBE_READ_MODEL_SLICE
+
+          const markdown = [
+            '# PBE Read-Model Evidence',
+            '',
+            `- Evidence scope: \`${slice}\``,
+            `- CI evidence status: \`${status}\``,
+            `- Validator status: \`${validatorStatus}\``,
+            `- Parity status: \`${parityStatus}\``,
+            '- Boundary: CI-backed Evidence is Evidence only.',
+            '- No source authority change.',
+            '- No full Graph-source promotion.',
+            '- No enforcement or required check is introduced by this workflow.',
+            '- Retained warnings remain visible in generated reports.',
+            '',
+          ].join('\n')
+
+          fs.appendFileSync(summaryPath, markdown)
+          NODE
+
+      - name: Upload read-model Evidence artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pbe-todo-search-read-model-evidence
+          path: |
+            examples/adoption/todo-search-slice/generated/generated-read-model.json
+            examples/adoption/todo-search-slice/generated/generated-read-model.md
+            examples/adoption/todo-search-slice/generated/read-model-evidence-manifest.json
+            examples/adoption/todo-search-slice/generated/read-model-parity-report.json
+            examples/adoption/todo-search-slice/generated/read-model-parity-report.md
+            examples/adoption/todo-search-slice/generated/read-model-validation-report.json
+            examples/adoption/todo-search-slice/generated/read-model-validation-report.md
+            examples/adoption/todo-search-slice/generated/read-model-ci-evidence-manifest.json
+            examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json

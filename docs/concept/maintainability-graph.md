@@ -159,9 +159,9 @@ public-doc cleanup, broader promotion review, rollback, or deferral.
 design for that validator/CI-backed Evidence branch. It keeps validation Evidence distinct from source authority and user
 approval.
 
-[ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md) records the future
-CI workflow integration design for read-model Evidence. It remains design-only and does not add CI enforcement or broaden
-Maintainability Graph source authority.
+[ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md) records the CI
+workflow integration design for read-model Evidence. The first implementation is manual and non-enforcing, and it does
+not add CI enforcement or broaden Maintainability Graph source authority.
 
 [generated-read-model-evidence-requirement.md](generated-read-model-evidence-requirement.md) records the user's decision
 to require generated builder / CLI-backed read-model Evidence before actual scoped execution. It is an Evidence

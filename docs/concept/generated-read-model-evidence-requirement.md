@@ -213,7 +213,8 @@ completed bounded generated Evidence prerequisite.
 
 The CI workflow integration design is recorded in
 [ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md). It defines how
-future CI-backed Evidence could be produced without implementing a workflow or changing source authority.
+CI-backed Evidence can be produced. The first implementation is manual and non-enforcing for Todo Search only; it does
+not change source authority.
 
 ### Original Requirement Choice Set
 

@@ -277,9 +277,19 @@ The CI-backed read-model Evidence workflow design is now recorded:
 - [ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md)
 
 This design defines manual dispatch, informational PR, future enforcement, post-merge, and scheduled CI modes; proposed
-commands; report artifacts; status semantics; waiver boundaries; and scope strategy. It does not add or modify
-`.github/workflows`, introduce CI enforcement, change source authority, expand pilot scope, or approve full
-Graph-source promotion.
+commands; report artifacts; status semantics; waiver boundaries; and scope strategy. The design/implementation path does
+not introduce CI enforcement, change source authority, expand pilot scope, or approve full Graph-source promotion.
+
+The non-enforcing manual CI workflow is now implemented:
+
+- workflow: `.github/workflows/read-model-evidence.yml`
+- workflow name: `PBE Read-Model Evidence`
+- trigger: `workflow_dispatch`
+- scope: `examples/adoption/todo-search-slice`
+
+The workflow can create a CI-backed Evidence artifact bundle and GitHub step summary when manually run. It is not a
+required check, does not run on PR/push by default, does not introduce branch protection, and does not change source
+authority.
 
 ## Outline-Only Later-Phase Docs
 
