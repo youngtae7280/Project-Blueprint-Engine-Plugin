@@ -118,6 +118,16 @@ describe('read-model Evidence builder', () => {
       status: string
       evidenceLevel: string
       summary: { blockingCount: number; checkCount: number; decisionRequiredCount: number }
+      metadata: {
+        profileId?: string
+        sourceLayout?: string
+        policyLevel?: string
+        expectedCounts?: Record<string, number>
+        parityRequirement?: Record<string, unknown>
+        pilotMarkerRequirement?: Record<string, unknown>
+        runtimeFixtureRequirement?: Record<string, unknown>
+      }
+      sliceValidationContract?: Record<string, unknown>
       sourceAuthorityBoundary: string
       nonPromotionStatement: string
     }
@@ -127,6 +137,18 @@ describe('read-model Evidence builder', () => {
     expect(report.summary.checkCount).toBe(todoSearchReadModelProfile.expectedCounts.validationChecks)
     expect(report.summary.blockingCount).toBe(0)
     expect(report.summary.decisionRequiredCount).toBe(0)
+    expect(report.metadata.profileId).toBe(todoSearchReadModelProfile.profileId)
+    expect(report.metadata.sourceLayout).toBe('flat-demo-support')
+    expect(report.metadata.policyLevel).toBe('pilot-marker-backed')
+    expect(report.metadata.expectedCounts).toEqual(todoSearchReadModelProfile.expectedCounts)
+    expect(report.metadata.parityRequirement).toMatchObject({ required: true, status: 'pass' })
+    expect(report.metadata.pilotMarkerRequirement).toMatchObject({ required: true, status: 'present' })
+    expect(report.metadata.runtimeFixtureRequirement).toMatchObject({ required: true, status: 'present' })
+    expect(report.sliceValidationContract).toMatchObject({
+      reportUnit: 'per-slice-validation-report',
+      sourceSlice: 'examples/adoption/todo-search-slice',
+      policyLevel: 'pilot-marker-backed',
+    })
     expect(report.sourceAuthorityBoundary).toContain('does not change source authority')
     expect(report.nonPromotionStatement).toContain('Validation pass is Evidence only')
   })
@@ -158,7 +180,19 @@ describe('read-model Evidence builder', () => {
     const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
       status: string
       summary: { checkCount: number; warningCount: number; blockingCount: number; decisionRequiredCount: number }
-      metadata: { parityReport?: string; pilotMarker?: string; sliceProfile?: string }
+      metadata: {
+        parityReport?: string
+        pilotMarker?: string
+        sliceProfile?: string
+        profileId?: string
+        sourceLayout?: string
+        policyLevel?: string
+        expectedCounts?: Record<string, number>
+        parityRequirement?: Record<string, unknown>
+        pilotMarkerRequirement?: Record<string, unknown>
+        runtimeFixtureRequirement?: Record<string, unknown>
+      }
+      sliceValidationContract?: Record<string, unknown>
       sourceAuthorityBoundary: string
     }
 
@@ -168,9 +202,79 @@ describe('read-model Evidence builder', () => {
     expect(report.summary.blockingCount).toBe(0)
     expect(report.summary.decisionRequiredCount).toBe(0)
     expect(report.metadata.sliceProfile).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
+    expect(report.metadata.profileId).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
+    expect(report.metadata.sourceLayout).toBe('canonical-pbe')
+    expect(report.metadata.policyLevel).toBe('structure-only')
+    expect(report.metadata.expectedCounts).toEqual(todoAppPbeRunStructureOnlyProfile.expectedCounts)
     expect(report.metadata.parityReport).toBe('not-required-for-structure-only')
     expect(report.metadata.pilotMarker).toBe('not-required-for-structure-only')
+    expect(report.metadata.parityRequirement).toMatchObject({ required: false, status: 'not-required' })
+    expect(report.metadata.pilotMarkerRequirement).toMatchObject({ required: false, status: 'not-required' })
+    expect(report.metadata.runtimeFixtureRequirement).toMatchObject({
+      required: false,
+      status: 'attached-evidence-only',
+    })
+    expect(report.sliceValidationContract).toMatchObject({
+      reportUnit: 'per-slice-validation-report',
+      sourceSlice: 'examples/valid/todo-app-pbe-run',
+      policyLevel: 'structure-only',
+    })
     expect(report.sourceAuthorityBoundary).toContain('structure-only')
+  })
+
+  it('validates the structure-only fixture without Todo Search generated, manual parity, or pilot marker artifacts', async () => {
+    const workspace = await createExampleWorkspace()
+    await generateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    await rm(join(workspace, 'examples/adoption/todo-search-slice'), { recursive: true, force: true })
+
+    const result = await validateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
+      status: string
+      summary: { checkCount: number; blockingCount: number; decisionRequiredCount: number }
+      metadata: {
+        policyLevel?: string
+        parityRequirement?: Record<string, unknown>
+        pilotMarkerRequirement?: Record<string, unknown>
+      }
+    }
+
+    expect(report.status).toBe('validation-pass')
+    expect(report.summary.checkCount).toBe(todoAppPbeRunStructureOnlyProfile.expectedCounts.validationChecks)
+    expect(report.summary.blockingCount).toBe(0)
+    expect(report.summary.decisionRequiredCount).toBe(0)
+    expect(report.metadata.policyLevel).toBe('structure-only')
+    expect(report.metadata.parityRequirement).toMatchObject({ required: false, status: 'not-required' })
+    expect(report.metadata.pilotMarkerRequirement).toMatchObject({ required: false, status: 'not-required' })
+  })
+
+  it('validates Todo Search without depending on the Todo App generated directory', async () => {
+    const workspace = await createExampleWorkspace()
+    const generated = await generateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    await compareReadModelEvidence(
+      workspace,
+      generated.generatedJsonPath,
+      'examples/adoption/todo-search-slice/maintainability-graph-read-model.json',
+    )
+    await rm(join(workspace, 'examples/valid/todo-app-pbe-run/generated'), { recursive: true, force: true })
+
+    const result = await validateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
+      status: string
+      summary: { checkCount: number; blockingCount: number; decisionRequiredCount: number }
+      metadata: {
+        policyLevel?: string
+        parityRequirement?: Record<string, unknown>
+        pilotMarkerRequirement?: Record<string, unknown>
+      }
+    }
+
+    expect(report.status).toBe('validation-pass')
+    expect(report.summary.checkCount).toBe(todoSearchReadModelProfile.expectedCounts.validationChecks)
+    expect(report.summary.blockingCount).toBe(0)
+    expect(report.summary.decisionRequiredCount).toBe(0)
+    expect(report.metadata.policyLevel).toBe('pilot-marker-backed')
+    expect(report.metadata.parityRequirement).toMatchObject({ required: true, status: 'pass' })
+    expect(report.metadata.pilotMarkerRequirement).toMatchObject({ required: true, status: 'present' })
   })
 
   it('blocks validation when viewScopedTags or Core View coverage are invalid', async () => {

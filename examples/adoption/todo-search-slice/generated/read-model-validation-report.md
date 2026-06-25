@@ -6,10 +6,13 @@ Evidence level: validator-backed
 
 ## Run Identity
 
-- Validated at: 2026-06-25T07:28:16.276Z
+- Validated at: 2026-06-25T07:38:30.156Z
 - Command identity: `pbe graph read-model validate --slice examples/adoption/todo-search-slice`
-- Source commit: 17c5a97
+- Source commit: fce9df7
 - Source slice: `examples/adoption/todo-search-slice`
+- Profile id: `todo-search-selected-slice`
+- Source layout: flat-demo-support
+- Policy level: pilot-marker-backed
 - Scope level: scoped-slice-validation
 
 ## Boundary
@@ -18,6 +21,24 @@ Validator-backed Evidence checks the bounded Todo Search read-model outputs only
 
 Validation pass is Evidence only. It does not promote Maintainability Graph, expand pilot scope, retire tree-native
 artifacts, introduce CI enforcement, or replace user approval.
+
+## Per-Slice Independence Contract
+
+- Report unit: per-slice-validation-report
+- Expected nodes: 40
+- Expected edges: 59
+- Expected validation checks: 20
+- Generated read-model: examples/adoption/todo-search-slice/generated/generated-read-model.json
+- Parity requirement: pass (examples/adoption/todo-search-slice/generated/read-model-parity-report.json)
+- Pilot marker requirement: present
+  (examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json)
+- Runtime fixture requirement: present
+- Fallback/reference count: 8
+- Missing fallback/reference count: 0
+
+Validation uses the target slice profile, generated artifacts, and declared source inputs only. It must not depend on
+another slice generated directory, manual parity artifact, pilot marker, or runtime fixture unless that artifact is
+declared by this profile.
 
 ## Summary
 

@@ -227,7 +227,9 @@ Follow-up status: multi-slice validation design is now recorded, the first imple
 Search `SliceReadModelConfig` profile without intended behavior change, and `examples/valid/todo-app-pbe-run` is now
 implemented as a second `structure-only` profile/fixture. This does not alter the reviewed CI-backed run result, which
 still applies only to Todo Search, and it does not add PR triggers, enforcement, CI-backed Evidence for the second
-fixture, aggregation, or source authority expansion.
+fixture, aggregation, or source authority expansion. Both local validation reports now carry per-slice independence
+metadata so a future aggregate report can read them as separate Evidence units without treating the Todo Search CI run as
+evidence for the second fixture.
 
 ## Gate Self-Check
 

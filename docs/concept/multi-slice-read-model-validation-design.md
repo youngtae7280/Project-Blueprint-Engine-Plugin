@@ -1,6 +1,6 @@
 # Multi-Slice Read-Model Validation Design
 
-Status: multi-slice-read-model-validation-design / second-structure-only-profile-implemented / aggregation-not-started
+Status: multi-slice-read-model-validation-design / per-slice-report-independence-implemented / aggregation-not-started
 
 ## Design Purpose
 
@@ -200,8 +200,8 @@ Recommended implementation sequence:
    `validation-pass`, and 20 validation checks.
 3. Add/read `examples/valid/todo-app-pbe-run` as a second `structure-only` fixture. Status: complete for one canonical
    `.pbe` fixture, with generated structure-only output and validation report.
-4. Add per-slice validation report independence. Status: partially prepared by independent per-slice reports; no
-   aggregate command or `validate --all` exists yet.
+4. Add per-slice validation report independence. Status: complete for the Todo Search and Todo App PBE Run validation
+   reports.
 5. Add aggregation only after per-slice validation is stable. Status: not started.
 
 ## Validation Policy Levels
@@ -219,6 +219,50 @@ Policy level is not source authority. It is an Evidence classification.
 
 Aggregation should summarize independent per-slice reports. It must not hide slice-specific warnings or convert
 compatibility caveats into a global pass.
+
+## Per-Slice Validation Report Independence Contract
+
+The Todo Search and Todo App PBE Run validation reports are now self-contained Evidence units. Each report includes:
+
+- `profileId` / `sliceProfile`
+- `sourceSlice`
+- `sourceLayout`
+- `policyLevel`
+- `evidenceLevel`
+- `scopeLevel`
+- declared expected node, edge, and validation-check counts
+- generated read-model path and observed node/edge counts
+- parity requirement/status/path
+- pilot marker requirement/status/path
+- runtime fixture requirement/status/path or structure-only attached-evidence status
+- retained warnings / accepted limitations
+- source authority boundary
+- non-promotion statement
+- fallback/reference summary
+- cross-slice dependency rule
+
+The contract rule is:
+
+```text
+Validation uses the target slice profile, generated artifacts, and declared source inputs only. It must not depend on
+another slice generated directory, manual parity artifact, pilot marker, or runtime fixture unless that artifact is
+declared by this profile.
+```
+
+Current report independence status:
+
+| Slice                                 | Profile id                        | Policy level          | Independence status | Notes                                                                                  |
+| ------------------------------------- | --------------------------------- | --------------------- | ------------------- | -------------------------------------------------------------------------------------- |
+| `examples/adoption/todo-search-slice` | `todo-search-selected-slice`      | `pilot-marker-backed` | implemented         | Requires its own parity report, pilot marker, runtime fixture, fallback references.    |
+| `examples/valid/todo-app-pbe-run`     | `todo-app-pbe-run-structure-only` | `structure-only`      | implemented         | Does not require Todo Search generated files, manual parity, pilot marker, or fixture. |
+
+Focused tests prove:
+
+- structure-only validation still passes after the Todo Search slice is removed from an isolated temp workspace
+- Todo Search validation still passes after the Todo App generated directory is removed from an isolated temp workspace
+- validators do not mutate source/manual/generated inputs except for their own validation report outputs
+
+This contract prepares future aggregation inputs, but it does not implement aggregate reporting or `validate --all`.
 
 Proposed aggregate statuses:
 
@@ -283,8 +327,7 @@ When the user approves implementation later, continue in this order:
 1. Keep Todo Search as the regression baseline and active scoped pilot.
 2. Keep `examples/valid/todo-app-pbe-run` at `structure-only` until a later user decision adds parity, pilot marker, or
    CI-backed Evidence.
-3. Strengthen per-slice validation report independence and profile boundaries.
-4. Add aggregate summary only after per-slice validation is stable.
+3. Add aggregate summary only after per-slice validation is stable.
 
 Do not start with `validate --all`, PR triggers, required checks, or broad CI changes.
 
@@ -303,23 +346,24 @@ defines validation policy levels, and defines conservative aggregation rules.
 
 ### Verification Summary
 
-| Check                     | Status          | Summary                                                                                 |
-| ------------------------- | --------------- | --------------------------------------------------------------------------------------- |
-| Todo Search baseline      | present         | Local validator-backed and reviewed CI-backed Evidence exist.                           |
-| Next candidate            | selected        | `examples/valid/todo-app-pbe-run` selected for structural design, not implementation.   |
-| Todo hardcoding           | visible         | Current builder remains Todo-shaped and needs profile extraction before second slice.   |
-| Aggregation rules         | design-recorded | Blocking and decision-required statuses propagate; warnings remain slice-specific.      |
-| Source authority boundary | preserved       | Multi-slice validation is Evidence-only.                                                |
-| Public-doc cleanup        | deferred        | Not required before design; prerequisite/caveat before broader promotion.               |
-| Second structure fixture  | implemented     | `examples/valid/todo-app-pbe-run` now has structure-only generated/validation Evidence. |
-| Aggregation               | not started     | No multi-slice aggregate command, `validate --all`, CI change, or enforcement exists.   |
+| Check                     | Status          | Summary                                                                                          |
+| ------------------------- | --------------- | ------------------------------------------------------------------------------------------------ |
+| Todo Search baseline      | present         | Local validator-backed and reviewed CI-backed Evidence exist.                                    |
+| Next candidate            | selected        | `examples/valid/todo-app-pbe-run` selected for structural design, not implementation.            |
+| Todo hardcoding           | visible         | Current builder remains Todo-shaped and needs profile extraction before second slice.            |
+| Per-slice independence    | implemented     | Each validation report now carries profile, policy, requirement, warning, and fallback metadata. |
+| Aggregation rules         | design-recorded | Blocking and decision-required statuses propagate; warnings remain slice-specific.               |
+| Source authority boundary | preserved       | Multi-slice validation is Evidence-only.                                                         |
+| Public-doc cleanup        | deferred        | Not required before design; prerequisite/caveat before broader promotion.                        |
+| Second structure fixture  | implemented     | `examples/valid/todo-app-pbe-run` now has structure-only generated/validation Evidence.          |
+| Aggregation               | not started     | No multi-slice aggregate command, `validate --all`, CI change, or enforcement exists.            |
 
 ### Remaining Judgment
 
 The user must decide the next implementation branch:
 
 ```text
-strengthen per-slice report independence before aggregation
+add aggregate summary after per-slice validation reports remain stable
 ```
 
 or choose a different branch such as parity design for `todo-app-pbe-run`, negative fixtures, cleanup, enforcement

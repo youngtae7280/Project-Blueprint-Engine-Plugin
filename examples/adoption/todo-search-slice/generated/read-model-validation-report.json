@@ -1,16 +1,47 @@
 {
   "version": "0.1.0-read-model-validation-report",
   "metadata": {
-    "validatedAt": "2026-06-25T07:28:16.276Z",
+    "validatedAt": "2026-06-25T07:38:30.156Z",
     "commandIdentity": "pbe graph read-model validate --slice examples/adoption/todo-search-slice",
-    "sourceCommit": "17c5a97",
+    "sourceCommit": "fce9df7",
     "sourceSlice": "examples/adoption/todo-search-slice",
+    "profileId": "todo-search-selected-slice",
     "sliceProfile": "todo-search-selected-slice",
+    "sourceLayout": "flat-demo-support",
+    "policyLevel": "pilot-marker-backed",
+    "evidenceLevel": "validator-backed",
     "scopeLevel": "scoped-slice-validation",
+    "expectedCounts": { "nodes": 40, "edges": 59, "validationChecks": 20 },
     "generatedReadModel": "examples/adoption/todo-search-slice/generated/generated-read-model.json",
+    "parityRequirement": {
+      "required": true,
+      "status": "pass",
+      "path": "examples/adoption/todo-search-slice/generated/read-model-parity-report.json",
+      "parityStatus": "comparison-pass",
+      "mismatchCount": 0,
+      "blockingCount": 0,
+      "decisionRequiredCount": 0
+    },
     "parityReport": "examples/adoption/todo-search-slice/generated/read-model-parity-report.json",
     "evidenceManifest": "examples/adoption/todo-search-slice/generated/read-model-evidence-manifest.json",
-    "pilotMarker": "examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json"
+    "pilotMarkerRequirement": {
+      "required": true,
+      "status": "present",
+      "path": "examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json",
+      "markerStatus": "scoped-pilot-executed-with-fallback-ready",
+      "primaryScope": "examples/adoption/todo-search-slice"
+    },
+    "pilotMarker": "examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json",
+    "runtimeFixtureRequirement": {
+      "required": true,
+      "status": "present",
+      "helperPath": "examples/adoption/todo-search-slice/runtime-fixture/todo-search.js",
+      "helperStatus": "present",
+      "testPath": "examples/adoption/todo-search-slice/runtime-fixture/todo-search.test.js",
+      "testStatus": "present"
+    },
+    "retainedWarningCount": 4,
+    "fallbackReferenceCount": 8
   },
   "status": "validation-pass",
   "evidenceLevel": "validator-backed",
@@ -223,6 +254,77 @@
     { "path": "examples/adoption/todo-search-slice/maintainability-graph-read-model.json", "status": "present" },
     { "path": "examples/adoption/todo-search-slice/view-instance-manifest.json", "status": "present" }
   ],
+  "sliceValidationContract": {
+    "version": "0.1.0-per-slice-validation-report-independence",
+    "reportUnit": "per-slice-validation-report",
+    "sourceSlice": "examples/adoption/todo-search-slice",
+    "profileId": "todo-search-selected-slice",
+    "sourceLayout": "flat-demo-support",
+    "policyLevel": "pilot-marker-backed",
+    "evidenceLevel": "validator-backed",
+    "scopeLevel": "scoped-slice-validation",
+    "expectedCounts": { "nodes": 40, "edges": 59, "validationChecks": 20 },
+    "generatedReadModel": {
+      "path": "examples/adoption/todo-search-slice/generated/generated-read-model.json",
+      "status": "present",
+      "nodeCount": 40,
+      "edgeCount": 59
+    },
+    "parityRequirement": {
+      "required": true,
+      "status": "pass",
+      "path": "examples/adoption/todo-search-slice/generated/read-model-parity-report.json",
+      "parityStatus": "comparison-pass",
+      "mismatchCount": 0,
+      "blockingCount": 0,
+      "decisionRequiredCount": 0
+    },
+    "pilotMarkerRequirement": {
+      "required": true,
+      "status": "present",
+      "path": "examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json",
+      "markerStatus": "scoped-pilot-executed-with-fallback-ready",
+      "primaryScope": "examples/adoption/todo-search-slice"
+    },
+    "runtimeFixtureRequirement": {
+      "required": true,
+      "status": "present",
+      "helperPath": "examples/adoption/todo-search-slice/runtime-fixture/todo-search.js",
+      "helperStatus": "present",
+      "testPath": "examples/adoption/todo-search-slice/runtime-fixture/todo-search.test.js",
+      "testStatus": "present"
+    },
+    "retainedWarnings": [
+      {
+        "id": "RW-BOUNDED-FIXTURE",
+        "findingNodeId": "FIND-BOUNDED-FIXTURE",
+        "status": "acceptable-warning",
+        "summary": "Bounded fixture Evidence is not full Todo app implementation."
+      },
+      {
+        "id": "RW-PARTIAL-UI",
+        "findingNodeId": "FIND-PARTIAL-UI",
+        "status": "acceptable-warning",
+        "summary": "UI screenshot/manual visual Evidence remains partial for the no-result empty state."
+      },
+      {
+        "id": "RW-GENERATED-BUILDER",
+        "findingNodeId": "FIND-GENERATED-BUILDER-MISSING",
+        "status": "generated-present-for-bounded-slice",
+        "summary": "Generated read-model output and scoped validator-backed Evidence now exist for the bounded Todo Search slice; CI/full promotion repeatability remains later."
+      },
+      {
+        "id": "RW-ACEP-CLEANUP",
+        "findingNodeId": "FIND-ACEP-CLEANUP-DEFERRED",
+        "status": "deferred-cleanup",
+        "summary": "ACEP task-card public-doc cleanup remains deferred."
+      }
+    ],
+    "fallbackReferenceSummary": { "count": 8, "missingCount": 0 },
+    "sourceAuthorityBoundary": "Validator-backed Evidence checks the bounded Todo Search read-model outputs only. It does not change source authority.",
+    "nonPromotionStatement": "Validation pass is Evidence only. It does not promote Maintainability Graph, expand pilot scope, retire tree-native artifacts, introduce CI enforcement, or replace user approval.",
+    "crossSliceDependencyRule": "Validation uses the target slice profile, generated artifacts, and declared source inputs only. It must not depend on another slice generated directory, manual parity artifact, pilot marker, or runtime fixture unless that artifact is declared by this profile."
+  },
   "recommendedNextDecisionSurface": [
     "Continue active observation",
     "Design CI workflow integration before broader enforcement",

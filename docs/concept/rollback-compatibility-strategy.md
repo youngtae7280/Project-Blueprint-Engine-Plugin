@@ -378,7 +378,8 @@ plus contracts, evidence, acceptance, skills, and CLI gates. This policy preserv
 The Todo Search scoped pilot keeps fallback/reference artifacts retained. The new
 `examples/valid/todo-app-pbe-run` profile is structure-only Evidence over a canonical `.pbe` fixture; it is not a
 rollback/fallback retirement event, does not create a second scoped authority pilot, and does not remove compatibility
-or fallback obligations.
+or fallback obligations. The current validation reports include per-slice fallback/reference summaries so future
+aggregation can preserve rollback and compatibility boundaries per slice.
 
 ## Scope Boundaries
 

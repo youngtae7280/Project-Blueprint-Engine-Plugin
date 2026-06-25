@@ -1,16 +1,41 @@
 {
   "version": "0.1.0-read-model-validation-report",
   "metadata": {
-    "validatedAt": "2026-06-25T07:28:16.337Z",
+    "validatedAt": "2026-06-25T07:38:30.238Z",
     "commandIdentity": "pbe graph read-model validate --slice examples/valid/todo-app-pbe-run",
-    "sourceCommit": "17c5a97",
+    "sourceCommit": "fce9df7",
     "sourceSlice": "examples/valid/todo-app-pbe-run",
+    "profileId": "todo-app-pbe-run-structure-only",
     "sliceProfile": "todo-app-pbe-run-structure-only",
+    "sourceLayout": "canonical-pbe",
+    "policyLevel": "structure-only",
+    "evidenceLevel": "validator-backed",
     "scopeLevel": "scoped-slice-validation",
+    "expectedCounts": { "nodes": 22, "edges": 38, "validationChecks": 16 },
     "generatedReadModel": "examples/valid/todo-app-pbe-run/generated/generated-read-model.json",
+    "parityRequirement": {
+      "required": false,
+      "status": "not-required",
+      "path": "not-required-for-structure-only",
+      "reason": "Structure-only validation does not require generated/manual parity."
+    },
     "parityReport": "not-required-for-structure-only",
     "evidenceManifest": "examples/valid/todo-app-pbe-run/generated/read-model-evidence-manifest.json",
-    "pilotMarker": "not-required-for-structure-only"
+    "pilotMarkerRequirement": {
+      "required": false,
+      "status": "not-required",
+      "path": "not-required-for-structure-only",
+      "reason": "Structure-only validation does not require a scoped source-authority pilot marker."
+    },
+    "pilotMarker": "not-required-for-structure-only",
+    "runtimeFixtureRequirement": {
+      "required": false,
+      "status": "attached-evidence-only",
+      "path": "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt",
+      "reason": "Structure-only validation does not require a runnable runtime fixture; attached evidence text may be referenced when present."
+    },
+    "retainedWarningCount": 2,
+    "fallbackReferenceCount": 14
   },
   "status": "validation-pass",
   "evidenceLevel": "validator-backed",
@@ -185,6 +210,59 @@
     { "path": "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt", "status": "present" },
     { "path": "examples/valid/todo-app-pbe-run/.pbe/blueprint/pbe-state.json", "status": "present" }
   ],
+  "sliceValidationContract": {
+    "version": "0.1.0-per-slice-validation-report-independence",
+    "reportUnit": "per-slice-validation-report",
+    "sourceSlice": "examples/valid/todo-app-pbe-run",
+    "profileId": "todo-app-pbe-run-structure-only",
+    "sourceLayout": "canonical-pbe",
+    "policyLevel": "structure-only",
+    "evidenceLevel": "validator-backed",
+    "scopeLevel": "scoped-slice-validation",
+    "expectedCounts": { "nodes": 22, "edges": 38, "validationChecks": 16 },
+    "generatedReadModel": {
+      "path": "examples/valid/todo-app-pbe-run/generated/generated-read-model.json",
+      "status": "present",
+      "nodeCount": 22,
+      "edgeCount": 38
+    },
+    "parityRequirement": {
+      "required": false,
+      "status": "not-required",
+      "path": "not-required-for-structure-only",
+      "reason": "Structure-only validation does not require generated/manual parity."
+    },
+    "pilotMarkerRequirement": {
+      "required": false,
+      "status": "not-required",
+      "path": "not-required-for-structure-only",
+      "reason": "Structure-only validation does not require a scoped source-authority pilot marker."
+    },
+    "runtimeFixtureRequirement": {
+      "required": false,
+      "status": "attached-evidence-only",
+      "path": "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt",
+      "reason": "Structure-only validation does not require a runnable runtime fixture; attached evidence text may be referenced when present."
+    },
+    "retainedWarnings": [
+      {
+        "id": "RW-STRUCTURE-ONLY",
+        "findingNodeId": "FIND-STRUCTURE-ONLY-LIMITATION",
+        "status": "structure-only-limitation",
+        "summary": "This profile validates canonical .pbe structure only; no manual parity artifact, pilot marker, CI-backed Evidence, or source-authority pilot is required or claimed."
+      },
+      {
+        "id": "RW-NO-RUNTIME-FIXTURE",
+        "findingNodeId": "FIND-NO-RUNTIME-FIXTURE",
+        "status": "accepted-structure-only-limitation",
+        "summary": "The fixture contains attached test-output Evidence but no runnable app/runtime fixture is required for structure-only validation."
+      }
+    ],
+    "fallbackReferenceSummary": { "count": 14, "missingCount": 0 },
+    "sourceAuthorityBoundary": "Validator-backed Evidence checks structure-only generated read-model outputs for this canonical .pbe fixture. It does not change source authority.",
+    "nonPromotionStatement": "Structure-only validation pass is Evidence only. It does not promote Maintainability Graph, create a source-authority pilot, require parity, introduce CI enforcement, retire .pbe artifacts, or replace user approval.",
+    "crossSliceDependencyRule": "Validation uses the target slice profile, generated artifacts, and declared source inputs only. It must not depend on another slice generated directory, manual parity artifact, pilot marker, or runtime fixture unless that artifact is declared by this profile."
+  },
   "recommendedNextDecisionSurface": [
     "Continue active observation",
     "Design CI workflow integration before broader enforcement",

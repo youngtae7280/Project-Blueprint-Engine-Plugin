@@ -6,10 +6,13 @@ Evidence level: validator-backed
 
 ## Run Identity
 
-- Validated at: 2026-06-25T07:28:16.337Z
+- Validated at: 2026-06-25T07:38:30.238Z
 - Command identity: `pbe graph read-model validate --slice examples/valid/todo-app-pbe-run`
-- Source commit: 17c5a97
+- Source commit: fce9df7
 - Source slice: `examples/valid/todo-app-pbe-run`
+- Profile id: `todo-app-pbe-run-structure-only`
+- Source layout: canonical-pbe
+- Policy level: structure-only
 - Scope level: scoped-slice-validation
 
 ## Boundary
@@ -19,6 +22,23 @@ not change source authority.
 
 Structure-only validation pass is Evidence only. It does not promote Maintainability Graph, create a source-authority
 pilot, require parity, introduce CI enforcement, retire .pbe artifacts, or replace user approval.
+
+## Per-Slice Independence Contract
+
+- Report unit: per-slice-validation-report
+- Expected nodes: 22
+- Expected edges: 38
+- Expected validation checks: 16
+- Generated read-model: examples/valid/todo-app-pbe-run/generated/generated-read-model.json
+- Parity requirement: not-required (not-required-for-structure-only)
+- Pilot marker requirement: not-required (not-required-for-structure-only)
+- Runtime fixture requirement: attached-evidence-only
+- Fallback/reference count: 14
+- Missing fallback/reference count: 0
+
+Validation uses the target slice profile, generated artifacts, and declared source inputs only. It must not depend on
+another slice generated directory, manual parity artifact, pilot marker, or runtime fixture unless that artifact is
+declared by this profile.
 
 ## Summary
 

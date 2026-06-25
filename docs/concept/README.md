@@ -328,6 +328,11 @@ parity-backed, pilot-marker-backed, CI-backed, source-authority bearing, or a sc
 active scoped source-authority pilot and the only reviewed CI-backed slice. Multi-slice aggregation, `validate --all`,
 CI enforcement, public-doc cleanup, and full Graph-source promotion remain unimplemented.
 
+The per-slice validation report independence contract is now implemented for both generated slices. Each validation
+report carries self-contained profile, source layout, policy level, expected counts, parity requirement, pilot marker
+requirement, runtime fixture requirement, retained-warning, fallback/reference, source-authority, and non-promotion
+metadata. This prepares future aggregation inputs without implementing aggregation or `validate --all`.
+
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.

@@ -155,6 +155,7 @@ interface ValidationReport {
   checks: ValidationCheck[]
   retainedWarnings: Array<Record<string, unknown>>
   fallbackReferenceStatus: Array<Record<string, unknown>>
+  sliceValidationContract?: Record<string, unknown>
   recommendedNextDecisionSurface: string[]
 }
 
@@ -2558,6 +2559,15 @@ function buildValidationReport(
         : warningCount > 0
           ? 'validation-warning'
           : 'validation-pass'
+  const fallbackReferenceStatus = buildFallbackReferenceStatus(root, marker, generated)
+  const parityRequirement = validationParityRequirement(slice, profile, parity)
+  const pilotMarkerRequirement = validationPilotMarkerRequirement(slice, profile, marker)
+  const runtimeFixtureRequirement = validationRuntimeFixtureRequirement(root, profile)
+  const expectedCounts = {
+    nodes: profile.expectedCounts.nodes,
+    edges: profile.expectedCounts.edges,
+    validationChecks: profile.expectedCounts.validationChecks,
+  }
   return {
     version: '0.1.0-read-model-validation-report',
     metadata: {
@@ -2565,18 +2575,22 @@ function buildValidationReport(
       commandIdentity,
       sourceCommit: resolveSourceCommit(root),
       sourceSlice: slice,
+      profileId: profile.profileId,
       sliceProfile: profile.profileId,
+      sourceLayout: profile.sourceLayout,
+      policyLevel: profile.policyLevel,
+      evidenceLevel: 'validator-backed',
       scopeLevel: 'scoped-slice-validation',
+      expectedCounts,
       generatedReadModel: `${slice}/generated/generated-read-model.json`,
-      parityReport:
-        profile.policyLevel === 'pilot-marker-backed'
-          ? `${slice}/generated/read-model-parity-report.json`
-          : 'not-required-for-structure-only',
+      parityRequirement,
+      parityReport: parityRequirement.path,
       evidenceManifest: `${slice}/generated/read-model-evidence-manifest.json`,
-      pilotMarker:
-        profile.policyLevel === 'pilot-marker-backed'
-          ? `${slice}/generated/scoped-source-authority-pilot-marker.json`
-          : 'not-required-for-structure-only',
+      pilotMarkerRequirement,
+      pilotMarker: pilotMarkerRequirement.path,
+      runtimeFixtureRequirement,
+      retainedWarningCount: generated.retainedWarnings.length,
+      fallbackReferenceCount: fallbackReferenceStatus.length,
     },
     status,
     evidenceLevel: 'validator-backed',
@@ -2593,7 +2607,36 @@ function buildValidationReport(
     },
     checks,
     retainedWarnings: generated.retainedWarnings,
-    fallbackReferenceStatus: buildFallbackReferenceStatus(root, marker, generated),
+    fallbackReferenceStatus,
+    sliceValidationContract: {
+      version: '0.1.0-per-slice-validation-report-independence',
+      reportUnit: 'per-slice-validation-report',
+      sourceSlice: slice,
+      profileId: profile.profileId,
+      sourceLayout: profile.sourceLayout,
+      policyLevel: profile.policyLevel,
+      evidenceLevel: 'validator-backed',
+      scopeLevel: 'scoped-slice-validation',
+      expectedCounts,
+      generatedReadModel: {
+        path: `${slice}/generated/generated-read-model.json`,
+        status: generated.version ? 'present' : 'missing',
+        nodeCount: generated.nodes.length,
+        edgeCount: generated.edges.length,
+      },
+      parityRequirement,
+      pilotMarkerRequirement,
+      runtimeFixtureRequirement,
+      retainedWarnings: generated.retainedWarnings,
+      fallbackReferenceSummary: {
+        count: fallbackReferenceStatus.length,
+        missingCount: fallbackReferenceStatus.filter((entry) => entry.status === 'missing').length,
+      },
+      sourceAuthorityBoundary: validationBoundaryForProfile(profile),
+      nonPromotionStatement: validationNonPromotionStatementForProfile(profile),
+      crossSliceDependencyRule:
+        'Validation uses the target slice profile, generated artifacts, and declared source inputs only. It must not depend on another slice generated directory, manual parity artifact, pilot marker, or runtime fixture unless that artifact is declared by this profile.',
+    },
     recommendedNextDecisionSurface: [
       'Continue active observation',
       'Design CI workflow integration before broader enforcement',
@@ -2784,6 +2827,77 @@ function buildValidationChecks(
       `${outputPrefix}/generated-read-model.json`,
     ),
   ]
+}
+
+function validationParityRequirement(
+  slice: string,
+  profile: SliceReadModelConfig,
+  parity: ParityReport | undefined,
+): Record<string, unknown> {
+  if (profile.policyLevel !== 'pilot-marker-backed') {
+    return {
+      required: false,
+      status: 'not-required',
+      path: 'not-required-for-structure-only',
+      reason: 'Structure-only validation does not require generated/manual parity.',
+    }
+  }
+  return {
+    required: true,
+    status: parity?.summary.status === 'comparison-pass' ? 'pass' : 'missing-or-not-pass',
+    path: `${slice}/generated/read-model-parity-report.json`,
+    parityStatus: parity?.summary.status || 'missing',
+    mismatchCount: parity?.summary.mismatchCount ?? 'unknown',
+    blockingCount: parity?.summary.blockingCount ?? 'unknown',
+    decisionRequiredCount: parity?.summary.decisionRequiredCount ?? 'unknown',
+  }
+}
+
+function validationPilotMarkerRequirement(
+  slice: string,
+  profile: SliceReadModelConfig,
+  marker: Record<string, unknown> | undefined,
+): Record<string, unknown> {
+  if (profile.policyLevel !== 'pilot-marker-backed') {
+    return {
+      required: false,
+      status: 'not-required',
+      path: 'not-required-for-structure-only',
+      reason: 'Structure-only validation does not require a scoped source-authority pilot marker.',
+    }
+  }
+  return {
+    required: true,
+    status: marker ? 'present' : 'missing',
+    path: `${slice}/generated/scoped-source-authority-pilot-marker.json`,
+    markerStatus: marker ? getPath(marker, ['status']) || 'present' : 'missing',
+    primaryScope: marker ? getPath(marker, ['pilotScope', 'primary']) || 'unknown' : 'missing',
+  }
+}
+
+function validationRuntimeFixtureRequirement(root: string, profile: SliceReadModelConfig): Record<string, unknown> {
+  if (profile.policyLevel === 'structure-only') {
+    const evidencePath = profile.artifacts.evidenceOutput ? sliceArtifact(profile, 'evidenceOutput') : undefined
+    return {
+      required: false,
+      status: evidencePath && existsSync(path.resolve(root, evidencePath)) ? 'attached-evidence-only' : 'not-required',
+      path: evidencePath || 'not-required-for-structure-only',
+      reason:
+        'Structure-only validation does not require a runnable runtime fixture; attached evidence text may be referenced when present.',
+    }
+  }
+  const helperPath = profile.artifacts.runtimeHelper ? sliceArtifact(profile, 'runtimeHelper') : undefined
+  const testPath = profile.artifacts.runtimeTest ? sliceArtifact(profile, 'runtimeTest') : undefined
+  const helperPresent = helperPath ? existsSync(path.resolve(root, helperPath)) : false
+  const testPresent = testPath ? existsSync(path.resolve(root, testPath)) : false
+  return {
+    required: true,
+    status: helperPresent && testPresent ? 'present' : 'missing',
+    helperPath: helperPath || 'missing',
+    helperStatus: helperPresent ? 'present' : 'missing',
+    testPath: testPath || 'missing',
+    testStatus: testPresent ? 'present' : 'missing',
+  }
 }
 
 function buildStructureOnlyValidationChecks(
@@ -3337,6 +3451,9 @@ Evidence level: ${report.evidenceLevel}
 - Command identity: \`${String(report.metadata.commandIdentity)}\`
 - Source commit: ${String(report.metadata.sourceCommit)}
 - Source slice: \`${String(report.metadata.sourceSlice)}\`
+- Profile id: \`${String(report.metadata.profileId || report.metadata.sliceProfile)}\`
+- Source layout: ${String(report.metadata.sourceLayout)}
+- Policy level: ${String(report.metadata.policyLevel)}
 - Scope level: ${report.scopeLevel}
 
 ## Boundary
@@ -3344,6 +3461,21 @@ Evidence level: ${report.evidenceLevel}
 ${report.sourceAuthorityBoundary}
 
 ${report.nonPromotionStatement}
+
+## Per-Slice Independence Contract
+
+- Report unit: ${String(getPath(report.sliceValidationContract || {}, ['reportUnit']) || 'per-slice-validation-report')}
+- Expected nodes: ${String(getPath(report.sliceValidationContract || {}, ['expectedCounts', 'nodes']) || 'unknown')}
+- Expected edges: ${String(getPath(report.sliceValidationContract || {}, ['expectedCounts', 'edges']) || 'unknown')}
+- Expected validation checks: ${String(getPath(report.sliceValidationContract || {}, ['expectedCounts', 'validationChecks']) || 'unknown')}
+- Generated read-model: ${String(getPath(report.sliceValidationContract || {}, ['generatedReadModel', 'path']) || report.metadata.generatedReadModel)}
+- Parity requirement: ${String(getPath(report.sliceValidationContract || {}, ['parityRequirement', 'status']) || 'unknown')} (${String(getPath(report.sliceValidationContract || {}, ['parityRequirement', 'path']) || 'unknown')})
+- Pilot marker requirement: ${String(getPath(report.sliceValidationContract || {}, ['pilotMarkerRequirement', 'status']) || 'unknown')} (${String(getPath(report.sliceValidationContract || {}, ['pilotMarkerRequirement', 'path']) || 'unknown')})
+- Runtime fixture requirement: ${String(getPath(report.sliceValidationContract || {}, ['runtimeFixtureRequirement', 'status']) || 'unknown')}
+- Fallback/reference count: ${String(getPath(report.sliceValidationContract || {}, ['fallbackReferenceSummary', 'count']) || report.fallbackReferenceStatus.length)}
+- Missing fallback/reference count: ${String(getPath(report.sliceValidationContract || {}, ['fallbackReferenceSummary', 'missingCount']) || 0)}
+
+${String(getPath(report.sliceValidationContract || {}, ['crossSliceDependencyRule']) || '')}
 
 ## Summary
 
