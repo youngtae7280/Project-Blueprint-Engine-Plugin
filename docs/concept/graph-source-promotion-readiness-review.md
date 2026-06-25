@@ -56,6 +56,8 @@ This review uses the following observable sources:
 - `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
 - `examples/adoption/todo-search-slice/maintainability-graph-read-model.md`
 - `examples/adoption/todo-search-slice/parity-check.md`
+- `examples/adoption/todo-search-slice/view-instance-manifest.json`
+- `examples/adoption/todo-search-slice/view-instance-manifest.md`
 - [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md)
 
 AI self-report is not Evidence for this review. Readiness findings are based on reviewable files, linked records,
@@ -63,31 +65,28 @@ passing fixture command Evidence, and explicit exception or warning records.
 
 ## Executive Recommendation
 
-Previous recommendation:
+Historical recommendation before the Graph-first Node/Edge/Tag refresh: the limited pilot decision surface was
+reviewable with warnings.
+
+Current recommendation after the Graph-first Node/Edge/Tag refresh:
 
 ```text
-ready for limited pilot promotion decision with warnings
-```
-
-Current refinement status:
-
-```text
-limited pilot approval deferred pending Graph-first Node/Edge/Tag baseline refresh
+ready for renewed limited pilot user decision with warnings
 ```
 
 Meaning:
 
 - The representative lifecycle slice is demonstrated with retained warnings.
 - The policy chain through Rollback / Compatibility Strategy is reviewable.
-- A manual equivalent read-model parity artifact now makes the graph/read-model relationship reviewable for limited pilot
-- decision preparation under the previous baseline.
-- The new Node/Edge/Tag policy requires the read-model parity artifact and decision package to be rechecked before
-  limited pilot approval proceeds.
+- A manual Node/Edge/Tag read-model parity artifact now makes the graph/read-model relationship reviewable for limited
+  pilot decision preparation.
+- The View Instance Manifest shows 7 Core View coverage, including Scope / Execution View.
+- Limited pilot approval is still not granted; the user must choose a decision option.
 - Full promotion still needs explicit user judgment about generated builder/repeatability, public-doc cleanup, and
   full-product/runtime parity.
 - Graph-source promotion must not be approved or declared from this review alone.
 
-Former blocking item:
+Former blocking item in the earlier review cycle:
 
 ```text
 Generated Maintainability Graph / read-model output is missing.
@@ -96,7 +95,7 @@ Generated Maintainability Graph / read-model output is missing.
 Updated status:
 
 ```text
-resolved for limited pilot readiness by manual equivalent parity artifact
+resolved for limited pilot review by manual Node/Edge/Tag parity artifact
 ```
 
 Evidence:
@@ -104,40 +103,43 @@ Evidence:
 - `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
 - `examples/adoption/todo-search-slice/maintainability-graph-read-model.md`
 - `examples/adoption/todo-search-slice/parity-check.md`
+- `examples/adoption/todo-search-slice/view-instance-manifest.json`
+- `examples/adoption/todo-search-slice/view-instance-manifest.md`
 
-These artifacts show graph/read-model nodes, edges, relationship parity, retained warnings, and source-authority
-boundaries. They do not implement a generated graph builder and do not justify full promotion by themselves.
+These artifacts show durable node kinds, durable edge types, view-scoped tags, confidence/freshness separation, 7 Core
+View coverage, retained warnings, and source-authority boundaries. They do not implement a generated graph builder and
+do not justify full promotion by themselves.
 
 ## Readiness Prerequisite Status
 
-| Prerequisite                                                                | Status             | Evidence / Reason                                                                                                                                                       |
-| --------------------------------------------------------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Concept policies complete through Rollback / Compatibility Strategy         | ready              | Approval Brief, Check/Evidence, Control Node, Legacy Compatibility, Runtime Feasibility, Source Transition, and Rollback policies are complete.                         |
-| Representative demo slice selected                                          | ready              | `representative-runtime-feasibility-demo.md` selects `Todo Search Adoption + Product Meaning Feedback`.                                                                 |
-| Actual representative demo result recorded                                  | ready              | `actual-runtime-feasibility-demo-result.md` records a manual Evidence pack and final `demonstrated` status with retained warnings.                                      |
-| Missing Project/Contract/Change/Impact evidence strengthened                | ready              | Todo Search selected-slice support artifacts include Project Tree, Cycle Contract, Node Execution Contract, Change Tree, and Impact Tree snapshots.                     |
-| Compatibility mismatch path demonstrated with real repo wording             | ready              | `examples/adoption/compatibility-mismatch-slice` records ACEP task-card-only authority wording and a Compatibility Control Node candidate.                              |
-| PP-001 product meaning decision confirmed                                   | ready              | Product Patch and Change Tree record parent orchestration approval for title + note/content search on 2026-06-24.                                                       |
-| Title + note/content runtime fixture Evidence present/fresh                 | ready              | `EV-SEARCH-NOTE-TEST` points to `runtime-evidence.md`; Vitest fixture command passed 1 file and 6 tests.                                                                |
-| Renewed user Acceptance approved with retained warnings                     | ready with warning | `acceptance-tree.json` records `renewed_acceptance_approved_with_warnings`; warnings remain carried to this readiness review.                                           |
-| Source Transition Path defined                                              | ready              | `source-transition-path.md` defines stages, authority matrix, prerequisites, invariants, conflict handling, and promotion review surface.                               |
-| Rollback / Compatibility Strategy defined                                   | ready              | `rollback-compatibility-strategy.md` defines rollback/fallback, compatibility period, triggers, statuses, safety principles, and control records.                       |
-| Source authority matrix available                                           | ready              | Source matrix is defined in Source Transition Path.                                                                                                                     |
-| Graph-first Node/Edge/Tag baseline defined                                  | ready with warning | `graph-node-edge-tag-policy.md` defines the target taxonomy. Existing limited pilot artifacts should be refreshed or explicitly accepted under that taxonomy.           |
-| Check/Evidence obligations visible                                          | ready              | Check/Evidence policy and demo artifacts distinguish Checks, Evidence, freshness, partial Evidence, and exceptions.                                                     |
-| Approval Brief / Control Node handling visible                              | ready              | Todo Search Approval Brief, actual demo result, and compatibility supplemental slice expose user-relevant judgment/control points.                                      |
-| Retained warnings classified                                                | ready              | This review classifies each retained warning below.                                                                                                                     |
-| Generated graph/read-model output available or explicitly deferred/blocking | ready with warning | Manual equivalent read-model parity artifacts now exist. A generated builder/CLI output remains a later implementation requirement for full promotion or repeatability. |
-| Public-doc cleanup status classified                                        | ready with warning | ACEP task-card public-doc cleanup is classified as deferred cleanup with a Compatibility Control Node candidate and explicit readiness warning.                         |
+| Prerequisite                                                                | Status             | Evidence / Reason                                                                                                                                                         |
+| --------------------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Concept policies complete through Rollback / Compatibility Strategy         | ready              | Approval Brief, Check/Evidence, Control Node, Legacy Compatibility, Runtime Feasibility, Source Transition, and Rollback policies are complete.                           |
+| Representative demo slice selected                                          | ready              | `representative-runtime-feasibility-demo.md` selects `Todo Search Adoption + Product Meaning Feedback`.                                                                   |
+| Actual representative demo result recorded                                  | ready              | `actual-runtime-feasibility-demo-result.md` records a manual Evidence pack and final `demonstrated` status with retained warnings.                                        |
+| Missing Project/Contract/Change/Impact evidence strengthened                | ready              | Todo Search selected-slice support artifacts include Project Tree, Cycle Contract, Node Execution Contract, Change Tree, and Impact Tree snapshots.                       |
+| Compatibility mismatch path demonstrated with real repo wording             | ready              | `examples/adoption/compatibility-mismatch-slice` records ACEP task-card-only authority wording and a Compatibility Control Node candidate.                                |
+| PP-001 product meaning decision confirmed                                   | ready              | Product Patch and Change Tree record parent orchestration approval for title + note/content search on 2026-06-24.                                                         |
+| Title + note/content runtime fixture Evidence present/fresh                 | ready              | `EV-SEARCH-NOTE-TEST` points to `runtime-evidence.md`; Vitest fixture command passed 1 file and 6 tests.                                                                  |
+| Renewed user Acceptance approved with retained warnings                     | ready with warning | `acceptance-tree.json` records `renewed_acceptance_approved_with_warnings`; warnings remain carried to this readiness review.                                             |
+| Source Transition Path defined                                              | ready              | `source-transition-path.md` defines stages, authority matrix, prerequisites, invariants, conflict handling, and promotion review surface.                                 |
+| Rollback / Compatibility Strategy defined                                   | ready              | `rollback-compatibility-strategy.md` defines rollback/fallback, compatibility period, triggers, statuses, safety principles, and control records.                         |
+| Source authority matrix available                                           | ready              | Source matrix is defined in Source Transition Path.                                                                                                                       |
+| Graph-first Node/Edge/Tag baseline reflected in limited pilot parity        | ready              | `maintainability-graph-read-model.json` and `view-instance-manifest.json` now use `nodeKind`, `edgeType`, view-scoped tags, confidence/freshness split, and 7 Core Views. |
+| Check/Evidence obligations visible                                          | ready              | Check/Evidence policy and demo artifacts distinguish Checks, Evidence, freshness, partial Evidence, and exceptions.                                                       |
+| Approval Brief / Control Node handling visible                              | ready              | Todo Search Approval Brief, actual demo result, and compatibility supplemental slice expose user-relevant judgment/control points.                                        |
+| Retained warnings classified                                                | ready              | This review classifies each retained warning below.                                                                                                                       |
+| Generated graph/read-model output available or explicitly deferred/blocking | ready with warning | Manual equivalent read-model parity artifacts now exist. A generated builder/CLI output remains a later implementation requirement for full promotion or repeatability.   |
+| Public-doc cleanup status classified                                        | ready with warning | ACEP task-card public-doc cleanup is classified as deferred cleanup with a Compatibility Control Node candidate and explicit readiness warning.                           |
 
 ## Retained Warnings Classification
 
-| Retained warning                                               | Classification                   | Promotion readiness meaning                                                                                                                                                                                   | Required next action                                                                                                                                           |
-| -------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Bounded fixture Evidence, not full Todo app implementation     | acceptable warning               | The bounded fixture is acceptable for representative lifecycle feasibility and limited pilot readiness discussion. It is not proof of full product runtime parity.                                            | Carry as a pilot/full distinction. Require full-product/runtime Evidence only if the user asks for full promotion confidence rather than limited pilot review. |
-| UI screenshot/manual visual evidence partial                   | acceptable warning               | The representative source-model promotion question is not blocked by missing UI screenshot Evidence because behavior Evidence and warning state are visible. It remains a product/UI evidence gap.            | Keep visible as a retained warning. Require screenshot/manual visual Evidence before claiming full UI/product parity.                                          |
-| Generated graph builder / repeatable read-model output missing | later implementation requirement | Manual equivalent parity artifacts resolve the read-model output blocker for limited pilot readiness discussion, but a generator or CLI-backed output may be required for full promotion or CI repeatability. | Decide whether full promotion requires generated output before approval.                                                                                       |
-| ACEP task-card public-doc cleanup deferred                     | deferred cleanup                 | Existing policy bounds the mismatch, and supplemental Evidence makes it visible. Cleanup is not required to run this readiness review, but the user must accept or resolve the caveat for promotion.          | Carry the Compatibility Control Node candidate into promotion decision. Decide cleanup-before-promotion or accepted deferred cleanup.                          |
+| Retained warning                                               | Classification                   | Promotion readiness meaning                                                                                                                                                                                      | Required next action                                                                                                                                           |
+| -------------------------------------------------------------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bounded fixture Evidence, not full Todo app implementation     | acceptable warning               | The bounded fixture is acceptable for representative lifecycle feasibility and limited pilot readiness discussion. It is not proof of full product runtime parity.                                               | Carry as a pilot/full distinction. Require full-product/runtime Evidence only if the user asks for full promotion confidence rather than limited pilot review. |
+| UI screenshot/manual visual evidence partial                   | acceptable warning               | The representative source-model promotion question is not blocked by missing UI screenshot Evidence because behavior Evidence and warning state are visible. It remains a product/UI evidence gap.               | Keep visible as a retained warning. Require screenshot/manual visual Evidence before claiming full UI/product parity.                                          |
+| Generated graph builder / repeatable read-model output missing | later implementation requirement | Manual Node/Edge/Tag parity artifacts resolve the read-model output blocker for limited pilot readiness discussion, but a generator or CLI-backed output may be required for full promotion or CI repeatability. | Decide whether full promotion requires generated output before approval.                                                                                       |
+| ACEP task-card public-doc cleanup deferred                     | deferred cleanup                 | Existing policy bounds the mismatch, and supplemental Evidence makes it visible. Cleanup is not required to run this readiness review, but the user must accept or resolve the caveat for promotion.             | Carry the Compatibility Control Node candidate into promotion decision. Decide cleanup-before-promotion or accepted deferred cleanup.                          |
 
 ## Promotion Recommendation
 
@@ -146,20 +148,18 @@ This review does not recommend immediate full promotion.
 It recommends:
 
 ```text
-ready for limited pilot promotion decision with warnings
+ready for renewed limited pilot user decision with warnings
 ```
 
 Prepared decision surface:
 
 - [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md)
 
-The package state is now `Ready for review under previous baseline`; the current action is `Requires Graph-first
-baseline refresh before approval`; the promotion state remains `Decision required / deferred pending Graph-first
-refinement`.
+The package state is now `Ready for user decision after Graph-first baseline refresh`; the promotion state remains
+`Decision required`.
 
 Allowed next user decisions:
 
-- ask whether to refresh the read-model parity artifact under the Node/Edge/Tag taxonomy before limited pilot approval
 - ask the user to approve, defer, reject, or add prerequisites before a limited pilot promotion decision
 - ask the user whether generated builder/repeatable graph output is required before full promotion
 - ask the user whether ACEP public-doc cleanup may remain deferred for the promotion decision
@@ -222,8 +222,8 @@ The user must decide whether to:
 Decision required
 ```
 
-Reason: limited pilot promotion decision package was prepared under the previous baseline, but the new Graph-first
-Node/Edge/Tag taxonomy must be reflected or explicitly accepted before the user approves the pilot decision.
+Reason: the Graph-first Node/Edge/Tag baseline refresh is complete for limited pilot review, but the user has not
+approved limited pilot promotion. The review can ask for a user decision; it cannot approve or execute promotion.
 
 ## Control Node / Risk Classification
 
@@ -238,11 +238,11 @@ Node/Edge/Tag taxonomy must be reflected or explicitly accepted before the user 
 
 ## Remaining Blockers / Decisions
 
-### Limited Pilot Promotion Blocker
+### Limited Pilot Promotion Decision State
 
-- No blocker remains for retaining the limited pilot decision package as a review surface.
-- Approval should not proceed until the read-model parity artifact is refreshed or explicitly accepted under the
-  Graph-first Node/Edge/Tag taxonomy.
+- No blocker remains for using the limited pilot decision package as a refreshed user decision surface.
+- Limited pilot promotion approval remains `Decision required`.
+- Approval must still be explicit user approval and must not be inferred from this review.
 
 ### Full Promotion / Repeatability Blocker
 
@@ -250,8 +250,6 @@ Node/Edge/Tag taxonomy must be reflected or explicitly accepted before the user 
 
 ### Decisions Needed Before Promotion Approval
 
-- Whether to refresh the existing read-model parity artifact under the Node/Edge/Tag taxonomy before asking for limited
-  pilot approval.
 - Whether to approve the limited pilot promotion decision after refresh, approve only package readiness, defer, reject,
   or require prerequisites first.
 - Whether full promotion requires generated graph/read-model output as a future CLI-backed report or generated artifact.

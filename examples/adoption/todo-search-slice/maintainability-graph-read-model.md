@@ -1,38 +1,34 @@
 # Maintainability Graph Read-Model Parity Artifact
 
-Status: manual equivalent parity artifact
+Status: manual Node/Edge/Tag parity artifact
 
-This artifact shows how the `Todo Search Adoption + Product Meaning Feedback` selected-slice tree-native artifacts can
-be read as a Maintainability Graph read/alignment model.
+This artifact refreshes the `Todo Search Adoption + Product Meaning Feedback` read-model parity output under
+[graph-node-edge-tag-policy.md](../../../docs/concept/graph-node-edge-tag-policy.md). It shows that the selected-slice
+tree-native artifacts can be interpreted as durable Graph nodes, durable semantic edges, and view-scoped tags for 7
+Core Views.
 
 It is not Graph-source promotion. It does not change source authority, does not mark tree-native artifacts as
-projections, and does not implement a generated graph builder, CLI command, schema, runtime model, or validator.
+projections, and does not implement a generated graph builder, CLI command, schema, runtime model, validator, migration,
+or rollback command.
 
-## What This Demonstrates
+Tree-native selected-slice artifacts remain the current operational source.
 
-This read-model artifact demonstrates that the selected slice can be represented as graph-style nodes and edges while
-preserving:
+## What Changed In This Refresh
 
-- Product intent and acceptance criteria
-- Project / boundary nodes
-- Work scope and file boundaries
-- Test / Check nodes
-- Evidence status and freshness
-- Change and Impact history after `PP-001`
-- renewed user Acceptance with warnings retained
-- Cycle and Node Execution Contract boundaries
-- compatibility warning / deferred cleanup visibility
-- source-authority boundary
+The previous manual parity artifact used tree-parity-oriented fields such as `graphType` and relationship labels such
+as `realizedByWork`, `verifiedBy`, and `evidencedBy`.
 
-The machine-readable parity output is recorded in:
+This refresh keeps those legacy meanings traceable but adds the new Graph-first responsibility split:
 
-```text
-examples/adoption/todo-search-slice/maintainability-graph-read-model.json
-```
+- durable targets use `nodeKind`
+- durable semantic relationships use `edgeType`
+- view-local roles use `viewScopedTags`
+- confidence and freshness/status are separate fields
+- 7 Core View coverage is represented through `coreViewCoverage` and `view-instance-manifest.json`
 
 ## Source Inputs
 
-The read model is derived manually from these reviewable sources:
+The read model is derived manually from reviewable sources:
 
 - `product-tree.json`
 - `project-tree.json`
@@ -49,72 +45,131 @@ The read model is derived manually from these reviewable sources:
 - `approval-brief.md`
 - `evidence-exceptions.md`
 - `examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md`
+- `docs/concept/graph-node-edge-tag-policy.md`
+- `docs/concept/view-tree-pack.md`
 
-## Node Summary
+Machine-readable output:
 
-| Graph area            | Representative nodes / records                                     | Parity status |
-| --------------------- | ------------------------------------------------------------------ | ------------- |
-| Product / intent      | `PT-SEARCH-001`, `AC-SEARCH-001`, `AC-SEARCH-002`, `AC-SEARCH-003` | present       |
-| Project / boundary    | `PJ-TODO-LIST-SURFACE`, `PJ-TODO-SEARCH-HELPER`                    | present       |
-| Work                  | `WT-SEARCH-001`                                                    | present       |
-| Test / Check          | `TT-SEARCH-001`, `TT-SEARCH-002`, `TT-SEARCH-003`, `TT-SEARCH-004` | present       |
-| Evidence              | `EV-SEARCH-TEST`, `EV-SEARCH-REVIEW`, `EV-SEARCH-NOTE-TEST`        | present       |
-| Acceptance            | `AT-ROOT`                                                          | present       |
-| Product Patch         | `PP-001`                                                           | present       |
-| Change / Impact       | `CH-001`, `IM-SEARCH-001`                                          | present       |
-| Execution Contract    | `CYCLE-TODO-SEARCH`, `NEC-WT-SEARCH-001`                           | present       |
-| Approval / Control    | `AB-TODO-SEARCH`, compatibility warning candidate                  | present       |
-| Compatibility warning | `CCN-ACEP-TASK-CARD-AUTHORITY-001`                                 | present       |
+```text
+examples/adoption/todo-search-slice/maintainability-graph-read-model.json
+```
 
-## Edge Summary
+View manifest:
 
-The read model preserves the required edges:
+```text
+examples/adoption/todo-search-slice/view-instance-manifest.json
+examples/adoption/todo-search-slice/view-instance-manifest.md
+```
 
-| Required relationship                            | Parity status | Notes                                                                  |
-| ------------------------------------------------ | ------------- | ---------------------------------------------------------------------- |
-| Product -> Project                               | present       | Product node derives Todo surface/helper boundaries.                   |
-| Product -> Work                                  | present       | `PT-SEARCH-001` maps to `WT-SEARCH-001`.                               |
-| Project -> Work                                  | present       | Project boundary nodes realize the selected Work node.                 |
-| Work -> Test                                     | present       | Work node links to title, empty-query, no-result, and note tests.      |
-| Test -> Evidence                                 | present       | Fixture Evidence backs title, empty-query, and note/content checks.    |
-| Evidence -> Acceptance                           | present       | `EV-SEARCH-NOTE-TEST` supports renewed Acceptance with warnings.       |
-| Product Patch -> Change                          | present       | `PP-001` resolves the note/content product meaning change.             |
-| Change -> Impact                                 | present       | `CH-001` is analyzed by `IM-SEARCH-001`.                               |
-| Impact -> affected Work/Test/Evidence/Acceptance | present       | Affected nodes are classified, with partial UI Evidence retained.      |
-| Contract -> Work/Test/Evidence boundaries        | present       | Cycle and Node contracts bound title + note/content scope.             |
-| Approval Brief -> Acceptance / warnings          | present       | Approval Brief summarizes renewed Acceptance and retained warnings.    |
-| Compatibility warning -> readiness review item   | present       | Supplemental ACEP task-card mismatch remains visible as deferred work. |
+## Node Kind Mapping Summary
 
-## Parity Checklist
+| Node kind       | Representative nodes                                                                                      | Status  | Notes                                                                                       |
+| --------------- | --------------------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------- |
+| `task`          | `TASK-TODO-SEARCH-PILOT`, `WT-SEARCH-001`                                                                 | present | Review task and selected Work node are durable task targets.                                |
+| `requirement`   | `PT-SEARCH-001`, `AC-SEARCH-001`, `AC-SEARCH-002`, `AC-SEARCH-003`                                        | present | Product meaning and acceptance criteria remain tree-native source inputs.                   |
+| `behavior`      | `BEH-SEARCH-TITLE-NOTE`, `BEH-EMPTY-QUERY`, `BEH-NO-RESULT`, `BEH-NON-SCOPE-GUARD`                        | present | Behavior nodes are derived from product criteria plus runtime fixture observations.         |
+| `code`          | `PJ-TODO-LIST-SURFACE`, `PJ-TODO-SEARCH-HELPER`, `CODE-RUNTIME-SEARCH-HELPER`, `CODE-RUNTIME-SEARCH-TEST` | present | Project boundaries are manual anchors; fixture files are observable code anchors.           |
+| `data`          | `DATA-TODO-ITEM`                                                                                          | present | Fixture data shape includes title, note, content, tag, and due date.                        |
+| `check`         | `TT-SEARCH-001`, `TT-SEARCH-002`, `TT-SEARCH-003`, `TT-SEARCH-004`                                        | present | Test Tree nodes are represented as Checks.                                                  |
+| `evidence`      | `EV-SEARCH-TEST`, `EV-SEARCH-REVIEW`, `EV-SEARCH-NOTE-TEST`                                               | present | Evidence freshness is explicit; historical/visual Evidence remains partial or stale.        |
+| `change`        | `CH-001`                                                                                                  | present | User-confirmed product meaning feedback.                                                    |
+| `finding`       | `IM-SEARCH-001`, `FIND-*`, `CCN-ACEP-TASK-CARD-AUTHORITY-001`                                             | present | Impact, warnings, and compatibility caveats are visible findings/control candidates.        |
+| `decision`      | `PP-001`, `AT-ROOT`, `DEC-LIMITED-PILOT-PENDING`                                                          | present | User confirmation, renewed Acceptance, and pending promotion decision remain separate.      |
+| `document`      | `CYCLE-TODO-SEARCH`, `NEC-WT-SEARCH-001`, `AB-TODO-SEARCH`, `DOC-*`                                       | present | Contracts, briefs, parity check, and package docs are review records, not source authority. |
+| `view-instance` | `VIEW-TODO-SEARCH-CORE-VIEWS`                                                                             | present | Manual 7 Core View projection manifest.                                                     |
 
-| Check                                                              | Status  | Evidence                                                                |
-| ------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------- |
-| Product -> Project -> Work -> Test -> Evidence -> Acceptance trace | present | JSON read model plus source trees and Approval Brief.                   |
-| Change / Impact stale-reopen history                               | present | `PP-001`, `CH-001`, `IM-SEARCH-001`, and affected node classifications. |
-| Execution Contract boundary                                        | present | Cycle Contract and Node Execution Contract are represented as nodes.    |
-| Approval Brief and user acceptance authority                       | present | `AB-TODO-SEARCH` points to `AT-ROOT`; user acceptance remains separate. |
-| Compatibility warning / deferred cleanup                           | present | `CCN-ACEP-TASK-CARD-AUTHORITY-001` is included as warning reference.    |
-| Source authority boundary                                          | present | Metadata states tree-native artifacts remain operational source.        |
-| Generated graph builder                                            | missing | No generator/CLI/schema/runtime model is implemented.                   |
-| UI screenshot/manual visual parity                                 | partial | No-result UI screenshot/manual visual evidence remains partial.         |
+## Edge Mapping Summary
+
+Durable semantic relationships are represented as `edgeType`, not tags.
+
+| Edge type      | Representative edges                                                        | Meaning                                                        |
+| -------------- | --------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `targets`      | `E-TASK-TARGETS-REQ`, `E-WT-TARGETS-BEH-SEARCH`                             | Task/Work points to the requirement or behavior it addresses.  |
+| `implements`   | `E-CODE-IMPLEMENTS-SEARCH`, `E-CODE-IMPLEMENTS-EMPTY`                       | Fixture helper implements bounded behavior.                    |
+| `satisfies`    | `E-BEH-SEARCH-SATISFIES-AC1`, `E-BEH-EMPTY-SATISFIES-AC2`                   | Behavior satisfies acceptance criteria.                        |
+| `reads`        | `E-CODE-READS-DATA`                                                         | Fixture helper reads Todo item fields.                         |
+| `takes-input`  | `E-CODE-TAKES-INPUT-DATA`                                                   | Fixture helper consumes Todo items and query input.            |
+| `returns`      | `E-CODE-RETURNS-DATA`                                                       | Fixture helper returns filtered Todo items.                    |
+| `verifies`     | `E-TT-004-VERIFIES-SEARCH`, `E-TT-003-VERIFIES-NO-RESULT`                   | Check nodes verify behavior nodes.                             |
+| `evidences`    | `E-EV-NOTE-EVIDENCES-TT004`, `E-EV-REVIEW-EVIDENCES-TT003`                  | Evidence nodes provide observable proof for Checks.            |
+| `touches`      | `E-CH-TOUCHES-BEH-SEARCH`, `E-WT-TOUCHES-CODE`                              | Change/Work touches behavior or code anchors.                  |
+| `reports-on`   | `E-IM-REPORTS-ON-CH`, `E-FIND-UI-REPORTS-ON-EV`                             | Findings and documents report impact, gaps, or warnings.       |
+| `requires`     | `E-CYCLE-REQUIRES-WT`, `E-CYCLE-REQUIRES-EV`, `E-DEC-PENDING-REQUIRES-USER` | Contracts or decisions require Work/Evidence/user review.      |
+| `invalidates`  | `E-CH-INVALIDATES-EV-HISTORICAL`, `E-CH-INVALIDATES-OLD-ACCEPTANCE`         | Change makes historical Evidence/Acceptance stale or reopened. |
+| `preserves`    | `E-CH-PRESERVES-NON-SCOPE`, `E-NEC-PRESERVES-GUARD`                         | Change/contract preserves non-scope guard behavior.            |
+| `approves`     | `E-PP-APPROVES-CH`, `E-AT-APPROVES-PT`                                      | User decision/Acceptance approves a change or product meaning. |
+| `derives-view` | `E-VIEW-DERIVES-*`                                                          | View Instance derives projection from source nodes.            |
+
+## View-Scoped Tag Summary
+
+View-scoped tags are temporary roles inside a View Instance only.
+
+Allowed tags used here:
+
+```text
+target, context, candidate, guard, required, stale, blocked, output
+```
+
+Examples:
+
+- `BEH-NON-SCOPE-GUARD` is tagged `guard` inside Behavior and Scope / Execution Views.
+- `TT-SEARCH-004` is tagged `required` inside Verification View.
+- `EV-SEARCH-NOTE-TEST` is tagged `output` inside Evidence / Acceptance View.
+- `FIND-GENERATED-BUILDER-MISSING` is tagged `blocked` inside Scope / Execution View for full promotion/repeatability.
+
+The artifact does not use tags such as `implements`, `verifies`, `evidences`, `code.target`, or `test.required`.
+
+## 7 Core View Coverage Matrix
+
+| Core View                  | Coverage | Key node kinds                                                 | Key edge types                                      | Retained boundary                                                             |
+| -------------------------- | -------- | -------------------------------------------------------------- | --------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Intent View                | present  | `task`, `requirement`, `decision`, `document`                  | `targets`, `requires`, `approves`                   | Promotion decision remains user-controlled.                                   |
+| Behavior View              | present  | `requirement`, `behavior`, `code`, `data`                      | `implements`, `satisfies`, `reads`, `takes-input`   | Fixture behavior is representative, not full app proof.                       |
+| Structure View             | present  | `code`, `data`, `task`                                         | `touches`, `reads`, `targets`                       | Project/code anchors remain manual demo-support boundaries.                   |
+| Scope / Execution View     | present  | `task`, `document`, `behavior`, `check`, `evidence`, `finding` | `requires`, `preserves`, `reports-on`               | Contracts expose selected/non-scope boundaries and generated-builder gap.     |
+| Impact View                | present  | `decision`, `change`, `finding`, `evidence`, `task`            | `touches`, `invalidates`, `preserves`, `reports-on` | PP-001 stale/reopen and compatibility cleanup caveats remain visible.         |
+| Verification View          | present  | `behavior`, `check`, `evidence`, `code`                        | `verifies`, `evidences`                             | UI visual evidence is partial even though runtime behavior evidence is fresh. |
+| Evidence / Acceptance View | present  | `evidence`, `decision`, `document`, `finding`                  | `evidences`, `approves`, `reports-on`, `requires`   | Renewed Acceptance is recorded; limited pilot promotion approval is pending.  |
+
+## Confidence / Freshness Split
+
+The artifact separates confidence from freshness/status.
+
+Examples:
+
+- `EV-SEARCH-NOTE-TEST` has `confidence: tool-confirmed` and `freshnessStatus: fresh`.
+- `AT-ROOT` has `confidence: user-confirmed` and `freshnessStatus: fresh`.
+- `EV-SEARCH-TEST` has `confidence: tool-confirmed` and `freshnessStatus: stale`.
+- `EV-SEARCH-REVIEW` has `confidence: inferred` and `freshnessStatus: stale`.
+
+`stale` is never used as a confidence value.
 
 ## Retained Warnings
 
-| Warning                                                | Classification after this artifact                                                                 |
-| ------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| Bounded fixture evidence, not full Todo app runtime    | acceptable warning                                                                                 |
-| UI screenshot/manual visual evidence remains partial   | acceptable warning                                                                                 |
-| Generated graph builder or CLI output is not available | later implementation requirement for full promotion; resolved for limited pilot by manual artifact |
-| ACEP task-card public-doc cleanup deferred             | deferred cleanup                                                                                   |
+| Warning                                                | Classification after refresh                                            |
+| ------------------------------------------------------ | ----------------------------------------------------------------------- |
+| Bounded fixture Evidence, not full Todo app runtime    | acceptable warning for limited pilot                                    |
+| UI screenshot/manual visual evidence remains partial   | acceptable warning for limited pilot                                    |
+| Generated graph builder or CLI-backed output is absent | later implementation requirement for full promotion or CI repeatability |
+| ACEP task-card public-doc cleanup deferred             | deferred cleanup                                                        |
 
-## Blocker Resolution Judgment
+## Remaining Gaps
 
-This manual parity artifact resolves the prior read-model output blocker for limited pilot promotion decision
-preparation because it provides an observable graph/read-model output with nodes, edges, parity status, retained
-warnings, and source-authority boundary.
+- No generated graph builder or CLI-backed read-model output exists.
+- UI screenshot/manual visual evidence remains partial.
+- ACEP task-card public-doc cleanup remains deferred.
+- Limited pilot promotion approval remains a user decision.
 
-It does not resolve the full generated-builder question. Full promotion, repeatable CI validation, or automated graph
-parity may still require a generated graph builder or CLI-backed read-model report.
+## Limited Pilot Readiness Judgment
+
+```text
+Node/Edge/Tag parity: demonstrated for limited pilot review with retained warnings
+Limited pilot package: ready for renewed user decision after refresh
+Full promotion: not ready without generated builder / broader parity decision
+```
+
+This means the previous Graph-first baseline refresh blocker is resolved for limited pilot review. It does not approve
+the limited pilot and does not make full promotion ready.
 
 ## Why This Is Not Graph-Source Promotion
 
@@ -124,17 +179,3 @@ parity may still require a generated graph builder or CLI-backed read-model repo
 - No tree-native artifact is marked as projection.
 - No generated graph builder, CLI, schema, runtime model, validator, migration, or rollback command is implemented.
 - User promotion approval is still required before any source authority change.
-
-## Readiness Conclusion
-
-For limited pilot promotion decision preparation:
-
-```text
-ready_with_warnings
-```
-
-For full promotion:
-
-```text
-not_ready_without_generator_or_full_parity_decision
-```

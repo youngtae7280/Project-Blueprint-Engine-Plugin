@@ -174,6 +174,13 @@ A View Tree Pack may be represented later as one or more View Instance Manifests
 
 The manifest is a durable record candidate, not an execution engine.
 
+The Todo Search representative slice now includes a manual example:
+
+- `examples/adoption/todo-search-slice/view-instance-manifest.json`
+- `examples/adoption/todo-search-slice/view-instance-manifest.md`
+
+That example is review evidence only. It does not define a schema, generator, renderer, CLI output, or source authority.
+
 ## Legacy Term Mapping
 
 Older uses of `Product Tree` as a UI or analysis view should be read as an Intent View unless they refer to the actual
@@ -198,7 +205,7 @@ reclassified by the approved source policy rather than left under the compatibil
 - Which Core Views are required for each PBE workflow stage?
 - What is the smallest useful projection that avoids context bloat?
 - Should `view-instance` be a first-class Node kind or a separate durable record kind?
-- How should existing read-model parity artifacts be rewritten under the Node/Edge/Tag policy?
+- Should View Instance Manifest become a first-class generated artifact in a later implementation phase?
 
 ## Related Gate
 

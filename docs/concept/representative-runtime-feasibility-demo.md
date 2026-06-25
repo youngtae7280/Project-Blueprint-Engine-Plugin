@@ -25,18 +25,19 @@ and user-renewed Acceptance.
 
 The promotion readiness review is recorded in
 [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md). It classifies retained warnings
-and previously recommended `ready for limited pilot promotion decision with warnings` after manual equivalent parity
-artifacts were added. After the Graph-first Node/Edge/Tag refinement, limited pilot approval is deferred pending baseline
-refresh. It does not approve Graph-source promotion.
+and now records the Graph-first Node/Edge/Tag parity refresh for limited pilot review. It does not approve Graph-source
+promotion.
 
 The representative slice now also has manual equivalent read-model parity artifacts:
 
 - `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
 - `examples/adoption/todo-search-slice/maintainability-graph-read-model.md`
 - `examples/adoption/todo-search-slice/parity-check.md`
+- `examples/adoption/todo-search-slice/view-instance-manifest.json`
+- `examples/adoption/todo-search-slice/view-instance-manifest.md`
 
-These artifacts support limited pilot promotion decision preparation with warnings, but they are not generated builder
-implementation and do not promote source authority.
+These artifacts now support renewed limited pilot user decision preparation with warnings under the Node/Edge/Tag
+taxonomy, but they are not generated builder implementation and do not promote source authority.
 
 The user judgment surface for that decision is recorded in
 [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md). It is not promotion
@@ -473,9 +474,9 @@ demonstrated with retained warnings: selected-slice Project/Contract/Change/Impa
 Product Patch confirmation and fresh bounded runtime fixture Evidence are recorded, and renewed Acceptance is approved by
 the user. A supplemental compatibility mismatch slice covers the real mismatch path outside the Todo Search product
 slice. The later readiness review treated the manual read-model parity artifact as sufficient for limited pilot decision
-preparation under the previous baseline, while generated builder output remains a full-promotion/repeatability question.
-After the Graph-first Node/Edge/Tag refinement, the parity artifact needs refresh or explicit acceptance before limited
-pilot approval.
+preparation in the earlier review cycle, while generated builder output remains a full-promotion/repeatability question.
+After the Graph-first Node/Edge/Tag refresh, the parity artifact can support a renewed limited pilot user decision while
+promotion approval remains separate.
 
 ### Source Transition Path
 

@@ -145,21 +145,21 @@ The following readiness review is recorded:
 
 - [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md)
 
-The readiness review previously recommended `ready for limited pilot promotion decision with warnings`. The prior
-generated Maintainability Graph/read-model output blocker is resolved for limited pilot readiness by manual equivalent
-parity artifacts in `examples/adoption/todo-search-slice/`. Generated builder output remains a later implementation
-requirement for full promotion or repeatable CI-backed parity. After the Graph-first Node/Edge/Tag refinement, approval
-is deferred pending baseline refresh. The review does not approve Graph-source promotion or change source authority.
+The readiness review now records the history and current status separately. Under the earlier baseline it treated the
+limited pilot decision surface as reviewable with warnings. After the Graph-first Node/Edge/Tag refinement, the Todo
+Search read-model parity artifact was refreshed with `nodeKind`, `edgeType`, `viewScopedTags`, confidence/freshness
+separation, and 7 Core View coverage. The current recommendation is `ready for renewed limited pilot user decision with
+warnings`; promotion state remains `Decision required`. The review does not approve Graph-source promotion or change
+source authority.
 
 The following decision package is now prepared for user judgment:
 
 - [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md)
 
-The package was prepared under the previous read-model parity baseline. After the Graph-first Node/Edge/Tag refinement,
-its current state is `Ready for review under previous baseline`, and its current action is `Requires Graph-first
-baseline refresh before approval`. It remains a user decision surface only. It does not approve limited pilot promotion,
-full Graph-source promotion, source authority change, public doc cleanup, generated builder implementation, or
-tree-native artifact retirement.
+The package is refreshed for the Node/Edge/Tag baseline and can be used again as a user decision surface. Its package
+state is `Ready for user decision after Graph-first baseline refresh`, while the promotion state remains
+`Decision required`. It does not approve limited pilot promotion, full Graph-source promotion, source authority change,
+public doc cleanup, generated builder implementation, or tree-native artifact retirement.
 
 ## Outline-Only Later-Phase Docs
 

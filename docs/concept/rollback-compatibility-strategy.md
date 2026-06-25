@@ -264,7 +264,8 @@ warning classification. It now treats manual equivalent read-model parity output
 decision preparation with warnings, while generated builder output remains a full-promotion/repeatability question.
 
 Manual equivalent read-model parity artifacts now resolve that read-model output blocker for limited pilot decision
-preparation while keeping generated builder output as a later full-promotion or repeatability question. The artifacts do
+preparation while keeping generated builder output as a later full-promotion or repeatability question. The artifacts
+are now refreshed under the Node/Edge/Tag taxonomy and include a View Instance Manifest for the 7 Core Views. They do
 not perform rollback, fallback, compatibility retirement, migration, or source promotion.
 
 [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md) packages the limited pilot
@@ -348,8 +349,6 @@ Those remain later concept or implementation questions.
 - Does rollback review need a specialized Approval Brief template?
 - Who approves compatibility retirement, and at what review point?
 - Which limited pilot promotion decision option will the user choose?
-- Does limited pilot approval require the read-model parity artifact to be updated to the new Node/Edge/Tag taxonomy
-  first?
 - Will the user accept ACEP task-card public-doc cleanup as deferred cleanup, or require cleanup before promotion
   approval?
 - Does full Graph-source promotion require an actual generated graph builder or CLI-backed read-model output?

@@ -1,16 +1,19 @@
 # Maintainability Graph Read-Model Parity Check
 
-Status: manual parity check
+Status: Node/Edge/Tag parity check
 
-This parity check evaluates whether the Maintainability Graph read-model artifact resolves the generated/read-model
-blocker from Graph-source Promotion Readiness Review.
+This parity check evaluates whether the Todo Search manual read-model artifact now satisfies the Graph-first
+Node/Edge/Tag policy for limited pilot review.
 
-It is not Graph-source promotion, not source authority change, and not a generated graph builder implementation.
+It is not Graph-source promotion, not source authority change, not limited pilot approval, and not a generated graph
+builder implementation.
 
 ## Source References
 
 - `maintainability-graph-read-model.json`
 - `maintainability-graph-read-model.md`
+- `view-instance-manifest.json`
+- `view-instance-manifest.md`
 - `product-tree.json`
 - `project-tree.json`
 - `work-tree.json`
@@ -24,58 +27,80 @@ It is not Graph-source promotion, not source authority change, and not a generat
 - `approval-brief.md`
 - `evidence-exceptions.md`
 - `examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md`
+- `docs/concept/graph-node-edge-tag-policy.md`
+- `docs/concept/view-tree-pack.md`
 
 ## Parity Questions
 
-| Question                                                                                   | Result | Evidence                                                                                            |
-| ------------------------------------------------------------------------------------------ | ------ | --------------------------------------------------------------------------------------------------- |
-| Does the artifact show Product -> Project -> Work -> Test -> Evidence -> Acceptance trace? | yes    | JSON nodes and edges preserve `PT-SEARCH-001` through `AT-ROOT`.                                    |
-| Does it include Change/Impact stale-reopen history?                                        | yes    | `PP-001`, `CH-001`, `IM-SEARCH-001`, affected nodes, and renewed Acceptance are represented.        |
-| Does it preserve Execution Contract boundary?                                              | yes    | `CYCLE-TODO-SEARCH` and `NEC-WT-SEARCH-001` are represented as contract nodes and boundary edges.   |
-| Does it preserve Approval Brief and user acceptance authority?                             | yes    | `AB-TODO-SEARCH` summarizes `AT-ROOT`; user approval remains separate from graph output.            |
-| Does it carry compatibility warning / deferred cleanup?                                    | yes    | `CCN-ACEP-TASK-CARD-AUTHORITY-001` remains visible as a compatibility warning.                      |
-| Does it avoid source authority change?                                                     | yes    | Metadata states tree-native artifacts remain source and `treeNativeArtifactsReclassified` is false. |
-| Does it provide a generated graph builder output?                                          | no     | The artifact is manual equivalent parity output; no generator/CLI/schema/runtime is implemented.    |
-| Does it hide partial/missing/exception relationships?                                      | no     | Partial UI Evidence and generated-builder absence remain explicit warnings.                         |
+| Question                                                                                | Result | Evidence / reason                                                                                                                                       |
+| --------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Can tree-native selected-slice artifacts be interpreted under the Node/Edge/Tag policy? | yes    | JSON nodes use `nodeKind`, edges use `edgeType`, and view-local roles use `viewScopedTags`.                                                             |
+| Are durable semantic relationships represented as Edges rather than Tags?               | yes    | `implements`, `verifies`, `evidences`, `invalidates`, `preserves`, and `approves` appear only as `edgeType`.                                            |
+| Are view-local roles represented as Tags only?                                          | yes    | Tags are limited to `target`, `context`, `candidate`, `guard`, `required`, `stale`, `blocked`, and `output`.                                            |
+| Are node-kind-specific tags avoided?                                                    | yes    | The artifact does not use tags such as `code.target`, `check.required`, `implements`, `verifies`, or `evidences`.                                       |
+| Are confidence and freshness/status separated?                                          | yes    | Nodes and edges use separate `confidence` and `freshnessStatus` fields; `stale` is never a confidence value.                                            |
+| Are all 7 Core Views represented?                                                       | yes    | `coreViewCoverage` and `view-instance-manifest.json` cover Intent, Behavior, Structure, Scope/Execution, Impact, Verification, and Evidence/Acceptance. |
+| Does Scope / Execution View expose Cycle/Node Contract boundaries?                      | yes    | `CYCLE-TODO-SEARCH`, `NEC-WT-SEARCH-001`, required Evidence, and non-scope guard behavior are included.                                                 |
+| Are missing/partial/deferred warnings retained?                                         | yes    | Partial UI Evidence, bounded fixture warning, generated-builder absence, and ACEP cleanup deferral remain visible.                                      |
+| Does the artifact avoid source authority change?                                        | yes    | Metadata states tree-native artifacts remain source and no promotion/generator/schema/runtime is implemented.                                           |
+| Is limited pilot approval now ready to be requested again?                              | yes    | The package can return to user decision surface after refresh, but approval remains `Decision required`.                                                |
+| Is full promotion ready?                                                                | no     | Full promotion still has generated-builder/repeatability, broader parity, and cleanup judgment questions.                                               |
 
-## Readiness Blocker Judgment
-
-Prior blocker:
-
-```text
-Generated Maintainability Graph/read-model output missing.
-```
-
-Updated judgment:
+## Node / Edge / Tag Parity Judgment
 
 ```text
-resolved_for_limited_pilot_readiness_with_warning
+demonstrated for limited pilot review with retained warnings
 ```
 
 Reason:
 
-- `maintainability-graph-read-model.json` is an observable read-model parity output.
-- It preserves node categories, edges, parity status, warnings, and source-authority boundary.
-- It is reviewable without implementing a generator or changing source authority.
+- durable targets are represented as `nodeKind`
+- durable semantic relationships are represented as `edgeType`
+- view-scoped temporary roles are represented as `viewScopedTags`
+- 7 Core Views are explicitly covered
+- warnings and source-authority boundaries remain visible
+
+## Limited Pilot Package Judgment
+
+Prior blocker before this refresh:
+
+```text
+Graph-first baseline refresh was required before limited pilot user decision
+```
+
+Updated state after this refresh:
+
+```text
+Graph-first baseline refresh completed for limited pilot review
+Promotion state remains Decision required
+No source authority change
+```
+
+The package may now be presented again as a user decision surface. It is not automatically approved.
+
+## Full Promotion / Repeatability Judgment
+
+```text
+not ready without generated builder / broader parity decision
+```
 
 Remaining limitation:
 
-```text
-generated_builder_missing_for_full_promotion_or_repeatable_ci
-```
+- This artifact is manual.
+- No generated graph builder, CLI-backed read-model output, schema, runtime model, or validator exists.
+- Public-doc cleanup remains deferred.
+- UI screenshot/manual visual Evidence remains partial.
+- Full product/runtime parity is not demonstrated by the bounded fixture.
 
-This limitation should be treated as a later implementation requirement or full-promotion prerequisite, not as a blocker
-to preparing a limited pilot promotion decision surface.
+## Retained Warnings
 
-## Remaining Partial / Missing / Exception Items
-
-| Item                                 | Status   | Treatment                                                               |
-| ------------------------------------ | -------- | ----------------------------------------------------------------------- |
-| Full Todo app runtime implementation | partial  | Acceptable warning for limited pilot; full promotion may require more.  |
-| UI screenshot/manual visual evidence | partial  | Acceptable warning unless full UI/product parity is in scope.           |
-| Generated graph builder / CLI output | missing  | Later implementation requirement for repeatability or full promotion.   |
-| ACEP task-card public-doc cleanup    | deferred | Deferred cleanup; user must accept or require cleanup before promotion. |
-| Graph-source promotion approval      | missing  | Must remain missing until explicit user promotion decision.             |
+| Item                                 | Status            | Treatment                                                               |
+| ------------------------------------ | ----------------- | ----------------------------------------------------------------------- |
+| Full Todo app runtime implementation | partial           | Acceptable warning for limited pilot; full promotion may require more.  |
+| UI screenshot/manual visual evidence | partial           | Acceptable warning unless full UI/product parity is in scope.           |
+| Generated graph builder / CLI output | missing           | Later implementation requirement for repeatability or full promotion.   |
+| ACEP task-card public-doc cleanup    | deferred          | Deferred cleanup; user must accept or require cleanup before promotion. |
+| Limited pilot promotion approval     | decision required | Must remain pending until explicit user approval.                       |
 
 ## Non-Promotion Statement
 

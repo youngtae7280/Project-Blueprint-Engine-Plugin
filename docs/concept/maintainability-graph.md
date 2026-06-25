@@ -120,28 +120,26 @@ strengthen the compatibility and stale/reopen paths, but generated read-model ou
 judgment, and cleanup judgment remain unresolved for promotion approval.
 The promotion readiness review is recorded in
 [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md). It classifies retained warnings
-and previously recommended `ready for limited pilot promotion decision with warnings` after manual equivalent parity
-artifacts were added. After the Graph-first Node/Edge/Tag refinement, limited pilot approval requires baseline refresh
-or explicit acceptance of the taxonomy gap. It does not promote Maintainability Graph or change source authority.
+and records that the earlier reviewable-with-warnings limited pilot recommendation has now been refreshed under the
+Graph-first Node/Edge/Tag taxonomy for limited pilot review. Promotion state remains `Decision required`; the review does
+not promote Maintainability Graph or change source authority.
 
 The limited pilot user judgment surface is recorded in
-[limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md). It was prepared under the
-previous baseline and now requires Graph-first baseline refresh before approval. The promotion state remains
-`Decision required / deferred pending Graph-first refinement`; it does not make Maintainability Graph the current source
-model.
-
-After this Graph-first Node/Edge/Tag baseline update, limited pilot approval must be re-reviewed before proceeding. The
-existing package and evidence remain valuable, but approval should not proceed until the selected read-model parity
-artifact is refreshed or explicitly accepted under the Node/Edge/Tag taxonomy.
+[limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md). It is now refreshed for the
+Node/Edge/Tag baseline and can be used again as a user decision surface. The promotion state remains
+`Decision required`; it does not make Maintainability Graph the current source model.
 
 The representative slice now includes manual equivalent read-model parity artifacts:
 
 - `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
 - `examples/adoption/todo-search-slice/maintainability-graph-read-model.md`
 - `examples/adoption/todo-search-slice/parity-check.md`
+- `examples/adoption/todo-search-slice/view-instance-manifest.json`
+- `examples/adoption/todo-search-slice/view-instance-manifest.md`
 
-These artifacts resolve the read-model output blocker for limited pilot promotion decision preparation only. They do not
-implement a generated graph builder and do not make Maintainability Graph the current source model.
+These artifacts now separate durable Node kinds, durable Edge types, and view-scoped Tags for the 7 Core Views. They
+resolve the Graph-first parity refresh blocker for limited pilot review only. They do not implement a generated graph
+builder and do not make Maintainability Graph the current source model.
 The concept-level authority transition policy is defined in [source-transition-path.md](source-transition-path.md).
 The concept-level recovery and compatibility safety policy is defined in
 [rollback-compatibility-strategy.md](rollback-compatibility-strategy.md).
@@ -181,8 +179,7 @@ traceability view.
 - OQ-027: Should graph checks become validators, evidence reports, documentation-only review aids, or a combination?
 - OQ-052: Does full Graph-source promotion require an actual generated graph builder or CLI-backed read-model output?
 - OQ-053: Which limited pilot promotion decision option will the user choose?
-- OQ-058: Does limited pilot approval require the read-model parity artifact to be updated to the new Node/Edge/Tag
-  taxonomy first?
+- OQ-054: Should `task` and `view-instance` be first-class node kinds or durable records outside node kind?
 
 ## Related Gate
 
