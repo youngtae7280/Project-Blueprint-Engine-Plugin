@@ -321,7 +321,9 @@ not perform rollback, approve fallback, clean up compatibility warnings, or reti
 artifacts.
 
 The later aggregate-enabled run `28156403793` reviews Todo Search, Todo App PBE Run, and aggregate summary artifacts as
-CI-backed Evidence. It also remains Evidence only and does not perform rollback, approve fallback, or retire artifacts.
+CI-backed Evidence. Post-update run `28157938343` confirms the same aggregate-enabled workflow after the Node 24
+action/runtime update. These runs remain Evidence only and do not perform rollback, approve fallback, or retire
+artifacts.
 
 [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) adds a source-transition safety constraint: durable
 semantic relationships must remain Edges, while Tags are view-scoped roles only. A future transition or parity artifact
@@ -386,8 +388,8 @@ aggregation can preserve rollback and compatibility boundaries per slice. The fi
 reports as Evidence-only inputs, but it does not execute rollback checks, retire fallback artifacts, or implement broader
 aggregate validation.
 The non-enforcing manual workflow now can upload Todo Search, Todo App PBE Run, and aggregate summary artifacts together,
-and run `28156403793` reviewed that aggregate-enabled bundle as CI-backed Evidence. That does not change fallback
-precedence, create rollback enforcement, retire fallback artifacts, or expand source authority.
+and runs `28156403793` / `28157938343` reviewed that aggregate-enabled bundle as CI-backed Evidence. That does not
+change fallback precedence, create rollback enforcement, retire fallback artifacts, or expand source authority.
 
 ## Scope Boundaries
 

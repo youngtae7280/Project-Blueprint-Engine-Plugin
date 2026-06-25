@@ -4,10 +4,10 @@ Status: aggregate-pass
 
 ## Run Identity
 
-- Summarized at: 2026-06-25T08:08:04.077Z
+- Summarized at: 2026-06-25T08:46:58.742Z
 - Command identity:
   `pbe graph read-model summarize --slices examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run`
-- Source commit: 3bfca70
+- Source commit: 96da2c7
 - Source mode: existing-per-slice-validation-reports-only
 - Input reports: `examples/adoption/todo-search-slice/generated/read-model-validation-report.json`,
   `examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json`

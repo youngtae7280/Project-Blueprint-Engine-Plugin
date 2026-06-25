@@ -301,7 +301,9 @@ Run `28151296796` completed successfully on `workflow_dispatch` for `main` as th
 Evidence review. Run `28156403793` later reviewed the aggregate-enabled workflow bundle, including Todo Search, Todo App
 PBE Run, and the aggregate summary. Its CI manifest records `ci-backed` / `ci-evidence-pass`, Todo Search
 `validation-pass` and `comparison-pass`, Todo App PBE Run `validation-pass`, aggregate `aggregate-pass`, and retained
-warning visibility. This remains non-enforcing Evidence only and does not change source authority.
+warning visibility. The workflow then moved to Node 24 action/runtime settings, and post-update run `28157938343`
+reviewed the same aggregate-enabled bundle successfully without the prior Node.js 20 deprecation annotation. This
+remains non-enforcing Evidence only and does not change source authority.
 
 The multi-slice validation design is recorded:
 
@@ -353,7 +355,8 @@ validation, `validate --all`, CI enforcement, source authority expansion, public
 promotion.
 
 The non-enforcing manual CI workflow now runs this aggregate command after generating and validating both included
-slices. Run `28156403793` reviewed the aggregate-enabled artifact bundle as CI-backed Evidence. It remains
+slices. Run `28156403793` reviewed the aggregate-enabled artifact bundle as CI-backed Evidence, and post-update run
+`28157938343` reviewed the same aggregate-enabled workflow after the Node 24 CI hygiene update. It remains
 manual-dispatch, non-enforcing Evidence only.
 
 ## Outline-Only Later-Phase Docs

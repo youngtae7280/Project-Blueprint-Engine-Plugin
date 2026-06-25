@@ -278,7 +278,8 @@ Transition Path. Run `28151296796` now provides reviewed CI-backed Evidence for 
 does not change transition stage or source authority.
 
 The later aggregate-enabled manual run `28156403793` reviewed Todo Search, Todo App PBE Run structure-only, and
-aggregate summary artifacts as CI-backed Evidence. It also does not change transition stage or source authority.
+aggregate summary artifacts as CI-backed Evidence. Post-update run `28157938343` confirmed the same aggregate-enabled
+workflow after the Node 24 action/runtime update. These runs do not change transition stage or source authority.
 
 [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) defines the target Graph-first responsibility split:
 Nodes are durable targets, Edges are durable semantic relationships, and Tags are temporary view-scoped roles.
@@ -352,8 +353,8 @@ not expand source authority, does not add a pilot marker, does not require manua
 `validate --all`. Both current validation reports carry per-slice independence metadata, and the first aggregate summary
 reads those reports as Evidence-only inputs while preserving slice-specific authority boundaries.
 The manual `PBE Read-Model Evidence` workflow now includes Todo App structure-only generation/validation and aggregate
-summarize, and run `28156403793` reviewed the aggregate-enabled artifact bundle as non-enforcing CI-backed Evidence.
-This workflow review does not add enforcement, `validate --all`, or source authority expansion.
+summarize, and runs `28156403793` / `28157938343` reviewed the aggregate-enabled artifact bundle as non-enforcing
+CI-backed Evidence. These workflow reviews do not add enforcement, `validate --all`, or source authority expansion.
 
 ## Scope Boundaries
 
