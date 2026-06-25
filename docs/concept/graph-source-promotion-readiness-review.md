@@ -49,6 +49,8 @@ This review uses the following observable sources:
 - [check-evidence-policy.md](check-evidence-policy.md)
 - [control-node-policy.md](control-node-policy.md)
 - [approval-brief.md](approval-brief.md)
+- [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md)
+- [retrofit-graph-bootstrap.md](retrofit-graph-bootstrap.md)
 - `examples/adoption/todo-search-slice/*`
 - `examples/adoption/compatibility-mismatch-slice/*`
 - `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
@@ -61,10 +63,16 @@ passing fixture command Evidence, and explicit exception or warning records.
 
 ## Executive Recommendation
 
-Recommendation:
+Previous recommendation:
 
 ```text
 ready for limited pilot promotion decision with warnings
+```
+
+Current refinement status:
+
+```text
+limited pilot approval deferred pending Graph-first Node/Edge/Tag baseline refresh
 ```
 
 Meaning:
@@ -72,7 +80,9 @@ Meaning:
 - The representative lifecycle slice is demonstrated with retained warnings.
 - The policy chain through Rollback / Compatibility Strategy is reviewable.
 - A manual equivalent read-model parity artifact now makes the graph/read-model relationship reviewable for limited pilot
-  decision preparation.
+- decision preparation under the previous baseline.
+- The new Node/Edge/Tag policy requires the read-model parity artifact and decision package to be rechecked before
+  limited pilot approval proceeds.
 - Full promotion still needs explicit user judgment about generated builder/repeatability, public-doc cleanup, and
   full-product/runtime parity.
 - Graph-source promotion must not be approved or declared from this review alone.
@@ -113,6 +123,7 @@ boundaries. They do not implement a generated graph builder and do not justify f
 | Source Transition Path defined                                              | ready              | `source-transition-path.md` defines stages, authority matrix, prerequisites, invariants, conflict handling, and promotion review surface.                               |
 | Rollback / Compatibility Strategy defined                                   | ready              | `rollback-compatibility-strategy.md` defines rollback/fallback, compatibility period, triggers, statuses, safety principles, and control records.                       |
 | Source authority matrix available                                           | ready              | Source matrix is defined in Source Transition Path.                                                                                                                     |
+| Graph-first Node/Edge/Tag baseline defined                                  | ready with warning | `graph-node-edge-tag-policy.md` defines the target taxonomy. Existing limited pilot artifacts should be refreshed or explicitly accepted under that taxonomy.           |
 | Check/Evidence obligations visible                                          | ready              | Check/Evidence policy and demo artifacts distinguish Checks, Evidence, freshness, partial Evidence, and exceptions.                                                     |
 | Approval Brief / Control Node handling visible                              | ready              | Todo Search Approval Brief, actual demo result, and compatibility supplemental slice expose user-relevant judgment/control points.                                      |
 | Retained warnings classified                                                | ready              | This review classifies each retained warning below.                                                                                                                     |
@@ -142,10 +153,13 @@ Prepared decision surface:
 
 - [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md)
 
-The package state is `Ready for approval`; the promotion state remains `Decision required`.
+The package state is now `Ready for review under previous baseline`; the current action is `Requires Graph-first
+baseline refresh before approval`; the promotion state remains `Decision required / deferred pending Graph-first
+refinement`.
 
 Allowed next user decisions:
 
+- ask whether to refresh the read-model parity artifact under the Node/Edge/Tag taxonomy before limited pilot approval
 - ask the user to approve, defer, reject, or add prerequisites before a limited pilot promotion decision
 - ask the user whether generated builder/repeatable graph output is required before full promotion
 - ask the user whether ACEP public-doc cleanup may remain deferred for the promotion decision
@@ -208,8 +222,8 @@ The user must decide whether to:
 Decision required
 ```
 
-Reason: limited pilot promotion decision package is now ready, but the user must decide whether to approve the pilot
-decision, approve only package readiness, require generated builder output first, require cleanup first, defer, or reject.
+Reason: limited pilot promotion decision package was prepared under the previous baseline, but the new Graph-first
+Node/Edge/Tag taxonomy must be reflected or explicitly accepted before the user approves the pilot decision.
 
 ## Control Node / Risk Classification
 
@@ -226,8 +240,9 @@ decision, approve only package readiness, require generated builder output first
 
 ### Limited Pilot Promotion Blocker
 
-- No blocker remains for preparing a limited pilot promotion decision surface, provided the user accepts the manual
-  parity artifact as sufficient for pilot readiness discussion.
+- No blocker remains for retaining the limited pilot decision package as a review surface.
+- Approval should not proceed until the read-model parity artifact is refreshed or explicitly accepted under the
+  Graph-first Node/Edge/Tag taxonomy.
 
 ### Full Promotion / Repeatability Blocker
 
@@ -235,8 +250,10 @@ decision, approve only package readiness, require generated builder output first
 
 ### Decisions Needed Before Promotion Approval
 
-- Whether to approve the limited pilot promotion decision, approve only package readiness, defer, reject, or require
-  prerequisites first.
+- Whether to refresh the existing read-model parity artifact under the Node/Edge/Tag taxonomy before asking for limited
+  pilot approval.
+- Whether to approve the limited pilot promotion decision after refresh, approve only package readiness, defer, reject,
+  or require prerequisites first.
 - Whether full promotion requires generated graph/read-model output as a future CLI-backed report or generated artifact.
 - Whether bounded fixture Evidence is enough for the pilot decision surface.
 - Whether ACEP task-card public-doc cleanup must happen before promotion approval or may remain deferred with an

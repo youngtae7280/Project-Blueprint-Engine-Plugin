@@ -25,8 +25,9 @@ and user-renewed Acceptance.
 
 The promotion readiness review is recorded in
 [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md). It classifies retained warnings
-and now recommends `ready for limited pilot promotion decision with warnings` after manual equivalent parity artifacts
-were added. It does not approve Graph-source promotion.
+and previously recommended `ready for limited pilot promotion decision with warnings` after manual equivalent parity
+artifacts were added. After the Graph-first Node/Edge/Tag refinement, limited pilot approval is deferred pending baseline
+refresh. It does not approve Graph-source promotion.
 
 The representative slice now also has manual equivalent read-model parity artifacts:
 
@@ -471,8 +472,10 @@ The current manual result is recorded in
 demonstrated with retained warnings: selected-slice Project/Contract/Change/Impact evidence has been strengthened,
 Product Patch confirmation and fresh bounded runtime fixture Evidence are recorded, and renewed Acceptance is approved by
 the user. A supplemental compatibility mismatch slice covers the real mismatch path outside the Todo Search product
-slice. The later readiness review treats the manual read-model parity artifact as sufficient for limited pilot decision
-preparation with warnings, while generated builder output remains a full-promotion/repeatability question.
+slice. The later readiness review treated the manual read-model parity artifact as sufficient for limited pilot decision
+preparation under the previous baseline, while generated builder output remains a full-promotion/repeatability question.
+After the Graph-first Node/Edge/Tag refinement, the parity artifact needs refresh or explicit acceptance before limited
+pilot approval.
 
 ### Source Transition Path
 
@@ -539,5 +542,6 @@ Those remain later concept or implementation questions.
 This document satisfies the representative slice selection condition before actual Runtime Feasibility Demonstration
 execution.
 
-The separate actual demo result records a strengthened but still partial manual Evidence pack. This document still does
-not complete generated result design, validation automation, promotion readiness review, or Graph-source promotion.
+The separate actual demo result records a strengthened manual Evidence pack demonstrated for the representative slice
+with retained warnings. This document still does not complete generated result design, validation automation, source
+promotion approval, or Graph-source promotion.

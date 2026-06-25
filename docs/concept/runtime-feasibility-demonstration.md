@@ -210,7 +210,8 @@ or source promotion by itself.
 
 [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md) records the later readiness
 review. It classifies retained warnings and prerequisites while keeping promotion separate. After manual equivalent
-parity artifacts were added, that review recommends `ready for limited pilot promotion decision with warnings`.
+parity artifacts were added, that review previously recommended `ready for limited pilot promotion decision with
+warnings`. After the Graph-first Node/Edge/Tag refinement, limited pilot approval is deferred pending baseline refresh.
 
 The representative slice now includes manual equivalent read-model parity artifacts in
 `examples/adoption/todo-search-slice/`. Those artifacts resolve the read-model output blocker for limited pilot promotion
@@ -219,7 +220,12 @@ repeatability.
 
 The limited pilot decision package is recorded in
 [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md). It prepares the user
-decision surface only and does not execute promotion.
+decision surface only and does not execute promotion. After the Graph-first Node/Edge/Tag baseline update, that package
+requires refresh before approval proceeds.
+
+[graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) defines the Node/Edge/Tag taxonomy that future
+feasibility and read-model parity outputs should use. [retrofit-graph-bootstrap.md](retrofit-graph-bootstrap.md) defines
+the progressive onboarding model for existing non-PBE projects.
 
 ## Promotion Boundary
 
@@ -341,6 +347,8 @@ Those remain later concept or implementation questions.
 - Should future demo results become a generated artifact?
 - How should future demo results connect to CI or validators?
 - Which limited pilot promotion decision option will the user choose?
+- Does limited pilot approval require the read-model parity artifact to be updated to the new Node/Edge/Tag taxonomy
+  first?
 - Will the user accept ACEP task-card public-doc cleanup as deferred cleanup, or require cleanup before promotion
   approval?
 - Does full Graph-source promotion require an actual generated graph builder or CLI-backed read-model output?
@@ -350,5 +358,6 @@ Those remain later concept or implementation questions.
 This policy satisfies the Runtime Feasibility Demonstration concept-policy completion condition for Graph-source
 promotion readiness.
 
-The separate actual demo result records a partial manual Evidence pack. It does not complete rollback mechanics,
-compatibility artifact generation, or Graph-source promotion itself.
+The separate actual demo result records a manual Evidence pack now demonstrated for the representative slice with
+retained warnings. It does not complete rollback mechanics, compatibility artifact generation, or Graph-source promotion
+itself.

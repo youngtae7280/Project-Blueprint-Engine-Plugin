@@ -36,6 +36,57 @@ The graph is maintainability-focused because it answers questions such as:
 - Which completed nodes are stale after feedback?
 - Which compatibility views are projections rather than sources of truth?
 
+## Target Graph-First Model
+
+The target Graph-first architecture treats Maintainability Graph as the future source model only after explicit
+Graph-source promotion.
+
+In that target:
+
+```text
+Graph = source model
+Tree = task or human-readable projection
+View Tree Pack = task-scoped projection
+```
+
+The core of Graph-first PBE is not simply that nodes exist. The core is the durable semantic relationship between nodes.
+Maintaining edge meaning is what lets PBE answer why work exists, what implements it, what verifies it, what evidences
+it, what became stale, and which user decision controls acceptance or source authority.
+
+Node, Edge, and Tag responsibilities are defined in
+[graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md):
+
+- Node = durable target
+- Edge = durable semantic relationship
+- Tag = temporary role inside a View Instance
+
+Meaningful relationships belong to Edges, not Tags. For example:
+
+- `code implements behavior` is an `implements` edge.
+- `check verifies behavior` is a `verifies` edge.
+- `evidence evidences check` is an `evidences` edge.
+- `finding reports-on code` is a `reports-on` edge.
+
+[view-tree-pack.md](view-tree-pack.md) defines how a task-scoped projection can be assembled from tree-native artifacts
+today and from Maintainability Graph after a future explicit promotion.
+
+## Retrofit Bootstrap
+
+Existing projects that did not start with PBE should not be forced into complete upfront graph reconstruction.
+
+[retrofit-graph-bootstrap.md](retrofit-graph-bootstrap.md) defines the progressive path:
+
+```text
+structural bootstrap
+-> behavior inference
+-> finding / unknown records
+-> task-driven expansion
+-> verified graph growth
+```
+
+Observed Behavior is not Product Requirement. Inferred edges must keep confidence and freshness/status visible. AI
+self-report is not Evidence.
+
 ## Source Promotion Target
 
 Maintainability Graph is currently a canonical read model over tree-native source artifacts.
@@ -69,13 +120,19 @@ strengthen the compatibility and stale/reopen paths, but generated read-model ou
 judgment, and cleanup judgment remain unresolved for promotion approval.
 The promotion readiness review is recorded in
 [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md). It classifies retained warnings
-and now recommends `ready for limited pilot promotion decision with warnings` after manual equivalent parity artifacts
-were added. It does not promote Maintainability Graph or change source authority.
+and previously recommended `ready for limited pilot promotion decision with warnings` after manual equivalent parity
+artifacts were added. After the Graph-first Node/Edge/Tag refinement, limited pilot approval requires baseline refresh
+or explicit acceptance of the taxonomy gap. It does not promote Maintainability Graph or change source authority.
 
 The limited pilot user judgment surface is recorded in
-[limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md). Its package state may be
-`Ready for approval`, but the promotion state remains `Decision required`; it does not make Maintainability Graph the
-current source model.
+[limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md). It was prepared under the
+previous baseline and now requires Graph-first baseline refresh before approval. The promotion state remains
+`Decision required / deferred pending Graph-first refinement`; it does not make Maintainability Graph the current source
+model.
+
+After this Graph-first Node/Edge/Tag baseline update, limited pilot approval must be re-reviewed before proceeding. The
+existing package and evidence remain valuable, but approval should not proceed until the selected read-model parity
+artifact is refreshed or explicitly accepted under the Node/Edge/Tag taxonomy.
 
 The representative slice now includes manual equivalent read-model parity artifacts:
 
@@ -93,6 +150,8 @@ The concept-level recovery and compatibility safety policy is defined in
 
 - Maintainability Graph is currently not a replacement for Product, Project, Work, Test, or control trees.
 - Maintainability Graph is the long-term source promotion candidate.
+- Maintainability Graph is edge-centric: durable semantic relationships are Edges, not Tags.
+- View Tree Pack is a projection over source records, not source authority.
 - It is not a generic knowledge graph.
 - It must preserve traceability back to Product truth and user-controlled acceptance.
 - It must not infer new product meaning without a Product or Change node.
@@ -122,6 +181,8 @@ traceability view.
 - OQ-027: Should graph checks become validators, evidence reports, documentation-only review aids, or a combination?
 - OQ-052: Does full Graph-source promotion require an actual generated graph builder or CLI-backed read-model output?
 - OQ-053: Which limited pilot promotion decision option will the user choose?
+- OQ-058: Does limited pilot approval require the read-model parity artifact to be updated to the new Node/Edge/Tag
+  taxonomy first?
 
 ## Related Gate
 

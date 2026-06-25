@@ -100,16 +100,22 @@ policy required before any future promotion review. That policy does not change 
 rollback behavior.
 
 [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md) records the later readiness
-review. It now recommends `ready for limited pilot promotion decision with warnings` after manual equivalent parity
-artifacts were added. It does not promote Maintainability Graph or change current runtime authority.
+review. It previously recommended `ready for limited pilot promotion decision with warnings` after manual equivalent
+parity artifacts were added. After the Graph-first Node/Edge/Tag refinement, limited pilot approval is deferred pending
+baseline refresh. It does not promote Maintainability Graph or change current runtime authority.
 
 Manual equivalent read-model parity artifacts now exist under `examples/adoption/todo-search-slice/`, so the readiness
-recommendation can move to `ready for limited pilot promotion decision with warnings`. Generated builder or CLI-backed
-output remains a later full-promotion/repeatability question rather than current runtime authority.
+recommendation could move to a limited pilot decision under the previous baseline. Generated builder or CLI-backed output
+remains a later full-promotion/repeatability question rather than current runtime authority, and the new Node/Edge/Tag
+baseline must be reflected before limited pilot approval proceeds.
 
 [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md) is now the user judgment
-surface for the limited pilot decision. It is package-ready, but the promotion decision remains pending and no runtime
-authority changes.
+surface for the limited pilot decision. It was prepared under the previous baseline, but the current action is to refresh
+or re-accept it under the Graph-first Node/Edge/Tag baseline before approval. No runtime authority changes.
+
+[graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) and
+[retrofit-graph-bootstrap.md](retrofit-graph-bootstrap.md) refine the target Graph-first architecture. They do not
+change current tree-native runtime authority, CLI behavior, validators, schemas, or generated builder support.
 
 ## Runtime Boundaries
 
@@ -141,6 +147,8 @@ PBE is a requirements-based execution control layer for AI-assisted development.
 - Whether View Tree Pack remains a conceptual projection or becomes a concrete artifact pack.
 - Which older public docs still need terminology cleanup after this concept baseline is reviewed.
 - Which limited pilot promotion decision option the user will choose.
+- Whether limited pilot approval requires the read-model parity artifact to be updated to the new Node/Edge/Tag taxonomy
+  first.
 - Whether the user will accept ACEP task-card public-doc cleanup as deferred cleanup, or require cleanup before
   promotion approval.
 - Whether full Graph-source promotion requires an actual generated graph builder or CLI-backed read-model output.

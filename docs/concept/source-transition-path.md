@@ -109,12 +109,13 @@ Graph-source promotion may not be requested as ready unless all of these are tru
 5. Rollback/fallback triggers, compatibility-retirement conditions, Evidence obligations, and control-record handling
    are reviewable under Rollback / Compatibility Strategy.
 6. Source authority matrix is agreed for current, transition candidate, and post-promotion roles.
-7. Projection/parity expectations are defined at the level needed for promotion review.
-8. Conflict resolution rules are defined for tree-native/graph mismatch.
-9. Check/Evidence obligations for promotion review are defined.
-10. Approval Brief, Limited Pilot Promotion Decision Package, or equivalent user judgment surface is prepared for the
+7. Node/Edge/Tag responsibilities are reflected in the candidate graph or read-model parity artifact.
+8. Projection/parity expectations are defined at the level needed for promotion review.
+9. Conflict resolution rules are defined for tree-native/graph mismatch.
+10. Check/Evidence obligations for promotion review are defined.
+11. Approval Brief, Limited Pilot Promotion Decision Package, or equivalent user judgment surface is prepared for the
     intended promotion decision scope.
-11. Explicit user approval is obtained.
+12. Explicit user approval is obtained.
 
 None of these prerequisites may be replaced by AI self-report.
 
@@ -222,13 +223,20 @@ and compatibility cleanup/defer judgment. PP-001 confirmation and supplemental c
 but they do not clean up public docs or change source authority.
 
 [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md) records the readiness review.
-It now recommends `ready for limited pilot promotion decision with warnings` after manual equivalent parity artifacts
-were added, and keeps all source authority unchanged.
+It previously recommended `ready for limited pilot promotion decision with warnings` after manual equivalent parity
+artifacts were added. After the Graph-first Node/Edge/Tag refinement, limited pilot approval is deferred pending baseline
+refresh. Source authority remains unchanged.
 
 [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md) records the user judgment
-surface for that limited pilot decision. The package may be ready for approval, but the promotion state remains
-`Decision required` until the user explicitly chooses an option. It does not execute source transition, promote
-Maintainability Graph, or change source authority.
+surface for that limited pilot decision. The package was prepared under the previous baseline. After the Graph-first
+Node/Edge/Tag refinement, it requires a baseline refresh before approval proceeds. It does not execute source transition,
+promote Maintainability Graph, or change source authority.
+
+[graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) defines the target Graph-first responsibility split:
+Nodes are durable targets, Edges are durable semantic relationships, and Tags are temporary view-scoped roles.
+
+[retrofit-graph-bootstrap.md](retrofit-graph-bootstrap.md) defines how existing non-PBE projects should grow Graph-first
+records progressively without requiring complete upfront graph reconstruction.
 
 Manual equivalent read-model parity artifacts are now recorded for the representative slice:
 
@@ -236,9 +244,9 @@ Manual equivalent read-model parity artifacts are now recorded for the represent
 - `examples/adoption/todo-search-slice/maintainability-graph-read-model.md`
 - `examples/adoption/todo-search-slice/parity-check.md`
 
-After those artifacts, the readiness recommendation is `ready for limited pilot promotion decision with warnings`.
-Generated builder/CLI-backed output remains a full-promotion or repeatability question, not a current source authority
-change.
+After those artifacts, the readiness recommendation could move to limited pilot decision preparation under the previous
+baseline. Generated builder/CLI-backed output remains a full-promotion or repeatability question, and Node/Edge/Tag
+taxonomy refresh is now needed before limited pilot approval. None of this is a current source authority change.
 
 ### Rollback / Compatibility Strategy
 
@@ -303,6 +311,8 @@ Those remain later concept or implementation questions.
 - How formal should projection/parity expectations be before promotion review?
 - Does promotion review need a specialized Approval Brief template?
 - Which limited pilot promotion decision option will the user choose?
+- Does limited pilot approval require the read-model parity artifact to be updated to the new Node/Edge/Tag taxonomy
+  first?
 - Will the user accept ACEP task-card public-doc cleanup as deferred cleanup, or require cleanup before promotion
   approval?
 - Does full Graph-source promotion require an actual generated graph builder or CLI-backed read-model output?

@@ -40,6 +40,10 @@ Terms are classified as `canonical`, `active-operational`, `compatibility`, `leg
 | Evidence Exception      | canonical                      | Visible record that required Evidence is absent or insufficient, including reason, residual risk, user judgment, and later remedy.   |
 | Evidence Freshness      | canonical                      | Whether Evidence still supports the linked Check after the current change, impact, scope, or acceptance shift.                       |
 | Control Node            | canonical                      | Control record that tracks user judgment, change control, impact scope, acceptance closure, and block/reopen status.                 |
+| Graph Node              | canonical                      | Durable target in the Maintainability Graph that can be referenced across tasks, checks, evidence, decisions, and views.             |
+| Graph Edge              | canonical                      | Durable semantic relationship between Graph Nodes; meaningful relationships belong here rather than in tags.                         |
+| View-scoped Tag         | canonical                      | Temporary role assigned inside one View Instance, such as `target`, `context`, `guard`, `required`, `stale`, or `output`.            |
+| View Instance Manifest  | canonical                      | Durable record candidate describing one task-scoped projection, its source nodes, traversal rules, tags, checks, and boundaries.     |
 
 ## Control Node Terms
 
@@ -70,6 +74,8 @@ Terms are classified as `canonical`, `active-operational`, `compatibility`, `leg
 | Graph-source Promotion Readiness Review  | canonical | Review report that classifies promotion prerequisites, retained warnings, blockers, and remaining decisions without promoting source authority.                                        |
 | Read-Model Parity Artifact               | canonical | Manual or generated read/alignment Evidence showing graph-style nodes, edges, parity status, warnings, and source-authority boundaries.                                                |
 | Limited Pilot Promotion Decision Package | canonical | User judgment surface that packages scoped pilot Evidence, warnings, rollback/compatibility boundaries, and decision options without executing promotion or changing source authority. |
+| Node / Edge / Tag Policy                 | canonical | Graph-first policy separating durable targets, durable semantic relationships, and temporary view-scoped roles.                                                                        |
+| Retrofit Graph Bootstrap                 | canonical | Policy for introducing PBE into existing projects through partial, evidence-aware graph growth rather than complete upfront reconstruction.                                            |
 
 ## Source Transition Terms
 
@@ -85,6 +91,18 @@ Terms are classified as `canonical`, `active-operational`, `compatibility`, `leg
 | Projection                          | canonical     | View derived from a source model; not product truth by itself.                                            |
 | Maintained compatibility view       | future-target | Future compatibility artifact kept for transition, review, or rollback after explicit promotion.          |
 | Migration boundary                  | canonical     | Concept boundary separating source-authority policy from actual artifact/model migration mechanics.       |
+
+## Core View Terms
+
+| Term                       | Status    | Meaning                                                                                                    |
+| -------------------------- | --------- | ---------------------------------------------------------------------------------------------------------- |
+| Intent View                | canonical | Task-scoped projection for product intent, requirements, acceptance criteria, requests, and decisions.     |
+| Behavior View              | canonical | Task-scoped projection for intended, observed, inferred, candidate, changed, or runtime behavior.          |
+| Structure View             | canonical | Task-scoped projection for code, data, documents, dependencies, and implementation structure.              |
+| Scope / Execution View     | canonical | Task-scoped projection for selected/foundation/deferred/out-of-scope/forbidden scope and contracts.        |
+| Impact View                | canonical | Task-scoped projection for changes, findings, affected nodes, stale state, invalidation, reopen, and risk. |
+| Verification View          | canonical | Task-scoped projection for Checks, required Evidence, risk checks, regression checks, and coverage.        |
+| Evidence / Acceptance View | canonical | Task-scoped projection for Evidence status, exceptions, retained warnings, acceptance, and judgment.       |
 
 ## Rollback / Compatibility Terms
 

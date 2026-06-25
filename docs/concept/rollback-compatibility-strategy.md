@@ -271,6 +271,10 @@ not perform rollback, fallback, compatibility retirement, migration, or source p
 decision options, retained warnings, and rollback/compatibility boundaries for user judgment. It does not perform
 rollback, fallback, compatibility retirement, migration, source transition, or promotion.
 
+[graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) adds a source-transition safety constraint: durable
+semantic relationships must remain Edges, while Tags are view-scoped roles only. A future transition or parity artifact
+that encodes durable meaning as tags can become a projection/parity failure or compatibility-control trigger.
+
 ### Maintainability Graph
 
 [maintainability-graph.md](maintainability-graph.md) remains the canonical read/alignment model and long-term
@@ -344,6 +348,8 @@ Those remain later concept or implementation questions.
 - Does rollback review need a specialized Approval Brief template?
 - Who approves compatibility retirement, and at what review point?
 - Which limited pilot promotion decision option will the user choose?
+- Does limited pilot approval require the read-model parity artifact to be updated to the new Node/Edge/Tag taxonomy
+  first?
 - Will the user accept ACEP task-card public-doc cleanup as deferred cleanup, or require cleanup before promotion
   approval?
 - Does full Graph-source promotion require an actual generated graph builder or CLI-backed read-model output?

@@ -360,6 +360,10 @@ That readiness review now classifies:
 The manual parity artifacts preserve this demo result's non-promotion boundary and leave explicit user promotion
 approval as a separate future decision.
 
+Subsequent Graph-first refinement in [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) does not invalidate
+this demo Evidence, but it means limited pilot approval should wait until the read-model parity artifact is refreshed or
+explicitly accepted under the Node/Edge/Tag taxonomy.
+
 ## 14. Explicit Non-Promotion Statement
 
 This demo result is not Graph-source promotion.

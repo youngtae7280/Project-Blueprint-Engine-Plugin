@@ -32,6 +32,16 @@ current tree-native artifacts.
 This means Phase 1-2 documents are not rejecting the Graph-source target. They preserve current plugin safety while
 documenting the transition path.
 
+Graph-first refinement adds one more separation:
+
+```text
+Node = durable target
+Edge = durable semantic relationship
+Tag = view-scoped role only
+```
+
+This refinement clarifies the target architecture. It does not change current operational source authority.
+
 Current operational source:
 
 ```text
@@ -63,7 +73,8 @@ Graph-source promotion requires a separate phase and explicit user approval afte
 8. Graph-source Promotion Readiness Review classifies retained warnings, blockers, and remaining decisions.
 9. A Maintainability Graph read-model parity artifact resolves any read-model output blocker for the intended promotion
    decision scope.
-10. A user-facing decision package is prepared for the intended limited pilot or promotion scope, and the user makes an
+10. Graph-first Node/Edge/Tag and retrofit bootstrap policies are reflected in the intended pilot or promotion scope.
+11. A user-facing decision package is prepared for the intended limited pilot or promotion scope, and the user makes an
     explicit approval decision.
 
 ## Phase 1 Repository Files
@@ -104,6 +115,8 @@ The following concept policies are complete at documentation level:
 - [runtime-feasibility-demonstration.md](runtime-feasibility-demonstration.md)
 - [source-transition-path.md](source-transition-path.md)
 - [rollback-compatibility-strategy.md](rollback-compatibility-strategy.md)
+- [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md)
+- [retrofit-graph-bootstrap.md](retrofit-graph-bootstrap.md)
 
 Concept policy completion does not create CLI commands, schemas, validators, templates, runtime artifacts, or durable
 acceptance storage by itself.
@@ -132,19 +145,21 @@ The following readiness review is recorded:
 
 - [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md)
 
-The readiness review now recommends `ready for limited pilot promotion decision with warnings`. The prior generated
-Maintainability Graph/read-model output blocker is resolved for limited pilot readiness by manual equivalent parity
-artifacts in `examples/adoption/todo-search-slice/`. Generated builder output remains a later implementation requirement
-for full promotion or repeatable CI-backed parity. The review does not approve Graph-source promotion or change source
-authority.
+The readiness review previously recommended `ready for limited pilot promotion decision with warnings`. The prior
+generated Maintainability Graph/read-model output blocker is resolved for limited pilot readiness by manual equivalent
+parity artifacts in `examples/adoption/todo-search-slice/`. Generated builder output remains a later implementation
+requirement for full promotion or repeatable CI-backed parity. After the Graph-first Node/Edge/Tag refinement, approval
+is deferred pending baseline refresh. The review does not approve Graph-source promotion or change source authority.
 
 The following decision package is now prepared for user judgment:
 
 - [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md)
 
-The package state is `Ready for approval`; the promotion state remains `Decision required`. It is a user decision
-surface only. It does not approve limited pilot promotion, full Graph-source promotion, source authority change, public
-doc cleanup, generated builder implementation, or tree-native artifact retirement.
+The package was prepared under the previous read-model parity baseline. After the Graph-first Node/Edge/Tag refinement,
+its current state is `Ready for review under previous baseline`, and its current action is `Requires Graph-first
+baseline refresh before approval`. It remains a user decision surface only. It does not approve limited pilot promotion,
+full Graph-source promotion, source authority change, public doc cleanup, generated builder implementation, or
+tree-native artifact retirement.
 
 ## Outline-Only Later-Phase Docs
 

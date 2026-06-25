@@ -37,6 +37,11 @@ This log is the source of truth for confirmed concept decisions in the PBE runti
 | DEC-029 | active | Graph-source Promotion Readiness Review classifies prerequisites and retained warnings, but it does not promote Maintainability Graph or change source authority. A representative demo may be demonstrated with retained warnings while blockers, warnings, cleanup, and user promotion approval remain separately reviewable.                                         | Graph-source Promotion Readiness Review                                           |
 | DEC-030 | active | A manual or generated Maintainability Graph read-model parity artifact can resolve the read-model output blocker for a limited pilot promotion decision only when it preserves source links, node/edge parity, warning status, and source-authority boundaries. Resolving that blocker for readiness does not promote Maintainability Graph or change source authority. | Maintainability Graph Read-Model Parity Artifact                                  |
 | DEC-031 | active | Limited Pilot Promotion Decision Package is a user judgment surface for a scoped pilot decision. It may package Evidence, warnings, rollback/compatibility boundaries, and choices, but it does not execute promotion, approve full Graph-source promotion, change source authority, replace tree-native artifacts, or let Codex/PBE approve on the user's behalf.      | Limited Pilot Promotion Decision Package                                          |
+| DEC-032 | active | Graph-first PBE separates durable Nodes, durable Edges, and view-scoped Tags. Nodes are durable targets, Edges carry permanent semantic meaning, and Tags are temporary View Instance roles only; semantic relationships such as implements, verifies, evidences, and reports-on must be represented as Edges rather than Tags.                                         | Graph Node / Edge / Tag Policy                                                    |
+| DEC-033 | active | View Tree Pack is a task-scoped projection, not source authority. Its Core Views are Intent, Behavior, Structure, Scope / Execution, Impact, Verification, and Evidence / Acceptance; Scope / Execution View is required so execution boundaries, forbidden scope, and contracts are not buried in Structure or Impact.                                                 | View Tree Pack and Graph Node / Edge / Tag Policy                                 |
+| DEC-034 | active | Confidence and freshness/status are separate dimensions. `stale` is not confidence; confidence records support level such as tool-confirmed, user-confirmed, inferred, or low-confidence, while freshness/status records current validity such as fresh, stale, invalidated, or unknown.                                                                                | Graph Node / Edge / Tag Policy                                                    |
+| DEC-035 | active | Existing-project onboarding uses progressive Retrofit Graph Bootstrap rather than complete upfront graph reconstruction. PBE should start with structural anchors, infer behavior cautiously, record findings/unknowns, expand around real tasks, and grow verified graph relationships with Evidence or user judgment.                                                 | Retrofit Graph Bootstrap                                                          |
+| DEC-036 | active | AI may propose graph updates, but product meaning, acceptance, risk decisions, and source-authority relationships require Evidence or user judgment before confirmation. AI self-report is not Evidence and cannot confirm source promotion, user acceptance, or hidden freshness.                                                                                      | Graph Node / Edge / Tag Policy and Retrofit Graph Bootstrap                       |
 
 ## Supersede Relationships
 
@@ -126,6 +131,24 @@ DEC-031 does not supersede DEC-007, DEC-013, DEC-020, DEC-021, DEC-029, or DEC-0
 package for a limited pilot decision, while user acceptance authority, current tree-native source authority, source
 transition prerequisites, rollback/compatibility safety, readiness warning classification, manual parity limits, and
 explicit user promotion approval remain separate.
+
+DEC-032 does not supersede DEC-003, DEC-013, DEC-018, DEC-020, or DEC-030. It refines the target Graph-first model and
+read/alignment taxonomy while tree-native artifacts remain current operational source until explicit promotion.
+
+DEC-033 does not supersede DEC-006, DEC-014, DEC-020, DEC-030, or DEC-031. It defines View Tree Pack as a projection and
+adds Scope / Execution View, while Cycle/Node Execution Contracts remain the current execution boundary, Approval Brief
+remains the user judgment surface, and limited pilot approval remains deferred pending Graph-first baseline refresh.
+
+DEC-034 does not supersede DEC-016, DEC-023, DEC-027, or DEC-030. It separates confidence from freshness/status while
+Check/Evidence policy still controls proof and AI self-report remains non-evidence.
+
+DEC-035 does not supersede DEC-003, DEC-005, DEC-013, or DEC-019. It defines a retrofit onboarding policy for existing
+projects without PBE, while PBE-managed projects still use tree-native Product/Project/Work/Test/Evidence/Acceptance
+artifacts as current operational source.
+
+DEC-036 does not supersede DEC-007, DEC-016, DEC-020, or DEC-031. It constrains AI graph update proposals while user
+acceptance authority, Evidence requirements, source-transition approval, and limited pilot decision authority remain
+user- or evidence-gated.
 
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in

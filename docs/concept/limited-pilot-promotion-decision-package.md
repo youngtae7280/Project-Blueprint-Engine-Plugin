@@ -1,6 +1,6 @@
 # Limited Pilot Promotion Decision Package
 
-Status: decision package / user judgment surface
+Status: decision package / requires Graph-first baseline refresh before approval
 
 ## Document Purpose
 
@@ -22,18 +22,36 @@ the scope, Evidence, retained warnings, rollback/compatibility boundaries, and a
 Current operational source remains tree-native artifacts until a later explicit user promotion decision changes that
 authority.
 
+## Current Baseline Refresh Notice
+
+This package was prepared under the previous read-model parity baseline.
+
+The evidence remains useful, but limited pilot approval should not proceed until the new Graph-first Node/Edge/Tag
+baseline is reflected in the relevant read-model parity artifact or explicitly accepted as sufficient for the limited
+pilot decision.
+
+Current state:
+
+```text
+Package state: Ready for review under previous baseline
+Current action: Requires Graph-first baseline refresh before approval
+Promotion state: Decision required / deferred pending Graph-first refinement
+```
+
 ## Decision Package Definition
 
 A Limited Pilot Promotion Decision Package is a user-facing approval surface for deciding whether a bounded pilot slice
 may proceed to the next source-transition decision step.
 
-It exists after readiness review has found:
+It exists after the earlier readiness review found:
 
 ```text
 ready for limited pilot promotion decision with warnings
 ```
 
-It does not perform the pilot. It makes the pilot decision reviewable.
+It does not perform the pilot. It made the pilot decision reviewable under the previous baseline. After
+[graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md), it must be rechecked against the new Node/Edge/Tag
+taxonomy before approval proceeds.
 
 ## Pilot Scope
 
@@ -83,7 +101,8 @@ The pilot scope does not include:
 
 ## What Approval Means
 
-If the user approves the limited pilot promotion decision, the approval means:
+If the user later approves the limited pilot promotion decision after the Graph-first baseline refresh, the approval
+means:
 
 1. The user accepts this decision package as the judgment surface for the scoped pilot decision.
 2. The user accepts that the primary pilot scope is limited to `examples/adoption/todo-search-slice`.
@@ -116,18 +135,18 @@ Approval of this package or the limited pilot decision does not mean:
 Evidence in this package is based on observable artifacts, linked records, command output, and reviewable files. AI
 self-report is not Evidence.
 
-| Evidence area                               | Observable artifact / record                                                                                                                                                                                                          | Status for package       | Decision relevance                                                                                                   |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------- |
-| Actual representative demo result           | [actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md)                                                                                                                                                | present                  | Records representative demo result as demonstrated with retained warnings.                                           |
-| Strengthened selected-slice artifacts       | `examples/adoption/todo-search-slice/product-tree.json`, `project-tree.json`, `work-tree.json`, `test-tree.json`, `evidence-tree.json`, `acceptance-tree.json`, `change-tree.json`, `impact-tree.json`, contracts, and approval brief | present                  | Makes Product -> Project -> Work -> Test -> Evidence -> Acceptance trace reviewable.                                 |
-| Real compatibility mismatch supplement      | `examples/adoption/compatibility-mismatch-slice/*`                                                                                                                                                                                    | present                  | Demonstrates real ACEP task-card-only wording mismatch as bounded compatibility Evidence.                            |
-| `PP-001` confirmation                       | `examples/adoption/todo-search-slice/product-patch-tree.json`, `change-tree.json`                                                                                                                                                     | present                  | Shows user-confirmed product meaning expansion to title + note/content search.                                       |
-| Refreshed runtime fixture Evidence          | `examples/adoption/todo-search-slice/runtime-evidence.md`, `runtime-fixture/todo-search.js`, `runtime-fixture/todo-search.test.js`                                                                                                    | present / fresh          | Shows bounded title + note/content search behavior with Vitest command Evidence.                                     |
-| Renewed user Acceptance                     | `examples/adoption/todo-search-slice/acceptance-tree.json`, `approval-brief.md`                                                                                                                                                       | present with warnings    | Records user-renewed demo-support Acceptance with warnings retained.                                                 |
-| Maintainability Graph read-model parity     | `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`, `maintainability-graph-read-model.md`                                                                                                                    | present manual artifact  | Shows graph-style nodes, edges, parity status, warnings, and source-authority boundary for limited pilot readiness.  |
-| Parity check                                | `examples/adoption/todo-search-slice/parity-check.md`                                                                                                                                                                                 | present                  | Judges the read-model output blocker resolved for limited pilot readiness with warning.                              |
-| Graph-source Promotion Readiness Review     | [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md)                                                                                                                                              | present                  | Records recommendation `ready for limited pilot promotion decision with warnings`.                                   |
-| Generated builder / CLI-backed graph output | No generated builder or CLI-backed graph output exists.                                                                                                                                                                               | missing / later required | Not blocking this package, but a later implementation requirement for full promotion or repeatable CI-backed parity. |
+| Evidence area                               | Observable artifact / record                                                                                                                                                                                                          | Status for package       | Decision relevance                                                                                                                                |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Actual representative demo result           | [actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md)                                                                                                                                                | present                  | Records representative demo result as demonstrated with retained warnings.                                                                        |
+| Strengthened selected-slice artifacts       | `examples/adoption/todo-search-slice/product-tree.json`, `project-tree.json`, `work-tree.json`, `test-tree.json`, `evidence-tree.json`, `acceptance-tree.json`, `change-tree.json`, `impact-tree.json`, contracts, and approval brief | present                  | Makes Product -> Project -> Work -> Test -> Evidence -> Acceptance trace reviewable.                                                              |
+| Real compatibility mismatch supplement      | `examples/adoption/compatibility-mismatch-slice/*`                                                                                                                                                                                    | present                  | Demonstrates real ACEP task-card-only wording mismatch as bounded compatibility Evidence.                                                         |
+| `PP-001` confirmation                       | `examples/adoption/todo-search-slice/product-patch-tree.json`, `change-tree.json`                                                                                                                                                     | present                  | Shows user-confirmed product meaning expansion to title + note/content search.                                                                    |
+| Refreshed runtime fixture Evidence          | `examples/adoption/todo-search-slice/runtime-evidence.md`, `runtime-fixture/todo-search.js`, `runtime-fixture/todo-search.test.js`                                                                                                    | present / fresh          | Shows bounded title + note/content search behavior with Vitest command Evidence.                                                                  |
+| Renewed user Acceptance                     | `examples/adoption/todo-search-slice/acceptance-tree.json`, `approval-brief.md`                                                                                                                                                       | present with warnings    | Records user-renewed demo-support Acceptance with warnings retained.                                                                              |
+| Maintainability Graph read-model parity     | `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`, `maintainability-graph-read-model.md`                                                                                                                    | present manual artifact  | Shows graph-style nodes, edges, parity status, warnings, and source-authority boundary for limited pilot readiness.                               |
+| Parity check                                | `examples/adoption/todo-search-slice/parity-check.md`                                                                                                                                                                                 | present                  | Judges the read-model output blocker resolved for limited pilot readiness with warning.                                                           |
+| Graph-source Promotion Readiness Review     | [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md)                                                                                                                                              | present                  | Records the earlier recommendation `ready for limited pilot promotion decision with warnings`, now deferred pending Graph-first baseline refresh. |
+| Generated builder / CLI-backed graph output | No generated builder or CLI-backed graph output exists.                                                                                                                                                                               | missing / later required | Not blocking this package, but a later implementation requirement for full promotion or repeatable CI-backed parity.                              |
 
 ## Retained Warnings Classification
 
@@ -142,34 +161,42 @@ Warnings remain visible. They are not removed by this decision package.
 
 ## Decision Options
 
-The user may choose one of these action labels.
+After the Graph-first baseline refresh is reviewed, the user may choose one of these action labels.
 
-| Option                                                         | Meaning                                                                                                        | Next effect                                                                                                |
-| -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `Approve limited pilot promotion decision`                     | Approve proceeding from this package into a scoped limited pilot promotion decision for the Todo Search slice. | Prepare the scoped pilot transition record; still do not perform full promotion or broad source change.    |
-| `Approve only decision-package readiness, not pilot promotion` | Confirm the package is ready and accurate, but do not approve the pilot promotion decision yet.                | Keep package accepted as review surface; leave promotion state `Decision required`.                        |
-| `Require generated builder / CLI-backed read-model first`      | Require repeatable generated graph/read-model output before any pilot promotion decision.                      | Block pilot decision until generated output or equivalent implementation Evidence exists.                  |
-| `Require public-doc cleanup first`                             | Require ACEP task-card public-doc cleanup before any pilot promotion decision.                                 | Block pilot decision until cleanup Evidence and compatibility status are updated.                          |
-| `Defer limited pilot decision`                                 | Postpone the pilot decision while keeping the package and warnings visible.                                    | Keep source authority unchanged; record deferral as remaining judgment.                                    |
-| `Reject limited pilot promotion`                               | Reject the scoped pilot promotion direction.                                                                   | Do not prepare pilot transition record; maintain tree-native operational source and revisit strategy only. |
+| Option                                                         | Meaning                                                                                                                                           | Next effect                                                                                                |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `Approve limited pilot promotion decision`                     | Approve proceeding from this package into a scoped limited pilot promotion decision for the Todo Search slice after Graph-first baseline refresh. | Prepare the scoped pilot transition record; still do not perform full promotion or broad source change.    |
+| `Approve only decision-package readiness, not pilot promotion` | Confirm the package is ready and accurate, but do not approve the pilot promotion decision yet.                                                   | Keep package accepted as review surface; leave promotion state `Decision required`.                        |
+| `Require Node/Edge/Tag parity refresh first`                   | Require the read-model parity artifact and package to be refreshed under the new Graph-first taxonomy first.                                      | Defer pilot approval until the parity refresh is reviewable.                                               |
+| `Require generated builder / CLI-backed read-model first`      | Require repeatable generated graph/read-model output before any pilot promotion decision.                                                         | Block pilot decision until generated output or equivalent implementation Evidence exists.                  |
+| `Require public-doc cleanup first`                             | Require ACEP task-card public-doc cleanup before any pilot promotion decision.                                                                    | Block pilot decision until cleanup Evidence and compatibility status are updated.                          |
+| `Defer limited pilot decision`                                 | Postpone the pilot decision while keeping the package and warnings visible.                                                                       | Keep source authority unchanged; record deferral as remaining judgment.                                    |
+| `Reject limited pilot promotion`                               | Reject the scoped pilot promotion direction.                                                                                                      | Do not prepare pilot transition record; maintain tree-native operational source and revisit strategy only. |
 
 ## Approval Brief State
 
 Package state:
 
 ```text
-Ready for approval
+Ready for review under previous baseline
+```
+
+Current action:
+
+```text
+Requires Graph-first baseline refresh before approval
 ```
 
 Promotion state:
 
 ```text
-Decision required
+Decision required / deferred pending Graph-first refinement
 ```
 
 Reason:
 
-- This package is complete enough to ask the user for a decision.
+- This package preserves useful evidence and options from the previous baseline.
+- The new Graph-first Node/Edge/Tag policy changes the taxonomy expected for read-model parity review.
 - The limited pilot promotion decision itself has not been approved.
 - Graph-source promotion has not been declared or executed.
 
@@ -222,6 +249,8 @@ This package does not decide:
 ## Remaining Open Questions
 
 - Will the user approve the limited pilot promotion decision?
+- Does limited pilot approval require the read-model parity artifact to be updated to the new Node/Edge/Tag taxonomy
+  first?
 - Will the user approve only this decision-package readiness without pilot promotion?
 - Will the user require generated builder / CLI-backed read-model output before any pilot decision?
 - Will the user require ACEP task-card public-doc cleanup before any pilot decision?
@@ -238,12 +267,15 @@ This package does not decide:
 | Evidence Reality Gate          | PASS   | Evidence points to observable docs, selected-slice artifacts, command Evidence, and parity artifacts.         |
 | Warning Retention Gate         | PASS   | All retained warnings remain visible and classified.                                                          |
 | User Decision Clarity Gate     | PASS   | User options and their next effects are explicit.                                                             |
+| Graph-First Refresh Gate       | PASS   | Package approval is deferred until the Node/Edge/Tag baseline is reflected or explicitly accepted.            |
 | Rollback / Compatibility Gate  | PASS   | Rollback/compatibility boundaries remain separate from this package and future approval.                      |
 | Implementation Boundary Gate   | PASS   | No CLI, schema, runtime, validator, generator, migration, public-doc cleanup, or full Todo app is added.      |
 
 ## Final Non-Promotion Statement
 
-This package is ready for user approval as a decision package.
+This package remains reviewable as a decision package prepared under the previous baseline.
+
+It now requires Graph-first baseline refresh before approval proceeds.
 
 It does not approve limited pilot promotion.
 
