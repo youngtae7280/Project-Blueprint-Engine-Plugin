@@ -272,6 +272,15 @@ The bounded scoped validator-backed Evidence command is now implemented for the 
 This validator-backed Evidence is local and scoped. It does not add CI enforcement, expand pilot scope, approve broader
 execution, change source authority, retire tree-native artifacts, or approve full Graph-source promotion.
 
+The CI-backed read-model Evidence workflow design is now recorded:
+
+- [ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md)
+
+This design defines manual dispatch, informational PR, future enforcement, post-merge, and scheduled CI modes; proposed
+commands; report artifacts; status semantics; waiver boundaries; and scope strategy. It does not add or modify
+`.github/workflows`, introduce CI enforcement, change source authority, expand pilot scope, or approve full
+Graph-source promotion.
+
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.

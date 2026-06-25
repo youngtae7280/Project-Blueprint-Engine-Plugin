@@ -271,6 +271,10 @@ validator/CI-backed Evidence design that can support broader transition review l
 command now produces local validator-backed Evidence (`validation-pass`) for the bounded pilot. That Evidence does not
 change transition stage, expand source authority, add CI enforcement, or replace the user approval gate.
 
+[ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md) defines a future
+non-enforcing CI-backed Evidence workflow shape for the same bounded read-model checks. It is design only and does not
+add `.github/workflows`, enforce CI gates, or change the Source Transition Path.
+
 [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) defines the target Graph-first responsibility split:
 Nodes are durable targets, Edges are durable semantic relationships, and Tags are temporary view-scoped roles.
 

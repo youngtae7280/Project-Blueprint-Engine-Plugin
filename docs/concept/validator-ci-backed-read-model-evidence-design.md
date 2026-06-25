@@ -1,6 +1,6 @@
 # Validator / CI-Backed Read-Model Evidence Design
 
-Status: validator-ci-backed-read-model-evidence-design / scoped-validator-backed-evidence-implemented / ci-not-started
+Status: validator-ci-backed-read-model-evidence-design / scoped-validator-backed-evidence-implemented / ci-workflow-design-recorded
 
 ## Document Purpose
 
@@ -129,6 +129,11 @@ pbe graph read-model validate --slice <path> --ci-manifest <file>
 The scoped command is local validator-backed Evidence only. This document and implementation do not add CI workflows,
 repo-wide `--all` enforcement, schema enforcement, source authority changes, or promotion approval.
 
+The CI-backed workflow integration design is recorded separately in
+[ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md). That document
+defines future CI trigger modes, command sequence, artifact outputs, status semantics, and waiver boundaries without
+adding a workflow.
+
 ## Report Field Expectations
 
 Future validation reports should include:
@@ -208,6 +213,8 @@ retirement, compatibility cleanup, and acceptance closure still require the appr
 - [source-transition-path.md](source-transition-path.md) keeps source authority transition separate from Evidence pass.
 - [rollback-compatibility-strategy.md](rollback-compatibility-strategy.md) keeps fallback/rollback and compatibility
   handling visible even when validation passes.
+- [ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md) defines the
+  future CI workflow integration design without introducing CI enforcement or changing source authority.
 
 ## Explicit Non-Scope
 
@@ -227,16 +234,16 @@ The scoped validator implementation does not:
 
 After scoped validator-backed Evidence is available, the next user decision should choose one of:
 
-1. `Design CI workflow integration for read-model Evidence`
-2. `Keep scoped pilot active and observe with validator-backed Evidence`
-3. `Prepare broader promotion readiness review inputs`
+1. `Approve non-enforcing CI workflow implementation for Todo Search read-model Evidence`
+2. `Refine CI workflow design before implementation`
+3. `Keep scoped pilot active and observe with validator-backed Evidence`
 4. `Perform public-doc cleanup first`
 5. `Require multi-slice validation design before CI`
 6. `Defer or reject broader execution/enforcement path`
 
-Recommended next step: design CI workflow integration only if the user wants to move toward broader
-execution/enforcement. If the user wants to stay conservative, keep the scoped pilot active and observe with
-validator-backed Evidence.
+Recommended next step: approve non-enforcing CI workflow implementation only if the user wants durable CI-backed
+Evidence for broader execution/enforcement discussions. If the user wants to stay conservative, keep the scoped pilot
+active and observe with validator-backed Evidence.
 
 ## Gate Self-Check
 

@@ -233,16 +233,17 @@ After this design, the user approved and Codex implemented the bounded builder t
 source-authority pilot execution for Todo Search, and approved scoped validator-backed Evidence implementation. The next
 user decision surface is now:
 
-1. `Design CI workflow integration for read-model Evidence`
-2. `Keep scoped pilot active and observe with validator-backed Evidence`
-3. `Require public-doc cleanup before broader promotion`
-4. `Prepare broader Graph-source promotion review`
-5. `Rollback / defer scoped source-authority pilot`
+1. `Approve non-enforcing CI workflow implementation for read-model Evidence`
+2. `Refine CI workflow design before implementation`
+3. `Keep scoped pilot active and observe with validator-backed Evidence`
+4. `Require public-doc cleanup before broader promotion`
+5. `Prepare broader Graph-source promotion review`
+6. `Rollback / defer scoped source-authority pilot`
 
 Recommended option after scoped validator-backed Evidence:
 
 ```text
-Design CI workflow integration only if the user wants broader execution or enforcement; otherwise keep observing the scoped pilot.
+Approve non-enforcing CI workflow implementation only if the user wants durable CI-backed Evidence; otherwise keep observing the scoped pilot.
 ```
 
 Reason:
@@ -262,6 +263,10 @@ change.
 That stricter repeatability design is now recorded in
 [validator-ci-backed-read-model-evidence-design.md](validator-ci-backed-read-model-evidence-design.md). It now records
 the scoped validator-backed Evidence implementation while keeping CI enforcement unimplemented.
+
+The CI workflow integration design is recorded in
+[ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md). It defines a future
+non-enforcing CI Evidence path without adding a workflow.
 
 ## Approval Brief Draft
 
@@ -299,7 +304,8 @@ prepare broader promotion review, or rollback/defer the pilot.
 
 ### Approval Choice Candidates
 
-- `Design CI workflow integration for read-model Evidence`
+- `Approve non-enforcing CI workflow implementation for read-model Evidence`
+- `Refine CI workflow design before implementation`
 - `Keep scoped pilot active and observe with validator-backed Evidence`
 - `Require public-doc cleanup before broader promotion`
 - `Prepare broader Graph-source promotion review`

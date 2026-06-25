@@ -311,6 +311,10 @@ Evidence checks for broader use. The scoped Todo Search validator-backed report 
 the bounded pilot, but it does not make rollback-ready status automatic, add CI enforcement, or retire fallback
 artifacts.
 
+[ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md) defines how a future
+CI run could provide stronger read-model Evidence. A CI pass would still be Evidence only; it would not perform
+rollback, approve fallback, clean up compatibility warnings, or retire tree-native fallback/reference artifacts.
+
 [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) adds a source-transition safety constraint: durable
 semantic relationships must remain Edges, while Tags are view-scoped roles only. A future transition or parity artifact
 that encodes durable meaning as tags can become a projection/parity failure or compatibility-control trigger.

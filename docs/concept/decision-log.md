@@ -56,6 +56,7 @@ This log is the source of truth for confirmed concept decisions in the PBE runti
 | DEC-048 | active | The Todo Search scoped source-authority pilot remains active under observation with retained warnings. Active observation keeps authority bounded to `examples/adoption/todo-search-slice`, requires parity to remain `comparison-pass`, preserves tree-native fallback/reference artifacts, and defines triggers for re-review, fallback/defer, validator/CI-backed Evidence, public-doc cleanup, or broader promotion review without performing those next-phase actions.                                                                                                                         | Scoped Source-Authority Pilot Active Observation                                  |
 | DEC-049 | active | Validator/CI-backed read-model Evidence is designed as a stronger future Evidence layer before broader execution, enforcement, or full promotion review. The design separates CLI command success, validator-backed Evidence, and CI-backed Evidence; defines scope levels, checks, report artifacts, statuses, and severity labels; and does not implement validation, add CI enforcement, change source authority, expand pilot scope, or make validation pass equivalent to user approval.                                                                                                       | Validator / CI-Backed Read-Model Evidence Design                                  |
 | DEC-050 | active | The user approved and Codex implemented a bounded scoped read-model validator command for the Todo Search selected slice. `pbe graph read-model validate --slice examples/adoption/todo-search-slice` creates validator-backed Evidence reports with `validation-pass` status for the current generated read-model and parity artifacts. This is local scoped Evidence only; it does not add CI workflow or enforcement, expand pilot scope, change source authority, retire tree-native artifacts, clean up public docs, or approve full Graph-source promotion.                                   | Scoped Read-Model Validator-Backed Evidence                                       |
+| DEC-051 | active | The user approved design of CI workflow integration for read-model Evidence. The CI-backed workflow design defines trigger modes, command sequence, artifact outputs, status semantics, waiver boundaries, and scoped-first strategy, but it does not add or modify `.github/workflows`, introduce CI enforcement, expand pilot scope, change source authority, retire tree-native artifacts, clean up public docs, or approve full Graph-source promotion.                                                                                                                                         | CI-Backed Read-Model Evidence Workflow Design                                     |
 
 ## Supersede Relationships
 
@@ -228,6 +229,10 @@ authority.
 DEC-050 does not supersede DEC-046, DEC-047, DEC-048, or DEC-049. It implements scoped validator-backed Evidence for
 Todo Search only. CI-backed Evidence, validator enforcement, public-doc cleanup, broader execution, full promotion
 review, and any source authority expansion remain separate future decisions.
+
+DEC-051 does not supersede DEC-050. It designs a future CI-backed Evidence workflow after local validator-backed
+Evidence exists. It does not implement CI, make CI required, expand the scoped pilot, or change the source-transition
+approval boundary.
 
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in

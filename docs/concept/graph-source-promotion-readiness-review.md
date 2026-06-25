@@ -116,6 +116,10 @@ later. The scoped Todo Search validator-backed Evidence command is now implement
 the current bounded pilot artifacts. CI-backed Evidence and enforcement remain unimplemented and do not follow from this
 review automatically.
 
+[ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md) now defines the
+future CI workflow integration surface for read-model Evidence. It does not add workflows, make CI required, or change
+source authority.
+
 Preparation outcome:
 
 ```text
@@ -277,14 +281,15 @@ Acceptance is user-approved with warnings retained.
 The user approved the bounded limited pilot option, dry-run, bounded scoped execution, active observation, and local
 validator-backed Evidence. Remaining judgment concerns whether to:
 
-1. design CI-backed read-model Evidence before broader execution or enforcement,
+1. implement a non-enforcing CI workflow for read-model Evidence, refine the CI design, or keep local observation only,
 2. defer or require ACEP task-card public-doc cleanup before full promotion,
 3. require full-product/runtime/UI Evidence before full promotion or only before full product parity claims, and
 4. prepare broader promotion review inputs or keep observing the scoped pilot.
 
 ### Approval Choice Candidates
 
-- `Design CI workflow integration for read-model Evidence`
+- `Approve non-enforcing CI workflow implementation for read-model Evidence`
+- `Refine CI workflow design before implementation`
 - `Keep scoped pilot active and observe with validator-backed Evidence`
 - `Require public-doc cleanup before promotion decision`
 - `Prepare broader Graph-source promotion review inputs`

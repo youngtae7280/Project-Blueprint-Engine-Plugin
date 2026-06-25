@@ -211,6 +211,10 @@ The later validator/CI-backed Evidence design is recorded in
 validator-backed Evidence is now implemented for Todo Search; CI-backed Evidence remains future and does not change the
 completed bounded generated Evidence prerequisite.
 
+The CI workflow integration design is recorded in
+[ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md). It defines how
+future CI-backed Evidence could be produced without implementing a workflow or changing source authority.
+
 ### Original Requirement Choice Set
 
 After this requirement is recorded, the user must choose one of:
