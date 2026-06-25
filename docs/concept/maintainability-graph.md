@@ -144,6 +144,10 @@ CLI-backed read-model output before authority-bearing execution and keeps curren
 to require generated builder / CLI-backed read-model Evidence before actual scoped execution. It is an Evidence
 prerequisite, not builder implementation and not source authority change.
 
+[cli-backed-read-model-evidence-output-design.md](cli-backed-read-model-evidence-output-design.md) records the user's
+design-first choice. It defines conceptual command surfaces, output artifacts, comparison rules, mismatch severity, and
+gate relationships, but it does not implement generated output or change source authority.
+
 The representative slice now includes manual equivalent read-model parity artifacts:
 
 - `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
@@ -195,7 +199,8 @@ traceability view.
 - OQ-052: Does full Graph-source promotion require an actual generated graph builder or CLI-backed read-model output?
 - OQ-064: Will the user approve actual scoped source-authority pilot execution with warnings, require prerequisites,
   defer, or reject execution?
-- OQ-066: What exact generated read-model output artifact format should be designed before implementation?
+- OQ-071: Will the user approve generated read-model builder implementation, refine output design, require
+  validator/CI design first, require cleanup, defer, or reject?
 - OQ-054: Should `task` and `view-instance` be first-class node kinds or durable records outside node kind?
 
 ## Related Gate

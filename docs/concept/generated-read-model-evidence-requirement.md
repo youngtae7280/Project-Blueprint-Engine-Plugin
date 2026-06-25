@@ -170,6 +170,23 @@ This requirement does not include:
 
 ## Next User Decision Surface
 
+The user selected the design-first path. The resulting design is recorded in
+[cli-backed-read-model-evidence-output-design.md](cli-backed-read-model-evidence-output-design.md).
+
+After that output design, the next decision surface is:
+
+1. `Approve generated read-model builder implementation task`
+2. `Refine output design before implementation`
+3. `Require validator/CI design first`
+4. `Require public-doc cleanup before implementation`
+5. `Defer generated builder work`
+6. `Reject scoped source-authority pilot path`
+
+The recommended next option from the output design is `Approve generated read-model builder implementation task` if the
+user accepts the current concept-level output shape. Stricter users can choose `Require validator/CI design first`.
+
+### Original Requirement Choice Set
+
 After this requirement is recorded, the user must choose one of:
 
 1. `Prepare generated read-model builder implementation task`
@@ -179,7 +196,7 @@ After this requirement is recorded, the user must choose one of:
 5. `Accept manual-candidate risk and revisit scoped execution approval`
 6. `Reject scoped source-authority pilot path`
 
-Recommended next option:
+Original recommended next option:
 
 ```text
 Prepare CLI-backed evidence output design first
@@ -192,8 +209,8 @@ Reason:
 - A design-first step can keep implementation bounded and avoid prematurely creating a generator that encodes the wrong
   source authority assumptions.
 
-If the user wants to move faster, `Prepare generated read-model builder implementation task` is possible, but it should
-still begin from this requirement's non-promotion and source-boundary constraints.
+That design-first step is now recorded. Any future implementation must still begin from this requirement's
+non-promotion and source-boundary constraints.
 
 ## Approval Brief Draft
 
@@ -216,23 +233,24 @@ non-scope boundaries without implementing anything.
 | Manual parity usefulness                     | present          | Manual artifacts remain accepted for dry-run and preparation.                             |
 | Manual parity as default authority candidate | not sufficient   | Authority-bearing execution needs stronger repeatability unless user accepts manual risk. |
 | Generated read-model Evidence requirement    | defined          | Source inputs, output expectations, mismatch categories, and gates are documented.        |
-| Builder / CLI implementation                 | not started      | This document does not implement generated output.                                        |
+| Output design                                | recorded         | `cli-backed-read-model-evidence-output-design.md` defines the future output surface.      |
+| Builder / CLI implementation                 | not started      | Neither this requirement nor the design implements generated output.                      |
 | Source authority change                      | not approved     | Generated Evidence, when later created, is not automatic source authority.                |
 | Rollback/fallback readiness                  | partial          | Generated Evidence can help but does not close rollback/fallback gate by itself.          |
 | Compatibility cleanup                        | deferred warning | Public-doc cleanup remains visible and separate.                                          |
 
 ### Remaining Judgment
 
-The user must decide whether to design the CLI-backed output surface first, move directly to a generated builder
-implementation task, require cleanup first, defer, accept manual-candidate risk, or reject the pilot path.
+The user must decide whether to approve implementation, refine the output design, require validator/CI design first,
+require cleanup first, defer generated builder work, or reject the scoped pilot path.
 
 ### Approval Choice Candidates
 
-- `Prepare generated read-model builder implementation task`
-- `Prepare CLI-backed evidence output design first`
-- `Require public-doc cleanup before generated builder work`
+- `Approve generated read-model builder implementation task`
+- `Refine output design before implementation`
+- `Require validator/CI design first`
+- `Require public-doc cleanup before implementation`
 - `Defer generated builder work`
-- `Accept manual-candidate risk and revisit scoped execution approval`
 - `Reject scoped source-authority pilot path`
 
 ### State Label
@@ -248,6 +266,7 @@ Reason: the prerequisite is selected, but implementation/design of generated Evi
 | Control record                        | Family                       | Status                    | Reason                                                                                 |
 | ------------------------------------- | ---------------------------- | ------------------------- | -------------------------------------------------------------------------------------- |
 | Generated prerequisite selected       | Decision Control Node        | resolved                  | User required generated/CLI-backed Evidence before execution.                          |
+| Output design selected                | Decision Control Node        | resolved                  | User selected design-first work, now recorded in the CLI-backed output design.         |
 | Generated output required/missing     | Evidence Control Node        | active / missing          | Generated read-model Evidence is now a prerequisite but does not yet exist.            |
 | Public-doc cleanup                    | Compatibility Control Node   | deferred / active warning | ACEP task-card cleanup remains visible and separate.                                   |
 | Scoped source authority change        | Impact / Change Control Node | not started               | No source authority execution occurs from this requirement.                            |

@@ -48,6 +48,7 @@ This log is the source of truth for confirmed concept decisions in the PBE runti
 | DEC-040 | active | The user selected `Run dry-run / review-only scoped pilot first` for the Todo Search selected slice. The dry-run observation records workflow Evidence without changing source authority and cannot by itself approve scoped source-authority pilot execution, full Graph-source promotion, tree-native artifact retirement, generated builder implementation, or public-doc cleanup.                                    | Dry-Run Scoped Limited Pilot Observation Record                                   |
 | DEC-041 | active | The user approved preparation of a scoped source-authority pilot package for the Todo Search selected slice. Preparation approval does not approve actual scoped source-authority execution, full Graph-source promotion, source authority change, tree-native artifact retirement, generated builder implementation, or public-doc cleanup; execution still requires a later explicit user decision.                    | Scoped Source-Authority Pilot Preparation Package                                 |
 | DEC-042 | active | The user requires generated builder / CLI-backed read-model Evidence before actual scoped source-authority pilot execution. This is a prerequisite decision only; it does not approve implementation, CLI command creation, validator/CI work, source authority change, tree-native artifact retirement, or Graph-source promotion.                                                                                      | Generated Read-Model Evidence Requirement                                         |
+| DEC-043 | active | The user approved design-first work for CLI-backed read-model Evidence output. This defines command/surface, output artifact, generated/manual comparison, mismatch, status label, and gate expectations without implementing CLI, builder, parser, validator, CI, generated output, source authority change, or Graph-source promotion.                                                                                 | CLI-Backed Read-Model Evidence Output Design                                      |
 
 ## Supersede Relationships
 
@@ -185,6 +186,11 @@ DEC-042 does not supersede DEC-016, DEC-020, DEC-021, DEC-030, DEC-039, DEC-040,
 prerequisite before any authority-bearing scoped execution, while Check/Evidence policy, source transition policy,
 rollback/fallback gates, manual parity limits, execution-mode separation, dry-run observation, preparation-package
 boundaries, and future user approval remain active.
+
+DEC-043 does not supersede DEC-016, DEC-020, DEC-021, DEC-030, DEC-039, DEC-040, DEC-041, or DEC-042. It designs the
+future evidence output surface while Check/Evidence policy, source transition policy, rollback/fallback gates, manual
+parity limits, execution separation, dry-run observation, preparation-package boundaries, generated Evidence
+requirement, and future implementation/execution approvals remain active.
 
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in

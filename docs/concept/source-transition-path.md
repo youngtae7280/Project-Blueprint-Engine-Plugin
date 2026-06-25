@@ -249,6 +249,11 @@ to require generated builder / CLI-backed read-model Evidence before actual scop
 strengthen Evidence and authority-readiness gates, but it does not close rollback/fallback, compatibility, or approval
 gates by itself.
 
+[cli-backed-read-model-evidence-output-design.md](cli-backed-read-model-evidence-output-design.md) records the
+design-first follow-up. It defines future command/surface candidates, output artifact expectations, comparison and
+mismatch handling, and status labels. It is a concept design only and does not execute or approve scoped authority
+transition.
+
 [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) defines the target Graph-first responsibility split:
 Nodes are durable targets, Edges are durable semantic relationships, and Tags are temporary view-scoped roles.
 
@@ -333,8 +338,8 @@ Those remain later concept or implementation questions.
   strengthen Evidence, defer, or reject execution?
 - Will the user accept ACEP task-card public-doc cleanup as deferred cleanup, or require cleanup before promotion
   approval?
-- What exact generated read-model output artifact format and CLI-backed surface should be designed before generated work
-  starts?
+- Will the user approve generated read-model builder implementation, require validator/CI design first, require cleanup,
+  defer, or reject the scoped pilot path?
 - How long should a post-promotion compatibility period last?
 - Where is the boundary between automatic recovery and manual judgment when tree-native artifacts and graph records
   conflict?

@@ -117,6 +117,17 @@ The requirement is recorded in
 [generated-read-model-evidence-requirement.md](generated-read-model-evidence-requirement.md). It is not implementation
 approval and does not create generated output.
 
+CLI-backed output design outcome:
+
+```text
+Prepare CLI-backed evidence output design first
+```
+
+The design is recorded in
+[cli-backed-read-model-evidence-output-design.md](cli-backed-read-model-evidence-output-design.md). It defines future
+command/surface candidates, generated output artifacts, comparison reports, mismatch categories, and status labels. It
+does not implement CLI, builder, parser, validator/CI, or generated output.
+
 Meaning:
 
 - The representative lifecycle slice is demonstrated with retained warnings.

@@ -270,25 +270,26 @@ CLI-backed read-model output before authority-bearing execution.
 | Runtime fixture Evidence                   | present / fresh   | Bounded Vitest command passes title + note/content behavior checks.                                   |
 | Node/Edge/Tag parity                       | present           | Manual read-model and View Instance Manifest are reviewable.                                          |
 | Source authority unchanged                 | present           | Tree-native selected-slice artifacts remain operational source.                                       |
-| Generated builder / CLI-backed output      | missing / warning | Recommended prerequisite before authority-bearing execution.                                          |
+| CLI-backed output design                   | present           | `cli-backed-read-model-evidence-output-design.md` defines the future output and comparison surface.   |
+| Generated builder / CLI-backed output      | missing / warning | Still required before authority-bearing execution if the user keeps that prerequisite.                |
 | Rollback/fallback readiness                | partial           | Not needed for preparation; not ready for authority execution without boundary and fallback Evidence. |
 | Compatibility cleanup                      | deferred warning  | ACEP task-card public-doc cleanup remains deferred and visible.                                       |
 | Actual scoped authority execution approval | missing           | Requires next explicit user decision.                                                                 |
 
 ### Remaining Judgment
 
-The user selected generated builder / CLI-backed read-model Evidence as a prerequisite. The next judgment is whether to
-design the output surface first, move directly to a builder implementation task, require cleanup first, defer, accept
-manual-candidate risk, or reject the pilot path.
+The user selected generated builder / CLI-backed read-model Evidence as a prerequisite, then selected design-first work.
+The output design is now recorded. The next judgment is whether to approve a builder implementation task, refine the
+design, require validator/CI design first, require cleanup first, defer, or reject the scoped pilot path.
 
 ### Approval Choice Candidates
 
-- `Approve actual scoped source-authority pilot execution with warnings`
-- `Require generated builder / CLI-backed read-model before execution`
-- `Require public-doc cleanup before execution`
-- `Strengthen evidence / run another dry-run`
-- `Defer scoped source-authority pilot`
-- `Reject scoped source-authority pilot`
+- `Approve generated read-model builder implementation task`
+- `Refine output design before implementation`
+- `Require validator/CI design first`
+- `Require public-doc cleanup before implementation`
+- `Defer generated builder work`
+- `Reject scoped source-authority pilot path`
 
 ### State Label
 
@@ -296,14 +297,15 @@ manual-candidate risk, or reject the pilot path.
 Decision required
 ```
 
-Reason: preparation is approved and recorded, but execution is not approved and generated/repeatable output is
-recommended before source-authority execution.
+Reason: preparation and output design are recorded, but generated Evidence, implementation, and execution are not
+approved.
 
 ## Control Node Summary
 
 | Control record                        | Family                       | Status                                             | Reason                                                                                          |
 | ------------------------------------- | ---------------------------- | -------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
 | Preparation selected                  | Decision Control Node        | resolved                                           | User approved scoped source-authority pilot preparation on 2026-06-25.                          |
+| Output design selected                | Decision Control Node        | resolved                                           | User selected CLI-backed Evidence output design first; the design is now recorded.              |
 | Actual execution decision             | Decision Control Node        | waiting for human                                  | User must approve execution, require prerequisites, defer, or reject.                           |
 | Manual parity / generated builder     | Evidence Control Node        | manual accepted for preparation; generated missing | Manual parity supports preparation; generated output is recommended before authority execution. |
 | Public-doc cleanup                    | Compatibility Control Node   | deferred / active warning                          | ACEP task-card cleanup remains visible and may be prerequisite if user chooses.                 |

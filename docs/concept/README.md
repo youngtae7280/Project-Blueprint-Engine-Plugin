@@ -205,6 +205,14 @@ The user selected generated builder / CLI-backed read-model Evidence as a prereq
 source-authority pilot execution. This is a requirement decision only. It does not approve builder implementation, CLI
 implementation, generated output, source authority change, or Graph-source promotion.
 
+The following CLI-backed read-model Evidence output design is recorded:
+
+- [cli-backed-read-model-evidence-output-design.md](cli-backed-read-model-evidence-output-design.md)
+
+The user selected design-first work. The design defines conceptual command surfaces, output artifacts, comparison
+reports, mismatch categories, status labels, and gate relationships. It does not implement a CLI, builder, parser,
+validator, CI workflow, generated output, source authority change, or Graph-source promotion.
+
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.

@@ -288,6 +288,10 @@ until fallback triggers, precedence, and user-visible rollback/fallback decision
 to require generated builder / CLI-backed read-model Evidence before actual scoped execution. Generated Evidence may
 improve fallback comparison, but rollback/fallback readiness still needs explicit trigger and precedence rules.
 
+[cli-backed-read-model-evidence-output-design.md](cli-backed-read-model-evidence-output-design.md) records the
+design-first follow-up. Its comparison report and Evidence manifest concepts can later support rollback/fallback review,
+but this design does not implement the generator, create Evidence, or make rollback-ready status true.
+
 [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) adds a source-transition safety constraint: durable
 semantic relationships must remain Edges, while Tags are view-scoped roles only. A future transition or parity artifact
 that encodes durable meaning as tags can become a projection/parity failure or compatibility-control trigger.
