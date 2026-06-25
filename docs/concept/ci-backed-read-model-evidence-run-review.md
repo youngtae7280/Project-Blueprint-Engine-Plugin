@@ -472,17 +472,19 @@ branch protection, add PR/push triggers, or make the workflow a required check.
 The next step should be one of:
 
 1. `Keep aggregate-enabled workflow manual/non-enforcing and observe`
-2. `Design PR informational trigger`
-3. `Design CI enforcement / required check policy`
-4. `Require public-doc cleanup before broader promotion`
-5. `Prepare broader Graph-source promotion review`
-6. `Rollback / defer scoped source-authority pilot`
+2. `Approve PR informational workflow implementation`
+3. `Refine PR informational path filters before implementation`
+4. `Design CI enforcement / required check policy`
+5. `Require public-doc cleanup before broader promotion`
+6. `Prepare broader Graph-source promotion review`
+7. `Rollback / defer scoped source-authority pilot`
 
 Recommended next step:
 
 ```text
-Keep the aggregate-enabled workflow manual/non-enforcing and observe, unless the user wants the next major branch: PR
-informational trigger, enforcement policy, cleanup, broader promotion review, or rollback/defer.
+Keep the aggregate-enabled workflow manual/non-enforcing and observe, or approve PR informational workflow implementation
+if the user wants PR-visible Evidence now. Enforcement policy, cleanup, broader promotion review, and rollback/defer
+remain separate major branches.
 ```
 
 Follow-up status: multi-slice validation design, Todo Search profile extraction, Todo App structure-only profile,

@@ -359,6 +359,15 @@ slices. Run `28156403793` reviewed the aggregate-enabled artifact bundle as CI-b
 `28157938343` reviewed the same aggregate-enabled workflow after the Node 24 CI hygiene update. It remains
 manual-dispatch, non-enforcing Evidence only.
 
+The PR informational read-model Evidence design is now recorded:
+
+- [pr-informational-read-model-evidence-design.md](pr-informational-read-model-evidence-design.md)
+
+The design defines a future `pull_request` informational trigger, path filters, artifact/manifest fields, GitHub Step
+Summary wording, and failure semantics. It does not modify `.github/workflows/read-model-evidence.yml`; the implemented
+workflow remains `workflow_dispatch` only. PR triggers, required checks, branch protection, CI enforcement, source
+authority expansion, public-doc cleanup, `validate --all`, and full Graph-source promotion remain unimplemented.
+
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.

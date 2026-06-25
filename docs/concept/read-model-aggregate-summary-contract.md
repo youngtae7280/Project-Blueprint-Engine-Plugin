@@ -135,10 +135,11 @@ Focused tests cover:
 Recommended next work remains bounded:
 
 1. keep aggregate summary as Evidence-only and observe stability
-2. decide whether a future `validate --all` command is needed
-3. keep the aggregate-enabled manual workflow non-enforcing and observe
-4. decide whether to strengthen Todo App PBE Run beyond structure-only
-5. keep source authority expansion and full promotion as separate explicit decisions
+2. keep the aggregate-enabled manual workflow non-enforcing and observe
+3. decide whether to implement the PR informational trigger design
+4. decide whether a future `validate --all` command is needed
+5. decide whether to strengthen Todo App PBE Run beyond structure-only
+6. keep source authority expansion and full promotion as separate explicit decisions
 
 ## Final Statement
 

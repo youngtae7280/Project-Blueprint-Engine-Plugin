@@ -341,8 +341,8 @@ cleanup remain separate.
   inputs.
 - The first multi-slice aggregate summary exists as Evidence-only output over existing per-slice validation reports.
   The manual workflow now includes the aggregate summarize command, and runs `28156403793` / `28157938343` reviewed the
-  aggregate-enabled artifact bundle as non-enforcing CI-backed Evidence. `validate --all`, CI enforcement, and
-  full-promotion waiver policy remain future questions.
+  aggregate-enabled artifact bundle as non-enforcing CI-backed Evidence. PR informational trigger behavior is designed
+  but not implemented. `validate --all`, CI enforcement, and full-promotion waiver policy remain future questions.
 
 ### Decisions Needed Before Promotion Approval
 

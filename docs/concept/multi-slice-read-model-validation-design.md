@@ -44,6 +44,10 @@ same aggregate-enabled workflow after the Node 24 action/runtime update. These r
 approve a broader pilot, required checks, branch protection, PR/push triggers, source authority expansion, public-doc
 cleanup, tree-native retirement, or full Graph-source promotion.
 
+The PR informational trigger design is now recorded in
+[pr-informational-read-model-evidence-design.md](pr-informational-read-model-evidence-design.md). It is a future
+visibility design only; the implemented workflow remains `workflow_dispatch` only.
+
 ## Multi-Slice Validation Is Not Source Authority Expansion
 
 Multi-slice read-model validation would mean:
@@ -406,16 +410,17 @@ design, multi-slice scope redesign, or continued observation.
 
 ## Control Node Summary
 
-| Control record                      | Family                     | Status                       | Reason                                                                                                                   |
-| ----------------------------------- | -------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Multi-slice validation design       | Decision Control Node      | design-recorded              | The expansion strategy is documented; aggregation remains unimplemented.                                                 |
-| Todo Search hardcoding              | Evidence / Impact Control  | resolved for first profile   | Todo assumptions are isolated into an explicit profile/config.                                                           |
-| `todo-app-pbe-run` candidate        | Evidence Control Node      | implemented / structure-only | It has canonical `.pbe` source inputs plus structure-only generated/validation output.                                   |
-| Compatibility mismatch supplemental | Compatibility Control Node | retained warning             | Public-doc cleanup remains deferred and warning-only.                                                                    |
-| Aggregate summary                   | Evidence Control Node      | implemented / Evidence-only  | First aggregate summary reads existing per-slice validation reports only.                                                |
-| Aggregate CI-backed review          | Evidence Control Node      | reviewed                     | Runs `28156403793` and `28157938343` reviewed the aggregate-enabled artifact bundle as non-enforcing CI-backed Evidence. |
-| Aggregate validation                | Decision Control Node      | deferred                     | `validate --all`, aggregate validation execution, and enforcement remain separate.                                       |
-| CI enforcement / PR triggers        | Decision Control Node      | not approved                 | Reviewed CI-backed Evidence exists, but enforcement and PR triggers remain future-only.                                  |
+| Control record                      | Family                     | Status                            | Reason                                                                                                                   |
+| ----------------------------------- | -------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Multi-slice validation design       | Decision Control Node      | design-recorded                   | The expansion strategy is documented; aggregation remains unimplemented.                                                 |
+| Todo Search hardcoding              | Evidence / Impact Control  | resolved for first profile        | Todo assumptions are isolated into an explicit profile/config.                                                           |
+| `todo-app-pbe-run` candidate        | Evidence Control Node      | implemented / structure-only      | It has canonical `.pbe` source inputs plus structure-only generated/validation output.                                   |
+| Compatibility mismatch supplemental | Compatibility Control Node | retained warning                  | Public-doc cleanup remains deferred and warning-only.                                                                    |
+| Aggregate summary                   | Evidence Control Node      | implemented / Evidence-only       | First aggregate summary reads existing per-slice validation reports only.                                                |
+| Aggregate CI-backed review          | Evidence Control Node      | reviewed                          | Runs `28156403793` and `28157938343` reviewed the aggregate-enabled artifact bundle as non-enforcing CI-backed Evidence. |
+| Aggregate validation                | Decision Control Node      | deferred                          | `validate --all`, aggregate validation execution, and enforcement remain separate.                                       |
+| PR informational trigger            | Decision Control Node      | design-recorded / not implemented | Future PR visibility is designed, but the workflow remains manual-only until separate implementation approval.           |
+| CI enforcement / required checks    | Decision Control Node      | not approved                      | Reviewed CI-backed Evidence exists, but enforcement and required checks remain future-only.                              |
 
 ## Gate Self-Check
 

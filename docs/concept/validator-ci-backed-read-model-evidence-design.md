@@ -141,6 +141,10 @@ later aggregate-enabled run `28156403793` is reviewed as `ci-evidence-pass` with
 `comparison-pass`, Todo App PBE Run `validation-pass`, and aggregate `aggregate-pass`. Post-update run `28157938343`
 reviews the same aggregate-enabled workflow after the workflow moved to Node 24 action/runtime settings.
 
+[pr-informational-read-model-evidence-design.md](pr-informational-read-model-evidence-design.md) now designs a future
+PR informational mode. It is visibility-only design and does not change the implemented workflow, add enforcement, or
+change source authority.
+
 Run `28156403793` also records a CI hygiene warning: GitHub Actions reports Node.js 20 deprecation for the current
 action versions. This warning did not fail validator-backed or CI-backed Evidence. It has been handled for the manual
 workflow by updating to `actions/checkout@v7`, `actions/setup-node@v6`, `node-version: 24`, and
@@ -261,8 +265,9 @@ using the new Evidence-only aggregate summary after per-slice reports remain sta
 is complete, `examples/valid/todo-app-pbe-run` is implemented as a second `structure-only` profile with local generated
 and validation Evidence, both validation reports now carry self-contained per-slice independence metadata, and
 `pbe graph read-model summarize --slices ...` can write the first aggregate summary. The second fixture is not
-parity-backed, pilot-marker-backed, CI-backed, or source-authority bearing. `validate --all`, PR triggers, enforcement,
-cleanup, broader promotion review, and rollback/defer remain separate decisions.
+parity-backed, pilot-marker-backed, CI-backed, or source-authority bearing. PR informational trigger behavior is now
+designed but not implemented. `validate --all`, PR trigger implementation, enforcement, cleanup, broader promotion
+review, and rollback/defer remain separate decisions.
 
 ## Gate Self-Check
 

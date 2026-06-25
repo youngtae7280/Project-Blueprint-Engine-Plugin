@@ -354,7 +354,8 @@ not expand source authority, does not add a pilot marker, does not require manua
 reads those reports as Evidence-only inputs while preserving slice-specific authority boundaries.
 The manual `PBE Read-Model Evidence` workflow now includes Todo App structure-only generation/validation and aggregate
 summarize, and runs `28156403793` / `28157938343` reviewed the aggregate-enabled artifact bundle as non-enforcing
-CI-backed Evidence. These workflow reviews do not add enforcement, `validate --all`, or source authority expansion.
+CI-backed Evidence. PR informational trigger behavior is designed but not implemented. These workflow reviews and design
+records do not add enforcement, `validate --all`, or source authority expansion.
 
 ## Scope Boundaries
 

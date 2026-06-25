@@ -1,6 +1,6 @@
 # CI-Backed Read-Model Evidence Workflow Design
 
-Status: ci-backed-read-model-evidence-workflow-design / node24-ci-hygiene-pass-reviewed / manual-dispatch-only
+Status: ci-backed-read-model-evidence-workflow-design / pr-informational-design-recorded / manual-dispatch-only
 
 ## Document Purpose
 
@@ -37,6 +37,11 @@ workflow produced reviewed Todo Search CI-backed Evidence in run `28151296796`; 
 `28156403793` reviewed the Todo Search, Todo App PBE Run, and aggregate artifact bundle. The post-update Node 24 run
 `28157938343` reviewed the same aggregate-enabled workflow after the action/runtime hygiene update. PR/push triggers,
 required checks, branch protection, and enforcement remain unimplemented.
+
+The future PR informational trigger design is recorded in
+[pr-informational-read-model-evidence-design.md](pr-informational-read-model-evidence-design.md). It defines how a later
+`pull_request` mode could provide visible PR Evidence without becoming a required check, branch protection rule, source
+authority expansion, or user acceptance replacement. The workflow file is not changed by that design.
 
 Run `28156403793` also surfaced a GitHub Actions maintenance annotation that Node.js 20 is deprecated for
 `actions/checkout@v4`, `actions/setup-node@v4`, and `actions/upload-artifact@v4` execution. This is a retained CI hygiene
@@ -322,18 +327,21 @@ This implementation and design do not:
 
 ## Recommended Next Decision Surface
 
-After this aggregate-enabled workflow run review, the next user decision should choose one of:
+After this aggregate-enabled workflow run review and PR informational design, the next user decision should choose one
+of:
 
 1. `Keep aggregate-enabled workflow manual/non-enforcing and observe`
-2. `Design CI enforcement / required check policy`
-3. `Require public-doc cleanup before broader CI or promotion work`
-4. `Prepare broader Graph-source promotion review`
-5. `Defer broader CI mode changes`
+2. `Approve PR informational workflow implementation`
+3. `Refine PR informational path filters before implementation`
+4. `Design CI enforcement / required check policy`
+5. `Require public-doc cleanup before broader CI or promotion work`
+6. `Prepare broader Graph-source promotion review`
+7. `Defer broader CI mode changes`
 
-Recommended next step: keep the aggregate-enabled workflow manual/non-enforcing and observe unless the user selects a
-major branch such as enforcement design, public-doc cleanup, broader promotion review, or defer. The Node.js 20
-deprecation annotation from run `28156403793` has been handled by the Node 24 action/runtime update and reviewed
-post-update run `28157938343`.
+Recommended next step: keep the aggregate-enabled workflow manual/non-enforcing and observe, or approve PR
+informational workflow implementation if the user wants PR-visible Evidence now. Enforcement design, public-doc cleanup,
+broader promotion review, and defer remain separate major branches. The Node.js 20 deprecation annotation from run
+`28156403793` has been handled by the Node 24 action/runtime update and reviewed post-update run `28157938343`.
 
 ## Approval Brief Draft
 
@@ -357,7 +365,7 @@ Source Transition Path, rollback, and compatibility.
 | CI enforcement             | not approved | Enforcement mode remains future-only.                                                                                                             |
 | Source authority boundary  | preserved    | CI Evidence would remain Evidence only.                                                                                                           |
 | Retained warnings          | visible      | Bounded fixture, partial UI, enforcement gap, and ACEP cleanup remain visible.                                                                    |
-| Next user decision         | required     | User must choose whether to keep observing or branch into enforcement, cleanup, promotion review, or defer.                                       |
+| Next user decision         | required     | User must choose whether to keep observing, implement PR informational mode, or branch into enforcement, cleanup, promotion review, or defer.     |
 
 ### Remaining Judgment
 
@@ -372,9 +380,9 @@ Decision required
 ```
 
 Reason: non-enforcing manual CI workflow implementation exists, run `28151296796` has been reviewed as Todo Search
-CI-backed Evidence, run `28156403793` has been reviewed as aggregate-enabled CI-backed Evidence, and run `28157938343`
-has been reviewed after the Node 24 action/runtime update. PR triggers, enforcement, broader source authority, and full
-promotion remain unapproved.
+CI-backed Evidence, run `28156403793` has been reviewed as aggregate-enabled CI-backed Evidence, run `28157938343` has
+been reviewed after the Node 24 action/runtime update, and PR informational mode is now designed but not implemented.
+PR triggers, enforcement, broader source authority, and full promotion remain unapproved.
 
 ## Gate Self-Check
 
