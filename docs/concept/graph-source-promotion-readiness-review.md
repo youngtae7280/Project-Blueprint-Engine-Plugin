@@ -74,6 +74,16 @@ Current recommendation after the Graph-first Node/Edge/Tag refresh:
 ready for renewed limited pilot user decision with warnings
 ```
 
+Current decision outcome after the user response:
+
+```text
+Approve limited pilot promotion decision
+```
+
+This outcome is bounded to `examples/adoption/todo-search-slice` and is recorded in
+[limited-pilot-transition-record.md](limited-pilot-transition-record.md). It is not full Graph-source promotion and does
+not change source authority.
+
 Meaning:
 
 - The representative lifecycle slice is demonstrated with retained warnings.
@@ -81,7 +91,7 @@ Meaning:
 - A manual Node/Edge/Tag read-model parity artifact now makes the graph/read-model relationship reviewable for limited
   pilot decision preparation.
 - The View Instance Manifest shows 7 Core View coverage, including Scope / Execution View.
-- Limited pilot approval is still not granted; the user must choose a decision option.
+- Limited pilot option approval is now granted for the bounded Todo Search transition record only.
 - Full promotion still needs explicit user judgment about generated builder/repeatability, public-doc cleanup, and
   full-product/runtime parity.
 - Graph-source promotion must not be approved or declared from this review alone.
@@ -155,12 +165,13 @@ Prepared decision surface:
 
 - [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md)
 
-The package state is now `Ready for user decision after Graph-first baseline refresh`; the promotion state remains
-`Decision required`.
+The package state is now `User approved limited pilot option after Graph-first baseline refresh`. The bounded transition
+record is [limited-pilot-transition-record.md](limited-pilot-transition-record.md). Full promotion and broad source
+authority change remain not approved.
 
-Allowed next user decisions:
+Allowed next actions:
 
-- ask the user to approve, defer, reject, or add prerequisites before a limited pilot promotion decision
+- use the bounded transition record for scoped pilot transition planning
 - ask the user whether generated builder/repeatable graph output is required before full promotion
 - ask the user whether ACEP public-doc cleanup may remain deferred for the promotion decision
 
@@ -199,12 +210,12 @@ Acceptance is user-approved with warnings retained.
 
 ### Remaining Judgment
 
-The user must decide whether to:
+The user approved the bounded limited pilot option. Remaining judgment concerns whether to:
 
-1. approve the limited pilot promotion decision package option,
+1. execute a later scoped pilot transition task and under what review criteria,
 2. require generated graph builder / CLI output before full promotion,
-3. defer or require ACEP task-card public-doc cleanup before any promotion decision, and
-4. require full-product/runtime/UI Evidence before pilot promotion or only before full product parity claims.
+3. defer or require ACEP task-card public-doc cleanup before full promotion, and
+4. require full-product/runtime/UI Evidence before full promotion or only before full product parity claims.
 
 ### Approval Choice Candidates
 
@@ -222,27 +233,27 @@ The user must decide whether to:
 Decision required
 ```
 
-Reason: the Graph-first Node/Edge/Tag baseline refresh is complete for limited pilot review, but the user has not
-approved limited pilot promotion. The review can ask for a user decision; it cannot approve or execute promotion.
+Reason: the Graph-first Node/Edge/Tag baseline refresh is complete and the user approved the bounded limited pilot
+option, but full promotion, broad source authority change, and actual scoped transition execution remain separate.
 
 ## Control Node / Risk Classification
 
-| Candidate Control Node                         | Family                       | Status label                                 | Reason                                                                                                                          | Approval Brief visibility                                               |
-| ---------------------------------------------- | ---------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| Accept bounded fixture Evidence for readiness  | Decision Control Node        | Waiting for human                            | User must decide whether bounded fixture Evidence is enough for limited pilot review or whether full runtime proof is required. | Show in promotion decision review.                                      |
-| Manual read-model parity artifact present      | Evidence Control Node        | Resolved for limited pilot / warning remains | Manual parity output exists; generated builder output remains a later implementation requirement.                               | Show as warning and full-promotion caveat.                              |
-| UI screenshot/manual visual Evidence partial   | Evidence Control Node        | Active warning                               | UI proof remains partial but does not block source-model readiness by itself.                                                   | Show as warning if full product/UI parity is in scope.                  |
-| ACEP public-doc cleanup deferred               | Compatibility Control Node   | Active / Deferred cleanup                    | Real wording mismatch is bounded by compatibility policy but remains a public-doc cleanup caveat.                               | Show in promotion readiness and promotion decision review.              |
-| Demo slice renewed Acceptance closed           | Acceptance Control Node      | Closed with warnings                         | User approved renewed demo-support Acceptance with warnings retained.                                                           | Show as closed demo-slice acceptance, not promotion approval.           |
-| Source authority transition affects tree views | Impact / Change Control Node | Deferred                                     | Any actual source transition would affect tree-native artifacts, projections, compatibility views, and rollback needs.          | Show only if user asks to prepare an actual promotion decision package. |
+| Candidate Control Node                         | Family                       | Status label                                 | Reason                                                                                                                                  | Approval Brief visibility                                               |
+| ---------------------------------------------- | ---------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Accept bounded fixture Evidence for readiness  | Decision Control Node        | Resolved for limited pilot / warning remains | User accepted bounded fixture Evidence for limited pilot decision context; full runtime proof may still be required for full promotion. | Show in transition record and full-promotion review.                    |
+| Manual read-model parity artifact present      | Evidence Control Node        | Resolved for limited pilot / warning remains | Manual parity output exists; generated builder output remains a later implementation requirement.                                       | Show as warning and full-promotion caveat.                              |
+| UI screenshot/manual visual Evidence partial   | Evidence Control Node        | Active warning                               | UI proof remains partial but does not block source-model readiness by itself.                                                           | Show as warning if full product/UI parity is in scope.                  |
+| ACEP public-doc cleanup deferred               | Compatibility Control Node   | Active / Deferred cleanup                    | Real wording mismatch is bounded by compatibility policy but remains a public-doc cleanup caveat.                                       | Show in promotion readiness and promotion decision review.              |
+| Demo slice renewed Acceptance closed           | Acceptance Control Node      | Closed with warnings                         | User approved renewed demo-support Acceptance with warnings retained.                                                                   | Show as closed demo-slice acceptance, not promotion approval.           |
+| Source authority transition affects tree views | Impact / Change Control Node | Deferred                                     | Any actual source transition would affect tree-native artifacts, projections, compatibility views, and rollback needs.                  | Show only if user asks to prepare an actual promotion decision package. |
 
 ## Remaining Blockers / Decisions
 
 ### Limited Pilot Promotion Decision State
 
-- No blocker remains for using the limited pilot decision package as a refreshed user decision surface.
-- Limited pilot promotion approval remains `Decision required`.
-- Approval must still be explicit user approval and must not be inferred from this review.
+- No blocker remains for the bounded limited pilot transition record.
+- Limited pilot option approval is recorded for the Todo Search selected slice only.
+- Full promotion approval and actual scoped transition execution remain separate and must not be inferred from this review.
 
 ### Full Promotion / Repeatability Blocker
 
@@ -250,8 +261,7 @@ approved limited pilot promotion. The review can ask for a user decision; it can
 
 ### Decisions Needed Before Promotion Approval
 
-- Whether to approve the limited pilot promotion decision after refresh, approve only package readiness, defer, reject,
-  or require prerequisites first.
+- When and under what review criteria actual scoped limited pilot transition execution should begin.
 - Whether full promotion requires generated graph/read-model output as a future CLI-backed report or generated artifact.
 - Whether bounded fixture Evidence is enough for the pilot decision surface.
 - Whether ACEP task-card public-doc cleanup must happen before promotion approval or may remain deferred with an

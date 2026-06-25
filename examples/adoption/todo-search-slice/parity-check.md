@@ -45,7 +45,7 @@ builder implementation.
 | Does Scope / Execution View expose Cycle/Node Contract boundaries?                      | yes    | `CYCLE-TODO-SEARCH`, `NEC-WT-SEARCH-001`, required Evidence, and non-scope guard behavior are included.                                                  |
 | Are missing/partial/deferred warnings retained?                                         | yes    | Partial UI Evidence, bounded fixture warning, generated-builder absence, and ACEP cleanup deferral remain visible.                                       |
 | Does the artifact avoid source authority change?                                        | yes    | Metadata states tree-native artifacts remain source and no promotion/generator/schema/runtime is implemented.                                            |
-| Is limited pilot approval now ready to be requested again?                              | yes    | The package can return to user decision surface after refresh, but approval remains `Decision required`.                                                 |
+| Has limited pilot approval been recorded after refresh?                                 | yes    | The user approved the bounded Todo Search limited pilot option; `limited-pilot-transition-record.md` records it without source authority change.         |
 | Is full promotion ready?                                                                | no     | Full promotion still has generated-builder/repeatability, broader parity, and cleanup judgment questions.                                                |
 
 ## Node / Edge / Tag Parity Judgment
@@ -75,11 +75,11 @@ Updated state after this refresh:
 
 ```text
 Graph-first baseline refresh completed for limited pilot review
-Promotion state remains Decision required
+Bounded limited pilot option approved for Todo Search transition record
 No source authority change
 ```
 
-The package may now be presented again as a user decision surface. It is not automatically approved.
+The package led to an explicit user-approved bounded transition record. It is not full Graph-source promotion.
 
 ## Full Promotion / Repeatability Judgment
 
@@ -97,13 +97,13 @@ Remaining limitation:
 
 ## Retained Warnings
 
-| Item                                 | Status            | Treatment                                                               |
-| ------------------------------------ | ----------------- | ----------------------------------------------------------------------- |
-| Full Todo app runtime implementation | partial           | Acceptable warning for limited pilot; full promotion may require more.  |
-| UI screenshot/manual visual evidence | partial           | Acceptable warning unless full UI/product parity is in scope.           |
-| Generated graph builder / CLI output | missing           | Later implementation requirement for repeatability or full promotion.   |
-| ACEP task-card public-doc cleanup    | deferred          | Deferred cleanup; user must accept or require cleanup before promotion. |
-| Limited pilot promotion approval     | decision required | Must remain pending until explicit user approval.                       |
+| Item                                 | Status      | Treatment                                                                  |
+| ------------------------------------ | ----------- | -------------------------------------------------------------------------- |
+| Full Todo app runtime implementation | partial     | Acceptable warning for limited pilot; full promotion may require more.     |
+| UI screenshot/manual visual evidence | partial     | Acceptable warning unless full UI/product parity is in scope.              |
+| Generated graph builder / CLI output | missing     | Later implementation requirement for repeatability or full promotion.      |
+| ACEP task-card public-doc cleanup    | deferred    | Deferred cleanup; user must accept or require cleanup before promotion.    |
+| Limited pilot transition execution   | not started | Approval is recorded, but actual scoped execution remains a separate task. |
 
 ## Non-Promotion Statement
 

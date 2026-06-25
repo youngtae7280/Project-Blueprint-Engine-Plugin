@@ -101,15 +101,18 @@ rollback behavior.
 
 [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md) records the later readiness
 review. It now separates the earlier limited pilot recommendation from the refreshed Graph-first Node/Edge/Tag parity
-status. The current state is `ready for renewed limited pilot user decision with warnings`, while promotion remains
-`Decision required`. It does not promote Maintainability Graph or change current runtime authority.
+status. The user approved the bounded limited pilot option for the Todo Search selected slice, while full promotion and
+broad source authority change remain not approved. It does not promote Maintainability Graph or change current runtime
+authority.
 
 Manual Node/Edge/Tag read-model parity artifacts now exist under `examples/adoption/todo-search-slice/`, so the
 readiness recommendation can return to a limited pilot user decision surface. Generated builder or CLI-backed output
 remains a later full-promotion/repeatability question rather than current runtime authority.
 
-[limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md) is now the refreshed user
-judgment surface for the limited pilot decision. No runtime authority changes.
+[limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md) is the refreshed user
+judgment surface for the limited pilot decision, and
+[limited-pilot-transition-record.md](limited-pilot-transition-record.md) records the bounded user-approved option. No
+runtime authority changes.
 
 [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) and
 [retrofit-graph-bootstrap.md](retrofit-graph-bootstrap.md) refine the target Graph-first architecture. They do not
@@ -144,7 +147,7 @@ PBE is a requirements-based execution control layer for AI-assisted development.
 - Whether Maintainability Graph later gains generated/read-model artifact support.
 - Whether View Tree Pack remains a conceptual projection or becomes a concrete artifact pack.
 - Which older public docs still need terminology cleanup after this concept baseline is reviewed.
-- Which limited pilot promotion decision option the user will choose.
+- When and under what review criteria actual scoped limited pilot transition execution should begin.
 - Whether the user will accept ACEP task-card public-doc cleanup as deferred cleanup, or require cleanup before
   promotion approval.
 - Whether full Graph-source promotion requires an actual generated graph builder or CLI-backed read-model output.

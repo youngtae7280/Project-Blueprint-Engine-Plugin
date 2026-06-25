@@ -40,8 +40,10 @@ These artifacts now support renewed limited pilot user decision preparation with
 taxonomy, but they are not generated builder implementation and do not promote source authority.
 
 The user judgment surface for that decision is recorded in
-[limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md). It is not promotion
-execution and keeps the promotion state `Decision required`.
+[limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md). The user approved the
+bounded limited pilot option for the Todo Search selected slice, and
+[limited-pilot-transition-record.md](limited-pilot-transition-record.md) records that decision. This is not full
+promotion execution or broad source authority change.
 
 This document is not:
 
@@ -476,7 +478,7 @@ the user. A supplemental compatibility mismatch slice covers the real mismatch p
 slice. The later readiness review treated the manual read-model parity artifact as sufficient for limited pilot decision
 preparation in the earlier review cycle, while generated builder output remains a full-promotion/repeatability question.
 After the Graph-first Node/Edge/Tag refresh, the parity artifact can support a renewed limited pilot user decision while
-promotion approval remains separate.
+full promotion approval remains separate. The user has approved the bounded limited pilot option only.
 
 ### Source Transition Path
 
@@ -533,7 +535,7 @@ Those remain later concept or implementation questions.
 - Should the future demo result be a generated artifact or a manual Evidence pack?
 - How should future demo Evidence connect to CI or validators?
 - Does promotion review need a specialized Approval Brief template?
-- Which limited pilot promotion decision option will the user choose?
+- When and under what review criteria should actual scoped limited pilot transition execution begin?
 - Will the user accept ACEP task-card public-doc cleanup as deferred cleanup, or require cleanup before promotion
   approval?
 - Does full Graph-source promotion require an actual generated graph builder or CLI-backed read-model output?

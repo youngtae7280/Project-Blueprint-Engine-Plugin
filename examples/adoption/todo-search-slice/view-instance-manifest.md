@@ -48,8 +48,8 @@ id. Its `viewScopedTags` map uses node ids as keys and allowed role tags as valu
 ### Intent View
 
 The Intent View includes `TASK-TODO-SEARCH-PILOT`, `PT-SEARCH-001`, `AC-SEARCH-*`, `PP-001`, `AT-ROOT`,
-`DEC-LIMITED-PILOT-PENDING`, and the limited pilot decision package. It shows product meaning and remaining user
-judgment without approving promotion.
+`DEC-LIMITED-PILOT-PENDING`, the limited pilot decision package, and the limited pilot transition record. It shows
+product meaning and the bounded user-approved pilot option without approving full promotion.
 
 ### Behavior View
 
@@ -81,7 +81,7 @@ The Verification View shows Checks as `check` nodes, Evidence as `evidence` node
 ### Evidence / Acceptance View
 
 The Evidence / Acceptance View shows present/fresh runtime Evidence, renewed user Acceptance with retained warnings, and
-the pending limited pilot promotion decision. It does not close promotion approval.
+the bounded limited pilot decision approval record. It does not close full promotion approval.
 
 ## Non-Promotion Statement
 

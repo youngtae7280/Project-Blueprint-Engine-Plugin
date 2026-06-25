@@ -76,6 +76,8 @@ Graph-source promotion requires a separate phase and explicit user approval afte
 10. Graph-first Node/Edge/Tag and retrofit bootstrap policies are reflected in the intended pilot or promotion scope.
 11. A user-facing decision package is prepared for the intended limited pilot or promotion scope, and the user makes an
     explicit approval decision.
+12. Any approved limited pilot decision is recorded in a bounded transition record before later scoped execution is
+    considered.
 
 ## Phase 1 Repository Files
 
@@ -152,20 +154,27 @@ separation, and 7 Core View coverage. The current recommendation is `ready for r
 warnings`; promotion state remains `Decision required`. The review does not approve Graph-source promotion or change
 source authority.
 
-The following decision package is now prepared for user judgment:
+The following decision package records the user-facing judgment surface:
 
 - [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md)
 
-The package is refreshed for the Node/Edge/Tag baseline and can be used again as a user decision surface. Its package
-state is `Ready for user decision after Graph-first baseline refresh`, while the promotion state remains
-`Decision required`. It does not approve limited pilot promotion, full Graph-source promotion, source authority change,
-public doc cleanup, generated builder implementation, or tree-native artifact retirement.
+The package was refreshed for the Node/Edge/Tag baseline and the user selected `Approve limited pilot promotion
+decision` for the bounded Todo Search scope. The approval does not approve full Graph-source promotion, broad source
+authority change, public doc cleanup, generated builder implementation, or tree-native artifact retirement.
+
+The following bounded transition record is now recorded:
+
+- [limited-pilot-transition-record.md](limited-pilot-transition-record.md)
+
+The record limits the approval to `examples/adoption/todo-search-slice`, keeps
+`examples/adoption/compatibility-mismatch-slice` as supplemental Evidence only, carries retained warnings, and preserves
+tree-native selected-slice artifacts as current operational source.
 
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.
-Further generated read-model builder support, actual pilot transition records, rollback mechanics, compatibility
-artifact generation, type models, CLI command design, validators, migration scripts, and Graph-source promotion are
+Further generated read-model builder support, actual scoped transition execution, rollback mechanics, compatibility
+artifact generation, type models, CLI command design, validators, migration scripts, and full Graph-source promotion are
 next-phase candidates only.
 
 If a later outline-only concept file is added, use the outline gate criteria below until it is promoted.

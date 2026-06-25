@@ -224,12 +224,15 @@ but they do not clean up public docs or change source authority.
 
 [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md) records the readiness review.
 It records the earlier reviewable-with-warnings limited pilot recommendation and the later Graph-first Node/Edge/Tag
-refresh of the Todo Search read-model parity artifact. The limited pilot package can now return to user decision review
-with retained warnings, while promotion state remains `Decision required`. Source authority remains unchanged.
+refresh of the Todo Search read-model parity artifact. The user later approved the bounded limited pilot decision option
+for the Todo Search selected slice, while full promotion and broad source authority change remain unapproved. Source
+authority remains unchanged.
 
 [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md) records the user judgment
-surface for that limited pilot decision. The package is refreshed for the Node/Edge/Tag baseline and does not execute
-source transition, promote Maintainability Graph, or change source authority.
+surface for that limited pilot decision. The package is refreshed for the Node/Edge/Tag baseline, and the user approved
+the bounded `Approve limited pilot promotion decision` option for the Todo Search selected slice. The resulting record is
+[limited-pilot-transition-record.md](limited-pilot-transition-record.md). These records do not execute source
+transition, promote Maintainability Graph, or change source authority.
 
 [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) defines the target Graph-first responsibility split:
 Nodes are durable targets, Edges are durable semantic relationships, and Tags are temporary view-scoped roles.
@@ -311,7 +314,7 @@ Those remain later concept or implementation questions.
 
 - How formal should projection/parity expectations be before promotion review?
 - Does promotion review need a specialized Approval Brief template?
-- Which limited pilot promotion decision option will the user choose?
+- When and under what review criteria should actual scoped limited pilot transition execution begin?
 - Will the user accept ACEP task-card public-doc cleanup as deferred cleanup, or require cleanup before promotion
   approval?
 - Does full Graph-source promotion require an actual generated graph builder or CLI-backed read-model output?

@@ -33,7 +33,8 @@
     "examples/adoption/todo-search-slice/evidence-exceptions.md",
     "examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md",
     "docs/concept/graph-node-edge-tag-policy.md",
-    "docs/concept/view-tree-pack.md"
+    "docs/concept/view-tree-pack.md",
+    "docs/concept/limited-pilot-transition-record.md"
   ],
   "taxonomy": {
     "nodeKindsUsed": [
@@ -697,19 +698,20 @@
     {
       "id": "DEC-LIMITED-PILOT-PENDING",
       "nodeKind": "decision",
-      "legacyGraphType": "pending_user_decision",
-      "sourceArtifact": "limited-pilot-promotion-decision-package.md",
-      "title": "Limited pilot promotion decision remains pending",
-      "status": "waiting_for_user",
-      "confidence": "inferred",
+      "legacyGraphType": "approved_user_decision",
+      "sourceArtifact": "docs/concept/limited-pilot-transition-record.md",
+      "title": "Limited pilot promotion decision approved for bounded Todo Search record",
+      "status": "approved_for_bounded_transition_record",
+      "confidence": "user-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "viewScopedTags": ["required", "blocked"],
+      "viewScopedTags": ["output"],
       "includedInViewIds": ["intent-view", "evidence-acceptance-view"],
       "viewRoles": {
-        "intent-view": ["required"],
-        "evidence-acceptance-view": ["blocked"]
-      }
+        "intent-view": ["output"],
+        "evidence-acceptance-view": ["output"]
+      },
+      "notes": "Legacy id retained for trace stability; the decision is now resolved by parent orchestration approval on 2026-06-25."
     },
     {
       "id": "VIEW-TODO-SEARCH-CORE-VIEWS",
@@ -727,6 +729,24 @@
       "viewRoles": {
         "scope-execution-view": ["output"]
       }
+    },
+    {
+      "id": "DOC-LIMITED-PILOT-TRANSITION-RECORD",
+      "nodeKind": "document",
+      "legacyGraphType": "transition_record",
+      "sourceArtifact": "docs/concept/limited-pilot-transition-record.md",
+      "title": "Bounded limited pilot transition record",
+      "status": "recorded",
+      "confidence": "tool-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["output"],
+      "includedInViewIds": ["intent-view", "evidence-acceptance-view"],
+      "viewRoles": {
+        "intent-view": ["output"],
+        "evidence-acceptance-view": ["output"]
+      },
+      "notes": "Records user approval of the bounded Todo Search limited pilot option without promoting source authority."
     }
   ],
   "edges": [
@@ -1369,15 +1389,16 @@
       "source": "view-instance-manifest.json"
     },
     {
-      "id": "E-DEC-PENDING-REQUIRES-USER",
+      "id": "E-DEC-APPROVES-TRANSITION-RECORD",
       "from": "DEC-LIMITED-PILOT-PENDING",
-      "to": "DOC-LIMITED-PILOT-PACKAGE",
-      "edgeType": "requires",
-      "legacyRelationship": "pendingDecisionRequiresPackageReview",
-      "confidence": "inferred",
+      "to": "DOC-LIMITED-PILOT-TRANSITION-RECORD",
+      "edgeType": "approves",
+      "legacyRelationship": "approvedLimitedPilotDecisionRecordedByTransitionRecord",
+      "confidence": "user-confirmed",
       "freshnessStatus": "fresh",
       "parityStatus": "present",
-      "source": "limited-pilot-promotion-decision-package.md"
+      "source": "docs/concept/limited-pilot-transition-record.md",
+      "notes": "Approval is bounded to the Todo Search selected slice and does not approve full Graph-source promotion."
     }
   ],
   "coreViewCoverage": [
@@ -1394,7 +1415,8 @@
         "PP-001",
         "AT-ROOT",
         "DEC-LIMITED-PILOT-PENDING",
-        "DOC-LIMITED-PILOT-PACKAGE"
+        "DOC-LIMITED-PILOT-PACKAGE",
+        "DOC-LIMITED-PILOT-TRANSITION-RECORD"
       ],
       "includedEdgeIds": [
         "E-TASK-TARGETS-REQ",
@@ -1403,7 +1425,7 @@
         "E-PT-REQUIRES-AC3",
         "E-PP-APPROVES-CH",
         "E-AT-APPROVES-PT",
-        "E-DEC-PENDING-REQUIRES-USER"
+        "E-DEC-APPROVES-TRANSITION-RECORD"
       ],
       "viewScopedTags": ["target", "required", "output"],
       "boundaryNotes": "Shows the approved product meaning and remaining limited pilot decision without changing source authority."
@@ -1561,7 +1583,8 @@
         "FIND-PARTIAL-UI",
         "FIND-GENERATED-BUILDER-MISSING",
         "FIND-ACEP-CLEANUP-DEFERRED",
-        "DEC-LIMITED-PILOT-PENDING"
+        "DEC-LIMITED-PILOT-PENDING",
+        "DOC-LIMITED-PILOT-TRANSITION-RECORD"
       ],
       "includedEdgeIds": [
         "E-EV-NOTE-EVIDENCES-TT001",
@@ -1574,7 +1597,7 @@
         "E-FIND-BOUNDED-REPORTS-ON-EV",
         "E-FIND-UI-REPORTS-ON-EV",
         "E-FIND-BUILDER-REPORTS-ON-DOC",
-        "E-DEC-PENDING-REQUIRES-USER"
+        "E-DEC-APPROVES-TRANSITION-RECORD"
       ],
       "viewScopedTags": ["target", "output", "stale", "blocked"],
       "boundaryNotes": "Shows evidence/acceptance state and retained warnings; promotion approval remains missing by design."
@@ -1638,9 +1661,9 @@
       ]
     },
     {
-      "requirement": "Limited pilot can return to user decision surface after refresh",
+      "requirement": "Limited pilot approval is recorded as a bounded transition record after refresh",
       "status": "present",
-      "evidence": ["DOC-LIMITED-PILOT-PACKAGE", "DEC-LIMITED-PILOT-PENDING"]
+      "evidence": ["DOC-LIMITED-PILOT-PACKAGE", "DEC-LIMITED-PILOT-PENDING", "DOC-LIMITED-PILOT-TRANSITION-RECORD"]
     },
     {
       "requirement": "Full promotion repeatability / generated builder is demonstrated",
@@ -1695,10 +1718,11 @@
       "treatment": "Carry as deferred cleanup and compatibility warning."
     },
     {
-      "id": "GAP-PROMOTION-APPROVAL",
-      "summary": "Limited pilot promotion approval remains a user decision.",
-      "treatment": "Decision required; this artifact does not approve or execute promotion."
-    }
+      "id": "GAP-SCOPED-TRANSITION-EXECUTION",
+      "summary": "Actual scoped limited pilot transition execution remains a separate task.",
+      "treatment": "Not started; this artifact records approval and does not execute transition or full promotion."
+    },
+    "Actual scoped limited pilot transition execution remains a separate task."
   ],
   "sourceAuthorityBoundary": {
     "currentOperationalSource": "tree-native selected-slice artifacts",
@@ -1710,7 +1734,7 @@
   },
   "readinessConclusion": {
     "nodeEdgeTagParity": "demonstrated_for_limited_pilot_review_with_retained_warnings",
-    "limitedPilotPackage": "ready_for_renewed_user_decision_after_graph_first_refresh",
+    "limitedPilotPackage": "user approved bounded limited pilot option; transition record prepared",
     "limitedPilotApprovalStatus": "decision_required",
     "fullPromotionReadiness": "not_ready_without_generated_builder_or_broader_parity_decision",
     "blockerResolution": "The previous Graph-first baseline refresh blocker is resolved for limited pilot review by this manual Node/Edge/Tag parity artifact and view-instance manifest.",
@@ -1719,6 +1743,7 @@
       "Whether full promotion requires an actual generated graph builder or CLI-backed read-model output.",
       "Whether ACEP task-card public-doc cleanup must happen before any source transition.",
       "Whether bounded fixture Evidence is enough for the limited pilot scope."
-    ]
+    ],
+    "nonPromotionStatement": "Approval is bounded to the Todo Search selected-slice transition record and does not promote Maintainability Graph or change source authority."
   }
 }

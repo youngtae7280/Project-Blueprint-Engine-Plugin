@@ -1,11 +1,12 @@
 # Limited Pilot Promotion Decision Package
 
-Status: decision package / ready for user decision after Graph-first baseline refresh
+Status: decision package / user-approved limited pilot option / transition record prepared
 
 ## Document Purpose
 
-This document packages the evidence, warnings, boundaries, and choices needed for a user to decide whether to approve a
-limited pilot promotion decision.
+This document packages the evidence, warnings, boundaries, and choices used for the user's limited pilot promotion
+decision. The user has now approved the `Approve limited pilot promotion decision` option for the bounded Todo Search
+scope.
 
 This document is not:
 
@@ -16,8 +17,9 @@ This document is not:
 - public-doc cleanup
 - Acceptance closure by Codex/PBE
 
-Codex/PBE is not the approver. A limited pilot promotion decision requires explicit user approval after the user reviews
-the scope, Evidence, retained warnings, rollback/compatibility boundaries, and available choices in this package.
+Codex/PBE is not the approver. The approved option came from the parent orchestration chat on 2026-06-25 after the user
+reviewed the scope, Evidence, retained warnings, rollback/compatibility boundaries, and available choices in this
+package.
 
 Current operational source remains tree-native artifacts until a later explicit user promotion decision changes that
 authority.
@@ -37,9 +39,9 @@ The relevant Todo Search read-model parity artifact has now been refreshed under
 Current state:
 
 ```text
-Package state: Ready for user decision after Graph-first baseline refresh
-Current action: Ask user for limited pilot decision or prerequisite choice
-Promotion state: Decision required
+Package state: User approved limited pilot option after Graph-first baseline refresh
+Current action: Scoped pilot transition record prepared/recorded
+Promotion state: Limited pilot decision approved for bounded Todo Search record only; full promotion remains not approved
 ```
 
 ## Decision Package Definition
@@ -49,9 +51,11 @@ may proceed to the next source-transition decision step.
 
 It exists after the earlier readiness review found that the limited pilot decision surface was reviewable with warnings.
 
-It does not perform the pilot. The package has now been rechecked against
-[graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) through the refreshed Node/Edge/Tag parity artifact.
-Approval still requires an explicit user choice.
+It does not perform full promotion. The package has now been rechecked against
+[graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) through the refreshed Node/Edge/Tag parity artifact, and
+the user selected the bounded limited pilot option.
+
+The resulting bounded transition record is [limited-pilot-transition-record.md](limited-pilot-transition-record.md).
 
 ## Pilot Scope
 
@@ -101,21 +105,21 @@ The pilot scope does not include:
 
 ## What Approval Means
 
-If the user later approves the limited pilot promotion decision, the approval means:
+The user-approved limited pilot promotion decision means:
 
 1. The user accepts this decision package as the judgment surface for the scoped pilot decision.
 2. The user accepts that the primary pilot scope is limited to `examples/adoption/todo-search-slice`.
 3. The user accepts that the compatibility mismatch supplemental slice is supporting Evidence only.
 4. The user accepts that the Maintainability Graph manual read-model parity artifact is sufficient for the limited pilot
    decision target, with retained warnings.
-5. A later bounded pilot transition record may be prepared for the selected pilot scope.
+5. A bounded pilot transition record may be prepared and recorded for the selected pilot scope.
 6. Retained warnings are acknowledged and carried into the pilot transition decision.
 7. Tree-native artifacts remain current operational source until any later approved transition record explicitly changes
    authority within its scope.
 
 ## What Approval Does Not Mean
 
-Approval of this package or the limited pilot decision does not mean:
+Approval of this package option or the limited pilot decision does not mean:
 
 - full Graph-source promotion
 - whole-PBE source authority change
@@ -160,42 +164,42 @@ Warnings remain visible. They are not removed by this decision package.
 
 ## Decision Options
 
-The Graph-first baseline refresh is now reviewable. The user may choose one of these action labels.
+The Graph-first baseline refresh became reviewable and the user selected option 1 on 2026-06-25.
 
-| Option                                                         | Meaning                                                                                                        | Next effect                                                                                                |
-| -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `Approve limited pilot promotion decision`                     | Approve proceeding from this package into a scoped limited pilot promotion decision for the Todo Search slice. | Prepare the scoped pilot transition record; still do not perform full promotion or broad source change.    |
-| `Approve only decision-package readiness, not pilot promotion` | Confirm the package is ready and accurate, but do not approve the pilot promotion decision yet.                | Keep package accepted as review surface; leave promotion state `Decision required`.                        |
-| `Require generated builder / CLI-backed read-model first`      | Require repeatable generated graph/read-model output before any pilot promotion decision.                      | Block pilot decision until generated output or equivalent implementation Evidence exists.                  |
-| `Require public-doc cleanup first`                             | Require ACEP task-card public-doc cleanup before any pilot promotion decision.                                 | Block pilot decision until cleanup Evidence and compatibility status are updated.                          |
-| `Defer limited pilot decision`                                 | Postpone the pilot decision while keeping the package and warnings visible.                                    | Keep source authority unchanged; record deferral as remaining judgment.                                    |
-| `Reject limited pilot promotion`                               | Reject the scoped pilot promotion direction.                                                                   | Do not prepare pilot transition record; maintain tree-native operational source and revisit strategy only. |
+| Option                                                         | Meaning                                                                                                 | Next effect                                                                                                |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `Approve limited pilot promotion decision`                     | Approved by the user for the Todo Search selected slice only.                                           | Scoped pilot transition record is prepared/recorded; still no full promotion or broad source change.       |
+| `Approve only decision-package readiness, not pilot promotion` | Confirm the package is ready and accurate, but do not approve the pilot promotion decision yet.         | Keep package accepted as review surface; leave promotion state `Decision required`.                        |
+| `Require generated builder / CLI-backed read-model first`      | Historical alternative: require repeatable generated graph/read-model output before any pilot decision. | Not selected for the bounded pilot; remains possible prerequisite for full promotion or CI repeatability.  |
+| `Require public-doc cleanup first`                             | Historical alternative: require ACEP task-card public-doc cleanup before any pilot decision.            | Not selected for the bounded pilot; cleanup remains deferred and visible.                                  |
+| `Defer limited pilot decision`                                 | Postpone the pilot decision while keeping the package and warnings visible.                             | Keep source authority unchanged; record deferral as remaining judgment.                                    |
+| `Reject limited pilot promotion`                               | Reject the scoped pilot promotion direction.                                                            | Do not prepare pilot transition record; maintain tree-native operational source and revisit strategy only. |
 
 ## Approval Brief State
 
 Package state:
 
 ```text
-Ready for user decision after Graph-first baseline refresh
+User approved limited pilot option after Graph-first baseline refresh
 ```
 
 Current action:
 
 ```text
-Ask user for limited pilot decision or prerequisite choice
+Scoped pilot transition record prepared/recorded
 ```
 
 Promotion state:
 
 ```text
-Decision required
+Bounded limited pilot decision approved for Todo Search record only; full promotion remains not approved
 ```
 
 Reason:
 
 - This package preserves useful evidence and options from the earlier review cycle.
 - The Graph-first Node/Edge/Tag parity artifact and View Instance Manifest are now refreshed for limited pilot review.
-- The limited pilot promotion decision itself has not been approved.
+- The limited pilot promotion decision option has been approved for the bounded Todo Search scope.
 - Graph-source promotion has not been declared or executed.
 
 ## Rollback / Compatibility Boundary
@@ -237,7 +241,7 @@ This package does not decide:
 
 | Candidate                                     | Family                       | Status for package           | Reason                                                                                                    |
 | --------------------------------------------- | ---------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Limited pilot approval choice                 | Decision Control Node        | Waiting for human            | User must choose whether to approve, defer, reject, or require prerequisites first.                       |
+| Limited pilot approval choice                 | Decision Control Node        | Resolved by user approval    | User approved option 1 on 2026-06-25 for the bounded Todo Search scope.                                   |
 | Manual parity artifact accepted for pilot     | Evidence Control Node        | Ready with warning           | Manual read-model parity is present; generated builder remains a later requirement.                       |
 | Generated builder / CLI-backed output missing | Evidence Control Node        | Deferred / later requirement | Full promotion or CI repeatability may require generated output.                                          |
 | ACEP task-card public-doc cleanup deferred    | Compatibility Control Node   | Deferred cleanup             | Public wording mismatch remains bounded but not cleaned up.                                               |
@@ -246,12 +250,11 @@ This package does not decide:
 
 ## Remaining Open Questions
 
-- Will the user approve the limited pilot promotion decision?
-- Will the user approve only this decision-package readiness without pilot promotion?
-- Will the user require generated builder / CLI-backed read-model output before any pilot decision?
-- Will the user require ACEP task-card public-doc cleanup before any pilot decision?
+- Will the user require generated builder / CLI-backed read-model output before full promotion or CI repeatability?
+- Will the user require ACEP task-card public-doc cleanup before full promotion?
 - Will the user treat bounded fixture Evidence as enough for the limited pilot, while reserving full-product runtime
   proof for a later full promotion review?
+- When and under what review criteria should actual scoped limited pilot transition execution begin?
 
 ## Gate Self-Check
 
@@ -269,9 +272,9 @@ This package does not decide:
 
 ## Final Non-Promotion Statement
 
-This package remains reviewable as a decision package refreshed under the Graph-first Node/Edge/Tag baseline.
+This package remains the reviewed decision package refreshed under the Graph-first Node/Edge/Tag baseline.
 
-It does not approve limited pilot promotion.
+It records user approval of the bounded limited pilot decision option.
 
 It does not approve full Graph-source promotion.
 

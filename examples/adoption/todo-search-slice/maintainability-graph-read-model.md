@@ -170,18 +170,19 @@ Examples:
 - No generated graph builder or CLI-backed read-model output exists.
 - UI screenshot/manual visual evidence remains partial.
 - ACEP task-card public-doc cleanup remains deferred.
-- Limited pilot promotion approval remains a user decision.
+- Actual scoped limited pilot transition execution remains a separate task.
 
 ## Limited Pilot Readiness Judgment
 
 ```text
 Node/Edge/Tag parity: demonstrated for limited pilot review with retained warnings
-Limited pilot package: ready for renewed user decision after refresh
+Limited pilot package: user approved bounded limited pilot option; transition record prepared
 Full promotion: not ready without generated builder / broader parity decision
 ```
 
-This means the previous Graph-first baseline refresh blocker is resolved for limited pilot review. It does not approve
-the limited pilot and does not make full promotion ready.
+This means the previous Graph-first baseline refresh blocker is resolved for limited pilot review, and the bounded Todo
+Search limited pilot option has been approved into `docs/concept/limited-pilot-transition-record.md`. It does not make
+full promotion ready.
 
 ## Why This Is Not Graph-Source Promotion
 

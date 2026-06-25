@@ -212,7 +212,8 @@ or source promotion by itself.
 review. It classifies retained warnings and prerequisites while keeping promotion separate. After manual equivalent
 parity artifacts were added, that review previously recommended `ready for limited pilot promotion decision with
 warnings`. After the Graph-first Node/Edge/Tag refinement, the Todo Search read-model parity artifact and View Instance
-Manifest were refreshed for limited pilot review. Promotion state remains `Decision required`.
+Manifest were refreshed for limited pilot review. The user later approved the bounded limited pilot option for the Todo
+Search selected slice; full promotion and broad source authority change remain separate.
 
 The representative slice now includes manual equivalent read-model parity artifacts in
 `examples/adoption/todo-search-slice/`. Those artifacts resolve the read-model output blocker for limited pilot promotion
@@ -220,9 +221,10 @@ decision preparation, while generated builder / CLI-backed output remains a late
 repeatability.
 
 The limited pilot decision package is recorded in
-[limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md). It prepares the user
-decision surface only and does not execute promotion. After the Graph-first Node/Edge/Tag baseline refresh, that package
-can return to user decision review with retained warnings.
+[limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md). It records the user decision
+surface only and does not execute promotion. After the Graph-first Node/Edge/Tag baseline refresh, the user selected the
+bounded limited pilot option, and [limited-pilot-transition-record.md](limited-pilot-transition-record.md) records the
+bounded non-promotion transition record.
 
 [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) defines the Node/Edge/Tag taxonomy that future
 feasibility and read-model parity outputs should use. [retrofit-graph-bootstrap.md](retrofit-graph-bootstrap.md) defines
@@ -347,7 +349,7 @@ Those remain later concept or implementation questions.
 
 - Should future demo results become a generated artifact?
 - How should future demo results connect to CI or validators?
-- Which limited pilot promotion decision option will the user choose?
+- When and under what review criteria should actual scoped limited pilot transition execution begin?
 - Will the user accept ACEP task-card public-doc cleanup as deferred cleanup, or require cleanup before promotion
   approval?
 - Does full Graph-source promotion require an actual generated graph builder or CLI-backed read-model output?

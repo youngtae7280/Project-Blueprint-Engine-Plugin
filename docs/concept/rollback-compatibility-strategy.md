@@ -269,8 +269,10 @@ are now refreshed under the Node/Edge/Tag taxonomy and include a View Instance M
 not perform rollback, fallback, compatibility retirement, migration, or source promotion.
 
 [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md) packages the limited pilot
-decision options, retained warnings, and rollback/compatibility boundaries for user judgment. It does not perform
-rollback, fallback, compatibility retirement, migration, source transition, or promotion.
+decision options, retained warnings, and rollback/compatibility boundaries for user judgment. The user approved the
+bounded Todo Search limited pilot option, and [limited-pilot-transition-record.md](limited-pilot-transition-record.md)
+records that approval. These records do not perform rollback, fallback, compatibility retirement, migration, source
+transition execution, or full promotion.
 
 [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) adds a source-transition safety constraint: durable
 semantic relationships must remain Edges, while Tags are view-scoped roles only. A future transition or parity artifact
@@ -348,7 +350,7 @@ Those remain later concept or implementation questions.
 - How should a future validator or CI check rollback readiness without over-automating source authority decisions?
 - Does rollback review need a specialized Approval Brief template?
 - Who approves compatibility retirement, and at what review point?
-- Which limited pilot promotion decision option will the user choose?
+- When and under what review criteria should actual scoped limited pilot transition execution begin?
 - Will the user accept ACEP task-card public-doc cleanup as deferred cleanup, or require cleanup before promotion
   approval?
 - Does full Graph-source promotion require an actual generated graph builder or CLI-backed read-model output?

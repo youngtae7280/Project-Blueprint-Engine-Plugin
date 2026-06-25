@@ -126,8 +126,10 @@ not promote Maintainability Graph or change source authority.
 
 The limited pilot user judgment surface is recorded in
 [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md). It is now refreshed for the
-Node/Edge/Tag baseline and can be used again as a user decision surface. The promotion state remains
-`Decision required`; it does not make Maintainability Graph the current source model.
+Node/Edge/Tag baseline, and the user approved the bounded `Approve limited pilot promotion decision` option for the Todo
+Search selected slice. The resulting bounded record is
+[limited-pilot-transition-record.md](limited-pilot-transition-record.md). These records do not make Maintainability
+Graph the current source model.
 
 The representative slice now includes manual equivalent read-model parity artifacts:
 
@@ -178,7 +180,7 @@ traceability view.
 - OQ-026: Which existing tree-native artifacts are sufficient inputs for future generated/read-model support?
 - OQ-027: Should graph checks become validators, evidence reports, documentation-only review aids, or a combination?
 - OQ-052: Does full Graph-source promotion require an actual generated graph builder or CLI-backed read-model output?
-- OQ-053: Which limited pilot promotion decision option will the user choose?
+- OQ-059: When and under what review criteria should actual scoped limited pilot transition execution begin?
 - OQ-054: Should `task` and `view-instance` be first-class node kinds or durable records outside node kind?
 
 ## Related Gate

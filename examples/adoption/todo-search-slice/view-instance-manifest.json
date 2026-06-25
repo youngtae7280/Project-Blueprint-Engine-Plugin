@@ -27,7 +27,8 @@
         "PP-001",
         "AT-ROOT",
         "DEC-LIMITED-PILOT-PENDING",
-        "DOC-LIMITED-PILOT-PACKAGE"
+        "DOC-LIMITED-PILOT-PACKAGE",
+        "DOC-LIMITED-PILOT-TRANSITION-RECORD"
       ],
       "includedEdgeIds": [
         "E-TASK-TARGETS-REQ",
@@ -36,7 +37,7 @@
         "E-PT-REQUIRES-AC3",
         "E-PP-APPROVES-CH",
         "E-AT-APPROVES-PT",
-        "E-DEC-PENDING-REQUIRES-USER"
+        "E-DEC-APPROVES-TRANSITION-RECORD"
       ],
       "viewScopedTags": {
         "TASK-TODO-SEARCH-PILOT": ["target"],
@@ -44,10 +45,11 @@
         "AC-SEARCH-002": ["required"],
         "AC-SEARCH-003": ["required"],
         "DOC-LIMITED-PILOT-PACKAGE": ["output"],
-        "DEC-LIMITED-PILOT-PENDING": ["required"]
+        "DEC-LIMITED-PILOT-PENDING": ["output"],
+        "DOC-LIMITED-PILOT-TRANSITION-RECORD": ["output"]
       },
       "coverageStatus": "present",
-      "boundaryNotes": "The view is a user judgment projection only; it does not approve limited pilot promotion."
+      "boundaryNotes": "The view is a user judgment projection only; it records bounded limited pilot approval without approving full Graph-source promotion."
     },
     {
       "id": "behavior-view",
@@ -239,7 +241,8 @@
         "FIND-PARTIAL-UI",
         "FIND-GENERATED-BUILDER-MISSING",
         "FIND-ACEP-CLEANUP-DEFERRED",
-        "DEC-LIMITED-PILOT-PENDING"
+        "DEC-LIMITED-PILOT-PENDING",
+        "DOC-LIMITED-PILOT-TRANSITION-RECORD"
       ],
       "includedEdgeIds": [
         "E-EV-NOTE-EVIDENCES-TT001",
@@ -252,7 +255,7 @@
         "E-FIND-BOUNDED-REPORTS-ON-EV",
         "E-FIND-UI-REPORTS-ON-EV",
         "E-FIND-BUILDER-REPORTS-ON-DOC",
-        "E-DEC-PENDING-REQUIRES-USER"
+        "E-DEC-APPROVES-TRANSITION-RECORD"
       ],
       "viewScopedTags": {
         "EV-SEARCH-NOTE-TEST": ["output"],
@@ -260,10 +263,11 @@
         "AB-TODO-SEARCH": ["output"],
         "FIND-PARTIAL-UI": ["stale"],
         "FIND-GENERATED-BUILDER-MISSING": ["stale"],
-        "DEC-LIMITED-PILOT-PENDING": ["blocked"]
+        "DEC-LIMITED-PILOT-PENDING": ["output"],
+        "DOC-LIMITED-PILOT-TRANSITION-RECORD": ["output"]
       },
       "coverageStatus": "present",
-      "boundaryNotes": "Renewed acceptance is recorded with warnings; limited pilot promotion approval remains a separate user decision."
+      "boundaryNotes": "Renewed acceptance is recorded with warnings; bounded limited pilot decision approval is recorded separately and full promotion remains unapproved."
     }
   ]
 }
