@@ -170,6 +170,13 @@ The record limits the approval to `examples/adoption/todo-search-slice`, keeps
 `examples/adoption/compatibility-mismatch-slice` as supplemental Evidence only, carries retained warnings, and preserves
 tree-native selected-slice artifacts as current operational source.
 
+The following execution plan is prepared for the next user mode decision:
+
+- [scoped-limited-pilot-transition-execution-plan.md](scoped-limited-pilot-transition-execution-plan.md)
+
+The plan recommends a dry-run / review-only scoped pilot first. It separates dry-run review from any scoped
+source-authority pilot and from full Graph-source promotion. Its status is `decision-required / not-executed`.
+
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.

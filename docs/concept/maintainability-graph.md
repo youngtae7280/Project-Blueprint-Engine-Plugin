@@ -131,6 +131,10 @@ Search selected slice. The resulting bounded record is
 [limited-pilot-transition-record.md](limited-pilot-transition-record.md). These records do not make Maintainability
 Graph the current source model.
 
+[scoped-limited-pilot-transition-execution-plan.md](scoped-limited-pilot-transition-execution-plan.md) now defines the
+next execution-mode decision. Its recommended dry-run / review-only path exercises Maintainability Graph as a
+read/alignment model without source authority change.
+
 The representative slice now includes manual equivalent read-model parity artifacts:
 
 - `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
@@ -180,7 +184,10 @@ traceability view.
 - OQ-026: Which existing tree-native artifacts are sufficient inputs for future generated/read-model support?
 - OQ-027: Should graph checks become validators, evidence reports, documentation-only review aids, or a combination?
 - OQ-052: Does full Graph-source promotion require an actual generated graph builder or CLI-backed read-model output?
-- OQ-059: When and under what review criteria should actual scoped limited pilot transition execution begin?
+- OQ-059: Will the user run a dry-run / review-only scoped pilot first, approve scoped source-authority pilot execution,
+  or require prerequisites first?
+- OQ-060: Should generated builder / CLI-backed read-model output be required before scoped pilot execution, or only
+  before full promotion / CI repeatability?
 - OQ-054: Should `task` and `view-instance` be first-class node kinds or durable records outside node kind?
 
 ## Related Gate

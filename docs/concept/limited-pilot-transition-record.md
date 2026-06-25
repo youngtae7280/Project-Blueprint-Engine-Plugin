@@ -157,3 +157,9 @@ It does not implement a generator, CLI, schema, runtime model, validator, migrat
 
 Any future scoped transition execution, full promotion, compatibility retirement, generated builder implementation, or
 public-doc cleanup requires a separate task and the required user judgment.
+
+## Next Planning Surface
+
+[scoped-limited-pilot-transition-execution-plan.md](scoped-limited-pilot-transition-execution-plan.md) defines the next
+mode-selection surface. It recommends a dry-run / review-only scoped pilot first, and it keeps scoped source-authority
+pilot execution behind a separate explicit user approval gate.

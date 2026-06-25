@@ -274,6 +274,11 @@ bounded Todo Search limited pilot option, and [limited-pilot-transition-record.m
 records that approval. These records do not perform rollback, fallback, compatibility retirement, migration, source
 transition execution, or full promotion.
 
+[scoped-limited-pilot-transition-execution-plan.md](scoped-limited-pilot-transition-execution-plan.md) defines the next
+mode-selection boundary. Dry-run / review-only execution does not need rollback because it does not change source
+authority. Scoped source-authority pilot execution would require rollback/fallback Evidence and compatibility marking
+before it can be approved.
+
 [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) adds a source-transition safety constraint: durable
 semantic relationships must remain Edges, while Tags are view-scoped roles only. A future transition or parity artifact
 that encodes durable meaning as tags can become a projection/parity failure or compatibility-control trigger.
@@ -350,7 +355,8 @@ Those remain later concept or implementation questions.
 - How should a future validator or CI check rollback readiness without over-automating source authority decisions?
 - Does rollback review need a specialized Approval Brief template?
 - Who approves compatibility retirement, and at what review point?
-- When and under what review criteria should actual scoped limited pilot transition execution begin?
+- Will the user run a dry-run / review-only scoped pilot first, approve scoped source-authority pilot execution, or
+  require prerequisites first?
 - Will the user accept ACEP task-card public-doc cleanup as deferred cleanup, or require cleanup before promotion
   approval?
 - Does full Graph-source promotion require an actual generated graph builder or CLI-backed read-model output?

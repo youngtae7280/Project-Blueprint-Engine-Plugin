@@ -261,7 +261,8 @@ option, but full promotion, broad source authority change, and actual scoped tra
 
 ### Decisions Needed Before Promotion Approval
 
-- When and under what review criteria actual scoped limited pilot transition execution should begin.
+- Which execution mode the user selects next: dry-run / review-only scoped pilot, scoped source-authority pilot,
+  prerequisite-first, defer, or reject.
 - Whether full promotion requires generated graph/read-model output as a future CLI-backed report or generated artifact.
 - Whether bounded fixture Evidence is enough for the pilot decision surface.
 - Whether ACEP task-card public-doc cleanup must happen before promotion approval or may remain deferred with an

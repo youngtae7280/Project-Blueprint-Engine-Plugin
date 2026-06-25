@@ -254,7 +254,8 @@ This package does not decide:
 - Will the user require ACEP task-card public-doc cleanup before full promotion?
 - Will the user treat bounded fixture Evidence as enough for the limited pilot, while reserving full-product runtime
   proof for a later full promotion review?
-- When and under what review criteria should actual scoped limited pilot transition execution begin?
+- Will the user run a dry-run / review-only scoped pilot first, approve scoped source-authority pilot execution, or
+  require prerequisites first?
 
 ## Gate Self-Check
 

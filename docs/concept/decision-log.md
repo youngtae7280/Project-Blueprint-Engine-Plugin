@@ -44,6 +44,7 @@ This log is the source of truth for confirmed concept decisions in the PBE runti
 | DEC-036 | active | AI may propose graph updates, but product meaning, acceptance, risk decisions, and source-authority relationships require Evidence or user judgment before confirmation. AI self-report is not Evidence and cannot confirm source promotion, user acceptance, or hidden freshness.                                                                                                                                       | Graph Node / Edge / Tag Policy and Retrofit Graph Bootstrap                       |
 | DEC-037 | active | The Todo Search read-model parity artifact is refreshed under the Graph-first Node/Edge/Tag taxonomy for limited pilot review. The refresh adds node kinds, edge types, view-scoped tags, confidence/freshness separation, and 7 Core View coverage without changing source authority or approving promotion.                                                                                                            | Todo Search Node/Edge/Tag Parity Refresh                                          |
 | DEC-038 | active | The user approved `Approve limited pilot promotion decision` for the Todo Search selected slice only. This approval permits a bounded limited pilot transition record for `examples/adoption/todo-search-slice`, with retained warnings carried forward, but it is not full Graph-source promotion, broad source authority change, generated builder completion, public-doc cleanup, or tree-native artifact retirement. | Limited Pilot Transition Record                                                   |
+| DEC-039 | active | Actual scoped limited pilot transition requires an execution plan and explicit execution mode selection. Dry-run / review-only scoped pilot execution does not change source authority, while any scoped source-authority pilot execution requires separate user approval, source boundary definition, rollback/fallback handling, compatibility marking, and Evidence gates.                                            | Scoped Limited Pilot Transition Execution Plan                                    |
 
 ## Supersede Relationships
 
@@ -161,6 +162,11 @@ DEC-038 does not supersede DEC-013, DEC-020, DEC-021, DEC-031, or DEC-037. It re
 decision for the Todo Search selected slice after the Node/Edge/Tag refresh, while full Graph-source promotion, broad
 source authority change, rollback/compatibility execution, generated builder support, public-doc cleanup, and
 tree-native artifact retirement remain separate.
+
+DEC-039 does not supersede DEC-020, DEC-021, DEC-030, DEC-031, or DEC-038. It plans the next execution-mode decision
+after the bounded limited pilot approval, while the approval record remains non-executing, dry-run remains
+non-authoritative, scoped source-authority pilot execution requires separate approval, and full Graph-source promotion
+remains out of scope.
 
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
