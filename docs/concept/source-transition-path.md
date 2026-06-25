@@ -262,6 +262,10 @@ promote Maintainability Graph as the repository-wide source model.
 observation after that bounded execution. The review confirms source-authority containment and parity stability while
 leaving broader transition decisions open.
 
+[scoped-source-authority-pilot-active-observation.md](scoped-source-authority-pilot-active-observation.md) records the
+current active observation mode. It does not advance transition stages; it defines the checks and trigger conditions that
+must be reviewed before any broader transition, rollback/defer, validator/CI, or cleanup decision.
+
 [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) defines the target Graph-first responsibility split:
 Nodes are durable targets, Edges are durable semantic relationships, and Tags are temporary view-scoped roles.
 
@@ -342,8 +346,8 @@ Those remain later concept or implementation questions.
 
 - How formal should projection/parity expectations be before promotion review?
 - Does promotion review need a specialized Approval Brief template?
-- After Todo Search scoped pilot execution, should PBE observe the pilot, require validator/CI-backed Evidence, perform
-  public-doc cleanup, prepare broader promotion review, or rollback/defer the pilot?
+- During Todo Search scoped pilot active observation, what trigger should cause validator/CI-backed Evidence,
+  public-doc cleanup, broader promotion review, rollback/defer, or continued observation?
 - Will the user accept ACEP task-card public-doc cleanup as deferred cleanup, or require cleanup before promotion
   approval?
 - What additional evidence is required before any broader source authority transition beyond Todo Search?

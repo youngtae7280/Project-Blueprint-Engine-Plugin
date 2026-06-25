@@ -150,6 +150,11 @@ Maintainability Graph promotion and does not make the graph the repository-wide 
 observation of that bounded pilot. The review outcome is `scoped-pilot-review-pass-with-retained-warnings`; it confirms
 parity stability and fallback readiness without expanding source authority.
 
+[scoped-source-authority-pilot-active-observation.md](scoped-source-authority-pilot-active-observation.md) records the
+current `keep-active-with-retained-warnings` stance. The pilot remains bounded to the Todo Search selected slice while
+observation triggers determine whether the next user decision is continued observation, validator/CI-backed Evidence,
+public-doc cleanup, broader promotion review, rollback, or deferral.
+
 [generated-read-model-evidence-requirement.md](generated-read-model-evidence-requirement.md) records the user's decision
 to require generated builder / CLI-backed read-model Evidence before actual scoped execution. It is an Evidence
 prerequisite, not builder implementation and not source authority change.
@@ -208,8 +213,8 @@ traceability view.
 - OQ-026: Which existing tree-native artifacts are sufficient inputs for future generated/read-model support?
 - OQ-027: Should graph checks become validators, evidence reports, documentation-only review aids, or a combination?
 - OQ-052: Does full Graph-source promotion require an actual generated graph builder or CLI-backed read-model output?
-- OQ-071: After scoped Todo Search pilot execution, should PBE observe the pilot, require validator/CI-backed Evidence,
-  perform public-doc cleanup, prepare broader promotion review, or rollback/defer the pilot?
+- OQ-071: What active-observation trigger should cause validator/CI-backed Evidence, public-doc cleanup, broader
+  promotion review, rollback/defer, or continued observation?
 - OQ-054: Should `task` and `view-instance` be first-class node kinds or durable records outside node kind?
 
 ## Related Gate

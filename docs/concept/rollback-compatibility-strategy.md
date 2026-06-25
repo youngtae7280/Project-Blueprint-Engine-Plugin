@@ -302,6 +302,10 @@ parity, boundary, warning visibility, Check/Evidence separation, compatibility, 
 safe to keep active with retained warnings. No rollback is recommended by the review, and fallback remains available if
 future parity, boundary, warning, compatibility, or acceptance-authority checks fail.
 
+[scoped-source-authority-pilot-active-observation.md](scoped-source-authority-pilot-active-observation.md) turns those
+fallback conditions into active observation triggers. It still performs no rollback command and makes no compatibility
+cleanup; tree-native selected-slice artifacts remain the visible fallback/reference set.
+
 [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) adds a source-transition safety constraint: durable
 semantic relationships must remain Edges, while Tags are view-scoped roles only. A future transition or parity artifact
 that encodes durable meaning as tags can become a projection/parity failure or compatibility-control trigger.
@@ -378,8 +382,8 @@ Those remain later concept or implementation questions.
 - How should a future validator or CI check rollback readiness without over-automating source authority decisions?
 - Does rollback review need a specialized Approval Brief template?
 - Who approves compatibility retirement, and at what review point?
-- After Todo Search scoped pilot execution, should PBE observe the pilot, require validator/CI-backed Evidence, perform
-  public-doc cleanup, prepare broader promotion review, or rollback/defer the pilot?
+- During Todo Search scoped pilot active observation, what trigger should cause validator/CI-backed Evidence,
+  public-doc cleanup, broader promotion review, rollback/defer, or continued observation?
 - Will the user accept ACEP task-card public-doc cleanup as deferred cleanup, or require cleanup before promotion
   approval?
 - What rollback/fallback Evidence and generated/manual conflict handling is sufficient before actual scoped execution?

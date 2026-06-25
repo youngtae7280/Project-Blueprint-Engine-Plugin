@@ -106,6 +106,10 @@ The subsequent scoped pilot review is documented in
 keeps the pilot safe to observe in the bounded Todo Search scope, but it still does not authorize broader promotion,
 validator/CI enforcement, public-doc cleanup, or tree-native artifact retirement.
 
+Active observation criteria are documented in
+[scoped-source-authority-pilot-active-observation.md](scoped-source-authority-pilot-active-observation.md). This keeps the
+pilot active with retained warnings and leaves full-promotion readiness as a separate future review.
+
 Preparation outcome:
 
 ```text

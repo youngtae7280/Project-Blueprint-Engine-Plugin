@@ -114,6 +114,11 @@ After this review, the user should choose among:
 Recommended next step: keep the scoped pilot active and observe longer. If the user wants to move beyond this bounded
 pilot, validator/CI-backed Evidence should be considered before broader execution or enforcement.
 
+The active observation criteria are recorded in
+[scoped-source-authority-pilot-active-observation.md](scoped-source-authority-pilot-active-observation.md). That record
+keeps the pilot active with retained warnings and defines re-review, fallback/defer, validator/CI, public-doc cleanup,
+and broader-promotion triggers without executing any next-phase action.
+
 ## Gate Self-Check
 
 | Gate                                     | Result | Notes                                                      |

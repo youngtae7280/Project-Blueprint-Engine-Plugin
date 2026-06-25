@@ -4,10 +4,10 @@ Status: comparison-pass
 
 ## Run Identity
 
-- Compared at: 2026-06-25T04:31:27.871Z
+- Compared at: 2026-06-25T04:36:37.062Z
 - Command identity:
   `pbe graph read-model compare --generated examples/adoption/todo-search-slice/generated/generated-read-model.json --manual examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
-- Source commit: 47c5604
+- Source commit: ce06861
 
 ## Boundary
 

@@ -156,6 +156,10 @@ The review confirms that generated authority remains bounded to the Todo Search 
 remains `comparison-pass`, fallback/reference artifacts remain usable, retained warnings remain visible, and user
 acceptance authority remains user-controlled. The review does not expand the pilot or approve broader promotion.
 
+Active observation criteria are recorded in
+[scoped-source-authority-pilot-active-observation.md](scoped-source-authority-pilot-active-observation.md). The active
+status is `keep-active-with-retained-warnings`; it does not expand pilot scope or approve broader promotion.
+
 ## Control Node Summary
 
 | Control record                     | Family                       | Status                      | Notes                                                                                     |

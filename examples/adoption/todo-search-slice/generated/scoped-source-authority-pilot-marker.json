@@ -82,5 +82,13 @@
       "Rollback or defer scoped pilot"
     ]
   },
+  "activeObservation": {
+    "status": "keep-active-with-retained-warnings",
+    "observationRecord": "docs/concept/scoped-source-authority-pilot-active-observation.md",
+    "scope": "examples/adoption/todo-search-slice only",
+    "requiredParityStatus": "comparison-pass",
+    "fallbackReferenceRetained": true,
+    "nonExpansionBoundary": "This active observation status does not expand source authority beyond the Todo Search selected slice."
+  },
   "nonPromotionStatement": "This marker records a bounded Todo Search scoped pilot only. It does not promote Maintainability Graph, change repository-wide source authority, retire tree-native artifacts, clean up public docs, or introduce validator/CI enforcement."
 }

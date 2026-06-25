@@ -244,6 +244,14 @@ the Todo Search selected slice because parity stays `comparison-pass`, fallback/
 retained warnings remain visible, and user acceptance authority remains user-controlled. Broader use still requires a
 separate decision surface.
 
+The active observation plan is:
+
+- [scoped-source-authority-pilot-active-observation.md](scoped-source-authority-pilot-active-observation.md)
+
+The active observation status is `keep-active-with-retained-warnings`. It keeps the scoped pilot bounded to Todo Search
+and defines re-review, fallback/defer, validator/CI, public-doc cleanup, and broader promotion-review triggers without
+performing any of those next-phase actions.
+
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.
