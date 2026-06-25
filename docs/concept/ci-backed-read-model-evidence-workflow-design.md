@@ -84,7 +84,7 @@ CI-backed Evidence is still Evidence. It is not source promotion, not user appro
 | ------------------------------- | ------------------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | `manual-workflow-dispatch`      | Let a user or maintainer request CI-backed Evidence for a selected slice. | Preferred first CI mode             | Informational only unless later approved as a required gate.                                            |
 | `local-equivalent-script`       | Mirror the CI command sequence locally before workflow implementation.    | Useful for implementation rehearsal | Local Evidence only; not CI-backed.                                                                     |
-| `pr-check-informational`        | Run scoped read-model Evidence on pull requests and report status.        | Possible second mode                | Should not block merge until user approves enforcement.                                                 |
+| `pr-check-informational`        | Run scoped read-model Evidence on pull requests and report status.        | Implemented as non-enforcing signal | Should not block merge until user approves enforcement.                                                 |
 | `pr-required-check-enforcement` | Require validation pass before merge.                                     | Future only                         | Requires separate explicit user approval and clear handling for warnings, waivers, and false positives. |
 | `main-post-merge-evidence`      | Produce Evidence after merge to main.                                     | Useful for audit trail              | Evidence-only; does not validate the PR before merge.                                                   |
 | `main-scheduled-observation`    | Periodically verify the active scoped pilot remains stable.               | Optional later observation mode     | Evidence-only unless enforcement is approved.                                                           |
@@ -99,9 +99,10 @@ Implemented trigger:
 
 ```text
 workflow_dispatch
+pull_request informational with path filters
 ```
 
-PR, push, scheduled, and required-check modes remain future-only.
+Push, scheduled, and required-check modes remain future-only.
 
 ## Implemented CI Command Sequence
 
@@ -327,21 +328,21 @@ This implementation and design do not:
 
 ## Recommended Next Decision Surface
 
-After this aggregate-enabled workflow run review and PR informational design, the next user decision should choose one
+After this aggregate-enabled workflow run review and PR informational implementation, the next user decision should choose one
 of:
 
-1. `Keep aggregate-enabled workflow manual/non-enforcing and observe`
-2. `Approve PR informational workflow implementation`
-3. `Refine PR informational path filters before implementation`
+1. `Review a real PR informational workflow run`
+2. `Refine PR informational path filters after observing noise`
+3. `Keep PR informational workflow non-enforcing and observe`
 4. `Design CI enforcement / required check policy`
 5. `Require public-doc cleanup before broader CI or promotion work`
 6. `Prepare broader Graph-source promotion review`
 7. `Defer broader CI mode changes`
 
-Recommended next step: keep the aggregate-enabled workflow manual/non-enforcing and observe, or approve PR
-informational workflow implementation if the user wants PR-visible Evidence now. Enforcement design, public-doc cleanup,
-broader promotion review, and defer remain separate major branches. The Node.js 20 deprecation annotation from run
-`28156403793` has been handled by the Node 24 action/runtime update and reviewed post-update run `28157938343`.
+Recommended next step: review a real PR informational workflow run when a suitable PR exists, then decide whether path
+filters or artifact naming need refinement. Enforcement design, public-doc cleanup, broader promotion review, and defer
+remain separate major branches. The Node.js 20 deprecation annotation from run `28156403793` has been handled by the
+Node 24 action/runtime update and reviewed post-update run `28157938343`.
 
 ## Approval Brief Draft
 
@@ -358,18 +359,18 @@ Source Transition Path, rollback, and compatibility.
 
 ### Verification Summary
 
-| Check                      | Status       | Summary                                                                                                                                           |
-| -------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Local validator baseline   | present      | Todo Search scoped validation is `validation-pass` with 20 checks.                                                                                |
-| CI workflow implementation | implemented  | `.github/workflows/read-model-evidence.yml` exists as manual dispatch and now includes Todo App structure-only Evidence plus aggregate summarize. |
-| CI enforcement             | not approved | Enforcement mode remains future-only.                                                                                                             |
-| Source authority boundary  | preserved    | CI Evidence would remain Evidence only.                                                                                                           |
-| Retained warnings          | visible      | Bounded fixture, partial UI, enforcement gap, and ACEP cleanup remain visible.                                                                    |
-| Next user decision         | required     | User must choose whether to keep observing, implement PR informational mode, or branch into enforcement, cleanup, promotion review, or defer.     |
+| Check                      | Status       | Summary                                                                                                                                                                  |
+| -------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Local validator baseline   | present      | Todo Search scoped validation is `validation-pass` with 20 checks.                                                                                                       |
+| CI workflow implementation | implemented  | `.github/workflows/read-model-evidence.yml` exists as manual dispatch plus PR informational mode and includes Todo App structure-only Evidence plus aggregate summarize. |
+| CI enforcement             | not approved | Enforcement mode remains future-only.                                                                                                                                    |
+| Source authority boundary  | preserved    | CI Evidence would remain Evidence only.                                                                                                                                  |
+| Retained warnings          | visible      | Bounded fixture, partial UI, enforcement gap, and ACEP cleanup remain visible.                                                                                           |
+| Next user decision         | required     | User must choose whether to review a real PR run, refine filters, or branch into enforcement, cleanup, promotion review, or defer.                                       |
 
 ### Remaining Judgment
 
-The user must decide whether to keep observing locally, design PR informational triggers, design enforcement policy,
+The user must decide whether to review a real PR informational run, refine path filters, design enforcement policy,
 prepare multi-slice validation, require public-doc cleanup before broader work, prepare broader promotion review, or
 rollback/defer the scoped pilot.
 
@@ -381,8 +382,8 @@ Decision required
 
 Reason: non-enforcing manual CI workflow implementation exists, run `28151296796` has been reviewed as Todo Search
 CI-backed Evidence, run `28156403793` has been reviewed as aggregate-enabled CI-backed Evidence, run `28157938343` has
-been reviewed after the Node 24 action/runtime update, and PR informational mode is now designed but not implemented.
-PR triggers, enforcement, broader source authority, and full promotion remain unapproved.
+been reviewed after the Node 24 action/runtime update, and PR informational mode is now implemented as non-enforcing.
+PR run review, enforcement, broader source authority, and full promotion remain unapproved.
 
 ## Gate Self-Check
 

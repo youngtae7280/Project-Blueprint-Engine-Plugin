@@ -363,10 +363,11 @@ The PR informational read-model Evidence design is now recorded:
 
 - [pr-informational-read-model-evidence-design.md](pr-informational-read-model-evidence-design.md)
 
-The design defines a future `pull_request` informational trigger, path filters, artifact/manifest fields, GitHub Step
-Summary wording, and failure semantics. It does not modify `.github/workflows/read-model-evidence.yml`; the implemented
-workflow remains `workflow_dispatch` only. PR triggers, required checks, branch protection, CI enforcement, source
-authority expansion, public-doc cleanup, `validate --all`, and full Graph-source promotion remain unimplemented.
+The workflow now implements `workflow_dispatch` and a non-enforcing `pull_request` informational trigger with path
+filters. The PR mode records `pull_request-informational` trigger metadata, PR head/base fields, artifact/manifest
+fields, GitHub Step Summary wording, and conservative failure semantics. Required checks, branch protection, CI
+enforcement, source authority expansion, public-doc cleanup, `validate --all`, and full Graph-source promotion remain
+unimplemented. A real PR informational run review is still pending.
 
 ## Outline-Only Later-Phase Docs
 

@@ -1,22 +1,23 @@
 # PR Informational Read-Model Evidence Design
 
-Status: pr-informational-read-model-evidence-design / design-only / workflow-not-changed
+Status: pr-informational-read-model-evidence-design / implemented / pr-run-review-pending
 
 ## Purpose
 
-This document designs a future pull request informational mode for read-model Evidence.
+This document records the pull request informational mode for read-model Evidence.
 
-The current implemented workflow remains manual only:
+The implemented workflow now supports manual and PR informational modes:
 
 ```text
 .github/workflows/read-model-evidence.yml
 trigger: workflow_dispatch
+trigger: pull_request informational with path filters
 ```
 
-The design purpose is to decide how a future `pull_request` trigger could provide visible read-model Evidence status on
-PRs without making the workflow a required check, branch protection rule, source-authority expansion, or promotion gate.
+The design purpose is to define how the `pull_request` trigger provides visible read-model Evidence status on PRs
+without making the workflow a required check, branch protection rule, source-authority expansion, or promotion gate.
 
-This document is design only. It does not modify `.github/workflows/read-model-evidence.yml`, does not add a PR trigger,
+The implementation adds only the non-enforcing PR informational trigger. It does not add `push` or `schedule` triggers,
 does not introduce CI enforcement, does not implement `validate --all`, does not expand source authority, and does not
 approve full Graph-source promotion.
 
@@ -25,7 +26,7 @@ approve full Graph-source promotion.
 | Baseline item                | Current state                                                                                          |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------ |
 | Workflow                     | `PBE Read-Model Evidence`                                                                              |
-| Implemented trigger          | `workflow_dispatch` only                                                                               |
+| Implemented trigger          | `workflow_dispatch`; `pull_request` informational with path filters                                    |
 | Latest reviewed manual run   | `28157938343`                                                                                          |
 | Latest run status            | `success` / `ci-evidence-pass`                                                                         |
 | Todo Search profile          | `todo-search-selected-slice`, `pilot-marker-backed`                                                    |
@@ -44,14 +45,14 @@ approve full Graph-source promotion.
 | Mode                                     | Trigger                | Purpose                                                | Current status | Enforcement boundary                                                |
 | ---------------------------------------- | ---------------------- | ------------------------------------------------------ | -------------- | ------------------------------------------------------------------- |
 | Manual CI-backed Evidence                | `workflow_dispatch`    | Reviewer-requested Evidence run tied to a known commit | implemented    | Non-enforcing; not a required check or user approval.               |
-| PR informational read-model Evidence     | `pull_request`         | Visible PR signal for read-model Evidence drift        | design-only    | Informational only unless enforcement is separately approved later. |
+| PR informational read-model Evidence     | `pull_request`         | Visible PR signal for read-model Evidence drift        | implemented    | Informational only unless enforcement is separately approved later. |
 | PR required check / branch protection    | required PR check      | Merge-blocking policy                                  | future-only    | Requires separate explicit user approval and warning/waiver policy. |
 | Push or scheduled post-merge observation | `push` or `schedule`   | Main branch audit trail or drift observation           | future-only    | Evidence only unless separately approved as enforcement.            |
 | Repo-wide promotion readiness validation | later validator policy | Full promotion review support                          | future-only    | Cannot approve source promotion without explicit user decision.     |
 
-## Proposed PR Informational Trigger
+## Implemented PR Informational Trigger
 
-Future candidate trigger:
+Implemented trigger:
 
 ```yaml
 on:
@@ -66,7 +67,8 @@ on:
       - 'docs/concept/**'
 ```
 
-This is a candidate only. It is not implemented by this document.
+This trigger is informational only. It is not a required check, branch protection rule, merge gate, source-authority
+expansion, or promotion gate.
 
 ### Trigger Scope Tradeoff
 
@@ -96,7 +98,7 @@ Reasoning:
 
 ## Future Command Sequence
 
-The future PR informational mode should reuse the current aggregate-enabled command sequence:
+The PR informational mode reuses the current aggregate-enabled command sequence:
 
 ```text
 npm run build:cli
@@ -117,13 +119,11 @@ directories, and should not mutate PR source files.
 
 ## Artifact And Manifest Policy
 
-The future PR informational run can reuse the current artifact bundle name or use a PR-specific name.
+The PR informational run currently reuses the same artifact bundle content and writes trigger-specific metadata in the
+CI evidence manifest.
 
-Recommended artifact name:
-
-```text
-pbe-read-model-evidence-pr-informational
-```
+Current artifact upload remains `pbe-todo-search-read-model-evidence` for compatibility with the existing reviewed
+manual workflow. The manifest distinguishes `workflow_dispatch` from `pull_request-informational`.
 
 Required artifact content should match the current manual bundle:
 
@@ -136,7 +136,7 @@ Required artifact content should match the current manual bundle:
 - Todo App PBE Run validation report JSON/Markdown
 - aggregate summary JSON/Markdown
 
-Future PR manifest fields:
+PR manifest fields:
 
 | Field group         | Candidate fields                                                                                   |
 | ------------------- | -------------------------------------------------------------------------------------------------- |
@@ -154,7 +154,7 @@ The manifest should not claim source authority, approval, promotion readiness ap
 
 ## Step Summary Candidate
 
-Future PR step summary wording:
+PR step summary wording:
 
 ```text
 # PBE Read-Model Evidence - PR Informational
@@ -230,11 +230,11 @@ This design does not:
 
 ## Recommended Next Decision Surface
 
-After this design, the next choices are:
+After this implementation, the next choices are:
 
-1. `Keep workflow manual-only and observe`
-2. `Approve PR informational workflow implementation`
-3. `Refine PR path filters before implementation`
+1. `Open or update a real PR and review the informational read-model Evidence run`
+2. `Refine PR path filters after observing run noise`
+3. `Keep PR informational mode and observe`
 4. `Design CI enforcement / required check policy`
 5. `Require public-doc cleanup before broader CI changes`
 6. `Defer PR-trigger work`
@@ -242,29 +242,29 @@ After this design, the next choices are:
 Recommended next step:
 
 ```text
-Approve PR informational workflow implementation only if the user wants PR-visible Evidence now. Otherwise keep the
-workflow manual-only and observe.
+Review a real PR informational run before deciding whether path filters, artifact naming, or failure semantics need
+adjustment. Do not move to enforcement without a separate decision.
 ```
 
-The first implementation, if approved later, should add `pull_request` as informational only and use the recommended
-path filters and failure semantics above. It should not make the check required.
+The implementation adds `pull_request` as informational only and uses the recommended path filters and failure semantics
+above. It does not make the check required.
 
 ## Gate Self-Check
 
-| Gate                              | Result | Notes                                                                         |
-| --------------------------------- | ------ | ----------------------------------------------------------------------------- |
-| Design-Only Gate                  | PASS   | No workflow or code change is made by this document.                          |
-| Manual Workflow Preservation Gate | PASS   | Current implemented workflow remains `workflow_dispatch` only.                |
-| PR Informational Boundary Gate    | PASS   | Future PR mode is explicitly non-enforcing and not branch protection.         |
-| Source Authority Boundary Gate    | PASS   | No source authority expansion or Todo App promotion level change is proposed. |
-| Non-Full-Promotion Gate           | PASS   | Full Graph-source promotion remains separate and unapproved.                  |
-| Artifact / Manifest Clarity Gate  | PASS   | Candidate PR manifest fields and artifact bundle are defined.                 |
-| Failure Semantics Honesty Gate    | PASS   | Real command failures and Evidence judgment statuses are separated.           |
-| Retained Warning Visibility Gate  | PASS   | Warnings remain visible and are not hidden behind PR green status.            |
-| User Approval Boundary Gate       | PASS   | PR informational pass cannot replace user acceptance or promotion approval.   |
+| Gate                                  | Result | Notes                                                                         |
+| ------------------------------------- | ------ | ----------------------------------------------------------------------------- |
+| Design / Implementation Boundary Gate | PASS   | Only the non-enforcing PR informational trigger is implemented.               |
+| Manual Workflow Preservation Gate     | PASS   | `workflow_dispatch` remains available.                                        |
+| PR Informational Boundary Gate        | PASS   | PR mode is explicitly non-enforcing and not branch protection.                |
+| Source Authority Boundary Gate        | PASS   | No source authority expansion or Todo App promotion level change is proposed. |
+| Non-Full-Promotion Gate               | PASS   | Full Graph-source promotion remains separate and unapproved.                  |
+| Artifact / Manifest Clarity Gate      | PASS   | Candidate PR manifest fields and artifact bundle are defined.                 |
+| Failure Semantics Honesty Gate        | PASS   | Real command failures and Evidence judgment statuses are separated.           |
+| Retained Warning Visibility Gate      | PASS   | Warnings remain visible and are not hidden behind PR green status.            |
+| User Approval Boundary Gate           | PASS   | PR informational pass cannot replace user acceptance or promotion approval.   |
 
 ## Final Statement
 
-PR informational read-model Evidence is a possible next CI visibility layer, not an enforcement layer. This design keeps
-the current workflow manual-only until a later explicit implementation decision, and it preserves source authority,
-promotion, public-doc cleanup, and user acceptance boundaries.
+PR informational read-model Evidence is a CI visibility layer, not an enforcement layer. The implementation preserves
+manual dispatch, source authority, promotion, public-doc cleanup, and user acceptance boundaries. A real PR run review is
+still pending.

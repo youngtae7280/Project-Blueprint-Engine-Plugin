@@ -6,9 +6,9 @@ Evidence level: validator-backed
 
 ## Run Identity
 
-- Validated at: 2026-06-25T08:46:55.472Z
+- Validated at: 2026-06-25T23:45:06.888Z
 - Command identity: `pbe graph read-model validate --slice examples/valid/todo-app-pbe-run`
-- Source commit: 96da2c7
+- Source commit: a676e7e
 - Source slice: `examples/valid/todo-app-pbe-run`
 - Profile id: `todo-app-pbe-run-structure-only`
 - Source layout: canonical-pbe

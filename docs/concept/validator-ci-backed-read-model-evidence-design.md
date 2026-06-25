@@ -266,8 +266,8 @@ is complete, `examples/valid/todo-app-pbe-run` is implemented as a second `struc
 and validation Evidence, both validation reports now carry self-contained per-slice independence metadata, and
 `pbe graph read-model summarize --slices ...` can write the first aggregate summary. The second fixture is not
 parity-backed, pilot-marker-backed, CI-backed, or source-authority bearing. PR informational trigger behavior is now
-designed but not implemented. `validate --all`, PR trigger implementation, enforcement, cleanup, broader promotion
-review, and rollback/defer remain separate decisions.
+implemented as a non-enforcing visibility signal, with real PR run review pending. `validate --all`, enforcement,
+cleanup, broader promotion review, and rollback/defer remain separate decisions.
 
 ## Gate Self-Check
 

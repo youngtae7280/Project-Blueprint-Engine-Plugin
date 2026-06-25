@@ -482,14 +482,15 @@ The next step should be one of:
 Recommended next step:
 
 ```text
-Keep the aggregate-enabled workflow manual/non-enforcing and observe, or approve PR informational workflow implementation
-if the user wants PR-visible Evidence now. Enforcement policy, cleanup, broader promotion review, and rollback/defer
-remain separate major branches.
+Keep the aggregate-enabled workflow non-enforcing and observe, or review the first real PR informational workflow run
+when a suitable PR exists. Enforcement policy, cleanup, broader promotion review, and rollback/defer remain separate
+major branches.
 ```
 
 Follow-up status: multi-slice validation design, Todo Search profile extraction, Todo App structure-only profile,
-per-slice independence, aggregate summary, and aggregate-enabled CI-backed run review are now recorded. This does not add
-PR triggers, enforcement, `validate --all`, source authority expansion, or full promotion.
+per-slice independence, aggregate summary, aggregate-enabled CI-backed run review, and PR informational trigger
+implementation are now recorded. This does not add enforcement, `validate --all`, source authority expansion, or full
+promotion; real PR run review remains pending.
 
 ## Gate Self-Check
 

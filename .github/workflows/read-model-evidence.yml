@@ -2,6 +2,15 @@ name: PBE Read-Model Evidence
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/read-model-evidence.yml
+      - cli/src/**
+      - scripts/**
+      - examples/adoption/todo-search-slice/**
+      - examples/valid/todo-app-pbe-run/**
+      - examples/read-model-aggregate/**
+      - docs/concept/**
 
 permissions:
   contents: read
@@ -93,6 +102,11 @@ jobs:
           const todoSearchParity = readJson(path.join(todoSearchGeneratedDir, 'read-model-parity-report.json'))
           const todoAppValidation = readJson(path.join(todoAppGeneratedDir, 'read-model-validation-report.json'))
           const aggregateSummary = readJson(path.join(aggregateDir, 'read-model-aggregate-summary.json'))
+          const eventName = process.env.GITHUB_EVENT_NAME || 'workflow_dispatch'
+          const eventPayload = readJson(process.env.GITHUB_EVENT_PATH || '') || {}
+          const pullRequest = eventPayload.pull_request || null
+          const isPullRequest = eventName === 'pull_request'
+          const triggerMode = isPullRequest ? 'pull_request-informational' : eventName
 
           const todoSearchPass =
             todoSearchValidation?.status === 'validation-pass' && todoSearchParity?.summary?.status === 'comparison-pass'
@@ -104,11 +118,21 @@ jobs:
             version: '1.0',
             evidenceLevel: 'ci-backed',
             workflowName: process.env.GITHUB_WORKFLOW || 'PBE Read-Model Evidence',
-            triggerMode: process.env.GITHUB_EVENT_NAME || 'workflow_dispatch',
+            eventName,
+            triggerMode,
             runId: process.env.GITHUB_RUN_ID || 'unavailable',
             runAttempt: process.env.GITHUB_RUN_ATTEMPT || 'unavailable',
             sourceCommit: process.env.GITHUB_SHA || 'unavailable',
             sourceRef: process.env.GITHUB_REF || 'unavailable',
+            pr: isPullRequest
+              ? {
+                  number: pullRequest?.number ?? eventPayload.number ?? null,
+                  headSha: pullRequest?.head?.sha || 'unavailable',
+                  baseSha: pullRequest?.base?.sha || 'unavailable',
+                  headRef: pullRequest?.head?.ref || 'unavailable',
+                  baseRef: pullRequest?.base?.ref || 'unavailable',
+                }
+              : null,
             sourceSlice: todoSearchSlice,
             sourceMode: 'existing per-slice validation reports only for aggregate summary',
             includedSlices: aggregateSlices,
@@ -177,7 +201,7 @@ jobs:
             sourceAuthorityBoundary:
               'CI-backed Evidence is Evidence only for declared read-model reports and aggregate summary. Todo Search remains the only scoped pilot; Todo App PBE Run remains structure-only. This workflow does not expand source authority.',
             nonEnforcementStatement:
-              'This workflow is manual workflow_dispatch only. It is not a required check, branch protection rule, PR gate, or CI enforcement mode.',
+              'This workflow is non-enforcing Evidence only. workflow_dispatch runs are manual Evidence runs; pull_request runs, when present, are informational signals only. It is not configured as a required check, branch protection rule, merge gate, or CI enforcement mode.',
             nonPromotionStatement:
               'This workflow is non-enforcing and does not approve full Graph-source promotion, tree-native retirement, public-doc cleanup, or user acceptance.',
             retainedWarningsRemainVisible: true,
@@ -208,6 +232,8 @@ jobs:
           }
 
           const status = manifest?.status || 'ci-evidence-blocked'
+          const triggerMode = manifest?.triggerMode || 'unknown'
+          const pr = manifest?.pr || null
           const todoSearchStatus = manifest?.todoSearch?.validatorStatus || 'missing'
           const todoSearchParity = manifest?.todoSearch?.parityStatus || 'missing'
           const todoAppStatus = manifest?.todoAppPbeRun?.validatorStatus || 'missing'
@@ -217,6 +243,8 @@ jobs:
           const markdown = [
             '# PBE Read-Model Evidence',
             '',
+            `- Trigger mode: \`${triggerMode}\``,
+            pr?.number ? `- PR: #${pr.number} (${pr.headRef}@${pr.headSha} -> ${pr.baseRef}@${pr.baseSha})` : null,
             `- Evidence scope: \`${includedSlices.join(', ')}\``,
             `- CI evidence status: \`${status}\``,
             `- Todo Search validator status: \`${todoSearchStatus}\``,
@@ -224,12 +252,16 @@ jobs:
             `- Todo App PBE Run validator status: \`${todoAppStatus}\``,
             `- Aggregate status: \`${aggregateStatus}\``,
             '- Boundary: CI-backed Evidence is Evidence only.',
+            '- Informational only for pull requests.',
+            '- Not a required check or branch protection rule.',
             '- No source authority change.',
             '- No full Graph-source promotion.',
-            '- No enforcement or required check is introduced by this workflow.',
+            '- No enforcement is introduced by this workflow.',
             '- Retained warnings remain visible in generated reports.',
             '',
-          ].join('\n')
+          ]
+            .filter(Boolean)
+            .join('\n')
 
           fs.appendFileSync(summaryPath, markdown)
           NODE

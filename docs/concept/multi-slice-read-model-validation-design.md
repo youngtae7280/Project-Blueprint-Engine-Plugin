@@ -359,16 +359,19 @@ Design stance:
 - do not perform public-doc cleanup in this task
 - treat cleanup as prerequisite or explicit caveat before broader Graph-source promotion
 
-## Next Implementation Path
+## Current Staged Implementation Path
 
-When the user approves implementation later, continue in this order:
+The staged path is:
 
 1. Keep Todo Search as the regression baseline and active scoped pilot.
 2. Keep `examples/valid/todo-app-pbe-run` at `structure-only` until a later user decision adds parity, pilot marker, or
    CI-backed Evidence.
-3. Add aggregate summary only after per-slice validation is stable.
+3. Add aggregate summary only after per-slice validation is stable. This is now implemented as Evidence-only output.
+4. Add PR informational visibility only after manual and aggregate Evidence are stable. This is now implemented as
+   non-enforcing PR informational Evidence, with real PR run review pending.
 
-Do not start with `validate --all`, PR triggers, required checks, or broad CI changes.
+Do not move next to `validate --all`, required checks, enforcement, or broad CI changes without a separate user
+decision.
 
 ## Approval Brief Draft
 
@@ -410,17 +413,17 @@ design, multi-slice scope redesign, or continued observation.
 
 ## Control Node Summary
 
-| Control record                      | Family                     | Status                            | Reason                                                                                                                   |
-| ----------------------------------- | -------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Multi-slice validation design       | Decision Control Node      | design-recorded                   | The expansion strategy is documented; aggregation remains unimplemented.                                                 |
-| Todo Search hardcoding              | Evidence / Impact Control  | resolved for first profile        | Todo assumptions are isolated into an explicit profile/config.                                                           |
-| `todo-app-pbe-run` candidate        | Evidence Control Node      | implemented / structure-only      | It has canonical `.pbe` source inputs plus structure-only generated/validation output.                                   |
-| Compatibility mismatch supplemental | Compatibility Control Node | retained warning                  | Public-doc cleanup remains deferred and warning-only.                                                                    |
-| Aggregate summary                   | Evidence Control Node      | implemented / Evidence-only       | First aggregate summary reads existing per-slice validation reports only.                                                |
-| Aggregate CI-backed review          | Evidence Control Node      | reviewed                          | Runs `28156403793` and `28157938343` reviewed the aggregate-enabled artifact bundle as non-enforcing CI-backed Evidence. |
-| Aggregate validation                | Decision Control Node      | deferred                          | `validate --all`, aggregate validation execution, and enforcement remain separate.                                       |
-| PR informational trigger            | Decision Control Node      | design-recorded / not implemented | Future PR visibility is designed, but the workflow remains manual-only until separate implementation approval.           |
-| CI enforcement / required checks    | Decision Control Node      | not approved                      | Reviewed CI-backed Evidence exists, but enforcement and required checks remain future-only.                              |
+| Control record                      | Family                     | Status                       | Reason                                                                                                                   |
+| ----------------------------------- | -------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Multi-slice validation design       | Decision Control Node      | design-recorded              | The expansion strategy is documented; aggregation remains unimplemented.                                                 |
+| Todo Search hardcoding              | Evidence / Impact Control  | resolved for first profile   | Todo assumptions are isolated into an explicit profile/config.                                                           |
+| `todo-app-pbe-run` candidate        | Evidence Control Node      | implemented / structure-only | It has canonical `.pbe` source inputs plus structure-only generated/validation output.                                   |
+| Compatibility mismatch supplemental | Compatibility Control Node | retained warning             | Public-doc cleanup remains deferred and warning-only.                                                                    |
+| Aggregate summary                   | Evidence Control Node      | implemented / Evidence-only  | First aggregate summary reads existing per-slice validation reports only.                                                |
+| Aggregate CI-backed review          | Evidence Control Node      | reviewed                     | Runs `28156403793` and `28157938343` reviewed the aggregate-enabled artifact bundle as non-enforcing CI-backed Evidence. |
+| Aggregate validation                | Decision Control Node      | deferred                     | `validate --all`, aggregate validation execution, and enforcement remain separate.                                       |
+| PR informational trigger            | Decision Control Node      | implemented / review pending | PR visibility is implemented as non-enforcing informational Evidence; real PR run review remains pending.                |
+| CI enforcement / required checks    | Decision Control Node      | not approved                 | Reviewed CI-backed Evidence exists, but enforcement and required checks remain future-only.                              |
 
 ## Gate Self-Check
 
