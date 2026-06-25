@@ -1,6 +1,6 @@
 # Read-Model Aggregate Summary Contract
 
-Status: read-model-aggregate-summary-contract / first-aggregate-summary-implemented / evidence-only
+Status: read-model-aggregate-summary-contract / first-aggregate-summary-implemented / non-enforcing-ci-workflow-enabled
 
 ## Purpose
 
@@ -103,6 +103,20 @@ Current counts:
 This result means the two current per-slice validation reports can be read together as an Evidence summary. It does not
 approve broader execution, CI enforcement, source authority expansion, or full Graph-source promotion.
 
+## Non-Enforcing CI Workflow Use
+
+The manual `PBE Read-Model Evidence` workflow now runs the aggregate summarize command after generating and validating
+the Todo Search and Todo App PBE Run per-slice reports:
+
+```text
+node dist/cli/index.js graph read-model summarize --slices examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run --json
+```
+
+The workflow is still `workflow_dispatch` only and non-enforcing. Running aggregate summarize in CI does not turn the
+aggregate into validation execution, does not implement `validate --all`, and does not expand source authority. A new
+aggregate-enabled workflow run has not yet been reviewed, so the current reviewed CI-backed Evidence remains the earlier
+Todo Search-only run `28151296796`.
+
 ## Tests
 
 Focused tests cover:
@@ -119,7 +133,7 @@ Recommended next work remains bounded:
 
 1. keep aggregate summary as Evidence-only and observe stability
 2. decide whether a future `validate --all` command is needed
-3. decide whether non-enforcing CI should run aggregate summarize
+3. run the aggregate-enabled manual workflow once and review the uploaded artifact bundle
 4. decide whether to strengthen Todo App PBE Run beyond structure-only
 5. keep source authority expansion and full promotion as separate explicit decisions
 

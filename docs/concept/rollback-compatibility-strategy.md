@@ -382,6 +382,8 @@ or fallback obligations. The current validation reports include per-slice fallba
 aggregation can preserve rollback and compatibility boundaries per slice. The first aggregate summary now reads those
 reports as Evidence-only inputs, but it does not execute rollback checks, retire fallback artifacts, or implement broader
 aggregate validation.
+The non-enforcing manual workflow now can upload Todo Search, Todo App PBE Run, and aggregate summary artifacts together,
+but that does not change fallback precedence and has not yet been reviewed as aggregate CI-backed Evidence.
 
 ## Scope Boundaries
 

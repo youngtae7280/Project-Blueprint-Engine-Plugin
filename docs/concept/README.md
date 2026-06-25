@@ -285,11 +285,13 @@ The non-enforcing manual CI workflow is now implemented:
 - workflow: `.github/workflows/read-model-evidence.yml`
 - workflow name: `PBE Read-Model Evidence`
 - trigger: `workflow_dispatch`
-- scope: `examples/adoption/todo-search-slice`
+- scope: Todo Search read-model Evidence, Todo App PBE Run structure-only Evidence, and the cross-slice aggregate
+  summary
 
-The workflow can create a CI-backed Evidence artifact bundle and GitHub step summary when manually run. It is not a
-required check, does not run on PR/push by default, does not introduce branch protection, and does not change source
-authority.
+The workflow can create a CI-backed Evidence artifact bundle and GitHub step summary when manually run. It now runs the
+Todo Search generate/compare/validate sequence, the Todo App PBE Run structure-only generate/validate sequence, and the
+aggregate summarize command over existing per-slice validation reports. It is not a required check, does not run on
+PR/push by default, does not introduce branch protection, and does not change source authority.
 
 The first CI run review is recorded:
 
@@ -298,7 +300,9 @@ The first CI run review is recorded:
 Run `28151296796` completed successfully on `workflow_dispatch` for `main`. The uploaded
 `pbe-todo-search-read-model-evidence` artifact was reviewed, and its CI manifest records `ci-backed` /
 `ci-evidence-pass`, `validation-pass`, `comparison-pass`, and retained warning visibility. This remains non-enforcing
-Evidence only and does not change source authority.
+Evidence only and does not change source authority. That reviewed run predates the aggregate-enabled workflow update;
+the expanded bundle still needs a separate manual workflow run and artifact review before it is treated as reviewed
+aggregate CI-backed Evidence.
 
 The multi-slice validation design is recorded:
 
@@ -325,8 +329,10 @@ The second profile/fixture is now implemented at structure-only level:
 
 This second fixture reads the canonical `.pbe` layout and creates reviewable structure-only Evidence. It is not
 parity-backed, pilot-marker-backed, CI-backed, source-authority bearing, or a scoped pilot. Todo Search remains the only
-active scoped source-authority pilot and the only reviewed CI-backed slice. Multi-slice aggregation, `validate --all`,
-CI enforcement, public-doc cleanup, and full Graph-source promotion remain unimplemented.
+active scoped source-authority pilot and the only reviewed CI-backed slice. The manual workflow can now include Todo App
+structure-only Evidence in the uploaded bundle, but that is not yet a reviewed Todo App CI-backed run and does not
+promote the fixture beyond structure-only. `validate --all`, CI enforcement, public-doc cleanup, and full Graph-source
+promotion remain unimplemented.
 
 The per-slice validation report independence contract is now implemented for both generated slices. Each validation
 report carries self-contained profile, source layout, policy level, expected counts, parity requirement, pilot marker
@@ -347,6 +353,10 @@ The first aggregate read-model Evidence summary contract is now implemented:
 The aggregate command reads existing per-slice validation reports only. It does not run generation, comparison,
 validation, `validate --all`, CI enforcement, source authority expansion, public-doc cleanup, or full Graph-source
 promotion.
+
+The non-enforcing manual CI workflow now runs this aggregate command after generating and validating both included
+slices. This workflow update is implementation only; an aggregate-enabled GitHub Actions run has not yet been reviewed
+as CI-backed aggregate Evidence.
 
 ## Outline-Only Later-Phase Docs
 

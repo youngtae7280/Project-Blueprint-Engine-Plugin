@@ -348,6 +348,9 @@ canonical `.pbe` inputs. That follow-up does not expand source authority, does n
 manual parity, and does not implement `validate --all`. Both current validation reports carry per-slice independence
 metadata, and the first aggregate summary reads those reports as Evidence-only inputs while preserving slice-specific
 authority boundaries.
+The manual `PBE Read-Model Evidence` workflow now includes Todo App structure-only generation/validation and aggregate
+summarize for the next manual CI run, but no aggregate-enabled run has been reviewed yet. This workflow update does not
+add enforcement, `validate --all`, or source authority expansion.
 
 ## Scope Boundaries
 

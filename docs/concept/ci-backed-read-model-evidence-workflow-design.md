@@ -1,11 +1,12 @@
 # CI-Backed Read-Model Evidence Workflow Design
 
-Status: ci-backed-read-model-evidence-workflow-design / non-enforcing-workflow-implemented / manual-dispatch-only
+Status: ci-backed-read-model-evidence-workflow-design / non-enforcing-workflow-aggregate-enabled / manual-dispatch-only
 
 ## Document Purpose
 
 This document defines the CI workflow design for read-model Evidence after the Todo Search scoped read-model validator
-became available. The first bounded non-enforcing workflow is now implemented as manual dispatch only.
+became available. The bounded non-enforcing workflow is implemented as manual dispatch only and now includes Todo App
+PBE Run structure-only Evidence plus the first aggregate read-model summary command.
 
 It explains how CI-backed Evidence can be produced by the manual workflow, how that differs from local
 validator-backed Evidence, what commands and artifacts the workflow uses, and how CI results should relate to Approval
@@ -17,23 +18,24 @@ retire tree-native artifacts, does not clean up public docs, and does not approv
 
 ## Current Local Validator-Backed Baseline
 
-| Baseline item              | Current state                                                                |
-| -------------------------- | ---------------------------------------------------------------------------- |
-| Scoped pilot               | `examples/adoption/todo-search-slice` only                                   |
-| Active observation status  | `keep-active-with-retained-warnings`                                         |
-| Generated/manual parity    | `comparison-pass`                                                            |
-| Local validator command    | `pbe graph read-model validate --slice examples/adoption/todo-search-slice`  |
-| Validator-backed status    | `validation-pass`                                                            |
-| Validator check count      | 20                                                                           |
-| Warning/blocking/decision  | 0 / 0 / 0                                                                    |
-| CI-backed Evidence         | reviewed manual run `28151296796` is `ci-evidence-pass`                      |
-| Tree-native fallback       | retained and usable                                                          |
-| Supplemental compatibility | warning-only, not pilot source scope                                         |
-| Current authority boundary | bounded Todo Search scoped pilot; no repository-wide source authority change |
+| Baseline item              | Current state                                                                                      |
+| -------------------------- | -------------------------------------------------------------------------------------------------- |
+| Scoped pilot               | `examples/adoption/todo-search-slice` only                                                         |
+| Active observation status  | `keep-active-with-retained-warnings`                                                               |
+| Generated/manual parity    | `comparison-pass`                                                                                  |
+| Local validator command    | `pbe graph read-model validate --slice examples/adoption/todo-search-slice`                        |
+| Validator-backed status    | `validation-pass`                                                                                  |
+| Validator check count      | 20                                                                                                 |
+| Warning/blocking/decision  | 0 / 0 / 0                                                                                          |
+| CI-backed Evidence         | reviewed Todo Search run `28151296796` is `ci-evidence-pass`; aggregate-enabled run review pending |
+| Tree-native fallback       | retained and usable                                                                                |
+| Supplemental compatibility | warning-only, not pilot source scope                                                               |
+| Current authority boundary | bounded Todo Search scoped pilot; no repository-wide source authority change                       |
 
 The local validator baseline is enough to keep the scoped pilot active under observation. The non-enforcing manual CI
-workflow produced reviewed CI-backed Evidence in run `28151296796`. PR/push triggers, required checks, branch
-protection, and enforcement remain unimplemented.
+workflow produced reviewed Todo Search CI-backed Evidence in run `28151296796`; the later aggregate-enabled workflow has
+not yet been manually run and reviewed. PR/push triggers, required checks, branch protection, and enforcement remain
+unimplemented.
 
 ## CI-Backed Evidence Definition
 
@@ -62,7 +64,7 @@ CI-backed Evidence is still Evidence. It is not source promotion, not user appro
 | Enforcement possibility | None unless separately wired               | Can be informational or enforcement, but enforcement requires separate approval |
 | User approval relation  | Evidence only; not user approval           | Evidence only; not user approval                                                |
 | Source authority effect | None by itself                             | None by itself                                                                  |
-| Current status          | implemented for Todo Search scoped slice   | reviewed manual run `28151296796` is `ci-evidence-pass`                         |
+| Current status          | implemented for Todo Search scoped slice   | Todo Search run `28151296796` is reviewed; aggregate-enabled run review pending |
 
 ## CI Trigger Modes
 
@@ -89,15 +91,19 @@ workflow_dispatch
 
 PR, push, scheduled, and required-check modes remain future-only.
 
-## Proposed CI Command Sequence
+## Implemented CI Command Sequence
 
-The implemented CI workflow for the current scoped slice runs the same bounded commands that local validation uses:
+The implemented CI workflow runs the same bounded commands that local validation uses, then writes a cross-slice
+aggregate summary from existing per-slice validation reports:
 
 ```text
 npm run build:cli
 node dist/cli/index.js graph read-model generate --slice examples/adoption/todo-search-slice --json
 node dist/cli/index.js graph read-model compare --generated examples/adoption/todo-search-slice/generated/generated-read-model.json --manual examples/adoption/todo-search-slice/maintainability-graph-read-model.json --json
 node dist/cli/index.js graph read-model validate --slice examples/adoption/todo-search-slice --json
+node dist/cli/index.js graph read-model generate --slice examples/valid/todo-app-pbe-run --json
+node dist/cli/index.js graph read-model validate --slice examples/valid/todo-app-pbe-run --json
+node dist/cli/index.js graph read-model summarize --slices examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run --json
 ```
 
 Implemented supporting commands:
@@ -128,6 +134,9 @@ Those future surfaces are not implemented by this design.
 | `read-model-parity-report.md`                | Human-readable parity summary.                                                      | yes                    |
 | `read-model-validation-report.json`          | Machine-readable validator-backed Evidence report.                                  | yes                    |
 | `read-model-validation-report.md`            | Human-readable validation report.                                                   | yes                    |
+| Todo App PBE Run `generated-read-model.*`    | Structure-only generated read-model Evidence for the canonical `.pbe` fixture.      | yes                    |
+| Todo App PBE Run validation report           | Structure-only validator-backed Evidence for the second fixture.                    | yes                    |
+| `read-model-aggregate-summary.*`             | Cross-slice Evidence summary over existing per-slice validation reports.            | yes                    |
 | `read-model-ci-evidence-manifest.json`       | CI manifest linking workflow, run id, source commit, commands, outputs, and status. | runtime artifact in CI |
 | GitHub Step Summary                          | CI run summary for review.                                                          | yes                    |
 | uploaded read-model Evidence artifact bundle | CI artifact containing generated outputs and reports.                               | yes                    |
@@ -138,6 +147,8 @@ CI artifacts should preserve:
 - command identity and exit status
 - source slice and input artifact list
 - generated/parity/validation report references
+- Todo App PBE Run structure-only validation references
+- aggregate summary status, included slices, and aggregate artifact references
 - retained warnings and Evidence exceptions
 - source-authority boundary and non-promotion statement
 - recommended next decision surface
@@ -304,19 +315,17 @@ This implementation and design do not:
 
 ## Recommended Next Decision Surface
 
-After this non-enforcing manual workflow implementation and reviewed run `28151296796`, the next user decision should
-choose one of:
+After this aggregate-enabled workflow implementation, the next user decision should choose one of:
 
-1. `Keep workflow manual/non-enforcing and observe`
-2. `Design PR informational trigger`
+1. `Run the manual workflow and review the aggregate-enabled artifact bundle`
+2. `Keep workflow manual/non-enforcing and observe locally`
 3. `Design CI enforcement / required check policy`
-4. `Prepare multi-slice validation design`
-5. `Require public-doc cleanup before broader CI or promotion work`
-6. `Prepare broader Graph-source promotion review`
+4. `Require public-doc cleanup before broader CI or promotion work`
+5. `Prepare broader Graph-source promotion review`
+6. `Defer aggregate CI-backed Evidence review`
 
-Recommended next step: keep the workflow manual/non-enforcing and observe, unless the user chooses the next branch: PR
-informational trigger design, enforcement policy design, multi-slice validation, cleanup, broader promotion review, or
-rollback/defer.
+Recommended next step: run the manual workflow once and review the aggregate-enabled artifact bundle. Until that review
+exists, only the older Todo Search run `28151296796` is reviewed CI-backed Evidence.
 
 ## Approval Brief Draft
 
@@ -328,19 +337,19 @@ the Todo Search selected slice.
 ### Result Summary
 
 This design defines CI trigger modes, command sequence, artifact outputs, status semantics, pass/warn/fail behavior,
-scope strategy, waiver boundaries, and relationship to Approval Briefs, Control Nodes, Source Transition Path, rollback,
-and compatibility.
+scope strategy, waiver boundaries, aggregate bundle contents, and relationship to Approval Briefs, Control Nodes,
+Source Transition Path, rollback, and compatibility.
 
 ### Verification Summary
 
-| Check                      | Status       | Summary                                                                                                                                          |
-| -------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Local validator baseline   | present      | Todo Search scoped validation is `validation-pass` with 20 checks.                                                                               |
-| CI workflow implementation | implemented  | `.github/workflows/read-model-evidence.yml` exists as manual dispatch.                                                                           |
-| CI enforcement             | not approved | Enforcement mode remains future-only.                                                                                                            |
-| Source authority boundary  | preserved    | CI Evidence would remain Evidence only.                                                                                                          |
-| Retained warnings          | visible      | Bounded fixture, partial UI, enforcement gap, and ACEP cleanup remain visible.                                                                   |
-| Next user decision         | required     | User must choose whether to keep observing or branch into PR triggers, enforcement, broader scope, cleanup, promotion review, or rollback/defer. |
+| Check                      | Status       | Summary                                                                                                                                           |
+| -------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Local validator baseline   | present      | Todo Search scoped validation is `validation-pass` with 20 checks.                                                                                |
+| CI workflow implementation | implemented  | `.github/workflows/read-model-evidence.yml` exists as manual dispatch and now includes Todo App structure-only Evidence plus aggregate summarize. |
+| CI enforcement             | not approved | Enforcement mode remains future-only.                                                                                                             |
+| Source authority boundary  | preserved    | CI Evidence would remain Evidence only.                                                                                                           |
+| Retained warnings          | visible      | Bounded fixture, partial UI, enforcement gap, and ACEP cleanup remain visible.                                                                    |
+| Next user decision         | required     | User must choose whether to run/review the aggregate-enabled manual workflow or branch into enforcement, cleanup, promotion review, or defer.     |
 
 ### Remaining Judgment
 
@@ -354,26 +363,28 @@ rollback/defer the scoped pilot.
 Decision required
 ```
 
-Reason: non-enforcing manual CI workflow implementation exists and run `28151296796` has been reviewed as Todo Search
-CI-backed Evidence. Todo Search profile extraction does not change the workflow boundary. PR triggers, enforcement,
-broader scope, and promotion authority remain separate decisions.
+Reason: non-enforcing manual CI workflow implementation exists, run `28151296796` has been reviewed as Todo Search
+CI-backed Evidence, and the workflow now includes Todo App structure-only Evidence plus aggregate summarize for the next
+manual run. PR triggers, enforcement, broader source authority, and full promotion remain unapproved.
 
 ## Gate Self-Check
 
-| Gate                                   | Result | Notes                                                                                |
-| -------------------------------------- | ------ | ------------------------------------------------------------------------------------ |
-| Design / Implementation Boundary Gate  | PASS   | Non-enforcing manual workflow is implemented; enforcement and broader scope are not. |
-| Workflow Boundary Gate                 | PASS   | Only `.github/workflows/read-model-evidence.yml` is added for manual dispatch.       |
-| Non-CI-Enforcement Gate                | PASS   | Enforcement mode remains future-only.                                                |
-| Source Authority Boundary Gate         | PASS   | CI-backed Evidence is Evidence only and does not change source authority.            |
-| Non-Full-Promotion Gate                | PASS   | Full Graph-source promotion remains unapproved.                                      |
-| Local-vs-CI Evidence Separation Gate   | PASS   | Local validator-backed Evidence and CI-backed Evidence are separate.                 |
-| User Approval Boundary Gate            | PASS   | CI pass is not user approval.                                                        |
-| Retained Warning Visibility Gate       | PASS   | Retained warnings remain explicit.                                                   |
-| Scope Strategy Gate                    | PASS   | Scoped Todo Search CI is first; multi-slice/repo-wide validation remains future.     |
-| Waiver / Manual Override Boundary Gate | PASS   | Waivers require explicit user judgment and cannot be Codex/PBE self-approved.        |
+| Gate                                   | Result | Notes                                                                                                              |
+| -------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------ |
+| Design / Implementation Boundary Gate  | PASS   | Non-enforcing manual workflow is implemented; enforcement and broader authority are not.                           |
+| Workflow Boundary Gate                 | PASS   | Only `.github/workflows/read-model-evidence.yml` is updated for manual dispatch.                                   |
+| Non-CI-Enforcement Gate                | PASS   | Enforcement mode remains future-only.                                                                              |
+| Source Authority Boundary Gate         | PASS   | CI-backed Evidence is Evidence only and does not change source authority.                                          |
+| Non-Full-Promotion Gate                | PASS   | Full Graph-source promotion remains unapproved.                                                                    |
+| Local-vs-CI Evidence Separation Gate   | PASS   | Local validator pass, reviewed Todo Search CI Evidence, and pending aggregate CI review are separate.              |
+| User Approval Boundary Gate            | PASS   | CI pass is not user approval.                                                                                      |
+| Retained Warning Visibility Gate       | PASS   | Retained warnings remain explicit.                                                                                 |
+| Scope Strategy Gate                    | PASS   | Workflow includes two declared slices and an aggregate summary without broadening source authority or enforcement. |
+| Waiver / Manual Override Boundary Gate | PASS   | Waivers require explicit user judgment and cannot be Codex/PBE self-approved.                                      |
 
 ## Final Non-Implementation Statement
 
-This non-enforcing CI workflow implementation does not introduce enforcement, does not expand the scoped pilot, does not
-change source authority, does not retire tree-native artifacts, and does not approve full Graph-source promotion.
+This non-enforcing CI workflow implementation does not introduce enforcement, does not expand source authority, does not
+make Todo App PBE Run a pilot slice, does not retire tree-native or `.pbe` artifacts, and does not approve full
+Graph-source promotion. The aggregate-enabled workflow output still requires a real manual run and artifact review
+before it can be cited as reviewed aggregate CI-backed Evidence.

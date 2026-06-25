@@ -1,6 +1,6 @@
 # Multi-Slice Read-Model Validation Design
 
-Status: multi-slice-read-model-validation-design / first-aggregate-summary-implemented / validate-all-not-started
+Status: multi-slice-read-model-validation-design / aggregate-ci-workflow-enabled / validate-all-not-started
 
 ## Design Purpose
 
@@ -15,8 +15,11 @@ It answers:
 - how per-slice validation and later aggregation should behave
 - why multi-slice validation is Evidence only, not source authority expansion or full Graph-source promotion
 
-This document does not implement a CLI refactor, second slice generator, validator change, CI workflow change, PR/push
-trigger, enforcement mode, source authority expansion, public-doc cleanup, tree-native retirement, or full promotion.
+This document originally did not implement a CLI refactor, second slice generator, validator change, CI workflow change,
+PR/push trigger, enforcement mode, source authority expansion, public-doc cleanup, tree-native retirement, or full
+promotion. Later bounded implementation added the Todo Search profile extraction, the Todo App PBE Run structure-only
+profile, per-slice report independence, the first aggregate summary, and a manual-dispatch workflow update that runs the
+aggregate command. These remain Evidence-only and do not implement `validate --all` or CI enforcement.
 
 ## Current Baseline
 
@@ -202,7 +205,8 @@ Recommended implementation sequence:
    `.pbe` fixture, with generated structure-only output and validation report.
 4. Add per-slice validation report independence. Status: complete for the Todo Search and Todo App PBE Run validation
    reports.
-5. Add aggregation only after per-slice validation is stable. Status: first Evidence-only aggregate summary implemented.
+5. Add aggregation only after per-slice validation is stable. Status: first Evidence-only aggregate summary implemented
+   and included in the non-enforcing manual workflow for the next CI run review.
 
 ## Validation Policy Levels
 
@@ -235,7 +239,9 @@ Implemented outputs:
 - `examples/read-model-aggregate/generated/read-model-aggregate-summary.md`
 
 The command reads existing per-slice validation reports only. It does not run generation, comparison, validation,
-`validate --all`, CI workflow logic, source authority transition, or promotion readiness approval.
+`validate --all`, source authority transition, or promotion readiness approval. The non-enforcing manual workflow now
+runs this command after producing the two per-slice validation reports, but that workflow remains `workflow_dispatch`
+only and the aggregate-enabled run has not yet been reviewed as CI-backed Evidence.
 
 ## Per-Slice Validation Report Independence Contract
 
@@ -397,15 +403,16 @@ design, multi-slice scope redesign, or continued observation.
 
 ## Control Node Summary
 
-| Control record                      | Family                     | Status                       | Reason                                                                                  |
-| ----------------------------------- | -------------------------- | ---------------------------- | --------------------------------------------------------------------------------------- |
-| Multi-slice validation design       | Decision Control Node      | design-recorded              | The expansion strategy is documented; aggregation remains unimplemented.                |
-| Todo Search hardcoding              | Evidence / Impact Control  | resolved for first profile   | Todo assumptions are isolated into an explicit profile/config.                          |
-| `todo-app-pbe-run` candidate        | Evidence Control Node      | implemented / structure-only | It has canonical `.pbe` source inputs plus structure-only generated/validation output.  |
-| Compatibility mismatch supplemental | Compatibility Control Node | retained warning             | Public-doc cleanup remains deferred and warning-only.                                   |
-| Aggregate summary                   | Evidence Control Node      | implemented / Evidence-only  | First aggregate summary reads existing per-slice validation reports only.               |
-| Aggregate validation                | Decision Control Node      | deferred                     | `validate --all`, aggregate execution, and CI-backed aggregation remain separate.       |
-| CI enforcement / PR triggers        | Decision Control Node      | not approved                 | Reviewed CI-backed Evidence exists, but enforcement and PR triggers remain future-only. |
+| Control record                      | Family                     | Status                       | Reason                                                                                               |
+| ----------------------------------- | -------------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Multi-slice validation design       | Decision Control Node      | design-recorded              | The expansion strategy is documented; aggregation remains unimplemented.                             |
+| Todo Search hardcoding              | Evidence / Impact Control  | resolved for first profile   | Todo assumptions are isolated into an explicit profile/config.                                       |
+| `todo-app-pbe-run` candidate        | Evidence Control Node      | implemented / structure-only | It has canonical `.pbe` source inputs plus structure-only generated/validation output.               |
+| Compatibility mismatch supplemental | Compatibility Control Node | retained warning             | Public-doc cleanup remains deferred and warning-only.                                                |
+| Aggregate summary                   | Evidence Control Node      | implemented / Evidence-only  | First aggregate summary reads existing per-slice validation reports only.                            |
+| Aggregate CI-backed review          | Evidence Control Node      | pending manual run review    | Workflow can now produce aggregate CI artifacts, but no aggregate-enabled run has been reviewed yet. |
+| Aggregate validation                | Decision Control Node      | deferred                     | `validate --all`, aggregate validation execution, and enforcement remain separate.                   |
+| CI enforcement / PR triggers        | Decision Control Node      | not approved                 | Reviewed CI-backed Evidence exists, but enforcement and PR triggers remain future-only.              |
 
 ## Gate Self-Check
 
@@ -425,6 +432,7 @@ design, multi-slice scope redesign, or continued observation.
 ## Final Statement
 
 This design now records the completed Todo Search profile extraction, the second structure-only fixture, per-slice report
-independence, and the first Evidence-only aggregate summary. It still does not implement `validate --all`, CI
+independence, the first Evidence-only aggregate summary, and a non-enforcing manual workflow path for aggregate
+artifacts. It still does not implement `validate --all`, CI
 enforcement, parity-backed validation for the second fixture, source authority expansion, public-doc cleanup, or full
 Graph-source promotion.

@@ -337,7 +337,8 @@ cleanup remain separate.
 - Todo Search and Todo App PBE Run validation reports now carry per-slice independence metadata for future aggregation
   inputs.
 - The first multi-slice aggregate summary exists as Evidence-only output over existing per-slice validation reports.
-  `validate --all`, CI-backed Evidence for additional slices, CI enforcement, and full-promotion waiver policy remain
+  The manual workflow now includes the aggregate summarize command for the next CI artifact bundle, but no
+  aggregate-enabled run has been reviewed yet. `validate --all`, CI enforcement, and full-promotion waiver policy remain
   future questions.
 
 ### Decisions Needed Before Promotion Approval

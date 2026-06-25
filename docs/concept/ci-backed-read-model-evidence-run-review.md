@@ -16,6 +16,10 @@ that its CI manifest preserves source-authority and non-promotion boundaries.
 This review supersedes the earlier blocked attempt that could not dispatch the workflow because local GitHub CLI was not
 authenticated. A user-authenticated manual workflow run is now available and reviewed.
 
+Note: this reviewed run predates the later workflow update that adds Todo App PBE Run structure-only Evidence and the
+aggregate summarize command. The aggregate-enabled workflow still needs a separate manual run and artifact review before
+it can be cited as reviewed aggregate CI-backed Evidence.
+
 ## Boundary
 
 This review is non-enforcing CI Evidence review only.

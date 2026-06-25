@@ -1,6 +1,6 @@
 # Validator / CI-Backed Read-Model Evidence Design
 
-Status: validator-ci-backed-read-model-evidence-design / scoped-validator-backed-evidence-implemented / non-enforcing-ci-workflow-implemented
+Status: validator-ci-backed-read-model-evidence-design / scoped-validator-backed-evidence-implemented / aggregate-capable-non-enforcing-ci-workflow
 
 ## Document Purpose
 
@@ -8,25 +8,25 @@ This document defines the concept-level design for validator-backed and CI-backe
 considers broader execution, enforcement, or full Graph-source promotion review.
 
 It builds on the Todo Search scoped source-authority pilot, which is currently active under observation with retained
-warnings. The bounded scoped validator command is now implemented for `examples/adoption/todo-search-slice` only. This
-does not add a CI workflow, does not enforce CI gates, does not expand pilot scope, and does not change source
-authority.
+warnings. The bounded scoped validator command is implemented for `examples/adoption/todo-search-slice`, and the manual
+non-enforcing workflow now also runs the Todo App PBE Run structure-only validator plus aggregate summarize. This does
+not enforce CI gates, does not expand source authority, and does not change promotion state.
 
 ## Current Scoped Pilot Baseline
 
-| Baseline item                 | Current state                                           |
-| ----------------------------- | ------------------------------------------------------- |
-| Scoped pilot                  | `examples/adoption/todo-search-slice` only              |
-| Active observation status     | `keep-active-with-retained-warnings`                    |
-| Generated/manual parity       | `comparison-pass`                                       |
-| Mismatch count                | 0                                                       |
-| Blocking count                | 0                                                       |
-| Decision-required count       | 0                                                       |
-| Generated read-model Evidence | present for bounded Todo Search slice                   |
-| Validator-backed Evidence     | present for bounded Todo Search slice                   |
-| CI-backed Evidence            | reviewed manual run `28151296796` is `ci-evidence-pass` |
-| Tree-native fallback          | retained and usable                                     |
-| Supplemental compatibility    | warning-only, not pilot source scope                    |
+| Baseline item                 | Current state                                                                |
+| ----------------------------- | ---------------------------------------------------------------------------- |
+| Scoped pilot                  | `examples/adoption/todo-search-slice` only                                   |
+| Active observation status     | `keep-active-with-retained-warnings`                                         |
+| Generated/manual parity       | `comparison-pass`                                                            |
+| Mismatch count                | 0                                                                            |
+| Blocking count                | 0                                                                            |
+| Decision-required count       | 0                                                                            |
+| Generated read-model Evidence | present for bounded Todo Search slice                                        |
+| Validator-backed Evidence     | present for bounded Todo Search slice                                        |
+| CI-backed Evidence            | Todo Search run `28151296796` reviewed; aggregate-enabled run review pending |
+| Tree-native fallback          | retained and usable                                                          |
+| Supplemental compatibility    | warning-only, not pilot source scope                                         |
 
 This baseline is sufficient to keep the current scoped pilot active and now has local validator-backed Evidence. It is
 not enough by itself to enforce broader execution, make CI claims, retire fallback artifacts, or approve full
@@ -94,16 +94,17 @@ promotion readiness.
 
 ## Proposed Report Artifacts
 
-The scoped Todo Search validator now creates the first two artifacts below under
-`examples/adoption/todo-search-slice/generated/`. The CI manifest is implemented for the manual Todo Search workflow and
-remains a future design target for multi-slice or repo-wide CI evidence.
+The scoped Todo Search validator creates the first two artifacts below under
+`examples/adoption/todo-search-slice/generated/`. The CI manifest is implemented for the manual workflow and now carries
+Todo Search, Todo App PBE Run, and aggregate summary fields for the next workflow run. Repo-wide CI evidence and
+enforcement remain future-only.
 
-| Artifact                               | Role                                                                                                                                                                               |
-| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `read-model-validation-report.json`    | Machine-readable validator-backed Evidence summary. Implemented for Todo Search scoped validation.                                                                                 |
-| `read-model-validation-report.md`      | Human-readable validation summary for review and Approval Brief use. Implemented for Todo Search.                                                                                  |
-| `read-model-ci-evidence-manifest.json` | CI-backed manifest linking commit, run identity, validation command, and produced artifacts. Implemented for the manual Todo Search workflow; future for multi-slice/repo-wide CI. |
-| `read-model-validation-summary.md`     | Optional concise summary for promotion or scoped execution review packages.                                                                                                        |
+| Artifact                               | Role                                                                                                                                                                                   |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `read-model-validation-report.json`    | Machine-readable validator-backed Evidence summary. Implemented for Todo Search scoped validation.                                                                                     |
+| `read-model-validation-report.md`      | Human-readable validation summary for review and Approval Brief use. Implemented for Todo Search.                                                                                      |
+| `read-model-ci-evidence-manifest.json` | CI-backed manifest linking commit, run identity, validation commands, aggregate status, and produced artifacts. Implemented for the manual workflow; repo-wide CI remains future-only. |
+| `read-model-validation-summary.md`     | Optional concise summary for promotion or scoped execution review packages.                                                                                                            |
 
 ## Implemented And Future CLI / CI Surfaces
 
@@ -135,7 +136,8 @@ The CI-backed workflow integration design and first non-enforcing manual workflo
 [ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md). That document
 defines CI trigger modes, command sequence, artifact outputs, status semantics, and waiver boundaries. The implemented
 workflow is `.github/workflows/read-model-evidence.yml` with manual `workflow_dispatch` only. The first worker run
-review now records run `28151296796` as `ci-evidence-pass` with `validation-pass` and `comparison-pass`.
+review records run `28151296796` as Todo Search `ci-evidence-pass` with `validation-pass` and `comparison-pass`. The
+aggregate-enabled workflow update has not yet been run and reviewed.
 
 ## Report Field Expectations
 
