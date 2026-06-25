@@ -81,7 +81,7 @@ Tree-native selected-slice artifacts remain preserved and usable as fallback/ref
 | -------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | Bounded fixture Evidence                     | Retained. It is acceptable for this scoped pilot but not proof of full Todo app implementation.    |
 | Partial UI screenshot/manual visual Evidence | Retained. It does not block active observation, but broader UI confidence needs stronger Evidence. |
-| CI-backed Evidence / enforcement missing     | Retained. Validator-backed Evidence is present locally; CI-backed repeatability is still future.   |
+| CI-backed Evidence / enforcement missing     | Retained. Reviewed manual CI-backed Evidence is present; CI enforcement remains future-only.       |
 | ACEP task-card public-doc cleanup deferred   | Retained. It is not cleaned up here and should be revisited before broader promotion planning.     |
 
 ## Observation Checks
@@ -151,8 +151,8 @@ validator command is implemented for Todo Search only; CI enforcement remains un
 The CI workflow integration design is recorded in
 [ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md). It defines trigger
 modes, commands, artifacts, status labels, and waiver boundaries. The non-enforcing manual workflow is implemented in
-`.github/workflows/read-model-evidence.yml`; PR/push triggers and enforcement remain future-only. The first worker run
-review is blocked until an authenticated GitHub workflow run produces a downloadable artifact.
+`.github/workflows/read-model-evidence.yml`; PR/push triggers and enforcement remain future-only. Run `28151296796`
+provides reviewed CI-backed Evidence with `ci-evidence-pass`, `validation-pass`, and `comparison-pass`.
 
 ## Triggers For Public-Doc Cleanup Decision
 
@@ -178,13 +178,14 @@ of these is true:
 The next major decision should be one of:
 
 1. `Continue active observation`
-2. `Run manual CI-backed Evidence workflow and review artifact result`
-3. `Perform public-doc cleanup`
-4. `Prepare broader Graph-source promotion review`
-5. `Rollback or defer scoped pilot`
+2. `Design PR informational trigger`
+3. `Design CI enforcement / required check policy`
+4. `Perform public-doc cleanup`
+5. `Prepare broader Graph-source promotion review`
+6. `Rollback or defer scoped pilot`
 
-Recommended current stance: continue active observation with validator-backed Evidence until the user wants CI
-integration, broader use, enforcement, cleanup, or promotion review.
+Recommended current stance: continue active observation with validator-backed and reviewed CI-backed Evidence until the
+user wants PR integration, broader use, enforcement, cleanup, promotion review, or rollback/defer.
 
 ## Gate Self-Check
 

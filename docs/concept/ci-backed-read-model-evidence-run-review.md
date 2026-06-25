@@ -1,22 +1,20 @@
 # CI-Backed Read-Model Evidence Run Review
 
-Status: ci-backed-read-model-evidence-run-review / blocked-awaiting-manual-workflow-run / no-ci-run-evidence-recorded
+Status: ci-backed-read-model-evidence-run-review / ci-evidence-pass-reviewed / non-enforcing-manual-run
 
 ## Review Purpose
 
-This document records the first attempt to run and review the non-enforcing GitHub Actions workflow for Todo Search
-read-model Evidence:
+This document records the reviewed GitHub Actions run for Todo Search read-model Evidence:
 
 ```text
 PBE Read-Model Evidence
 ```
 
-The purpose is to verify whether a real CI-backed Evidence run exists, whether its uploaded artifact bundle can be
-reviewed, and whether its CI manifest preserves the source-authority and non-promotion boundaries.
+The purpose is to verify that a real CI-backed Evidence run exists, that its uploaded artifact bundle is reviewable, and
+that its CI manifest preserves source-authority and non-promotion boundaries.
 
-No real CI-backed Evidence run was created or reviewed in this attempt because the local GitHub CLI was not
-authenticated. This document therefore records a blocker and the exact manual run instructions rather than inventing CI
-Evidence.
+This review supersedes the earlier blocked attempt that could not dispatch the workflow because local GitHub CLI was not
+authenticated. A user-authenticated manual workflow run is now available and reviewed.
 
 ## Boundary
 
@@ -34,126 +32,115 @@ It does not:
 - perform public-doc cleanup
 - retire tree-native artifacts
 - hide retained warnings
-- treat a future CI pass as user approval
+- treat CI pass as user approval
 
-## Intended Workflow Run
+## Reviewed Workflow Run
 
-| Field             | Intended value                              |
-| ----------------- | ------------------------------------------- |
-| Workflow file     | `.github/workflows/read-model-evidence.yml` |
-| Workflow name     | `PBE Read-Model Evidence`                   |
-| Target ref        | `main`                                      |
-| Trigger mode      | `workflow_dispatch`                         |
-| Expected artifact | `pbe-todo-search-read-model-evidence`       |
-| Scope             | `examples/adoption/todo-search-slice`       |
+| Field            | Observed value                                                                                                          |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Workflow file    | `.github/workflows/read-model-evidence.yml`                                                                             |
+| Workflow name    | `PBE Read-Model Evidence`                                                                                               |
+| Run ID           | `28151296796`                                                                                                           |
+| Run URL          | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28151296796`                              |
+| Target branch    | `main`                                                                                                                  |
+| Event            | `workflow_dispatch`                                                                                                     |
+| Status           | `completed`                                                                                                             |
+| Conclusion       | `success`                                                                                                               |
+| Source commit    | `f7ab62d06ba33056a33cb433134353b9ed8a5cd4`                                                                              |
+| Artifact name    | `pbe-todo-search-read-model-evidence`                                                                                   |
+| Job name         | `Todo Search Read-Model Evidence`                                                                                       |
+| Job URL          | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28151296796/job/83369398505`              |
+| Download path    | `.tmp/read-model-evidence-run-28151296796`                                                                              |
+| Review command   | `gh run view 28151296796 --json databaseId,status,conclusion,event,headBranch,headSha,url`                              |
+| Download command | `gh run download 28151296796 --name pbe-todo-search-read-model-evidence --dir .tmp/read-model-evidence-run-28151296796` |
 
-## Execution Attempt
+The downloaded artifact stays under `.tmp/` and is not committed.
 
-Attempted command:
+## Job / Step Review Result
 
-```bash
-gh workflow run read-model-evidence.yml --ref main
-```
-
-Observed result:
-
-```text
-To get started with GitHub CLI, please run:  gh auth login
-Alternatively, populate the GH_TOKEN environment variable with a GitHub API authentication token.
-```
-
-Authentication check:
+Reviewed command:
 
 ```bash
-gh auth status
+gh run view 28151296796 --json jobs
 ```
 
-Observed result:
+Observed job:
 
-```text
-You are not logged into any GitHub hosts. To log in, run: gh auth login
-```
+| Field      | Observed value                    |
+| ---------- | --------------------------------- |
+| Job        | `Todo Search Read-Model Evidence` |
+| Status     | `completed`                       |
+| Conclusion | `success`                         |
+| Started    | `2026-06-25T06:26:57Z`            |
+| Completed  | `2026-06-25T06:27:21Z`            |
 
-Run identity:
+The following workflow steps completed successfully:
 
-```text
-not available
-```
-
-Run URL:
-
-```text
-not available
-```
-
-Run status / conclusion:
-
-```text
-not available
-```
+- Checkout
+- Setup Node.js
+- Install dependencies
+- Build CLI
+- Generate read-model Evidence
+- Compare generated and manual read-model Evidence
+- Validate read-model Evidence
+- Focused read-model Evidence tests
+- Todo Search runtime fixture tests
+- Validate PBE plugin files
+- Validate PBE tree schemas
+- Write CI evidence manifest
+- Write evidence summary
+- Upload read-model Evidence artifacts
 
 ## Artifact Review Result
 
-No uploaded GitHub Actions artifact was available for review in this worker context.
+The uploaded artifact bundle was downloaded and inspected.
 
-Expected artifact name:
+Expected and observed files:
+
+| Artifact file                               | Review status |
+| ------------------------------------------- | ------------- |
+| `generated-read-model.json`                 | present       |
+| `generated-read-model.md`                   | present       |
+| `read-model-evidence-manifest.json`         | present       |
+| `read-model-parity-report.json`             | present       |
+| `read-model-parity-report.md`               | present       |
+| `read-model-validation-report.json`         | present       |
+| `read-model-validation-report.md`           | present       |
+| `read-model-ci-evidence-manifest.json`      | present       |
+| `scoped-source-authority-pilot-marker.json` | present       |
+
+Artifact review status:
 
 ```text
-pbe-todo-search-read-model-evidence
+ci-backed artifact bundle reviewed
 ```
-
-Expected files after a successful manual CI run:
-
-- `generated-read-model.json`
-- `generated-read-model.md`
-- `read-model-evidence-manifest.json`
-- `read-model-parity-report.json`
-- `read-model-parity-report.md`
-- `read-model-validation-report.json`
-- `read-model-validation-report.md`
-- `read-model-ci-evidence-manifest.json`
-- `scoped-source-authority-pilot-marker.json`
-
-Because no run was created, none of these files can be counted as reviewed CI-backed artifact Evidence by this record.
-The committed local/generated artifacts remain local and validator-backed Evidence, not reviewed CI-backed Evidence.
 
 ## CI Manifest Review Result
 
-No `read-model-ci-evidence-manifest.json` from GitHub Actions was available for review.
+Reviewed file:
 
-Expected manifest checks after a successful manual CI run:
-
-| Manifest field                  | Expected value / condition                     | Current review status |
-| ------------------------------- | ---------------------------------------------- | --------------------- |
-| `evidenceLevel`                 | `ci-backed`                                    | not reviewed          |
-| `status`                        | `ci-evidence-pass` if workflow succeeds        | not reviewed          |
-| `sourceSlice`                   | `examples/adoption/todo-search-slice`          | not reviewed          |
-| `validatorStatus`               | `validation-pass`                              | not reviewed          |
-| `parityStatus`                  | `comparison-pass`                              | not reviewed          |
-| `retainedWarningsRemainVisible` | `true`                                         | not reviewed          |
-| `sourceAuthorityBoundary`       | present and Todo Search scoped                 | not reviewed          |
-| `nonPromotionStatement`         | present; no full promotion or source authority | not reviewed          |
-
-## Manual Run Instructions
-
-An authenticated maintainer can run the workflow manually with:
-
-```bash
-gh auth login
-gh workflow run read-model-evidence.yml --ref main
-gh run list --workflow read-model-evidence.yml --limit 5
-gh run watch <run-id>
-gh run view <run-id> --json databaseId,status,conclusion,event,headBranch,headSha,url
-gh run download <run-id> --name pbe-todo-search-read-model-evidence --dir .tmp/read-model-evidence-run
+```text
+.tmp/read-model-evidence-run-28151296796/read-model-ci-evidence-manifest.json
 ```
 
-After downloading the artifact, inspect:
+| Manifest field                  | Observed value / condition                 | Review status |
+| ------------------------------- | ------------------------------------------ | ------------- |
+| `evidenceLevel`                 | `ci-backed`                                | pass          |
+| `status`                        | `ci-evidence-pass`                         | pass          |
+| `workflowName`                  | `PBE Read-Model Evidence`                  | pass          |
+| `triggerMode`                   | `workflow_dispatch`                        | pass          |
+| `runId`                         | `28151296796`                              | pass          |
+| `runAttempt`                    | `1`                                        | pass          |
+| `sourceCommit`                  | `f7ab62d06ba33056a33cb433134353b9ed8a5cd4` | pass          |
+| `sourceRef`                     | `refs/heads/main`                          | pass          |
+| `sourceSlice`                   | `examples/adoption/todo-search-slice`      | pass          |
+| `validatorStatus`               | `validation-pass`                          | pass          |
+| `parityStatus`                  | `comparison-pass`                          | pass          |
+| `retainedWarningsRemainVisible` | `true`                                     | pass          |
+| `sourceAuthorityBoundary`       | present                                    | pass          |
+| `nonPromotionStatement`         | present                                    | pass          |
 
-```bash
-node -e "const fs=require('fs'); const j=JSON.parse(fs.readFileSync('.tmp/read-model-evidence-run/read-model-ci-evidence-manifest.json','utf8')); console.log(JSON.stringify({evidenceLevel:j.evidenceLevel,status:j.status,sourceSlice:j.sourceSlice,validatorStatus:j.validatorStatus,parityStatus:j.parityStatus,retainedWarningsRemainVisible:j.retainedWarningsRemainVisible}, null, 2));"
-```
-
-Expected successful review shape:
+CI manifest summary:
 
 ```json
 {
@@ -166,6 +153,40 @@ Expected successful review shape:
 }
 ```
 
+## Validation Report Review Result
+
+Reviewed file:
+
+```text
+.tmp/read-model-evidence-run-28151296796/read-model-validation-report.json
+```
+
+| Validation field                | Observed value            | Review status |
+| ------------------------------- | ------------------------- | ------------- |
+| `status`                        | `validation-pass`         | pass          |
+| `evidenceLevel`                 | `validator-backed`        | pass          |
+| `scopeLevel`                    | `scoped-slice-validation` | pass          |
+| `summary.checkCount`            | 20                        | pass          |
+| `summary.passCount`             | 20                        | pass          |
+| `summary.warningCount`          | 0                         | pass          |
+| `summary.blockingCount`         | 0                         | pass          |
+| `summary.decisionRequiredCount` | 0                         | pass          |
+
+## Parity Report Review Result
+
+Reviewed file:
+
+```text
+.tmp/read-model-evidence-run-28151296796/read-model-parity-report.json
+```
+
+| Parity field                    | Observed value    | Review status |
+| ------------------------------- | ----------------- | ------------- |
+| `summary.status`                | `comparison-pass` | pass          |
+| `summary.mismatchCount`         | 0                 | pass          |
+| `summary.blockingCount`         | 0                 | pass          |
+| `summary.decisionRequiredCount` | 0                 | pass          |
+
 ## Retained Warnings
 
 The retained warnings remain active and visible:
@@ -174,49 +195,54 @@ The retained warnings remain active and visible:
 - partial UI screenshot/manual visual Evidence remains partial
 - ACEP task-card public-doc cleanup remains deferred
 - PR/push triggers and CI enforcement remain unapproved
-- actual GitHub CI-backed artifact review is blocked until an authenticated manual workflow run is completed
+- CI pass is Evidence only and does not approve source authority change or user acceptance
 
 ## Source Authority Boundary
 
 Tree-native selected-slice artifacts remain current operational source.
 
-The manual workflow, when run, can produce CI-backed Evidence. It does not by itself change source authority, approve
-full Graph-source promotion, retire tree-native artifacts, replace user acceptance, add branch protection, or make the
-workflow a required check.
+The reviewed CI-backed Evidence confirms a non-enforcing manual workflow run for the Todo Search selected slice. It does
+not change source authority, approve full Graph-source promotion, retire tree-native artifacts, replace user acceptance,
+add branch protection, add PR/push triggers, or make the workflow a required check.
 
 ## Next Decision Surface
 
 The next step should be one of:
 
-1. `Run manual workflow with authenticated GitHub CLI or GitHub UI and review artifact`
-2. `Provide a CI run id / artifact bundle for review`
-3. `Keep workflow manual/non-enforcing and observe locally`
-4. `Design PR informational trigger only after a reviewed manual run`
-5. `Defer CI-backed Evidence run review`
+1. `Keep workflow manual/non-enforcing and observe`
+2. `Design PR informational trigger`
+3. `Design CI enforcement / required check policy`
+4. `Prepare multi-slice validation design`
+5. `Require public-doc cleanup before broader promotion`
+6. `Prepare broader Graph-source promotion review`
+7. `Rollback / defer scoped source-authority pilot`
 
 Recommended next step:
 
 ```text
-Run manual workflow with authenticated GitHub CLI or GitHub UI and review artifact.
+Keep workflow manual/non-enforcing and observe, unless the user wants the next major branch: PR informational trigger, enforcement policy, multi-slice validation, cleanup, broader promotion review, or rollback/defer.
 ```
 
 ## Gate Self-Check
 
-| Gate                             | Status  | Result                                                                 |
-| -------------------------------- | ------- | ---------------------------------------------------------------------- |
-| Manual Workflow Run Gate         | blocked | `gh` is installed but unauthenticated; no workflow run was dispatched. |
-| CI-Backed Artifact Review Gate   | blocked | No uploaded artifact was available for review.                         |
-| Non-Enforcing CI Gate            | pass    | The intended workflow remains manual and informational only.           |
-| Non-Required-Check Gate          | pass    | No required check or branch protection was added.                      |
-| Source Authority Boundary Gate   | pass    | Source authority remains unchanged.                                    |
-| Non-Full-Promotion Gate          | pass    | No full Graph-source promotion is recorded.                            |
-| Scope Containment Gate           | pass    | Scope remains Todo Search selected slice only.                         |
-| Retained Warning Visibility Gate | pass    | Warnings remain documented.                                            |
-| User Approval Boundary Gate      | pass    | No CI pass is treated as user approval.                                |
-| Evidence Honesty Gate            | pass    | No unavailable CI run or artifact is treated as Evidence.              |
+| Gate                             | Status | Result                                                                                         |
+| -------------------------------- | ------ | ---------------------------------------------------------------------------------------------- |
+| Manual Workflow Run Gate         | pass   | Run `28151296796` completed successfully on `workflow_dispatch`.                               |
+| CI-Backed Artifact Review Gate   | pass   | Artifact bundle `pbe-todo-search-read-model-evidence` was downloaded and inspected.            |
+| CI Manifest Integrity Gate       | pass   | CI manifest is `ci-backed` / `ci-evidence-pass` and includes run/source/scope/boundary fields. |
+| Validation Report Gate           | pass   | Validation report is `validation-pass`, 20 checks, 0 warning/blocking/decision-required.       |
+| Parity Report Gate               | pass   | Parity report is `comparison-pass`, 0 mismatch/blocking/decision-required.                     |
+| Non-Enforcing CI Gate            | pass   | Workflow remains manual and informational only.                                                |
+| Non-Required-Check Gate          | pass   | No required check or branch protection was added.                                              |
+| Source Authority Boundary Gate   | pass   | Source authority remains unchanged.                                                            |
+| Non-Full-Promotion Gate          | pass   | No full Graph-source promotion is recorded.                                                    |
+| Scope Containment Gate           | pass   | Scope remains Todo Search selected slice only.                                                 |
+| Retained Warning Visibility Gate | pass   | Warnings remain documented.                                                                    |
+| User Approval Boundary Gate      | pass   | CI pass is not treated as user approval.                                                       |
+| Evidence Honesty Gate            | pass   | Only the observed CI run and downloaded artifact are recorded as reviewed Evidence.            |
 
 ## Final Statement
 
-This record does not prove CI-backed Evidence exists. It records that the worker could not dispatch the workflow because
-GitHub CLI authentication was unavailable, and it preserves the manual run instructions needed to produce reviewable
-CI-backed Evidence later.
+This review records successful non-enforcing CI-backed Evidence for the Todo Search selected slice. It does not promote
+Maintainability Graph, change current source authority, expand pilot scope, introduce CI enforcement, add required
+checks, retire tree-native artifacts, clean up public docs, or replace user approval.

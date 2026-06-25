@@ -313,9 +313,9 @@ artifacts.
 
 [ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md) defines how a CI run
 could provide stronger read-model Evidence. The first non-enforcing manual workflow is now available for Todo Search
-only, but the first worker run review is blocked until an authenticated GitHub workflow run produces an artifact. A CI
-pass would still be Evidence only; it would not perform rollback, approve fallback, clean up compatibility warnings, or
-retire tree-native fallback/reference artifacts.
+only, and run `28151296796` provides reviewed `ci-evidence-pass` Evidence. That CI pass is still Evidence only; it does
+not perform rollback, approve fallback, clean up compatibility warnings, or retire tree-native fallback/reference
+artifacts.
 
 [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) adds a source-transition safety constraint: durable
 semantic relationships must remain Edges, while Tags are view-scoped roles only. A future transition or parity artifact

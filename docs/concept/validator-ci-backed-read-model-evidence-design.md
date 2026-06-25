@@ -14,19 +14,19 @@ authority.
 
 ## Current Scoped Pilot Baseline
 
-| Baseline item                 | Current state                                                       |
-| ----------------------------- | ------------------------------------------------------------------- |
-| Scoped pilot                  | `examples/adoption/todo-search-slice` only                          |
-| Active observation status     | `keep-active-with-retained-warnings`                                |
-| Generated/manual parity       | `comparison-pass`                                                   |
-| Mismatch count                | 0                                                                   |
-| Blocking count                | 0                                                                   |
-| Decision-required count       | 0                                                                   |
-| Generated read-model Evidence | present for bounded Todo Search slice                               |
-| Validator-backed Evidence     | present for bounded Todo Search slice                               |
-| CI-backed Evidence            | manual workflow implemented; first run review blocked by local auth |
-| Tree-native fallback          | retained and usable                                                 |
-| Supplemental compatibility    | warning-only, not pilot source scope                                |
+| Baseline item                 | Current state                                           |
+| ----------------------------- | ------------------------------------------------------- |
+| Scoped pilot                  | `examples/adoption/todo-search-slice` only              |
+| Active observation status     | `keep-active-with-retained-warnings`                    |
+| Generated/manual parity       | `comparison-pass`                                       |
+| Mismatch count                | 0                                                       |
+| Blocking count                | 0                                                       |
+| Decision-required count       | 0                                                       |
+| Generated read-model Evidence | present for bounded Todo Search slice                   |
+| Validator-backed Evidence     | present for bounded Todo Search slice                   |
+| CI-backed Evidence            | reviewed manual run `28151296796` is `ci-evidence-pass` |
+| Tree-native fallback          | retained and usable                                     |
+| Supplemental compatibility    | warning-only, not pilot source scope                    |
 
 This baseline is sufficient to keep the current scoped pilot active and now has local validator-backed Evidence. It is
 not enough by itself to enforce broader execution, make CI claims, retire fallback artifacts, or approve full
@@ -87,7 +87,7 @@ promotion readiness.
 | Check/Evidence mapping          | Checks and Evidence are mapped distinctly.                                                                                    | blocking                      |
 | Source authority boundary       | boundary statement is present and bounded to the declared scope.                                                              | blocking                      |
 | Non-promotion statement         | output explicitly says it is not promotion or automatic source authority change.                                              | blocking                      |
-| Retained warnings               | bounded fixture, partial UI Evidence, validator/CI gap, and public-doc cleanup warnings remain visible where applicable.      | warning or decision-required  |
+| Retained warnings               | bounded fixture, partial UI Evidence, CI enforcement gap, and public-doc cleanup warnings remain visible where applicable.    | warning or decision-required  |
 | Fallback/reference artifacts    | tree-native fallback/reference artifacts are present or an exception is visible.                                              | blocking                      |
 | User acceptance authority       | output does not replace user acceptance with Codex/PBE judgment.                                                              | blocking                      |
 | Compatibility boundary          | supplemental compatibility evidence remains warning-only unless separately promoted or cleaned up.                            | warning or decision-required  |
@@ -134,7 +134,7 @@ The CI-backed workflow integration design and first non-enforcing manual workflo
 [ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md). That document
 defines CI trigger modes, command sequence, artifact outputs, status semantics, and waiver boundaries. The implemented
 workflow is `.github/workflows/read-model-evidence.yml` with manual `workflow_dispatch` only. The first worker run
-review is blocked until an authenticated GitHub workflow run produces a downloadable artifact.
+review now records run `28151296796` as `ci-evidence-pass` with `validation-pass` and `comparison-pass`.
 
 ## Report Field Expectations
 
@@ -235,17 +235,18 @@ The scoped validator implementation does not:
 
 ## Next Decision Surface
 
-After scoped validator-backed Evidence is available, the next user decision should choose one of:
+After scoped validator-backed Evidence and reviewed CI-backed Evidence are available, the next user decision should
+choose one of:
 
-1. `Run manual CI-backed Evidence workflow and review artifact result`
-2. `Keep workflow manual/non-enforcing and observe`
-3. `Design PR informational trigger`
-4. `Design CI enforcement / required check policy`
-5. `Require multi-slice validation design before broader CI`
+1. `Keep workflow manual/non-enforcing and observe`
+2. `Design PR informational trigger`
+3. `Design CI enforcement / required check policy`
+4. `Require multi-slice validation design before broader CI`
+5. `Require public-doc cleanup before broader promotion`
 6. `Defer or reject broader execution/enforcement path`
 
-Recommended next step: run the manual CI-backed Evidence workflow from an authenticated GitHub CLI or GitHub UI and
-review the uploaded artifact result before considering PR triggers, enforcement, or broader scope.
+Recommended next step: keep the workflow manual/non-enforcing and observe, unless the user chooses PR triggers,
+enforcement, multi-slice validation, cleanup, broader promotion review, or rollback/defer.
 
 ## Gate Self-Check
 

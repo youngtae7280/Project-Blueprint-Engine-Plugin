@@ -26,15 +26,14 @@ retire tree-native artifacts, does not clean up public docs, and does not approv
 | Validator-backed status    | `validation-pass`                                                            |
 | Validator check count      | 20                                                                           |
 | Warning/blocking/decision  | 0 / 0 / 0                                                                    |
-| CI-backed Evidence         | manual workflow implemented; first run review blocked by local auth          |
+| CI-backed Evidence         | reviewed manual run `28151296796` is `ci-evidence-pass`                      |
 | Tree-native fallback       | retained and usable                                                          |
 | Supplemental compatibility | warning-only, not pilot source scope                                         |
 | Current authority boundary | bounded Todo Search scoped pilot; no repository-wide source authority change |
 
 The local validator baseline is enough to keep the scoped pilot active under observation. The non-enforcing manual CI
-workflow can produce CI-backed Evidence when manually dispatched by an authenticated user. The first worker run review is
-blocked because local GitHub CLI is unauthenticated, so no CI-backed artifact has been reviewed yet. PR/push triggers,
-required checks, branch protection, and enforcement remain unimplemented.
+workflow produced reviewed CI-backed Evidence in run `28151296796`. PR/push triggers, required checks, branch
+protection, and enforcement remain unimplemented.
 
 ## CI-Backed Evidence Definition
 
@@ -63,7 +62,7 @@ CI-backed Evidence is still Evidence. It is not source promotion, not user appro
 | Enforcement possibility | None unless separately wired               | Can be informational or enforcement, but enforcement requires separate approval |
 | User approval relation  | Evidence only; not user approval           | Evidence only; not user approval                                                |
 | Source authority effect | None by itself                             | None by itself                                                                  |
-| Current status          | implemented for Todo Search scoped slice   | manual workflow implemented; run review blocked by local auth                   |
+| Current status          | implemented for Todo Search scoped slice   | reviewed manual run `28151296796` is `ci-evidence-pass`                         |
 
 ## CI Trigger Modes
 
@@ -305,17 +304,19 @@ This implementation and design do not:
 
 ## Recommended Next Decision Surface
 
-After this non-enforcing manual workflow implementation, the next user decision should choose one of:
+After this non-enforcing manual workflow implementation and reviewed run `28151296796`, the next user decision should
+choose one of:
 
-1. `Run manual CI-backed Evidence workflow and review artifact result`
-2. `Keep workflow manual/non-enforcing and observe`
-3. `Design PR informational trigger`
-4. `Design CI enforcement / required check policy`
-5. `Prepare multi-slice validation design`
-6. `Require public-doc cleanup before broader CI or promotion work`
+1. `Keep workflow manual/non-enforcing and observe`
+2. `Design PR informational trigger`
+3. `Design CI enforcement / required check policy`
+4. `Prepare multi-slice validation design`
+5. `Require public-doc cleanup before broader CI or promotion work`
+6. `Prepare broader Graph-source promotion review`
 
-Recommended next step: run the manual workflow once from an authenticated GitHub CLI or GitHub UI and review the
-uploaded artifact result before considering PR informational triggers, enforcement, or broader scope.
+Recommended next step: keep the workflow manual/non-enforcing and observe, unless the user chooses the next branch: PR
+informational trigger design, enforcement policy design, multi-slice validation, cleanup, broader promotion review, or
+rollback/defer.
 
 ## Approval Brief Draft
 
@@ -332,20 +333,20 @@ and compatibility.
 
 ### Verification Summary
 
-| Check                      | Status       | Summary                                                                                   |
-| -------------------------- | ------------ | ----------------------------------------------------------------------------------------- |
-| Local validator baseline   | present      | Todo Search scoped validation is `validation-pass` with 20 checks.                        |
-| CI workflow implementation | implemented  | `.github/workflows/read-model-evidence.yml` exists as manual dispatch.                    |
-| CI enforcement             | not approved | Enforcement mode remains future-only.                                                     |
-| Source authority boundary  | preserved    | CI Evidence would remain Evidence only.                                                   |
-| Retained warnings          | visible      | Bounded fixture, partial UI, CI gap, and ACEP cleanup remain visible.                     |
-| Next user decision         | required     | User or maintainer must run the manual workflow with GitHub auth and review the artifact. |
+| Check                      | Status       | Summary                                                                                                                                          |
+| -------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Local validator baseline   | present      | Todo Search scoped validation is `validation-pass` with 20 checks.                                                                               |
+| CI workflow implementation | implemented  | `.github/workflows/read-model-evidence.yml` exists as manual dispatch.                                                                           |
+| CI enforcement             | not approved | Enforcement mode remains future-only.                                                                                                            |
+| Source authority boundary  | preserved    | CI Evidence would remain Evidence only.                                                                                                          |
+| Retained warnings          | visible      | Bounded fixture, partial UI, enforcement gap, and ACEP cleanup remain visible.                                                                   |
+| Next user decision         | required     | User must choose whether to keep observing or branch into PR triggers, enforcement, broader scope, cleanup, promotion review, or rollback/defer. |
 
 ### Remaining Judgment
 
-The user must decide whether to run the manual workflow and review the CI-backed artifact result, keep observing locally,
-design PR informational triggers, design enforcement policy, prepare multi-slice validation, or require public-doc
-cleanup before broader work.
+The user must decide whether to keep observing locally, design PR informational triggers, design enforcement policy,
+prepare multi-slice validation, require public-doc cleanup before broader work, prepare broader promotion review, or
+rollback/defer the scoped pilot.
 
 ### State Label
 

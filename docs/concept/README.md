@@ -291,13 +291,14 @@ The workflow can create a CI-backed Evidence artifact bundle and GitHub step sum
 required check, does not run on PR/push by default, does not introduce branch protection, and does not change source
 authority.
 
-The first CI run review attempt is recorded:
+The first CI run review is recorded:
 
 - [ci-backed-read-model-evidence-run-review.md](ci-backed-read-model-evidence-run-review.md)
 
-The worker could not dispatch the workflow because GitHub CLI was not authenticated in the local environment. No
-CI-backed artifact is counted as reviewed Evidence yet. The document records the exact manual run commands and keeps the
-status as `blocked-awaiting-manual-workflow-run`.
+Run `28151296796` completed successfully on `workflow_dispatch` for `main`. The uploaded
+`pbe-todo-search-read-model-evidence` artifact was reviewed, and its CI manifest records `ci-backed` /
+`ci-evidence-pass`, `validation-pass`, `comparison-pass`, and retained warning visibility. This remains non-enforcing
+Evidence only and does not change source authority.
 
 ## Outline-Only Later-Phase Docs
 

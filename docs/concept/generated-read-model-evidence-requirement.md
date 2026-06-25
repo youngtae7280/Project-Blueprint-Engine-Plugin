@@ -208,8 +208,8 @@ cleanup, CI enforcement, or tree-native artifact retirement.
 
 The later validator/CI-backed Evidence design is recorded in
 [validator-ci-backed-read-model-evidence-design.md](validator-ci-backed-read-model-evidence-design.md). Local scoped
-validator-backed Evidence is now implemented for Todo Search; CI-backed Evidence remains future and does not change the
-completed bounded generated Evidence prerequisite.
+validator-backed Evidence is now implemented for Todo Search; reviewed CI-backed Evidence exists for run `28151296796`
+and does not change the completed bounded generated Evidence prerequisite.
 
 The CI workflow integration design is recorded in
 [ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md). It defines how

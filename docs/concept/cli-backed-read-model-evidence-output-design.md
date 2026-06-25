@@ -230,21 +230,21 @@ This design and bounded implementation result do not include:
 ## Recommended Next User Decision Surface
 
 After this design, the user approved and Codex implemented the bounded builder task, approved actual scoped
-source-authority pilot execution for Todo Search, approved scoped validator-backed Evidence implementation, and approved
-the first non-enforcing manual CI workflow implementation. The next user decision surface is now:
+source-authority pilot execution for Todo Search, approved scoped validator-backed Evidence implementation, approved the
+first non-enforcing manual CI workflow implementation, and reviewed run `28151296796` as CI-backed Evidence. The next
+user decision surface is now:
 
-1. `Run manual CI-backed Evidence workflow and review artifact result`
-2. `Keep workflow manual/non-enforcing and continue observation`
-3. `Design PR informational trigger`
-4. `Design CI enforcement / required check policy`
-5. `Require public-doc cleanup before broader promotion`
-6. `Prepare broader Graph-source promotion review`
-7. `Rollback / defer scoped source-authority pilot`
+1. `Keep workflow manual/non-enforcing and continue observation`
+2. `Design PR informational trigger`
+3. `Design CI enforcement / required check policy`
+4. `Require public-doc cleanup before broader promotion`
+5. `Prepare broader Graph-source promotion review`
+6. `Rollback / defer scoped source-authority pilot`
 
-Recommended option after the first non-enforcing workflow implementation:
+Recommended option after reviewed CI-backed Evidence:
 
 ```text
-Run manual CI-backed Evidence workflow and review artifact result before considering PR triggers, enforcement, or broader scope.
+Keep workflow manual/non-enforcing and continue observation unless the user chooses the next major branch.
 ```
 
 Reason:
@@ -295,19 +295,18 @@ builder now creates generated output for Todo Search only.
 | Generated output                | present      | Bounded Todo Search generated read-model and parity report are created under `generated/`.     |
 | Source authority change         | not approved | Generated output remains Evidence rather than automatic source.                                |
 | Validator-backed Evidence       | present      | Scoped Todo Search validator report is `validation-pass`.                                      |
-| CI-backed Evidence              | implemented  | Manual workflow exists; reviewed CI run artifact remains future.                               |
+| CI-backed Evidence              | reviewed     | Run `28151296796` is reviewed as `ci-evidence-pass`.                                           |
 | Comparison warning resolution   | present      | The five freshness warnings were reviewed and resolved; current parity status is pass.         |
 
 ### Remaining Judgment
 
 The user approved bounded scoped source-authority pilot execution with generated Evidence, scoped validator-backed
-Evidence, and a manual non-enforcing CI workflow. The remaining decision is whether to run/review the manual CI artifact,
-keep observing the pilot, design PR informational triggers or enforcement policy, require public-doc cleanup, prepare
-broader promotion review, or rollback/defer the pilot.
+Evidence, and reviewed CI-backed Evidence. The remaining decision is whether to keep observing the pilot, design PR
+informational triggers or enforcement policy, require public-doc cleanup, prepare broader promotion review, or
+rollback/defer the pilot.
 
 ### Approval Choice Candidates
 
-- `Run manual CI-backed Evidence workflow and review artifact result`
 - `Keep workflow manual/non-enforcing and continue observation`
 - `Design PR informational trigger`
 - `Design CI enforcement / required check policy`
