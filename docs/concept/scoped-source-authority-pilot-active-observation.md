@@ -146,12 +146,13 @@ enforcement decision before:
 
 The concept-level design for that decision is recorded in
 [validator-ci-backed-read-model-evidence-design.md](validator-ci-backed-read-model-evidence-design.md). The scoped
-validator command is implemented for Todo Search only; CI workflows and enforcement remain unimplemented.
+validator command is implemented for Todo Search only; CI enforcement remains unimplemented.
 
 The CI workflow integration design is recorded in
 [ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md). It defines trigger
 modes, commands, artifacts, status labels, and waiver boundaries. The non-enforcing manual workflow is implemented in
-`.github/workflows/read-model-evidence.yml`; PR/push triggers and enforcement remain future-only.
+`.github/workflows/read-model-evidence.yml`; PR/push triggers and enforcement remain future-only. The first worker run
+review is blocked until an authenticated GitHub workflow run produces a downloadable artifact.
 
 ## Triggers For Public-Doc Cleanup Decision
 

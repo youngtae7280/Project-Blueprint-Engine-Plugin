@@ -274,7 +274,8 @@ change transition stage, expand source authority, add CI enforcement, or replace
 [ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md) defines a future
 non-enforcing CI-backed Evidence workflow shape for the same bounded read-model checks. The first manual
 `workflow_dispatch` implementation exists for Todo Search only. It does not enforce CI gates or change the Source
-Transition Path.
+Transition Path. The first worker run review is blocked by missing local GitHub CLI authentication, so reviewed
+CI-backed artifact Evidence is still pending.
 
 [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md) defines the target Graph-first responsibility split:
 Nodes are durable targets, Edges are durable semantic relationships, and Tags are temporary view-scoped roles.

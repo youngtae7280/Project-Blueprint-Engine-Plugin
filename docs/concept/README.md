@@ -291,6 +291,14 @@ The workflow can create a CI-backed Evidence artifact bundle and GitHub step sum
 required check, does not run on PR/push by default, does not introduce branch protection, and does not change source
 authority.
 
+The first CI run review attempt is recorded:
+
+- [ci-backed-read-model-evidence-run-review.md](ci-backed-read-model-evidence-run-review.md)
+
+The worker could not dispatch the workflow because GitHub CLI was not authenticated in the local environment. No
+CI-backed artifact is counted as reviewed Evidence yet. The document records the exact manual run commands and keeps the
+status as `blocked-awaiting-manual-workflow-run`.
+
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.

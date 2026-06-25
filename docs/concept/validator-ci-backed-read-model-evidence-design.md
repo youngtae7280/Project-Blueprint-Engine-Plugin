@@ -14,19 +14,19 @@ authority.
 
 ## Current Scoped Pilot Baseline
 
-| Baseline item                 | Current state                                        |
-| ----------------------------- | ---------------------------------------------------- |
-| Scoped pilot                  | `examples/adoption/todo-search-slice` only           |
-| Active observation status     | `keep-active-with-retained-warnings`                 |
-| Generated/manual parity       | `comparison-pass`                                    |
-| Mismatch count                | 0                                                    |
-| Blocking count                | 0                                                    |
-| Decision-required count       | 0                                                    |
-| Generated read-model Evidence | present for bounded Todo Search slice                |
-| Validator-backed Evidence     | present for bounded Todo Search slice                |
-| CI-backed Evidence            | manual workflow implemented; artifact review pending |
-| Tree-native fallback          | retained and usable                                  |
-| Supplemental compatibility    | warning-only, not pilot source scope                 |
+| Baseline item                 | Current state                                                       |
+| ----------------------------- | ------------------------------------------------------------------- |
+| Scoped pilot                  | `examples/adoption/todo-search-slice` only                          |
+| Active observation status     | `keep-active-with-retained-warnings`                                |
+| Generated/manual parity       | `comparison-pass`                                                   |
+| Mismatch count                | 0                                                                   |
+| Blocking count                | 0                                                                   |
+| Decision-required count       | 0                                                                   |
+| Generated read-model Evidence | present for bounded Todo Search slice                               |
+| Validator-backed Evidence     | present for bounded Todo Search slice                               |
+| CI-backed Evidence            | manual workflow implemented; first run review blocked by local auth |
+| Tree-native fallback          | retained and usable                                                 |
+| Supplemental compatibility    | warning-only, not pilot source scope                                |
 
 This baseline is sufficient to keep the current scoped pilot active and now has local validator-backed Evidence. It is
 not enough by itself to enforce broader execution, make CI claims, retire fallback artifacts, or approve full
@@ -133,7 +133,8 @@ promotion approval.
 The CI-backed workflow integration design and first non-enforcing manual workflow are recorded separately in
 [ci-backed-read-model-evidence-workflow-design.md](ci-backed-read-model-evidence-workflow-design.md). That document
 defines CI trigger modes, command sequence, artifact outputs, status semantics, and waiver boundaries. The implemented
-workflow is `.github/workflows/read-model-evidence.yml` with manual `workflow_dispatch` only.
+workflow is `.github/workflows/read-model-evidence.yml` with manual `workflow_dispatch` only. The first worker run
+review is blocked until an authenticated GitHub workflow run produces a downloadable artifact.
 
 ## Report Field Expectations
 
@@ -243,8 +244,8 @@ After scoped validator-backed Evidence is available, the next user decision shou
 5. `Require multi-slice validation design before broader CI`
 6. `Defer or reject broader execution/enforcement path`
 
-Recommended next step: run the manual CI-backed Evidence workflow once and review the uploaded artifact result before
-considering PR triggers, enforcement, or broader scope.
+Recommended next step: run the manual CI-backed Evidence workflow from an authenticated GitHub CLI or GitHub UI and
+review the uploaded artifact result before considering PR triggers, enforcement, or broader scope.
 
 ## Gate Self-Check
 
