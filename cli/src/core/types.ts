@@ -71,6 +71,7 @@ export interface CliOptions {
   evidence?: string[]
   acceptance?: string[]
   slice?: string
+  slices?: string
   generated?: string
   manual?: string
 }

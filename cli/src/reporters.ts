@@ -141,6 +141,8 @@ Commands:
                        Compare generated read-model Evidence with a manual parity artifact
   graph read-model validate
                        Validate scoped generated read-model Evidence and write validator-backed reports
+  graph read-model summarize
+                       Summarize existing per-slice read-model validation reports without running validation
 
 Options:
   --root <path>        Target project root. Defaults to current directory.
@@ -166,6 +168,7 @@ Options:
   --evidence <id>      Affected Evidence node id. May be repeated or comma-separated.
   --acceptance <id>    Affected Acceptance node id. May be repeated or comma-separated.
   --slice <path>       Selected slice path for graph read-model generation.
+  --slices <paths>     Slice paths for graph read-model summarize, comma-separated.
   --generated <file>   Generated read-model file for graph read-model comparison.
   --manual <file>      Manual parity artifact for graph read-model comparison.
 `

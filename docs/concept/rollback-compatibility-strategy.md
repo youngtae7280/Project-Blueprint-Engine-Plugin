@@ -379,7 +379,9 @@ The Todo Search scoped pilot keeps fallback/reference artifacts retained. The ne
 `examples/valid/todo-app-pbe-run` profile is structure-only Evidence over a canonical `.pbe` fixture; it is not a
 rollback/fallback retirement event, does not create a second scoped authority pilot, and does not remove compatibility
 or fallback obligations. The current validation reports include per-slice fallback/reference summaries so future
-aggregation can preserve rollback and compatibility boundaries per slice.
+aggregation can preserve rollback and compatibility boundaries per slice. The first aggregate summary now reads those
+reports as Evidence-only inputs, but it does not execute rollback checks, retire fallback artifacts, or implement broader
+aggregate validation.
 
 ## Scope Boundaries
 

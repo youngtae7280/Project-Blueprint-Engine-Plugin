@@ -2,6 +2,7 @@ import { relativePath } from '../core/fs.js'
 import {
   compareReadModelEvidence,
   generateReadModelEvidence,
+  summarizeReadModelEvidence,
   validateReadModelEvidence,
 } from '../core/read-model-evidence.js'
 import type { CommandResult } from '../core/types.js'
@@ -88,4 +89,42 @@ export async function graphReadModelValidateCommand(context: CommandContext): Pr
       nonPromotionStatement: result.report.nonPromotionStatement,
     },
   }
+}
+
+export async function graphReadModelSummarizeCommand(context: CommandContext): Promise<CommandResult> {
+  const slices = parseSlices(context.options.slices)
+  if (slices.length === 0) {
+    return invalidCommand('graph read-model summarize requires --slices <path,path>.')
+  }
+  const result = await summarizeReadModelEvidence(context.options.root, slices)
+  const failed = result.summary.status === 'aggregate-blocked' || result.summary.status === 'decision-required'
+  return {
+    ok: !failed,
+    command: 'graph read-model summarize',
+    exitCode: failed ? ExitCode.ValidationFailed : ExitCode.Success,
+    message: 'Aggregate read-model Evidence summary created from existing per-slice validation reports.',
+    issues: [],
+    data: {
+      aggregateSummary: relativePath(context.options.root, result.summaryJsonPath),
+      aggregateSummaryMarkdown: relativePath(context.options.root, result.summaryMarkdownPath),
+      status: result.summary.status,
+      sliceCount: result.summary.summary.sliceCount,
+      warningCount: result.summary.summary.warningCount,
+      blockingCount: result.summary.summary.blockingCount,
+      decisionRequiredCount: result.summary.summary.decisionRequiredCount,
+      includedSlices: result.summary.includedSlices,
+      aggregateBoundary: result.summary.aggregateBoundary,
+      nonPromotionStatement: result.summary.nonPromotionStatement,
+    },
+  }
+}
+
+function parseSlices(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.flatMap(parseSlices)
+  }
+  return String(value || '')
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean)
 }

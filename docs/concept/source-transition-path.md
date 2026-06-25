@@ -345,8 +345,9 @@ that authority; it defines the conceptual path that would be required before a f
 Todo Search remains the only scoped source-authority pilot and the only reviewed CI-backed slice. A second profile,
 `examples/valid/todo-app-pbe-run`, now exists at `structure-only` level with generated/validation Evidence from
 canonical `.pbe` inputs. That follow-up does not expand source authority, does not add a pilot marker, does not require
-manual parity, and does not implement aggregation or `validate --all`. Both current validation reports carry per-slice
-independence metadata so future aggregation can preserve slice-specific authority boundaries.
+manual parity, and does not implement `validate --all`. Both current validation reports carry per-slice independence
+metadata, and the first aggregate summary reads those reports as Evidence-only inputs while preserving slice-specific
+authority boundaries.
 
 ## Scope Boundaries
 

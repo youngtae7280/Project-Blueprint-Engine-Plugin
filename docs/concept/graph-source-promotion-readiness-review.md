@@ -336,8 +336,9 @@ cleanup remain separate.
 - `examples/valid/todo-app-pbe-run` now has structure-only generated/validation Evidence as a second profile/fixture.
 - Todo Search and Todo App PBE Run validation reports now carry per-slice independence metadata for future aggregation
   inputs.
-- Multi-slice aggregation, CI-backed Evidence for additional slices, CI enforcement, and full-promotion waiver policy
-  remain future questions.
+- The first multi-slice aggregate summary exists as Evidence-only output over existing per-slice validation reports.
+  `validate --all`, CI-backed Evidence for additional slices, CI enforcement, and full-promotion waiver policy remain
+  future questions.
 
 ### Decisions Needed Before Promotion Approval
 

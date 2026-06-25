@@ -4,9 +4,9 @@ Status: generated-present / evidence-only / source-authority-unchanged
 
 ## Run Identity
 
-- Generated at: 2026-06-25T07:38:22.575Z
+- Generated at: 2026-06-25T07:51:13.618Z
 - Command identity: `pbe graph read-model generate --slice examples/adoption/todo-search-slice`
-- Source commit: fce9df7
+- Source commit: a98ecd8
 - Source slice: `examples/adoption/todo-search-slice`
 
 ## Boundary

@@ -2,9 +2,9 @@
   "version": "0.1.0-generated-read-model-evidence",
   "metadata": {
     "artifactRole": "generated_read_model_evidence",
-    "generatedAt": "2026-06-25T07:38:22.575Z",
+    "generatedAt": "2026-06-25T07:51:13.618Z",
     "commandIdentity": "pbe graph read-model generate --slice examples/adoption/todo-search-slice",
-    "sourceCommit": "fce9df7",
+    "sourceCommit": "a98ecd8",
     "sourceSlice": "examples/adoption/todo-search-slice",
     "sliceProfile": "todo-search-selected-slice",
     "sliceProfileDisplayName": "Todo Search Adoption + Product Meaning Feedback",

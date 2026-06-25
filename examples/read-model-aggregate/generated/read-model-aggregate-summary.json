@@ -1,0 +1,170 @@
+{
+  "version": "0.1.0-read-model-aggregate-summary",
+  "metadata": {
+    "summarizedAt": "2026-06-25T07:51:24.369Z",
+    "commandIdentity": "pbe graph read-model summarize --slices examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run",
+    "sourceCommit": "a98ecd8",
+    "aggregateArtifactRole": "cross-slice-evidence-summary",
+    "inputReportList": [
+      "examples/adoption/todo-search-slice/generated/read-model-validation-report.json",
+      "examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json"
+    ],
+    "sourceMode": "existing-per-slice-validation-reports-only",
+    "generationBoundary": "Aggregate summarize reads per-slice validation reports only. It does not run generate, compare, validate, or validate --all."
+  },
+  "status": "aggregate-pass",
+  "aggregateBoundary": "Aggregate read-model summary is Evidence-only over existing per-slice validation reports. It does not expand source authority, introduce CI enforcement, approve promotion, run validation, or replace user approval.",
+  "nonPromotionStatement": "Aggregate-pass is not user acceptance, source-authority expansion, CI enforcement, or full Graph-source promotion.",
+  "decisionRule": [
+    "Any slice with blocking status, missing report, or malformed report => aggregate-blocked.",
+    "Otherwise, any decision-required slice => decision-required.",
+    "Otherwise, any warning slice => aggregate-warning.",
+    "All included slices validation-pass with 0 warning/blocking/decision-required => aggregate-pass."
+  ],
+  "includedSlices": ["examples/adoption/todo-search-slice", "examples/valid/todo-app-pbe-run"],
+  "summary": {
+    "sliceCount": 2,
+    "presentReportCount": 2,
+    "missingReportCount": 0,
+    "malformedReportCount": 0,
+    "validationPassCount": 2,
+    "warningCount": 0,
+    "blockingCount": 0,
+    "decisionRequiredCount": 0,
+    "retainedWarningCount": 6,
+    "status": "aggregate-pass"
+  },
+  "perSliceSummaries": [
+    {
+      "sourceSlice": "examples/adoption/todo-search-slice",
+      "reportPath": "examples/adoption/todo-search-slice/generated/read-model-validation-report.json",
+      "reportStatus": "present",
+      "profileId": "todo-search-selected-slice",
+      "policyLevel": "pilot-marker-backed",
+      "sourceLayout": "flat-demo-support",
+      "validationStatus": "validation-pass",
+      "checkCount": 20,
+      "passCount": 20,
+      "warningCount": 0,
+      "blockingCount": 0,
+      "decisionRequiredCount": 0,
+      "parityRequirement": {
+        "required": true,
+        "status": "pass",
+        "path": "examples/adoption/todo-search-slice/generated/read-model-parity-report.json",
+        "parityStatus": "comparison-pass",
+        "mismatchCount": 0,
+        "blockingCount": 0,
+        "decisionRequiredCount": 0
+      },
+      "pilotMarkerRequirement": {
+        "required": true,
+        "status": "present",
+        "path": "examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json",
+        "markerStatus": "scoped-pilot-executed-with-fallback-ready",
+        "primaryScope": "examples/adoption/todo-search-slice"
+      },
+      "runtimeFixtureRequirement": {
+        "required": true,
+        "status": "present",
+        "helperPath": "examples/adoption/todo-search-slice/runtime-fixture/todo-search.js",
+        "helperStatus": "present",
+        "testPath": "examples/adoption/todo-search-slice/runtime-fixture/todo-search.test.js",
+        "testStatus": "present"
+      },
+      "retainedWarningCount": 4,
+      "acceptedLimitations": [
+        {
+          "id": "RW-BOUNDED-FIXTURE",
+          "findingNodeId": "FIND-BOUNDED-FIXTURE",
+          "status": "acceptable-warning",
+          "summary": "Bounded fixture Evidence is not full Todo app implementation."
+        },
+        {
+          "id": "RW-PARTIAL-UI",
+          "findingNodeId": "FIND-PARTIAL-UI",
+          "status": "acceptable-warning",
+          "summary": "UI screenshot/manual visual Evidence remains partial for the no-result empty state."
+        },
+        {
+          "id": "RW-GENERATED-BUILDER",
+          "findingNodeId": "FIND-GENERATED-BUILDER-MISSING",
+          "status": "generated-present-for-bounded-slice",
+          "summary": "Generated read-model output and scoped validator-backed Evidence now exist for the bounded Todo Search slice; CI/full promotion repeatability remains later."
+        },
+        {
+          "id": "RW-ACEP-CLEANUP",
+          "findingNodeId": "FIND-ACEP-CLEANUP-DEFERRED",
+          "status": "deferred-cleanup",
+          "summary": "ACEP task-card public-doc cleanup remains deferred."
+        }
+      ],
+      "sourceAuthorityBoundary": "Validator-backed Evidence checks the bounded Todo Search read-model outputs only. It does not change source authority.",
+      "nonPromotionStatement": "Validation pass is Evidence only. It does not promote Maintainability Graph, expand pilot scope, retire tree-native artifacts, introduce CI enforcement, or replace user approval.",
+      "notes": [
+        "Per-slice validation report is interpreted as an independent Evidence unit.",
+        "Validation uses the target slice profile, generated artifacts, and declared source inputs only. It must not depend on another slice generated directory, manual parity artifact, pilot marker, or runtime fixture unless that artifact is declared by this profile."
+      ]
+    },
+    {
+      "sourceSlice": "examples/valid/todo-app-pbe-run",
+      "reportPath": "examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json",
+      "reportStatus": "present",
+      "profileId": "todo-app-pbe-run-structure-only",
+      "policyLevel": "structure-only",
+      "sourceLayout": "canonical-pbe",
+      "validationStatus": "validation-pass",
+      "checkCount": 16,
+      "passCount": 16,
+      "warningCount": 0,
+      "blockingCount": 0,
+      "decisionRequiredCount": 0,
+      "parityRequirement": {
+        "required": false,
+        "status": "not-required",
+        "path": "not-required-for-structure-only",
+        "reason": "Structure-only validation does not require generated/manual parity."
+      },
+      "pilotMarkerRequirement": {
+        "required": false,
+        "status": "not-required",
+        "path": "not-required-for-structure-only",
+        "reason": "Structure-only validation does not require a scoped source-authority pilot marker."
+      },
+      "runtimeFixtureRequirement": {
+        "required": false,
+        "status": "attached-evidence-only",
+        "path": "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt",
+        "reason": "Structure-only validation does not require a runnable runtime fixture; attached evidence text may be referenced when present."
+      },
+      "retainedWarningCount": 2,
+      "acceptedLimitations": [
+        {
+          "id": "RW-STRUCTURE-ONLY",
+          "findingNodeId": "FIND-STRUCTURE-ONLY-LIMITATION",
+          "status": "structure-only-limitation",
+          "summary": "This profile validates canonical .pbe structure only; no manual parity artifact, pilot marker, CI-backed Evidence, or source-authority pilot is required or claimed."
+        },
+        {
+          "id": "RW-NO-RUNTIME-FIXTURE",
+          "findingNodeId": "FIND-NO-RUNTIME-FIXTURE",
+          "status": "accepted-structure-only-limitation",
+          "summary": "The fixture contains attached test-output Evidence but no runnable app/runtime fixture is required for structure-only validation."
+        }
+      ],
+      "sourceAuthorityBoundary": "Validator-backed Evidence checks structure-only generated read-model outputs for this canonical .pbe fixture. It does not change source authority.",
+      "nonPromotionStatement": "Structure-only validation pass is Evidence only. It does not promote Maintainability Graph, create a source-authority pilot, require parity, introduce CI enforcement, retire .pbe artifacts, or replace user approval.",
+      "notes": [
+        "Per-slice validation report is interpreted as an independent Evidence unit.",
+        "Validation uses the target slice profile, generated artifacts, and declared source inputs only. It must not depend on another slice generated directory, manual parity artifact, pilot marker, or runtime fixture unless that artifact is declared by this profile."
+      ]
+    }
+  ],
+  "recommendedNextDecisionSurface": [
+    "Keep aggregate summary as Evidence-only and observe report stability",
+    "Design per-slice validation aggregation implementation separately",
+    "Decide whether validate --all is needed after aggregate reports remain stable",
+    "Decide whether CI should run aggregate summarize in non-enforcing mode",
+    "Do not treat aggregate-pass as source promotion or user acceptance"
+  ]
+}

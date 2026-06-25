@@ -333,6 +333,21 @@ report carries self-contained profile, source layout, policy level, expected cou
 requirement, runtime fixture requirement, retained-warning, fallback/reference, source-authority, and non-promotion
 metadata. This prepares future aggregation inputs without implementing aggregation or `validate --all`.
 
+The first aggregate read-model Evidence summary contract is now implemented:
+
+- [read-model-aggregate-summary-contract.md](read-model-aggregate-summary-contract.md)
+- command:
+  `pbe graph read-model summarize --slices examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run`
+- output:
+  `examples/read-model-aggregate/generated/read-model-aggregate-summary.json`
+- output:
+  `examples/read-model-aggregate/generated/read-model-aggregate-summary.md`
+- current status: `aggregate-pass`
+
+The aggregate command reads existing per-slice validation reports only. It does not run generation, comparison,
+validation, `validate --all`, CI enforcement, source authority expansion, public-doc cleanup, or full Graph-source
+promotion.
+
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.

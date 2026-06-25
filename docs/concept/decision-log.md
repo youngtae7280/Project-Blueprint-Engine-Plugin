@@ -260,6 +260,10 @@ while keeping Todo Search as the only active scoped source-authority pilot and o
 DEC-058 does not supersede DEC-057. It strengthens the report contract for the existing two generated slices so they can
 be read independently before any later aggregate reporting.
 
+DEC-059 does not supersede DEC-058. It implements the first aggregate read-model Evidence summary over existing
+per-slice validation reports only. The aggregate summary is Evidence-only and does not run validation, implement
+`validate --all`, change CI workflows, expand source authority, promote Maintainability Graph, or replace user approval.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

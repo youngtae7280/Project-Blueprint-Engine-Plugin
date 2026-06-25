@@ -165,6 +165,61 @@ interface ValidateResult {
   report: ValidationReport
 }
 
+type AggregateStatus = 'aggregate-pass' | 'aggregate-warning' | 'aggregate-blocked' | 'decision-required'
+
+interface PerSliceAggregateSummary {
+  sourceSlice: string
+  reportPath: string
+  reportStatus: 'present' | 'missing' | 'malformed'
+  profileId: string
+  policyLevel: string
+  sourceLayout: string
+  validationStatus: string
+  checkCount: number
+  passCount: number
+  warningCount: number
+  blockingCount: number
+  decisionRequiredCount: number
+  parityRequirement: Record<string, unknown>
+  pilotMarkerRequirement: Record<string, unknown>
+  runtimeFixtureRequirement: Record<string, unknown>
+  retainedWarningCount: number
+  acceptedLimitations: Array<Record<string, unknown>>
+  sourceAuthorityBoundary: string
+  nonPromotionStatement: string
+  notes: string[]
+}
+
+interface AggregateReadModelSummary {
+  version: string
+  metadata: Record<string, unknown>
+  status: AggregateStatus
+  aggregateBoundary: string
+  nonPromotionStatement: string
+  decisionRule: string[]
+  includedSlices: string[]
+  summary: {
+    sliceCount: number
+    presentReportCount: number
+    missingReportCount: number
+    malformedReportCount: number
+    validationPassCount: number
+    warningCount: number
+    blockingCount: number
+    decisionRequiredCount: number
+    retainedWarningCount: number
+    status: AggregateStatus
+  }
+  perSliceSummaries: PerSliceAggregateSummary[]
+  recommendedNextDecisionSurface: string[]
+}
+
+interface AggregateResult {
+  summaryJsonPath: string
+  summaryMarkdownPath: string
+  summary: AggregateReadModelSummary
+}
+
 interface TreeNode {
   id: string
   title?: string
@@ -552,6 +607,175 @@ export async function validateReadModelEvidence(root: string, slice: string): Pr
   await writeFormattedJson(reportJsonPath, report)
   await writeFormattedMarkdown(reportMarkdownPath, renderValidationReportMarkdown(report))
   return { reportJsonPath, reportMarkdownPath, report }
+}
+
+export async function summarizeReadModelEvidence(root: string, slices: string[]): Promise<AggregateResult> {
+  const normalizedSlices = unique(slices.map(normalizePath).filter(Boolean))
+  if (normalizedSlices.length === 0) {
+    throw new Error('graph read-model summarize requires at least one --slices entry.')
+  }
+  const commandIdentity = `pbe graph read-model summarize --slices ${normalizedSlices.join(',')}`
+  const perSliceSummaries = await Promise.all(
+    normalizedSlices.map((slice) => buildPerSliceAggregateSummary(root, slice)),
+  )
+  const status = aggregateStatus(perSliceSummaries)
+  const outputDir = path.join(path.resolve(root), 'examples', 'read-model-aggregate', 'generated')
+  const summary: AggregateReadModelSummary = {
+    version: '0.1.0-read-model-aggregate-summary',
+    metadata: {
+      summarizedAt: new Date().toISOString(),
+      commandIdentity,
+      sourceCommit: resolveSourceCommit(root),
+      aggregateArtifactRole: 'cross-slice-evidence-summary',
+      inputReportList: normalizedSlices.map((slice) => `${slice}/generated/read-model-validation-report.json`),
+      sourceMode: 'existing-per-slice-validation-reports-only',
+      generationBoundary:
+        'Aggregate summarize reads per-slice validation reports only. It does not run generate, compare, validate, or validate --all.',
+    },
+    status,
+    aggregateBoundary:
+      'Aggregate read-model summary is Evidence-only over existing per-slice validation reports. It does not expand source authority, introduce CI enforcement, approve promotion, run validation, or replace user approval.',
+    nonPromotionStatement:
+      'Aggregate-pass is not user acceptance, source-authority expansion, CI enforcement, or full Graph-source promotion.',
+    decisionRule: [
+      'Any slice with blocking status, missing report, or malformed report => aggregate-blocked.',
+      'Otherwise, any decision-required slice => decision-required.',
+      'Otherwise, any warning slice => aggregate-warning.',
+      'All included slices validation-pass with 0 warning/blocking/decision-required => aggregate-pass.',
+    ],
+    includedSlices: normalizedSlices,
+    summary: aggregateCounts(perSliceSummaries, status),
+    perSliceSummaries,
+    recommendedNextDecisionSurface: [
+      'Keep aggregate summary as Evidence-only and observe report stability',
+      'Design per-slice validation aggregation implementation separately',
+      'Decide whether validate --all is needed after aggregate reports remain stable',
+      'Decide whether CI should run aggregate summarize in non-enforcing mode',
+      'Do not treat aggregate-pass as source promotion or user acceptance',
+    ],
+  }
+  const summaryJsonPath = path.join(outputDir, 'read-model-aggregate-summary.json')
+  const summaryMarkdownPath = path.join(outputDir, 'read-model-aggregate-summary.md')
+  await writeFormattedJson(summaryJsonPath, summary)
+  await writeFormattedMarkdown(summaryMarkdownPath, renderAggregateSummaryMarkdown(summary))
+  return { summaryJsonPath, summaryMarkdownPath, summary }
+}
+
+async function buildPerSliceAggregateSummary(root: string, slice: string): Promise<PerSliceAggregateSummary> {
+  const reportPath = `${slice}/generated/read-model-validation-report.json`
+  const absoluteReportPath = path.resolve(root, reportPath)
+  const parsed = await readJsonSafe<ValidationReport>(absoluteReportPath)
+  if (!parsed.ok) {
+    const reportStatus = existsSync(absoluteReportPath) ? 'malformed' : 'missing'
+    return {
+      sourceSlice: slice,
+      reportPath,
+      reportStatus,
+      profileId: 'unknown',
+      policyLevel: 'unknown',
+      sourceLayout: 'unknown',
+      validationStatus: reportStatus,
+      checkCount: 0,
+      passCount: 0,
+      warningCount: 0,
+      blockingCount: 1,
+      decisionRequiredCount: 0,
+      parityRequirement: { required: 'unknown', status: 'unknown' },
+      pilotMarkerRequirement: { required: 'unknown', status: 'unknown' },
+      runtimeFixtureRequirement: { required: 'unknown', status: 'unknown' },
+      retainedWarningCount: 0,
+      acceptedLimitations: [],
+      sourceAuthorityBoundary: 'unavailable because the per-slice validation report could not be read',
+      nonPromotionStatement: 'Aggregate summary did not infer promotion from a missing or malformed report.',
+      notes: [`Per-slice validation report is ${reportStatus}: ${parsed.error}`],
+    }
+  }
+  const report = parsed.value
+  const contract = objectValue(report.sliceValidationContract)
+  const metadata = objectValue(report.metadata)
+  const summary = objectValue(report.summary)
+  const retainedWarnings = Array.isArray(report.retainedWarnings)
+    ? report.retainedWarnings
+    : arrayValue(getPath(contract, ['retainedWarnings']))
+  return {
+    sourceSlice: stringValue(getPath(contract, ['sourceSlice']), stringValue(metadata.sourceSlice, slice)),
+    reportPath,
+    reportStatus: 'present',
+    profileId: stringValue(
+      getPath(contract, ['profileId']),
+      stringValue(metadata.profileId, stringValue(metadata.sliceProfile)),
+    ),
+    policyLevel: stringValue(getPath(contract, ['policyLevel']), stringValue(metadata.policyLevel, 'unknown')),
+    sourceLayout: stringValue(getPath(contract, ['sourceLayout']), stringValue(metadata.sourceLayout, 'unknown')),
+    validationStatus: stringValue(report.status, stringValue(summary.status, 'unknown')),
+    checkCount: numberValue(getPath(summary, ['checkCount'])),
+    passCount: numberValue(getPath(summary, ['passCount'])),
+    warningCount: numberValue(getPath(summary, ['warningCount'])),
+    blockingCount: numberValue(getPath(summary, ['blockingCount'])),
+    decisionRequiredCount: numberValue(getPath(summary, ['decisionRequiredCount'])),
+    parityRequirement: objectValue(getPath(contract, ['parityRequirement']) || metadata.parityRequirement),
+    pilotMarkerRequirement: objectValue(
+      getPath(contract, ['pilotMarkerRequirement']) || metadata.pilotMarkerRequirement,
+    ),
+    runtimeFixtureRequirement: objectValue(
+      getPath(contract, ['runtimeFixtureRequirement']) || metadata.runtimeFixtureRequirement,
+    ),
+    retainedWarningCount: retainedWarnings.length,
+    acceptedLimitations: retainedWarnings,
+    sourceAuthorityBoundary: stringValue(
+      getPath(contract, ['sourceAuthorityBoundary']),
+      stringValue(report.sourceAuthorityBoundary, 'missing source authority boundary'),
+    ),
+    nonPromotionStatement: stringValue(
+      getPath(contract, ['nonPromotionStatement']),
+      stringValue(report.nonPromotionStatement, 'missing non-promotion statement'),
+    ),
+    notes: [
+      'Per-slice validation report is interpreted as an independent Evidence unit.',
+      stringValue(
+        getPath(contract, ['crossSliceDependencyRule']),
+        'No cross-slice dependency rule was found in the report.',
+      ),
+    ],
+  }
+}
+
+function aggregateStatus(perSliceSummaries: PerSliceAggregateSummary[]): AggregateStatus {
+  if (
+    perSliceSummaries.some(
+      (entry) =>
+        entry.reportStatus !== 'present' || entry.validationStatus === 'validation-blocked' || entry.blockingCount > 0,
+    )
+  ) {
+    return 'aggregate-blocked'
+  }
+  if (
+    perSliceSummaries.some((entry) => entry.validationStatus === 'decision-required' || entry.decisionRequiredCount > 0)
+  ) {
+    return 'decision-required'
+  }
+  if (perSliceSummaries.some((entry) => entry.validationStatus === 'validation-warning' || entry.warningCount > 0)) {
+    return 'aggregate-warning'
+  }
+  return 'aggregate-pass'
+}
+
+function aggregateCounts(
+  perSliceSummaries: PerSliceAggregateSummary[],
+  status: AggregateStatus,
+): AggregateReadModelSummary['summary'] {
+  return {
+    sliceCount: perSliceSummaries.length,
+    presentReportCount: perSliceSummaries.filter((entry) => entry.reportStatus === 'present').length,
+    missingReportCount: perSliceSummaries.filter((entry) => entry.reportStatus === 'missing').length,
+    malformedReportCount: perSliceSummaries.filter((entry) => entry.reportStatus === 'malformed').length,
+    validationPassCount: perSliceSummaries.filter((entry) => entry.validationStatus === 'validation-pass').length,
+    warningCount: sum(perSliceSummaries.map((entry) => entry.warningCount)),
+    blockingCount: sum(perSliceSummaries.map((entry) => entry.blockingCount)),
+    decisionRequiredCount: sum(perSliceSummaries.map((entry) => entry.decisionRequiredCount)),
+    retainedWarningCount: sum(perSliceSummaries.map((entry) => entry.retainedWarningCount)),
+    status,
+  }
 }
 
 async function loadSliceData(sliceDir: string, profile: SliceReadModelConfig): Promise<Record<string, unknown>> {
@@ -3148,6 +3372,28 @@ function getPath(source: Record<string, unknown>, pathSegments: string[]): unkno
   return current
 }
 
+function objectValue(value: unknown): Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value) ? (value as Record<string, unknown>) : {}
+}
+
+function arrayValue(value: unknown): Array<Record<string, unknown>> {
+  return Array.isArray(value)
+    ? (value.filter((entry) => typeof entry === 'object' && entry !== null) as Array<Record<string, unknown>>)
+    : []
+}
+
+function stringValue(value: unknown, fallback = 'unknown'): string {
+  return typeof value === 'string' && value.length > 0 ? value : fallback
+}
+
+function numberValue(value: unknown): number {
+  return typeof value === 'number' && Number.isFinite(value) ? value : 0
+}
+
+function sum(values: number[]): number {
+  return values.reduce((total, value) => total + value, 0)
+}
+
 function compareNodes(generated: GeneratedReadModel, manual: GeneratedReadModel, mismatches: Mismatch[]): void {
   const generatedMap = new Map(generated.nodes.map((entry) => [entry.id, entry]))
   for (const manualNode of manual.nodes) {
@@ -3502,6 +3748,76 @@ ${report.fallbackReferenceStatus.map((entry) => `- ${String(entry.path)}: ${Stri
 ## Recommended Next Decision Surface
 
 ${report.recommendedNextDecisionSurface.map((entry) => `- ${entry}`).join('\n')}
+`
+}
+
+function renderAggregateSummaryMarkdown(summary: AggregateReadModelSummary): string {
+  return `# Read-Model Aggregate Summary
+
+Status: ${summary.status}
+
+## Run Identity
+
+- Summarized at: ${String(summary.metadata.summarizedAt)}
+- Command identity: \`${String(summary.metadata.commandIdentity)}\`
+- Source commit: ${String(summary.metadata.sourceCommit)}
+- Source mode: ${String(summary.metadata.sourceMode)}
+- Input reports: ${Array.isArray(summary.metadata.inputReportList) ? summary.metadata.inputReportList.map((entry) => `\`${String(entry)}\``).join(', ') : 'unknown'}
+
+## Boundary
+
+${summary.aggregateBoundary}
+
+${summary.nonPromotionStatement}
+
+## Decision Rule
+
+${summary.decisionRule.map((entry) => `- ${entry}`).join('\n')}
+
+## Aggregate Counts
+
+- Included slices: ${summary.summary.sliceCount}
+- Present reports: ${summary.summary.presentReportCount}
+- Missing reports: ${summary.summary.missingReportCount}
+- Malformed reports: ${summary.summary.malformedReportCount}
+- Validation-pass slices: ${summary.summary.validationPassCount}
+- Warnings: ${summary.summary.warningCount}
+- Blocking: ${summary.summary.blockingCount}
+- Decision required: ${summary.summary.decisionRequiredCount}
+- Retained warnings / accepted limitations: ${summary.summary.retainedWarningCount}
+
+## Per-Slice Summary
+
+| Slice | Profile | Policy | Layout | Validation | Checks | Warnings | Blocking | Decision Required | Parity | Pilot Marker | Runtime Fixture |
+| ----- | ------- | ------ | ------ | ---------- | ------ | -------- | -------- | ----------------- | ------ | ------------ | --------------- |
+${summary.perSliceSummaries
+  .map(
+    (entry) =>
+      `| \`${entry.sourceSlice}\` | \`${entry.profileId}\` | ${entry.policyLevel} | ${entry.sourceLayout} | ${entry.validationStatus} | ${entry.checkCount} | ${entry.warningCount} | ${entry.blockingCount} | ${entry.decisionRequiredCount} | ${String(entry.parityRequirement.status || 'unknown')} | ${String(entry.pilotMarkerRequirement.status || 'unknown')} | ${String(entry.runtimeFixtureRequirement.status || 'unknown')} |`,
+  )
+  .join('\n')}
+
+## Source Authority / Non-Promotion Boundary By Slice
+
+${summary.perSliceSummaries
+  .map(
+    (entry) => `### ${entry.sourceSlice}
+
+- Source authority boundary: ${entry.sourceAuthorityBoundary}
+- Non-promotion statement: ${entry.nonPromotionStatement}
+- Report status: ${entry.reportStatus}
+- Report path: \`${entry.reportPath}\`
+- Retained warnings / accepted limitations:
+${entry.acceptedLimitations.map((warning) => `  - ${String(warning.id)}: ${String(warning.status)} - ${String(warning.summary)}`).join('\n') || '  - none recorded'}
+- Notes:
+${entry.notes.map((note) => `  - ${note}`).join('\n')}
+`,
+  )
+  .join('\n')}
+
+## Recommended Next Decision Surface
+
+${summary.recommendedNextDecisionSurface.map((entry) => `- ${entry}`).join('\n')}
 `
 }
 

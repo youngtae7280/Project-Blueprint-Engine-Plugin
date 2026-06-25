@@ -6,6 +6,7 @@ import {
   compareReadModelEvidence,
   generateReadModelEvidence,
   getSliceReadModelProfile,
+  summarizeReadModelEvidence,
   todoAppPbeRunStructureOnlyProfile,
   todoSearchReadModelProfile,
   validateReadModelEvidence,
@@ -277,6 +278,180 @@ describe('read-model Evidence builder', () => {
     expect(report.metadata.pilotMarkerRequirement).toMatchObject({ required: true, status: 'present' })
   })
 
+  it('summarizes independent per-slice validation reports as aggregate-pass Evidence', async () => {
+    const workspace = await createExampleWorkspace()
+    await prepareTwoSliceValidationReports(workspace)
+
+    const result = await summarizeReadModelEvidence(workspace, [
+      'examples/adoption/todo-search-slice',
+      'examples/valid/todo-app-pbe-run',
+    ])
+    const summary = JSON.parse(await readFile(result.summaryJsonPath, 'utf8')) as {
+      status: string
+      metadata: { sourceMode: string }
+      summary: {
+        sliceCount: number
+        warningCount: number
+        blockingCount: number
+        decisionRequiredCount: number
+      }
+      perSliceSummaries: Array<{
+        sourceSlice: string
+        profileId: string
+        policyLevel: string
+        validationStatus: string
+        checkCount: number
+        parityRequirement: Record<string, unknown>
+        pilotMarkerRequirement: Record<string, unknown>
+        runtimeFixtureRequirement: Record<string, unknown>
+      }>
+      aggregateBoundary: string
+      nonPromotionStatement: string
+    }
+
+    expect(summary.status).toBe('aggregate-pass')
+    expect(summary.metadata.sourceMode).toBe('existing-per-slice-validation-reports-only')
+    expect(summary.summary.sliceCount).toBe(2)
+    expect(summary.summary.warningCount).toBe(0)
+    expect(summary.summary.blockingCount).toBe(0)
+    expect(summary.summary.decisionRequiredCount).toBe(0)
+    expect(summary.aggregateBoundary).toContain('Evidence-only')
+    expect(summary.nonPromotionStatement).toContain('not user acceptance')
+    expect(summary.perSliceSummaries).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          sourceSlice: 'examples/adoption/todo-search-slice',
+          profileId: todoSearchReadModelProfile.profileId,
+          policyLevel: 'pilot-marker-backed',
+          validationStatus: 'validation-pass',
+          checkCount: todoSearchReadModelProfile.expectedCounts.validationChecks,
+          parityRequirement: expect.objectContaining({ required: true, status: 'pass' }),
+          pilotMarkerRequirement: expect.objectContaining({ required: true, status: 'present' }),
+          runtimeFixtureRequirement: expect.objectContaining({ required: true, status: 'present' }),
+        }),
+        expect.objectContaining({
+          sourceSlice: 'examples/valid/todo-app-pbe-run',
+          profileId: todoAppPbeRunStructureOnlyProfile.profileId,
+          policyLevel: 'structure-only',
+          validationStatus: 'validation-pass',
+          checkCount: todoAppPbeRunStructureOnlyProfile.expectedCounts.validationChecks,
+          parityRequirement: expect.objectContaining({ required: false, status: 'not-required' }),
+          pilotMarkerRequirement: expect.objectContaining({ required: false, status: 'not-required' }),
+          runtimeFixtureRequirement: expect.objectContaining({ required: false, status: 'attached-evidence-only' }),
+        }),
+      ]),
+    )
+  })
+
+  it('calculates aggregate warning, blocked, and decision-required status from report summaries', async () => {
+    const cases = [
+      { validationStatus: 'validation-warning', field: 'warningCount', count: 1, aggregateStatus: 'aggregate-warning' },
+      {
+        validationStatus: 'validation-blocked',
+        field: 'blockingCount',
+        count: 1,
+        aggregateStatus: 'aggregate-blocked',
+      },
+      {
+        validationStatus: 'decision-required',
+        field: 'decisionRequiredCount',
+        count: 1,
+        aggregateStatus: 'decision-required',
+      },
+    ]
+
+    for (const entry of cases) {
+      const workspace = await createExampleWorkspace()
+      await prepareTwoSliceValidationReports(workspace)
+      await mutateValidationReport(
+        workspace,
+        'examples/valid/todo-app-pbe-run',
+        entry.validationStatus,
+        entry.field,
+        entry.count,
+      )
+
+      const result = await summarizeReadModelEvidence(workspace, [
+        'examples/adoption/todo-search-slice',
+        'examples/valid/todo-app-pbe-run',
+      ])
+
+      expect(result.summary.status).toBe(entry.aggregateStatus)
+    }
+  })
+
+  it('does not mutate per-slice validation reports while writing an aggregate summary', async () => {
+    const workspace = await createExampleWorkspace()
+    await prepareTwoSliceValidationReports(workspace)
+    const reportPaths = [
+      join(workspace, 'examples/adoption/todo-search-slice/generated/read-model-validation-report.json'),
+      join(workspace, 'examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json'),
+    ]
+    const before = await Promise.all(reportPaths.map((entry) => readFile(entry, 'utf8')))
+
+    await summarizeReadModelEvidence(workspace, [
+      'examples/adoption/todo-search-slice',
+      'examples/valid/todo-app-pbe-run',
+    ])
+    const after = await Promise.all(reportPaths.map((entry) => readFile(entry, 'utf8')))
+
+    expect(after).toEqual(before)
+  })
+
+  it('summarizes from validation reports only without reading generated read-model files', async () => {
+    const workspace = await createExampleWorkspace()
+    await prepareTwoSliceValidationReports(workspace)
+    await rm(join(workspace, 'examples/adoption/todo-search-slice/generated/generated-read-model.json'), {
+      force: true,
+    })
+    await rm(join(workspace, 'examples/valid/todo-app-pbe-run/generated/generated-read-model.json'), { force: true })
+
+    const result = await summarizeReadModelEvidence(workspace, [
+      'examples/adoption/todo-search-slice',
+      'examples/valid/todo-app-pbe-run',
+    ])
+
+    expect(result.summary.status).toBe('aggregate-pass')
+    expect(result.summary.metadata.sourceMode).toBe('existing-per-slice-validation-reports-only')
+  })
+
+  it('reports aggregate-blocked for missing or malformed per-slice validation reports', async () => {
+    const missingWorkspace = await createExampleWorkspace()
+    await prepareTwoSliceValidationReports(missingWorkspace)
+    await rm(join(missingWorkspace, 'examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json'), {
+      force: true,
+    })
+
+    const missingResult = await summarizeReadModelEvidence(missingWorkspace, [
+      'examples/adoption/todo-search-slice',
+      'examples/valid/todo-app-pbe-run',
+    ])
+
+    expect(missingResult.summary.status).toBe('aggregate-blocked')
+    expect(
+      missingResult.summary.perSliceSummaries.find((entry) => entry.sourceSlice === 'examples/valid/todo-app-pbe-run')
+        ?.reportStatus,
+    ).toBe('missing')
+
+    const malformedWorkspace = await createExampleWorkspace()
+    await prepareTwoSliceValidationReports(malformedWorkspace)
+    await writeFile(
+      join(malformedWorkspace, 'examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json'),
+      '{not-json',
+    )
+
+    const malformedResult = await summarizeReadModelEvidence(malformedWorkspace, [
+      'examples/adoption/todo-search-slice',
+      'examples/valid/todo-app-pbe-run',
+    ])
+
+    expect(malformedResult.summary.status).toBe('aggregate-blocked')
+    expect(
+      malformedResult.summary.perSliceSummaries.find((entry) => entry.sourceSlice === 'examples/valid/todo-app-pbe-run')
+        ?.reportStatus,
+    ).toBe('malformed')
+  })
+
   it('blocks validation when viewScopedTags or Core View coverage are invalid', async () => {
     const workspace = await createExampleWorkspace()
     const generated = await generateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
@@ -372,4 +547,34 @@ async function createExampleWorkspace(): Promise<string> {
   await cp(resolve('examples'), join(workspace, 'examples'), { recursive: true })
   await cp(resolve('docs'), join(workspace, 'docs'), { recursive: true })
   return workspace
+}
+
+async function prepareTwoSliceValidationReports(workspace: string): Promise<void> {
+  const todoSearch = await generateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+  await compareReadModelEvidence(
+    workspace,
+    todoSearch.generatedJsonPath,
+    'examples/adoption/todo-search-slice/maintainability-graph-read-model.json',
+  )
+  await validateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+  await generateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+  await validateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+}
+
+async function mutateValidationReport(
+  workspace: string,
+  slice: string,
+  validationStatus: string,
+  countField: string,
+  count: number,
+): Promise<void> {
+  const reportPath = join(workspace, slice, 'generated/read-model-validation-report.json')
+  const report = JSON.parse(await readFile(reportPath, 'utf8')) as {
+    status: string
+    summary: Record<string, unknown>
+  }
+  report.status = validationStatus
+  report.summary.status = validationStatus
+  report.summary[countField] = count
+  await writeFile(reportPath, JSON.stringify(report, null, 2))
 }

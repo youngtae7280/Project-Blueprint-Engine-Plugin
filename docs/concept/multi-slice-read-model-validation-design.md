@@ -1,6 +1,6 @@
 # Multi-Slice Read-Model Validation Design
 
-Status: multi-slice-read-model-validation-design / per-slice-report-independence-implemented / aggregation-not-started
+Status: multi-slice-read-model-validation-design / first-aggregate-summary-implemented / validate-all-not-started
 
 ## Design Purpose
 
@@ -202,7 +202,7 @@ Recommended implementation sequence:
    `.pbe` fixture, with generated structure-only output and validation report.
 4. Add per-slice validation report independence. Status: complete for the Todo Search and Todo App PBE Run validation
    reports.
-5. Add aggregation only after per-slice validation is stable. Status: not started.
+5. Add aggregation only after per-slice validation is stable. Status: first Evidence-only aggregate summary implemented.
 
 ## Validation Policy Levels
 
@@ -219,6 +219,23 @@ Policy level is not source authority. It is an Evidence classification.
 
 Aggregation should summarize independent per-slice reports. It must not hide slice-specific warnings or convert
 compatibility caveats into a global pass.
+
+The first aggregate summary contract is now implemented in
+[read-model-aggregate-summary-contract.md](read-model-aggregate-summary-contract.md).
+
+Implemented command:
+
+```text
+pbe graph read-model summarize --slices examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run
+```
+
+Implemented outputs:
+
+- `examples/read-model-aggregate/generated/read-model-aggregate-summary.json`
+- `examples/read-model-aggregate/generated/read-model-aggregate-summary.md`
+
+The command reads existing per-slice validation reports only. It does not run generation, comparison, validation,
+`validate --all`, CI workflow logic, source authority transition, or promotion readiness approval.
 
 ## Per-Slice Validation Report Independence Contract
 
@@ -262,7 +279,9 @@ Focused tests prove:
 - Todo Search validation still passes after the Todo App generated directory is removed from an isolated temp workspace
 - validators do not mutate source/manual/generated inputs except for their own validation report outputs
 
-This contract prepares future aggregation inputs, but it does not implement aggregate reporting or `validate --all`.
+This contract prepares future aggregate inputs, and the first aggregate summary now reads those reports as independent
+Evidence units. It still does not implement `validate --all`, aggregate validation execution, CI enforcement, or
+promotion readiness approval.
 
 Proposed aggregate statuses:
 
@@ -273,6 +292,13 @@ Proposed aggregate statuses:
 | `aggregate-blocked` | At least one slice has blocking status.                                                                  |
 | `decision-required` | At least one slice requires user judgment, or aggregate scope/policy level is ambiguous.                 |
 
+Current aggregate result:
+
+| Aggregate artifact                                                          | Included slices | Status           | Warning / blocking / decision-required |
+| --------------------------------------------------------------------------- | --------------- | ---------------- | -------------------------------------- |
+| `examples/read-model-aggregate/generated/read-model-aggregate-summary.json` | 2               | `aggregate-pass` | 0 / 0 / 0                              |
+| `examples/read-model-aggregate/generated/read-model-aggregate-summary.md`   | 2               | `aggregate-pass` | 0 / 0 / 0                              |
+
 Rules:
 
 - one blocking slice blocks aggregate pass
@@ -280,7 +306,7 @@ Rules:
 - warnings remain attached to the originating slice
 - supplemental compatibility warnings remain supplemental and must not be counted as a full slice
 - invalid examples should be reported under negative-fixture results, not positive aggregate pass/fail
-- aggregate summary must include slice list, policy level per slice, source input availability, retained warnings, and
+- aggregate summary includes slice list, policy level per slice, source input availability, retained warnings, and
   source-authority boundary
 - aggregate pass is Evidence only and does not approve broader source authority
 
@@ -356,7 +382,7 @@ defines validation policy levels, and defines conservative aggregation rules.
 | Source authority boundary | preserved       | Multi-slice validation is Evidence-only.                                                         |
 | Public-doc cleanup        | deferred        | Not required before design; prerequisite/caveat before broader promotion.                        |
 | Second structure fixture  | implemented     | `examples/valid/todo-app-pbe-run` now has structure-only generated/validation Evidence.          |
-| Aggregation               | not started     | No multi-slice aggregate command, `validate --all`, CI change, or enforcement exists.            |
+| Aggregation               | implemented     | First Evidence-only summary command exists; no `validate --all`, CI change, or enforcement.      |
 
 ### Remaining Judgment
 
@@ -377,7 +403,8 @@ design, multi-slice scope redesign, or continued observation.
 | Todo Search hardcoding              | Evidence / Impact Control  | resolved for first profile   | Todo assumptions are isolated into an explicit profile/config.                          |
 | `todo-app-pbe-run` candidate        | Evidence Control Node      | implemented / structure-only | It has canonical `.pbe` source inputs plus structure-only generated/validation output.  |
 | Compatibility mismatch supplemental | Compatibility Control Node | retained warning             | Public-doc cleanup remains deferred and warning-only.                                   |
-| Aggregate validation                | Decision Control Node      | deferred                     | Aggregation should wait until per-slice reports are independent.                        |
+| Aggregate summary                   | Evidence Control Node      | implemented / Evidence-only  | First aggregate summary reads existing per-slice validation reports only.               |
+| Aggregate validation                | Decision Control Node      | deferred                     | `validate --all`, aggregate execution, and CI-backed aggregation remain separate.       |
 | CI enforcement / PR triggers        | Decision Control Node      | not approved                 | Reviewed CI-backed Evidence exists, but enforcement and PR triggers remain future-only. |
 
 ## Gate Self-Check
@@ -391,12 +418,13 @@ design, multi-slice scope redesign, or continued observation.
 | Non-Full-Promotion Gate            | pass   | Full Graph-source promotion remains unapproved.                                          |
 | Candidate Slice Clarity Gate       | pass   | `todo-app-pbe-run` is a structural candidate; other examples keep bounded roles.         |
 | Todo Hardcoding Honesty Gate       | pass   | Todo-shaped assumptions are listed and must be isolated before expansion.                |
-| Aggregation Rule Clarity Gate      | pass   | Pass/warning/blocking/decision-required propagation rules are explicit.                  |
+| Aggregation Rule Clarity Gate      | pass   | Pass/warning/blocking/decision-required propagation rules are implemented for summary.   |
 | Public-Doc Cleanup Boundary Gate   | pass   | Cleanup remains deferred and visible.                                                    |
 | User Approval Boundary Gate        | pass   | User approval remains required before implementation or broader authority changes.       |
 
 ## Final Statement
 
-This design now records the completed Todo Search profile extraction and the second structure-only fixture. It still
-does not implement aggregation, CI enforcement, parity-backed validation for the second fixture, source authority
-expansion, public-doc cleanup, or full Graph-source promotion.
+This design now records the completed Todo Search profile extraction, the second structure-only fixture, per-slice report
+independence, and the first Evidence-only aggregate summary. It still does not implement `validate --all`, CI
+enforcement, parity-backed validation for the second fixture, source authority expansion, public-doc cleanup, or full
+Graph-source promotion.

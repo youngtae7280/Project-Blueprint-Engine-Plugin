@@ -10,6 +10,7 @@ import { gateAssessCommand, gateCommand } from './gate.js'
 import {
   graphReadModelCompareCommand,
   graphReadModelGenerateCommand,
+  graphReadModelSummarizeCommand,
   graphReadModelValidateCommand,
 } from './graph.js'
 import { impactAnalyzeCommand } from './impact.js'
@@ -158,6 +159,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'validate') {
     return graphReadModelValidateCommand(context)
+  }
+  if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'summarize') {
+    return graphReadModelSummarizeCommand(context)
   }
   return invalidCommand(`Unknown command: ${positionals.join(' ')}`)
 }

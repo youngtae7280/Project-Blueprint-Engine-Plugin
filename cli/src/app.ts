@@ -110,6 +110,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     evidence: [] as string[],
     acceptance: [] as string[],
     slice: undefined as string | undefined,
+    slices: undefined as string | undefined,
     generated: undefined as string | undefined,
     manual: undefined as string | undefined,
   }
@@ -250,6 +251,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--slice requires a path.' }
       }
       options.slice = value
+      index += 1
+    } else if (arg === '--slices') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--slices requires comma-separated slice paths.' }
+      }
+      options.slices = value
       index += 1
     } else if (arg === '--generated') {
       const value = argv[index + 1]
