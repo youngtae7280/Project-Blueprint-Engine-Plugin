@@ -5,6 +5,9 @@ Status: pr-informational-observation-log / append-only-runbook-established / non
 This document is the append-only observation log and review runbook for non-enforcing PR informational read-model
 Evidence runs.
 
+Temporary smoke note: this branch-only line exists only to trigger the third PR informational read-model Evidence
+observation and must not be merged to `main`.
+
 It is not a source-authority record, CI enforcement policy, required-check policy, branch-protection rule, promotion
 decision, or user acceptance record. It gives future reviewers a repeatable way to inspect PR-triggered read-model
 Evidence without changing workflow behavior.
