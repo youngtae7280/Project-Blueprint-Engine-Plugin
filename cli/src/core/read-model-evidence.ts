@@ -275,12 +275,14 @@ interface ValidateAllProfileResult {
 }
 
 interface ValidateAllResult {
+  status: AggregateStatus
   registryPath: string
   includedProfiles: Array<{
     profileId: string
     sourceSlice: string
     policyLevel: SliceReadModelConfig['policyLevel']
     requiredCommands: RegistryCommand[]
+    projectionContractRequired: boolean
   }>
   perSliceResults: ValidateAllProfileResult[]
   aggregateResult: AggregateResult
@@ -1199,8 +1201,8 @@ export async function validateAllReadModelEvidence(
   const perSliceResults: ValidateAllProfileResult[] = []
   for (const plan of plans) {
     const profile = getSliceReadModelProfile(plan.sourceSlice)
-    assertRegistryProfileMatchesConfig(registryPath, registry.profiles, profile)
-    perSliceResults.push(await runValidateAllProfilePlan(root, profile, plan.commands))
+    const registryProfile = assertRegistryProfileMatchesConfig(registryPath, registry.profiles, profile)
+    perSliceResults.push(await runValidateAllProfilePlan(root, profile, registryProfile, plan.commands))
   }
 
   const aggregateResult = await summarizeReadModelEvidence(
@@ -1208,13 +1210,20 @@ export async function validateAllReadModelEvidence(
     plans.map((plan) => plan.sourceSlice),
   )
 
+  const status = validateAllAggregateStatus(perSliceResults, aggregateResult.summary.status)
+
   return {
+    status,
     registryPath,
     includedProfiles: plans.map((plan) => ({
       profileId: plan.profileId,
       sourceSlice: plan.sourceSlice,
       policyLevel: plan.policyLevel,
       requiredCommands: [...plan.commands],
+      projectionContractRequired: Boolean(
+        registry.profiles.find((entry) => entry.sourceSlice === plan.sourceSlice)?.optionalArtifacts
+          .graphSourceProjection,
+      ),
     })),
     perSliceResults,
     aggregateResult,
@@ -1230,6 +1239,7 @@ export async function validateAllReadModelEvidence(
 async function runValidateAllProfilePlan(
   root: string,
   profile: SliceReadModelConfig,
+  registryProfile: ReadModelSliceRegistryProfile,
   commands: RegistryCommand[],
 ): Promise<ValidateAllProfileResult> {
   const commandResults: Array<Record<string, unknown>> = []
@@ -1287,6 +1297,38 @@ async function runValidateAllProfilePlan(
     }
   }
 
+  const projectionPath = registryProfile.optionalArtifacts.graphSourceProjection
+  if (profile.artifacts.graphSource && projectionPath) {
+    try {
+      const projection = await loadGraphSourceProjectionArtifact(
+        root,
+        `${profile.supportedSlice}/${projectionPath}`,
+        `${profile.supportedSlice}/${profile.artifacts.graphSource}`,
+      )
+      commandResults.push({
+        command: 'project-contract',
+        status: 'projection-contract-pass',
+        graphSource: `${profile.supportedSlice}/${profile.artifacts.graphSource}`,
+        projection: `${profile.supportedSlice}/${projectionPath}`,
+        nodeCount: projection.nodes.length,
+        edgeCount: projection.edges.length,
+        coreViewCount: projection.coreViewCoverage.length,
+        sourceAuthorityBoundary: projection.sourceAuthorityBoundary,
+        nonPromotionStatement: projection.nonPromotionStatement,
+      })
+    } catch (error) {
+      status = 'blocked'
+      commandResults.push({
+        command: 'project-contract',
+        status: 'projection-contract-blocked',
+        graphSource: `${profile.supportedSlice}/${profile.artifacts.graphSource}`,
+        projection: `${profile.supportedSlice}/${projectionPath}`,
+        blockingCount: 1,
+        message: error instanceof Error ? error.message : String(error),
+      })
+    }
+  }
+
   return {
     profileId: profile.profileId,
     sourceSlice: profile.supportedSlice,
@@ -1300,7 +1342,7 @@ function assertRegistryProfileMatchesConfig(
   registryPath: string,
   registryProfiles: ReadModelSliceRegistryProfile[],
   profile: SliceReadModelConfig,
-): void {
+): ReadModelSliceRegistryProfile {
   const registryProfile = registryProfiles.find((entry) => entry.sourceSlice === profile.supportedSlice)
   if (!registryProfile) {
     throw new Error(`Read-model registry ${registryPath} does not include configured slice ${profile.supportedSlice}.`)
@@ -1333,6 +1375,20 @@ function assertRegistryProfileMatchesConfig(
       `Read-model registry ${registryPath} does not match in-code profile ${profile.profileId}: ${mismatches.join('; ')}`,
     )
   }
+  return registryProfile
+}
+
+function validateAllAggregateStatus(
+  perSliceResults: ValidateAllProfileResult[],
+  aggregateStatusValue: AggregateStatus,
+): AggregateStatus {
+  if (perSliceResults.some((entry) => entry.status === 'blocked')) {
+    return 'aggregate-blocked'
+  }
+  if (perSliceResults.some((entry) => entry.status === 'decision-required')) {
+    return 'decision-required'
+  }
+  return aggregateStatusValue
 }
 
 function manualParityArtifactForProfile(profile: SliceReadModelConfig): string {

@@ -24,6 +24,7 @@
         "generatedReadModelSummary": "generated/generated-read-model.md",
         "parityReportSummary": "generated/read-model-parity-report.md",
         "validationReportSummary": "generated/read-model-validation-report.md",
+        "graphSourceProjection": "generated/graph-source-read-model-projection.json",
         "ciEvidenceManifest": "generated/read-model-ci-evidence-manifest.json"
       },
       "expectedCounts": {

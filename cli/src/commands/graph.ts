@@ -95,7 +95,7 @@ export async function graphReadModelValidateCommand(context: CommandContext): Pr
     try {
       const result = await validateAllReadModelEvidence(context.options.root)
       const aggregate = result.aggregateResult.summary
-      const failed = aggregate.status === 'aggregate-blocked' || aggregate.status === 'decision-required'
+      const failed = result.status === 'aggregate-blocked' || result.status === 'decision-required'
       return {
         ok: !failed,
         command: 'graph read-model validate --all',
@@ -103,11 +103,18 @@ export async function graphReadModelValidateCommand(context: CommandContext): Pr
         message: 'Registry-backed read-model validate-all Evidence created.',
         issues: [],
         data: {
-          status: aggregate.status,
+          status: result.status,
+          validateAllStatus: result.status,
           aggregateStatus: aggregate.status,
           registryPath: result.registryPath,
           includedProfiles: result.includedProfiles,
           perSliceResults: result.perSliceResults,
+          projectionContractStatus: result.perSliceResults.map((entry) => ({
+            profileId: entry.profileId,
+            sourceSlice: entry.sourceSlice,
+            status:
+              entry.commands.find((command) => command.command === 'project-contract')?.status || 'not-configured',
+          })),
           aggregateSummary: relativePath(context.options.root, result.aggregateResult.summaryJsonPath),
           aggregateSummaryMarkdown: relativePath(context.options.root, result.aggregateResult.summaryMarkdownPath),
           sliceCount: aggregate.summary.sliceCount,

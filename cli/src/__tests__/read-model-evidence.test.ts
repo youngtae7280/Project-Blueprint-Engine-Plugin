@@ -246,6 +246,9 @@ describe('read-model Evidence builder', () => {
       validationReport: todoSearchReadModelProfile.artifacts.validationReport,
       scopedPilotMarker: todoSearchReadModelProfile.artifacts.scopedPilotMarker,
     })
+    expect(todoSearch?.optionalArtifacts.graphSourceProjection).toBe(
+      'generated/graph-source-read-model-projection.json',
+    )
 
     expect(todoApp).toMatchObject({
       sourceSlice: todoAppPbeRunStructureOnlyProfile.supportedSlice,
@@ -333,6 +336,7 @@ describe('read-model Evidence builder', () => {
       todoSearchReadModelProfile.profileId,
       todoAppPbeRunStructureOnlyProfile.profileId,
     ])
+    expect(result.status).toBe('aggregate-pass')
     expect(result.aggregateResult.summary.status).toBe('aggregate-pass')
     expect(result.aggregateResult.summary.summary).toMatchObject({
       sliceCount: 2,
@@ -343,6 +347,13 @@ describe('read-model Evidence builder', () => {
     expect(result.sourceAuthorityBoundary).toContain('does not expand source authority')
     expect(result.nonPromotionStatement).toContain('not user acceptance')
     expect(result.nonEnforcementStatement).toContain('non-enforcing')
+    const todoSearch = result.perSliceResults.find((entry) => entry.profileId === todoSearchReadModelProfile.profileId)
+    expect(todoSearch?.commands.find((entry) => entry.command === 'project-contract')).toMatchObject({
+      status: 'projection-contract-pass',
+      nodeCount: 40,
+      edgeCount: 59,
+      coreViewCount: 7,
+    })
   })
 
   it('uses registry command plans without directory discovery or policy promotion', async () => {
@@ -357,7 +368,12 @@ describe('read-model Evidence builder', () => {
 
     expect(result.includedProfiles).toHaveLength(2)
     expect(result.aggregateResult.summary.includedSlices).not.toContain('examples/unregistered-slice')
-    expect(todoSearch?.commands.map((entry) => entry.command)).toEqual(['generate', 'compare', 'validate'])
+    expect(todoSearch?.commands.map((entry) => entry.command)).toEqual([
+      'generate',
+      'compare',
+      'validate',
+      'project-contract',
+    ])
     expect(todoSearch?.commands.find((entry) => entry.command === 'compare')).toMatchObject({
       status: 'comparison-pass',
       mismatchCount: 0,
@@ -365,6 +381,48 @@ describe('read-model Evidence builder', () => {
     expect(todoApp?.commands.map((entry) => entry.command)).toEqual(['generate', 'validate'])
     expect(todoApp?.commands.some((entry) => entry.command === 'compare')).toBe(false)
     expect(todoApp?.policyLevel).toBe('structure-only')
+  })
+
+  it('blocks validate-all when the graph source projection artifact is missing or corrupted', async () => {
+    const missingProjectionWorkspace = await createExampleWorkspace()
+    await rm(
+      join(
+        missingProjectionWorkspace,
+        'examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json',
+      ),
+      { force: true },
+    )
+
+    const missingProjectionResult = await validateAllReadModelEvidence(missingProjectionWorkspace)
+    const missingTodoSearch = missingProjectionResult.perSliceResults.find(
+      (entry) => entry.profileId === todoSearchReadModelProfile.profileId,
+    )
+    expect(missingProjectionResult.status).toBe('aggregate-blocked')
+    expect(missingProjectionResult.aggregateResult.summary.status).toBe('aggregate-pass')
+    expect(missingTodoSearch?.status).toBe('blocked')
+    expect(missingTodoSearch?.commands.find((entry) => entry.command === 'project-contract')).toMatchObject({
+      status: 'projection-contract-blocked',
+      blockingCount: 1,
+    })
+
+    const corruptProjectionWorkspace = await createExampleWorkspace()
+    const projectionPath = join(
+      corruptProjectionWorkspace,
+      'examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json',
+    )
+    const projection = JSON.parse(await readFile(projectionPath, 'utf8')) as Record<string, unknown>
+    delete projection.sourceAuthorityBoundary
+    await writeFile(projectionPath, JSON.stringify(projection, null, 2))
+
+    const corruptProjectionResult = await validateAllReadModelEvidence(corruptProjectionWorkspace)
+    const corruptTodoSearch = corruptProjectionResult.perSliceResults.find(
+      (entry) => entry.profileId === todoSearchReadModelProfile.profileId,
+    )
+    expect(corruptProjectionResult.status).toBe('aggregate-blocked')
+    expect(corruptTodoSearch?.commands.find((entry) => entry.command === 'project-contract')).toMatchObject({
+      status: 'projection-contract-blocked',
+      blockingCount: 1,
+    })
   })
 
   it('blocks validate-all when registry entries are unsupported or drift from in-code profiles', async () => {
