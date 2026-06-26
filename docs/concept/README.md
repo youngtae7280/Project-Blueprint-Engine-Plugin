@@ -378,6 +378,14 @@ The policy defines what to observe across future PR informational runs, the reco
 refinement criteria, failure classification, and escalation criteria. It does not change workflow triggers, create PRs,
 dispatch GitHub Actions, add required checks, introduce enforcement, expand source authority, or approve promotion.
 
+The append-only observation log and review runbook is now recorded:
+
+- [pr-informational-observation-log.md](pr-informational-observation-log.md)
+
+The log records the manual baseline run `28207696557`, first PR informational run `28207822252` / PR `#1`, a reusable
+future-entry template, review checklist, observation counters, and decision thresholds. It is a recording surface only;
+it does not change workflow triggers, dispatch Actions, add enforcement, expand source authority, or approve promotion.
+
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.

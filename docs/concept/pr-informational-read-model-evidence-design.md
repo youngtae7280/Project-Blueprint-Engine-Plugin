@@ -248,6 +248,8 @@ The first real PR informational run is reviewed in
 
 The observation policy for this implemented trigger is recorded in
 [pr-informational-observation-policy.md](pr-informational-observation-policy.md).
+The append-only observation log and review runbook for future PR runs is recorded in
+[pr-informational-observation-log.md](pr-informational-observation-log.md).
 
 After this implementation, first PR run review, and observation-policy definition, the next choices are:
 

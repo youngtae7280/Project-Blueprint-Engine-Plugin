@@ -607,6 +607,11 @@ The observation policy for later PR informational runs is recorded in
 [pr-informational-observation-policy.md](pr-informational-observation-policy.md). Future PR run notes should use that
 policy before changing path filters, failure semantics, required-check policy, or validation scope.
 
+The append-only observation log and runbook for repeatable future PR run review is recorded in
+[pr-informational-observation-log.md](pr-informational-observation-log.md). It records the manual baseline run
+`28207696557`, PR `#1` run `28207822252`, and the template/checklist for future observations without changing workflow
+triggers or enforcement.
+
 ## Gate Self-Check
 
 | Gate                             | Status | Result                                                                                                      |

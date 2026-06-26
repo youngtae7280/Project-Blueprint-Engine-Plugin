@@ -348,6 +348,9 @@ Recommended next step: keep the PR informational workflow non-enforcing and obse
 policy before deciding whether path filters or artifact naming need refinement. Enforcement design, public-doc cleanup,
 broader promotion review, and defer remain separate major branches. The Node.js 20 deprecation annotation from run
 `28156403793` has been handled by the Node 24 action/runtime update and reviewed post-update run `28157938343`.
+Future PR observations should be recorded in
+[pr-informational-observation-log.md](pr-informational-observation-log.md) before path-filter, failure-semantics,
+enforcement, or validation-scope changes are proposed.
 
 ## Approval Brief Draft
 

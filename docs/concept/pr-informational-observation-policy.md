@@ -18,6 +18,10 @@ This policy turns `Keep PR informational workflow non-enforcing and observe more
 surface. It does not modify `.github/workflows/read-model-evidence.yml`, create new pull requests, dispatch GitHub
 Actions, add required checks, change source authority, approve full Graph-source promotion, or replace user acceptance.
 
+The operational append-only log and runbook for applying this policy is
+[pr-informational-observation-log.md](pr-informational-observation-log.md). Future PR run reviews should record entries
+there before path-filter, failure-semantics, enforcement, or validation-scope changes are considered.
+
 ## Current Baseline
 
 | Baseline item                 | Current state                                                                                                        |
@@ -227,6 +231,9 @@ Boundary visibility:
 Noise / false positive assessment:
 Recommended follow-up:
 ```
+
+The detailed reusable entry template, review checklist, changed-path categories, and observation counter live in
+[pr-informational-observation-log.md](pr-informational-observation-log.md).
 
 ## Non-Scope
 
