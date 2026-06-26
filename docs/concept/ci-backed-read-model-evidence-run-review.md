@@ -1009,6 +1009,28 @@ for the limited promoted scope.
 | Cleanup               | Artifact temp directory removed                                                                     |
 | Review result         | Manual CI confirms graph-source-backed Todo Search generation health                                |
 
+PR run `28219583619` then reviewed graph-source-backed Todo Search generation through the non-enforcing
+`pull_request-informational` trigger.
+
+| Field                 | Value                                                                                               |
+| --------------------- | --------------------------------------------------------------------------------------------------- |
+| PR                    | `#5`; draft temporary smoke PR; closed without merge                                                |
+| Run ID                | `28219583619`                                                                                       |
+| Run URL               | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28219583619>          |
+| Event                 | `pull_request`                                                                                      |
+| Trigger mode          | `pull_request-informational`                                                                        |
+| Head SHA              | `47ed16a208bde2881145c53e1758a00a73483078`                                                          |
+| Base SHA              | `673edf81ddad20d2cfbd5cadb54597f0a2ebf447`                                                          |
+| Manifest ref          | `refs/pull/5/merge`                                                                                 |
+| Manifest              | `ci-evidence-pass`; `validateAllStatus: aggregate-pass`; `aggregateStatus: aggregate-pass`          |
+| Todo Search           | 40 nodes / 59 edges; `comparison-pass`; `validation-pass`; 20 checks                                |
+| Generation source     | Generated read-model metadata records `readModelSourceMode: graph-source-backed`                    |
+| Graph source metadata | Generated read-model metadata records `examples/adoption/todo-search-slice/graph-source.json`       |
+| Projection            | Todo Search `projection-contract-pass`; Todo App PBE Run `not-configured`                           |
+| Boundary              | Non-enforcing Evidence only; no repo-wide promotion, enforcement, retirement, or Todo App promotion |
+| Cleanup               | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted               |
+| Review result         | PR informational CI confirms graph-source-backed Todo Search generation health                      |
+
 ## Gate Self-Check
 
 | Gate                             | Status | Result                                                                                                       |
@@ -1017,7 +1039,8 @@ for the limited promoted scope.
 | Validate-All Manual Run Gate     | pass   | Run `28210541509` completed successfully on `workflow_dispatch` after the workflow switched to validate-all. |
 | Projection-Status Manual Gate    | pass   | Run `28218687289` captured Todo Search `projection-contract-pass` in manifest and validate-all output.       |
 | Graph-Source-Backed Manual Gate  | pass   | Run `28219396764` confirmed graph-source-backed Todo Search generation in CI artifacts.                      |
-| PR Informational Run Gate        | pass   | PR #1, PR #2, PR #3, and PR #4 triggered `pull_request` runs and completed successfully.                     |
+| Graph-Source-Backed PR Gate      | pass   | PR #5 run `28219583619` confirmed graph-source-backed Todo Search generation in PR artifacts.                |
+| PR Informational Run Gate        | pass   | PR #1, PR #2, PR #3, PR #4, and PR #5 triggered `pull_request` runs and completed successfully.              |
 | CI-Backed Artifact Review Gate   | pass   | Expanded artifact bundle `pbe-todo-search-read-model-evidence` was downloaded and inspected.                 |
 | CI Manifest Integrity Gate       | pass   | Manifest is `ci-backed` / `ci-evidence-pass` and includes Todo Search, Todo App, aggregate, and boundaries.  |
 | Validation Report Gate           | pass   | Todo Search and Todo App validation reports are `validation-pass` with 20 and 16 checks.                     |

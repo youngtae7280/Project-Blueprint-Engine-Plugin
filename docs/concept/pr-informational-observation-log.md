@@ -15,13 +15,13 @@ Evidence without changing workflow behavior.
 | ------------------------- | ------------------------------------------------------------------------------------------------------- |
 | Manual dispatch baseline  | Run `28207696557`, `workflow_dispatch`, `success`, `ci-evidence-pass`                                   |
 | First real PR run         | PR `#1`, run `28207822252`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass` |
-| Latest PR run             | PR `#4`, run `28218854329`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass` |
+| Latest PR run             | PR `#5`, run `28219583619`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass` |
 | Current workflow mode     | `workflow_dispatch` plus non-enforcing `pull_request-informational`                                     |
 | Included slices           | `examples/adoption/todo-search-slice`; `examples/valid/todo-app-pbe-run`; aggregate summary             |
 | Workflow command mode     | registry-backed `validate --all` after manual run `28210541509`                                         |
 | Observation policy        | [pr-informational-observation-policy.md](pr-informational-observation-policy.md)                        |
 | Refinement design         | [pr-informational-path-filter-refinement.md](pr-informational-path-filter-refinement.md)                |
-| Current real PR run count | 4 reviewed real PR informational runs                                                                   |
+| Current real PR run count | 5 reviewed real PR informational runs                                                                   |
 | Target before refinement  | Run-count threshold satisfied; refinement may be considered but is not automatic.                       |
 | Enforcement / authority   | Not approved. PR Evidence is informational only and does not change source authority.                   |
 
@@ -166,6 +166,35 @@ unchanged after three successful PR observations.
 | Failure / noise class        | No failure; docs-only smoke verified PR projection-status capture after manual run `28218687289`                                              |
 | Interpretation               | Projection-status capture is reviewed in both manual and PR informational modes. Enforcement/source-promotion remain separate future choices. |
 | Cleanup                      | Downloaded `.tmp` artifacts removed; PR closed without merge; remote smoke branch deleted                                                     |
+
+### Baseline Entry 6: Graph-Source-Backed Generation PR Observation Run
+
+| Field                        | Value                                                                                                                                                 |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Entry type                   | PR informational smoke review for graph-source-backed Todo Search generation                                                                          |
+| PR                           | `#5`; draft temporary smoke PR; closed without merge                                                                                                  |
+| Run ID                       | `28219583619`                                                                                                                                         |
+| Run URL                      | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28219583619`                                                            |
+| Job ID / URL                 | `83597708416`; `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28219583619/job/83597708416`                             |
+| Event / trigger mode         | `pull_request` / `pull_request-informational`                                                                                                         |
+| Head SHA / base SHA          | `47ed16a208bde2881145c53e1758a00a73483078` / `673edf81ddad20d2cfbd5cadb54597f0a2ebf447`                                                               |
+| Head ref / base ref          | `pbe/pr-info-graph-source-generation-smoke-20260626` / `main`                                                                                         |
+| Source ref / manifest commit | `refs/pull/5/merge` / `bae41d3feae1254f4b009dc97e1e0367c69441a0`                                                                                      |
+| Changed path categories      | `docs/concept/**` smoke change                                                                                                                        |
+| Artifact bundle              | Present and reviewed                                                                                                                                  |
+| Manifest status              | `ci-evidence-pass`                                                                                                                                    |
+| Evidence level               | `ci-backed`                                                                                                                                           |
+| Source mode                  | `registry-backed validate-all`; `validateAllStatus: aggregate-pass`                                                                                   |
+| Generated source mode        | Todo Search generated read-model metadata records `readModelSourceMode: graph-source-backed`                                                          |
+| Graph source artifact        | Todo Search generated read-model metadata records `examples/adoption/todo-search-slice/graph-source.json`                                             |
+| Projection contract status   | Todo Search `projection-contract-pass`; Todo App PBE Run `not-configured`                                                                             |
+| Todo Search status           | `validation-pass`, `comparison-pass`, 40 nodes / 59 edges, 20 checks                                                                                  |
+| Todo App PBE Run status      | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                                              |
+| Aggregate status             | `aggregate-pass`, 2 included slices, 0 warnings / 0 blocking / 0 decision-required                                                                    |
+| Boundary visibility          | Source-authority boundary, non-enforcement statement, and non-promotion statement present                                                             |
+| Failure / noise class        | No failure; docs-only smoke verified PR behavior after Todo Search generation became graph-source-backed                                              |
+| Interpretation               | Graph-source-backed generation is reviewed in both manual and PR informational modes. Broader promotion/enforcement remain separate future decisions. |
+| Cleanup                      | Downloaded `.tmp` artifacts removed; PR closed without merge; remote smoke branch deleted                                                             |
 
 ## Future Observation Entry Template
 
