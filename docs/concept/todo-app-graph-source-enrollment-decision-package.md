@@ -19,6 +19,8 @@ The next bounded local branch is also implemented and manually reviewed in CI: T
 is partially complete: manual run `28224636333` confirms the uploaded artifact metadata; PR informational review remains
 pending.
 
+Temporary PR smoke reviews for this metadata must close without merge after artifact inspection.
+
 ## Current Evidence
 
 | Evidence surface             | Current status                                                                                                  |
