@@ -289,9 +289,8 @@ Negative fixture storage policy is recorded in
 remain local test inputs only and are not part of current validator-backed or CI-backed positive Evidence runs.
 The first durable candidate plan is recorded in
 [read-model-negative-fixture-candidate-plan.md](read-model-negative-fixture-candidate-plan.md); invalid tag and missing
-Core View fixtures were selected as the first durable candidates. The invalid `viewScopedTags` fixture is now
-implemented as local focused test input; it remains outside validator-backed positive Evidence reports, CI-backed runs,
-and source-authority decisions. Missing Core View coverage remains a future durable fixture candidate.
+Core View fixtures were selected as the first durable candidates. Both are now implemented as local focused test inputs;
+they remain outside validator-backed positive Evidence reports, CI-backed runs, and source-authority decisions.
 
 ## Gate Self-Check
 

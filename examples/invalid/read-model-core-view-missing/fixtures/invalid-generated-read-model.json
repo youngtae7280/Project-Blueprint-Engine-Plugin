@@ -1,0 +1,142 @@
+{
+  "version": "0.1.0-generated-read-model-evidence",
+  "metadata": {
+    "artifactRole": "invalid_read_model_test_fixture",
+    "sourceSlice": "examples/valid/todo-app-pbe-run",
+    "sliceProfile": "todo-app-pbe-run-structure-only",
+    "slicePolicyLevel": "structure-only",
+    "sourceLayout": "canonical-pbe",
+    "generatedStatus": "invalid-test-fixture",
+    "fixtureBoundary": "This is invalid local test input, not generated Evidence or source authority.",
+    "intentionallyMissingCoreView": "Evidence / Acceptance View"
+  },
+  "sourceInputs": [
+    {
+      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json",
+      "absolutePath": "fixture-non-authoritative",
+      "status": "present"
+    }
+  ],
+  "taxonomy": {
+    "nodeKindsUsed": ["product", "acceptance"],
+    "edgeTypesUsed": ["satisfies"],
+    "viewScopedTagsAllowed": ["target", "context", "candidate", "guard", "required", "stale", "blocked", "output"]
+  },
+  "nodes": [
+    {
+      "id": "PT-1",
+      "nodeKind": "product",
+      "sourceArtifact": ".pbe/tree/product-tree.json",
+      "title": "Todo App product root",
+      "status": "present",
+      "confidence": "tool-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["target"],
+      "includedInViewIds": ["intent-view"],
+      "viewRoles": {
+        "intent-view": ["target"]
+      },
+      "notes": "Invalid fixture: Evidence / Acceptance View is intentionally missing from coreViewCoverage."
+    },
+    {
+      "id": "ACCEPT-PT-1",
+      "nodeKind": "acceptance",
+      "sourceArtifact": ".pbe/control/acceptance-tree.json",
+      "title": "Todo App acceptance root",
+      "status": "present",
+      "confidence": "user-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "viewScopedTags": ["output"],
+      "includedInViewIds": ["evidence-acceptance-view"],
+      "viewRoles": {
+        "evidence-acceptance-view": ["output"]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "EDGE-PT-1-ACCEPT-PT-1",
+      "from": "PT-1",
+      "to": "ACCEPT-PT-1",
+      "edgeType": "satisfies",
+      "confidence": "tool-confirmed",
+      "freshnessStatus": "fresh",
+      "parityStatus": "present",
+      "source": "invalid fixture"
+    }
+  ],
+  "coreViewCoverage": [
+    {
+      "viewId": "intent-view",
+      "name": "Intent View",
+      "coverageStatus": "present",
+      "includedNodeIds": ["PT-1"],
+      "includedEdgeIds": [],
+      "viewScopedTags": ["target"],
+      "boundaryNotes": "Fixture coverage only."
+    },
+    {
+      "viewId": "behavior-view",
+      "name": "Behavior View",
+      "coverageStatus": "present",
+      "includedNodeIds": ["PT-1"],
+      "includedEdgeIds": [],
+      "viewScopedTags": ["context"],
+      "boundaryNotes": "Fixture coverage only."
+    },
+    {
+      "viewId": "structure-view",
+      "name": "Structure View",
+      "coverageStatus": "present",
+      "includedNodeIds": ["PT-1"],
+      "includedEdgeIds": [],
+      "viewScopedTags": ["context"],
+      "boundaryNotes": "Fixture coverage only."
+    },
+    {
+      "viewId": "scope-execution-view",
+      "name": "Scope / Execution View",
+      "coverageStatus": "present",
+      "includedNodeIds": ["PT-1"],
+      "includedEdgeIds": [],
+      "viewScopedTags": ["required"],
+      "boundaryNotes": "Fixture coverage only."
+    },
+    {
+      "viewId": "impact-view",
+      "name": "Impact View",
+      "coverageStatus": "present",
+      "includedNodeIds": ["PT-1"],
+      "includedEdgeIds": [],
+      "viewScopedTags": ["candidate"],
+      "boundaryNotes": "Fixture coverage only."
+    },
+    {
+      "viewId": "verification-view",
+      "name": "Verification View",
+      "coverageStatus": "present",
+      "includedNodeIds": ["PT-1"],
+      "includedEdgeIds": [],
+      "viewScopedTags": ["guard"],
+      "boundaryNotes": "Fixture coverage only."
+    }
+  ],
+  "checkEvidenceMapping": [
+    {
+      "checkId": "core-view-coverage-present",
+      "evidence": "The fixture intentionally omits Evidence / Acceptance View from coreViewCoverage."
+    }
+  ],
+  "retainedWarnings": [
+    {
+      "id": "RW-STRUCTURE-ONLY",
+      "status": "invalid-fixture-boundary",
+      "summary": "This invalid fixture is structure-only test input and does not claim parity, pilot authority, CI Evidence, or source authority."
+    }
+  ],
+  "compatibilityWarnings": [],
+  "sourceAuthorityBoundary": "Canonical .pbe artifacts remain current operational source; this invalid fixture is local test input only.",
+  "nonPromotionStatement": "This invalid fixture does not promote Graph source authority, does not change source authority, and does not approve user acceptance."
+}

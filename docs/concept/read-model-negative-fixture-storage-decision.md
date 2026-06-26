@@ -1,6 +1,6 @@
 # Read-Model Negative Fixture Storage Decision
 
-Status: read-model-negative-fixture-storage-decision / decision-surface / first-fixture-implemented /
+Status: read-model-negative-fixture-storage-decision / decision-surface / first-two-fixtures-implemented /
 non-enforcing
 
 ## Purpose
@@ -198,9 +198,13 @@ The first candidate narrowing plan is recorded in
 with invalid `viewScopedTags` and missing Core View coverage, while keeping pilot-marker-missing and structure-only
 policy conflict as later or inline/temp candidates.
 
-The first durable fixture is now implemented at `examples/invalid/read-model-invalid-view-scoped-tags`. It follows this
-storage decision by staying outside `generated/`, declaring its non-authority boundary in a README, and remaining outside
-the positive validate-all registry and CI workflow.
+The first two durable fixtures are now implemented:
+
+- `examples/invalid/read-model-invalid-view-scoped-tags`
+- `examples/invalid/read-model-core-view-missing`
+
+They follow this storage decision by staying outside `generated/`, declaring their non-authority boundaries in README
+files, and remaining outside the positive validate-all registry and CI workflow.
 
 Recommended cases to keep inline/temp:
 

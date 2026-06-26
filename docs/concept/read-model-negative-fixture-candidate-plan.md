@@ -1,13 +1,14 @@
 # Read-Model Negative Fixture Candidate Plan
 
-Status: read-model-negative-fixture-candidate-plan / candidate-plan / first-fixture-implemented /
-remaining-fixtures-future
+Status: read-model-negative-fixture-candidate-plan / candidate-plan / first-two-fixtures-implemented /
+later-fixtures-future
 
 ## Purpose
 
 This document narrows the first durable negative read-model fixture candidates and records current implementation state.
 It originally preceded invalid fixture files, tests, or CLI behavior. The invalid `viewScopedTags` fixture is now
-implemented as local focused test input; the missing Core View fixture remains future work.
+implemented as local focused test input, and the missing Core View fixture is now implemented as the second durable
+negative fixture.
 
 It follows the storage policy in
 [read-model-negative-fixture-storage-decision.md](read-model-negative-fixture-storage-decision.md), which recommends:
@@ -27,9 +28,8 @@ Current read-model baseline:
 - Todo Search remains `pilot-marker-backed`
 - Todo App PBE Run remains `structure-only`
 - current CI runs positive configured profiles only
-
-This plan does not create invalid fixture directories, write invalid JSON/Markdown artifacts, change focused tests, or
-modify workflow behavior.
+- the invalid `viewScopedTags` and missing Core View fixtures are implemented as local focused test fixtures only
+- invalid fixtures remain outside the validate-all registry and CI workflow
 
 ## Candidate Comparison
 
@@ -264,11 +264,13 @@ Rationale:
 Current implementation status:
 
 - `examples/invalid/read-model-invalid-view-scoped-tags` is implemented as the first durable negative fixture.
-- The fixture stores invalid local test input outside `generated/`.
-- A focused test injects the fixture into a temp Todo App PBE Run validation workspace and expects a blocking
+- `examples/invalid/read-model-core-view-missing` is implemented as the second durable negative fixture.
+- Both fixtures store invalid local test input outside `generated/`.
+- A focused test injects the invalid tag fixture into a temp Todo App PBE Run validation workspace and expects a blocking
   `view-scoped-tags-allowed` result.
-- The fixture is not included in `examples/read-model-aggregate/read-model-slices.json`, `validate --all`, or CI.
-- `examples/invalid/read-model-core-view-missing` remains the next durable candidate.
+- A focused test injects the missing Core View fixture into a temp Todo App PBE Run validation workspace and expects a
+  blocking `core-view-coverage-present` result while `view-scoped-tags-allowed` remains passing.
+- Neither fixture is included in `examples/read-model-aggregate/read-model-slices.json`, `validate --all`, or CI.
 
 Keep these candidates inline/temp for now:
 
@@ -294,9 +296,10 @@ For each remaining durable fixture implementation:
 
 ## Non-Scope
 
-This candidate plan and the first implemented fixture do not:
+This candidate plan and the first two implemented fixtures do not:
 
-- create additional `examples/invalid/read-model-*` fixtures beyond the approved invalid `viewScopedTags` fixture
+- create additional `examples/invalid/read-model-*` fixtures beyond the approved invalid tag and missing Core View
+  fixtures
 - modify parser or CLI behavior
 - modify `.github/workflows/read-model-evidence.yml`
 - regenerate generated artifacts
@@ -312,18 +315,18 @@ This candidate plan and the first implemented fixture do not:
 
 ## Gate Self-Check
 
-| Gate                               | Result | Notes                                                                     |
-| ---------------------------------- | ------ | ------------------------------------------------------------------------- |
-| Fixture Boundary Gate              | PASS   | The invalid tag fixture is local test input only, not generated Evidence. |
-| Candidate Narrowing Gate           | PASS   | First durable candidates are narrowed to invalid tags and missing view.   |
-| Positive Fixture Preservation Gate | PASS   | Positive Todo Search and Todo App fixtures remain untouched.              |
-| CI Boundary Gate                   | PASS   | Invalid fixtures remain outside current manual/PR CI workflow.            |
-| Source Authority Boundary Gate     | PASS   | Fixture planning does not alter source authority.                         |
-| Non-Full-Promotion Gate            | PASS   | Full Graph-source promotion remains separate.                             |
-| User Approval Boundary Gate        | PASS   | This plan does not replace user approval or acceptance.                   |
+| Gate                               | Result | Notes                                                                      |
+| ---------------------------------- | ------ | -------------------------------------------------------------------------- |
+| Fixture Boundary Gate              | PASS   | The invalid tag and missing Core View fixtures are local test inputs only. |
+| Candidate Narrowing Gate           | PASS   | First durable candidates are narrowed to invalid tags and missing view.    |
+| Positive Fixture Preservation Gate | PASS   | Positive Todo Search and Todo App fixtures remain untouched.               |
+| CI Boundary Gate                   | PASS   | Invalid fixtures remain outside current manual/PR CI workflow.             |
+| Source Authority Boundary Gate     | PASS   | Fixture planning does not alter source authority.                          |
+| Non-Full-Promotion Gate            | PASS   | Full Graph-source promotion remains separate.                              |
+| User Approval Boundary Gate        | PASS   | This plan does not replace user approval or acceptance.                    |
 
 ## Final Statement
 
-This document narrows the first durable negative fixture candidates and records that the invalid `viewScopedTags`
-fixture is now implemented as a local focused test fixture. It does not implement the missing Core View fixture,
-workflow changes, enforcement, source authority expansion, or promotion.
+This document narrows the first durable negative fixture candidates and records that the invalid `viewScopedTags` and
+missing Core View fixtures are now implemented as local focused test fixtures. It does not implement workflow changes,
+enforcement, source authority expansion, or promotion.

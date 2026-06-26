@@ -702,6 +702,45 @@ describe('read-model Evidence builder', () => {
     expect(await readFile(registryPath, 'utf8')).toBe(registryBefore)
   })
 
+  it('blocks validation from the durable missing Core View fixture without enrolling it in validate-all', async () => {
+    const workspace = await createExampleWorkspace()
+    const invalidFixturePath = resolve(
+      'examples/invalid/read-model-core-view-missing/fixtures/invalid-generated-read-model.json',
+    )
+    const positiveGeneratedPath = resolve('examples/valid/todo-app-pbe-run/generated/generated-read-model.json')
+    const registryPath = resolve('examples/read-model-aggregate/read-model-slices.json')
+    const positiveGeneratedBefore = await readFile(positiveGeneratedPath, 'utf8')
+    const registryBefore = await readFile(registryPath, 'utf8')
+
+    const generated = await generateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    await writeFile(generated.generatedJsonPath, await readFile(invalidFixturePath, 'utf8'))
+
+    const result = await validateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
+      status: string
+      summary: { blockingCount: number }
+      checks: Array<{ id: string; status: string; message: string }>
+    }
+    const workspaceRegistry = JSON.parse(
+      await readFile(join(workspace, 'examples/read-model-aggregate/read-model-slices.json'), 'utf8'),
+    ) as { profiles: Array<{ sourceSlice: string }> }
+
+    expect(report.status).toBe('validation-blocked')
+    expect(report.summary.blockingCount).toBeGreaterThanOrEqual(1)
+    expect(report.checks.find((entry) => entry.id === 'view-scoped-tags-allowed')).toMatchObject({
+      status: 'pass',
+    })
+    expect(report.checks.find((entry) => entry.id === 'core-view-coverage-present')).toMatchObject({
+      status: 'blocking',
+    })
+    expect(report.checks.find((entry) => entry.id === 'core-view-coverage-present')?.message).toContain(
+      'Evidence / Acceptance View',
+    )
+    expect(workspaceRegistry.profiles.some((entry) => entry.sourceSlice.startsWith('examples/invalid/'))).toBe(false)
+    expect(await readFile(positiveGeneratedPath, 'utf8')).toBe(positiveGeneratedBefore)
+    expect(await readFile(registryPath, 'utf8')).toBe(registryBefore)
+  })
+
   it('blocks active scoped validation when parity is not comparison-pass', async () => {
     const workspace = await createExampleWorkspace()
     const generated = await generateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
