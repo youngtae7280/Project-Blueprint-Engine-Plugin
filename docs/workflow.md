@@ -74,14 +74,19 @@ parallel groups, required integration tasks, final validation, and single-sessio
 
 ## ACEP Generator
 
-ACEP Generator writes `.pbe/codex-execution-pack/` with task cards, traceability matrix, UI/UX spec, evidence rules,
-validation guidance, final coverage check, completion criteria, execution strategy, source-of-truth references,
+ACEP Generator writes `.pbe/codex-execution-pack/` with task-card views, traceability matrix, UI/UX spec, evidence
+rules, validation guidance, final coverage check, completion criteria, execution strategy, source-of-truth references,
 foundation contract, parallel safety contract, and an execution manifest.
+
+Task-card views are compatibility/execution projections under Cycle Contract and Node Execution Contract authority. They
+help Codex execute the pack, but they do not become source authority or replace Product, Work, Test, Evidence,
+Acceptance, or execution-contract records.
 
 ## ACEP Runner
 
-ACEP Runner reads the pack and executes manifest phases. It executes selected and foundation scope only. It does not
-implement deferred or out-of-scope behavior.
+ACEP Runner reads the pack and executes manifest phases. It executes selected and foundation scope only, using task-card
+views as execution aids under the manifest and execution contracts. It does not implement deferred or out-of-scope
+behavior.
 
 It follows sequential phases in order, handles parallel phases by parallel group, runs every integration task before
 moving forward, and falls back to sequential execution of parallel-capable tasks when actual parallel execution is not

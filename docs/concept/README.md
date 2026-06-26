@@ -415,16 +415,17 @@ The public-doc cleanup or waiver decision package is now recorded:
 - [public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md)
 
 The package inventories public/user-facing docs for task-card authority, source-authority, compatibility-view, and
-generated-Evidence wording risks. Batch A cleanup is now implemented in `docs/source-of-truth-matrix.md` as a review
-candidate. Remaining Batch B/C/D cleanup and any waiver approval stay separate.
+generated-Evidence wording risks. Batch A cleanup is implemented in `docs/source-of-truth-matrix.md`, and Batch B cleanup
+is implemented in `README.md`, `docs/acep.md`, and `docs/workflow.md`, as review candidates. Remaining Batch C/D cleanup
+and any waiver approval stay separate.
 
 The public-doc cleanup implementation plan is now recorded:
 
 - [public-doc-cleanup-implementation-plan.md](public-doc-cleanup-implementation-plan.md)
 
-The plan records Batch A as implemented and ready for review, keeps Batch B/C/D unimplemented, and preserves the
-`no-waiver-approved` state. It does not approve promotion, source authority expansion, tree-native retirement, or public
-cleanup beyond Batch A.
+The plan records Batch A and Batch B as implemented and ready for review, keeps Batch C/D unimplemented, and preserves
+the `no-waiver-approved` state. It does not approve promotion, source authority expansion, tree-native retirement, or
+public cleanup beyond Batch B.
 
 The future all-slice read-model validation contract is now recorded:
 

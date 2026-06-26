@@ -2,7 +2,9 @@
 
 ACEP means Autonomous Codex Execution Pack.
 
-It is the handoff from planning to implementation.
+It is the handoff from planning to implementation. ACEP packages Cycle Contract and Node Execution Contract obligations
+into an execution pack. Task cards, when present, are compatibility or execution views inside that pack; they do not
+replace Product, Work, Test, Evidence, Acceptance, or execution-contract authority.
 
 ## Output
 
@@ -12,7 +14,7 @@ ACEP is generated under:
 .pbe/codex-execution-pack/
 ```
 
-It contains policy, blueprint summaries, traceability matrix, UI/UX spec, task cards, validation commands, evidence
+It contains policy, blueprint summaries, traceability matrix, UI/UX spec, task-card views, validation commands, evidence
 rules, completion criteria, recovery guidance, final coverage check, final report template, execution strategy, and an
 execution manifest.
 
@@ -64,7 +66,8 @@ The default autonomy level is:
 autonomous_until_stop
 ```
 
-Codex should keep working through task cards without asking the user unless a stop condition occurs.
+Codex should keep working through the execution manifest and task-card views without asking the user unless a stop
+condition occurs.
 
 ## Stop Conditions
 
@@ -98,4 +101,6 @@ It executes manifest phases in order. Sequential phases run task by task. Parall
 group, or sequentially as a fallback when actual parallel execution is unavailable. Every parallel group must complete
 its integration task before Codex moves to the next phase. The runner validates after focused changes, records evidence,
 updates UI/UX evidence when needed, completes final coverage, and writes a final report only when technical completion
-criteria are satisfied. It then prepares result review as `submitted_for_review`.
+criteria are satisfied. It then prepares result review as `submitted_for_review`. Task cards help expose work units to
+Codex, but runner scope is bounded by the manifest, Cycle Contract, Node Execution Contracts, traceability, validation,
+and evidence obligations.

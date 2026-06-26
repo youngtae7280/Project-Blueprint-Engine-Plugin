@@ -1,6 +1,6 @@
 # Public-Doc Cleanup Or Waiver Decision Package
 
-Status: decision-package / batch-a-implemented / no-waiver-approved
+Status: decision-package / batch-a-b-implemented / no-waiver-approved
 
 ## Purpose
 
@@ -13,8 +13,9 @@ boundaries. Those docs are useful historical and user-facing material, but befor
 must either be cleaned up or explicitly waived by the user.
 
 Batch A cleanup has now edited `docs/source-of-truth-matrix.md` to remove the strongest ACEP task-card authority
-ambiguity. This package still does not approve a waiver, change source authority, approve Graph-source promotion, add
-enforcement, or retire tree-native artifacts.
+ambiguity. Batch B cleanup has now edited `README.md`, `docs/acep.md`, and `docs/workflow.md` to frame task-card
+shorthand as execution/compatibility views under contract authority. This package still does not approve a waiver,
+change source authority, approve Graph-source promotion, add enforcement, or retire tree-native artifacts.
 
 ## Why This Matters Before Broader Promotion
 
@@ -48,9 +49,9 @@ The inventory below is based on a quick scan of `README.md`, `AGENTS.md`, `docs/
 | Path / group                                     | Category                               | Wording risk                                                                                                                                                                                                                                                                    | Recommended action                                                                 | Blocking for promotion approval?        |
 | ------------------------------------------------ | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------- |
 | `docs/source-of-truth-matrix.md`                 | Batch A implemented / review candidate | Previously said `ACEP` owned `executable task cards`, which could be read as task-card source authority. Batch A now reframes ACEP as Cycle Contract / Node Execution Contract packaging, manifest, and evidence rules, and frames task cards as execution/compatibility views. | Review Batch A wording; no waiver is approved by the cleanup.                      | Review still required before promotion. |
-| `README.md` task-card references                 | Cleanup or waiver candidate            | Mostly says PBE is not only task cards, but diagrams and gate tables still use task-card shorthand.                                                                                                                                                                             | Clarify task cards as compatibility/execution views under contract authority.      | Likely yes for full promotion.          |
-| `docs/acep.md`                                   | Cleanup or waiver candidate            | Describes pack output and runner behavior through `task cards`; useful but may over-center cards.                                                                                                                                                                               | Add contract-boundary wording around Cycle/Node Execution Contracts.               | Conditional; explicit waiver possible.  |
-| `docs/workflow.md`                               | Cleanup or waiver candidate            | Says ACEP Generator writes task cards and source-of-truth references.                                                                                                                                                                                                           | Clarify generated pack references authority but does not become source.            | Conditional; explicit waiver possible.  |
+| `README.md` task-card references                 | Batch B implemented / review candidate | Diagrams and module tables now frame task cards as task-card views under execution contracts.                                                                                                                                                                                   | Review readability; no waiver is approved by the cleanup.                          | Review still required before promotion. |
+| `docs/acep.md`                                   | Batch B implemented / review candidate | ACEP output, autonomy, and runner wording now describe task cards as compatibility/execution views inside the execution pack.                                                                                                                                                   | Review runner clarity; no waiver is approved by the cleanup.                       | Review still required before promotion. |
+| `docs/workflow.md`                               | Batch B implemented / review candidate | ACEP Generator and Runner wording now says task-card views are projections under Cycle Contract and Node Execution Contract authority.                                                                                                                                          | Review workflow clarity; no waiver is approved by the cleanup.                     | Review still required before promotion. |
 | `docs/examples.md`, `docs/usage.md`              | Cleanup or waiver candidate            | Uses task-card execution shorthand for user workflows.                                                                                                                                                                                                                          | Keep examples but add compatibility shorthand note if promotion proceeds.          | Conditional; explicit waiver possible.  |
 | `docs/traceability-rules.md`                     | Cleanup candidate before promotion     | Treats task cards as traceability units; may need alignment with Node Execution Contracts.                                                                                                                                                                                      | Reframe task-card links as execution-contract projection links.                    | Conditional; likely cleanup.            |
 | `docs/ux-auditor.md`, `docs/coverage-auditor.md` | Cleanup or waiver candidate            | Audit language checks task cards as coverage artifacts.                                                                                                                                                                                                                         | Clarify task cards are checked as contract projections, not source truth.          | Conditional.                            |
@@ -108,14 +109,14 @@ no-waiver-approved
 ## Implementation Plan
 
 The cleanup implementation plan is recorded in
-[public-doc-cleanup-implementation-plan.md](public-doc-cleanup-implementation-plan.md). Batch A is implemented in
-`docs/source-of-truth-matrix.md` as a review candidate. Batch B/C/D remain unimplemented, and no waiver is approved.
+[public-doc-cleanup-implementation-plan.md](public-doc-cleanup-implementation-plan.md). Batch A and Batch B are
+implemented as review candidates. Batch C/D remain unimplemented, and no waiver is approved.
 
 ## Non-Scope
 
 This package does not:
 
-- implement Batch B/C/D cleanup
+- implement Batch C/D cleanup
 - approve an explicit waiver
 - expand source authority
 - approve Graph-source promotion
