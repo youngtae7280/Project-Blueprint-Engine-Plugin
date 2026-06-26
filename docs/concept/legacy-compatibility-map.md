@@ -19,8 +19,8 @@ This document is not:
 - a migration script
 - a Graph-source promotion declaration
 
-The current operational source remains tree-native artifacts until a separate Graph-source promotion phase receives
-explicit user approval.
+The current operational source is now scoped. Maintainability Graph is the limited source model for the Todo Search
+selected-slice authority surface; tree-native artifacts remain operational source outside explicitly promoted scopes.
 
 ## Compatibility Status Categories
 
@@ -65,7 +65,7 @@ Rules:
 | ------------------------------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `5 Layer`                                                           | legacy / superseded as active architecture  | Historical explanatory frame only. Current architecture is tree-native control plus concept policies and future Maintainability Graph target.          |
 | `Knowledge Graph` / `Traceability Knowledge Graph`                  | legacy / predecessor expression             | Older or general expression. Use `Maintainability Graph` for the canonical read/alignment model and future source-model candidate.                     |
-| `Maintainability Graph`                                             | canonical read model / future-target source | Canonical read/alignment model today and long-term source-model candidate. Not current operational source of truth.                                    |
+| `Maintainability Graph`                                             | limited source model / canonical read model | Source model for explicitly promoted scopes; canonical read/alignment model and long-term source-model candidate elsewhere.                            |
 | `Product Tree`                                                      | canonical / active-operational              | Current source of product truth. Future Graph-source phase may project it as a view, but it is not superseded now.                                     |
 | `Project Tree`                                                      | canonical / active-operational              | Current derived architecture/ownership artifact. Future Graph-source phase may project it as a view, but it is not superseded now.                     |
 | `Work Tree`                                                         | canonical / active-operational              | Current executable work artifact derived from Product and Project. Not a direct prompt task list.                                                      |
@@ -182,7 +182,8 @@ This map does not promote Graph-source. Before promotion, later review must acco
 Until then:
 
 ```text
-tree-native artifacts = current operational source of truth
+promoted scope = Maintainability Graph source model
+unpromoted scope = tree-native artifacts as current operational source of truth
 Maintainability Graph = canonical read/alignment model and future-target candidate
 ```
 

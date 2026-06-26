@@ -2,6 +2,7 @@
 
 | Artifact                | Owns                                                                           | Derived From                                | Must Not Decide                            |
 | ----------------------- | ------------------------------------------------------------------------------ | ------------------------------------------- | ------------------------------------------ |
+| Maintainability Graph   | approved graph-source relationships for explicitly promoted scopes             | user-approved promotion record, PBE trees   | user acceptance, unapproved scopes         |
 | RPD                     | user intent, requirement meaning, ambiguity                                    | user input                                  | files, classes, tasks, validation commands |
 | Scope Classification    | selected/deferred/foundation/blocked/out-of-scope                              | user scope decision, RPD                    | code design                                |
 | Dependency Impact Audit | future module impact classification                                            | scope classification, RPD hints, WPD hints  | implementation details                     |
@@ -19,6 +20,10 @@
 - Each artifact owns only its responsibility.
 - Duplicate mention of a requirement across artifacts is traceability, not a defect.
 - Artifacts should declare `sourceOfTruthFor`, `derivedFrom`, and `mustNotOwn` where practical.
+- For explicitly promoted Graph-source scopes, Maintainability Graph is the approved source model for the named scope.
+  Tree-native artifacts remain maintained compatibility, fallback, or reference views until retirement is separately
+  approved.
+- Outside explicitly promoted scopes, the tree-native source-of-truth rules still apply.
 - Task cards, when present, are execution or compatibility views inside ACEP packaging. They do not replace Product,
   Work, Test, Evidence, Acceptance, Cycle Contract, or Node Execution Contract authority.
 

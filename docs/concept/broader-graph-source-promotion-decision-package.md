@@ -1,16 +1,17 @@
 # Broader Graph-Source Promotion Decision Package
 
-Status: promotion-decision-package-ready / preparation-complete-with-user-decision-required /
-no-promotion-executed
+Status: decision-package-used / limited-promotion-executed / repo-wide-promotion-not-executed
 
 ## Purpose
 
-This package collects the matured Graph/read-model Evidence stack, public-doc cleanup status, candidate authority matrix,
-and rollback/fallback plan into one user decision surface.
+This package collected the matured Graph/read-model Evidence stack, public-doc cleanup status, candidate authority
+matrix, and rollback/fallback plan into one user decision surface.
 
-It does not approve or execute Graph-source promotion. It does not expand source authority, retire tree-native
-artifacts, change workflow behavior, add enforcement, regenerate Evidence, or replace user acceptance. It only makes the
-available decision options explicit enough that the user can approve, defer, revise, or reject a future promotion path.
+The user subsequently selected the limited promotion branch. The execution record is
+[broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md).
+
+This package still does not execute repo-wide Graph-source promotion. It does not retire tree-native artifacts, change
+workflow behavior, add enforcement, regenerate Evidence, or replace user acceptance.
 
 Readiness label:
 
@@ -18,22 +19,28 @@ Readiness label:
 promotion-decision-package-ready / preparation-complete-with-user-decision-required
 ```
 
-Meaning:
+Original meaning:
 
 ```text
 pre-promotion preparation package is complete; actual promotion remains blocked on explicit user approval
 ```
 
+Current decision outcome:
+
+```text
+approve limited Graph-source promotion execution
+```
+
 ## Current State
 
-| Field                      | Value                                                                                                            |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Preparation state          | `preparation-complete`                                                                                           |
-| Decision surface state     | `decision-ready`                                                                                                 |
-| Promotion execution        | `no-promotion-executed`                                                                                          |
-| Current operational source | Tree-native Product / Project / Work / Test / Evidence / Acceptance artifacts remain current operational source. |
-| Candidate source model     | Maintainability Graph remains a source-model candidate and canonical read/alignment model.                       |
-| User approval boundary     | Codex, CI, validators, generated reports, and aggregate summaries cannot self-approve source authority change.   |
+| Field                      | Value                                                                                                                     |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Preparation state          | `preparation-complete`                                                                                                    |
+| Decision surface state     | `decision-used`                                                                                                           |
+| Promotion execution        | `limited-promotion-executed`                                                                                              |
+| Current operational source | Maintainability Graph for promoted Todo Search selected-slice scope; tree-native artifacts elsewhere.                     |
+| Candidate source model     | Maintainability Graph is promoted only for the bounded execution-record scope and remains candidate/read-model elsewhere. |
+| User approval boundary     | Codex, CI, validators, generated reports, and aggregate summaries still cannot self-approve further authority changes.    |
 
 ## Evidence Inventory
 
@@ -56,24 +63,27 @@ pre-promotion preparation package is complete; actual promotion remains blocked 
 The user can choose one of these next branches. Any execution requires a later scoped implementation step after the
 choice is explicit.
 
-| Option                                                       | Meaning                                                                                                                                   | Immediate effect if selected                                                                                  |
-| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Approve limited Graph-source promotion                       | Approve a bounded source authority change under the reviewed candidate authority matrix and rollback/fallback plan.                       | Prepare a separate execution plan naming exact scope, changed authority, retained fallback, and review gates. |
-| Continue observation                                         | Keep the scoped pilot, registry-backed validate-all, manual CI, PR informational CI, and local negative fixtures as observation surfaces. | No source authority change; keep current workflow and registry boundaries.                                    |
-| Request revisions to authority matrix / rollback plan / docs | Ask for specific revisions before any approval branch is eligible.                                                                        | Update the relevant concept package and rerun docs validation.                                                |
-| Defer or rollback scoped pilot                               | Stop broader promotion preparation or move the Todo Search scoped pilot back toward fallback/reference-only status.                       | Prepare a separate defer/rollback decision record before any state-changing action.                           |
-| Design enforcement/required-check policy separately          | Keep source authority decisions separate while exploring whether read-model Evidence should ever become a required check.                 | Create a separate enforcement design surface only; no branch protection or required check is added here.      |
+| Option                                                       | Meaning                                                                                                                                   | Immediate effect if selected                                                                                                       |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Approve limited Graph-source promotion                       | Approve a bounded source authority change under the reviewed candidate authority matrix and rollback/fallback plan.                       | Selected and executed in [broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md). |
+| Continue observation                                         | Keep the scoped pilot, registry-backed validate-all, manual CI, PR informational CI, and local negative fixtures as observation surfaces. | No source authority change; keep current workflow and registry boundaries.                                                         |
+| Request revisions to authority matrix / rollback plan / docs | Ask for specific revisions before any approval branch is eligible.                                                                        | Update the relevant concept package and rerun docs validation.                                                                     |
+| Defer or rollback scoped pilot                               | Stop broader promotion preparation or move the Todo Search scoped pilot back toward fallback/reference-only status.                       | Prepare a separate defer/rollback decision record before any state-changing action.                                                |
+| Design enforcement/required-check policy separately          | Keep source authority decisions separate while exploring whether read-model Evidence should ever become a required check.                 | Create a separate enforcement design surface only; no branch protection or required check is added here.                           |
 
 ## Recommended Default
 
-Recommended default at this point:
+Historical recommended default before the user selected a branch:
 
 ```text
 decision-ready; wait for explicit user choice
 ```
 
-The preparation package is mature enough to support a user decision. It is not permission for Codex to execute a
-promotion automatically.
+Current status:
+
+```text
+limited branch executed; further repo-wide promotion still requires a separate user choice
+```
 
 ## User Approval Language
 
@@ -87,10 +97,10 @@ enforcement change, waiver, defer decision, or rollback decision.
 
 ## Explicit Non-Scope
 
-This decision package does not:
+This decision package and its limited execution do not:
 
-- execute actual Graph-source promotion
-- expand source authority
+- execute repo-wide Graph-source promotion
+- expand source authority beyond the Todo Search selected-slice execution scope
 - retire tree-native artifacts
 - change workflow behavior, code, CLI behavior, tests, generated artifacts, registry entries, or examples
 - regenerate or commit generated artifacts
@@ -102,21 +112,23 @@ This decision package does not:
 
 ## Post-Preparation Work
 
-After this package, remaining work is not preparation by default. It is decision-dependent execution:
+After this package, remaining work is not preparation by default. The first decision-dependent execution branch has now
+run:
 
-| If the user chooses...                   | Next work should be...                                                                                 |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| Approve limited promotion                | Prepare a separate, scoped execution package and implementation plan before changing authority.        |
-| Continue observation                     | Keep recording manual/PR runs and retained warnings without changing workflow, authority, or registry. |
-| Request revisions                        | Revise the named package, rerun docs validation, and return to this decision surface.                  |
-| Defer or rollback scoped pilot           | Prepare defer/rollback records and preserve tree-native fallback/reference authority.                  |
-| Design enforcement/required-check policy | Create a separate non-executing enforcement policy design; do not couple it to promotion approval.     |
+| If the user chooses...                   | Next work should be...                                                                                                |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Approve limited promotion                | Executed by [broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md). |
+| Continue observation                     | Keep recording manual/PR runs and retained warnings without changing workflow, authority, or registry.                |
+| Request revisions                        | Revise the named package, rerun docs validation, and return to this decision surface.                                 |
+| Defer or rollback scoped pilot           | Prepare defer/rollback records and preserve tree-native fallback/reference authority.                                 |
+| Design enforcement/required-check policy | Create a separate non-executing enforcement policy design; do not couple it to promotion approval.                    |
 
 ## Final Preparation Statement
 
-The pre-promotion preparation package is now complete for user judgment.
+The pre-promotion preparation package was completed for user judgment and the user selected the limited promotion
+branch.
 
-This is a `100% preparation` claim only: the decision surface, Evidence inventory, authority matrix, public-doc cleanup
-status, and rollback/fallback plan are gathered and cross-linked.
+The limited branch is now executed for Todo Search selected-slice authority only.
 
-It is not a `promotion executed` claim, not a `source authority expanded` claim, and not a `user accepted` claim.
+It is not a repo-wide `promotion executed` claim, not tree-native artifact retirement, not enforcement approval, and not
+a replacement for user acceptance.

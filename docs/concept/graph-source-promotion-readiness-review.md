@@ -19,21 +19,22 @@ This document is not:
 - public-doc cleanup
 - full Todo app implementation
 
-Current operational source remains tree-native artifacts. Maintainability Graph remains the canonical read/alignment
-model and long-term source-model candidate until a separate explicit user promotion approval occurs.
+Current operational source is now scoped. Maintainability Graph is the limited source model for the Todo Search
+selected-slice authority surface, while tree-native artifacts remain operational source outside explicitly promoted
+scopes.
 
 ## Review Basis
 
-| Field                 | Value                                                                |
-| --------------------- | -------------------------------------------------------------------- |
-| Date                  | 2026-06-24                                                           |
-| Repo path             | `C:\Users\ytkim\Desktop\kyt_work\Project Blueprint Engine Plugin`    |
-| Basis commit          | `3983dee Record renewed acceptance for demo slice`                   |
-| Review scope          | Graph-source promotion readiness, not promotion approval             |
-| Representative slice  | `Todo Search Adoption + Product Meaning Feedback`                    |
-| Supplemental slice    | `ACEP task-card-only authority wording` compatibility mismatch slice |
-| Current source status | tree-native artifacts remain current operational source of truth     |
-| Graph status          | Maintainability Graph remains read/alignment model and source target |
+| Field                 | Value                                                                                      |
+| --------------------- | ------------------------------------------------------------------------------------------ |
+| Date                  | 2026-06-24                                                                                 |
+| Repo path             | `C:\Users\ytkim\Desktop\kyt_work\Project Blueprint Engine Plugin`                          |
+| Basis commit          | `3983dee Record renewed acceptance for demo slice`                                         |
+| Review scope          | Graph-source promotion readiness, not promotion approval                                   |
+| Representative slice  | `Todo Search Adoption + Product Meaning Feedback`                                          |
+| Supplemental slice    | `ACEP task-card-only authority wording` compatibility mismatch slice                       |
+| Current source status | limited Graph-source promoted for Todo Search selected-slice; tree-native source elsewhere |
+| Graph status          | source model for promoted limited scope; read/alignment model and source target elsewhere  |
 
 ## Source References
 
@@ -142,12 +143,17 @@ change user acceptance boundaries.
 rollback triggers, trigger-specific actions, snapshot/reference requirements, and compatibility-retirement guardrails for
 that candidate matrix. It does not execute rollback, change source authority, or approve promotion.
 
-[broader-graph-source-promotion-decision-package.md](broader-graph-source-promotion-decision-package.md) now packages the
+[broader-graph-source-promotion-decision-package.md](broader-graph-source-promotion-decision-package.md) packaged the
 matured Evidence inventory, public-doc cleanup status, candidate authority matrix, and rollback/fallback plan into the
 user-facing decision surface for broader Graph-source promotion. Its readiness label is
 `promotion-decision-package-ready / preparation-complete-with-user-decision-required`. This is a preparation-complete
 state for user judgment only; no source authority expansion, Graph-source promotion, enforcement, tree-native
 retirement, or user acceptance change is executed.
+
+[broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md) now records the
+user-approved limited execution branch. Maintainability Graph is the source model for the Todo Search selected-slice
+authority surface; tree-native selected-slice artifacts are maintained as compatibility / fallback / reference; repo-wide
+promotion, tree-native retirement, CI enforcement, invalid-fixture CI, and Todo App promotion remain out of scope.
 
 [public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md) now records the public
 documentation cleanup or explicit waiver decision package for one of those caveats. It inventories public/user-facing
@@ -257,12 +263,12 @@ do not justify full promotion by themselves.
 
 ## Promotion Recommendation
 
-This review does not recommend immediate full promotion.
+This review no longer treats the limited Todo Search branch as merely pending. That branch is executed separately.
 
-It recommends:
+It recommends for any scope beyond that branch:
 
 ```text
-ready for renewed limited pilot user decision with warnings
+continue post-promotion observation; require separate approval for repo-wide promotion
 ```
 
 Prepared decision surface:
@@ -281,7 +287,7 @@ Allowed next actions:
 
 Not allowed from this review:
 
-- declaring Maintainability Graph the current operational source
+- declaring Maintainability Graph the repository-wide current operational source
 - marking tree-native artifacts superseded
 - treating the manual parity artifact as a generated builder or full-promotion proof
 - treating demo-slice renewed Acceptance as source promotion approval
@@ -304,7 +310,7 @@ Acceptance is user-approved with warnings retained.
 | Check                                           | Status                   | Summary                                                                                                                                                                                       |
 | ----------------------------------------------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Representative lifecycle demonstrated           | ready                    | Product -> Project -> Work -> Test -> Evidence -> Acceptance is reviewable for the selected slice.                                                                                            |
-| Source authority safety                         | ready                    | All updated artifacts preserve tree-native operational source authority.                                                                                                                      |
+| Source authority safety                         | ready with scoped change | Maintainability Graph is promoted only for Todo Search selected-slice; tree-native source authority remains outside promoted scopes.                                                          |
 | Check/Evidence safety                           | ready                    | AI self-report is excluded; command Evidence and exceptions are linked.                                                                                                                       |
 | Compatibility mismatch visibility               | ready with warning       | ACEP task-card-only wording is documented as a Compatibility Control Node candidate.                                                                                                          |
 | Rollback / compatibility readiness              | ready with warning       | Strategy and concrete docs-only fallback plan exist, but rollback execution, snapshot tooling, and compatibility retirement mechanics are not implemented.                                    |
@@ -405,21 +411,21 @@ enforcement, waiver judgment, and any actual execution still require explicit us
 | Non-Promotion Gate           | PASS   | This review does not promote Maintainability Graph or change source authority.                                                                                                                                               |
 | Warning Classification Gate  | PASS   | All retained warnings are classified as blocker, acceptable warning, deferred cleanup, or later requirement.                                                                                                                 |
 | Evidence Reality Gate        | PASS   | Findings cite existing docs, selected-slice artifacts, compatibility slice records, and command Evidence.                                                                                                                    |
-| Source Authority Safety Gate | PASS   | Tree-native artifacts remain current operational source.                                                                                                                                                                     |
+| Source Authority Safety Gate | PASS   | Limited Graph-source promotion is scoped to Todo Search selected-slice; tree-native artifacts remain source outside promoted scopes and fallback/reference inside the promoted scope.                                        |
 | Approval Boundary Gate       | PASS   | Readiness review, promotion decision, and promotion approval remain separate.                                                                                                                                                |
 | Control Node Visibility Gate | PASS   | Decision, Evidence, Compatibility, Acceptance, and Impact/Change control candidates are identified.                                                                                                                          |
 | Gap Honesty Gate             | PASS   | Remaining public-doc cleanup, full-product Evidence, additional-slice CI-backed Evidence, aggregation, and pilot/full distinction remain visible.                                                                            |
 | Implementation Boundary Gate | PASS   | Scoped builder/validator exist for Todo Search and structure-only generation/validation exists for one canonical `.pbe` fixture; no CI enforcement, schema, runtime, model, migration, or full Todo implementation is added. |
 
-## Final Non-Promotion Statement
+## Final Scoped-Promotion Statement
 
-This readiness review does not approve Graph-source promotion.
+This readiness review records that a separate execution record approves and executes limited Graph-source promotion.
 
-This readiness review does not change source authority.
+This readiness review does not approve repo-wide promotion or additional source authority expansion.
 
-This readiness review does not make Maintainability Graph the current operational source.
+This readiness review does not make Maintainability Graph the repository-wide current operational source.
 
-This readiness review does not supersede tree-native artifacts.
+This readiness review does not retire tree-native artifacts.
 
-Tree-native artifacts remain the operational source of truth until a later promotion decision receives explicit user
-approval after blockers, warnings, and compatibility caveats are reviewed.
+Tree-native artifacts remain operational source outside promoted scopes and remain fallback/reference inside the
+promoted Todo Search selected-slice scope.

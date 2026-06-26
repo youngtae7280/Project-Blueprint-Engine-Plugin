@@ -1,16 +1,18 @@
 # Source-Authority Rollback / Fallback Plan
 
-Status: rollback-fallback-plan / docs-only / no-rollback-execution / no-source-authority-change
+Status: fallback-plan-active / limited-promotion-fallback / no-rollback-needed
 
 ## Purpose
 
-This plan defines how PBE should recover, defer, or stop if candidate broader source-authority expansion fails,
+This plan defines how PBE should recover, defer, or stop if limited or broader source-authority expansion fails,
 conflicts, becomes stale, or is rejected.
 
-It is based on the candidate authority matrix in
-[source-authority-expansion-design-package.md](source-authority-expansion-design-package.md). It does not execute
-rollback, expand source authority, promote Maintainability Graph, retire tree-native artifacts, modify workflows,
-modify CLI behavior, regenerate artifacts, or replace user acceptance.
+It is based on the authority matrix in
+[source-authority-expansion-design-package.md](source-authority-expansion-design-package.md). It is now active for the
+limited promotion recorded in
+[broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md). It does not
+execute rollback, retire tree-native artifacts, modify workflows, modify CLI behavior, regenerate artifacts, or replace
+user acceptance.
 
 Recommended readiness status:
 
@@ -19,7 +21,7 @@ rollback-fallback-plan-ready-for-promotion-package-with-caveats
 ```
 
 This means the rollback/fallback review surface is ready to feed a future promotion decision package. It does not mean
-rollback is implemented, promotion is approved, or source authority has changed.
+fallback rules are ready and active for the limited Todo Search promotion. No rollback is currently required.
 
 ## Rollback / Fallback Scope
 
@@ -27,8 +29,8 @@ The plan covers these review surfaces:
 
 | Scope area                                | Covered boundary                                                                                          |
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Todo Search scoped pilot                  | Preserve bounded pilot fallback/reference artifacts and stop broader promotion if pilot signals fail.     |
-| Candidate broader source-authority matrix | Apply fallback rules to every artifact family before any source role changes.                             |
+| Todo Search limited promotion             | Preserve bounded fallback/reference artifacts and stop or roll back the promoted scope if signals fail.   |
+| Candidate broader source-authority matrix | Apply fallback rules to every artifact family before any additional source role changes.                  |
 | Positive read-model registry              | Keep `validate --all` scoped to declared positive profiles unless a separate registry change is approved. |
 | Validate-all reports and aggregate        | Treat generated, validation, parity, and aggregate reports as Evidence only until promotion approval.     |
 | Public-doc cleanup state                  | Keep Batch A/B/C/D cleanup as review input; unresolved waiver/sufficiency questions can defer promotion.  |
@@ -45,8 +47,9 @@ If candidate authority expansion conflicts with existing records or user judgmen
 4. Retained manual parity, scoped-pilot, and read-model reference artifacts.
 5. Generated read-model, validation, aggregate, and CI Evidence as review Evidence only.
 
-Generated Evidence can support diagnosis and revalidation, but it must not outrank user acceptance or tree-native
-operational source until a later explicit promotion decision changes authority.
+Generated Evidence can support diagnosis and revalidation, but it must not outrank user acceptance. In the promoted Todo
+Search scope, fallback/reference tree-native artifacts remain available when graph-source interpretation is blocked,
+stale, or disputed. Outside promoted scopes, tree-native artifacts remain operational source.
 
 ## Rollback Triggers
 
@@ -132,9 +135,9 @@ Ready because:
 
 Caveats:
 
-- no rollback implementation exists
-- no source authority change is approved
-- no promotion package is approved
+- no rollback command implementation exists
+- only the limited Todo Search source authority change is approved and executed
+- repo-wide promotion is not approved
 - no concrete artifact snapshot command exists
 - no enforcement policy is approved
 - Todo App PBE Run remains `structure-only`
@@ -145,8 +148,8 @@ Caveats:
 This plan does not:
 
 - execute rollback
-- expand source authority
-- approve Graph-source promotion
+- expand source authority beyond the executed limited scope
+- approve repo-wide Graph-source promotion
 - retire tree-native artifacts
 - modify public docs
 - modify workflow, code, CLI, tests, or generated artifacts
@@ -164,9 +167,10 @@ Follow-on decision surface:
 broader Graph-source promotion decision package prepared
 ```
 
-[broader-graph-source-promotion-decision-package.md](broader-graph-source-promotion-decision-package.md) now combines
-the matured Evidence stack, public-doc cleanup status, candidate authority matrix, this rollback/fallback plan,
-enforcement status, retained caveats, and explicit user approval choices without executing promotion.
+[broader-graph-source-promotion-decision-package.md](broader-graph-source-promotion-decision-package.md) combined the
+matured Evidence stack, public-doc cleanup status, authority matrix, this rollback/fallback plan, enforcement status,
+retained caveats, and explicit user approval choices. The selected limited branch is executed in
+[broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md).
 
-Any actual rollback, fallback, source authority expansion, promotion, artifact retirement, or enforcement change still
+Any actual rollback command, broader source authority expansion, artifact retirement, or enforcement change still
 requires a later explicit user decision and a separate scoped execution package.

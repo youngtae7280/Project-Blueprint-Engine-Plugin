@@ -4,8 +4,8 @@ Status: concept policy
 
 ## Document Purpose
 
-Rollback / Compatibility Strategy defines the concept-level safety policy required before a future Graph-source
-promotion can be considered.
+Rollback / Compatibility Strategy defines the safety policy required before and after Graph-source promotion scopes are
+considered or executed.
 
 It explains how PBE should stop, recover, preserve compatibility, and keep user judgment visible if a future source
 authority transition fails, partially succeeds, or creates compatibility mismatch.
@@ -22,10 +22,10 @@ This document is not:
 - a generated artifact design
 - a Graph-source promotion declaration
 
-The current operational source remains tree-native artifacts until a separate Graph-source promotion phase receives
-explicit user approval. Because tree-native artifacts are already the current operational source in this phase,
-`rollback` is not an immediate action. It is a future safety model that must exist before source authority can be
-changed.
+The current operational source is now scoped: Maintainability Graph is the limited source model for the Todo Search
+selected-slice authority surface, while tree-native artifacts remain operational source outside explicitly promoted
+scopes. Because the limited promotion retains tree-native selected-slice artifacts as fallback/reference, `rollback` is
+not currently needed, but fallback is active.
 
 ## Core Definition
 
@@ -46,18 +46,18 @@ Evidence stack as `promotion-review-inputs-ready-with-caveats`. That status is n
 authority change. Any actual Graph-source promotion still needs explicit rollback/fallback decisions, compatibility
 retirement conditions, and user approval before source authority can change.
 
-[source-authority-expansion-design-package.md](source-authority-expansion-design-package.md) now records a candidate
-broader authority matrix and staged expansion path. It is a design input for future rollback/fallback planning, not a
-rollback-ready state, source authority change, promotion decision, or compatibility retirement approval.
+[source-authority-expansion-design-package.md](source-authority-expansion-design-package.md) now records the authority
+matrix used for the limited promotion and the staged path for any broader expansion.
 
 [source-authority-rollback-fallback-plan.md](source-authority-rollback-fallback-plan.md) now records the concrete
 fallback precedence, rollback triggers, trigger-specific actions, snapshot/reference requirements, and
-compatibility-retirement guardrails for that candidate matrix. It is still docs-only: no rollback is executed, no source
-authority changes, and no compatibility retirement is approved.
+compatibility-retirement guardrails for that matrix. It is active for the limited Todo Search promotion: no rollback is
+executed, no compatibility retirement is approved, and broader promotion remains out of scope.
 
-[broader-graph-source-promotion-decision-package.md](broader-graph-source-promotion-decision-package.md) now records the
-prepared user decision surface for broader Graph-source promotion. It consumes this rollback/fallback planning as input
-only. It does not execute rollback, approve fallback, change source authority, or retire compatibility views.
+[broader-graph-source-promotion-decision-package.md](broader-graph-source-promotion-decision-package.md) recorded the
+prepared user decision surface for broader Graph-source promotion. The selected limited branch is executed in
+[broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md). This strategy
+continues to govern fallback and compatibility behavior after that limited execution.
 
 [public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md) records the cleanup or
 explicit waiver decision surface for public compatibility wording. Deferring cleanup without an explicit waiver would

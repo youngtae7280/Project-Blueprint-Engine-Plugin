@@ -21,13 +21,13 @@ schema.
 Current:
 
 ```text
-View Tree Pack can be projected from tree-native artifacts.
+View Tree Pack can be projected from the active source for its scope.
 ```
 
 Target:
 
 ```text
-After explicit future Graph-source promotion, View Tree Pack can be projected from Maintainability Graph.
+In promoted Graph-source scopes, View Tree Pack can be projected from Maintainability Graph.
 ```
 
 Always:
@@ -36,14 +36,15 @@ Always:
 View Tree Pack is a task-scoped projection, not source authority.
 ```
 
-Current operational source remains:
+Current operational source is scoped:
 
 ```text
-Product Tree -> Project Tree -> Work Tree -> Test Tree
+Promoted Todo Search selected-slice scope -> Maintainability Graph
+Unpromoted scopes -> Product Tree -> Project Tree -> Work Tree -> Test Tree
 Cycle Tree -> Change Tree -> Impact Tree -> Evidence Tree -> Acceptance Tree
 ```
 
-The Graph-first target does not change that current authority until explicit user promotion approval.
+The Graph-first target changes authority only in scopes with explicit promotion execution records.
 
 [generated-read-model-evidence-requirement.md](generated-read-model-evidence-requirement.md) records a later prerequisite
 for generated / CLI-backed read-model Evidence before actual scoped source-authority pilot execution. That requirement

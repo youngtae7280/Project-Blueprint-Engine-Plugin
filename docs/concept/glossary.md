@@ -17,33 +17,33 @@ Terms are classified as `canonical`, `active-operational`, `compatibility`, `leg
 
 ## Canonical Terms
 
-| Term                    | Status                         | Meaning                                                                                                                              |
-| ----------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Product Tree            | canonical / active-operational | Source of product truth: intent, behavior, constraints, UX decisions, acceptance criteria, and product non-scope.                    |
-| Project Tree            | canonical / active-operational | Derived architecture and ownership structure for modules, surfaces, boundaries, dependencies, and integration responsibilities.      |
-| Work Tree               | canonical / active-operational | Executable work nodes derived from Product and Project nodes.                                                                        |
-| Test Tree               | canonical / active-operational | Verification nodes that prove Product and Work nodes and declare required evidence.                                                  |
-| Cycle Tree              | canonical / active-operational | Selected implementation slice packaged into Cycle and Node Execution Contracts.                                                      |
-| Change Tree             | canonical / active-operational | Product, scope, UX, risk, acceptance, or verification changes discovered during review or execution.                                 |
-| Impact Tree             | canonical / active-operational | Affected Product, Project, Work, Test, Evidence, Cycle, and Acceptance nodes that must be stale, invalidated, or reopened.           |
-| Evidence Tree           | canonical / active-operational | Test results, logs, diffs, screenshots, manual notes, and other proof linked to nodes and criteria.                                  |
-| Acceptance Tree         | canonical / active-operational | User-controlled closure state for product branches or slices.                                                                        |
-| Cycle Contract          | canonical / active-operational | Contract for one selected implementation slice, including included scope, non-scope, tests, evidence, and stop conditions.           |
-| Node Execution Contract | canonical / active-operational | Contract for a single executable Work node, including source nodes, files, dependencies, tests, evidence, and rules.                 |
-| Visual Design Contract  | canonical / active-operational | Visual source, tokens, component rules, state coverage, evidence requirements, and waiver/not-required decisions for visual UI work. |
-| Maintainability Graph   | canonical / future-target      | Current canonical read model / alignment model over tree-native artifacts and long-term target source model candidate.               |
-| View Tree Pack          | canonical                      | Conceptual projection pack that lets Codex read selected tree views without treating compatibility views as product truth.           |
-| Approval Brief          | canonical                      | User-facing judgment surface for interpreted intent, result, verification, remaining judgment, and approval choice.                  |
-| Human Gate              | canonical                      | Control mechanism used when PBE needs human judgment, authority, risk acceptance, or intent confirmation before safe progress.       |
-| Check                   | canonical                      | Verification obligation: a condition, question, criterion, or judgment item that must be verified.                                   |
-| Evidence                | canonical                      | Observable artifact showing that a Check was performed or satisfied; AI self-report alone is not Evidence.                           |
-| Evidence Exception      | canonical                      | Visible record that required Evidence is absent or insufficient, including reason, residual risk, user judgment, and later remedy.   |
-| Evidence Freshness      | canonical                      | Whether Evidence still supports the linked Check after the current change, impact, scope, or acceptance shift.                       |
-| Control Node            | canonical                      | Control record that tracks user judgment, change control, impact scope, acceptance closure, and block/reopen status.                 |
-| Graph Node              | canonical                      | Durable target in the Maintainability Graph that can be referenced across tasks, checks, evidence, decisions, and views.             |
-| Graph Edge              | canonical                      | Durable semantic relationship between Graph Nodes; meaningful relationships belong here rather than in tags.                         |
-| View-scoped Tag         | canonical                      | Temporary role assigned inside one View Instance, such as `target`, `context`, `guard`, `required`, `stale`, or `output`.            |
-| View Instance Manifest  | canonical                      | Durable record candidate describing one task-scoped projection, its source nodes, traversal rules, tags, checks, and boundaries.     |
+| Term                    | Status                                            | Meaning                                                                                                                                    |
+| ----------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Product Tree            | canonical / active-operational                    | Source of product truth: intent, behavior, constraints, UX decisions, acceptance criteria, and product non-scope.                          |
+| Project Tree            | canonical / active-operational                    | Derived architecture and ownership structure for modules, surfaces, boundaries, dependencies, and integration responsibilities.            |
+| Work Tree               | canonical / active-operational                    | Executable work nodes derived from Product and Project nodes.                                                                              |
+| Test Tree               | canonical / active-operational                    | Verification nodes that prove Product and Work nodes and declare required evidence.                                                        |
+| Cycle Tree              | canonical / active-operational                    | Selected implementation slice packaged into Cycle and Node Execution Contracts.                                                            |
+| Change Tree             | canonical / active-operational                    | Product, scope, UX, risk, acceptance, or verification changes discovered during review or execution.                                       |
+| Impact Tree             | canonical / active-operational                    | Affected Product, Project, Work, Test, Evidence, Cycle, and Acceptance nodes that must be stale, invalidated, or reopened.                 |
+| Evidence Tree           | canonical / active-operational                    | Test results, logs, diffs, screenshots, manual notes, and other proof linked to nodes and criteria.                                        |
+| Acceptance Tree         | canonical / active-operational                    | User-controlled closure state for product branches or slices.                                                                              |
+| Cycle Contract          | canonical / active-operational                    | Contract for one selected implementation slice, including included scope, non-scope, tests, evidence, and stop conditions.                 |
+| Node Execution Contract | canonical / active-operational                    | Contract for a single executable Work node, including source nodes, files, dependencies, tests, evidence, and rules.                       |
+| Visual Design Contract  | canonical / active-operational                    | Visual source, tokens, component rules, state coverage, evidence requirements, and waiver/not-required decisions for visual UI work.       |
+| Maintainability Graph   | canonical / active-operational in promoted scopes | Limited source model for explicitly promoted scopes; canonical read/alignment model and long-term target source model candidate elsewhere. |
+| View Tree Pack          | canonical                                         | Conceptual projection pack that lets Codex read selected tree views without treating compatibility views as product truth.                 |
+| Approval Brief          | canonical                                         | User-facing judgment surface for interpreted intent, result, verification, remaining judgment, and approval choice.                        |
+| Human Gate              | canonical                                         | Control mechanism used when PBE needs human judgment, authority, risk acceptance, or intent confirmation before safe progress.             |
+| Check                   | canonical                                         | Verification obligation: a condition, question, criterion, or judgment item that must be verified.                                         |
+| Evidence                | canonical                                         | Observable artifact showing that a Check was performed or satisfied; AI self-report alone is not Evidence.                                 |
+| Evidence Exception      | canonical                                         | Visible record that required Evidence is absent or insufficient, including reason, residual risk, user judgment, and later remedy.         |
+| Evidence Freshness      | canonical                                         | Whether Evidence still supports the linked Check after the current change, impact, scope, or acceptance shift.                             |
+| Control Node            | canonical                                         | Control record that tracks user judgment, change control, impact scope, acceptance closure, and block/reopen status.                       |
+| Graph Node              | canonical                                         | Durable target in the Maintainability Graph that can be referenced across tasks, checks, evidence, decisions, and views.                   |
+| Graph Edge              | canonical                                         | Durable semantic relationship between Graph Nodes; meaningful relationships belong here rather than in tags.                               |
+| View-scoped Tag         | canonical                                         | Temporary role assigned inside one View Instance, such as `target`, `context`, `guard`, `required`, `stale`, or `output`.                  |
+| View Instance Manifest  | canonical                                         | Durable record candidate describing one task-scoped projection, its source nodes, traversal rules, tags, checks, and boundaries.           |
 
 ## Control Node Terms
 
@@ -80,18 +80,19 @@ Terms are classified as `canonical`, `active-operational`, `compatibility`, `leg
 
 ## Source Transition Terms
 
-| Term                                | Status        | Meaning                                                                                                   |
-| ----------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------- |
-| Current tree-native source          | canonical     | Stage where Product/Project/Work/Test/Evidence/Acceptance Trees remain current operational source.        |
-| Graph read-model alignment          | canonical     | Stage where Maintainability Graph explains and cross-checks tree-native artifacts without authority move. |
-| Transition candidate                | canonical     | Candidate state where promotion review may be considered after prerequisites are prepared.                |
-| Explicit promotion decision         | canonical     | User-approved source authority decision through Approval Brief or equivalent judgment surface.            |
-| Graph-source promoted               | future-target | Future state where Maintainability Graph is source model; not current operational state.                  |
-| Post-promotion compatibility period | future-target | Future transition period where prior tree-native artifacts may remain as projections or compatibility.    |
-| Source authority change             | canonical     | Explicit user-approved change to which artifact/model is treated as operational source.                   |
-| Projection                          | canonical     | View derived from a source model; not product truth by itself.                                            |
-| Maintained compatibility view       | future-target | Future compatibility artifact kept for transition, review, or rollback after explicit promotion.          |
-| Migration boundary                  | canonical     | Concept boundary separating source-authority policy from actual artifact/model migration mechanics.       |
+| Term                                | Status        | Meaning                                                                                                                                        |
+| ----------------------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current tree-native source          | canonical     | Stage where Product/Project/Work/Test/Evidence/Acceptance Trees remain current operational source.                                             |
+| Graph read-model alignment          | canonical     | Stage where Maintainability Graph explains and cross-checks tree-native artifacts without authority move.                                      |
+| Transition candidate                | canonical     | Candidate state where promotion review may be considered after prerequisites are prepared.                                                     |
+| Explicit promotion decision         | canonical     | User-approved source authority decision through Approval Brief or equivalent judgment surface.                                                 |
+| Limited graph-source promoted       | canonical     | Stage where Maintainability Graph is source model for an explicitly named bounded scope while tree-native artifacts remain fallback/reference. |
+| Graph-source promoted               | future-target | Future state where Maintainability Graph is source model; not current operational state.                                                       |
+| Post-promotion compatibility period | future-target | Future transition period where prior tree-native artifacts may remain as projections or compatibility.                                         |
+| Source authority change             | canonical     | Explicit user-approved change to which artifact/model is treated as operational source.                                                        |
+| Projection                          | canonical     | View derived from a source model; not product truth by itself.                                                                                 |
+| Maintained compatibility view       | future-target | Future compatibility artifact kept for transition, review, or rollback after explicit promotion.                                               |
+| Migration boundary                  | canonical     | Concept boundary separating source-authority policy from actual artifact/model migration mechanics.                                            |
 
 ## Core View Terms
 

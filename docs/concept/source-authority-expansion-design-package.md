@@ -1,42 +1,41 @@
 # Source-Authority Expansion Design Package
 
-Status: design-package / docs-only / no-source-authority-change / no-promotion
+Status: design-package-used / limited-source-authority-expanded / repo-wide-promotion-not-executed
 
 ## Purpose
 
-This package defines the candidate source-authority expansion shape that would need review before any broader
-Graph-source promotion decision.
+This package defines the source-authority expansion shape used for the limited Graph-source promotion branch.
 
-It does not execute a source authority change. It does not promote Maintainability Graph, retire tree-native artifacts,
-change workflow behavior, change CLI behavior, add enforcement, or replace user acceptance. It only names the artifact
-roles, authority boundaries, staged expansion path, and caveats that a future promotion decision package must make
-explicit.
+The limited execution is recorded in
+[broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md). This package
+does not execute repo-wide promotion, retire tree-native artifacts, change workflow behavior, change CLI behavior, add
+enforcement, or replace user acceptance.
 
 ## Current Authority Baseline
 
-Current operational source authority remains unchanged:
+Current operational source authority is now scoped:
 
-| Area                                         | Current role                                                                                                                                       |
-| -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Product / Project / Work Trees               | Operational source for product meaning, project structure, executable work scope, selected/foundation/deferred/out-of-scope classification.        |
-| Test / Evidence / Acceptance Trees           | Operational source for verification obligations, Evidence records, freshness/exception state, and user-controlled acceptance.                      |
-| Cycle Contract / Node Execution Contracts    | Current bounded execution authority for selected/foundation scope and required Evidence.                                                           |
-| Todo Search generated read-model             | Bounded scoped-pilot Evidence and parity/validation surface only; not repository-wide source authority.                                            |
-| Todo App PBE Run generated read-model        | Structure-only Evidence over a canonical `.pbe` fixture; not parity-backed, pilot-marker-backed, or source-authority-bearing.                      |
-| Read-model parity / validation / aggregate   | Evidence and review signals only. They do not approve source authority expansion, enforcement, promotion, or user acceptance.                      |
-| CI evidence manifest and PR informational CI | Non-enforcing Evidence only. They do not create required checks, branch protection, enforcement, or source authority consequences.                 |
-| Public docs and concept docs                 | Public explanation and concept records. They do not become product source authority or promotion approval by describing candidate future behavior. |
+| Area                                         | Current role                                                                                                                                          |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Product / Project / Work Trees               | Current source outside promoted scopes; maintained compatibility / fallback / reference for promoted Todo Search selected-slice scope.                |
+| Test / Evidence / Acceptance Trees           | Current source outside promoted scopes; maintained verification/evidence/acceptance fallback/reference for promoted Todo Search selected-slice scope. |
+| Cycle Contract / Node Execution Contracts    | Current bounded execution authority for selected/foundation scope and required Evidence.                                                              |
+| Todo Search generated read-model             | Generated projection/Evidence for the limited promoted Todo Search graph-source scope; not independent source authority.                              |
+| Todo App PBE Run generated read-model        | Structure-only Evidence over a canonical `.pbe` fixture; not parity-backed, pilot-marker-backed, or source-authority-bearing.                         |
+| Read-model parity / validation / aggregate   | Evidence and review signals only. They do not approve source authority expansion, enforcement, promotion, or user acceptance.                         |
+| CI evidence manifest and PR informational CI | Non-enforcing Evidence only. They do not create required checks, branch protection, enforcement, or source authority consequences.                    |
+| Public docs and concept docs                 | Public explanation and concept records. They do not become product source authority or promotion approval by describing candidate future behavior.    |
 
 Current state:
 
 ```text
-current tree-native source
+limited graph-source promoted for Todo Search selected-slice; tree-native source elsewhere
 ```
 
 Current non-state:
 
 ```text
-graph-source promoted
+repository-wide graph-source promoted
 ```
 
 ## Candidate Future Authority Roles
@@ -56,36 +55,36 @@ A future promotion decision should classify every artifact family into one of th
 
 This matrix is a design surface for review. It is not an approved promotion matrix.
 
-| Artifact family                           | Current role                                      | Candidate broader role after explicit approval                                      | Required boundary before any change                                                                                       |
-| ----------------------------------------- | ------------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Product Tree                              | source authority                                  | graph source record or maintained projection from graph source                      | Product meaning, acceptance criteria, UX decisions, and non-scope must remain traceable and user-controlled.              |
-| Project Tree                              | source authority derived from Product Tree        | graph source records or maintained architecture projection                          | Ownership, boundaries, surfaces, and dependencies must retain parity and conflict handling.                               |
-| Work Tree                                 | source authority for executable work scope        | graph source records or maintained Work View projection                             | Selected/foundation/deferred/blocked/out-of-scope scope must not silently change.                                         |
-| Test Tree                                 | source authority for verification obligations     | graph source records or maintained Test View projection                             | Checks and acceptance-criteria coverage must remain explicit.                                                             |
-| Evidence Tree                             | source authority for Evidence records             | graph source records or maintained Evidence View projection                         | Evidence status, freshness, exception, and linked Check scope must not be hidden.                                         |
-| Acceptance Tree                           | source authority for user-controlled acceptance   | graph source records or maintained Acceptance View projection                       | User acceptance authority must remain user-controlled and cannot be replaced by generated or CI Evidence.                 |
-| Maintainability Graph                     | canonical read/alignment model and source target  | candidate source model only after explicit promotion approval                       | Promotion package must define exact scope, conflict handling, rollback/fallback, compatibility period, and user approval. |
-| Generated read-model                      | generated Evidence                                | projection/read model or source-derived generated view after approved promotion     | Generated output must remain freshness-scoped and cannot silently override source records.                                |
-| View Instance Manifest                    | review Evidence for Core View coverage            | projection manifest or compatibility review aid                                     | View membership and role tags must remain separate from source facts.                                                     |
-| Read-model parity / validation reports    | generated Evidence                                | Evidence for parity, policy compliance, and source/projection drift                 | Pass status is not acceptance, promotion, or enforcement by itself.                                                       |
-| Aggregate read-model summary              | Evidence-only cross-slice summary                 | Evidence-only summary unless a later enforcement policy is explicitly approved      | Aggregate pass remains non-promotional and must keep per-slice warnings visible.                                          |
-| CI evidence manifest                      | non-enforcing CI Evidence                         | Evidence for repeatability; possible future required signal only after approval     | Required checks, branch protection, and enforcement need separate user decision.                                          |
-| ACEP execution pack                       | compatibility package over contracts and evidence | compatibility/execution package or generated projection after approved promotion    | ACEP must remain Cycle Contract / Node Execution Contract packaging, not standalone source authority.                     |
-| Task-card views                           | compatibility/execution views                     | compatibility/execution views or generated projections from approved source records | Task cards must remain views/carriers of contract obligations, not source authority.                                      |
-| Cycle Contract / Node Execution Contracts | execution authority for bounded scope             | execution authority remains required regardless of source model                     | Source change must not authorize silent scope expansion or missing Evidence.                                              |
-| Public docs                               | user-facing explanation                           | explanation of current and future states                                            | Must not claim promotion before approval or hide compatibility/public-doc cleanup caveats.                                |
-| Concept docs                              | concept records and decision history              | concept records and decision history                                                | Historical decisions remain visible; concept docs are not themselves operational source authority.                        |
+| Artifact family                           | Current role                                                                          | Candidate broader role after explicit approval                                      | Required boundary before any change                                                                                       |
+| ----------------------------------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Product Tree                              | source authority                                                                      | graph source record or maintained projection from graph source                      | Product meaning, acceptance criteria, UX decisions, and non-scope must remain traceable and user-controlled.              |
+| Project Tree                              | source authority derived from Product Tree                                            | graph source records or maintained architecture projection                          | Ownership, boundaries, surfaces, and dependencies must retain parity and conflict handling.                               |
+| Work Tree                                 | source authority for executable work scope                                            | graph source records or maintained Work View projection                             | Selected/foundation/deferred/blocked/out-of-scope scope must not silently change.                                         |
+| Test Tree                                 | source authority for verification obligations                                         | graph source records or maintained Test View projection                             | Checks and acceptance-criteria coverage must remain explicit.                                                             |
+| Evidence Tree                             | source authority for Evidence records                                                 | graph source records or maintained Evidence View projection                         | Evidence status, freshness, exception, and linked Check scope must not be hidden.                                         |
+| Acceptance Tree                           | source authority for user-controlled acceptance                                       | graph source records or maintained Acceptance View projection                       | User acceptance authority must remain user-controlled and cannot be replaced by generated or CI Evidence.                 |
+| Maintainability Graph                     | source model for promoted Todo Search scope; canonical read/alignment model elsewhere | candidate source model only after explicit promotion approval for any broader scope | Promotion package must define exact scope, conflict handling, rollback/fallback, compatibility period, and user approval. |
+| Generated read-model                      | generated Evidence                                                                    | projection/read model or source-derived generated view after approved promotion     | Generated output must remain freshness-scoped and cannot silently override source records.                                |
+| View Instance Manifest                    | review Evidence for Core View coverage                                                | projection manifest or compatibility review aid                                     | View membership and role tags must remain separate from source facts.                                                     |
+| Read-model parity / validation reports    | generated Evidence                                                                    | Evidence for parity, policy compliance, and source/projection drift                 | Pass status is not acceptance, promotion, or enforcement by itself.                                                       |
+| Aggregate read-model summary              | Evidence-only cross-slice summary                                                     | Evidence-only summary unless a later enforcement policy is explicitly approved      | Aggregate pass remains non-promotional and must keep per-slice warnings visible.                                          |
+| CI evidence manifest                      | non-enforcing CI Evidence                                                             | Evidence for repeatability; possible future required signal only after approval     | Required checks, branch protection, and enforcement need separate user decision.                                          |
+| ACEP execution pack                       | compatibility package over contracts and evidence                                     | compatibility/execution package or generated projection after approved promotion    | ACEP must remain Cycle Contract / Node Execution Contract packaging, not standalone source authority.                     |
+| Task-card views                           | compatibility/execution views                                                         | compatibility/execution views or generated projections from approved source records | Task cards must remain views/carriers of contract obligations, not source authority.                                      |
+| Cycle Contract / Node Execution Contracts | execution authority for bounded scope                                                 | execution authority remains required regardless of source model                     | Source change must not authorize silent scope expansion or missing Evidence.                                              |
+| Public docs                               | user-facing explanation                                                               | explanation of current and future states                                            | Must not claim promotion before approval or hide compatibility/public-doc cleanup caveats.                                |
+| Concept docs                              | concept records and decision history                                                  | concept records and decision history                                                | Historical decisions remain visible; concept docs are not themselves operational source authority.                        |
 
 ## Proposed Staged Expansion Path
 
-1. Keep the current bounded Todo Search scoped pilot active under observation.
-2. Define broader candidate source boundaries using the matrix above, including explicit source/projection/fallback roles.
+1. Execute the limited Todo Search Graph-source promotion with fallback retained.
+2. Keep broader candidate source boundaries using the matrix above, including explicit source/projection/fallback roles.
 3. Use [source-authority-rollback-fallback-plan.md](source-authority-rollback-fallback-plan.md) as the concrete
    rollback/fallback review input for trigger categories, precedence, snapshots, recovery paths, and
    compatibility-retirement conditions.
-4. Prepare a promotion decision package that shows Evidence, warnings, conflicts, public-doc cleanup status, enforcement
-   status, and user approval choices.
-5. Only after explicit user approval, execute a scoped or broader authority change with source, projection, fallback,
+4. For any scope beyond the executed Todo Search branch, prepare a promotion decision package that shows Evidence,
+   warnings, conflicts, public-doc cleanup status, enforcement status, and user approval choices.
+5. Only after explicit user approval, execute any additional authority change with source, projection, fallback,
    compatibility, and Evidence obligations named.
 
 ## Risks And Caveats
@@ -106,8 +105,8 @@ This matrix is a design surface for review. It is not an approved promotion matr
 
 This package does not:
 
-- expand source authority
-- approve Graph-source promotion
+- expand source authority beyond the executed limited scope
+- approve repo-wide Graph-source promotion
 - retire tree-native artifacts
 - migrate artifacts
 - modify public docs

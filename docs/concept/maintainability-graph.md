@@ -1,6 +1,6 @@
 # Maintainability Graph
 
-Status: canonical candidate
+Status: limited source model / canonical candidate
 
 ## Document Purpose
 
@@ -17,7 +17,12 @@ It does not define a stored graph file, query engine, visualization, schema, val
 
 ## Current Definition
 
-The Maintainability Graph is a read model over existing PBE sources of truth. It connects:
+The Maintainability Graph now has two current roles:
+
+- limited source model for the promoted Todo Search selected-slice authority surface
+- canonical read/alignment model over existing PBE sources of truth outside explicitly promoted scopes
+
+It connects:
 
 - Product, Project, Work, Test, Cycle, Change, Impact, Evidence, and Acceptance nodes
 - acceptance criteria
@@ -38,13 +43,14 @@ The graph is maintainability-focused because it answers questions such as:
 
 ## Target Graph-First Model
 
-The target Graph-first architecture treats Maintainability Graph as the future source model only after explicit
-Graph-source promotion.
+The target Graph-first architecture treats Maintainability Graph as the source model only inside explicitly promoted
+scopes. The first executed scope is recorded in
+[broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md).
 
-The current read-model Evidence stack is now summarized for future promotion review in
+The current read-model Evidence stack was summarized for promotion review in
 [broader-graph-source-promotion-review-inputs.md](broader-graph-source-promotion-review-inputs.md). That package makes
-review inputs easier to inspect, but it does not promote Maintainability Graph to source authority or retire tree-native
-artifacts.
+review inputs easier to inspect. The later execution record promotes only the bounded Todo Search selected-slice scope
+and does not retire tree-native artifacts.
 
 The candidate broader source-authority matrix is now documented in
 [source-authority-expansion-design-package.md](source-authority-expansion-design-package.md). It defines possible future
@@ -53,8 +59,8 @@ compatibility views, but it remains design-only and does not change the current 
 
 The matching rollback/fallback plan is documented in
 [source-authority-rollback-fallback-plan.md](source-authority-rollback-fallback-plan.md). It defines how PBE should stop,
-defer, or fall back if candidate promotion inputs conflict, become stale, or are rejected. It does not execute rollback
-or make Maintainability Graph the source model.
+defer, or fall back if promotion inputs conflict, become stale, or are rejected. It is now active as the fallback plan
+for the limited Todo Search promotion; no rollback is currently needed.
 
 In that target:
 
@@ -104,13 +110,13 @@ self-report is not Evidence.
 
 ## Source Promotion Target
 
-Maintainability Graph is currently a canonical read model over tree-native source artifacts.
+Maintainability Graph is now promoted as the limited source model for the Todo Search selected-slice authority surface.
 
-The long-term target is to promote it into the source model after the required policies, compatibility mapping, and
-representative feasibility demonstration are complete.
+Outside explicitly promoted scopes, it remains a canonical read model over tree-native source artifacts and long-term
+source-model candidate.
 
-Until then, it must not silently override Product Tree, Work Tree, Test Tree, Evidence Tree, Acceptance Tree, or
-confirmed user decisions.
+Inside the promoted scope, it must still not silently override user-controlled acceptance, execution contracts,
+evidence obligations, or fallback/reference artifacts without the rollback/fallback review path.
 
 Graph-source promotion requires explicit user approval after:
 
@@ -138,6 +144,14 @@ The promotion readiness review is recorded in
 and records that the earlier reviewable-with-warnings limited pilot recommendation has now been refreshed under the
 Graph-first Node/Edge/Tag taxonomy for limited pilot review. Promotion state remains `Decision required`; the review does
 not promote Maintainability Graph or change source authority.
+
+The later broader decision package and execution record are:
+
+- [broader-graph-source-promotion-decision-package.md](broader-graph-source-promotion-decision-package.md)
+- [broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md)
+
+Together they move the Todo Search selected-slice authority surface from decision-ready preparation into
+`limited-graph-source-promoted`, while keeping repo-wide promotion and tree-native retirement out of scope.
 
 The source-authority expansion design package is now a review input for any later broader promotion package. It does not
 make Maintainability Graph the current source model and does not replace rollback, fallback, enforcement, or user
@@ -218,7 +232,9 @@ The concept-level recovery and compatibility safety policy is defined in
 
 ## Confirmed Decisions
 
-- Maintainability Graph is currently not a replacement for Product, Project, Work, Test, or control trees.
+- Maintainability Graph is the limited source model for the promoted Todo Search selected-slice scope.
+- Maintainability Graph is currently not a replacement for Product, Project, Work, Test, or control trees outside
+  explicitly promoted scopes.
 - Maintainability Graph is the long-term source promotion candidate.
 - Maintainability Graph is edge-centric: durable semantic relationships are Edges, not Tags.
 - View Tree Pack is a projection over source records, not source authority.

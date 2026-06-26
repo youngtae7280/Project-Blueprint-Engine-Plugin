@@ -9,7 +9,7 @@ Graph-source promotion.
 
 It is a readiness gate. It asks whether a representative PBE lifecycle can be explained, observed, and reviewed while:
 
-- tree-native artifacts remain the current operational source of truth
+- tree-native artifacts remain the current operational source of truth outside explicitly promoted Graph-source scopes
 - Maintainability Graph is used only as a canonical read/alignment model
 - Check/Evidence, Approval Brief, Control Node, Change Lifecycle, and Legacy Compatibility policies remain coherent
 

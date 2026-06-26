@@ -22,12 +22,17 @@ If a later document conflicts with a confirmed decision, record the conflict ins
 
 ## Transition Stance
 
-The current plugin remains tree-native at the operational source level.
+The current plugin now has one explicitly promoted Graph-source scope:
 
-The long-term architectural target is to promote Maintainability Graph to the source model.
+- [broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md) promotes
+  Maintainability Graph as the limited source model for the Todo Search selected-slice authority surface.
 
-Until that promotion is explicitly approved, Maintainability Graph is a canonical read model / alignment model over
-current tree-native artifacts.
+Outside explicitly promoted scopes, the plugin remains tree-native at the operational source level.
+
+The long-term architectural target remains broader Maintainability Graph promotion to the source model.
+
+Until another promotion is explicitly approved, Maintainability Graph remains a canonical read model / alignment model
+over current tree-native artifacts outside the promoted scope.
 
 This means Phase 1-2 documents are not rejecting the Graph-source target. They preserve current plugin safety while
 documenting the transition path.
@@ -40,18 +45,19 @@ Edge = durable semantic relationship
 Tag = view-scoped role only
 ```
 
-This refinement clarifies the target architecture. It does not change current operational source authority.
+This refinement clarifies the target architecture. It now applies as source authority only inside the explicitly
+promoted Todo Search selected-slice scope; elsewhere it remains the target/read-model taxonomy.
 
 Current operational source:
 
 ```text
-tree-native artifacts
+limited Graph-source promoted for Todo Search selected-slice; tree-native artifacts elsewhere
 ```
 
 Current conceptual alignment model:
 
 ```text
-Maintainability Graph
+Maintainability Graph outside promoted scopes
 ```
 
 Long-term target source model:
@@ -60,7 +66,7 @@ Long-term target source model:
 Maintainability Graph
 ```
 
-Graph-source promotion requires a separate phase and explicit user approval after:
+Further Graph-source promotion requires a separate phase and explicit user approval after:
 
 1. Approval Brief policy is complete.
 2. Check / Evidence policy is complete.
@@ -78,6 +84,7 @@ Graph-source promotion requires a separate phase and explicit user approval afte
     explicit approval decision.
 12. Any approved limited pilot decision is recorded in a bounded transition record before later scoped execution is
     considered.
+13. Any executed promotion branch is recorded in a scoped execution record with fallback/reference artifacts retained.
 
 ## Phase 1 Repository Files
 
@@ -414,17 +421,17 @@ The source-authority expansion design package is now recorded:
 
 - [source-authority-expansion-design-package.md](source-authority-expansion-design-package.md)
 
-The package defines a candidate future authority matrix, artifact roles, staged expansion path, and caveats for broader
-Graph-source promotion review. It is docs-only and does not change current tree-native source authority, promote
-Maintainability Graph, retire artifacts, add enforcement, or replace user acceptance.
+The package defines the authority matrix, artifact roles, staged expansion path, and caveats used for the limited
+promotion branch and for any later broader Graph-source promotion review. It does not approve repo-wide promotion,
+retire artifacts, add enforcement, or replace user acceptance.
 
 The source-authority rollback/fallback plan is now recorded:
 
 - [source-authority-rollback-fallback-plan.md](source-authority-rollback-fallback-plan.md)
 
 The plan defines fallback precedence, rollback triggers, trigger-specific actions, snapshot/reference requirements, and
-compatibility-retirement guardrails for the candidate authority matrix. It is docs-only and does not execute rollback,
-change source authority, approve promotion, or retire artifacts.
+compatibility-retirement guardrails for the authority matrix. It is active for the limited Todo Search promotion, but it
+does not execute rollback, approve repo-wide promotion, or retire artifacts.
 
 The broader Graph-source promotion decision package is now recorded:
 
@@ -432,9 +439,18 @@ The broader Graph-source promotion decision package is now recorded:
 
 The package collects the matured Evidence stack, public-doc cleanup status, candidate authority matrix, and
 rollback/fallback plan into a single user decision surface. Its readiness label is
-`promotion-decision-package-ready / preparation-complete-with-user-decision-required`. This means pre-promotion
-preparation is complete for user judgment only; no promotion, source authority expansion, tree-native retirement,
-enforcement, or user acceptance change is executed.
+`promotion-decision-package-ready / preparation-complete-with-user-decision-required`. It was used for the limited
+promotion branch; by itself it still does not approve repo-wide promotion, tree-native retirement, enforcement, or user
+acceptance replacement.
+
+The broader limited Graph-source promotion execution record is now recorded:
+
+- [broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md)
+
+The record executes the limited promotion branch for the Todo Search selected-slice authority surface. Maintainability
+Graph is now the source model for that bounded scope, while tree-native selected-slice artifacts remain maintained
+compatibility / fallback / reference artifacts. Repo-wide promotion, tree-native retirement, CI enforcement, invalid
+fixture CI inclusion, and Todo App promotion beyond `structure-only` remain out of scope.
 
 The public-doc cleanup or waiver decision package is now recorded:
 

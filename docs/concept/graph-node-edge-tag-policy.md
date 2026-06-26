@@ -17,8 +17,9 @@ Tag = temporary role inside a View Instance
 This policy is concept-level only. It does not define a TypeScript schema, validator, CLI command, graph builder,
 runtime model, or migration script.
 
-Current operational source remains tree-native artifacts. This policy clarifies the target Graph-first architecture and
-read/alignment model only. It does not declare Graph-source promotion or source authority change.
+Current operational source is now scoped. This policy is source-authority-bearing inside the promoted Todo Search
+selected-slice scope and remains the target/read-alignment taxonomy outside explicitly promoted scopes. It does not
+declare repo-wide Graph-source promotion.
 
 ## Core Definitions
 
@@ -232,26 +233,25 @@ This policy does not decide that storage form.
 Current operational source:
 
 ```text
-tree-native artifacts
+limited Graph-source promoted for Todo Search selected-slice; tree-native artifacts elsewhere
 ```
 
 Target Graph-first architecture:
 
 ```text
-Maintainability Graph as source model after explicit future promotion
+Maintainability Graph as source model inside explicitly promoted scopes
 ```
 
-This policy does not promote Maintainability Graph, does not change source authority, and does not mark tree-native
-artifacts as projections. It only defines how Graph-first records should be interpreted when PBE prepares for that
-future direction.
+This policy is authority-bearing only inside the promoted Todo Search selected-slice scope. It does not mark
+tree-native artifacts as retired and does not promote Maintainability Graph repo-wide.
 
 ## Gate Self-Check
 
-| Gate                         | Result | Notes                                                                                         |
-| ---------------------------- | ------ | --------------------------------------------------------------------------------------------- |
-| Source Authority Safety      | PASS   | Current operational source remains tree-native.                                               |
-| Node / Edge / Tag Separation | PASS   | Durable targets, durable semantic relations, and view-scoped roles are separated.             |
-| Tag Explosion Control        | PASS   | Generic view tags are preferred over node-kind-specific tag names.                            |
-| Confidence / Freshness Split | PASS   | Confidence labels and freshness/status labels are distinct.                                   |
-| AI Update Safety             | PASS   | AI can propose graph updates; product/acceptance/risk/source authority require evidence/user. |
-| Implementation Boundary      | PASS   | No schema, CLI, runtime, validator, migration, or graph builder is defined.                   |
+| Gate                         | Result | Notes                                                                                                |
+| ---------------------------- | ------ | ---------------------------------------------------------------------------------------------------- |
+| Source Authority Safety      | PASS   | Source authority is limited to the promoted Todo Search scope; tree-native source remains elsewhere. |
+| Node / Edge / Tag Separation | PASS   | Durable targets, durable semantic relations, and view-scoped roles are separated.                    |
+| Tag Explosion Control        | PASS   | Generic view tags are preferred over node-kind-specific tag names.                                   |
+| Confidence / Freshness Split | PASS   | Confidence labels and freshness/status labels are distinct.                                          |
+| AI Update Safety             | PASS   | AI can propose graph updates; product/acceptance/risk/source authority require evidence/user.        |
+| Implementation Boundary      | PASS   | No schema, CLI, runtime, validator, migration, or graph builder is defined.                          |

@@ -57,8 +57,8 @@ This document is not:
 - a rollback command design
 - a Graph-source promotion declaration
 
-The current operational source remains tree-native artifacts. Maintainability Graph remains a canonical read/alignment
-model and long-term source-model candidate until a separate source promotion phase receives explicit user approval.
+The current operational source is now scoped. Maintainability Graph is the limited source model for explicitly promoted
+scopes and remains a canonical read/alignment model and long-term source-model candidate elsewhere.
 
 ## Core Definition
 

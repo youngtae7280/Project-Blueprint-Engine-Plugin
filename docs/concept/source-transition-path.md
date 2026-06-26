@@ -4,8 +4,8 @@ Status: concept policy
 
 ## Document Purpose
 
-Source Transition Path defines the concept-level authority policy for a possible future transition from tree-native
-operational source artifacts to Maintainability Graph as the source model.
+Source Transition Path defines the concept-level authority policy for transitions from tree-native operational source
+artifacts to Maintainability Graph as the source model.
 
 It explains what must be true before source authority can change, who can approve that change, and how tree-native
 artifacts, graph records, projections, contracts, user judgment, and compatibility views must remain separated during
@@ -20,9 +20,11 @@ This document is not:
 - a runtime implementation
 - a generated artifact design
 - an implementation roadmap
-- a Graph-source promotion declaration
+- a repo-wide Graph-source promotion declaration
 
-The current operational source remains tree-native artifacts until an explicit promotion decision is made by the user.
+The current operational source is now split by explicit scope: Maintainability Graph is promoted for the Todo Search
+selected-slice authority surface, while tree-native artifacts remain operational source outside explicitly promoted
+scopes.
 
 ## Core Definition
 
@@ -63,19 +65,20 @@ implementation roadmap.
 | representative feasibility demonstrated | Runtime Feasibility Demonstration criteria are satisfied for a representative lifecycle slice with observable Evidence. No source authority changes.                                                                      |
 | transition candidate                    | Graph-source promotion can be evaluated as a candidate only if projection/parity expectations, conflict handling, Rollback / Compatibility Strategy, source authority matrix, and promotion review Evidence are prepared. |
 | explicit promotion decision             | The user explicitly approves source promotion through Approval Brief or an equivalent user judgment surface. Codex/PBE cannot self-approve.                                                                               |
-| graph-source promoted                   | Future target state where Maintainability Graph is the source model and trees/views may be projected from it. This document describes the state but does not declare it active.                                           |
+| limited graph-source promoted           | Maintainability Graph is source model for an explicitly named bounded scope; tree-native artifacts remain maintained compatibility / fallback / reference artifacts for that scope.                                       |
+| graph-source promoted                   | Future broader state where Maintainability Graph is the source model and trees/views may be projected from it. This document describes the broader state but does not declare it repo-wide active.                        |
 | post-promotion compatibility period     | Tree-native artifacts may remain as projections, views, compatibility artifacts, or transitional records according to the approved promotion and rollback/compatibility policy.                                           |
 
 Current state:
 
 ```text
-current tree-native source
+limited graph-source promoted for Todo Search selected-slice; current tree-native source elsewhere
 ```
 
 Current non-state:
 
 ```text
-graph-source promoted
+repository-wide graph-source promoted
 ```
 
 Current review-input note:
@@ -84,10 +87,10 @@ Current review-input note:
 promotion-review-inputs-ready-with-caveats
 ```
 
-The current read-model Evidence stack is packaged in
+The read-model Evidence stack was packaged in
 [broader-graph-source-promotion-review-inputs.md](broader-graph-source-promotion-review-inputs.md). That package is a
-future review input surface only. It does not move the project beyond `current tree-native source`, does not approve
-`graph-source promoted`, and does not change the source authority matrix below.
+review input surface. It supported the later limited execution record, but it does not approve repo-wide
+`graph-source promoted` or retire tree-native artifacts.
 
 Current decision-package note:
 
@@ -97,9 +100,15 @@ promotion-decision-package-ready / preparation-complete-with-user-decision-requi
 
 The broader decision surface is packaged in
 [broader-graph-source-promotion-decision-package.md](broader-graph-source-promotion-decision-package.md). That package
-means the pre-promotion preparation materials are collected for user judgment. It still does not move the project beyond
-`current tree-native source`, approve `graph-source promoted`, retire tree-native artifacts, add enforcement, or replace
-user acceptance.
+means the pre-promotion preparation materials were collected for user judgment. The selected limited branch is executed
+by the execution record below; repo-wide promotion, tree-native retirement, enforcement, and user acceptance replacement
+remain out of scope.
+
+The limited execution record is packaged in
+[broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md). That record
+moves the Todo Search selected-slice authority surface into `limited graph-source promoted`, keeps tree-native
+selected-slice artifacts as maintained compatibility / fallback / reference artifacts, and leaves repo-wide promotion,
+tree-native retirement, CI enforcement, invalid-fixture CI, and Todo App promotion out of scope.
 
 One remaining caveat is public-doc cleanup sufficiency or explicit waiver. The decision package is recorded in
 [public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md). Batch A, Batch B, and
@@ -121,20 +130,20 @@ change source authority.
 
 This matrix is conceptual. It does not define files, generators, validators, or migration behavior.
 
-| Item                                                 | Current Tree-Native Source                                                                      | Transition Candidate                                                                                                                                      | Post-Promotion Compatibility Period                                                                                                   |
-| ---------------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Product Tree                                         | Current product truth and operational source for product meaning.                               | Must be mapped to graph Product/Intent records with no loss of acceptance criteria, UX decisions, or non-scope.                                           | May become projection/view/compatibility artifact only after explicit promotion; user-approved product meaning must remain traceable. |
-| Project Tree                                         | Current operational architecture/ownership source derived from Product Tree.                    | Must map architecture boundaries, surfaces, dependencies, and ownership into graph records or projections.                                                | May become projected architecture view if parity and rollback expectations are defined.                                               |
-| Work Tree                                            | Current executable work source after Project derivation.                                        | Must map selected/foundation/deferred/blocked/out-of-scope Work scope and dependency boundaries.                                                          | May become projected Work View; executable scope must still be bounded by contracts.                                                  |
-| Test Tree                                            | Current verification source declaring Checks and required Evidence.                             | Must map Test, Check, criteria, and required Evidence links without weakening Check/Evidence policy.                                                      | May become projected Test/Verification View; required verification obligations must remain explicit.                                  |
-| Evidence Tree                                        | Current operational proof/evidence record.                                                      | Must preserve Evidence category, status, freshness, exception, and linked Check scope.                                                                    | May become projected Evidence View or compatibility record; Evidence gaps must not be hidden.                                         |
-| Acceptance Tree                                      | Current durable user-controlled acceptance state.                                               | Must preserve accepted, deferred, rejected, reopened, and invalidated acceptance state.                                                                   | User acceptance authority remains durable and cannot be replaced by Codex/PBE or graph automation.                                    |
-| Maintainability Graph                                | Canonical read/alignment model and future source-model candidate.                               | Candidate source model only after feasibility Evidence, authority matrix, projection/parity, conflict, and rollback/compatibility expectations are ready. | Future source model only after explicit promotion decision; still must preserve Product-to-Acceptance traceability.                   |
-| View Tree Pack                                       | Conceptual projection over tree-native artifacts; not source.                                   | Helps inspect candidate projections and context boundaries.                                                                                               | May become projection pack from graph source if approved; still not product truth by itself.                                          |
-| Cycle Contract / Node Execution Contract             | Current execution boundary for selected/foundation scope and required Evidence.                 | Must remain the execution boundary regardless of source-model candidate.                                                                                  | Remains the bounded execution contract concept after promotion; source model change does not authorize silent scope expansion.        |
-| Approval Brief                                       | User-facing judgment surface, not source artifact.                                              | Must summarize promotion readiness, Evidence, blockers, remaining judgment, and approval choice.                                                          | Remains user judgment surface; does not replace acceptance or source records.                                                         |
-| Control Nodes                                        | Conceptual control records for decisions, impact, evidence gaps, acceptance, and compatibility. | Must surface blocker, decision, stale/reopen, evidence exception, and compatibility mismatch relevant to promotion.                                       | Remain control records, not authority source; closure still requires proper Evidence, decision, or compatibility disposition.         |
-| `.pbe/blueprint/*` and `.pbe/codex-execution-pack/*` | Compatibility views/packages over tree-native source artifacts.                                 | Must be interpreted through Legacy Compatibility Map when conflicts or promotion judgments arise.                                                         | May remain compatibility artifacts or be retired only under approved compatibility policy; not silently deleted or treated as source. |
+| Item                                                 | Current Tree-Native Source                                                                                                               | Transition Candidate                                                                                                                                      | Post-Promotion Compatibility Period                                                                                                   |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Product Tree                                         | Current product truth outside promoted scopes; maintained fallback/reference for promoted Todo Search scope.                             | Must be mapped to graph Product/Intent records with no loss of acceptance criteria, UX decisions, or non-scope.                                           | May become projection/view/compatibility artifact only after explicit promotion; user-approved product meaning must remain traceable. |
+| Project Tree                                         | Current operational architecture/ownership source outside promoted scopes; maintained fallback/reference for promoted Todo Search scope. | Must map architecture boundaries, surfaces, dependencies, and ownership into graph records or projections.                                                | May become projected architecture view if parity and rollback expectations are defined.                                               |
+| Work Tree                                            | Current executable work source outside promoted scopes; maintained fallback/reference for promoted Todo Search scope.                    | Must map selected/foundation/deferred/blocked/out-of-scope Work scope and dependency boundaries.                                                          | May become projected Work View; executable scope must still be bounded by contracts.                                                  |
+| Test Tree                                            | Current verification source outside promoted scopes; maintained fallback/reference for promoted Todo Search scope.                       | Must map Test, Check, criteria, and required Evidence links without weakening Check/Evidence policy.                                                      | May become projected Test/Verification View; required verification obligations must remain explicit.                                  |
+| Evidence Tree                                        | Current operational proof/evidence record outside promoted scopes; maintained fallback/reference for promoted Todo Search scope.         | Must preserve Evidence category, status, freshness, exception, and linked Check scope.                                                                    | May become projected Evidence View or compatibility record; Evidence gaps must not be hidden.                                         |
+| Acceptance Tree                                      | Durable user-controlled acceptance state; maintained fallback/reference for promoted scope and never replaced by graph automation.       | Must preserve accepted, deferred, rejected, reopened, and invalidated acceptance state.                                                                   | User acceptance authority remains durable and cannot be replaced by Codex/PBE or graph automation.                                    |
+| Maintainability Graph                                | Source model for promoted Todo Search selected-slice scope; canonical read/alignment model and source candidate elsewhere.               | Candidate source model only after feasibility Evidence, authority matrix, projection/parity, conflict, and rollback/compatibility expectations are ready. | Future source model only after explicit promotion decision; still must preserve Product-to-Acceptance traceability.                   |
+| View Tree Pack                                       | Conceptual projection over tree-native artifacts; not source.                                                                            | Helps inspect candidate projections and context boundaries.                                                                                               | May become projection pack from graph source if approved; still not product truth by itself.                                          |
+| Cycle Contract / Node Execution Contract             | Current execution boundary for selected/foundation scope and required Evidence.                                                          | Must remain the execution boundary regardless of source-model candidate.                                                                                  | Remains the bounded execution contract concept after promotion; source model change does not authorize silent scope expansion.        |
+| Approval Brief                                       | User-facing judgment surface, not source artifact.                                                                                       | Must summarize promotion readiness, Evidence, blockers, remaining judgment, and approval choice.                                                          | Remains user judgment surface; does not replace acceptance or source records.                                                         |
+| Control Nodes                                        | Conceptual control records for decisions, impact, evidence gaps, acceptance, and compatibility.                                          | Must surface blocker, decision, stale/reopen, evidence exception, and compatibility mismatch relevant to promotion.                                       | Remain control records, not authority source; closure still requires proper Evidence, decision, or compatibility disposition.         |
+| `.pbe/blueprint/*` and `.pbe/codex-execution-pack/*` | Compatibility views/packages over tree-native source artifacts.                                                                          | Must be interpreted through Legacy Compatibility Map when conflicts or promotion judgments arise.                                                         | May remain compatibility artifacts or be retired only under approved compatibility policy; not silently deleted or treated as source. |
 
 ## Promotion Prerequisites
 
@@ -178,9 +187,10 @@ These invariants apply before, during, and after any approved source transition:
 
 ## Conflict And Drift Handling
 
-### Current Phase
+### Current / Mixed Phase
 
-When a tree-native artifact and Maintainability Graph read/alignment model disagree in the current phase:
+When a tree-native artifact and Maintainability Graph read/alignment model disagree outside an explicitly promoted
+scope:
 
 ```text
 tree-native artifact = operational source
@@ -188,6 +198,17 @@ Maintainability Graph = alignment signal
 ```
 
 The mismatch must not be silently fixed by graph interpretation.
+
+When the disagreement is inside the limited promoted Todo Search selected-slice scope:
+
+```text
+promoted Maintainability Graph source model = scoped operational source
+tree-native selected-slice artifacts = maintained compatibility / fallback / reference
+```
+
+The mismatch still must not be hidden. The fallback/reference artifacts remain reviewable, and any authority-affecting
+conflict must use the rollback/fallback plan and user judgment before changing accepted product meaning, evidence state,
+or execution scope.
 
 If the mismatch affects current approval, scope, verification, or user judgment, record the appropriate control or
 policy item:
@@ -426,21 +447,19 @@ This policy does not implement:
 - runtime source-model conversion
 - authority-bearing generated graph or projection artifacts
 - rollback mechanics
-- actual Graph-source promotion
+- repo-wide Graph-source promotion
 
 Those remain later concept or implementation questions.
 
 ## Remaining Open Questions
 
 - How formal should projection/parity expectations be before promotion review?
-- Are the candidate authority matrix and rollback/fallback plan sufficient for a user-approved promotion execution branch,
-  or do they need revision?
-- Which option will the user choose from the broader Graph-source promotion decision package?
+- What follow-up observation should apply to the executed limited Graph-source promotion branch?
+- What additional approval, evidence, or migration mechanics are required before any repo-wide promotion branch?
 - Does promotion review need a specialized Approval Brief template?
 - During Todo Search scoped pilot active observation, what trigger should cause validator/CI-backed Evidence,
   public-doc cleanup, broader promotion review, rollback/defer, or continued observation?
-- Will the user accept Batch A/B/C/D public-doc cleanup as sufficient for promotion review, or require an explicit
-  waiver before promotion approval?
+- Is Batch A/B/C/D public-doc cleanup sufficient for broader repo-wide promotion, or will a future waiver be needed?
 - What additional evidence is required before any broader source authority transition beyond Todo Search?
 - How long should a post-promotion compatibility period last?
 - Where is the boundary between automatic recovery and manual judgment when tree-native artifacts and graph records
