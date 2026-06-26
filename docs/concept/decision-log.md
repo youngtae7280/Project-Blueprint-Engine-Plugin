@@ -590,6 +590,13 @@ DEC-125 does not supersede DEC-097 through DEC-124. It confirms Todo App PBE Run
 `confirmed-structure-only-graph-source`. This is graph-source confirmation only and does not add enforcement, required
 checks, tree retirement, invalid-fixture CI, parity backing, pilot-marker backing, or promotion beyond `structure-only`.
 
+DEC-126 does not supersede DEC-097 through DEC-125. It records manual run `28226270934` and PR #10 run `28226357099`
+reviewing confirmed Todo App graph-source-backed metadata in non-enforcing CI. The reviewed artifacts record Todo App
+`projection-contract-pass`, `structure-only-confirmed`, `confirmed-structure-only-graph-source`, 22 nodes / 38 edges /
+7 Core Views, E2E smoke pass, validate-all aggregate pass, and uploaded `graph-source-read-model-projection.json`.
+Workflow triggers remain manual plus PR informational; no enforcement, required check, tree retirement, invalid-fixture
+CI, or promotion beyond `structure-only` is introduced.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
