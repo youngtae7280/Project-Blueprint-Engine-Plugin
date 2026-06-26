@@ -20,28 +20,28 @@ Graph-source promotion.
 
 ## Current Local Validator-Backed Baseline
 
-| Baseline item              | Current state                                                                                                                                                                                              |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Scoped pilot               | `examples/adoption/todo-search-slice` only                                                                                                                                                                 |
-| Active observation status  | `keep-active-with-retained-warnings`                                                                                                                                                                       |
-| Generated/manual parity    | `comparison-pass`                                                                                                                                                                                          |
-| Local validator command    | `pbe graph read-model validate --slice examples/adoption/todo-search-slice`                                                                                                                                |
-| Validator-backed status    | `validation-pass`                                                                                                                                                                                          |
-| Validator check count      | 20                                                                                                                                                                                                         |
-| Warning/blocking/decision  | 0 / 0 / 0                                                                                                                                                                                                  |
-| CI-backed Evidence         | Todo Search run `28151296796`, aggregate-enabled run `28156403793`, Node 24 run `28157938343`, validate-all manual run `28210541509`, and validate-all PR run `28210904900` reviewed as `ci-evidence-pass` |
-| Tree-native fallback       | retained and usable                                                                                                                                                                                        |
-| Supplemental compatibility | warning-only, not pilot source scope                                                                                                                                                                       |
-| Current authority boundary | bounded Todo Search scoped pilot; no repository-wide source authority change                                                                                                                               |
+| Baseline item              | Current state                                                                                                                                                                                                               |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Scoped pilot               | `examples/adoption/todo-search-slice` only                                                                                                                                                                                  |
+| Active observation status  | `keep-active-with-retained-warnings`                                                                                                                                                                                        |
+| Generated/manual parity    | `comparison-pass`                                                                                                                                                                                                           |
+| Local validator command    | `pbe graph read-model validate --slice examples/adoption/todo-search-slice`                                                                                                                                                 |
+| Validator-backed status    | `validation-pass`                                                                                                                                                                                                           |
+| Validator check count      | 20                                                                                                                                                                                                                          |
+| Warning/blocking/decision  | 0 / 0 / 0                                                                                                                                                                                                                   |
+| CI-backed Evidence         | Todo Search run `28151296796`, aggregate-enabled run `28156403793`, Node 24 run `28157938343`, validate-all manual run `28210541509`, and validate-all PR runs `28210904900` / `28213236499` reviewed as `ci-evidence-pass` |
+| Tree-native fallback       | retained and usable                                                                                                                                                                                                         |
+| Supplemental compatibility | warning-only, not pilot source scope                                                                                                                                                                                        |
+| Current authority boundary | bounded Todo Search scoped pilot; no repository-wide source authority change                                                                                                                                                |
 
 The local validator baseline is enough to keep the scoped pilot active under observation. The non-enforcing manual CI
 workflow produced reviewed Todo Search CI-backed Evidence in run `28151296796`; the later aggregate-enabled workflow run
 `28156403793` reviewed the Todo Search, Todo App PBE Run, and aggregate artifact bundle. The post-update Node 24 run
 `28157938343` reviewed the same aggregate-enabled workflow after the action/runtime hygiene update. PR #1 reviewed run
 `28207822252` as a non-enforcing `pull_request-informational` Evidence run. The workflow later switched to
-registry-backed local `validate --all`; manual run `28210541509` and PR #2 run `28210904900` reviewed that switched
-workflow as `ci-evidence-pass`. Push/schedule triggers, required checks, branch protection, and enforcement remain
-unimplemented.
+registry-backed local `validate --all`; manual run `28210541509`, PR #2 run `28210904900`, and PR #3 run `28213236499`
+reviewed that switched workflow as `ci-evidence-pass`. Push/schedule triggers, required checks, branch protection, and
+enforcement remain unimplemented.
 
 The PR informational trigger design and first run review are recorded in
 [pr-informational-read-model-evidence-design.md](pr-informational-read-model-evidence-design.md) and

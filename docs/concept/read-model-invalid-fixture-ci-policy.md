@@ -28,6 +28,8 @@ Current positive CI / validate-all path:
   - `examples/valid/todo-app-pbe-run`
 - expected aggregate status: `aggregate-pass`
 - source mode: registry-backed positive read-model Evidence only
+- latest PR observation: PR #3 / run `28213236499` confirmed the positive artifact bundle still excludes invalid
+  fixtures
 
 Current negative coverage:
 

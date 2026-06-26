@@ -28,6 +28,8 @@ enforcement or source-authority consequences from `validate --all` workflow resu
 Non-enforcing CI workflow integration of local `validate --all` is recorded in
 [ci-validate-all-integration-design.md](ci-validate-all-integration-design.md). The first PR informational run after
 that switch is now reviewed as PR #2 / run `28210904900`.
+The third PR informational observation is now reviewed as PR #3 / run `28213236499`; the recommended run-count
+observation threshold is satisfied, but path-filter or failure-semantics changes still require a separate decision.
 Registry fixture and test planning for that future path is tracked in
 [read-model-slice-registry-test-strategy.md](read-model-slice-registry-test-strategy.md).
 Negative fixture storage policy is tracked in
@@ -44,11 +46,13 @@ fixtures local-only for now, so PR informational observation continues to cover 
 | Manual dispatch review        | Run `28207696557`, `workflow_dispatch`, `success`, `ci-evidence-pass`                                                |
 | First PR informational review | PR #1, run `28207822252`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`                |
 | Validate-all PR review        | PR #2, run `28210904900`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`                |
+| Third PR informational review | PR #3, run `28213236499`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`                |
 | Workflow mode                 | `workflow_dispatch` + non-enforcing `pull_request` informational trigger                                             |
 | Included slices               | `examples/adoption/todo-search-slice`; `examples/valid/todo-app-pbe-run`; aggregate summary                          |
 | Todo Search status            | `validation-pass`, `comparison-pass`, 40 nodes / 59 edges / 20 checks                                                |
 | Todo App PBE Run status       | `validation-pass`, parity `not-required`, 22 nodes / 38 edges / 16 checks                                            |
 | Aggregate status              | `aggregate-pass`, 2 slices, 0 warning / 0 blocking / 0 decision-required                                             |
+| Observation threshold         | 3 real PR informational runs reviewed; refinement can be considered but is not automatic                             |
 | Authority boundary            | CI/PR Evidence is Evidence only; no source authority expansion, full promotion, enforcement, or user acceptance swap |
 
 ## Observation Purpose
@@ -228,9 +232,10 @@ Reopen broader validation scope or `validate --all` workflow integration only af
 - source authority boundaries remain unambiguous
 
 The non-enforcing CI workflow switch to local `validate --all` is implemented and reviewed in
-[ci-validate-all-integration-design.md](ci-validate-all-integration-design.md). PR #2 / run `28210904900` is the first
-post-switch PR informational observation; at least one more real PR run or one week of normal PR flow should be observed
-before enforcement or filter changes are discussed.
+[ci-validate-all-integration-design.md](ci-validate-all-integration-design.md). PR #2 / run `28210904900` and PR #3 /
+run `28213236499` are reviewed post-switch PR informational observations. The three-real-PR count threshold is
+satisfied, so path-filter or failure-semantics refinement can be considered as a separate decision surface; enforcement
+still requires a separate user decision.
 
 ## Observation Record Template
 

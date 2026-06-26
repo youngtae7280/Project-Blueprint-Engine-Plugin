@@ -13,9 +13,9 @@ node dist/cli/index.js graph read-model validate --all --json
 ```
 
 The switch is implemented in `.github/workflows/read-model-evidence.yml`, manually reviewed in run `28210541509`, and
-reviewed through a `pull_request` informational smoke run `28210904900`. It remains non-enforcing. It does not add
-required checks, add branch protection, expand source authority, perform public-doc cleanup, promote Todo App PBE Run
-beyond `structure-only`, or approve full Graph-source promotion.
+reviewed through `pull_request` informational smoke runs `28210904900` and `28213236499`. It remains non-enforcing. It
+does not add required checks, add branch protection, expand source authority, perform public-doc cleanup, promote Todo
+App PBE Run beyond `structure-only`, or approve full Graph-source promotion.
 
 ## Prior CI Mode
 
@@ -82,6 +82,19 @@ Reviewed PR informational run after switch:
 | Event        | `pull_request`                                                                                          |
 | Head SHA     | `dadc1fd415a57342e7e1084c561868e242b39c54`                                                              |
 | Manifest ref | `refs/pull/2/merge`                                                                                     |
+| Manifest     | `ci-evidence-pass`; `pull_request-informational`; `validateAllStatus: aggregate-pass`; `aggregate-pass` |
+| Review state | recorded in [ci-backed-read-model-evidence-run-review.md](ci-backed-read-model-evidence-run-review.md)  |
+
+Third PR informational observation after switch:
+
+| Field        | Value                                                                                                   |
+| ------------ | ------------------------------------------------------------------------------------------------------- |
+| PR           | `#3`; draft smoke PR; closed without merge                                                              |
+| Run ID       | `28213236499`                                                                                           |
+| Run URL      | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28213236499>              |
+| Event        | `pull_request`                                                                                          |
+| Head SHA     | `b9f2048541b884fb6eb74234f7fecd844102abc8`                                                              |
+| Manifest ref | `refs/pull/3/merge`                                                                                     |
 | Manifest     | `ci-evidence-pass`; `pull_request-informational`; `validateAllStatus: aggregate-pass`; `aggregate-pass` |
 | Review state | recorded in [ci-backed-read-model-evidence-run-review.md](ci-backed-read-model-evidence-run-review.md)  |
 

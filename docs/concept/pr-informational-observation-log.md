@@ -11,18 +11,18 @@ Evidence without changing workflow behavior.
 
 ## Current Baseline
 
-| Baseline item             | Current value                                                                                               |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Manual dispatch baseline  | Run `28207696557`, `workflow_dispatch`, `success`, `ci-evidence-pass`                                       |
-| First real PR run         | PR `#1`, run `28207822252`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`     |
-| Latest PR run             | PR `#2`, run `28210904900`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`     |
-| Current workflow mode     | `workflow_dispatch` plus non-enforcing `pull_request-informational`                                         |
-| Included slices           | `examples/adoption/todo-search-slice`; `examples/valid/todo-app-pbe-run`; aggregate summary                 |
-| Workflow command mode     | registry-backed `validate --all` after manual run `28210541509`                                             |
-| Observation policy        | [pr-informational-observation-policy.md](pr-informational-observation-policy.md)                            |
-| Current real PR run count | 2 reviewed real PR informational runs                                                                       |
-| Target before refinement  | At least 3 real PR informational runs or 1 week of normal PR flow, unless immediate re-review is triggered. |
-| Enforcement / authority   | Not approved. PR Evidence is informational only and does not change source authority.                       |
+| Baseline item             | Current value                                                                                           |
+| ------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Manual dispatch baseline  | Run `28207696557`, `workflow_dispatch`, `success`, `ci-evidence-pass`                                   |
+| First real PR run         | PR `#1`, run `28207822252`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass` |
+| Latest PR run             | PR `#3`, run `28213236499`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass` |
+| Current workflow mode     | `workflow_dispatch` plus non-enforcing `pull_request-informational`                                     |
+| Included slices           | `examples/adoption/todo-search-slice`; `examples/valid/todo-app-pbe-run`; aggregate summary             |
+| Workflow command mode     | registry-backed `validate --all` after manual run `28210541509`                                         |
+| Observation policy        | [pr-informational-observation-policy.md](pr-informational-observation-policy.md)                        |
+| Current real PR run count | 3 reviewed real PR informational runs                                                                   |
+| Target before refinement  | Run-count threshold satisfied; refinement may be considered but is not automatic.                       |
+| Enforcement / authority   | Not approved. PR Evidence is informational only and does not change source authority.                   |
 
 Negative fixture policy is documented separately in
 [read-model-negative-fixture-storage-decision.md](read-model-negative-fixture-storage-decision.md). Current PR
@@ -106,6 +106,34 @@ entries are expected unless a separate future mode is approved.
 | Failure / noise class        | No failure; docs-only trigger was intentional smoke signal for the validate-all workflow switch, not enough long-term filter evidence alone  |
 | Interpretation               | Continue observation. One more real PR run or one week of normal PR flow is recommended before path-filter refinement or enforcement design. |
 | Cleanup                      | PR closed without merge; remote smoke branch deleted                                                                                         |
+
+### Baseline Entry 4: Third PR Informational Observation Run
+
+| Field                        | Value                                                                                                                                                  |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Entry type                   | Third real PR informational observation and second validate-all-centered PR observation                                                                |
+| PR                           | `#3`; draft temporary smoke PR; closed without merge                                                                                                   |
+| Run ID                       | `28213236499`                                                                                                                                          |
+| Run URL                      | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28213236499`                                                             |
+| Job ID / URL                 | `83578792524`; `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28213236499/job/83578792524`                              |
+| Event / trigger mode         | `pull_request` / `pull_request-informational`                                                                                                          |
+| Head SHA / base SHA          | `b9f2048541b884fb6eb74234f7fecd844102abc8` / `e7722e0faaa4cbe90d9d24ae7ad1cc69c18d58dd`                                                                |
+| Head ref / base ref          | `pbe/pr-info-observation-smoke-20260626-3` / `main`                                                                                                    |
+| Source ref / manifest commit | `refs/pull/3/merge` / `a1ff90963040f43abec3ce3ef80efd1d25263199`                                                                                       |
+| Changed path categories      | `docs/concept/**` smoke change                                                                                                                         |
+| Artifact bundle              | Present and reviewed                                                                                                                                   |
+| Manifest status              | `ci-evidence-pass`                                                                                                                                     |
+| Evidence level               | `ci-backed`                                                                                                                                            |
+| Source mode                  | `registry-backed validate-all`; `validateAllStatus: aggregate-pass`                                                                                    |
+| Todo Search status           | `validation-pass`, `comparison-pass`, 40 nodes / 59 edges, 20 checks                                                                                   |
+| Todo App PBE Run status      | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                                               |
+| Aggregate status             | `aggregate-pass`, 2 included slices, 0 warnings / 0 blocking / 0 decision-required                                                                     |
+| Invalid fixture status       | Not included in artifact bundle, positive registry, validate-all aggregate path, or CI workflow                                                        |
+| Retained warning visibility  | Present; `retainedWarningsRemainVisible: true`                                                                                                         |
+| Boundary visibility          | Source-authority boundary, non-enforcement statement, and non-promotion statement present                                                              |
+| Failure / noise class        | No failure; docs-only trigger is now the third observed PR informational run and can inform a later path-filter refinement decision surface            |
+| Interpretation               | Run-count threshold is satisfied. Path-filter or failure-semantics refinement can now be considered, but enforcement/source-promotion remain separate. |
+| Cleanup                      | Downloaded `.tmp` artifacts removed; PR closed without merge; remote smoke branch deleted                                                              |
 
 ## Future Observation Entry Template
 
@@ -225,14 +253,14 @@ Record changed paths by category instead of only listing filenames:
 
 ## Observation Counter
 
-| Counter                                   | Current value                                                                                              |
-| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Real PR informational runs reviewed       | 1                                                                                                          |
-| Manual dispatch runs reviewed after PR CI | 1                                                                                                          |
-| Target before filter refinement           | 3 real PR informational runs or 1 week of normal PR flow, unless immediate re-review is triggered.         |
-| Enforcement discussion state              | Closed until a separate user decision reopens it.                                                          |
-| All-slice validation state                | Contract design only; see [read-model-validate-all-contract.md](read-model-validate-all-contract.md).      |
-| Registry test strategy state              | Design only; see [read-model-slice-registry-test-strategy.md](read-model-slice-registry-test-strategy.md). |
+| Counter                                   | Current value                                                                                            |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Real PR informational runs reviewed       | 3                                                                                                        |
+| Manual dispatch runs reviewed after PR CI | 1                                                                                                        |
+| Target before filter refinement           | Run-count threshold satisfied; next step may design path-filter/failure-semantics refinement if desired. |
+| Enforcement discussion state              | Closed until a separate user decision reopens it.                                                        |
+| All-slice validation state                | Local and CI validate-all are implemented as non-enforcing Evidence only.                                |
+| Registry test strategy state              | Implemented for registry parser/planner tests; invalid fixtures remain local-only.                       |
 
 ## Decision Thresholds
 
@@ -270,8 +298,8 @@ All-slice validation implementation is governed by
 [read-model-validate-all-contract.md](read-model-validate-all-contract.md) and remains separate from this observation
 log.
 The non-enforcing CI workflow switch to local `validate --all` is implemented and manually reviewed in
-[ci-validate-all-integration-design.md](ci-validate-all-integration-design.md). The first PR run after the switch should
-be appended here as a workflow-mode observation.
+[ci-validate-all-integration-design.md](ci-validate-all-integration-design.md). PR #2 and PR #3 are now appended here as
+validate-all-centered PR observations.
 Registry fixture/test implementation is governed by
 [read-model-slice-registry-test-strategy.md](read-model-slice-registry-test-strategy.md) and also remains separate from
 this log.

@@ -386,9 +386,11 @@ The append-only observation log and review runbook is now recorded:
 - [pr-informational-observation-log.md](pr-informational-observation-log.md)
 
 The log records the manual baseline run `28207696557`, first PR informational run `28207822252` / PR `#1`, validate-all
-PR informational run `28210904900` / PR `#2`, a reusable future-entry template, review checklist, observation counters,
-and decision thresholds. It is a recording surface only; it does not change workflow triggers, dispatch Actions, add
-enforcement, expand source authority, or approve promotion.
+PR informational run `28210904900` / PR `#2`, third PR informational observation run `28213236499` / PR `#3`, a reusable
+future-entry template, review checklist, observation counters, and decision thresholds. The three-real-PR run-count
+threshold is now satisfied, so path-filter or failure-semantics refinement can be considered as a separate decision
+surface. The log is a recording surface only; it does not change workflow triggers, dispatch Actions, add enforcement,
+expand source authority, or approve promotion.
 
 The future all-slice read-model validation contract is now recorded:
 
@@ -487,10 +489,10 @@ The CI validate-all integration design is now recorded:
 
 The record explains how the non-enforcing manual/PR informational workflow now replaces its explicit read-model command
 sequence with local registry-backed `validate --all`. It compares command coverage, artifact bundle requirements,
-manifest and Step Summary fields, failure semantics, and migration review expectations. Manual run `28210541509` and PR
-informational run `28210904900` reviewed the switched workflow as `ci-evidence-pass` with
-`validateAllStatus: aggregate-pass`. No required check, enforcement, source authority, public-doc cleanup, or promotion
-change is made.
+manifest and Step Summary fields, failure semantics, and migration review expectations. Manual run `28210541509`, PR
+informational run `28210904900`, and third PR informational observation run `28213236499` reviewed the switched workflow
+as `ci-evidence-pass` with `validateAllStatus: aggregate-pass`. No required check, enforcement, source authority,
+public-doc cleanup, or promotion change is made.
 
 ## Outline-Only Later-Phase Docs
 
