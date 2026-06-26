@@ -358,9 +358,9 @@ enforcement, or validation-scope changes are proposed.
 Local all-slice validation uses
 [read-model-validate-all-contract.md](read-model-validate-all-contract.md). Any CI workflow switch to that command or
 any enforcement mode remains a separate future decision.
-The candidate non-enforcing workflow switch to local `validate --all` is now designed in
-[ci-validate-all-integration-design.md](ci-validate-all-integration-design.md); this workflow file remains unchanged
-until a separate implementation task.
+The candidate non-enforcing workflow switch to local `validate --all` is now implemented and manually reviewed in
+[ci-validate-all-integration-design.md](ci-validate-all-integration-design.md). Run `28210541509` confirms the switched
+manual workflow remains `ci-evidence-pass`.
 The future registry/test planning layer is recorded in
 [read-model-slice-registry-test-strategy.md](read-model-slice-registry-test-strategy.md).
 The storage/location decision surface for the registry artifact is recorded in

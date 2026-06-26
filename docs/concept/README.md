@@ -443,11 +443,11 @@ The CI validate-all integration design is now recorded:
 
 - [ci-validate-all-integration-design.md](ci-validate-all-integration-design.md)
 
-The design explains how the non-enforcing manual/PR informational workflow could later replace its explicit read-model
-command sequence with local registry-backed `validate --all`. It compares command coverage, artifact bundle
-requirements, manifest and Step Summary fields, failure semantics, and migration review expectations. It is design-only:
-no workflow file, GitHub Action run, PR, required check, enforcement, source authority, public-doc cleanup, or promotion
-change is made.
+The record explains how the non-enforcing manual/PR informational workflow now replaces its explicit read-model command
+sequence with local registry-backed `validate --all`. It compares command coverage, artifact bundle requirements,
+manifest and Step Summary fields, failure semantics, and migration review expectations. Manual run `28210541509`
+reviewed the switched workflow as `ci-evidence-pass` with `validateAllStatus: aggregate-pass`. No required check,
+enforcement, source authority, public-doc cleanup, or promotion change is made.
 
 ## Outline-Only Later-Phase Docs
 

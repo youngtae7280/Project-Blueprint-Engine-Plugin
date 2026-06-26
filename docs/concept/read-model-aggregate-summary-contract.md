@@ -121,8 +121,8 @@ node dist/cli/index.js graph read-model summarize --slices examples/adoption/tod
 ```
 
 The workflow is still non-enforcing manual/PR informational Evidence. Running aggregate summarize in CI does not turn
-the aggregate into enforcement and does not expand source authority. Local `validate --all` now exists, but the workflow
-has not switched to it; that future switch is designed in
+the aggregate into enforcement and does not expand source authority. The workflow now reaches aggregate output through
+local `validate --all`; the switch is recorded in
 [ci-validate-all-integration-design.md](ci-validate-all-integration-design.md). A new
 aggregate-enabled workflow run, `28156403793`, has now been reviewed as CI-backed Evidence with `ci-evidence-pass` and
 aggregate `aggregate-pass`. Post-update run `28157938343` reviewed the same aggregate-enabled workflow after the Node 24

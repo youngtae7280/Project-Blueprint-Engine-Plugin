@@ -17,6 +17,7 @@ Evidence without changing workflow behavior.
 | First real PR run         | PR `#1`, run `28207822252`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`     |
 | Current workflow mode     | `workflow_dispatch` plus non-enforcing `pull_request-informational`                                         |
 | Included slices           | `examples/adoption/todo-search-slice`; `examples/valid/todo-app-pbe-run`; aggregate summary                 |
+| Workflow command mode     | registry-backed `validate --all` after manual run `28210541509`                                             |
 | Observation policy        | [pr-informational-observation-policy.md](pr-informational-observation-policy.md)                            |
 | Current real PR run count | 1 reviewed real PR informational run                                                                        |
 | Target before refinement  | At least 3 real PR informational runs or 1 week of normal PR flow, unless immediate re-review is triggered. |
@@ -233,9 +234,9 @@ Neither a green PR informational run nor this log can approve enforcement or sou
 All-slice validation implementation is governed by
 [read-model-validate-all-contract.md](read-model-validate-all-contract.md) and remains separate from this observation
 log.
-The future non-enforcing CI workflow switch to local `validate --all` is designed in
-[ci-validate-all-integration-design.md](ci-validate-all-integration-design.md). If implemented later, the first manual
-and PR runs after the switch should be appended here as workflow-mode observations.
+The non-enforcing CI workflow switch to local `validate --all` is implemented and manually reviewed in
+[ci-validate-all-integration-design.md](ci-validate-all-integration-design.md). The first PR run after the switch should
+be appended here as a workflow-mode observation.
 Registry fixture/test implementation is governed by
 [read-model-slice-registry-test-strategy.md](read-model-slice-registry-test-strategy.md) and also remains separate from
 this log.

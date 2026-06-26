@@ -381,11 +381,11 @@ The staged path is:
    candidate registry location, now materialized as `examples/read-model-aggregate/read-model-slices.json`.
 9. Treat local `validate --all` as the only registry-consuming command surface; existing single-slice commands and CI
    workflow command sequences remain separately governed.
-10. Use [ci-validate-all-integration-design.md](ci-validate-all-integration-design.md) before any non-enforcing workflow
-    switch from explicit read-model commands to local `validate --all`.
+10. Use [ci-validate-all-integration-design.md](ci-validate-all-integration-design.md) for the implemented
+    non-enforcing workflow switch from explicit read-model commands to local `validate --all`, reviewed by manual run
+    `28210541509`.
 
-Do not move next to CI `validate --all`, required checks, enforcement, or broad CI changes without a separate user
-decision.
+Do not move next to required checks, enforcement, or broader CI changes without a separate user decision.
 
 ## Approval Brief Draft
 
