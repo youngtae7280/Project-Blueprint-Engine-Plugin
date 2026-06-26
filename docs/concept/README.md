@@ -477,8 +477,9 @@ The next bounded expansion surface is now candidate-only for Todo App PBE Run:
 candidate that mirrors the current 22-node / 38-edge / 7-Core-View Todo App read-model records for future review.
 Focused tests parse it and reject promotion/validate-all-consumption claims. The same explicit projection command now
 writes `examples/valid/todo-app-pbe-run/generated/graph-source-candidate-read-model-projection.json` as a candidate
-projection with the same 22/38/7 shape and structure-only boundaries. It is not consumed by `validate --all`, not in the
-positive registry, not in CI, and does not promote Todo App beyond `structure-only`.
+projection with the same 22/38/7 shape and structure-only boundaries. Focused tests now load the committed candidate
+projection and reject source-authority creation or validate-all enrollment drift. It is not consumed by `validate --all`,
+not in the positive registry, not in CI, and does not promote Todo App beyond `structure-only`.
 
 The public-doc cleanup or waiver decision package is now recorded:
 

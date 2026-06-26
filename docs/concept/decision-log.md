@@ -495,6 +495,11 @@ structure-only candidate and commits the generated candidate projection artifact
 38-edge / 7-Core-View shape, but remains candidate Evidence only; it is not consumed by validate-all, is not enrolled in
 CI or the positive registry, and does not promote Todo App PBE Run beyond `structure-only`.
 
+DEC-108 does not supersede DEC-097 through DEC-107. It adds an internal committed-artifact contract check for the Todo
+App PBE Run candidate projection only. The check preserves candidate/structure-only boundaries and rejects
+source-authority creation or validate-all enrollment claims, while leaving positive validate-all, CI workflow behavior,
+enforcement, and Todo App promotion unchanged.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

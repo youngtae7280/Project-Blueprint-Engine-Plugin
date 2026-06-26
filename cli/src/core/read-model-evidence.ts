@@ -771,6 +771,27 @@ export async function loadStructureOnlyGraphSourceCandidateArtifact(
   return normalizeStructureOnlyGraphSourceCandidateArtifact(parsed.value, graphSourcePath)
 }
 
+export async function loadStructureOnlyGraphSourceCandidateProjectionArtifact(
+  root: string,
+  projectionPath = `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/generated/graph-source-candidate-read-model-projection.json`,
+  graphSourcePath = `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/graph-source-candidate.json`,
+): Promise<StructureOnlyGraphSourceCandidateProjectionArtifact> {
+  const graphSource = await loadStructureOnlyGraphSourceCandidateArtifact(root, graphSourcePath)
+  const absoluteProjectionPath = path.resolve(root, projectionPath)
+  const parsed = await readJsonSafe<unknown>(absoluteProjectionPath)
+  if (!parsed.ok) {
+    throw new Error(
+      `Unable to read structure-only graph source candidate projection at ${projectionPath}: ${parsed.error}`,
+    )
+  }
+  return normalizeStructureOnlyGraphSourceCandidateProjectionArtifact(
+    parsed.value,
+    graphSource,
+    projectionPath,
+    graphSourcePath,
+  )
+}
+
 export async function loadGraphSourceProjectionArtifact(
   root: string,
   projectionPath = `${todoSearchReadModelProfile.supportedSlice}/generated/graph-source-read-model-projection.json`,
@@ -1143,6 +1164,11 @@ export function normalizeStructureOnlyGraphSourceCandidateProjectionArtifact(
   if (!sourceAuthorityBoundary.includes('structure-only')) {
     errors.push(
       'structureOnlyGraphSourceCandidateProjection.sourceAuthorityBoundary must preserve structure-only boundary',
+    )
+  }
+  if (!sourceAuthorityBoundary.includes('does not create source authority')) {
+    errors.push(
+      'structureOnlyGraphSourceCandidateProjection.sourceAuthorityBoundary must deny source-authority creation',
     )
   }
   if (!nonPromotionStatement.includes('not promote Todo App')) {

@@ -139,7 +139,8 @@ examples/valid/todo-app-pbe-run/generated/graph-source-candidate-read-model-proj
 The candidate projection preserves 22 nodes, 38 edges, and 7 Core Views. Its metadata uses
 `candidate_graph_source_read_model_projection` and `structure-only`; its boundaries state that it does not promote Todo
 App PBE Run, does not add parity or pilot marker requirements, and is not consumed by validate-all, the positive
-registry, or CI. Focused tests validate the projection contract and reject projection boundary drift.
+registry, or CI. Focused tests now validate the committed candidate projection contract directly and reject projection
+boundary drift, including source-authority creation claims.
 
 ## Initial Implementation Sequence
 
