@@ -577,6 +577,12 @@ generation metadata in run `28224636333`. The reviewed artifact confirms `readMo
 projection pass, E2E smoke pass, and validate-all aggregate pass without Todo App source-authority promotion,
 repo-wide promotion, tree retirement, enforcement, or required checks.
 
+DEC-124 does not supersede DEC-097 through DEC-123. It records PR informational CI review of the same Todo App
+graph-source-candidate-backed generation metadata in PR #9 run `28224878648`. The smoke PR was closed without merge and
+the branch was deleted; the reviewed artifact confirms PR metadata plus the same Todo App/Todo Search/E2E/validate-all
+statuses without Todo App source-authority promotion, repo-wide promotion, tree retirement, enforcement, or required
+checks.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

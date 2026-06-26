@@ -194,6 +194,7 @@ structure-only candidate-backed generation path, not Todo App source-authority p
 Manual workflow run `28224636333` reviewed this metadata in uploaded CI artifacts: Todo App generation recorded
 `graph-source-backed` and `non-authority-structure-only`, validation stayed `validation-pass`, positive projection stayed
 `candidate-projection-contract-pass`, and validate-all/E2E smoke stayed pass.
+PR #9 run `28224878648` reviewed the same fields through `pull_request-informational` mode with PR metadata present.
 
 ## Initial Implementation Sequence
 

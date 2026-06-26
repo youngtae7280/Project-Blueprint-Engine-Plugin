@@ -1130,6 +1130,27 @@ backed.
 | Cleanup               | Artifact temp directory removed                                                                        |
 | Review result         | Manual CI confirms Todo App candidate-backed generation metadata is visible in uploaded artifacts      |
 
+PR run `28224878648` then reviewed the same Todo App candidate-backed generation metadata through the non-enforcing
+`pull_request-informational` trigger.
+
+| Field                 | Value                                                                                                  |
+| --------------------- | ------------------------------------------------------------------------------------------------------ |
+| PR                    | `#9`; draft temporary smoke PR; closed without merge                                                   |
+| Run ID                | `28224878648`                                                                                          |
+| Run URL               | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28224878648>             |
+| Event                 | `pull_request`                                                                                         |
+| Trigger mode          | `pull_request-informational`                                                                           |
+| Head branch           | `pbe/pr-info-todo-app-graph-source-generation-20260626`                                                |
+| Base branch           | `main`                                                                                                 |
+| Manifest              | `ci-evidence-pass`; `validateAllStatus: aggregate-pass`; `e2eSmokeStatus: e2e-smoke-pass`              |
+| Todo Search           | graph-source-backed; 40 nodes / 59 edges / 7 views; `projection-contract-pass`                         |
+| Todo App generation   | `readModelSourceMode: graph-source-backed`; `graphSourceAuthorityStatus: non-authority-structure-only` |
+| Todo App Evidence     | 22 nodes / 38 edges / 7 views; `validation-pass`; `candidate-projection-contract-pass`                 |
+| Candidate observation | `candidate-observation-pass`; remains separate observation metadata                                    |
+| Boundary              | PR observation only; no Todo App source authority, promotion, enforcement, or tree retirement          |
+| Cleanup               | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted                  |
+| Review result         | PR CI confirms Todo App candidate-backed generation metadata is visible in uploaded artifacts          |
+
 ## Gate Self-Check
 
 | Gate                             | Status | Result                                                                                                        |
@@ -1144,6 +1165,7 @@ backed.
 | Graph-Source-Backed PR Gate      | pass   | PR #5 run `28219583619` confirmed graph-source-backed Todo Search generation in PR artifacts.                 |
 | Todo App Projection PR Gate      | pass   | PR #7 run `28223010185` confirmed Todo App `candidate-projection-contract-pass` in PR artifacts.              |
 | E2E Smoke PR Gate                | pass   | PR #8 run `28224088829` confirmed `e2eSmokeStatus: e2e-smoke-pass` in PR artifacts.                           |
+| Todo App Generation PR Gate      | pass   | PR #9 run `28224878648` confirmed Todo App `graph-source-backed` / `non-authority-structure-only` metadata.   |
 | PR Informational Run Gate        | pass   | PR #1, PR #2, PR #3, PR #4, and PR #5 triggered `pull_request` runs and completed successfully.               |
 | CI-Backed Artifact Review Gate   | pass   | Expanded artifact bundle `pbe-todo-search-read-model-evidence` was downloaded and inspected.                  |
 | CI Manifest Integrity Gate       | pass   | Manifest is `ci-backed` / `ci-evidence-pass` and includes Todo Search, Todo App, aggregate, and boundaries.   |

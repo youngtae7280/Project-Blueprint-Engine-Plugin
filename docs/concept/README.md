@@ -513,7 +513,7 @@ Todo App PBE Run generation is now graph-source-candidate-backed for the structu
 generate --slice examples/valid/todo-app-pbe-run` reads `graph-source-candidate.json` and emits `readModelSourceMode:
 graph-source-backed` with `graphSourceAuthorityStatus: non-authority-structure-only`. This remains non-promotional and
 does not make Todo App source-authority-bearing. Manual run `28224636333` reviewed the generated metadata in CI
-artifacts.
+artifacts; PR #9 run `28224878648` reviewed the same metadata in `pull_request-informational` mode.
 
 The local read-model E2E smoke is now recorded:
 
