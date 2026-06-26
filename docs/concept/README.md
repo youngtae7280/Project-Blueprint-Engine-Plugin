@@ -475,11 +475,12 @@ Manual CI run `28219396764` and PR #5 run `28219583619` reviewed this graph-sour
 The next bounded expansion surface is now candidate-only for Todo App PBE Run:
 `examples/valid/todo-app-pbe-run/graph-source-candidate.json`. It is a non-generated structure-only graph-source
 candidate that mirrors the current 22-node / 38-edge / 7-Core-View Todo App read-model records for future review.
-Focused tests parse it and reject promotion/validate-all-consumption claims. The same explicit projection command now
+Focused tests parse it and reject promotion or source-authority claims. The same explicit projection command now
 writes `examples/valid/todo-app-pbe-run/generated/graph-source-candidate-read-model-projection.json` as a candidate
 projection with the same 22/38/7 shape and structure-only boundaries. Focused tests now load the committed candidate
-projection and reject source-authority creation or validate-all enrollment drift. It is not consumed by `validate --all`,
-not in the positive registry, not in aggregate status, and does not promote Todo App beyond `structure-only`.
+projection and reject source-authority creation or authority-bearing enrollment drift. It is now consumed by local
+positive `validate --all` only as a non-authority structure-only projection-contract check, and does not promote Todo App
+beyond `structure-only`.
 The local `graph read-model observe-candidates` command now reports this candidate projection contract separately from
 positive validate-all semantics. The non-enforcing read-model Evidence workflow now captures that observation output as
 separate CI artifact metadata without enrolling the Todo App candidate in positive validate-all, source authority, or
@@ -493,8 +494,9 @@ The Todo App graph-source enrollment decision package is now recorded:
 - [todo-app-graph-source-enrollment-decision-package.md](todo-app-graph-source-enrollment-decision-package.md)
 
 It compares keeping Todo App candidate-only, bounded non-authority enrollment in positive validate-all, later promotion
-beyond structure-only, and deferral. The recommended next safe branch is bounded non-authority enrollment first, with no
-Todo App source-authority promotion.
+beyond structure-only, and deferral. The bounded non-authority enrollment is now implemented locally: Todo App positive
+validate-all reports `candidate-projection-contract-pass` while preserving `structure-only` and no source-authority
+promotion. Manual and PR CI review of this new status remains next.
 
 The public-doc cleanup or waiver decision package is now recorded:
 

@@ -1,29 +1,31 @@
 # Todo App Graph-Source Enrollment Decision Package
 
-Status: decision-package / docs-only / no-enrollment-executed / no-source-authority-promotion
+Status: bounded-non-authority-enrollment-implemented-local-first / no-source-authority-promotion /
+ci-review-pending
 
 ## Purpose
 
-This package records the decision surface for moving `examples/valid/todo-app-pbe-run` beyond candidate observation.
-The candidate graph-source artifact, candidate projection, local observation command, and non-enforcing manual/PR CI
-artifact capture are now reviewed. The remaining question is whether Todo App PBE Run should stay candidate-only, become
-part of a bounded non-authority positive validate-all projection contract, or wait for a later promotion package.
+This package records the decision surface and local-first implementation result for moving
+`examples/valid/todo-app-pbe-run` beyond candidate observation. The candidate graph-source artifact, candidate
+projection, local observation command, and non-enforcing manual/PR CI artifact capture are reviewed. The next safe branch
+has now been implemented locally: Todo App PBE Run participates in positive validate-all only through a bounded
+non-authority structure-only projection contract.
 
-This document does not change the registry, workflow, CLI behavior, generated artifacts, source authority, enforcement,
-or Todo App policy level.
+This document does not approve source authority, enforcement, CI review completion, or Todo App promotion. Manual and PR
+workflow reviews remain pending for the new positive validate-all projection status.
 
 ## Current Evidence
 
-| Evidence surface             | Current status                                                                                    |
-| ---------------------------- | ------------------------------------------------------------------------------------------------- |
-| Candidate graph source       | `examples/valid/todo-app-pbe-run/graph-source-candidate.json`, `candidate-not-promoted`           |
-| Candidate projection         | `graph-source-candidate-read-model-projection.json`, 22 nodes / 38 edges / 7 Core Views           |
-| Local contract check         | Focused tests verify structure-only, no source-authority claim, no positive validate-all claim    |
-| Local observation command    | `graph read-model observe-candidates --json`, `candidate-observation-pass`                        |
-| Manual CI observation        | Run `28221088498`, `candidate-observation-pass`, candidate projection artifact uploaded           |
-| PR informational observation | PR #6 run `28221326457`, `pull_request-informational`, PR metadata present, observation pass      |
-| Positive validate-all status | Todo App projection remains `not-configured`; aggregate remains `aggregate-pass`                  |
-| Current policy               | Todo App PBE Run remains `structure-only`, not parity-backed, not pilot-marker-backed, not source |
+| Evidence surface             | Current status                                                                                             |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Candidate graph source       | `examples/valid/todo-app-pbe-run/graph-source-candidate.json`, `candidate-not-promoted`                    |
+| Candidate projection         | `graph-source-candidate-read-model-projection.json`, 22 nodes / 38 edges / 7 Core Views                    |
+| Local contract check         | Focused tests verify structure-only, no source-authority claim, and non-authority validate-all use         |
+| Local observation command    | `graph read-model observe-candidates --json`, `candidate-observation-pass`                                 |
+| Manual CI observation        | Run `28221088498`, `candidate-observation-pass`, candidate projection artifact uploaded                    |
+| PR informational observation | PR #6 run `28221326457`, `pull_request-informational`, PR metadata present, observation pass               |
+| Positive validate-all status | Local Todo App projection reports `candidate-projection-contract-pass`; aggregate remains `aggregate-pass` |
+| Current policy               | Todo App PBE Run remains `structure-only`, not parity-backed, not pilot-marker-backed, not source          |
 
 ## Decision Options
 
@@ -34,25 +36,25 @@ or Todo App policy level.
 | Promote beyond structure-only later | Prepare parity/pilot/source-authority package for Todo App.                                          | Could broaden graph-source transition after stronger evidence.                       | Requires user approval, parity policy, fallback/rollback plan, and source-authority decision.     |
 | Defer Todo App graph-source work    | Stop after observation and focus elsewhere.                                                          | Avoids churn while Todo Search limited promotion continues.                          | Leaves second-slice graph-source transition paused.                                               |
 
-## Recommendation
+## Implemented Local-First Branch
 
-Recommended next safe branch:
+Implemented safe branch:
 
 ```text
 Bounded non-authority enrollment of the Todo App candidate projection contract into positive validate-all.
 ```
 
-This should be implemented only as a structure-only projection-contract check. It should not promote Todo App PBE Run,
-add parity or pilot-marker requirements, change source authority, or make the candidate graph source an operational
-source. The expected first implementation would:
+This is implemented only as a structure-only projection-contract check. It does not promote Todo App PBE Run, add parity
+or pilot-marker requirements, change source authority, or make the candidate graph source an operational source. The
+local implementation:
 
-1. Add explicit registry/profile metadata for Todo App candidate projection contract checking.
+1. Adds explicit registry/profile metadata for Todo App candidate projection contract checking.
 2. Keep `policyLevel: structure-only`.
-3. Require 22 nodes / 38 edges / 7 Core Views.
-4. Return a positive validate-all projection status such as `candidate-projection-contract-pass`.
-5. Preserve `aggregate-pass` semantics only if the structure-only candidate projection contract passes.
-6. Update local tests before any CI review.
-7. Run manual and PR CI reviews after the local implementation is pushed.
+3. Requires 22 nodes / 38 edges / 7 Core Views.
+4. Returns `candidate-projection-contract-pass` in local positive validate-all output.
+5. Preserves `aggregate-pass` semantics only if the structure-only candidate projection contract passes.
+6. Adds focused pass and failure tests before CI review.
+7. Leaves manual and PR CI reviews as the next step after the local implementation is pushed.
 
 ## Required Boundaries For Enrollment
 
@@ -63,25 +65,22 @@ source. The expected first implementation would:
 - Tree-native `.pbe` artifacts remain source/reference for Todo App.
 - Required checks, branch protection, and enforcement remain separate.
 
-## Readiness Gates Before Implementation
+## Review Gates After Local Implementation
 
-| Gate                            | Required state                                                                                      |
-| ------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Local candidate contract        | Passing and mutation-safe.                                                                          |
-| Manual/PR candidate observation | Reviewed as pass.                                                                                   |
-| Registry/profile wording        | Must state non-authority, structure-only, no parity, no pilot marker.                               |
-| Failure semantics               | Missing/corrupt candidate projection should block local validate-all, but not imply CI enforcement. |
-| CI review                       | Manual and PR reviews required after implementation before calling the enrollment path reviewed.    |
-| User approval boundary          | Codex/CI cannot self-promote Todo App or treat validate-all pass as user acceptance.                |
+| Gate                            | Required state                                                                                     |
+| ------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Local candidate contract        | Passing and mutation-safe. Complete locally.                                                       |
+| Manual/PR candidate observation | Reviewed as pass.                                                                                  |
+| Registry/profile wording        | States non-authority, structure-only, no parity, no pilot marker.                                  |
+| Failure semantics               | Missing/corrupt candidate projection blocks local validate-all, but does not imply CI enforcement. |
+| CI review                       | Manual and PR reviews required after implementation before calling the enrollment path reviewed.   |
+| User approval boundary          | Codex/CI cannot self-promote Todo App or treat validate-all pass as user acceptance.               |
 
 ## Non-Scope
 
-This decision package does not:
+This local-first enrollment does not:
 
-- modify `examples/read-model-aggregate/read-model-slices.json`
 - modify `.github/workflows/read-model-evidence.yml`
-- modify CLI behavior or tests
-- regenerate generated artifacts
 - promote Todo App PBE Run
 - add parity-backed or pilot-marker-backed status
 - expand source authority
@@ -94,7 +93,7 @@ This decision package does not:
 
 The user should choose one:
 
-1. Implement bounded non-authority enrollment into positive validate-all.
-2. Keep candidate-only observation for more manual/PR runs.
-3. Prepare a stronger Todo App promotion package.
-4. Defer Todo App graph-source expansion.
+1. Run and review manual CI for the bounded non-authority positive validate-all projection status.
+2. Run and review PR informational CI for the same status.
+3. Prepare a stronger Todo App promotion package only after separate approval.
+4. Defer broader Todo App graph-source expansion after local enrollment.

@@ -133,11 +133,12 @@ describe('read-model Evidence builder', () => {
     expect(candidate.sourceRecords.coreViewCoverage).toEqual(generated.coreViewCoverage)
     expect(candidate.sourceAuthorityBoundary).toContain('structure-only')
     expect(candidate.candidateBoundaries.nonPromotionStatement).toContain('not promote Todo App')
-    expect(candidate.candidateBoundaries.validateAllBoundary).toContain('not consumed by validate-all')
+    expect(candidate.candidateBoundaries.validateAllBoundary).toContain('positive validate-all')
+    expect(candidate.candidateBoundaries.validateAllBoundary).toContain('non-authority')
     const registryTodoAppProfile = registry.profiles.find(
       (entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId,
     )
-    expect(registryTodoAppProfile?.optionalArtifacts.graphSourceCandidate).toBeUndefined()
+    expect(registryTodoAppProfile?.optionalArtifacts.graphSourceCandidate).toBe('graph-source-candidate.json')
   })
 
   it('rejects Todo App graph source candidates that claim promotion or validate-all consumption', async () => {
@@ -152,10 +153,10 @@ describe('read-model Evidence builder', () => {
     }
     candidate.status = 'limited-source-active'
     candidate.candidateBoundaries.nonPromotionStatement = 'This candidate promotes Todo App.'
-    candidate.candidateBoundaries.validateAllBoundary = 'This candidate is consumed by validate-all.'
+    candidate.candidateBoundaries.validateAllBoundary = 'This candidate is source authority.'
 
     expect(() => normalizeStructureOnlyGraphSourceCandidateArtifact(candidate)).toThrow(
-      /candidate-not-promoted.*block Todo App promotion.*keep validate-all separate/s,
+      /candidate-not-promoted.*block Todo App promotion.*positive validate-all non-authority/s,
     )
   })
 
@@ -214,7 +215,8 @@ describe('read-model Evidence builder', () => {
     expect(projection.nodes).toEqual(generated.nodes)
     expect(projection.edges).toEqual(generated.edges)
     expect(projection.coreViewCoverage).toEqual(generated.coreViewCoverage)
-    expect(projection.validateAllBoundary).toContain('not consumed by validate-all')
+    expect(projection.validateAllBoundary).toContain('positive validate-all')
+    expect(projection.validateAllBoundary).toContain('non-authority')
     expect(normalizedProjection.metadata.candidateScope).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
   })
 
@@ -238,11 +240,14 @@ describe('read-model Evidence builder', () => {
     expect(projection.coreViewCoverage).toHaveLength(coreViews.length)
     expect(projection.sourceAuthorityBoundary).toContain('does not create source authority')
     expect(projection.nonPromotionStatement).toContain('not promote Todo App')
-    expect(projection.validateAllBoundary).toContain('not consumed by validate-all')
+    expect(projection.validateAllBoundary).toContain('positive validate-all')
+    expect(projection.validateAllBoundary).toContain('non-authority')
     const registryTodoAppProfile = registry.profiles.find(
       (entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId,
     )
-    expect(registryTodoAppProfile?.optionalArtifacts.graphSourceCandidateProjection).toBeUndefined()
+    expect(registryTodoAppProfile?.optionalArtifacts.graphSourceCandidateProjection).toBe(
+      'generated/graph-source-candidate-read-model-projection.json',
+    )
   })
 
   it('rejects Todo App candidate projection artifacts with source-bearing boundary drift', async () => {
@@ -251,11 +256,11 @@ describe('read-model Evidence builder', () => {
       ...projectStructureOnlyGraphSourceCandidateReadModel(candidate).projection,
       sourceAuthorityBoundary: 'This projection is source authority.',
       nonPromotionStatement: 'This projection promotes Todo App.',
-      validateAllBoundary: 'This projection is consumed by validate-all.',
+      validateAllBoundary: 'This projection is source authority.',
     }
 
     expect(() => normalizeStructureOnlyGraphSourceCandidateProjectionArtifact(projection, candidate)).toThrow(
-      /deny source-authority creation.*block Todo App promotion.*keep validate-all separate/s,
+      /deny source-authority creation.*block Todo App promotion.*positive validate-all non-authority/s,
     )
   })
 
@@ -286,13 +291,14 @@ describe('read-model Evidence builder', () => {
         nodeCount: todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes,
         edgeCount: todoAppPbeRunStructureOnlyProfile.expectedCounts.edges,
         coreViewCount: coreViews.length,
-        validateAllBoundary: expect.stringContaining('not consumed by validate-all'),
+        validateAllBoundary: expect.stringContaining('positive validate-all'),
       }),
     ])
-    expect(payload.validateAllBoundary).toContain('separate from positive validate-all')
+    expect(payload.validateAllBoundary).toContain('separate report-only command')
+    expect(payload.validateAllBoundary).toContain('positive validate-all only as non-authority')
   })
 
-  it('blocks candidate observation without changing positive validate-all when candidate projection drifts', async () => {
+  it('blocks candidate observation and positive validate-all when enrolled candidate projection drifts', async () => {
     const workspace = await createExampleWorkspace()
     const projectionPath = join(
       workspace,
@@ -303,7 +309,7 @@ describe('read-model Evidence builder', () => {
       validateAllBoundary: string
     }
     projection.sourceAuthorityBoundary = 'This projection is source authority.'
-    projection.validateAllBoundary = 'This projection is consumed by validate-all.'
+    projection.validateAllBoundary = 'This projection is source authority.'
     await writeFile(projectionPath, JSON.stringify(projection, null, 2))
 
     const result = await runPbeCli(['graph', 'read-model', 'observe-candidates', '--json'], {
@@ -324,13 +330,16 @@ describe('read-model Evidence builder', () => {
       status: 'candidate-projection-contract-blocked',
       error: expect.stringContaining('deny source-authority creation'),
     })
-    expect(payload.observedCandidates[0].error).toContain('keep validate-all separate')
-    expect(validateAllResult.status).toBe('aggregate-pass')
-    expect(
-      validateAllResult.perSliceResults
-        .find((entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId)
-        ?.commands.some((entry) => entry.command === 'project-contract'),
-    ).toBe(false)
+    expect(payload.observedCandidates[0].error).toContain('positive validate-all non-authority')
+    const todoApp = validateAllResult.perSliceResults.find(
+      (entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId,
+    )
+    expect(validateAllResult.status).toBe('aggregate-blocked')
+    expect(validateAllResult.aggregateResult.summary.status).toBe('aggregate-pass')
+    expect(todoApp?.commands.find((entry) => entry.command === 'project-contract')).toMatchObject({
+      status: 'candidate-projection-contract-blocked',
+      blockingCount: 1,
+    })
   })
 
   it('writes graph source projection output through the CLI without changing default generation', async () => {
@@ -490,6 +499,10 @@ describe('read-model Evidence builder', () => {
       validationReport: todoAppPbeRunStructureOnlyProfile.artifacts.validationReport,
       evidenceManifest: todoAppPbeRunStructureOnlyProfile.artifacts.evidenceManifest,
     })
+    expect(todoApp?.optionalArtifacts.graphSourceCandidate).toBe('graph-source-candidate.json')
+    expect(todoApp?.optionalArtifacts.graphSourceCandidateProjection).toBe(
+      'generated/graph-source-candidate-read-model-projection.json',
+    )
   })
 
   it('builds command plans from registry metadata without executing commands', async () => {
@@ -576,11 +589,21 @@ describe('read-model Evidence builder', () => {
     expect(result.nonPromotionStatement).toContain('not user acceptance')
     expect(result.nonEnforcementStatement).toContain('non-enforcing')
     const todoSearch = result.perSliceResults.find((entry) => entry.profileId === todoSearchReadModelProfile.profileId)
+    const todoApp = result.perSliceResults.find(
+      (entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId,
+    )
     expect(todoSearch?.commands.find((entry) => entry.command === 'project-contract')).toMatchObject({
       status: 'projection-contract-pass',
       nodeCount: 40,
       edgeCount: 59,
       coreViewCount: 7,
+    })
+    expect(todoApp?.commands.find((entry) => entry.command === 'project-contract')).toMatchObject({
+      status: 'candidate-projection-contract-pass',
+      nodeCount: 22,
+      edgeCount: 38,
+      coreViewCount: 7,
+      contractMode: 'structure-only-candidate',
     })
   })
 
@@ -606,12 +629,12 @@ describe('read-model Evidence builder', () => {
       status: 'comparison-pass',
       mismatchCount: 0,
     })
-    expect(todoApp?.commands.map((entry) => entry.command)).toEqual(['generate', 'validate'])
+    expect(todoApp?.commands.map((entry) => entry.command)).toEqual(['generate', 'validate', 'project-contract'])
     expect(todoApp?.commands.some((entry) => entry.command === 'compare')).toBe(false)
     expect(todoApp?.policyLevel).toBe('structure-only')
   })
 
-  it('blocks validate-all when the graph source projection artifact is missing or corrupted', async () => {
+  it('blocks validate-all when projection contract artifacts are missing or corrupted', async () => {
     const missingProjectionWorkspace = await createExampleWorkspace()
     await rm(
       join(
@@ -649,6 +672,25 @@ describe('read-model Evidence builder', () => {
     expect(corruptProjectionResult.status).toBe('aggregate-blocked')
     expect(corruptTodoSearch?.commands.find((entry) => entry.command === 'project-contract')).toMatchObject({
       status: 'projection-contract-blocked',
+      blockingCount: 1,
+    })
+
+    const missingCandidateProjectionWorkspace = await createExampleWorkspace()
+    await rm(
+      join(
+        missingCandidateProjectionWorkspace,
+        'examples/valid/todo-app-pbe-run/generated/graph-source-candidate-read-model-projection.json',
+      ),
+      { force: true },
+    )
+
+    const missingCandidateResult = await validateAllReadModelEvidence(missingCandidateProjectionWorkspace)
+    const missingCandidateTodoApp = missingCandidateResult.perSliceResults.find(
+      (entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId,
+    )
+    expect(missingCandidateResult.status).toBe('aggregate-blocked')
+    expect(missingCandidateTodoApp?.commands.find((entry) => entry.command === 'project-contract')).toMatchObject({
+      status: 'candidate-projection-contract-blocked',
       blockingCount: 1,
     })
   })

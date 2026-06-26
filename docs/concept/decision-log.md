@@ -523,6 +523,11 @@ DEC-113 does not supersede DEC-097 through DEC-112. It prepares the Todo App gra
 only. The recommended next safe branch is bounded non-authority enrollment in positive validate-all, but registry,
 workflow, CLI behavior, source authority, Todo App promotion, enforcement, and tree retirement remain unchanged.
 
+DEC-114 does not supersede DEC-097 through DEC-113. It implements bounded non-authority Todo App projection-contract
+enrollment in local positive `validate --all` only. Todo App remains `structure-only`, not parity-backed,
+not pilot-marker-backed, not source-authority-bearing, and not promoted. Workflow behavior, CI review, repo-wide
+promotion, tree retirement, enforcement, invalid-fixture CI, and required checks remain future decisions.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

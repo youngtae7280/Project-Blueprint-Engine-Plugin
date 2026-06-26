@@ -71,7 +71,9 @@ Current projection-contract observation:
 - Validate-all JSON is captured as
   `examples/read-model-aggregate/generated/read-model-validate-all-output.json`.
 - CI manifest and Step Summary now expose `projectionContractStatus`.
-- Todo Search is expected to report `projection-contract-pass`; Todo App PBE Run remains `not-configured`.
+- Todo Search is expected to report `projection-contract-pass`.
+- Todo App PBE Run now reports `candidate-projection-contract-pass` locally as a bounded non-authority structure-only
+  projection contract; manual/PR CI review of that new positive validate-all status remains pending.
 - Missing or corrupt projection artifacts can block the non-enforcing CI Evidence status without adding required checks,
   branch protection, or merge enforcement.
 - Manual run `28218687289` and PR #4 run `28218854329` reviewed this capture path as `ci-evidence-pass`.
@@ -81,8 +83,9 @@ Current candidate-observation capture:
 - The workflow also runs `graph read-model observe-candidates --json` after positive validate-all.
 - Output is captured at `examples/read-model-aggregate/generated/read-model-candidate-observation-output.json`.
 - CI manifest and Step Summary expose `candidateObservationStatus` and the Todo App candidate projection status.
-- This is separate from `validateAllStatus`, `aggregateStatus`, and the positive registry. It does not promote Todo App
-  PBE Run, add source authority, or enroll the candidate in positive aggregate semantics.
+- This remains separate from `candidateObservationStatus` and does not promote Todo App PBE Run or add source authority.
+  The same candidate projection is now also locally checked by positive validate-all as non-authority structure-only
+  Evidence.
 - Manual run `28221088498` reviewed this capture path as `ci-evidence-pass`; the uploaded manifest included
   `candidateObservationStatus: candidate-observation-pass`, Todo App candidate `candidate-projection-contract-pass`,
   positive Todo App projection `not-configured`, and both candidate observation/projection artifacts.

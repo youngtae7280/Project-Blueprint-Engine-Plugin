@@ -860,7 +860,7 @@ export async function observeReadModelCandidateProjections(root: string): Promis
       nonPromotionStatement:
         'Candidate observation pass does not promote Todo App PBE Run, approve repo-wide Graph-source promotion, or replace user acceptance.',
       validateAllBoundary:
-        'Candidate observation is separate from positive validate-all, the positive registry, aggregate status, and source authority; non-enforcing CI may capture it as observation metadata only.',
+        'Candidate observation remains a separate report-only command. The Todo App candidate projection may also be checked by positive validate-all only as non-authority structure-only Evidence.',
     }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
@@ -879,7 +879,8 @@ export async function observeReadModelCandidateProjections(root: string): Promis
           policyLevel: 'structure-only',
           nonPromotionStatement: 'Blocked candidate observation does not imply promotion.',
           sourceAuthorityBoundary: 'Blocked candidate observation does not create source authority.',
-          validateAllBoundary: 'Blocked candidate observation remains separate from positive validate-all.',
+          validateAllBoundary:
+            'Blocked candidate observation remains report-only; positive validate-all may also block on the same non-authority structure-only projection contract.',
           error: message,
         },
       ],
@@ -888,7 +889,7 @@ export async function observeReadModelCandidateProjections(root: string): Promis
       nonPromotionStatement:
         'Candidate observation block does not promote Todo App PBE Run, approve repo-wide Graph-source promotion, or replace user acceptance.',
       validateAllBoundary:
-        'Candidate observation is separate from positive validate-all, the positive registry, aggregate status, and source authority; non-enforcing CI may capture it as observation metadata only.',
+        'Candidate observation remains a separate report-only command. The Todo App candidate projection may also be checked by positive validate-all only as non-authority structure-only Evidence.',
     }
   }
 }
@@ -1261,8 +1262,10 @@ export function normalizeStructureOnlyGraphSourceCandidateProjectionArtifact(
   if (!nonPromotionStatement.includes('not promote Todo App')) {
     errors.push('structureOnlyGraphSourceCandidateProjection.nonPromotionStatement must block Todo App promotion')
   }
-  if (!validateAllBoundary.includes('not consumed by validate-all')) {
-    errors.push('structureOnlyGraphSourceCandidateProjection.validateAllBoundary must keep validate-all separate')
+  if (!validateAllBoundary.includes('positive validate-all') || !validateAllBoundary.includes('non-authority')) {
+    errors.push(
+      'structureOnlyGraphSourceCandidateProjection.validateAllBoundary must keep positive validate-all non-authority',
+    )
   }
   if (userAcceptanceBoundary !== graphSource.candidateBoundaries.userAcceptanceBoundary) {
     errors.push(
@@ -1506,9 +1509,9 @@ export function normalizeStructureOnlyGraphSourceCandidateArtifact(
       'structureOnlyGraphSourceCandidate.candidateBoundaries.nonPromotionStatement must block Todo App promotion',
     )
   }
-  if (!validateAllBoundary.includes('not consumed by validate-all')) {
+  if (!validateAllBoundary.includes('positive validate-all') || !validateAllBoundary.includes('non-authority')) {
     errors.push(
-      'structureOnlyGraphSourceCandidate.candidateBoundaries.validateAllBoundary must keep validate-all separate',
+      'structureOnlyGraphSourceCandidate.candidateBoundaries.validateAllBoundary must keep positive validate-all non-authority',
     )
   }
 
@@ -1810,7 +1813,9 @@ export async function validateAllReadModelEvidence(
       requiredCommands: [...plan.commands],
       projectionContractRequired: Boolean(
         registry.profiles.find((entry) => entry.sourceSlice === plan.sourceSlice)?.optionalArtifacts
-          .graphSourceProjection,
+          .graphSourceProjection ||
+          registry.profiles.find((entry) => entry.sourceSlice === plan.sourceSlice)?.optionalArtifacts
+            .graphSourceCandidateProjection,
       ),
     })),
     perSliceResults,
@@ -1885,22 +1890,23 @@ async function runValidateAllProfilePlan(
     }
   }
 
-  const projectionPath = registryProfile.optionalArtifacts.graphSourceProjection
-  if (profile.artifacts.graphSource && projectionPath) {
+  const graphSourceProjectionPath = registryProfile.optionalArtifacts.graphSourceProjection
+  if (profile.artifacts.graphSource && graphSourceProjectionPath) {
     try {
       const projection = await loadGraphSourceProjectionArtifact(
         root,
-        `${profile.supportedSlice}/${projectionPath}`,
+        `${profile.supportedSlice}/${graphSourceProjectionPath}`,
         `${profile.supportedSlice}/${profile.artifacts.graphSource}`,
       )
       commandResults.push({
         command: 'project-contract',
         status: 'projection-contract-pass',
         graphSource: `${profile.supportedSlice}/${profile.artifacts.graphSource}`,
-        projection: `${profile.supportedSlice}/${projectionPath}`,
+        projection: `${profile.supportedSlice}/${graphSourceProjectionPath}`,
         nodeCount: projection.nodes.length,
         edgeCount: projection.edges.length,
         coreViewCount: projection.coreViewCoverage.length,
+        contractMode: 'source-backed',
         sourceAuthorityBoundary: projection.sourceAuthorityBoundary,
         nonPromotionStatement: projection.nonPromotionStatement,
       })
@@ -1910,7 +1916,43 @@ async function runValidateAllProfilePlan(
         command: 'project-contract',
         status: 'projection-contract-blocked',
         graphSource: `${profile.supportedSlice}/${profile.artifacts.graphSource}`,
-        projection: `${profile.supportedSlice}/${projectionPath}`,
+        projection: `${profile.supportedSlice}/${graphSourceProjectionPath}`,
+        blockingCount: 1,
+        message: error instanceof Error ? error.message : String(error),
+      })
+    }
+  }
+
+  const graphSourceCandidateProjectionPath = registryProfile.optionalArtifacts.graphSourceCandidateProjection
+  const graphSourceCandidatePath = registryProfile.optionalArtifacts.graphSourceCandidate
+  if (profile.policyLevel === 'structure-only' && graphSourceCandidateProjectionPath && graphSourceCandidatePath) {
+    try {
+      const projection = await loadStructureOnlyGraphSourceCandidateProjectionArtifact(
+        root,
+        `${profile.supportedSlice}/${graphSourceCandidateProjectionPath}`,
+        `${profile.supportedSlice}/${graphSourceCandidatePath}`,
+      )
+      commandResults.push({
+        command: 'project-contract',
+        status: 'candidate-projection-contract-pass',
+        graphSourceCandidate: `${profile.supportedSlice}/${graphSourceCandidatePath}`,
+        projection: `${profile.supportedSlice}/${graphSourceCandidateProjectionPath}`,
+        nodeCount: projection.nodes.length,
+        edgeCount: projection.edges.length,
+        coreViewCount: projection.coreViewCoverage.length,
+        contractMode: 'structure-only-candidate',
+        sourceAuthorityBoundary: projection.sourceAuthorityBoundary,
+        nonPromotionStatement: projection.nonPromotionStatement,
+        validateAllBoundary: projection.validateAllBoundary,
+      })
+    } catch (error) {
+      status = 'blocked'
+      commandResults.push({
+        command: 'project-contract',
+        status: 'candidate-projection-contract-blocked',
+        graphSourceCandidate: `${profile.supportedSlice}/${graphSourceCandidatePath}`,
+        projection: `${profile.supportedSlice}/${graphSourceCandidateProjectionPath}`,
+        contractMode: 'structure-only-candidate',
         blockingCount: 1,
         message: error instanceof Error ? error.message : String(error),
       })

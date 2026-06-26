@@ -76,7 +76,9 @@
       },
       "optionalArtifacts": {
         "generatedReadModelSummary": "generated/generated-read-model.md",
-        "validationReportSummary": "generated/read-model-validation-report.md"
+        "validationReportSummary": "generated/read-model-validation-report.md",
+        "graphSourceCandidate": "graph-source-candidate.json",
+        "graphSourceCandidateProjection": "generated/graph-source-candidate-read-model-projection.json"
       },
       "expectedCounts": {
         "nodes": 22,
