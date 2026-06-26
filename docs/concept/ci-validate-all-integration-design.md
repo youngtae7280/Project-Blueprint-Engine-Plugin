@@ -66,6 +66,15 @@ Implemented command sequence:
 The sequence keeps the same non-enforcing CI mode. It changes only how read-model Evidence files are produced inside the
 workflow.
 
+Current projection-contract observation:
+
+- Validate-all JSON is captured as
+  `examples/read-model-aggregate/generated/read-model-validate-all-output.json`.
+- CI manifest and Step Summary now expose `projectionContractStatus`.
+- Todo Search is expected to report `projection-contract-pass`; Todo App PBE Run remains `not-configured`.
+- Missing or corrupt projection artifacts can block the non-enforcing CI Evidence status without adding required checks,
+  branch protection, or merge enforcement.
+
 Reviewed manual run after switch:
 
 | Field        | Value                                                                                                  |
@@ -115,6 +124,7 @@ Third PR informational observation after switch:
 | Todo App generate               | Explicit command                                  | Covered by registry profile `todo-app-pbe-run-structure-only`                     |
 | Todo App validate               | Explicit command                                  | Covered by required `validate` command in registry                                |
 | Aggregate summarize             | Explicit command over per-slice reports           | Covered after registry profile commands complete                                  |
+| Todo Search graph projection    | Not present                                       | Captured as `projectionContractStatus` from validate-all JSON output              |
 | Focused tests                   | Outside read-model command sequence               | Still outside validate-all and still explicit                                     |
 | Runtime fixture tests           | Outside read-model command sequence               | Still outside validate-all and still explicit                                     |
 | PBE plugin validation           | Outside read-model command sequence               | Still outside validate-all and still explicit                                     |

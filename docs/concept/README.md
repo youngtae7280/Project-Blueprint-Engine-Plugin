@@ -587,6 +587,10 @@ informational run `28210904900`, and third PR informational observation run `282
 as `ci-evidence-pass` with `validateAllStatus: aggregate-pass`. No required check, enforcement, source authority,
 public-doc cleanup, or promotion change is made.
 
+The workflow now captures Todo Search graph-source `projectionContractStatus` from validate-all output into the CI
+manifest, Step Summary, and uploaded artifact bundle. Manual/PR review of that new observation field remains the next CI
+observation step.
+
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.
