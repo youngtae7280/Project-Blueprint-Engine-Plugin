@@ -41,6 +41,11 @@ The graph is maintainability-focused because it answers questions such as:
 The target Graph-first architecture treats Maintainability Graph as the future source model only after explicit
 Graph-source promotion.
 
+The current read-model Evidence stack is now summarized for future promotion review in
+[broader-graph-source-promotion-review-inputs.md](broader-graph-source-promotion-review-inputs.md). That package makes
+review inputs easier to inspect, but it does not promote Maintainability Graph to source authority or retire tree-native
+artifacts.
+
 In that target:
 
 ```text

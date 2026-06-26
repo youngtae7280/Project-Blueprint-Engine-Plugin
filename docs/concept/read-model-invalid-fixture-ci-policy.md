@@ -21,6 +21,10 @@ The PR informational path-filter and failure-semantics refinement surface is rec
 [pr-informational-path-filter-refinement.md](pr-informational-path-filter-refinement.md). It keeps invalid-fixture
 expected-blocking behavior separate from the current positive registry-backed PR workflow.
 
+[broader-graph-source-promotion-review-inputs.md](broader-graph-source-promotion-review-inputs.md) records local
+negative fixture coverage as a review input and a caveat. It does not make invalid fixtures CI-backed or promotion
+blocking by itself.
+
 ## Current Baseline
 
 Current positive CI / validate-all path:

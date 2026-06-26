@@ -15,6 +15,11 @@ It answers two questions:
 This is a design-only document. It does not modify `.github/workflows/read-model-evidence.yml`, code, tests, generated
 artifacts, source authority, CI enforcement, required checks, branch protection, public docs, or promotion state.
 
+The broader promotion review input package in
+[broader-graph-source-promotion-review-inputs.md](broader-graph-source-promotion-review-inputs.md) treats this
+path-filter/failure-semantics design as one input to a future promotion review. It does not turn PR informational
+Evidence into enforcement or source authority.
+
 ## Observation Summary
 
 Reviewed PR informational runs:

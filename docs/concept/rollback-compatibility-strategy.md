@@ -40,6 +40,12 @@ authority transition.
 The strategy exists to prevent unsafe promotion and unsafe recovery. It does not move source authority, create rollback
 mechanics, or retire artifacts by itself.
 
+The broader promotion review input package in
+[broader-graph-source-promotion-review-inputs.md](broader-graph-source-promotion-review-inputs.md) records the current
+Evidence stack as `promotion-review-inputs-ready-with-caveats`. That status is not rollback readiness for a broader
+authority change. Any actual Graph-source promotion still needs explicit rollback/fallback decisions, compatibility
+retirement conditions, and user approval before source authority can change.
+
 After any future promotion, these boundaries must still hold:
 
 - only the user can accept product results

@@ -78,6 +78,17 @@ Current non-state:
 graph-source promoted
 ```
 
+Current review-input note:
+
+```text
+promotion-review-inputs-ready-with-caveats
+```
+
+The current read-model Evidence stack is packaged in
+[broader-graph-source-promotion-review-inputs.md](broader-graph-source-promotion-review-inputs.md). That package is a
+future review input surface only. It does not move the project beyond `current tree-native source`, does not approve
+`graph-source promoted`, and does not change the source authority matrix below.
+
 ## Source Authority Matrix
 
 This matrix is conceptual. It does not define files, generators, validators, or migration behavior.

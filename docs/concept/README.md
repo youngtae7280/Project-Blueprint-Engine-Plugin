@@ -401,6 +401,15 @@ confirmed noise, and recommends keeping the current broad informational filters 
 for now. Actual workflow path-filter changes, failure-semantics changes, invalid-fixture CI, required checks,
 enforcement, source authority expansion, and promotion remain separate decisions.
 
+The broader Graph-source promotion review input package is now recorded:
+
+- [broader-graph-source-promotion-review-inputs.md](broader-graph-source-promotion-review-inputs.md)
+
+The package inventories the matured scoped pilot, generated/parity/validation reports, registry-backed `validate --all`,
+manual and PR CI-backed Evidence, local negative fixture coverage, and path-filter/failure-semantics policy. Its
+recommended status is `promotion-review-inputs-ready-with-caveats`; it is not promotion approval, source authority
+expansion, enforcement approval, public-doc cleanup, tree-native retirement, or user acceptance.
+
 The future all-slice read-model validation contract is now recorded:
 
 - [read-model-validate-all-contract.md](read-model-validate-all-contract.md)

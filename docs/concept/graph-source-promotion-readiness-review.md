@@ -61,6 +61,7 @@ This review uses the following observable sources:
 - [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md)
 - [dry-run-scoped-limited-pilot-observation-record.md](dry-run-scoped-limited-pilot-observation-record.md)
 - [scoped-source-authority-pilot-preparation-package.md](scoped-source-authority-pilot-preparation-package.md)
+- [broader-graph-source-promotion-review-inputs.md](broader-graph-source-promotion-review-inputs.md)
 
 AI self-report is not Evidence for this review. Readiness findings are based on reviewable files, linked records,
 passing fixture command Evidence, and explicit exception or warning records.
@@ -123,6 +124,11 @@ CI workflow integration surface for read-model Evidence. The first implementatio
 `28151296796` provides reviewed CI-backed Evidence for the Todo Search selected slice, run `28156403793` provides
 reviewed aggregate-enabled CI-backed Evidence for the declared bundle, and run `28157938343` confirms the same bundle
 after the Node 24 action/runtime update.
+
+[broader-graph-source-promotion-review-inputs.md](broader-graph-source-promotion-review-inputs.md) now packages the
+matured scoped pilot, generated/parity/validation reports, registry-backed `validate --all`, manual and PR CI-backed
+Evidence, local negative fixture coverage, and path-filter/failure-semantics policy as future promotion-review inputs.
+Its status is `promotion-review-inputs-ready-with-caveats`, not `promotion-ready` or `promotion-approved`.
 
 Preparation outcome:
 
@@ -290,7 +296,8 @@ concerns whether to:
    refine filters later, design enforcement policy, or prepare multi-slice validation,
 2. defer or require ACEP task-card public-doc cleanup before full promotion,
 3. require full-product/runtime/UI Evidence before full promotion or only before full product parity claims, and
-4. prepare broader promotion review inputs or keep observing the scoped pilot.
+4. use [broader-graph-source-promotion-review-inputs.md](broader-graph-source-promotion-review-inputs.md) to choose
+   the next review branch, or keep observing the scoped pilot.
 
 ### Approval Choice Candidates
 
@@ -299,7 +306,7 @@ concerns whether to:
 - `Refine PR informational path filters after enough observation`
 - `Design CI enforcement / required check policy`
 - `Require public-doc cleanup before promotion decision`
-- `Prepare broader Graph-source promotion review inputs`
+- `Use broader Graph-source promotion review inputs to choose the next decision surface`
 - `Rollback / defer scoped pilot`
 - `Stop promotion readiness and continue concept/implementation hardening`
 
