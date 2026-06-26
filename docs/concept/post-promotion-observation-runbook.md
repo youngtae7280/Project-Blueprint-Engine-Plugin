@@ -99,9 +99,10 @@ pbe graph read-model project --graph-source examples/adoption/todo-search-slice/
 ```
 
 The next branch now includes a candidate-only Todo App PBE Run graph-source artifact at
-`examples/valid/todo-app-pbe-run/graph-source-candidate.json`. It is structure-only review input, not validate-all or CI
-input. Continue observation should check that this candidate remains outside the positive registry unless a separate
-Todo App promotion or projection decision is approved.
+`examples/valid/todo-app-pbe-run/graph-source-candidate.json` and a generated candidate projection at
+`examples/valid/todo-app-pbe-run/generated/graph-source-candidate-read-model-projection.json`. They are structure-only
+review inputs, not validate-all or CI inputs. Continue observation should check that these candidate artifacts remain
+outside the positive registry unless a separate Todo App promotion or projection consumption decision is approved.
 
 ## Non-Scope
 

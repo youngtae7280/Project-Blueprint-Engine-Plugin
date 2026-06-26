@@ -490,6 +490,11 @@ and focused candidate validation tests only. The artifact is structure-only revi
 `validate --all`, is not enrolled in CI or the positive registry, does not add parity/pilot-marker requirements, and does
 not promote Todo App PBE Run beyond `structure-only`.
 
+DEC-107 does not supersede DEC-097 through DEC-106. It exposes explicit projection for the Todo App PBE Run
+structure-only candidate and commits the generated candidate projection artifact. The projection preserves the 22-node /
+38-edge / 7-Core-View shape, but remains candidate Evidence only; it is not consumed by validate-all, is not enrolled in
+CI or the positive registry, and does not promote Todo App PBE Run beyond `structure-only`.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

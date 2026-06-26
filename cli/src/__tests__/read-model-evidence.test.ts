@@ -16,7 +16,9 @@ import {
   normalizeGraphSourceArtifact,
   normalizeGraphSourceProjectionArtifact,
   normalizeStructureOnlyGraphSourceCandidateArtifact,
+  normalizeStructureOnlyGraphSourceCandidateProjectionArtifact,
   projectGraphSourceReadModel,
+  projectStructureOnlyGraphSourceCandidateReadModel,
   summarizeReadModelEvidence,
   todoAppPbeRunStructureOnlyProfile,
   todoSearchReadModelProfile,
@@ -153,6 +155,78 @@ describe('read-model Evidence builder', () => {
 
     expect(() => normalizeStructureOnlyGraphSourceCandidateArtifact(candidate)).toThrow(
       /candidate-not-promoted.*block Todo App promotion.*keep validate-all separate/s,
+    )
+  })
+
+  it('writes a Todo App graph source candidate projection without promoting the structure-only profile', async () => {
+    const workspace = await createExampleWorkspace()
+    const outputPath = 'examples/valid/todo-app-pbe-run/generated/graph-source-candidate-read-model-projection.json'
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'project',
+        '--graph-source',
+        'examples/valid/todo-app-pbe-run/graph-source-candidate.json',
+        '--output',
+        outputPath,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot: resolve('.') },
+    )
+
+    expect(result.exitCode).toBe(0)
+    const payload = JSON.parse(result.stdout) as {
+      projection: string
+      nodeCount: number
+      edgeCount: number
+      coreViewCount: number
+      nonPromotionStatement: string
+      userAcceptanceBoundary: string
+    }
+    expect(payload.projection).toBe(outputPath)
+    expect(payload.nodeCount).toBe(todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes)
+    expect(payload.edgeCount).toBe(todoAppPbeRunStructureOnlyProfile.expectedCounts.edges)
+    expect(payload.coreViewCount).toBe(coreViews.length)
+    expect(payload.nonPromotionStatement).toContain('not promote Todo App')
+    expect(payload.userAcceptanceBoundary).toContain('User acceptance remains user-controlled')
+
+    const generated = JSON.parse(
+      await readFile(join(workspace, 'examples/valid/todo-app-pbe-run/generated/generated-read-model.json'), 'utf8'),
+    ) as { nodes: unknown[]; edges: unknown[]; coreViewCoverage: unknown[] }
+    const candidate = await loadStructureOnlyGraphSourceCandidateArtifact(workspace)
+    const projection = JSON.parse(await readFile(join(workspace, outputPath), 'utf8')) as {
+      metadata: { artifactRole: string; policyLevel: string }
+      nodes: unknown[]
+      edges: unknown[]
+      coreViewCoverage: unknown[]
+      validateAllBoundary: string
+    }
+    const normalizedProjection = normalizeStructureOnlyGraphSourceCandidateProjectionArtifact(
+      projection,
+      candidate,
+      outputPath,
+    )
+
+    expect(projection.metadata.artifactRole).toBe('candidate_graph_source_read_model_projection')
+    expect(projection.metadata.policyLevel).toBe('structure-only')
+    expect(projection.nodes).toEqual(generated.nodes)
+    expect(projection.edges).toEqual(generated.edges)
+    expect(projection.coreViewCoverage).toEqual(generated.coreViewCoverage)
+    expect(projection.validateAllBoundary).toContain('not consumed by validate-all')
+    expect(normalizedProjection.metadata.candidateScope).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
+  })
+
+  it('rejects Todo App candidate projection artifacts with source-bearing boundary drift', async () => {
+    const candidate = await loadStructureOnlyGraphSourceCandidateArtifact(resolve('.'))
+    const projection = {
+      ...projectStructureOnlyGraphSourceCandidateReadModel(candidate).projection,
+      nonPromotionStatement: 'This projection promotes Todo App.',
+      validateAllBoundary: 'This projection is consumed by validate-all.',
+    }
+
+    expect(() => normalizeStructureOnlyGraphSourceCandidateProjectionArtifact(projection, candidate)).toThrow(
+      /block Todo App promotion.*keep validate-all separate/s,
     )
   })
 

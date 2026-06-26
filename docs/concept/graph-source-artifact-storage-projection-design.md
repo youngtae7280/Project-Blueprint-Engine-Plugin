@@ -1,7 +1,7 @@
 # Graph Source Artifact Storage And Projection Generation Design
 
 Status: first-artifact-implemented / minimal-cli-projection-path / graph-source-backed-generation /
-structure-only-candidate-added / no-workflow-change
+structure-only-candidate-projection / no-workflow-change
 
 ## Purpose
 
@@ -129,6 +129,17 @@ Implemented boundary:
 
 Focused tests parse the candidate, compare its records to the existing Todo App structure-only generated read-model, and
 reject attempts to mark the candidate as promoted or validate-all consumed.
+
+The same `graph read-model project --graph-source ... --output ...` CLI surface now projects this candidate into:
+
+```text
+examples/valid/todo-app-pbe-run/generated/graph-source-candidate-read-model-projection.json
+```
+
+The candidate projection preserves 22 nodes, 38 edges, and 7 Core Views. Its metadata uses
+`candidate_graph_source_read_model_projection` and `structure-only`; its boundaries state that it does not promote Todo
+App PBE Run, does not add parity or pilot marker requirements, and is not consumed by validate-all, the positive
+registry, or CI. Focused tests validate the projection contract and reject projection boundary drift.
 
 ## Initial Implementation Sequence
 

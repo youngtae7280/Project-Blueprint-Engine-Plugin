@@ -123,7 +123,34 @@ export interface GraphSourceProjectionResult {
   projection: GraphSourceProjectionArtifact
 }
 
-export interface GraphSourceProjectionFileResult extends GraphSourceProjectionResult {
+export interface StructureOnlyGraphSourceCandidateProjectionArtifact
+  extends Pick<GeneratedReadModel, 'taxonomy' | 'nodes' | 'edges' | 'coreViewCoverage'> {
+  metadata: {
+    artifactRole: 'candidate_graph_source_read_model_projection'
+    sourceArtifact: string
+    sourceSlice: string
+    sourceProfile: string
+    candidateScope: 'todo-app-pbe-run-structure-only'
+    policyLevel: 'structure-only'
+    projectionBoundary: string
+  }
+  fallbackReferences: string[]
+  retainedCompatibilityArtifacts: string[]
+  sourceAuthorityBoundary: string
+  nonPromotionStatement: string
+  userAcceptanceBoundary: string
+  validateAllBoundary: string
+}
+
+export interface StructureOnlyGraphSourceCandidateProjectionResult {
+  graphSourcePath: string
+  projection: StructureOnlyGraphSourceCandidateProjectionArtifact
+}
+
+export type GraphSourceProjectionFileResult = (
+  | GraphSourceProjectionResult
+  | StructureOnlyGraphSourceCandidateProjectionResult
+) & {
   projectionJsonPath: string
 }
 
@@ -793,14 +820,69 @@ export function projectGraphSourceReadModel(
   }
 }
 
+export function projectStructureOnlyGraphSourceCandidateReadModel(
+  graphSource: StructureOnlyGraphSourceCandidateArtifact,
+  graphSourcePath = `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/graph-source-candidate.json`,
+): StructureOnlyGraphSourceCandidateProjectionResult {
+  return {
+    graphSourcePath: normalizePath(graphSourcePath),
+    projection: {
+      metadata: {
+        artifactRole: 'candidate_graph_source_read_model_projection',
+        sourceArtifact: normalizePath(graphSourcePath),
+        sourceSlice: graphSource.sourceSlice,
+        sourceProfile: graphSource.sourceProfile,
+        candidateScope: graphSource.candidateScope,
+        policyLevel: 'structure-only',
+        projectionBoundary: graphSource.projectionBoundary,
+      },
+      taxonomy: {
+        nodeKindsUsed: unique(graphSource.sourceRecords.nodes.map((node) => node.nodeKind)),
+        edgeTypesUsed: unique(graphSource.sourceRecords.edges.map((edge) => edge.edgeType)),
+        viewScopedTagsAllowed: allowedViewScopedTags,
+        tagBoundary:
+          'Tags describe temporary roles inside a View Instance only. Durable semantic meaning is represented by edges, not tags.',
+      },
+      nodes: cloneJson(graphSource.sourceRecords.nodes),
+      edges: cloneJson(graphSource.sourceRecords.edges),
+      coreViewCoverage: cloneJson(graphSource.sourceRecords.coreViewCoverage),
+      fallbackReferences: cloneJson(graphSource.fallbackReferences),
+      retainedCompatibilityArtifacts: cloneJson(graphSource.retainedCompatibilityArtifacts),
+      sourceAuthorityBoundary: graphSource.sourceAuthorityBoundary,
+      nonPromotionStatement: graphSource.candidateBoundaries.nonPromotionStatement,
+      userAcceptanceBoundary: graphSource.candidateBoundaries.userAcceptanceBoundary,
+      validateAllBoundary: graphSource.candidateBoundaries.validateAllBoundary,
+    },
+  }
+}
+
 export async function projectGraphSourceReadModelToFile(
   root: string,
   graphSourcePath = `${todoSearchReadModelProfile.supportedSlice}/graph-source.json`,
-  outputPath = `${todoSearchReadModelProfile.supportedSlice}/generated/graph-source-read-model-projection.json`,
+  outputPath?: string,
 ): Promise<GraphSourceProjectionFileResult> {
-  const graphSource = await loadGraphSourceArtifact(root, graphSourcePath)
-  const result = projectGraphSourceReadModel(graphSource, graphSourcePath)
-  const projectionJsonPath = path.resolve(root, outputPath)
+  const normalizedGraphSourcePath = normalizePath(graphSourcePath)
+  const absoluteGraphSourcePath = path.resolve(root, normalizedGraphSourcePath)
+  const parsed = await readJsonSafe<unknown>(absoluteGraphSourcePath)
+  if (!parsed.ok) {
+    throw new Error(`Unable to read graph source artifact at ${normalizedGraphSourcePath}: ${parsed.error}`)
+  }
+  const source = asRecord(parsed.value, 'graphSource', [])
+  const result =
+    source.artifactRole === 'candidate-graph-source'
+      ? projectStructureOnlyGraphSourceCandidateReadModel(
+          normalizeStructureOnlyGraphSourceCandidateArtifact(parsed.value, normalizedGraphSourcePath),
+          normalizedGraphSourcePath,
+        )
+      : projectGraphSourceReadModel(
+          normalizeGraphSourceArtifact(parsed.value, normalizedGraphSourcePath),
+          normalizedGraphSourcePath,
+        )
+  const defaultOutput =
+    source.artifactRole === 'candidate-graph-source'
+      ? `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/generated/graph-source-candidate-read-model-projection.json`
+      : `${todoSearchReadModelProfile.supportedSlice}/generated/graph-source-read-model-projection.json`
+  const projectionJsonPath = path.resolve(root, outputPath || defaultOutput)
   await writeFormattedJson(projectionJsonPath, result.projection)
   return {
     ...result,
@@ -942,6 +1024,177 @@ export function normalizeGraphSourceProjectionArtifact(
   }
   if (errors.length > 0) {
     throw new Error(`Invalid graph source projection artifact ${projectionPath}: ${errors.join('; ')}`)
+  }
+  return normalizedProjection
+}
+
+export function normalizeStructureOnlyGraphSourceCandidateProjectionArtifact(
+  value: unknown,
+  graphSource: StructureOnlyGraphSourceCandidateArtifact,
+  projectionPath = `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/generated/graph-source-candidate-read-model-projection.json`,
+  graphSourcePath = `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/graph-source-candidate.json`,
+): StructureOnlyGraphSourceCandidateProjectionArtifact {
+  const errors: string[] = []
+  const projection = asRecord(value, 'structureOnlyGraphSourceCandidateProjection', errors)
+  const metadata = asRecord(projection.metadata, 'structureOnlyGraphSourceCandidateProjection.metadata', errors)
+  const expectedProjection = projectStructureOnlyGraphSourceCandidateReadModel(graphSource, graphSourcePath).projection
+  const nodes = requiredRecordArray<GraphNode>(
+    projection,
+    'nodes',
+    errors,
+    'structureOnlyGraphSourceCandidateProjection',
+  )
+  const edges = requiredRecordArray<GraphEdge>(
+    projection,
+    'edges',
+    errors,
+    'structureOnlyGraphSourceCandidateProjection',
+  )
+  const coreViewCoverage = requiredRecordArray<CoreViewCoverage>(
+    projection,
+    'coreViewCoverage',
+    errors,
+    'structureOnlyGraphSourceCandidateProjection',
+  )
+  const fallbackReferences = requiredStringArray(
+    projection,
+    'fallbackReferences',
+    errors,
+    'structureOnlyGraphSourceCandidateProjection',
+  )
+  const retainedCompatibilityArtifacts = requiredStringArray(
+    projection,
+    'retainedCompatibilityArtifacts',
+    errors,
+    'structureOnlyGraphSourceCandidateProjection',
+  )
+  const sourceAuthorityBoundary = requiredString(
+    projection,
+    'sourceAuthorityBoundary',
+    errors,
+    'structureOnlyGraphSourceCandidateProjection',
+  )
+  const nonPromotionStatement = requiredString(
+    projection,
+    'nonPromotionStatement',
+    errors,
+    'structureOnlyGraphSourceCandidateProjection',
+  )
+  const userAcceptanceBoundary = requiredString(
+    projection,
+    'userAcceptanceBoundary',
+    errors,
+    'structureOnlyGraphSourceCandidateProjection',
+  )
+  const validateAllBoundary = requiredString(
+    projection,
+    'validateAllBoundary',
+    errors,
+    'structureOnlyGraphSourceCandidateProjection',
+  )
+
+  if (metadata.artifactRole !== 'candidate_graph_source_read_model_projection') {
+    errors.push(
+      'structureOnlyGraphSourceCandidateProjection.metadata.artifactRole must be candidate_graph_source_read_model_projection',
+    )
+  }
+  if (normalizePath(String(metadata.sourceArtifact || '')) !== normalizePath(graphSourcePath)) {
+    errors.push(
+      `structureOnlyGraphSourceCandidateProjection.metadata.sourceArtifact must be ${normalizePath(graphSourcePath)}`,
+    )
+  }
+  if (metadata.sourceProfile !== graphSource.sourceProfile) {
+    errors.push(
+      `structureOnlyGraphSourceCandidateProjection.metadata.sourceProfile must be ${graphSource.sourceProfile}`,
+    )
+  }
+  if (metadata.candidateScope !== graphSource.candidateScope) {
+    errors.push(
+      `structureOnlyGraphSourceCandidateProjection.metadata.candidateScope must be ${graphSource.candidateScope}`,
+    )
+  }
+  if (metadata.policyLevel !== 'structure-only') {
+    errors.push('structureOnlyGraphSourceCandidateProjection.metadata.policyLevel must be structure-only')
+  }
+  if (nodes.length !== todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes) {
+    errors.push(
+      `structureOnlyGraphSourceCandidateProjection.nodes must contain ${todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes} nodes`,
+    )
+  }
+  if (edges.length !== todoAppPbeRunStructureOnlyProfile.expectedCounts.edges) {
+    errors.push(
+      `structureOnlyGraphSourceCandidateProjection.edges must contain ${todoAppPbeRunStructureOnlyProfile.expectedCounts.edges} edges`,
+    )
+  }
+  if (coreViewCoverage.length !== coreViewNames.length) {
+    errors.push(
+      `structureOnlyGraphSourceCandidateProjection.coreViewCoverage must contain ${coreViewNames.length} Core Views`,
+    )
+  }
+  if (JSON.stringify(nodes) !== JSON.stringify(expectedProjection.nodes)) {
+    errors.push('structureOnlyGraphSourceCandidateProjection.nodes must match candidate source records')
+  }
+  if (JSON.stringify(edges) !== JSON.stringify(expectedProjection.edges)) {
+    errors.push('structureOnlyGraphSourceCandidateProjection.edges must match candidate source records')
+  }
+  if (JSON.stringify(coreViewCoverage) !== JSON.stringify(expectedProjection.coreViewCoverage)) {
+    errors.push('structureOnlyGraphSourceCandidateProjection.coreViewCoverage must match candidate source records')
+  }
+  if (!sourceAuthorityBoundary.includes('structure-only')) {
+    errors.push(
+      'structureOnlyGraphSourceCandidateProjection.sourceAuthorityBoundary must preserve structure-only boundary',
+    )
+  }
+  if (!nonPromotionStatement.includes('not promote Todo App')) {
+    errors.push('structureOnlyGraphSourceCandidateProjection.nonPromotionStatement must block Todo App promotion')
+  }
+  if (!validateAllBoundary.includes('not consumed by validate-all')) {
+    errors.push('structureOnlyGraphSourceCandidateProjection.validateAllBoundary must keep validate-all separate')
+  }
+  if (userAcceptanceBoundary !== graphSource.candidateBoundaries.userAcceptanceBoundary) {
+    errors.push(
+      'structureOnlyGraphSourceCandidateProjection.userAcceptanceBoundary must match candidate userAcceptanceBoundary',
+    )
+  }
+
+  const normalizedProjection: StructureOnlyGraphSourceCandidateProjectionArtifact = {
+    metadata: {
+      artifactRole: 'candidate_graph_source_read_model_projection',
+      sourceArtifact: normalizePath(String(metadata.sourceArtifact || '')),
+      sourceSlice: normalizePath(String(metadata.sourceSlice || '')),
+      sourceProfile: String(metadata.sourceProfile || ''),
+      candidateScope: 'todo-app-pbe-run-structure-only',
+      policyLevel: 'structure-only',
+      projectionBoundary: String(metadata.projectionBoundary || ''),
+    },
+    taxonomy: expectedProjection.taxonomy,
+    nodes,
+    edges,
+    coreViewCoverage,
+    fallbackReferences: fallbackReferences.map(normalizePath),
+    retainedCompatibilityArtifacts: retainedCompatibilityArtifacts.map(normalizePath),
+    sourceAuthorityBoundary,
+    nonPromotionStatement,
+    userAcceptanceBoundary,
+    validateAllBoundary,
+  }
+  assertAllowedTags({
+    version: 'structure-only-graph-source-candidate-projection-normalization',
+    metadata: {},
+    sourceInputs: [],
+    taxonomy: {},
+    nodes: normalizedProjection.nodes,
+    edges: normalizedProjection.edges,
+    coreViewCoverage: normalizedProjection.coreViewCoverage,
+    checkEvidenceMapping: [],
+    retainedWarnings: [],
+    compatibilityWarnings: [],
+    sourceAuthorityBoundary,
+    nonPromotionStatement,
+  })
+
+  if (errors.length > 0) {
+    throw new Error(`Invalid structure-only graph source candidate projection ${projectionPath}: ${errors.join('; ')}`)
   }
   return normalizedProjection
 }
