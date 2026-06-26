@@ -503,6 +503,10 @@ is limited promoted and graph-source-backed, tree-native artifacts remain source
 structure-only/non-authority, and repo-wide promotion, tree retirement, enforcement, and required checks are still
 incomplete.
 
+Manual workflow run `28222731063` reviewed the Todo App bounded non-authority positive validate-all projection status:
+Todo App reports `candidate-projection-contract-pass`, Todo Search remains `projection-contract-pass`, aggregate remains
+`aggregate-pass`, and candidate observation stays separate.
+
 The public-doc cleanup or waiver decision package is now recorded:
 
 - [public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md)

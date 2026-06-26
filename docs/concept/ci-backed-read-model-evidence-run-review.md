@@ -1,12 +1,12 @@
 # CI-Backed Read-Model Evidence Run Review
 
-Status: ci-backed-read-model-evidence-run-review / validate-all-pr-ci-evidence-pass-reviewed /
-non-enforcing-pr-run
+Status: ci-backed-read-model-evidence-run-review / todo-app-projection-manual-ci-reviewed /
+non-enforcing-manual-run
 
 ## Review Purpose
 
-This document records reviewed GitHub Actions runs for read-model Evidence, with the latest review covering the third
-PR informational workflow run after the validate-all switch:
+This document records reviewed GitHub Actions runs for read-model Evidence, with the latest review covering the manual
+workflow run after Todo App bounded non-authority projection-contract enrollment entered positive validate-all:
 
 ```text
 PBE Read-Model Evidence
@@ -1031,34 +1031,54 @@ PR run `28219583619` then reviewed graph-source-backed Todo Search generation th
 | Cleanup               | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted               |
 | Review result         | PR informational CI confirms graph-source-backed Todo Search generation health                      |
 
+Manual run `28222731063` reviewed the workflow after Todo App bounded non-authority projection-contract enrollment
+entered local positive validate-all.
+
+| Field                 | Value                                                                                                        |
+| --------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Run ID                | `28222731063`                                                                                                |
+| Run URL               | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28222731063>                   |
+| Event                 | `workflow_dispatch`                                                                                          |
+| Commit                | `b60b315b25da6767db73c0f6b8a082d06d61192d`                                                                   |
+| Conclusion            | `success`                                                                                                    |
+| Manifest              | `ci-evidence-pass`; `validateAllStatus: aggregate-pass`; `aggregateStatus: aggregate-pass`                   |
+| Todo Search           | graph-source-backed; 40 nodes / 59 edges; `projection-contract-pass`                                         |
+| Todo App              | `validation-pass`; positive validate-all `candidate-projection-contract-pass`; 22 nodes / 38 edges / 7 views |
+| Candidate observation | `candidate-observation-pass`; remains separate observation metadata                                          |
+| Artifact              | validate-all output, candidate observation output, Todo Search projection, Todo App candidate projection     |
+| Boundary              | Non-enforcing Evidence only; no Todo App source authority, promotion, enforcement, or tree retirement        |
+| Cleanup               | Artifact temp directory removed                                                                              |
+| Review result         | Manual CI confirms Todo App positive non-authority projection contract enrollment health                     |
+
 ## Gate Self-Check
 
-| Gate                             | Status | Result                                                                                                       |
-| -------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------ |
-| Manual Workflow Run Gate         | pass   | Run `28156403793` completed successfully on `workflow_dispatch`.                                             |
-| Validate-All Manual Run Gate     | pass   | Run `28210541509` completed successfully on `workflow_dispatch` after the workflow switched to validate-all. |
-| Projection-Status Manual Gate    | pass   | Run `28218687289` captured Todo Search `projection-contract-pass` in manifest and validate-all output.       |
-| Graph-Source-Backed Manual Gate  | pass   | Run `28219396764` confirmed graph-source-backed Todo Search generation in CI artifacts.                      |
-| Graph-Source-Backed PR Gate      | pass   | PR #5 run `28219583619` confirmed graph-source-backed Todo Search generation in PR artifacts.                |
-| PR Informational Run Gate        | pass   | PR #1, PR #2, PR #3, PR #4, and PR #5 triggered `pull_request` runs and completed successfully.              |
-| CI-Backed Artifact Review Gate   | pass   | Expanded artifact bundle `pbe-todo-search-read-model-evidence` was downloaded and inspected.                 |
-| CI Manifest Integrity Gate       | pass   | Manifest is `ci-backed` / `ci-evidence-pass` and includes Todo Search, Todo App, aggregate, and boundaries.  |
-| Validation Report Gate           | pass   | Todo Search and Todo App validation reports are `validation-pass` with 20 and 16 checks.                     |
-| Parity Report Gate               | pass   | Todo Search parity is `comparison-pass`; Todo App parity remains `not-required`.                             |
-| Aggregate Report Gate            | pass   | Aggregate summary is `aggregate-pass`, 2 slices, 0 warning/blocking/decision-required.                       |
-| Validate-All Manifest Gate       | pass   | Manifest records `sourceMode: registry-backed validate-all` and `validateAllStatus: aggregate-pass`.         |
-| Validate-All PR Run Gate         | pass   | PR #2 run `28210904900` and PR #3 run `28213236499` record validate-all `pull_request` success.              |
-| Projection-Status PR Gate        | pass   | PR #4 run `28218854329` captured Todo Search `projection-contract-pass` in PR informational artifacts.       |
-| Observation Threshold Gate       | pass   | Three real PR informational runs are reviewed; refinement may be considered but is not automatic.            |
-| Non-Enforcing CI Gate            | pass   | Workflow remains informational only for manual and PR runs.                                                  |
-| Non-Required-Check Gate          | pass   | No required check or branch protection was added.                                                            |
-| Source Authority Boundary Gate   | pass   | Source authority remains unchanged; Todo App remains structure-only.                                         |
-| Non-Full-Promotion Gate          | pass   | No full Graph-source promotion is recorded.                                                                  |
-| Scope Containment Gate           | pass   | Source-authority pilot remains bounded to Todo Search only.                                                  |
-| Node 24 CI Hygiene Gate          | pass   | Run `28157938343` succeeded after the workflow moved to Node 24 action/runtime settings.                     |
-| Retained Warning Visibility Gate | pass   | Retained Evidence/source warnings remain documented; Node.js 20 deprecation is no longer active.             |
-| User Approval Boundary Gate      | pass   | CI pass is not treated as user approval.                                                                     |
-| Evidence Honesty Gate            | pass   | Only the observed CI run and downloaded artifact are recorded as reviewed Evidence.                          |
+| Gate                             | Status | Result                                                                                                        |
+| -------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------- |
+| Manual Workflow Run Gate         | pass   | Run `28156403793` completed successfully on `workflow_dispatch`.                                              |
+| Validate-All Manual Run Gate     | pass   | Run `28210541509` completed successfully on `workflow_dispatch` after the workflow switched to validate-all.  |
+| Projection-Status Manual Gate    | pass   | Run `28218687289` captured Todo Search `projection-contract-pass` in manifest and validate-all output.        |
+| Graph-Source-Backed Manual Gate  | pass   | Run `28219396764` confirmed graph-source-backed Todo Search generation in CI artifacts.                       |
+| Todo App Projection Manual Gate  | pass   | Run `28222731063` confirmed Todo App `candidate-projection-contract-pass` in positive validate-all artifacts. |
+| Graph-Source-Backed PR Gate      | pass   | PR #5 run `28219583619` confirmed graph-source-backed Todo Search generation in PR artifacts.                 |
+| PR Informational Run Gate        | pass   | PR #1, PR #2, PR #3, PR #4, and PR #5 triggered `pull_request` runs and completed successfully.               |
+| CI-Backed Artifact Review Gate   | pass   | Expanded artifact bundle `pbe-todo-search-read-model-evidence` was downloaded and inspected.                  |
+| CI Manifest Integrity Gate       | pass   | Manifest is `ci-backed` / `ci-evidence-pass` and includes Todo Search, Todo App, aggregate, and boundaries.   |
+| Validation Report Gate           | pass   | Todo Search and Todo App validation reports are `validation-pass` with 20 and 16 checks.                      |
+| Parity Report Gate               | pass   | Todo Search parity is `comparison-pass`; Todo App parity remains `not-required`.                              |
+| Aggregate Report Gate            | pass   | Aggregate summary is `aggregate-pass`, 2 slices, 0 warning/blocking/decision-required.                        |
+| Validate-All Manifest Gate       | pass   | Manifest records `sourceMode: registry-backed validate-all` and `validateAllStatus: aggregate-pass`.          |
+| Validate-All PR Run Gate         | pass   | PR #2 run `28210904900` and PR #3 run `28213236499` record validate-all `pull_request` success.               |
+| Projection-Status PR Gate        | pass   | PR #4 run `28218854329` captured Todo Search `projection-contract-pass` in PR informational artifacts.        |
+| Observation Threshold Gate       | pass   | Three real PR informational runs are reviewed; refinement may be considered but is not automatic.             |
+| Non-Enforcing CI Gate            | pass   | Workflow remains informational only for manual and PR runs.                                                   |
+| Non-Required-Check Gate          | pass   | No required check or branch protection was added.                                                             |
+| Source Authority Boundary Gate   | pass   | Source authority remains unchanged; Todo App remains structure-only.                                          |
+| Non-Full-Promotion Gate          | pass   | No full Graph-source promotion is recorded.                                                                   |
+| Scope Containment Gate           | pass   | Source-authority pilot remains bounded to Todo Search only.                                                   |
+| Node 24 CI Hygiene Gate          | pass   | Run `28157938343` succeeded after the workflow moved to Node 24 action/runtime settings.                      |
+| Retained Warning Visibility Gate | pass   | Retained Evidence/source warnings remain documented; Node.js 20 deprecation is no longer active.              |
+| User Approval Boundary Gate      | pass   | CI pass is not treated as user approval.                                                                      |
+| Evidence Honesty Gate            | pass   | Only the observed CI run and downloaded artifact are recorded as reviewed Evidence.                           |
 
 ## Final Statement
 

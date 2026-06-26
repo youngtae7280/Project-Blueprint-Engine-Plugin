@@ -533,6 +533,11 @@ Graph-source transition state: Todo Search selected scope is limited Graph-sourc
 tree-native artifacts remain source/fallback as applicable, Todo App remains structure-only/non-authority, and
 repo-wide promotion, tree retirement, enforcement, and required checks remain incomplete.
 
+DEC-116 does not supersede DEC-097 through DEC-115. It records manual CI review of Todo App bounded non-authority
+projection-contract enrollment in run `28222731063`. The run confirms Todo App positive validate-all
+`candidate-projection-contract-pass`, Todo Search `projection-contract-pass`, aggregate pass, and separate candidate
+observation metadata, without workflow behavior changes, source authority expansion, promotion, or enforcement.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
