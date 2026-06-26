@@ -1,6 +1,6 @@
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { join, resolve } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import {
   buildReadModelRegistryCommandPlans,
@@ -17,6 +17,13 @@ import {
 } from '../core/read-model-evidence'
 
 const workspaces: string[] = []
+const exampleWorkspacePaths = [
+  'examples/adoption/todo-search-slice',
+  'examples/adoption/compatibility-mismatch-slice',
+  'examples/valid/todo-app-pbe-run',
+  'examples/read-model-aggregate',
+  'docs/concept',
+]
 const allowedTags = new Set(['target', 'context', 'candidate', 'guard', 'required', 'stale', 'blocked', 'output'])
 const coreViews = [
   'Intent View',
@@ -866,9 +873,14 @@ describe('read-model Evidence builder', () => {
 async function createExampleWorkspace(): Promise<string> {
   const workspace = await mkdtemp(join(tmpdir(), 'pbe-read-model-'))
   workspaces.push(workspace)
-  await cp(resolve('examples'), join(workspace, 'examples'), { recursive: true })
-  await cp(resolve('docs'), join(workspace, 'docs'), { recursive: true })
+  await Promise.all(exampleWorkspacePaths.map((entry) => copyWorkspacePath(entry, workspace)))
   return workspace
+}
+
+async function copyWorkspacePath(relativePath: string, workspace: string): Promise<void> {
+  const destination = join(workspace, relativePath)
+  await mkdir(dirname(destination), { recursive: true })
+  await cp(resolve(relativePath), destination, { recursive: true })
 }
 
 async function readRegistryFixtureObject(): Promise<{

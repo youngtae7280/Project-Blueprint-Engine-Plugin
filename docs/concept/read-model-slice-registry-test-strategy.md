@@ -38,6 +38,11 @@ View fixture is implemented at `examples/invalid/read-model-core-view-missing` a
 pilot marker fixture is also implemented at `examples/invalid/read-model-pilot-marker-missing` as a local
 authority-boundary test fixture.
 
+Focused test runtime stabilization is now part of the strategy: temp workspaces should copy only the read-model slices,
+aggregate registry/artifacts, compatibility fixture, and concept docs required for the behavior under test. This keeps
+non-mutation and cross-slice-leakage checks isolated without repeatedly copying unrelated example or documentation
+trees.
+
 ## Relationship To Validate-All Contract
 
 The validate-all contract defines the policy surface:
