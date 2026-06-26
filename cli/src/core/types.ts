@@ -74,7 +74,9 @@ export interface CliOptions {
   slice?: string
   slices?: string
   generated?: string
+  graphSource?: string
   manual?: string
+  output?: string
 }
 
 export interface CliEnvironment {

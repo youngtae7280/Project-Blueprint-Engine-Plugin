@@ -2,6 +2,7 @@ import { relativePath } from '../core/fs.js'
 import {
   compareReadModelEvidence,
   generateReadModelEvidence,
+  projectGraphSourceReadModelToFile,
   summarizeReadModelEvidence,
   validateAllReadModelEvidence,
   validateReadModelEvidence,
@@ -59,6 +60,32 @@ export async function graphReadModelCompareCommand(context: CommandContext): Pro
       decisionRequiredCount: result.report.summary.decisionRequiredCount,
       sourceAuthorityBoundary: result.report.sourceAuthorityBoundary,
       nonPromotionStatement: result.report.nonPromotionStatement,
+    },
+  }
+}
+
+export async function graphReadModelProjectCommand(context: CommandContext): Promise<CommandResult> {
+  const graphSource = context.options.graphSource
+  if (!graphSource) {
+    return invalidCommand('graph read-model project requires --graph-source <file>.')
+  }
+  const result = await projectGraphSourceReadModelToFile(context.options.root, graphSource, context.options.output)
+  return {
+    ok: true,
+    command: 'graph read-model project',
+    exitCode: ExitCode.Success,
+    message: 'Graph source read-model projection created.',
+    issues: [],
+    data: {
+      graphSource: result.graphSourcePath,
+      projection: relativePath(context.options.root, result.projectionJsonPath),
+      nodeCount: result.projection.nodes.length,
+      edgeCount: result.projection.edges.length,
+      coreViewCount: result.projection.coreViewCoverage.length,
+      sourceAuthorityBoundary: result.projection.sourceAuthorityBoundary,
+      nonPromotionStatement: result.projection.nonPromotionStatement,
+      userAcceptanceBoundary: result.projection.userAcceptanceBoundary,
+      fallbackReferences: result.projection.fallbackReferences,
     },
   }
 }

@@ -1427,6 +1427,11 @@
       "role": "projection-evidence"
     },
     {
+      "kind": "graph-source-read-model-projection",
+      "path": "examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json",
+      "role": "graph-source-projection-evidence"
+    },
+    {
       "kind": "view-instance-manifest",
       "path": "examples/adoption/todo-search-slice/view-instance-manifest.json",
       "role": "compatibility-view-evidence"

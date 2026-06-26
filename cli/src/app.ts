@@ -113,7 +113,9 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     slice: undefined as string | undefined,
     slices: undefined as string | undefined,
     generated: undefined as string | undefined,
+    graphSource: undefined as string | undefined,
     manual: undefined as string | undefined,
+    output: undefined as string | undefined,
   }
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -269,12 +271,26 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
       }
       options.generated = value
       index += 1
+    } else if (arg === '--graph-source') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--graph-source requires a file path.' }
+      }
+      options.graphSource = value
+      index += 1
     } else if (arg === '--manual') {
       const value = argv[index + 1]
       if (!value) {
         return { error: '--manual requires a file path.' }
       }
       options.manual = value
+      index += 1
+    } else if (arg === '--output') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--output requires a file path.' }
+      }
+      options.output = value
       index += 1
     } else if (arg === '--stage') {
       const value = argv[index + 1]

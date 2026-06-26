@@ -102,9 +102,16 @@ export interface GraphSourceProjectionResult {
   graphSourcePath: string
   projection: Pick<GeneratedReadModel, 'taxonomy' | 'nodes' | 'edges' | 'coreViewCoverage'> & {
     metadata: Record<string, unknown>
+    fallbackReferences: string[]
+    retainedCompatibilityArtifacts: string[]
     sourceAuthorityBoundary: string
     nonPromotionStatement: string
+    userAcceptanceBoundary: string
   }
+}
+
+export interface GraphSourceProjectionFileResult extends GraphSourceProjectionResult {
+  projectionJsonPath: string
 }
 
 interface Mismatch {
@@ -717,10 +724,28 @@ export function projectGraphSourceReadModel(
       nodes: cloneJson(graphSource.sourceRecords.nodes),
       edges: cloneJson(graphSource.sourceRecords.edges),
       coreViewCoverage: cloneJson(graphSource.sourceRecords.coreViewCoverage),
+      fallbackReferences: cloneJson(graphSource.fallbackReferences),
+      retainedCompatibilityArtifacts: cloneJson(graphSource.retainedCompatibilityArtifacts),
       sourceAuthorityBoundary: graphSource.sourceAuthorityBoundary,
       nonPromotionStatement:
         'Projection from graph-source artifact is Evidence/projection output. It does not replace user acceptance, CI enforcement, or repo-wide promotion.',
+      userAcceptanceBoundary: graphSource.userAcceptanceBoundary,
     },
+  }
+}
+
+export async function projectGraphSourceReadModelToFile(
+  root: string,
+  graphSourcePath = `${todoSearchReadModelProfile.supportedSlice}/graph-source.json`,
+  outputPath = `${todoSearchReadModelProfile.supportedSlice}/generated/graph-source-read-model-projection.json`,
+): Promise<GraphSourceProjectionFileResult> {
+  const graphSource = await loadGraphSourceArtifact(root, graphSourcePath)
+  const result = projectGraphSourceReadModel(graphSource, graphSourcePath)
+  const projectionJsonPath = path.resolve(root, outputPath)
+  await writeFormattedJson(projectionJsonPath, result.projection)
+  return {
+    ...result,
+    projectionJsonPath,
   }
 }
 

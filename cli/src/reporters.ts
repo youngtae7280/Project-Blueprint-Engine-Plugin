@@ -139,6 +139,8 @@ Commands:
                        Generate bounded read-model Evidence from a selected slice
   graph read-model compare
                        Compare generated read-model Evidence with a manual parity artifact
+  graph read-model project
+                       Project a bounded Graph source artifact into read-model projection output
   graph read-model validate
                        Validate scoped generated read-model Evidence and write validator-backed reports
   graph read-model validate --all
@@ -173,6 +175,9 @@ Options:
   --slice <path>       Selected slice path for graph read-model generation.
   --slices <paths>     Slice paths for graph read-model summarize, comma-separated.
   --generated <file>   Generated read-model file for graph read-model comparison.
+  --graph-source <file>
+                       Graph source artifact for graph read-model projection.
   --manual <file>      Manual parity artifact for graph read-model comparison.
+  --output <file>      Output file for graph read-model projection.
 `
 }

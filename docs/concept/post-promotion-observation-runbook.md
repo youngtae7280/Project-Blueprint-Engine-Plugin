@@ -91,9 +91,15 @@ available, and how validation proves projection health.
 The first decision surface for that branch is
 [graph-source-artifact-storage-projection-design.md](graph-source-artifact-storage-projection-design.md).
 
-The first concrete step is now implemented as `examples/adoption/todo-search-slice/graph-source.json` plus internal
-parser/projection tests. The next branch is whether to expose projection generation as a CLI output path or keep it
-internal while schema hardening continues.
+The first concrete steps are now implemented as `examples/adoption/todo-search-slice/graph-source.json`, focused
+parser/projection tests, and the minimal CLI projection path:
+
+```bash
+pbe graph read-model project --graph-source examples/adoption/todo-search-slice/graph-source.json --output examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
+```
+
+The next branch is whether to harden schema/validation around this projection artifact, integrate it into positive
+validation planning, or keep it standalone while observation continues.
 
 ## Non-Scope
 

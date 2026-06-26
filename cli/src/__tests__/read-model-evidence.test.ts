@@ -2,6 +2,7 @@ import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
+import { runPbeCli } from '../app'
 import {
   buildReadModelRegistryCommandPlans,
   compareReadModelEvidence,
@@ -96,8 +97,68 @@ describe('read-model Evidence builder', () => {
     expect(result.projection.edges).toEqual(generated.edges)
     expect(result.projection.coreViewCoverage).toEqual(generated.coreViewCoverage)
     expect(result.projection.metadata.artifactRole).toBe('graph_source_read_model_projection')
+    expect(result.projection.fallbackReferences).toContain('examples/adoption/todo-search-slice/product-tree.json')
+    expect(result.projection.userAcceptanceBoundary).toContain('cannot accept product results')
     expect(result.projection.sourceAuthorityBoundary).toContain('limited source model')
     expect(result.projection.nonPromotionStatement).toContain('repo-wide promotion')
+  })
+
+  it('writes graph source projection output through the CLI without changing default generation', async () => {
+    const workspace = await createExampleWorkspace()
+    const outputPath = 'examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json'
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'project',
+        '--graph-source',
+        'examples/adoption/todo-search-slice/graph-source.json',
+        '--output',
+        outputPath,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot: resolve('.') },
+    )
+
+    expect(result.exitCode).toBe(0)
+    const payload = JSON.parse(result.stdout) as {
+      projection: string
+      nodeCount: number
+      edgeCount: number
+      coreViewCount: number
+      sourceAuthorityBoundary: string
+      nonPromotionStatement: string
+      fallbackReferences: string[]
+    }
+    expect(payload.projection).toBe(outputPath)
+    expect(payload.nodeCount).toBe(todoSearchReadModelProfile.expectedCounts.nodes)
+    expect(payload.edgeCount).toBe(todoSearchReadModelProfile.expectedCounts.edges)
+    expect(payload.coreViewCount).toBe(coreViews.length)
+    expect(payload.sourceAuthorityBoundary).toContain('Todo Search selected-slice')
+    expect(payload.nonPromotionStatement).toContain('repo-wide promotion')
+    expect(payload.fallbackReferences).toContain('examples/adoption/todo-search-slice/product-tree.json')
+
+    const generated = JSON.parse(
+      await readFile(
+        join(workspace, 'examples/adoption/todo-search-slice/generated/generated-read-model.json'),
+        'utf8',
+      ),
+    ) as { nodes: unknown[]; edges: unknown[]; coreViewCoverage: unknown[] }
+    const projection = JSON.parse(await readFile(join(workspace, outputPath), 'utf8')) as {
+      metadata: { artifactRole: string }
+      nodes: unknown[]
+      edges: unknown[]
+      coreViewCoverage: unknown[]
+      fallbackReferences: string[]
+      userAcceptanceBoundary: string
+    }
+
+    expect(projection.metadata.artifactRole).toBe('graph_source_read_model_projection')
+    expect(projection.nodes).toEqual(generated.nodes)
+    expect(projection.edges).toEqual(generated.edges)
+    expect(projection.coreViewCoverage).toEqual(generated.coreViewCoverage)
+    expect(projection.fallbackReferences).toContain('examples/adoption/todo-search-slice/product-tree.json')
+    expect(projection.userAcceptanceBoundary).toContain('cannot accept product results')
   })
 
   it('rejects malformed graph source artifacts and does not mutate the positive artifact', async () => {

@@ -1,6 +1,6 @@
 # Graph Source Artifact Storage And Projection Generation Design
 
-Status: first-artifact-implemented / internal-projection-helper / no-cli-surface-change
+Status: first-artifact-implemented / minimal-cli-projection-path / no-workflow-change
 
 ## Purpose
 
@@ -11,22 +11,23 @@ Graph source artifact/storage + projection generation
 ```
 
 It prepares and now records the first storage and projection step for the promoted Todo Search selected-slice scope. The
-first non-generated graph source artifact exists, and focused tests prove internal projection preserves the current Todo
-Search read-model shape. This does not modify CLI behavior, change workflows, retire tree-native artifacts, or expand
-source authority beyond the executed limited scope.
+first non-generated graph source artifact exists, and focused tests prove projection preserves the current Todo Search
+read-model shape. A minimal CLI projection path now writes an explicit generated projection artifact when invoked. This
+does not change default generation, workflows, retained fallback artifacts, or source authority beyond the executed
+limited scope.
 
 ## Current Baseline
 
-| Area                  | Current state                                                                                                                                   |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| Promoted scope        | Todo Search selected-slice authority surface.                                                                                                   |
-| Source model in scope | Maintainability Graph, as recorded by [broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md). |
-| Fallback/reference    | Tree-native selected-slice artifacts retained as maintained compatibility / fallback / reference artifacts.                                     |
-| Graph source artifact | `examples/adoption/todo-search-slice/graph-source.json` exists as non-generated limited source artifact.                                        |
-| Generated projections | Existing generated read-model artifacts remain Evidence/projection outputs, not independent source authority.                                   |
-| Positive registry     | `examples/read-model-aggregate/read-model-slices.json` includes Todo Search and Todo App PBE Run only.                                          |
-| Todo App PBE Run      | `structure-only`, not source-bearing.                                                                                                           |
-| CI                    | Manual and PR informational, non-enforcing.                                                                                                     |
+| Area                  | Current state                                                                                                                                        |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Promoted scope        | Todo Search selected-slice authority surface.                                                                                                        |
+| Source model in scope | Maintainability Graph, as recorded by [broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md).      |
+| Fallback/reference    | Tree-native selected-slice artifacts retained as maintained compatibility / fallback / reference artifacts.                                          |
+| Graph source artifact | `examples/adoption/todo-search-slice/graph-source.json` exists as non-generated limited source artifact.                                             |
+| Generated projections | Existing generated read-model artifacts and the graph-source projection output remain Evidence/projection outputs, not independent source authority. |
+| Positive registry     | `examples/read-model-aggregate/read-model-slices.json` includes Todo Search and Todo App PBE Run only.                                               |
+| Todo App PBE Run      | `structure-only`, not source-bearing.                                                                                                                |
+| CI                    | Manual and PR informational, non-enforcing.                                                                                                          |
 
 ## Candidate Storage Locations
 
@@ -66,19 +67,24 @@ The artifact should store durable graph source records. It should not store gene
 
 ## Projection Generation Expectations
 
-Current internal projection helper:
+Current projection helper and CLI surface:
 
 ```text
-loadGraphSourceArtifact -> projectGraphSourceReadModel
+loadGraphSourceArtifact -> projectGraphSourceReadModel -> projectGraphSourceReadModelToFile
+pbe graph read-model project --graph-source examples/adoption/todo-search-slice/graph-source.json --output examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
 ```
 
 Focused tests prove that projection from `graph-source.json` preserves the current Todo Search generated read-model
-nodes, edges, and Core View coverage.
+nodes, edges, and Core View coverage. The generated projection artifact is:
 
-Future CLI-facing projection generation should:
+```text
+examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
+```
+
+Future projection generation hardening should:
 
 1. Read the promoted graph source artifact.
-2. Generate read-model / view projection artifacts into `generated/`.
+2. Generate or refresh read-model / view projection artifacts into `generated/`.
 3. Compare generated projections against retained fallback/reference artifacts where parity is required.
 4. Preserve source, projection, Evidence, fallback, and user-acceptance boundaries in every output manifest.
 5. Keep Todo App PBE Run structure-only unless a separate authority package promotes it.
@@ -87,21 +93,19 @@ Future CLI-facing projection generation should:
 
 Recommended sequence:
 
-1. Review the internal graph source projection helper and artifact shape.
-2. Decide whether projection generation needs a CLI surface or should remain internal until schema hardening.
-3. If approved, generate read-model / view projection artifacts from graph source into `generated/`.
-4. Add parity/validation tests proving projection output still matches the current Todo Search baseline.
-5. Keep `validate --all` positive registry behavior stable until the projection path is reviewed.
+1. Review the graph source projection helper, CLI surface, and artifact shape.
+2. Decide whether schema hardening should happen before any broader generated projection refresh.
+3. Add parity/validation tests proving projection output still matches the current Todo Search baseline.
+4. Keep `validate --all` positive registry behavior stable until the projection path is reviewed.
 
 ## Non-Scope
 
 This design does not:
 
 - create a repo-wide graph source artifact
-- add a CLI projection command
-- modify CLI commands
+- change default `graph read-model generate` behavior
 - modify workflow or CI
-- regenerate generated artifacts
+- regenerate unrelated generated artifacts
 - add enforcement or required checks
 - promote Todo App PBE Run beyond `structure-only`
 - execute repo-wide Graph-source promotion
