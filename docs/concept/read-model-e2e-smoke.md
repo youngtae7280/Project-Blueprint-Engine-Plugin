@@ -1,6 +1,7 @@
 # Read-Model E2E Smoke
 
-Status: local-smoke-implemented / ci-observation-integrated / non-enforcing / no-promotion-change
+Status: local-smoke-implemented / ci-observation-integrated / manual-ci-reviewed / non-enforcing /
+no-promotion-change
 
 ## Purpose
 
@@ -10,6 +11,11 @@ the run so the repository's generated artifacts do not churn.
 
 The non-enforcing `PBE Read-Model Evidence` workflow now also runs the smoke and writes
 `examples/read-model-aggregate/generated/read-model-e2e-smoke-output.json` as an uploaded observation artifact.
+
+Manual workflow run `28223860233` reviewed the CI observation path after integration. The artifact manifest recorded
+`e2eSmokeStatus: e2e-smoke-pass`, and the uploaded `read-model-e2e-smoke-output.json` confirmed Todo Search 40/59/7
+with `projection-contract-pass`, Todo App 22/38/7 with `candidate-projection-contract-pass`, validate-all
+`aggregate-pass`, and separate candidate observation `candidate-observation-pass`.
 
 The smoke checks:
 

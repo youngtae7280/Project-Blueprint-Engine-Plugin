@@ -554,6 +554,12 @@ Evidence workflow as observation metadata and uploads `read-model-e2e-smoke-outp
 `e2eSmokeStatus` in the CI manifest and Step Summary without adding required checks, enforcement, repo-wide promotion,
 tree retirement, or Todo App source-authority promotion.
 
+DEC-120 does not supersede DEC-097 through DEC-119. It records manual CI review of E2E smoke observation in run
+`28223860233`. The reviewed artifact confirms `e2eSmokeStatus: e2e-smoke-pass`, Todo Search
+`projection-contract-pass`, Todo App `candidate-projection-contract-pass`, validate-all aggregate pass, and separate
+candidate observation metadata without adding enforcement, repo-wide promotion, tree retirement, or Todo App
+source-authority promotion.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
