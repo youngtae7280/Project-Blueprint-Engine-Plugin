@@ -74,6 +74,8 @@ Current projection-contract observation:
 - Todo Search is expected to report `projection-contract-pass`; Todo App PBE Run remains `not-configured`.
 - Missing or corrupt projection artifacts can block the non-enforcing CI Evidence status without adding required checks,
   branch protection, or merge enforcement.
+- Manual run `28218687289` reviewed this capture path as `ci-evidence-pass`; PR informational review of the same field
+  remains a future observation step.
 
 Reviewed manual run after switch:
 
@@ -112,6 +114,18 @@ Third PR informational observation after switch:
 | Manifest ref | `refs/pull/3/merge`                                                                                     |
 | Manifest     | `ci-evidence-pass`; `pull_request-informational`; `validateAllStatus: aggregate-pass`; `aggregate-pass` |
 | Review state | recorded in [ci-backed-read-model-evidence-run-review.md](ci-backed-read-model-evidence-run-review.md)  |
+
+Projection-contract manual observation:
+
+| Field        | Value                                                                                                                     |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| Run ID       | `28218687289`                                                                                                             |
+| Run URL      | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28218687289>                                |
+| Event        | `workflow_dispatch`                                                                                                       |
+| Commit       | `a968d3661f22f7c06647080310e8ea1f87e79d0a`                                                                                |
+| Manifest     | `ci-evidence-pass`; `projectionContractStatus` present; Todo Search `projection-contract-pass`; Todo App `not-configured` |
+| Artifacts    | `read-model-validate-all-output.json` and `graph-source-read-model-projection.json` present                               |
+| Review state | recorded in [ci-backed-read-model-evidence-run-review.md](ci-backed-read-model-evidence-run-review.md)                    |
 
 ## Command Sequence Comparison
 

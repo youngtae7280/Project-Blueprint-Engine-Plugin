@@ -949,12 +949,32 @@ The append-only observation log and runbook for repeatable future PR run review 
 `28207696557`, PR `#1` run `28207822252`, PR `#2` run `28210904900`, PR `#3` run `28213236499`, and the
 template/checklist for future observations without changing workflow triggers or enforcement.
 
+## Projection-Contract CI Capture Review
+
+Manual run `28218687289` reviewed the validate-all workflow after CI began capturing graph-source projection contract
+status.
+
+| Field         | Value                                                                                        |
+| ------------- | -------------------------------------------------------------------------------------------- |
+| Run ID        | `28218687289`                                                                                |
+| Run URL       | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28218687289>   |
+| Event         | `workflow_dispatch`                                                                          |
+| Commit        | `a968d3661f22f7c06647080310e8ea1f87e79d0a`                                                   |
+| Conclusion    | `success`                                                                                    |
+| Job ID        | `83595024984`                                                                                |
+| Manifest      | `ci-evidence-pass`; `validateAllStatus: aggregate-pass`; `aggregateStatus: aggregate-pass`   |
+| Projection    | Todo Search `projection-contract-pass`; Todo App PBE Run `not-configured`                    |
+| Artifact      | `read-model-validate-all-output.json` and `graph-source-read-model-projection.json` present  |
+| Boundary      | Non-enforcing Evidence only; no source authority expansion or Todo App promotion             |
+| Review result | Manual projection-status observation reviewed; PR projection-status observation remains open |
+
 ## Gate Self-Check
 
 | Gate                             | Status | Result                                                                                                       |
 | -------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------ |
 | Manual Workflow Run Gate         | pass   | Run `28156403793` completed successfully on `workflow_dispatch`.                                             |
 | Validate-All Manual Run Gate     | pass   | Run `28210541509` completed successfully on `workflow_dispatch` after the workflow switched to validate-all. |
+| Projection-Status Manual Gate    | pass   | Run `28218687289` captured Todo Search `projection-contract-pass` in manifest and validate-all output.       |
 | PR Informational Run Gate        | pass   | PR #1, PR #2, and PR #3 triggered `pull_request` runs and completed successfully.                            |
 | CI-Backed Artifact Review Gate   | pass   | Expanded artifact bundle `pbe-todo-search-read-model-evidence` was downloaded and inspected.                 |
 | CI Manifest Integrity Gate       | pass   | Manifest is `ci-backed` / `ci-evidence-pass` and includes Todo Search, Todo App, aggregate, and boundaries.  |

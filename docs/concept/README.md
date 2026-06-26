@@ -588,8 +588,8 @@ as `ci-evidence-pass` with `validateAllStatus: aggregate-pass`. No required chec
 public-doc cleanup, or promotion change is made.
 
 The workflow now captures Todo Search graph-source `projectionContractStatus` from validate-all output into the CI
-manifest, Step Summary, and uploaded artifact bundle. Manual/PR review of that new observation field remains the next CI
-observation step.
+manifest, Step Summary, and uploaded artifact bundle. Manual run `28218687289` reviewed that capture path as
+`ci-evidence-pass`; PR review of that new observation field remains the next CI observation step.
 
 ## Outline-Only Later-Phase Docs
 
