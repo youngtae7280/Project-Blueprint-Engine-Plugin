@@ -113,6 +113,8 @@ local test inputs and are not part of current `validate --all`. The implemented 
 `examples/invalid/read-model-pilot-marker-missing` prove invalid role tags, missing Core View coverage, and missing
 required pilot marker coverage block validation through focused tests only; they are intentionally absent from
 `examples/read-model-aggregate/read-model-slices.json`.
+Structure-only policy conflict is covered through inline/temp registry normalization tests, not a durable fixture:
+structure-only registry entries must not require `compare`, parity reports, or scoped pilot markers.
 
 ## Execution Modes
 

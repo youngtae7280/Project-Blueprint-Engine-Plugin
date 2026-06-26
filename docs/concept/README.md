@@ -423,8 +423,8 @@ The first durable negative fixture candidate plan is now recorded:
 - [read-model-negative-fixture-candidate-plan.md](read-model-negative-fixture-candidate-plan.md)
 
 The plan narrows first durable candidates to `examples/invalid/read-model-invalid-view-scoped-tags` and
-`examples/invalid/read-model-core-view-missing`, while keeping pilot-marker-missing and structure-only policy conflict as
-later or inline/temp candidates.
+`examples/invalid/read-model-core-view-missing`, then records the missing pilot marker authority-boundary fixture and
+inline/temp structure-only policy conflict coverage.
 
 The first three durable negative fixtures are now present:
 
@@ -436,6 +436,9 @@ They store local invalid read-model fixtures or absence metadata outside `genera
 `viewScopedTags`, missing required Core View coverage, and missing scoped pilot marker each produce blocking validation
 results. The fixtures are not in the validate-all registry, are not run by CI, are not generated Evidence, and do not
 change source authority or promotion state.
+
+Structure-only policy conflict coverage is now inline/temp rather than durable fixture based: focused registry tests
+reject a `structure-only` profile that requires compare/parity/pilot marker artifacts.
 
 The registry storage/location decision surface is now recorded:
 

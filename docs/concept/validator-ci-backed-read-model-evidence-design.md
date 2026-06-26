@@ -292,6 +292,8 @@ The first durable candidate plan is recorded in
 Core View fixtures were selected as the first generic durable candidates, and the missing pilot marker fixture is now
 implemented as the first authority-boundary durable candidate. These fixtures remain outside validator-backed positive
 Evidence reports, CI-backed runs, and source-authority decisions.
+Structure-only policy conflict is covered by inline/temp registry normalization tests rather than a durable fixture, so
+structure-only profiles cannot require parity or pilot marker artifacts in registry metadata.
 
 ## Gate Self-Check
 

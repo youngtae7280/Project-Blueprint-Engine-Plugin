@@ -186,17 +186,16 @@ Use a three-tier storage policy:
 Do not place negative fixtures under `generated/`. Invalid fixtures are test inputs or review examples, not generated
 Evidence outputs.
 
-Recommended first durable candidates, if implementation is later approved:
+Recommended durable candidates:
 
 1. `examples/invalid/read-model-pilot-marker-missing`
 2. `examples/invalid/read-model-invalid-view-scoped-tags`
 3. `examples/invalid/read-model-core-view-missing`
-4. `examples/invalid/read-model-structure-only-policy-conflict`
 
 The first candidate narrowing plan is recorded in
-[read-model-negative-fixture-candidate-plan.md](read-model-negative-fixture-candidate-plan.md). It recommends starting
-with invalid `viewScopedTags` and missing Core View coverage, while keeping pilot-marker-missing and structure-only
-policy conflict as later or inline/temp candidates.
+[read-model-negative-fixture-candidate-plan.md](read-model-negative-fixture-candidate-plan.md). It records invalid
+`viewScopedTags`, missing Core View coverage, and missing pilot marker as implemented local fixtures, while
+structure-only policy conflict is covered by inline/temp registry normalization tests rather than a durable fixture.
 
 The first three durable fixtures are now implemented:
 
@@ -207,6 +206,10 @@ The first three durable fixtures are now implemented:
 They follow this storage decision by staying outside `generated/`, declaring their non-authority boundaries in README
 files, and remaining outside the positive validate-all registry and CI workflow. The pilot marker fixture is
 absence-based and stores only small metadata because the missing marker artifact is the test case.
+
+Structure-only policy conflict remains inline/temp coverage. The registry normalization tests reject structure-only
+entries that require compare/parity/pilot marker artifacts without creating a durable
+`examples/invalid/read-model-structure-only-policy-conflict` fixture.
 
 Recommended cases to keep inline/temp:
 

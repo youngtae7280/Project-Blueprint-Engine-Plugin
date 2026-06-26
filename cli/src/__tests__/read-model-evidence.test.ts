@@ -137,6 +137,21 @@ describe('read-model Evidence builder', () => {
     expect(() => normalizeReadModelSliceRegistry(unknownPolicy)).toThrow(/policyLevel/)
   })
 
+  it('rejects structure-only registry entries that require parity or pilot marker artifacts', async () => {
+    const source = await readRegistryFixtureObject()
+    const structureOnlyConflict = cloneJson(source)
+    structureOnlyConflict.profiles[1].requiredCommands = ['generate', 'compare', 'validate']
+    structureOnlyConflict.profiles[1].parityRequirement.required = true
+    structureOnlyConflict.profiles[1].pilotMarkerRequirement.required = true
+    structureOnlyConflict.profiles[1].requiredArtifacts.parityReport = 'generated/read-model-parity-report.json'
+    structureOnlyConflict.profiles[1].requiredArtifacts.scopedPilotMarker =
+      'generated/scoped-source-authority-pilot-marker.json'
+
+    expect(() => normalizeReadModelSliceRegistry(structureOnlyConflict)).toThrow(
+      /compare for structure-only policy.*parityRequirement\.required.*pilotMarkerRequirement\.required.*parityReport.*scopedPilotMarker/s,
+    )
+  })
+
   it('does not mutate the registry fixture while parsing or planning', async () => {
     const workspace = await createExampleWorkspace()
     const registryPath = join(workspace, 'examples/read-model-aggregate/read-model-slices.json')

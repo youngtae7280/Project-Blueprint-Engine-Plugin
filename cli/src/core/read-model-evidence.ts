@@ -616,6 +616,7 @@ export function normalizeReadModelSliceRegistry(
         if (seenProfileIds.has(profile.profileId)) {
           errors.push(`registry.profiles[${index}].profileId duplicates ${profile.profileId}`)
         }
+        validateReadModelRegistryPolicyConsistency(profile, index, errors)
         seenProfileIds.add(profile.profileId)
         profiles.push(profile)
       }
@@ -646,6 +647,31 @@ export function buildReadModelRegistryCommandPlans(registry: ReadModelSliceRegis
       policyLevel: profile.policyLevel,
       commands: [...profile.requiredCommands],
     }))
+}
+
+function validateReadModelRegistryPolicyConsistency(
+  profile: ReadModelSliceRegistryProfile,
+  index: number,
+  errors: string[],
+): void {
+  const prefix = `registry.profiles[${index}]`
+  if (profile.policyLevel === 'structure-only') {
+    if (profile.requiredCommands.includes('compare')) {
+      errors.push(`${prefix}.requiredCommands must not include compare for structure-only policy`)
+    }
+    if (profile.parityRequirement.required === true) {
+      errors.push(`${prefix}.parityRequirement.required must be false for structure-only policy`)
+    }
+    if (profile.pilotMarkerRequirement.required === true) {
+      errors.push(`${prefix}.pilotMarkerRequirement.required must be false for structure-only policy`)
+    }
+    if ('parityReport' in profile.requiredArtifacts) {
+      errors.push(`${prefix}.requiredArtifacts.parityReport is not allowed for structure-only policy`)
+    }
+    if ('scopedPilotMarker' in profile.requiredArtifacts) {
+      errors.push(`${prefix}.requiredArtifacts.scopedPilotMarker is not allowed for structure-only policy`)
+    }
+  }
 }
 
 export async function generateReadModelEvidence(root: string, slice: string): Promise<GenerateResult> {

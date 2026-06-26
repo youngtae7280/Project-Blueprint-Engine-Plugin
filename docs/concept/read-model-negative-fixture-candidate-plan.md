@@ -281,17 +281,20 @@ Current implementation status:
   `pilot-marker-exists` result while parity remains `comparison-pass`.
 - None of these fixtures is included in `examples/read-model-aggregate/read-model-slices.json`, `validate --all`, or CI.
 
-Keep these candidates inline/temp for now:
+Inline/temp coverage now established:
 
 - `structure-only policy conflict`
 
 Rationale:
 
 - structure-only policy conflict is better expressed as an inline/temp registry mutation until policy fields stabilize
+- the registry normalization test now rejects structure-only entries that require `compare`, parity, or pilot marker
+  artifacts
+- no durable `examples/invalid/read-model-structure-only-policy-conflict` fixture is needed yet
 
 ## Suggested Implementation Sequence
 
-For each remaining durable fixture implementation:
+For any future durable fixture implementation:
 
 1. Add fixture README/boundary marker for each selected durable fixture.
 2. Add minimal invalid artifact(s) only; avoid copying a full generated slice unless necessary.
@@ -307,7 +310,8 @@ This candidate plan and the first three implemented fixtures do not:
 
 - create additional `examples/invalid/read-model-*` fixtures beyond the approved invalid tag and missing Core View
   fixtures plus the missing pilot marker fixture
-- modify parser or CLI behavior
+- create a durable structure-only policy conflict fixture
+- modify CLI command behavior
 - modify `.github/workflows/read-model-evidence.yml`
 - regenerate generated artifacts
 - create a PR
@@ -334,6 +338,7 @@ This candidate plan and the first three implemented fixtures do not:
 
 ## Final Statement
 
-This document narrows the first durable negative fixture candidates and records that the invalid `viewScopedTags`,
-missing Core View, and missing pilot marker fixtures are now implemented as local focused test fixtures. It does not
-implement workflow changes, enforcement, source authority expansion, or promotion.
+This document narrows the first durable negative fixture candidates, records that the invalid `viewScopedTags`, missing
+Core View, and missing pilot marker fixtures are implemented as local focused test fixtures, and records structure-only
+policy conflict as inline/temp registry coverage. It does not implement workflow changes, enforcement, source authority
+expansion, or promotion.

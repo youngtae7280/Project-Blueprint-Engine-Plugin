@@ -165,6 +165,8 @@ artifacts to produce negative cases.
 The candidate plan narrows the first durable fixtures to invalid `viewScopedTags`, missing Core View coverage, and
 missing pilot marker coverage. These fixtures are durable and local-test-only; they are not part of the validate-all
 registry or CI workflow.
+Structure-only policy conflict is covered as inline/temp registry normalization coverage: a structure-only profile that
+requires `compare`, parity, or pilot marker artifacts is rejected without adding a durable invalid fixture.
 
 | Category                                      | Expected result                                                                  |
 | --------------------------------------------- | -------------------------------------------------------------------------------- |
@@ -178,7 +180,7 @@ registry or CI workflow.
 | Missing Core View coverage                    | Blocking for profiles that require 7 Core View coverage.                         |
 | Parity required but missing comparison report | Blocking for parity-backed or pilot-marker-backed profiles.                      |
 | Pilot marker required but missing marker      | Blocking for pilot-marker-backed profiles.                                       |
-| Structure-only profile requiring parity/pilot | Blocking policy confusion; structure-only must remain lightweight.               |
+| Structure-only profile requiring parity/pilot | Blocking policy confusion; covered by inline/temp registry normalization tests.  |
 | Aggregate input malformed                     | Aggregate blocked; do not regenerate silently.                                   |
 | Cross-slice dependency leakage                | Blocking: one slice validation depends on another slice's generated directory.   |
 
