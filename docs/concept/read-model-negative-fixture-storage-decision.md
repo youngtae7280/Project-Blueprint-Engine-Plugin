@@ -1,12 +1,12 @@
 # Read-Model Negative Fixture Storage Decision
 
-Status: read-model-negative-fixture-storage-decision / decision-surface / design-only /
-no-fixture-implementation / non-enforcing
+Status: read-model-negative-fixture-storage-decision / decision-surface / first-fixture-implemented /
+non-enforcing
 
 ## Purpose
 
-This document decides how future negative read-model fixtures should be stored before creating any durable invalid
-fixtures.
+This document decides how negative read-model fixtures should be stored. It originally preceded durable invalid fixture
+creation; the first invalid `viewScopedTags` fixture is now implemented under this policy.
 
 The current baseline already has:
 
@@ -198,6 +198,10 @@ The first candidate narrowing plan is recorded in
 with invalid `viewScopedTags` and missing Core View coverage, while keeping pilot-marker-missing and structure-only
 policy conflict as later or inline/temp candidates.
 
+The first durable fixture is now implemented at `examples/invalid/read-model-invalid-view-scoped-tags`. It follows this
+storage decision by staying outside `generated/`, declaring its non-authority boundary in a README, and remaining outside
+the positive validate-all registry and CI workflow.
+
 Recommended cases to keep inline/temp:
 
 - duplicate profile ID
@@ -291,16 +295,16 @@ behavior-level validate-all failures.
 
 ## Gate Self-Check
 
-| Gate                               | Result | Notes                                                                  |
-| ---------------------------------- | ------ | ---------------------------------------------------------------------- |
-| Design-Only Gate                   | PASS   | No fixture file, code, test, workflow, or generated artifact is added. |
-| Negative Fixture Boundary Gate     | PASS   | Invalid fixtures are test inputs, not source or generated Evidence.    |
-| Positive Fixture Preservation Gate | PASS   | Positive Todo Search and Todo App fixtures must not be mutated.        |
-| Validate-All Boundary Gate         | PASS   | Current validate-all positive workflow remains unchanged.              |
-| Non-CI-Enforcement Gate            | PASS   | Invalid fixture execution in CI remains future-only.                   |
-| Source Authority Boundary Gate     | PASS   | Fixture storage does not alter source authority.                       |
-| Non-Full-Promotion Gate            | PASS   | Full Graph-source promotion remains separate.                          |
-| User Approval Boundary Gate        | PASS   | Negative fixture policy does not replace user acceptance.              |
+| Gate                               | Result | Notes                                                                                |
+| ---------------------------------- | ------ | ------------------------------------------------------------------------------------ |
+| Storage Decision Gate              | PASS   | The decision keeps invalid fixtures outside `generated/` and separates them from CI. |
+| Negative Fixture Boundary Gate     | PASS   | Invalid fixtures are test inputs, not source or generated Evidence.                  |
+| Positive Fixture Preservation Gate | PASS   | Positive Todo Search and Todo App fixtures must not be mutated.                      |
+| Validate-All Boundary Gate         | PASS   | Current validate-all positive workflow remains unchanged.                            |
+| Non-CI-Enforcement Gate            | PASS   | Invalid fixture execution in CI remains future-only.                                 |
+| Source Authority Boundary Gate     | PASS   | Fixture storage does not alter source authority.                                     |
+| Non-Full-Promotion Gate            | PASS   | Full Graph-source promotion remains separate.                                        |
+| User Approval Boundary Gate        | PASS   | Negative fixture policy does not replace user acceptance.                            |
 
 ## Final Statement
 

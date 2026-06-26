@@ -1,12 +1,13 @@
 # Read-Model Negative Fixture Candidate Plan
 
-Status: read-model-negative-fixture-candidate-plan / candidate-plan / design-only /
-no-fixture-implementation
+Status: read-model-negative-fixture-candidate-plan / candidate-plan / first-fixture-implemented /
+remaining-fixtures-future
 
 ## Purpose
 
-This document narrows the first durable negative read-model fixture candidates before any invalid fixture files, tests,
-or CLI behavior are implemented.
+This document narrows the first durable negative read-model fixture candidates and records current implementation state.
+It originally preceded invalid fixture files, tests, or CLI behavior. The invalid `viewScopedTags` fixture is now
+implemented as local focused test input; the missing Core View fixture remains future work.
 
 It follows the storage policy in
 [read-model-negative-fixture-storage-decision.md](read-model-negative-fixture-storage-decision.md), which recommends:
@@ -260,6 +261,15 @@ Rationale:
 - neither requires promoting Todo App PBE Run or expanding source authority
 - they can be tested locally without changing CI workflow behavior
 
+Current implementation status:
+
+- `examples/invalid/read-model-invalid-view-scoped-tags` is implemented as the first durable negative fixture.
+- The fixture stores invalid local test input outside `generated/`.
+- A focused test injects the fixture into a temp Todo App PBE Run validation workspace and expects a blocking
+  `view-scoped-tags-allowed` result.
+- The fixture is not included in `examples/read-model-aggregate/read-model-slices.json`, `validate --all`, or CI.
+- `examples/invalid/read-model-core-view-missing` remains the next durable candidate.
+
 Keep these candidates inline/temp for now:
 
 - `pilot marker required but missing marker`
@@ -272,7 +282,7 @@ Rationale:
 
 ## Suggested Implementation Sequence
 
-If implementation is later approved:
+For each remaining durable fixture implementation:
 
 1. Add fixture README/boundary marker for each selected durable fixture.
 2. Add minimal invalid artifact(s) only; avoid copying a full generated slice unless necessary.
@@ -284,10 +294,10 @@ If implementation is later approved:
 
 ## Non-Scope
 
-This candidate plan does not:
+This candidate plan and the first implemented fixture do not:
 
-- create `examples/invalid/read-model-*` fixtures
-- modify parser, CLI, or tests
+- create additional `examples/invalid/read-model-*` fixtures beyond the approved invalid `viewScopedTags` fixture
+- modify parser or CLI behavior
 - modify `.github/workflows/read-model-evidence.yml`
 - regenerate generated artifacts
 - create a PR
@@ -302,17 +312,18 @@ This candidate plan does not:
 
 ## Gate Self-Check
 
-| Gate                               | Result | Notes                                                                   |
-| ---------------------------------- | ------ | ----------------------------------------------------------------------- |
-| Design-Only Gate                   | PASS   | No fixture, code, test, workflow, or generated artifact is created.     |
-| Candidate Narrowing Gate           | PASS   | First durable candidates are narrowed to invalid tags and missing view. |
-| Positive Fixture Preservation Gate | PASS   | Positive Todo Search and Todo App fixtures remain untouched.            |
-| CI Boundary Gate                   | PASS   | Invalid fixtures remain outside current manual/PR CI workflow.          |
-| Source Authority Boundary Gate     | PASS   | Fixture planning does not alter source authority.                       |
-| Non-Full-Promotion Gate            | PASS   | Full Graph-source promotion remains separate.                           |
-| User Approval Boundary Gate        | PASS   | This plan does not replace user approval or acceptance.                 |
+| Gate                               | Result | Notes                                                                     |
+| ---------------------------------- | ------ | ------------------------------------------------------------------------- |
+| Fixture Boundary Gate              | PASS   | The invalid tag fixture is local test input only, not generated Evidence. |
+| Candidate Narrowing Gate           | PASS   | First durable candidates are narrowed to invalid tags and missing view.   |
+| Positive Fixture Preservation Gate | PASS   | Positive Todo Search and Todo App fixtures remain untouched.              |
+| CI Boundary Gate                   | PASS   | Invalid fixtures remain outside current manual/PR CI workflow.            |
+| Source Authority Boundary Gate     | PASS   | Fixture planning does not alter source authority.                         |
+| Non-Full-Promotion Gate            | PASS   | Full Graph-source promotion remains separate.                             |
+| User Approval Boundary Gate        | PASS   | This plan does not replace user approval or acceptance.                   |
 
 ## Final Statement
 
-This document narrows the first durable negative fixture candidates. It does not implement fixtures, tests, workflow
-changes, enforcement, source authority expansion, or promotion.
+This document narrows the first durable negative fixture candidates and records that the invalid `viewScopedTags`
+fixture is now implemented as a local focused test fixture. It does not implement the missing Core View fixture,
+workflow changes, enforcement, source authority expansion, or promotion.

@@ -424,7 +424,16 @@ The first durable negative fixture candidate plan is now recorded:
 
 The plan narrows first durable candidates to `examples/invalid/read-model-invalid-view-scoped-tags` and
 `examples/invalid/read-model-core-view-missing`, while keeping pilot-marker-missing and structure-only policy conflict as
-later or inline/temp candidates. It does not create fixtures, tests, code, workflow changes, or generated artifacts.
+later or inline/temp candidates.
+
+The first durable negative fixture is now present:
+
+- `examples/invalid/read-model-invalid-view-scoped-tags`
+
+It stores a local invalid read-model fixture outside `generated/` and a focused test proves that invalid
+`viewScopedTags` produces a blocking validation result. The fixture is not in the validate-all registry, is not run by
+CI, is not generated Evidence, and does not change source authority or promotion state. The missing Core View durable
+fixture remains a future candidate.
 
 The registry storage/location decision surface is now recorded:
 

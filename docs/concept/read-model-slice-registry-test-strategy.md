@@ -32,7 +32,9 @@ failures inline/temp first, recommends temp workspace copies for mutation and le
 `examples/invalid/read-model-*` fixtures for stable behavior-level validate-all failures.
 The first durable candidate plan is recorded in
 [read-model-negative-fixture-candidate-plan.md](read-model-negative-fixture-candidate-plan.md); it selects invalid
-`viewScopedTags` and missing Core View coverage as the first candidate pair without implementing them.
+`viewScopedTags` and missing Core View coverage as the first candidate pair. The invalid `viewScopedTags` fixture is now
+implemented at `examples/invalid/read-model-invalid-view-scoped-tags` as local focused test input; missing Core View
+coverage remains a future durable candidate.
 
 ## Relationship To Validate-All Contract
 
@@ -158,7 +160,8 @@ Negative fixtures should be lightweight and isolated. The storage policy is now 
 failures inline/temp, use temp workspace copies for mutation and leakage cases, and add durable
 `examples/invalid/read-model-*` fixtures only for stable behavior-level failures. Do not mutate current positive slice
 artifacts to produce negative cases.
-The candidate plan narrows the first durable fixtures to invalid `viewScopedTags` and missing Core View coverage.
+The candidate plan narrows the first durable fixtures to invalid `viewScopedTags` and missing Core View coverage. The
+invalid tag fixture is now durable and local-test-only; it is not part of the validate-all registry or CI workflow.
 
 | Category                                      | Expected result                                                                  |
 | --------------------------------------------- | -------------------------------------------------------------------------------- |

@@ -108,7 +108,9 @@ local test inputs only; current `validate --all` and CI runs remain positive-pro
 design explicitly includes invalid fixtures.
 The first durable candidate plan is recorded in
 [read-model-negative-fixture-candidate-plan.md](read-model-negative-fixture-candidate-plan.md); selected candidates remain
-future local test inputs and are not part of current `validate --all`.
+local test inputs and are not part of current `validate --all`. The first implemented fixture,
+`examples/invalid/read-model-invalid-view-scoped-tags`, proves invalid role tags block validation through focused tests
+only; it is intentionally absent from `examples/read-model-aggregate/read-model-slices.json`.
 
 ## Execution Modes
 
