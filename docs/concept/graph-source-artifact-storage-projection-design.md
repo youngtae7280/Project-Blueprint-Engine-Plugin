@@ -181,6 +181,16 @@ The next decision surface is now recorded in
 records the local-first bounded non-authority enrollment into positive validate-all. Manual and PR CI review of the new
 Todo App positive projection status remains pending.
 
+Todo App structure-only generation now uses the same candidate source records for generated read-model output:
+
+```bash
+pbe graph read-model generate --slice examples/valid/todo-app-pbe-run
+```
+
+The generated read-model preserves 22 nodes, 38 edges, and 7 Core Views, records `readModelSourceMode:
+graph-source-backed`, and keeps `graphSourceAuthorityStatus: non-authority-structure-only`. This is still a
+structure-only candidate-backed generation path, not Todo App source-authority promotion.
+
 ## Initial Implementation Sequence
 
 Recommended sequence:

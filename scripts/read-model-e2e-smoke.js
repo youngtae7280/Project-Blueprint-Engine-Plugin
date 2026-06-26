@@ -121,6 +121,17 @@ try {
   assertEqual(todoAppGenerate.edgeCount, 38, 'Todo App generated edge count')
 
   const todoAppGenerated = readJson('examples/valid/todo-app-pbe-run/generated/generated-read-model.json')
+  assertEqual(todoAppGenerated.metadata.readModelSourceMode, 'graph-source-backed', 'Todo App source mode')
+  assertEqual(
+    todoAppGenerated.metadata.graphSourceArtifact,
+    'examples/valid/todo-app-pbe-run/graph-source-candidate.json',
+    'Todo App graph source candidate artifact',
+  )
+  assertEqual(
+    todoAppGenerated.metadata.graphSourceAuthorityStatus,
+    'non-authority-structure-only',
+    'Todo App graph source authority status',
+  )
   assertEqual(todoAppGenerated.coreViewCoverage.length, 7, 'Todo App Core View count')
 
   const todoAppValidate = runCli([
@@ -194,6 +205,8 @@ try {
     },
     todoApp: {
       policyLevel: 'structure-only',
+      sourceMode: todoAppGenerated.metadata.readModelSourceMode,
+      authorityStatus: todoAppGenerated.metadata.graphSourceAuthorityStatus,
       nodes: todoAppGenerate.nodeCount,
       edges: todoAppGenerate.edgeCount,
       coreViews: todoAppGenerated.coreViewCoverage.length,

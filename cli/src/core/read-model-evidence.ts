@@ -430,6 +430,7 @@ export interface SliceReadModelConfig {
     compatibilityControlNode?: string
     compatibilityEvidenceExceptions?: string
     graphSource?: string
+    graphSourceCandidate?: string
     workGraph?: string
     sourceOfTruthMatrix?: string
     evidenceOutput?: string
@@ -639,6 +640,7 @@ export const todoAppPbeRunStructureOnlyProfile: SliceReadModelConfig = {
     sourceOfTruthMatrix: '.pbe/blueprint/source-of-truth-matrix.md',
     evidenceOutput: '.pbe/evidence/test-results/todo-add.txt',
     pbeState: '.pbe/blueprint/pbe-state.json',
+    graphSourceCandidate: 'graph-source-candidate.json',
   },
   sourceArtifactRelativePaths: [
     '.pbe/tree/product-tree.json',
@@ -655,6 +657,7 @@ export const todoAppPbeRunStructureOnlyProfile: SliceReadModelConfig = {
     '.pbe/blueprint/source-of-truth-matrix.md',
     '.pbe/evidence/test-results/todo-add.txt',
     '.pbe/blueprint/pbe-state.json',
+    'graph-source-candidate.json',
   ],
   retainedWarnings: [
     {
@@ -1665,6 +1668,33 @@ async function buildGeneratedReadModelRecords(
         graphSourceProjectionRole: projection.metadata.artifactRole,
         graphSourcePromotionScope: projection.metadata.promotionScope,
         graphSourceProjectionBoundary: projection.metadata.projectionBoundary,
+        fallbackReferences: cloneJson(projection.fallbackReferences),
+      },
+    }
+  }
+
+  if (profile.policyLevel === 'structure-only' && profile.artifacts.graphSourceCandidate) {
+    const graphSourceCandidatePath = `${profile.supportedSlice}/${profile.artifacts.graphSourceCandidate}`
+    const graphSourceCandidate = await loadStructureOnlyGraphSourceCandidateArtifact(root, graphSourceCandidatePath)
+    const projection = projectStructureOnlyGraphSourceCandidateReadModel(
+      graphSourceCandidate,
+      graphSourceCandidatePath,
+    ).projection
+    return {
+      nodes: cloneJson(projection.nodes),
+      edges: cloneJson(projection.edges),
+      coreViewCoverage: cloneJson(projection.coreViewCoverage),
+      metadata: {
+        readModelSourceMode: 'graph-source-backed',
+        graphSourceArtifact: graphSourceCandidatePath,
+        graphSourceProjectionRole: projection.metadata.artifactRole,
+        graphSourceCandidateStatus: graphSourceCandidate.status,
+        graphSourceCandidateScope: graphSourceCandidate.candidateScope,
+        graphSourceCandidatePolicyLevel: graphSourceCandidate.policyLevel,
+        graphSourceCandidateBoundary: graphSourceCandidate.sourceAuthorityBoundary,
+        graphSourceProjectionBoundary: projection.metadata.projectionBoundary,
+        graphSourcePromotionStatus: 'not-promoted',
+        graphSourceAuthorityStatus: 'non-authority-structure-only',
         fallbackReferences: cloneJson(projection.fallbackReferences),
       },
     }

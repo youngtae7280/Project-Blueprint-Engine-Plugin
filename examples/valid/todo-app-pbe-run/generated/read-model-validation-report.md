@@ -6,9 +6,9 @@ Evidence level: validator-backed
 
 ## Run Identity
 
-- Validated at: 2026-06-26T01:04:20.551Z
+- Validated at: 2026-06-26T07:43:03.951Z
 - Command identity: `pbe graph read-model validate --slice examples/valid/todo-app-pbe-run`
-- Source commit: 79e1179
+- Source commit: 329d1c2
 - Source slice: `examples/valid/todo-app-pbe-run`
 - Profile id: `todo-app-pbe-run-structure-only`
 - Source layout: canonical-pbe
@@ -33,7 +33,7 @@ pilot, require parity, introduce CI enforcement, retire .pbe artifacts, or repla
 - Parity requirement: not-required (not-required-for-structure-only)
 - Pilot marker requirement: not-required (not-required-for-structure-only)
 - Runtime fixture requirement: attached-evidence-only
-- Fallback/reference count: 14
+- Fallback/reference count: 15
 - Missing fallback/reference count: 0
 
 Validation uses the target slice profile, generated artifacts, and declared source inputs only. It must not depend on
@@ -92,6 +92,7 @@ declared by this profile.
 - examples/valid/todo-app-pbe-run/.pbe/blueprint/source-of-truth-matrix.md: present
 - examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt: present
 - examples/valid/todo-app-pbe-run/.pbe/blueprint/pbe-state.json: present
+- examples/valid/todo-app-pbe-run/graph-source-candidate.json: present
 
 ## Recommended Next Decision Surface
 

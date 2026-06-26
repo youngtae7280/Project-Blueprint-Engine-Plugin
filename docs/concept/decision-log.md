@@ -565,6 +565,12 @@ DEC-121 does not supersede DEC-097 through DEC-120. It records PR informational 
 the same E2E smoke, projection, validate-all, and candidate-observation statuses without adding enforcement, repo-wide
 promotion, tree retirement, or Todo App source-authority promotion.
 
+DEC-122 does not supersede DEC-097 through DEC-121. It makes Todo App PBE Run structure-only generation
+graph-source-candidate-backed locally: `graph read-model generate --slice examples/valid/todo-app-pbe-run` reads
+`graph-source-candidate.json`, preserves 22 nodes / 38 edges / 7 Core Views and validation pass, and records
+`non-authority-structure-only` metadata. Todo App remains structure-only, candidate/non-promotional, not
+source-authority-bearing, and not repo-wide promotion.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

@@ -1,9 +1,9 @@
 {
   "version": "0.1.0-read-model-validation-report",
   "metadata": {
-    "validatedAt": "2026-06-26T01:04:20.551Z",
+    "validatedAt": "2026-06-26T07:43:03.951Z",
     "commandIdentity": "pbe graph read-model validate --slice examples/valid/todo-app-pbe-run",
-    "sourceCommit": "79e1179",
+    "sourceCommit": "329d1c2",
     "sourceSlice": "examples/valid/todo-app-pbe-run",
     "profileId": "todo-app-pbe-run-structure-only",
     "sliceProfile": "todo-app-pbe-run-structure-only",
@@ -35,7 +35,7 @@
       "reason": "Structure-only validation does not require a runnable runtime fixture; attached evidence text may be referenced when present."
     },
     "retainedWarningCount": 2,
-    "fallbackReferenceCount": 14
+    "fallbackReferenceCount": 15
   },
   "status": "validation-pass",
   "evidenceLevel": "validator-backed",
@@ -208,7 +208,8 @@
     { "path": "examples/valid/todo-app-pbe-run/.pbe/blueprint/work-graph.json", "status": "present" },
     { "path": "examples/valid/todo-app-pbe-run/.pbe/blueprint/source-of-truth-matrix.md", "status": "present" },
     { "path": "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt", "status": "present" },
-    { "path": "examples/valid/todo-app-pbe-run/.pbe/blueprint/pbe-state.json", "status": "present" }
+    { "path": "examples/valid/todo-app-pbe-run/.pbe/blueprint/pbe-state.json", "status": "present" },
+    { "path": "examples/valid/todo-app-pbe-run/graph-source-candidate.json", "status": "present" }
   ],
   "sliceValidationContract": {
     "version": "0.1.0-per-slice-validation-report-independence",
@@ -258,7 +259,7 @@
         "summary": "The fixture contains attached test-output Evidence but no runnable app/runtime fixture is required for structure-only validation."
       }
     ],
-    "fallbackReferenceSummary": { "count": 14, "missingCount": 0 },
+    "fallbackReferenceSummary": { "count": 15, "missingCount": 0 },
     "sourceAuthorityBoundary": "Validator-backed Evidence checks structure-only generated read-model outputs for this canonical .pbe fixture. It does not change source authority.",
     "nonPromotionStatement": "Structure-only validation pass is Evidence only. It does not promote Maintainability Graph, create a source-authority pilot, require parity, introduce CI enforcement, retire .pbe artifacts, or replace user approval.",
     "crossSliceDependencyRule": "Validation uses the target slice profile, generated artifacts, and declared source inputs only. It must not depend on another slice generated directory, manual parity artifact, pilot marker, or runtime fixture unless that artifact is declared by this profile."

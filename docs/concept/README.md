@@ -509,6 +509,11 @@ Todo App reports `candidate-projection-contract-pass`, Todo Search remains `proj
 PR #7 run `28223010185` reviewed the same fields in `pull_request-informational` mode, then the temporary PR was closed
 without merge and the smoke branch was deleted.
 
+Todo App PBE Run generation is now graph-source-candidate-backed for the structure-only profile: `graph read-model
+generate --slice examples/valid/todo-app-pbe-run` reads `graph-source-candidate.json` and emits `readModelSourceMode:
+graph-source-backed` with `graphSourceAuthorityStatus: non-authority-structure-only`. This remains non-promotional and
+does not make Todo App source-authority-bearing.
+
 The local read-model E2E smoke is now recorded:
 
 - [read-model-e2e-smoke.md](read-model-e2e-smoke.md)

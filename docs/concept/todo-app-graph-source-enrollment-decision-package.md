@@ -1,6 +1,6 @@
 # Todo App Graph-Source Enrollment Decision Package
 
-Status: bounded-non-authority-enrollment-reviewed / manual-and-pr-ci-reviewed / no-source-authority-promotion
+Status: bounded-non-authority-enrollment-reviewed / graph-source-backed-structure-only-generation / no-source-authority-promotion
 
 ## Purpose
 
@@ -12,6 +12,11 @@ non-authority structure-only projection contract.
 
 This document does not approve source authority, enforcement, or Todo App promotion. Manual and PR workflow reviews are
 complete for the new positive validate-all projection status.
+
+The next bounded local branch is also implemented: Todo App PBE Run structure-only generation now reads
+`graph-source-candidate.json` for generated read-model records while preserving `structure-only`,
+`candidate-not-promoted`, and `non-authority-structure-only` metadata. Manual/PR CI review of that generated source mode
+is still a later observation step.
 
 ## Current Evidence
 
@@ -26,6 +31,7 @@ complete for the new positive validate-all projection status.
 | Positive validate-all status | Todo App projection reports `candidate-projection-contract-pass`; aggregate remains `aggregate-pass` |
 | Manual CI review             | Run `28222731063`, `workflow_dispatch`, `ci-evidence-pass`, Todo App positive projection pass        |
 | PR informational review      | PR #7 run `28223010185`, `pull_request-informational`, Todo App positive projection pass             |
+| Generation source mode       | Local generate records `readModelSourceMode: graph-source-backed` and `non-authority-structure-only` |
 | Current policy               | Todo App PBE Run remains `structure-only`, not parity-backed, not pilot-marker-backed, not source    |
 
 ## Decision Options
@@ -56,6 +62,10 @@ local implementation:
 5. Preserves `aggregate-pass` semantics only if the structure-only candidate projection contract passes.
 6. Adds focused pass and failure tests before CI review.
 7. Has manual and PR CI review complete for the positive projection status.
+
+The follow-up generation branch now reuses the candidate source records for `graph read-model generate --slice
+examples/valid/todo-app-pbe-run`. This keeps the candidate graph source outside source authority while proving that the
+structure-only generated read-model can be backed by the candidate records.
 
 ## Required Boundaries For Enrollment
 

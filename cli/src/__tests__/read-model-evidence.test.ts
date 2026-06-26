@@ -886,14 +886,35 @@ describe('read-model Evidence builder', () => {
     const generatedJson = JSON.parse(await readFile(generated.generatedJsonPath, 'utf8')) as {
       nodes: unknown[]
       edges: unknown[]
-      metadata: { slicePolicyLevel?: string; sliceProfile?: string }
+      metadata: {
+        slicePolicyLevel?: string
+        sliceProfile?: string
+        readModelSourceMode?: string
+        graphSourceArtifact?: string
+        graphSourceProjectionRole?: string
+        graphSourcePromotionStatus?: string
+        graphSourceAuthorityStatus?: string
+        graphSourceCandidatePolicyLevel?: string
+      }
       coreViewCoverage: Array<{ name: string; viewScopedTags?: string[] }>
+      sourceInputs: Array<{ relativePath: string }>
       sourceAuthorityBoundary: string
       nonPromotionStatement: string
     }
 
     expect(generatedJson.metadata.sliceProfile).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
     expect(generatedJson.metadata.slicePolicyLevel).toBe('structure-only')
+    expect(generatedJson.metadata.readModelSourceMode).toBe('graph-source-backed')
+    expect(generatedJson.metadata.graphSourceArtifact).toBe(
+      'examples/valid/todo-app-pbe-run/graph-source-candidate.json',
+    )
+    expect(generatedJson.metadata.graphSourceProjectionRole).toBe('candidate_graph_source_read_model_projection')
+    expect(generatedJson.metadata.graphSourcePromotionStatus).toBe('not-promoted')
+    expect(generatedJson.metadata.graphSourceAuthorityStatus).toBe('non-authority-structure-only')
+    expect(generatedJson.metadata.graphSourceCandidatePolicyLevel).toBe('structure-only')
+    expect(generatedJson.sourceInputs.map((entry) => entry.relativePath)).toContain(
+      'examples/valid/todo-app-pbe-run/graph-source-candidate.json',
+    )
     expect(generatedJson.nodes).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes)
     expect(generatedJson.edges).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.edges)
     expect(generatedJson.coreViewCoverage.map((entry) => entry.name)).toEqual(coreViews)
@@ -946,6 +967,46 @@ describe('read-model Evidence builder', () => {
       policyLevel: 'structure-only',
     })
     expect(report.sourceAuthorityBoundary).toContain('structure-only')
+  })
+
+  it('uses Todo App graph-source candidate records for structure-only generated read-model output', async () => {
+    const workspace = await createExampleWorkspace()
+    const graphSourcePath = join(workspace, 'examples/valid/todo-app-pbe-run/graph-source-candidate.json')
+    const graphSource = JSON.parse(await readFile(graphSourcePath, 'utf8')) as {
+      sourceRecords: { nodes: Array<{ id: string; title: string }> }
+    }
+    const targetNode = graphSource.sourceRecords.nodes.find((entry) => entry.id === 'PT-1')
+    expect(targetNode).toBeDefined()
+    targetNode!.title = 'Todo App candidate graph source backed smoke title'
+    await writeFile(graphSourcePath, JSON.stringify(graphSource, null, 2))
+
+    const generated = await generateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    const generatedJson = JSON.parse(await readFile(generated.generatedJsonPath, 'utf8')) as {
+      nodes: Array<{ id: string; title: string }>
+      edges: unknown[]
+      coreViewCoverage: unknown[]
+      metadata: {
+        readModelSourceMode?: string
+        graphSourceArtifact?: string
+        graphSourceAuthorityStatus?: string
+      }
+      sourceAuthorityBoundary: string
+      nonPromotionStatement: string
+    }
+
+    expect(generatedJson.metadata.readModelSourceMode).toBe('graph-source-backed')
+    expect(generatedJson.metadata.graphSourceArtifact).toBe(
+      'examples/valid/todo-app-pbe-run/graph-source-candidate.json',
+    )
+    expect(generatedJson.metadata.graphSourceAuthorityStatus).toBe('non-authority-structure-only')
+    expect(generatedJson.nodes.find((entry) => entry.id === 'PT-1')?.title).toBe(
+      'Todo App candidate graph source backed smoke title',
+    )
+    expect(generatedJson.nodes).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes)
+    expect(generatedJson.edges).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.edges)
+    expect(generatedJson.coreViewCoverage).toHaveLength(coreViews.length)
+    expect(generatedJson.sourceAuthorityBoundary).toContain('structure-only')
+    expect(generatedJson.nonPromotionStatement).toContain('does not change source authority')
   })
 
   it('validates the structure-only fixture without Todo Search generated, manual parity, or pilot marker artifacts', async () => {
