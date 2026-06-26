@@ -543,6 +543,12 @@ non-authority projection-contract enrollment in PR #7 run `28223010185`. The smo
 branch was deleted; no workflow behavior change, source authority expansion, promotion, enforcement, required check, or
 tree retirement is introduced.
 
+DEC-118 does not supersede DEC-097 through DEC-117. It adds local `npm run test:read-model:e2e` dogfood coverage for the
+mixed Graph-source transition in a temporary workspace. The smoke checks Todo Search graph-source-backed
+generate/compare/validate/projection, Todo App structure-only generate/validate/non-authority projection, validate-all
+aggregate pass, and separate candidate observation without CI enforcement, required checks, repo-wide promotion, tree
+retirement, or Todo App source-authority promotion.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

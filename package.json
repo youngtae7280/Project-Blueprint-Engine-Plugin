@@ -16,6 +16,7 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:examples": "npm run build:cli && node scripts/test-examples.js",
+    "test:read-model:e2e": "npm run build:cli && node scripts/read-model-e2e-smoke.js",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

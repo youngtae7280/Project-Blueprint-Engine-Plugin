@@ -509,6 +509,14 @@ Todo App reports `candidate-projection-contract-pass`, Todo Search remains `proj
 PR #7 run `28223010185` reviewed the same fields in `pull_request-informational` mode, then the temporary PR was closed
 without merge and the smoke branch was deleted.
 
+The local read-model E2E smoke is now recorded:
+
+- [read-model-e2e-smoke.md](read-model-e2e-smoke.md)
+
+`npm run test:read-model:e2e` dogfoods the current mixed Graph-source flow in a temporary workspace: Todo Search
+graph-source-backed generation/parity/validation/projection, Todo App structure-only generation/validation/non-authority
+projection contract, validate-all aggregate pass, and separate candidate observation.
+
 The public-doc cleanup or waiver decision package is now recorded:
 
 - [public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md)
