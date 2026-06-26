@@ -80,8 +80,9 @@ This matrix is a design surface for review. It is not an approved promotion matr
 
 1. Keep the current bounded Todo Search scoped pilot active under observation.
 2. Define broader candidate source boundaries using the matrix above, including explicit source/projection/fallback roles.
-3. Prepare a concrete rollback/fallback plan for the broader candidate scope, including trigger categories, precedence,
-   snapshots, recovery paths, and compatibility-retirement conditions.
+3. Use [source-authority-rollback-fallback-plan.md](source-authority-rollback-fallback-plan.md) as the concrete
+   rollback/fallback review input for trigger categories, precedence, snapshots, recovery paths, and
+   compatibility-retirement conditions.
 4. Prepare a promotion decision package that shows Evidence, warnings, conflicts, public-doc cleanup status, enforcement
    status, and user approval choices.
 5. Only after explicit user approval, execute a scoped or broader authority change with source, projection, fallback,
@@ -95,7 +96,7 @@ This matrix is a design surface for review. It is not an approved promotion matr
 | Stale generated Evidence                 | Keep freshness/sourceCommit visible and block hidden promotion from stale reports.                                       |
 | Compatibility view confusion             | Label compatibility views, task-card views, generated read-models, and public docs as non-authoritative unless approved. |
 | Acceptance/user approval boundary        | Preserve Acceptance Tree and user approval as user-controlled; CI/generation cannot self-accept.                         |
-| Rollback/fallback requirements           | Define snapshots, fallback precedence, rollback triggers, and compatibility-retirement conditions before execution.      |
+| Rollback/fallback requirements           | Review the concrete rollback/fallback plan before execution; implementation and approval remain separate.                |
 | Todo App PBE Run structure-only status   | Do not treat the second profile as source-authority-bearing without separate parity/pilot/authority artifacts.           |
 | Invalid fixture local-only policy        | Keep negative fixtures local-only unless a separate CI invalid-fixture mode is approved.                                 |
 | Enforcement ambiguity                    | Keep CI informational/non-enforcing unless required checks and branch protection are explicitly approved.                |
@@ -117,17 +118,25 @@ This package does not:
 - promote Todo App PBE Run beyond `structure-only`
 - replace user acceptance authority
 
+## Related Rollback / Fallback Plan
+
+The concrete rollback/fallback plan is recorded in
+[source-authority-rollback-fallback-plan.md](source-authority-rollback-fallback-plan.md). It defines fallback precedence,
+rollback triggers, trigger-specific actions, snapshot/reference requirements, and compatibility-retirement guardrails.
+It does not execute rollback, expand source authority, approve promotion, or retire artifacts.
+
 ## Recommended Next Decision Surface
 
 Recommended next step:
 
 ```text
-Prepare concrete rollback/fallback plan for the candidate broader authority scope.
+Prepare broader Graph-source promotion decision package.
 ```
 
 Rationale:
 
 - public-doc cleanup batches A/B/C/D are now mostly addressed as review inputs
 - the candidate authority matrix is now explicit
-- actual promotion still needs rollback/fallback mechanics and user approval boundaries before an approval package can
-  be safely assembled
+- the concrete rollback/fallback review surface is now explicit
+- actual promotion still needs a user-facing decision package and explicit user approval before any authority change can
+  execute

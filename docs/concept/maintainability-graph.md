@@ -51,6 +51,11 @@ The candidate broader source-authority matrix is now documented in
 roles for Maintainability Graph, generated read-models, tree artifacts, reports, CI manifests, contracts, and
 compatibility views, but it remains design-only and does not change the current read-model role.
 
+The matching rollback/fallback plan is documented in
+[source-authority-rollback-fallback-plan.md](source-authority-rollback-fallback-plan.md). It defines how PBE should stop,
+defer, or fall back if candidate promotion inputs conflict, become stale, or are rejected. It does not execute rollback
+or make Maintainability Graph the source model.
+
 In that target:
 
 ```text
@@ -137,6 +142,10 @@ not promote Maintainability Graph or change source authority.
 The source-authority expansion design package is now a review input for any later broader promotion package. It does not
 make Maintainability Graph the current source model and does not replace rollback, fallback, enforcement, or user
 approval decisions.
+
+The source-authority rollback/fallback plan is also a review input for any later broader promotion package. It preserves
+the rule that generated Evidence and CI Evidence cannot outrank user acceptance or tree-native source authority before
+explicit promotion.
 
 The limited pilot user judgment surface is recorded in
 [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md). It is now refreshed for the

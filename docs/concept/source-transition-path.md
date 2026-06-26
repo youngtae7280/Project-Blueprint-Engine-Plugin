@@ -100,6 +100,11 @@ The candidate broader source-authority expansion design package is recorded in
 roles and a staged expansion path for future review, but it does not change the current transition stage, source
 authority matrix, rollback/fallback obligations, or user approval requirements.
 
+The concrete rollback/fallback plan for that candidate matrix is recorded in
+[source-authority-rollback-fallback-plan.md](source-authority-rollback-fallback-plan.md). It defines fallback precedence,
+rollback triggers, actions, snapshots, and compatibility-retirement guardrails, but it does not execute rollback or
+change source authority.
+
 ## Source Authority Matrix
 
 This matrix is conceptual. It does not define files, generators, validators, or migration behavior.
@@ -254,6 +259,10 @@ authority remains unchanged.
 candidate authority matrix for any broader source-authority expansion discussion. It must be reviewed with rollback,
 fallback, compatibility, and user approval decisions before any promotion package can become executable.
 
+[source-authority-rollback-fallback-plan.md](source-authority-rollback-fallback-plan.md) provides the matching
+rollback/fallback review surface. It still leaves promotion approval, rollback execution, compatibility retirement, and
+artifact snapshot mechanics as future decisions.
+
 [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md) records the user judgment
 surface for that limited pilot decision. The package is refreshed for the Node/Edge/Tag baseline, and the user approved
 the bounded `Approve limited pilot promotion decision` option for the Todo Search selected slice. The resulting record is
@@ -407,8 +416,7 @@ Those remain later concept or implementation questions.
 ## Remaining Open Questions
 
 - How formal should projection/parity expectations be before promotion review?
-- Is the candidate authority matrix in `source-authority-expansion-design-package.md` acceptable as the basis for a
-  concrete rollback/fallback plan?
+- Are the candidate authority matrix and rollback/fallback plan sufficient to prepare a promotion decision package?
 - Does promotion review need a specialized Approval Brief template?
 - During Todo Search scoped pilot active observation, what trigger should cause validator/CI-backed Evidence,
   public-doc cleanup, broader promotion review, rollback/defer, or continued observation?

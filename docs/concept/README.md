@@ -418,6 +418,14 @@ The package defines a candidate future authority matrix, artifact roles, staged 
 Graph-source promotion review. It is docs-only and does not change current tree-native source authority, promote
 Maintainability Graph, retire artifacts, add enforcement, or replace user acceptance.
 
+The source-authority rollback/fallback plan is now recorded:
+
+- [source-authority-rollback-fallback-plan.md](source-authority-rollback-fallback-plan.md)
+
+The plan defines fallback precedence, rollback triggers, trigger-specific actions, snapshot/reference requirements, and
+compatibility-retirement guardrails for the candidate authority matrix. It is docs-only and does not execute rollback,
+change source authority, approve promotion, or retire artifacts.
+
 The public-doc cleanup or waiver decision package is now recorded:
 
 - [public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md)

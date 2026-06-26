@@ -137,6 +137,10 @@ candidate broader authority matrix, artifact roles, staged expansion path, and r
 promotion decision package, but it does not expand source authority, approve promotion, retire tree-native artifacts, or
 change user acceptance boundaries.
 
+[source-authority-rollback-fallback-plan.md](source-authority-rollback-fallback-plan.md) now defines fallback precedence,
+rollback triggers, trigger-specific actions, snapshot/reference requirements, and compatibility-retirement guardrails for
+that candidate matrix. It does not execute rollback, change source authority, or approve promotion.
+
 [public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md) now records the public
 documentation cleanup or explicit waiver decision package for one of those caveats. It inventories public/user-facing
 docs and recommends cleanup before actual full promotion unless the user explicitly approves a visible waiver.
@@ -295,11 +299,12 @@ Acceptance is user-approved with warnings retained.
 | Source authority safety                         | ready                    | All updated artifacts preserve tree-native operational source authority.                                                                                                                      |
 | Check/Evidence safety                           | ready                    | AI self-report is excluded; command Evidence and exceptions are linked.                                                                                                                       |
 | Compatibility mismatch visibility               | ready with warning       | ACEP task-card-only wording is documented as a Compatibility Control Node candidate.                                                                                                          |
-| Rollback / compatibility readiness              | ready with warning       | Strategy exists, but no rollback or compatibility retirement mechanics are implemented.                                                                                                       |
+| Rollback / compatibility readiness              | ready with warning       | Strategy and concrete docs-only fallback plan exist, but rollback execution, snapshot tooling, and compatibility retirement mechanics are not implemented.                                    |
 | Manual graph/read-model parity output           | ready with warning       | Manual parity artifacts make the read-model relationship reviewable for limited pilot discussion.                                                                                             |
 | Generated / validator-backed / CI-backed output | ready with warning       | Generated output, local validator-backed Evidence, and reviewed non-enforcing CI-backed Evidence exist for Todo Search; broader/multi-slice coverage and enforcement remain future decisions. |
 | Public-doc cleanup                              | reviewed through Batch D | Batch A/B/C are implemented as review candidates; Batch D is reviewed and implemented only where needed; any waiver or promotion approval remains separate.                                   |
 | Source authority expansion design               | docs-only design package | Candidate artifact roles and authority matrix are documented for review; no source authority change or promotion is approved.                                                                 |
+| Rollback/fallback plan                          | docs-only plan           | Fallback precedence, triggers, actions, snapshot/reference requirements, and retirement guardrails are documented; no rollback execution is approved.                                         |
 
 ### Remaining Judgment
 
@@ -376,7 +381,7 @@ authority change, CI enforcement, and waiver judgment remain separate.
 ### Decisions Needed Before Promotion Approval
 
 - Whether full promotion requires CI-backed graph/read-model Evidence or an explicit user waiver.
-- Whether the candidate authority matrix is acceptable as the basis for a concrete rollback/fallback plan.
+- Whether the candidate authority matrix and rollback/fallback plan are sufficient for a promotion decision package.
 - Whether bounded fixture Evidence is enough for the pilot decision surface.
 - Whether Batch A/B/C/D public-doc cleanup is sufficient for promotion approval or still needs an explicit compatibility
   waiver.

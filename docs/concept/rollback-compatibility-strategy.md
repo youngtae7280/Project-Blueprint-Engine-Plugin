@@ -50,6 +50,11 @@ retirement conditions, and user approval before source authority can change.
 broader authority matrix and staged expansion path. It is a design input for future rollback/fallback planning, not a
 rollback-ready state, source authority change, promotion decision, or compatibility retirement approval.
 
+[source-authority-rollback-fallback-plan.md](source-authority-rollback-fallback-plan.md) now records the concrete
+fallback precedence, rollback triggers, trigger-specific actions, snapshot/reference requirements, and
+compatibility-retirement guardrails for that candidate matrix. It is still docs-only: no rollback is executed, no source
+authority changes, and no compatibility retirement is approved.
+
 [public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md) records the cleanup or
 explicit waiver decision surface for public compatibility wording. Deferring cleanup without an explicit waiver would
 leave a compatibility caveat unresolved for broader promotion review.
@@ -410,7 +415,9 @@ retire fallback artifacts, or expand source authority.
 [read-model-validate-all-contract.md](read-model-validate-all-contract.md) defines future all-slice validation semantics
 at concept level only; it does not introduce rollback enforcement, fallback retirement, or source-authority expansion.
 [source-authority-expansion-design-package.md](source-authority-expansion-design-package.md) identifies the artifact
-families that a concrete rollback/fallback plan would need to cover, but the plan itself remains unimplemented.
+families that a concrete rollback/fallback plan would need to cover, and
+[source-authority-rollback-fallback-plan.md](source-authority-rollback-fallback-plan.md) now records that docs-only plan.
+Rollback execution, snapshot tooling, and promotion approval remain unimplemented.
 
 ## Scope Boundaries
 
@@ -433,7 +440,7 @@ Those remain later concept or implementation questions.
 - How long should a post-promotion compatibility period last, and what default exit criteria should it use?
 - Which compatibility views must remain maintained after promotion?
 - How should a future validator or CI check rollback readiness without over-automating source authority decisions?
-- What concrete fallback precedence, snapshots, and recovery paths are required for the candidate authority matrix?
+- Are the documented fallback precedence, snapshots, and recovery paths sufficient for a promotion decision package?
 - Does rollback review need a specialized Approval Brief template?
 - Who approves compatibility retirement, and at what review point?
 - During Todo Search scoped pilot active observation, what trigger should cause validator/CI-backed Evidence,
