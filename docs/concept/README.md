@@ -472,6 +472,12 @@ fallback artifacts, Todo App structure-only status, or source authority beyond t
 Manual CI run `28219396764` and PR #5 run `28219583619` reviewed this graph-source-backed generation path as
 `ci-evidence-pass`.
 
+The next bounded expansion surface is now candidate-only for Todo App PBE Run:
+`examples/valid/todo-app-pbe-run/graph-source-candidate.json`. It is a non-generated structure-only graph-source
+candidate that mirrors the current 22-node / 38-edge / 7-Core-View Todo App read-model records for future review.
+Focused tests parse it and reject promotion/validate-all-consumption claims. It is not consumed by `validate --all`, not
+in the positive registry, not in CI, and does not promote Todo App beyond `structure-only`.
+
 The public-doc cleanup or waiver decision package is now recorded:
 
 - [public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md)

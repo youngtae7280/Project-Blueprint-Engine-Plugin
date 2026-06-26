@@ -1,6 +1,7 @@
 # Graph Source Artifact Storage And Projection Generation Design
 
-Status: first-artifact-implemented / minimal-cli-projection-path / graph-source-backed-generation / no-workflow-change
+Status: first-artifact-implemented / minimal-cli-projection-path / graph-source-backed-generation /
+structure-only-candidate-added / no-workflow-change
 
 ## Purpose
 
@@ -17,6 +18,15 @@ now also backs Todo Search default read-model generation from the bounded graph 
 workflows, retained fallback artifacts, Todo App structure-only behavior, or source authority beyond the executed limited
 scope.
 
+The next bounded expansion surface is now present as a candidate-only artifact for the Todo App PBE Run:
+
+```text
+examples/valid/todo-app-pbe-run/graph-source-candidate.json
+```
+
+This candidate mirrors the current structure-only generated read-model records for reviewability, but it is not consumed
+by `validate --all`, not uploaded as CI authority, not parity-backed, not pilot-marker-backed, and not promoted.
+
 ## Current Baseline
 
 | Area                  | Current state                                                                                                                                        |
@@ -27,7 +37,7 @@ scope.
 | Graph source artifact | `examples/adoption/todo-search-slice/graph-source.json` exists as non-generated limited source artifact.                                             |
 | Generated projections | Existing generated read-model artifacts and the graph-source projection output remain Evidence/projection outputs, not independent source authority. |
 | Positive registry     | `examples/read-model-aggregate/read-model-slices.json` includes Todo Search and Todo App PBE Run only.                                               |
-| Todo App PBE Run      | `structure-only`, not source-bearing.                                                                                                                |
+| Todo App PBE Run      | `structure-only`, with a candidate graph-source artifact for future review only; not source-bearing.                                                 |
 | CI                    | Manual and PR informational, non-enforcing.                                                                                                          |
 
 ## Candidate Storage Locations
@@ -100,6 +110,26 @@ Future projection generation hardening should:
 4. Preserve source, projection, Evidence, fallback, and user-acceptance boundaries in every output manifest.
 5. Keep Todo App PBE Run structure-only unless a separate authority package promotes it.
 
+## Todo App Candidate Artifact
+
+The Todo App candidate artifact is strict JSON, non-generated, and located outside `generated/`:
+
+```text
+examples/valid/todo-app-pbe-run/graph-source-candidate.json
+```
+
+Implemented boundary:
+
+- `artifactRole: candidate-graph-source`
+- `status: candidate-not-promoted`
+- `candidateScope: todo-app-pbe-run-structure-only`
+- `policyLevel: structure-only`
+- source records preserve the current 22-node / 38-edge / 7-Core-View structure-only projection
+- candidate boundaries state that the artifact is not consumed by validate-all, the positive registry, or CI
+
+Focused tests parse the candidate, compare its records to the existing Todo App structure-only generated read-model, and
+reject attempts to mark the candidate as promoted or validate-all consumed.
+
 ## Initial Implementation Sequence
 
 Recommended sequence:
@@ -118,6 +148,7 @@ This design does not:
 - regenerate unrelated generated artifacts
 - add enforcement or required checks
 - promote Todo App PBE Run beyond `structure-only`
+- enroll the Todo App candidate artifact in validate-all or CI
 - execute repo-wide Graph-source promotion
 - retire tree-native artifacts
 - replace user acceptance

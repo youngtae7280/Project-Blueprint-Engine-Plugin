@@ -11,9 +11,11 @@ import {
   loadGraphSourceArtifact,
   loadGraphSourceProjectionArtifact,
   loadReadModelSliceRegistry,
+  loadStructureOnlyGraphSourceCandidateArtifact,
   normalizeReadModelSliceRegistry,
   normalizeGraphSourceArtifact,
   normalizeGraphSourceProjectionArtifact,
+  normalizeStructureOnlyGraphSourceCandidateArtifact,
   projectGraphSourceReadModel,
   summarizeReadModelEvidence,
   todoAppPbeRunStructureOnlyProfile,
@@ -103,6 +105,55 @@ describe('read-model Evidence builder', () => {
     expect(result.projection.userAcceptanceBoundary).toContain('cannot accept product results')
     expect(result.projection.sourceAuthorityBoundary).toContain('limited source model')
     expect(result.projection.nonPromotionStatement).toContain('repo-wide promotion')
+  })
+
+  it('parses the Todo App structure-only graph source candidate without promoting it', async () => {
+    const candidate = await loadStructureOnlyGraphSourceCandidateArtifact(resolve('.'))
+    const generated = JSON.parse(
+      await readFile('examples/valid/todo-app-pbe-run/generated/generated-read-model.json', 'utf8'),
+    ) as {
+      nodes: unknown[]
+      edges: unknown[]
+      coreViewCoverage: unknown[]
+    }
+    const registry = await loadReadModelSliceRegistry(resolve('.'))
+
+    expect(candidate.schemaVersion).toBe(1)
+    expect(candidate.artifactRole).toBe('candidate-graph-source')
+    expect(candidate.status).toBe('candidate-not-promoted')
+    expect(candidate.candidateScope).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
+    expect(candidate.sourceSlice).toBe(todoAppPbeRunStructureOnlyProfile.supportedSlice)
+    expect(candidate.sourceProfile).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
+    expect(candidate.policyLevel).toBe('structure-only')
+    expect(candidate.sourceRecords.nodes).toEqual(generated.nodes)
+    expect(candidate.sourceRecords.edges).toEqual(generated.edges)
+    expect(candidate.sourceRecords.coreViewCoverage).toEqual(generated.coreViewCoverage)
+    expect(candidate.sourceAuthorityBoundary).toContain('structure-only')
+    expect(candidate.candidateBoundaries.nonPromotionStatement).toContain('not promote Todo App')
+    expect(candidate.candidateBoundaries.validateAllBoundary).toContain('not consumed by validate-all')
+    const registryTodoAppProfile = registry.profiles.find(
+      (entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId,
+    )
+    expect(registryTodoAppProfile?.optionalArtifacts.graphSourceCandidate).toBeUndefined()
+  })
+
+  it('rejects Todo App graph source candidates that claim promotion or validate-all consumption', async () => {
+    const candidate = JSON.parse(
+      await readFile('examples/valid/todo-app-pbe-run/graph-source-candidate.json', 'utf8'),
+    ) as {
+      status: string
+      candidateBoundaries: {
+        nonPromotionStatement: string
+        validateAllBoundary: string
+      }
+    }
+    candidate.status = 'limited-source-active'
+    candidate.candidateBoundaries.nonPromotionStatement = 'This candidate promotes Todo App.'
+    candidate.candidateBoundaries.validateAllBoundary = 'This candidate is consumed by validate-all.'
+
+    expect(() => normalizeStructureOnlyGraphSourceCandidateArtifact(candidate)).toThrow(
+      /candidate-not-promoted.*block Todo App promotion.*keep validate-all separate/s,
+    )
   })
 
   it('writes graph source projection output through the CLI without changing default generation', async () => {

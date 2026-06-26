@@ -98,8 +98,10 @@ parser/projection tests, and the minimal CLI projection path:
 pbe graph read-model project --graph-source examples/adoption/todo-search-slice/graph-source.json --output examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
 ```
 
-The next branch is whether to harden schema/validation around this projection artifact, integrate it into positive
-validation planning, or keep it standalone while observation continues.
+The next branch now includes a candidate-only Todo App PBE Run graph-source artifact at
+`examples/valid/todo-app-pbe-run/graph-source-candidate.json`. It is structure-only review input, not validate-all or CI
+input. Continue observation should check that this candidate remains outside the positive registry unless a separate
+Todo App promotion or projection decision is approved.
 
 ## Non-Scope
 

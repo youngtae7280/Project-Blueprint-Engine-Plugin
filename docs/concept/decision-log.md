@@ -485,6 +485,11 @@ DEC-097 through DEC-104 otherwise: the change is bounded to Todo Search generate
 not change workflow triggers, enforcement, repo-wide authority, fallback retention, tree retirement, invalid-fixture CI,
 or Todo App `structure-only` status.
 
+DEC-106 does not supersede DEC-097 through DEC-105. It adds the first Todo App PBE Run graph-source candidate artifact
+and focused candidate validation tests only. The artifact is structure-only review input, is not consumed by
+`validate --all`, is not enrolled in CI or the positive registry, does not add parity/pilot-marker requirements, and does
+not promote Todo App PBE Run beyond `structure-only`.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
