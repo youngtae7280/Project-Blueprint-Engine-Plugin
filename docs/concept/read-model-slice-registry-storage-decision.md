@@ -1,0 +1,214 @@
+# Read-Model Slice Registry Storage Decision
+
+Status: read-model-slice-registry-storage-decision / decision-surface / design-only / no-registry-file-yet /
+non-enforcing
+
+This document records the storage-location and file-format decision surface for a future read-model slice registry
+fixture.
+
+It follows:
+
+- [read-model-validate-all-contract.md](read-model-validate-all-contract.md)
+- [read-model-slice-registry-test-strategy.md](read-model-slice-registry-test-strategy.md)
+
+It does not create the registry file, implement parser or CLI behavior, modify workflows, regenerate generated
+artifacts, dispatch GitHub Actions, create PRs, introduce CI enforcement, expand source authority, perform public-doc
+cleanup, or approve full Graph-source promotion.
+
+## Decision Context
+
+The validate-all contract defines the future all-slice validation policy. The registry test strategy defines the desired
+fixture shape and tests. Before creating an actual registry file, PBE needs a decision surface for:
+
+- where the registry should live
+- which file format should be used
+- what artifact role the registry has
+- what may mutate it
+- how existing in-code profile configuration remains compatible until parser support exists
+
+The registry is execution metadata for future read-model validation. It is not product source, not graph source, and not
+promotion approval.
+
+## Candidate Locations
+
+| Candidate location                                                 | Strengths                                                                                   | Risks / drawbacks                                                                                              | Current judgment                                   |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `examples/read-model-aggregate/read-model-slices.json`             | Repo-local, non-generated, near aggregate Evidence, outside any single slice, easy to parse | Creates a new config-like artifact under `examples`; requires parser support later                             | Recommended candidate for actual registry file     |
+| `examples/read-model-aggregate/generated/read-model-slices.json`   | Near aggregate output files                                                                 | Generated directory implies output, may be overwritten, mixes config/source metadata with churn artifacts      | Avoid                                              |
+| `examples/read-model-slices.json`                                  | Simple top-level examples registry                                                          | Less clearly tied to read-model aggregate path; may look like registry for all examples, not read-model slices | Acceptable fallback but less precise               |
+| `docs/concept/read-model-slices.md/json`                           | Safe for design-only discussion                                                             | Documentation path is not ideal for future executable config; parser reading docs/concept would blur docs/code | Good for concept samples only, not execution input |
+| Future `.pbe/read-model-slices.json` or `.pbe/graph/registry.json` | Closer to PBE runtime artifacts and future repo-level config                                | No repo root `.pbe` artifact exists here; could imply source authority or active runtime state too early       | Future-only after runtime artifact policy          |
+| CLI internal hardcoded profile list                                | No new file; current behavior is stable                                                     | Does not scale; hides profile registry from review; makes `validate --all` less transparent                    | Short-term fallback only                           |
+
+## Recommendation
+
+Recommended next storage location if the actual registry file is approved:
+
+```text
+examples/read-model-aggregate/read-model-slices.json
+```
+
+Rationale:
+
+- It is outside Todo Search and Todo App PBE Run slice ownership, so it can describe cross-slice validation without
+  becoming a slice artifact.
+- It is outside `generated/`, so it is not confused with command output or artifact churn.
+- It is near the aggregate summary output, so readers can connect registry scope to aggregate Evidence.
+- It is repo-local and easy for future CLI code to read without implying `.pbe` source authority.
+- It can be introduced as a candidate fixture before parser support consumes it.
+
+Do not place the registry under `examples/read-model-aggregate/generated/`. A registry is configuration/execution
+metadata, while `generated/` is output Evidence. Mixing them would make mutation and source boundary harder to review.
+
+## File Format Comparison
+
+| Format    | Strengths                                                                 | Risks / drawbacks                                                                              | Current judgment                               |
+| --------- | ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| JSON      | Native parser, deterministic, Prettier support, schema-ready, no comments | Comments must live in adjacent docs; strict syntax can be less friendly                        | Recommended                                    |
+| JSONC     | Allows comments while staying JSON-like                                   | Needs non-native parser choice; comment semantics must be standardized                         | Possible later if comments become important    |
+| YAML      | Readable and comment-friendly                                             | More parser ambiguity; indentation sensitivity; less aligned with existing generated artifacts | Not recommended for first registry             |
+| TS module | Type-safe and can share constants                                         | Blurs config with implementation; harder to treat as reviewable artifact                       | Not recommended for evidence/config fixture    |
+| Markdown  | Human-friendly                                                            | Poor executable config format; parser would be fragile                                         | Documentation only, not future execution input |
+
+Recommended first format:
+
+```text
+JSON
+```
+
+Rationale:
+
+- future parser can use standard JSON parsing
+- future schema validation is straightforward
+- Prettier support is already available
+- generated reports and manifests are already JSON/Markdown pairs
+- comments can stay in this decision document and in adjacent README-style documentation
+
+## Artifact Role
+
+The future registry file should be classified as:
+
+```text
+execution metadata / validation target registry / not source authority
+```
+
+Registry inclusion means:
+
+- the slice is included in future read-model validation scope
+- the slice has a declared policy level and required artifacts
+- the slice may be summarized in aggregate Evidence
+
+Registry inclusion does not mean:
+
+- source authority changes
+- Maintainability Graph becomes source
+- Todo App PBE Run becomes parity-backed, pilot-marker-backed, CI-backed, or source-authority bearing
+- tree-native or canonical `.pbe` artifacts are retired
+- user acceptance is replaced
+- full Graph-source promotion is approved
+
+## Mutation Boundary
+
+Future parser behavior:
+
+- may read registry entries
+- may normalize paths for internal command planning
+- may report unsupported or invalid entries
+- must not silently rewrite the registry
+
+Future `validate --all` behavior:
+
+- may write generated reports in declared generated output directories
+- may write aggregate summaries in the aggregate generated output directory
+- must not mutate registry configuration unless a separate explicit config-update task is approved
+- must not mutate source artifacts, manual parity artifacts, or pilot markers unless a separate artifact-update task is
+  approved
+
+Registry file changes should be ordinary reviewed source changes, not side effects of validation.
+
+## Compatibility And Fallback
+
+Until parser support is implemented, the existing in-code profile list remains the behavior fallback:
+
+- `todo-search-selected-slice`
+- `todo-app-pbe-run-structure-only`
+
+The future registry file can be introduced first as a candidate fixture and compared against current in-code profiles.
+Parser support can then consume it later.
+
+Recommended compatibility sequence:
+
+1. Create candidate registry file at the approved location.
+2. Add tests that compare registry entries to current in-code profiles.
+3. Implement parser/normalization against the registry fixture.
+4. Implement command planner using parsed registry data.
+5. Only then consider a `validate --all` command surface.
+
+## Decision Options
+
+| Option | Choice                                              | Meaning                                                                         | Tradeoff                                                                                      |
+| ------ | --------------------------------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| A      | Create actual registry file next                    | Add `examples/read-model-aggregate/read-model-slices.json` as candidate fixture | Best transparency; adds a real config artifact before parser exists                           |
+| B      | Implement parser against in-code fixture first      | Keep fixture data in tests/code before adding a repo artifact                   | Reduces artifact churn, but hides review surface and delays registry-as-artifact verification |
+| C      | Continue hardcoded profiles until more slices exist | Avoid registry work while only two profiles exist                               | Lowest immediate cost, but delays `validate --all` readiness                                  |
+| D      | Defer registry work                                 | Keep current aggregate/report-only path and PR observation only                 | Safe, but no progress toward all-slice validation implementation                              |
+
+## Recommended Next Action
+
+Recommended next action:
+
+```text
+Option A: create actual registry file next as a candidate fixture at examples/read-model-aggregate/read-model-slices.json
+```
+
+Conditions for that next step:
+
+- keep the file non-generated
+- use strict JSON
+- mark `registryRole`, `sourceAuthorityBoundary`, and `nonPromotionStatement`
+- include only the two current profiles
+- do not wire the parser or CLI to consume it yet unless separately approved
+- do not change workflow triggers or CI enforcement
+
+If the next step is considered too soon, Option C is the safest fallback: continue hardcoded profiles until another
+slice is ready.
+
+## Non-Scope
+
+This decision surface does not:
+
+- create the registry file
+- implement parser behavior
+- implement command planning
+- implement `validate --all`
+- modify `.github/workflows/read-model-evidence.yml`
+- regenerate generated artifacts
+- create PRs
+- dispatch GitHub Actions
+- add required checks
+- add branch protection
+- introduce CI enforcement
+- expand source authority
+- approve full Graph-source promotion
+- perform public-doc cleanup
+- promote Todo App PBE Run beyond `structure-only`
+
+## Gate Self-Check
+
+| Gate                           | Result | Notes                                                                                 |
+| ------------------------------ | ------ | ------------------------------------------------------------------------------------- |
+| Decision-Surface Gate          | PASS   | Defines location/format tradeoffs without creating the registry file.                 |
+| Non-Generated Location Gate    | PASS   | Recommends a non-generated path and rejects `generated/` as config storage.           |
+| Format Clarity Gate            | PASS   | Recommends JSON and records JSONC/YAML/TS/Markdown tradeoffs.                         |
+| Artifact Role Gate             | PASS   | Registry is execution metadata, not source authority or promotion.                    |
+| Mutation Boundary Gate         | PASS   | Future validation may not silently rewrite registry/source/manual/pilot artifacts.    |
+| Compatibility Fallback Gate    | PASS   | In-code profiles remain fallback until parser support exists.                         |
+| Non-Implementation Gate        | PASS   | No code, parser, CLI, workflow, registry file, PR, or Actions changes are introduced. |
+| Source Authority Boundary Gate | PASS   | Registry inclusion does not expand source authority or retire tree-native artifacts.  |
+| Todo App Structure-Only Gate   | PASS   | Todo App PBE Run remains structure-only.                                              |
+| User Approval Boundary Gate    | PASS   | Creating or consuming the registry remains a later decision.                          |
+
+## Final Statement
+
+This document recommends a future registry location and JSON format, but it does not create the registry file and does
+not implement any parser, CLI, workflow, enforcement, source-authority, promotion, or cleanup behavior.

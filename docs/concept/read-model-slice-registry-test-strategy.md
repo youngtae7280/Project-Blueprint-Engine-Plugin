@@ -13,6 +13,10 @@ This document does not create an actual registry file, implement parser or CLI c
 generated artifacts, dispatch GitHub Actions, create PRs, introduce enforcement, expand source authority, perform
 public-doc cleanup, or approve full Graph-source promotion.
 
+The storage and file-format decision surface for the future registry fixture is recorded in
+[read-model-slice-registry-storage-decision.md](read-model-slice-registry-storage-decision.md). This strategy should not
+be treated as approval to create that file.
+
 ## Relationship To Validate-All Contract
 
 The validate-all contract defines the policy surface:
@@ -256,8 +260,9 @@ Report-only mode should skip command execution steps and start from existing val
 
 This strategy is enough to request implementation of a registry fixture when:
 
-- the registry fixture storage location is approved
-- the file format is selected
+- the registry fixture storage location is approved through
+  [read-model-slice-registry-storage-decision.md](read-model-slice-registry-storage-decision.md)
+- the file format is selected through the storage decision surface
 - positive fixture expectations above are accepted
 - negative fixture storage policy is selected
 - parser/normalization behavior is agreed

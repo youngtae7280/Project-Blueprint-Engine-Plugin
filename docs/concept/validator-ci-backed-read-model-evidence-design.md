@@ -274,6 +274,8 @@ Future all-slice validation should follow
 change, or enforcement mode is implemented.
 Registry fixture and test planning for that path is recorded in
 [read-model-slice-registry-test-strategy.md](read-model-slice-registry-test-strategy.md).
+Registry storage/location tradeoffs are recorded in
+[read-model-slice-registry-storage-decision.md](read-model-slice-registry-storage-decision.md).
 
 ## Gate Self-Check
 

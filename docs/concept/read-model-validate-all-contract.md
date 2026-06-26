@@ -95,6 +95,9 @@ more profiles.
 The proposed fixture and test strategy for this registry is recorded in
 [read-model-slice-registry-test-strategy.md](read-model-slice-registry-test-strategy.md). That strategy should be used
 before creating the actual registry file or implementing parser/planner behavior.
+The storage/location decision surface is recorded in
+[read-model-slice-registry-storage-decision.md](read-model-slice-registry-storage-decision.md) and should be resolved
+before any actual registry file is added.
 
 ## Execution Modes
 

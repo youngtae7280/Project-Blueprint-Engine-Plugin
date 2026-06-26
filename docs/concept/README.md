@@ -403,6 +403,14 @@ The strategy defines the proposed registry fixture shape, positive fixtures, neg
 tests, per-policy tests, independence tests, aggregate tests, non-mutation tests, boundary tests, and implementation
 readiness criteria. It does not create a registry file or implement `validate --all`.
 
+The registry storage/location decision surface is now recorded:
+
+- [read-model-slice-registry-storage-decision.md](read-model-slice-registry-storage-decision.md)
+
+The decision surface recommends a future non-generated JSON registry fixture at
+`examples/read-model-aggregate/read-model-slices.json`, compares alternatives, defines artifact role and mutation
+boundaries, and keeps actual registry creation/parser work as a later decision.
+
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.

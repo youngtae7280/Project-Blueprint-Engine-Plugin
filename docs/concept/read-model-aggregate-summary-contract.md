@@ -142,8 +142,10 @@ Recommended next work remains bounded:
    future `validate --all` implementation decision
 5. use [read-model-slice-registry-test-strategy.md](read-model-slice-registry-test-strategy.md) before creating a
    registry fixture or parser/planner tests
-6. decide whether to strengthen Todo App PBE Run beyond structure-only
-7. keep source authority expansion and full promotion as separate explicit decisions
+6. use [read-model-slice-registry-storage-decision.md](read-model-slice-registry-storage-decision.md) before adding a
+   real registry file
+7. decide whether to strengthen Todo App PBE Run beyond structure-only
+8. keep source authority expansion and full promotion as separate explicit decisions
 
 ## Final Statement
 

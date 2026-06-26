@@ -356,6 +356,9 @@ Future all-slice validation should use
 `validate --all`, CI workflow change, or enforcement mode is implemented.
 The future registry/test planning layer is recorded in
 [read-model-slice-registry-test-strategy.md](read-model-slice-registry-test-strategy.md).
+The storage/location decision surface for any future registry artifact is recorded in
+[read-model-slice-registry-storage-decision.md](read-model-slice-registry-storage-decision.md). This CI design does not
+create or consume that registry.
 
 ## Approval Brief Draft
 
