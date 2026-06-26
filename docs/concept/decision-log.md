@@ -571,6 +571,12 @@ graph-source-candidate-backed locally: `graph read-model generate --slice exampl
 `non-authority-structure-only` metadata. Todo App remains structure-only, candidate/non-promotional, not
 source-authority-bearing, and not repo-wide promotion.
 
+DEC-123 does not supersede DEC-097 through DEC-122. It records manual CI review of Todo App graph-source-candidate-backed
+generation metadata in run `28224636333`. The reviewed artifact confirms `readModelSourceMode: graph-source-backed`,
+`graphSourceAuthorityStatus: non-authority-structure-only`, Todo App 22/38/7 validation/projection pass, Todo Search
+projection pass, E2E smoke pass, and validate-all aggregate pass without Todo App source-authority promotion,
+repo-wide promotion, tree retirement, enforcement, or required checks.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

@@ -1111,6 +1111,25 @@ trigger.
 | Cleanup               | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted                     |
 | Review result         | PR CI confirms E2E smoke status is visible in manifest and uploaded artifact output                       |
 
+Manual run `28224636333` reviewed the workflow after Todo App structure-only generation became graph-source-candidate
+backed.
+
+| Field                 | Value                                                                                                  |
+| --------------------- | ------------------------------------------------------------------------------------------------------ |
+| Run ID                | `28224636333`                                                                                          |
+| Run URL               | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28224636333>             |
+| Event                 | `workflow_dispatch`                                                                                    |
+| Commit                | `0f593bf79dcc6d4c40fcce8448057b35ad633a89`                                                             |
+| Conclusion            | `success`                                                                                              |
+| Manifest              | `ci-evidence-pass`; `validateAllStatus: aggregate-pass`; `e2eSmokeStatus: e2e-smoke-pass`              |
+| Todo Search           | graph-source-backed; 40 nodes / 59 edges / 7 views; `projection-contract-pass`                         |
+| Todo App generation   | `readModelSourceMode: graph-source-backed`; `graphSourceAuthorityStatus: non-authority-structure-only` |
+| Todo App Evidence     | 22 nodes / 38 edges / 7 views; `validation-pass`; `candidate-projection-contract-pass`                 |
+| Candidate observation | `candidate-observation-pass`; remains separate observation metadata                                    |
+| Boundary              | CI observation only; no Todo App source authority, promotion, enforcement, or tree retirement          |
+| Cleanup               | Artifact temp directory removed                                                                        |
+| Review result         | Manual CI confirms Todo App candidate-backed generation metadata is visible in uploaded artifacts      |
+
 ## Gate Self-Check
 
 | Gate                             | Status | Result                                                                                                        |
@@ -1121,6 +1140,7 @@ trigger.
 | Graph-Source-Backed Manual Gate  | pass   | Run `28219396764` confirmed graph-source-backed Todo Search generation in CI artifacts.                       |
 | Todo App Projection Manual Gate  | pass   | Run `28222731063` confirmed Todo App `candidate-projection-contract-pass` in positive validate-all artifacts. |
 | E2E Smoke Manual Gate            | pass   | Run `28223860233` confirmed `e2eSmokeStatus: e2e-smoke-pass` in manifest and uploaded smoke output.           |
+| Todo App Generation Manual Gate  | pass   | Run `28224636333` confirmed Todo App `graph-source-backed` / `non-authority-structure-only` metadata.         |
 | Graph-Source-Backed PR Gate      | pass   | PR #5 run `28219583619` confirmed graph-source-backed Todo Search generation in PR artifacts.                 |
 | Todo App Projection PR Gate      | pass   | PR #7 run `28223010185` confirmed Todo App `candidate-projection-contract-pass` in PR artifacts.              |
 | E2E Smoke PR Gate                | pass   | PR #8 run `28224088829` confirmed `e2eSmokeStatus: e2e-smoke-pass` in PR artifacts.                           |

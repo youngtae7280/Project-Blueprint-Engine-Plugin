@@ -191,6 +191,10 @@ The generated read-model preserves 22 nodes, 38 edges, and 7 Core Views, records
 graph-source-backed`, and keeps `graphSourceAuthorityStatus: non-authority-structure-only`. This is still a
 structure-only candidate-backed generation path, not Todo App source-authority promotion.
 
+Manual workflow run `28224636333` reviewed this metadata in uploaded CI artifacts: Todo App generation recorded
+`graph-source-backed` and `non-authority-structure-only`, validation stayed `validation-pass`, positive projection stayed
+`candidate-projection-contract-pass`, and validate-all/E2E smoke stayed pass.
+
 ## Initial Implementation Sequence
 
 Recommended sequence:

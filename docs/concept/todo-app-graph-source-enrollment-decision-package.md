@@ -13,26 +13,27 @@ non-authority structure-only projection contract.
 This document does not approve source authority, enforcement, or Todo App promotion. Manual and PR workflow reviews are
 complete for the new positive validate-all projection status.
 
-The next bounded local branch is also implemented: Todo App PBE Run structure-only generation now reads
+The next bounded local branch is also implemented and manually reviewed in CI: Todo App PBE Run structure-only generation now reads
 `graph-source-candidate.json` for generated read-model records while preserving `structure-only`,
 `candidate-not-promoted`, and `non-authority-structure-only` metadata. Manual/PR CI review of that generated source mode
-is still a later observation step.
+is partially complete: manual run `28224636333` confirms the uploaded artifact metadata; PR informational review remains
+pending.
 
 ## Current Evidence
 
-| Evidence surface             | Current status                                                                                       |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Candidate graph source       | `examples/valid/todo-app-pbe-run/graph-source-candidate.json`, `candidate-not-promoted`              |
-| Candidate projection         | `graph-source-candidate-read-model-projection.json`, 22 nodes / 38 edges / 7 Core Views              |
-| Local contract check         | Focused tests verify structure-only, no source-authority claim, and non-authority validate-all use   |
-| Local observation command    | `graph read-model observe-candidates --json`, `candidate-observation-pass`                           |
-| Manual CI observation        | Run `28221088498`, `candidate-observation-pass`, candidate projection artifact uploaded              |
-| PR informational observation | PR #6 run `28221326457`, `pull_request-informational`, PR metadata present, observation pass         |
-| Positive validate-all status | Todo App projection reports `candidate-projection-contract-pass`; aggregate remains `aggregate-pass` |
-| Manual CI review             | Run `28222731063`, `workflow_dispatch`, `ci-evidence-pass`, Todo App positive projection pass        |
-| PR informational review      | PR #7 run `28223010185`, `pull_request-informational`, Todo App positive projection pass             |
-| Generation source mode       | Local generate records `readModelSourceMode: graph-source-backed` and `non-authority-structure-only` |
-| Current policy               | Todo App PBE Run remains `structure-only`, not parity-backed, not pilot-marker-backed, not source    |
+| Evidence surface             | Current status                                                                                                  |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Candidate graph source       | `examples/valid/todo-app-pbe-run/graph-source-candidate.json`, `candidate-not-promoted`                         |
+| Candidate projection         | `graph-source-candidate-read-model-projection.json`, 22 nodes / 38 edges / 7 Core Views                         |
+| Local contract check         | Focused tests verify structure-only, no source-authority claim, and non-authority validate-all use              |
+| Local observation command    | `graph read-model observe-candidates --json`, `candidate-observation-pass`                                      |
+| Manual CI observation        | Run `28221088498`, `candidate-observation-pass`, candidate projection artifact uploaded                         |
+| PR informational observation | PR #6 run `28221326457`, `pull_request-informational`, PR metadata present, observation pass                    |
+| Positive validate-all status | Todo App projection reports `candidate-projection-contract-pass`; aggregate remains `aggregate-pass`            |
+| Manual CI review             | Run `28222731063`, `workflow_dispatch`, `ci-evidence-pass`, Todo App positive projection pass                   |
+| PR informational review      | PR #7 run `28223010185`, `pull_request-informational`, Todo App positive projection pass                        |
+| Generation source mode       | Manual run `28224636333` confirms `readModelSourceMode: graph-source-backed` and `non-authority-structure-only` |
+| Current policy               | Todo App PBE Run remains `structure-only`, not parity-backed, not pilot-marker-backed, not source               |
 
 ## Decision Options
 
