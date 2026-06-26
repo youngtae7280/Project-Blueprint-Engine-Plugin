@@ -165,6 +165,13 @@ The CI manifest and Step Summary expose `candidateObservationStatus` and the Tod
 separate observation metadata. These fields do not change `validateAllStatus`, `aggregateStatus`, the positive registry,
 source authority, or Todo App promotion status.
 
+Manual workflow run `28221088498` reviewed this candidate-observation capture on `workflow_dispatch` at commit
+`68c2d20775ecbdd118a7d7b91053239ed4cd97f9`. The artifact manifest recorded
+`candidateObservationStatus: candidate-observation-pass`, Todo App candidate `candidate-projection-contract-pass`,
+positive Todo App projection `not-configured`, `validateAllStatus: aggregate-pass`, and `aggregateStatus:
+aggregate-pass`. The artifact bundle included both `read-model-candidate-observation-output.json` and
+`graph-source-candidate-read-model-projection.json`.
+
 ## Initial Implementation Sequence
 
 Recommended sequence:

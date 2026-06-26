@@ -510,6 +510,11 @@ non-enforcing read-model Evidence workflow as separate CI artifact metadata and 
 observation remains separate from `validateAllStatus`, `aggregateStatus`, the positive registry, enforcement, and Todo
 App source-authority status.
 
+DEC-111 does not supersede DEC-097 through DEC-110. It records manual CI review of candidate-observation artifact
+capture in run `28221088498` and a small manifest artifact list fix before that review. The reviewed workflow remains
+manual/PR informational only and does not enroll Todo App in positive validate-all, source authority, enforcement, or
+promotion.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

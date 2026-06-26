@@ -64,7 +64,9 @@ registry-backed `validate --all` only; invalid fixtures remain local focused tes
 
 Todo App graph-source candidate observation is also separate from positive validation. The workflow captures
 `graph read-model observe-candidates --json` as artifact metadata and Step Summary fields, but it does not enroll the
-Todo App candidate in the positive registry, aggregate status, source authority, or promotion scope.
+Todo App candidate in the positive registry, aggregate status, source authority, or promotion scope. Manual run
+`28221088498` reviewed this capture as `ci-evidence-pass` with candidate observation pass, Todo App candidate projection
+pass, positive Todo App projection `not-configured`, and both candidate observation/projection artifacts uploaded.
 
 Run `28156403793` also surfaced a GitHub Actions maintenance annotation that Node.js 20 is deprecated for
 `actions/checkout@v4`, `actions/setup-node@v4`, and `actions/upload-artifact@v4` execution. This is a retained CI hygiene

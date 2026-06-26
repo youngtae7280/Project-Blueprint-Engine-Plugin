@@ -83,6 +83,9 @@ Current candidate-observation capture:
 - CI manifest and Step Summary expose `candidateObservationStatus` and the Todo App candidate projection status.
 - This is separate from `validateAllStatus`, `aggregateStatus`, and the positive registry. It does not promote Todo App
   PBE Run, add source authority, or enroll the candidate in positive aggregate semantics.
+- Manual run `28221088498` reviewed this capture path as `ci-evidence-pass`; the uploaded manifest included
+  `candidateObservationStatus: candidate-observation-pass`, Todo App candidate `candidate-projection-contract-pass`,
+  positive Todo App projection `not-configured`, and both candidate observation/projection artifacts.
 
 Reviewed manual run after switch:
 
