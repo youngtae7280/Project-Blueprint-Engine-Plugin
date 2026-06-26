@@ -538,6 +538,11 @@ projection-contract enrollment in run `28222731063`. The run confirms Todo App p
 `candidate-projection-contract-pass`, Todo Search `projection-contract-pass`, aggregate pass, and separate candidate
 observation metadata, without workflow behavior changes, source authority expansion, promotion, or enforcement.
 
+DEC-117 does not supersede DEC-097 through DEC-116. It records PR informational CI review of the same Todo App bounded
+non-authority projection-contract enrollment in PR #7 run `28223010185`. The smoke PR was closed without merge and the
+branch was deleted; no workflow behavior change, source authority expansion, promotion, enforcement, required check, or
+tree retirement is introduced.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

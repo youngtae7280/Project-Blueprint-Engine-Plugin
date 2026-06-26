@@ -506,6 +506,8 @@ incomplete.
 Manual workflow run `28222731063` reviewed the Todo App bounded non-authority positive validate-all projection status:
 Todo App reports `candidate-projection-contract-pass`, Todo Search remains `projection-contract-pass`, aggregate remains
 `aggregate-pass`, and candidate observation stays separate.
+PR #7 run `28223010185` reviewed the same fields in `pull_request-informational` mode, then the temporary PR was closed
+without merge and the smoke branch was deleted.
 
 The public-doc cleanup or waiver decision package is now recorded:
 

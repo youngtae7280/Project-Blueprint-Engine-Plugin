@@ -72,7 +72,7 @@ run `28221326457` reviewed the same capture in `pull_request-informational` mode
 
 After that review, local positive `validate --all` now enrolls the Todo App candidate projection contract only as a
 non-authority structure-only check and reports `candidate-projection-contract-pass`. Manual run `28222731063` confirms
-that field in workflow artifacts; PR informational review remains pending.
+that field in workflow artifacts; PR #7 run `28223010185` confirms the same field in PR informational artifacts.
 
 Run `28156403793` also surfaced a GitHub Actions maintenance annotation that Node.js 20 is deprecated for
 `actions/checkout@v4`, `actions/setup-node@v4`, and `actions/upload-artifact@v4` execution. This is a retained CI hygiene

@@ -73,7 +73,7 @@ Current projection-contract observation:
 - CI manifest and Step Summary now expose `projectionContractStatus`.
 - Todo Search is expected to report `projection-contract-pass`.
 - Todo App PBE Run now reports `candidate-projection-contract-pass` as a bounded non-authority structure-only projection
-  contract. Manual CI run `28222731063` reviewed that status; PR CI review remains pending.
+  contract. Manual CI run `28222731063` and PR #7 run `28223010185` reviewed that status.
 - Missing or corrupt projection artifacts can block the non-enforcing CI Evidence status without adding required checks,
   branch protection, or merge enforcement.
 - Manual run `28218687289` and PR #4 run `28218854329` reviewed this capture path as `ci-evidence-pass`.

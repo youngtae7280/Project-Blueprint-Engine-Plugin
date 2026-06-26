@@ -1050,6 +1050,27 @@ entered local positive validate-all.
 | Cleanup               | Artifact temp directory removed                                                                              |
 | Review result         | Manual CI confirms Todo App positive non-authority projection contract enrollment health                     |
 
+PR run `28223010185` then reviewed the same Todo App positive projection status through the non-enforcing
+`pull_request-informational` trigger.
+
+| Field                 | Value                                                                                                    |
+| --------------------- | -------------------------------------------------------------------------------------------------------- |
+| PR                    | `#7`; draft temporary smoke PR; closed without merge                                                     |
+| Run ID                | `28223010185`                                                                                            |
+| Run URL               | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28223010185>               |
+| Event                 | `pull_request`                                                                                           |
+| Trigger mode          | `pull_request-informational`                                                                             |
+| Head branch           | `pbe/pr-info-todo-app-projection-smoke-20260626`                                                         |
+| Base branch           | `main`                                                                                                   |
+| Manifest              | `ci-evidence-pass`; `validateAllStatus: aggregate-pass`; `aggregateStatus: aggregate-pass`               |
+| Todo Search           | graph-source-backed; 40 nodes / 59 edges; `projection-contract-pass`                                     |
+| Todo App              | positive validate-all `candidate-projection-contract-pass`; 22 nodes / 38 edges / 7 views                |
+| Candidate observation | `candidate-observation-pass`; remains separate observation metadata                                      |
+| Artifact              | validate-all output, candidate observation output, Todo Search projection, Todo App candidate projection |
+| Boundary              | Non-enforcing Evidence only; no Todo App source authority, promotion, enforcement, or tree retirement    |
+| Cleanup               | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted                    |
+| Review result         | PR CI confirms Todo App positive non-authority projection contract enrollment health                     |
+
 ## Gate Self-Check
 
 | Gate                             | Status | Result                                                                                                        |
@@ -1060,6 +1081,7 @@ entered local positive validate-all.
 | Graph-Source-Backed Manual Gate  | pass   | Run `28219396764` confirmed graph-source-backed Todo Search generation in CI artifacts.                       |
 | Todo App Projection Manual Gate  | pass   | Run `28222731063` confirmed Todo App `candidate-projection-contract-pass` in positive validate-all artifacts. |
 | Graph-Source-Backed PR Gate      | pass   | PR #5 run `28219583619` confirmed graph-source-backed Todo Search generation in PR artifacts.                 |
+| Todo App Projection PR Gate      | pass   | PR #7 run `28223010185` confirmed Todo App `candidate-projection-contract-pass` in PR artifacts.              |
 | PR Informational Run Gate        | pass   | PR #1, PR #2, PR #3, PR #4, and PR #5 triggered `pull_request` runs and completed successfully.               |
 | CI-Backed Artifact Review Gate   | pass   | Expanded artifact bundle `pbe-todo-search-read-model-evidence` was downloaded and inspected.                  |
 | CI Manifest Integrity Gate       | pass   | Manifest is `ci-backed` / `ci-evidence-pass` and includes Todo Search, Todo App, aggregate, and boundaries.   |

@@ -1,7 +1,6 @@
 # Todo App Graph-Source Enrollment Decision Package
 
-Status: bounded-non-authority-enrollment-implemented / manual-ci-reviewed / no-source-authority-promotion /
-pr-ci-review-pending
+Status: bounded-non-authority-enrollment-reviewed / manual-and-pr-ci-reviewed / no-source-authority-promotion
 
 ## Purpose
 
@@ -11,8 +10,8 @@ projection, local observation command, and non-enforcing manual/PR CI artifact c
 has now been implemented locally: Todo App PBE Run participates in positive validate-all only through a bounded
 non-authority structure-only projection contract.
 
-This document does not approve source authority, enforcement, full CI review completion, or Todo App promotion. Manual
-workflow review is complete for the new positive validate-all projection status; PR workflow review remains pending.
+This document does not approve source authority, enforcement, or Todo App promotion. Manual and PR workflow reviews are
+complete for the new positive validate-all projection status.
 
 ## Current Evidence
 
@@ -26,6 +25,7 @@ workflow review is complete for the new positive validate-all projection status;
 | PR informational observation | PR #6 run `28221326457`, `pull_request-informational`, PR metadata present, observation pass         |
 | Positive validate-all status | Todo App projection reports `candidate-projection-contract-pass`; aggregate remains `aggregate-pass` |
 | Manual CI review             | Run `28222731063`, `workflow_dispatch`, `ci-evidence-pass`, Todo App positive projection pass        |
+| PR informational review      | PR #7 run `28223010185`, `pull_request-informational`, Todo App positive projection pass             |
 | Current policy               | Todo App PBE Run remains `structure-only`, not parity-backed, not pilot-marker-backed, not source    |
 
 ## Decision Options
@@ -55,7 +55,7 @@ local implementation:
 4. Returns `candidate-projection-contract-pass` in local positive validate-all output.
 5. Preserves `aggregate-pass` semantics only if the structure-only candidate projection contract passes.
 6. Adds focused pass and failure tests before CI review.
-7. Has manual CI review complete; PR CI review remains next.
+7. Has manual and PR CI review complete for the positive projection status.
 
 ## Required Boundaries For Enrollment
 
@@ -68,14 +68,14 @@ local implementation:
 
 ## Review Gates After Local Implementation
 
-| Gate                            | Required state                                                                                      |
-| ------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Local candidate contract        | Passing and mutation-safe. Complete locally.                                                        |
-| Manual/PR candidate observation | Reviewed as pass.                                                                                   |
-| Registry/profile wording        | States non-authority, structure-only, no parity, no pilot marker.                                   |
-| Failure semantics               | Missing/corrupt candidate projection blocks local validate-all, but does not imply CI enforcement.  |
-| CI review                       | Manual review complete; PR review still required before calling the enrollment path fully reviewed. |
-| User approval boundary          | Codex/CI cannot self-promote Todo App or treat validate-all pass as user acceptance.                |
+| Gate                            | Required state                                                                                     |
+| ------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Local candidate contract        | Passing and mutation-safe. Complete locally.                                                       |
+| Manual/PR candidate observation | Reviewed as pass.                                                                                  |
+| Registry/profile wording        | States non-authority, structure-only, no parity, no pilot marker.                                  |
+| Failure semantics               | Missing/corrupt candidate projection blocks local validate-all, but does not imply CI enforcement. |
+| CI review                       | Manual and PR review complete for the bounded non-authority projection status.                     |
+| User approval boundary          | Codex/CI cannot self-promote Todo App or treat validate-all pass as user acceptance.               |
 
 ## Non-Scope
 
@@ -94,7 +94,7 @@ This local-first enrollment does not:
 
 The user should choose one:
 
-1. Run and review PR informational CI for the bounded non-authority positive validate-all projection status.
-2. Decide whether additional manual observation is needed.
+1. Decide whether additional observation is needed.
+2. Prepare the next bounded E2E dogfood smoke script/design implementation.
 3. Prepare a stronger Todo App promotion package only after separate approval.
-4. Defer broader Todo App graph-source expansion after local enrollment.
+4. Defer broader Todo App graph-source expansion after reviewed enrollment.
