@@ -1,13 +1,14 @@
 # Public-Doc Cleanup Implementation Plan
 
-Status: implementation-plan / docs-only / no-public-doc-edits-yet / no-waiver-approved
+Status: implementation-plan / batch-a-implemented / no-waiver-approved
 
 ## Purpose
 
 This plan turns the public-doc cleanup or waiver decision package into a small, staged cleanup implementation plan.
 
-It does not edit public docs. It does not approve a waiver. It does not approve Graph-source promotion, expand source
-authority, change workflow behavior, change CLI behavior, or retire tree-native artifacts.
+Batch A is now implemented in `docs/source-of-truth-matrix.md`. This plan still does not approve a waiver, Graph-source
+promotion, source authority expansion, workflow behavior changes, CLI behavior changes, or tree-native artifact
+retirement.
 
 ## Cleanup Goal
 
@@ -25,17 +26,17 @@ language to the current authority model.
 
 ## Batch Plan
 
-| Batch   | Scope                          | Likely files                                                                                                        | Goal                                                                                                          |
-| ------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Batch A | High-signal blocker cleanup    | `docs/source-of-truth-matrix.md`                                                                                    | Remove the strongest task-card authority ambiguity before broader promotion approval.                         |
-| Batch B | Task-card shorthand docs       | `README.md`, `docs/acep.md`, `docs/workflow.md`                                                                     | Add consistent contract-packaging and compatibility-view wording where task-card shorthand remains useful.    |
-| Batch C | Examples, usage, audit wording | `docs/examples.md`, `docs/usage.md`, `docs/traceability-rules.md`, `docs/ux-auditor.md`, `docs/coverage-auditor.md` | Reframe examples and audit references so task-card terms are projections/views with traceability obligations. |
-| Batch D | Optional review-only docs      | `docs/file-format.md`, `AGENTS.md`                                                                                  | Review labels and examples only; edit if future cleanup finds ambiguous authority wording.                    |
+| Batch   | Scope                          | Likely files                                                                                                        | Goal                                                                                                              |
+| ------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Batch A | High-signal blocker cleanup    | `docs/source-of-truth-matrix.md`                                                                                    | Implemented: ACEP no longer owns `executable task cards`; task cards are framed as execution/compatibility views. |
+| Batch B | Task-card shorthand docs       | `README.md`, `docs/acep.md`, `docs/workflow.md`                                                                     | Add consistent contract-packaging and compatibility-view wording where task-card shorthand remains useful.        |
+| Batch C | Examples, usage, audit wording | `docs/examples.md`, `docs/usage.md`, `docs/traceability-rules.md`, `docs/ux-auditor.md`, `docs/coverage-auditor.md` | Reframe examples and audit references so task-card terms are projections/views with traceability obligations.     |
+| Batch D | Optional review-only docs      | `docs/file-format.md`, `AGENTS.md`                                                                                  | Review labels and examples only; edit if future cleanup finds ambiguous authority wording.                        |
 
-Recommended first implementation:
+Batch A implementation result:
 
 ```text
-Start with Batch A only, verify, then decide whether Batch B/C should follow in the same cleanup sequence.
+Batch A implemented and ready for review. Batch B/C/D remain unimplemented.
 ```
 
 ## Cleanup Wording Principles
@@ -51,30 +52,29 @@ Start with Batch A only, verify, then decide whether Batch B/C should follow in 
 
 ## Per-File Suggested Edits
 
-| Path                             | Current risk                                                                                         | Proposed wording direction                                                                                          | Priority | Verification needed                                                                |
-| -------------------------------- | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------- |
-| `docs/source-of-truth-matrix.md` | `ACEP` owns `executable task cards`, which can imply task-card source authority.                     | Change ACEP ownership to Cycle Contract / Node Execution Contract packaging, execution manifest, and bounded scope. | A        | Confirm matrix still separates RPD/WPD/VD/Execution Planner/ACEP responsibilities. |
-| `README.md`                      | Diagrams and gate tables still use task-card shorthand despite stronger "not only task cards" text.  | Keep task-card term, but add nearby note that task cards are compatibility/execution views under contracts.         | B        | Confirm quick-start and workflow sections remain readable to new users.            |
-| `docs/acep.md`                   | ACEP pack output and runner behavior are centered on task cards.                                     | Add contract-boundary wording: task cards are one projection inside the execution pack.                             | B        | Confirm ACEP runner instructions still make operational sense.                     |
-| `docs/workflow.md`               | ACEP Generator writes task cards and source-of-truth references, which can blur authority.           | Clarify generated pack references authority but does not become authority.                                          | B        | Confirm workflow sequence remains unchanged.                                       |
-| `docs/examples.md`               | Example execution text says Codex implements task cards.                                             | Keep user-friendly wording but add that task cards derive from contracts and traceability.                          | C        | Confirm examples stay concise.                                                     |
-| `docs/usage.md`                  | Usage flow mentions task cards as execution artifacts.                                               | Add compatibility-view note where task cards are introduced.                                                        | C        | Confirm commands and user instructions are unchanged.                              |
-| `docs/traceability-rules.md`     | Task cards are treated as traceability units.                                                        | Reframe task-card links as execution-contract projection links.                                                     | C        | Confirm traceability obligations remain complete.                                  |
-| `docs/ux-auditor.md`             | UI task-card checks may imply task cards own UI evidence obligations.                                | Clarify task-card sections are checked as contract projections of UI/UX, Work, Test, and Evidence obligations.      | C        | Confirm UX audit coverage remains strict.                                          |
-| `docs/coverage-auditor.md`       | Every task card has requirement links; may over-center task cards.                                   | Clarify coverage can be checked through task-card projections but source obligations remain tree/contract linked.   | C        | Confirm coverage audit remains actionable.                                         |
-| `docs/file-format.md`            | Mentions task-card paths and compatibility views mostly as layout.                                   | Review only; edit labels if they imply authority.                                                                   | D        | Confirm no layout examples become misleading.                                      |
-| `AGENTS.md`                      | Mostly canonical; one visual section mentions ACEP task cards and Node Execution Contracts together. | Optional clarification only if cleanup wants every task-card mention to carry projection wording.                   | D        | Confirm agent instructions remain concise and operational.                         |
+| Path                             | Current risk                                                                                                                | Proposed wording direction                                                                                         | Priority | Verification needed                                                                |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | -------- | ---------------------------------------------------------------------------------- |
+| `docs/source-of-truth-matrix.md` | Resolved in Batch A: `ACEP` no longer owns `executable task cards`; task cards are framed as execution/compatibility views. | Review the new ACEP ownership as Cycle Contract / Node Execution Contract packaging, manifest, and evidence rules. | A        | Confirm matrix still separates RPD/WPD/VD/Execution Planner/ACEP responsibilities. |
+| `README.md`                      | Diagrams and gate tables still use task-card shorthand despite stronger "not only task cards" text.                         | Keep task-card term, but add nearby note that task cards are compatibility/execution views under contracts.        | B        | Confirm quick-start and workflow sections remain readable to new users.            |
+| `docs/acep.md`                   | ACEP pack output and runner behavior are centered on task cards.                                                            | Add contract-boundary wording: task cards are one projection inside the execution pack.                            | B        | Confirm ACEP runner instructions still make operational sense.                     |
+| `docs/workflow.md`               | ACEP Generator writes task cards and source-of-truth references, which can blur authority.                                  | Clarify generated pack references authority but does not become authority.                                         | B        | Confirm workflow sequence remains unchanged.                                       |
+| `docs/examples.md`               | Example execution text says Codex implements task cards.                                                                    | Keep user-friendly wording but add that task cards derive from contracts and traceability.                         | C        | Confirm examples stay concise.                                                     |
+| `docs/usage.md`                  | Usage flow mentions task cards as execution artifacts.                                                                      | Add compatibility-view note where task cards are introduced.                                                       | C        | Confirm commands and user instructions are unchanged.                              |
+| `docs/traceability-rules.md`     | Task cards are treated as traceability units.                                                                               | Reframe task-card links as execution-contract projection links.                                                    | C        | Confirm traceability obligations remain complete.                                  |
+| `docs/ux-auditor.md`             | UI task-card checks may imply task cards own UI evidence obligations.                                                       | Clarify task-card sections are checked as contract projections of UI/UX, Work, Test, and Evidence obligations.     | C        | Confirm UX audit coverage remains strict.                                          |
+| `docs/coverage-auditor.md`       | Every task card has requirement links; may over-center task cards.                                                          | Clarify coverage can be checked through task-card projections but source obligations remain tree/contract linked.  | C        | Confirm coverage audit remains actionable.                                         |
+| `docs/file-format.md`            | Mentions task-card paths and compatibility views mostly as layout.                                                          | Review only; edit labels if they imply authority.                                                                  | D        | Confirm no layout examples become misleading.                                      |
+| `AGENTS.md`                      | Mostly canonical; one visual section mentions ACEP task cards and Node Execution Contracts together.                        | Optional clarification only if cleanup wants every task-card mention to carry projection wording.                  | D        | Confirm agent instructions remain concise and operational.                         |
 
 ## Implementation Sequencing Recommendation
 
 Recommended sequence:
 
-1. Implement Batch A in one small public-doc cleanup commit.
-2. Run docs validation and PBE validation.
-3. Review whether Batch A resolves the blocker or exposes wording patterns that should be handled in Batch B.
-4. Implement Batch B if promotion preparation continues.
-5. Implement Batch C only after Batch B wording has stabilized.
-6. Treat Batch D as optional review-only cleanup unless a concrete ambiguity is found.
+1. Review Batch A wording and confirm it resolves the strongest authority ambiguity.
+2. Decide whether Batch B should begin.
+3. Implement Batch B if promotion preparation continues.
+4. Implement Batch C only after Batch B wording has stabilized.
+5. Treat Batch D as optional review-only cleanup unless a concrete ambiguity is found.
 
 Do not combine cleanup with source authority expansion, workflow changes, or promotion approval.
 
@@ -115,8 +115,6 @@ no-waiver-approved
 
 This plan does not:
 
-- edit public docs
-- implement cleanup
 - approve waiver
 - expand source authority
 - approve Graph-source promotion

@@ -90,9 +90,10 @@ future review input surface only. It does not move the project beyond `current t
 `graph-source promoted`, and does not change the source authority matrix below.
 
 One remaining caveat is public-doc cleanup or explicit waiver. The decision package is recorded in
-[public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md), but no cleanup or waiver
-is implemented by this transition path.
-[public-doc-cleanup-implementation-plan.md](public-doc-cleanup-implementation-plan.md) records the docs-only cleanup
+[public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md). Batch A cleanup is now
+implemented in `docs/source-of-truth-matrix.md` as a review candidate, but Batch B/C/D cleanup and waiver approval remain
+open.
+[public-doc-cleanup-implementation-plan.md](public-doc-cleanup-implementation-plan.md) records the staged cleanup
 sequence for that caveat; it does not change the transition stage or source authority.
 
 ## Source Authority Matrix
@@ -236,8 +237,8 @@ for future demo execution. It is a readiness artifact and does not count as obse
 Evidence result. Its `demonstrated` status for the representative demo slice now includes fresh bounded runtime fixture
 Evidence for title + note/content search and user-renewed Acceptance with retained warnings. Promotion readiness still
 requires generated/parity expectation Evidence, full-product/runtime scope judgment where full promotion is requested,
-and compatibility cleanup/defer judgment. PP-001 confirmation and supplemental compatibility mismatch Evidence exist,
-but they do not clean up public docs or change source authority.
+and compatibility cleanup/defer judgment. PP-001 confirmation, supplemental compatibility mismatch Evidence, and Batch
+A public-doc cleanup exist, but they do not complete remaining public-doc cleanup or change source authority.
 
 [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md) records the readiness review.
 It records the earlier reviewable-with-warnings limited pilot recommendation and the later Graph-first Node/Edge/Tag
@@ -401,7 +402,7 @@ Those remain later concept or implementation questions.
 - Does promotion review need a specialized Approval Brief template?
 - During Todo Search scoped pilot active observation, what trigger should cause validator/CI-backed Evidence,
   public-doc cleanup, broader promotion review, rollback/defer, or continued observation?
-- Will the user accept ACEP task-card public-doc cleanup as deferred cleanup, or require cleanup before promotion
+- Will the user accept remaining ACEP task-card public-doc cleanup as deferred cleanup, or require Batch B/C/D cleanup before promotion
   approval?
 - What additional evidence is required before any broader source authority transition beyond Todo Search?
 - How long should a post-promotion compatibility period last?

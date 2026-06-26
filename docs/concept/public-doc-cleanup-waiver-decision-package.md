@@ -1,6 +1,6 @@
 # Public-Doc Cleanup Or Waiver Decision Package
 
-Status: decision-package / docs-only / no-cleanup-implemented / no-waiver-approved
+Status: decision-package / batch-a-implemented / no-waiver-approved
 
 ## Purpose
 
@@ -12,7 +12,8 @@ still use legacy or shorthand wording around task cards, source-of-truth matrice
 boundaries. Those docs are useful historical and user-facing material, but before any full Graph-source promotion they
 must either be cleaned up or explicitly waived by the user.
 
-This package does not edit public docs, approve a waiver, change source authority, approve Graph-source promotion, add
+Batch A cleanup has now edited `docs/source-of-truth-matrix.md` to remove the strongest ACEP task-card authority
+ambiguity. This package still does not approve a waiver, change source authority, approve Graph-source promotion, add
 enforcement, or retire tree-native artifacts.
 
 ## Why This Matters Before Broader Promotion
@@ -44,20 +45,20 @@ Public-doc cleanup or explicit waiver is needed to keep these distinctions visib
 The inventory below is based on a quick scan of `README.md`, `AGENTS.md`, `docs/index.md`, and public `docs/*.md`.
 `docs/concept/**` is intentionally separated as concept record material.
 
-| Path / group                                     | Category                           | Wording risk                                                                                                                      | Recommended action                                                                      | Blocking for promotion approval?       |
-| ------------------------------------------------ | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | -------------------------------------- |
-| `docs/source-of-truth-matrix.md`                 | Cleanup candidate before promotion | Says `ACEP` owns `executable task cards`, which can be read as task-card source authority.                                        | Rewrite ACEP ownership as Cycle Contract / Node Execution Contract packaging and scope. | Yes, unless explicitly waived.         |
-| `README.md` task-card references                 | Cleanup or waiver candidate        | Mostly says PBE is not only task cards, but diagrams and gate tables still use task-card shorthand.                               | Clarify task cards as compatibility/execution views under contract authority.           | Likely yes for full promotion.         |
-| `docs/acep.md`                                   | Cleanup or waiver candidate        | Describes pack output and runner behavior through `task cards`; useful but may over-center cards.                                 | Add contract-boundary wording around Cycle/Node Execution Contracts.                    | Conditional; explicit waiver possible. |
-| `docs/workflow.md`                               | Cleanup or waiver candidate        | Says ACEP Generator writes task cards and source-of-truth references.                                                             | Clarify generated pack references authority but does not become source.                 | Conditional; explicit waiver possible. |
-| `docs/examples.md`, `docs/usage.md`              | Cleanup or waiver candidate        | Uses task-card execution shorthand for user workflows.                                                                            | Keep examples but add compatibility shorthand note if promotion proceeds.               | Conditional; explicit waiver possible. |
-| `docs/traceability-rules.md`                     | Cleanup candidate before promotion | Treats task cards as traceability units; may need alignment with Node Execution Contracts.                                        | Reframe task-card links as execution-contract projection links.                         | Conditional; likely cleanup.           |
-| `docs/ux-auditor.md`, `docs/coverage-auditor.md` | Cleanup or waiver candidate        | Audit language checks task cards as coverage artifacts.                                                                           | Clarify task cards are checked as contract projections, not source truth.               | Conditional.                           |
-| `docs/file-format.md`                            | Mostly safe / review later         | Mentions compatibility views and task-card paths, but mostly as file layout.                                                      | Review for labels only if broader cleanup starts.                                       | No unless conflict found.              |
-| `AGENTS.md`                                      | Mostly safe / review later         | Current instructions define ACEP as Cycle Contract and Node Execution Contract packaging; one visual section mentions task cards. | Keep as operational guidance; optionally clarify visual task-card shorthand later.      | No immediate blocker.                  |
-| `docs/project-blueprint-engine-plugin.md`        | Safe / no action needed            | Explicitly says PBE generates an execution contract, not just task cards.                                                         | Use as model wording for cleanup.                                                       | No.                                    |
-| `docs/tree-model.md`, `docs/core-concepts.md`    | Safe / no action needed            | Public architecture docs emphasize tree-native source/control model.                                                              | Keep as canonical public wording.                                                       | No.                                    |
-| `docs/concept/**`                                | Concept-only retained context      | Contains historical decisions, warnings, and transition records by design.                                                        | Do not clean as public docs unless a later concept-archive policy is approved.          | No for this package.                   |
+| Path / group                                     | Category                               | Wording risk                                                                                                                                                                                                                                                                    | Recommended action                                                                 | Blocking for promotion approval?        |
+| ------------------------------------------------ | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------- |
+| `docs/source-of-truth-matrix.md`                 | Batch A implemented / review candidate | Previously said `ACEP` owned `executable task cards`, which could be read as task-card source authority. Batch A now reframes ACEP as Cycle Contract / Node Execution Contract packaging, manifest, and evidence rules, and frames task cards as execution/compatibility views. | Review Batch A wording; no waiver is approved by the cleanup.                      | Review still required before promotion. |
+| `README.md` task-card references                 | Cleanup or waiver candidate            | Mostly says PBE is not only task cards, but diagrams and gate tables still use task-card shorthand.                                                                                                                                                                             | Clarify task cards as compatibility/execution views under contract authority.      | Likely yes for full promotion.          |
+| `docs/acep.md`                                   | Cleanup or waiver candidate            | Describes pack output and runner behavior through `task cards`; useful but may over-center cards.                                                                                                                                                                               | Add contract-boundary wording around Cycle/Node Execution Contracts.               | Conditional; explicit waiver possible.  |
+| `docs/workflow.md`                               | Cleanup or waiver candidate            | Says ACEP Generator writes task cards and source-of-truth references.                                                                                                                                                                                                           | Clarify generated pack references authority but does not become source.            | Conditional; explicit waiver possible.  |
+| `docs/examples.md`, `docs/usage.md`              | Cleanup or waiver candidate            | Uses task-card execution shorthand for user workflows.                                                                                                                                                                                                                          | Keep examples but add compatibility shorthand note if promotion proceeds.          | Conditional; explicit waiver possible.  |
+| `docs/traceability-rules.md`                     | Cleanup candidate before promotion     | Treats task cards as traceability units; may need alignment with Node Execution Contracts.                                                                                                                                                                                      | Reframe task-card links as execution-contract projection links.                    | Conditional; likely cleanup.            |
+| `docs/ux-auditor.md`, `docs/coverage-auditor.md` | Cleanup or waiver candidate            | Audit language checks task cards as coverage artifacts.                                                                                                                                                                                                                         | Clarify task cards are checked as contract projections, not source truth.          | Conditional.                            |
+| `docs/file-format.md`                            | Mostly safe / review later             | Mentions compatibility views and task-card paths, but mostly as file layout.                                                                                                                                                                                                    | Review for labels only if broader cleanup starts.                                  | No unless conflict found.               |
+| `AGENTS.md`                                      | Mostly safe / review later             | Current instructions define ACEP as Cycle Contract and Node Execution Contract packaging; one visual section mentions task cards.                                                                                                                                               | Keep as operational guidance; optionally clarify visual task-card shorthand later. | No immediate blocker.                   |
+| `docs/project-blueprint-engine-plugin.md`        | Safe / no action needed                | Explicitly says PBE generates an execution contract, not just task cards.                                                                                                                                                                                                       | Use as model wording for cleanup.                                                  | No.                                     |
+| `docs/tree-model.md`, `docs/core-concepts.md`    | Safe / no action needed                | Public architecture docs emphasize tree-native source/control model.                                                                                                                                                                                                            | Keep as canonical public wording.                                                  | No.                                     |
+| `docs/concept/**`                                | Concept-only retained context          | Contains historical decisions, warnings, and transition records by design.                                                                                                                                                                                                      | Do not clean as public docs unless a later concept-archive policy is approved.     | No for this package.                    |
 
 ## Wording Risk Classes
 
@@ -107,16 +108,14 @@ no-waiver-approved
 ## Implementation Plan
 
 The cleanup implementation plan is recorded in
-[public-doc-cleanup-implementation-plan.md](public-doc-cleanup-implementation-plan.md). It recommends implementing Batch
-A first, focused on `docs/source-of-truth-matrix.md`, before broader task-card shorthand cleanup. The plan does not edit
-public docs or approve a waiver.
+[public-doc-cleanup-implementation-plan.md](public-doc-cleanup-implementation-plan.md). Batch A is implemented in
+`docs/source-of-truth-matrix.md` as a review candidate. Batch B/C/D remain unimplemented, and no waiver is approved.
 
 ## Non-Scope
 
 This package does not:
 
-- edit public docs
-- implement cleanup
+- implement Batch B/C/D cleanup
 - approve an explicit waiver
 - expand source authority
 - approve Graph-source promotion

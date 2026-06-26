@@ -136,7 +136,8 @@ Its status is `promotion-review-inputs-ready-with-caveats`, not `promotion-ready
 documentation cleanup or explicit waiver decision package for one of those caveats. It inventories public/user-facing
 docs and recommends cleanup before actual full promotion unless the user explicitly approves a visible waiver.
 [public-doc-cleanup-implementation-plan.md](public-doc-cleanup-implementation-plan.md) breaks that cleanup into staged
-batches, with Batch A focused on the `docs/source-of-truth-matrix.md` authority wording risk.
+batches. Batch A is now implemented as a review candidate in `docs/source-of-truth-matrix.md`; Batch B/C/D remain
+unimplemented and no waiver is approved.
 
 Preparation outcome:
 
@@ -226,7 +227,7 @@ do not justify full promotion by themselves.
 | Approval Brief / Control Node handling visible                              | ready              | Todo Search Approval Brief, actual demo result, and compatibility supplemental slice expose user-relevant judgment/control points.                                                                                        |
 | Retained warnings classified                                                | ready              | This review classifies each retained warning below.                                                                                                                                                                       |
 | Generated graph/read-model output available or explicitly deferred/blocking | ready with warning | Bounded Todo Search generated output, local validator-backed Evidence, and reviewed CI-backed Evidence exist. Full promotion may still require broader/multi-slice validation, enforcement decisions, or explicit waiver. |
-| Public-doc cleanup status classified                                        | ready with warning | ACEP task-card public-doc cleanup is classified as deferred cleanup with a Compatibility Control Node candidate and explicit readiness warning.                                                                           |
+| Public-doc cleanup status classified                                        | ready with warning | Batch A source-of-truth matrix cleanup is implemented as a review candidate; remaining Batch B/C/D cleanup is still a Compatibility Control Node candidate and explicit readiness warning.                                |
 
 ## Retained Warnings Classification
 
@@ -235,7 +236,7 @@ do not justify full promotion by themselves.
 | Bounded fixture Evidence, not full Todo app implementation | acceptable warning               | The bounded fixture is acceptable for representative lifecycle feasibility and limited pilot readiness discussion. It is not proof of full product runtime parity.                                           | Carry as a pilot/full distinction. Require full-product/runtime Evidence only if the user asks for full promotion confidence rather than limited pilot review.                         |
 | UI screenshot/manual visual evidence partial               | acceptable warning               | The representative source-model promotion question is not blocked by missing UI screenshot Evidence because behavior Evidence and warning state are visible. It remains a product/UI evidence gap.           | Keep visible as a retained warning. Require screenshot/manual visual Evidence before claiming full UI/product parity.                                                                  |
 | CI-backed read-model Evidence / enforcement missing        | later implementation requirement | Generated read-model output, parity comparison, local validator-backed Evidence, reviewed CI-backed Evidence, and a reviewed PR informational run exist. CI enforcement and broader scope remain unapproved. | Observe PR informational runs under policy; decide later whether to refine filters, design enforcement, broaden validation, clean up public docs, or prepare broader promotion review. |
-| ACEP task-card public-doc cleanup deferred                 | deferred cleanup                 | Existing policy bounds the mismatch, and supplemental Evidence makes it visible. Cleanup is not required to run this readiness review, but the user must accept or resolve the caveat for promotion.         | Carry the Compatibility Control Node candidate into promotion decision. Decide cleanup-before-promotion or accepted deferred cleanup.                                                  |
+| ACEP task-card public-doc cleanup partially implemented    | deferred cleanup                 | Batch A corrected the highest-signal source-of-truth matrix wording, but remaining public-doc shorthand still needs cleanup, review, or explicit waiver before promotion.                                    | Review Batch A and decide Batch B/C/D cleanup-before-promotion or accepted deferred cleanup.                                                                                           |
 
 ## Promotion Recommendation
 
@@ -283,16 +284,16 @@ Acceptance is user-approved with warnings retained.
 
 ### Verification Summary
 
-| Check                                           | Status             | Summary                                                                                                                                                                                       |
-| ----------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Representative lifecycle demonstrated           | ready              | Product -> Project -> Work -> Test -> Evidence -> Acceptance is reviewable for the selected slice.                                                                                            |
-| Source authority safety                         | ready              | All updated artifacts preserve tree-native operational source authority.                                                                                                                      |
-| Check/Evidence safety                           | ready              | AI self-report is excluded; command Evidence and exceptions are linked.                                                                                                                       |
-| Compatibility mismatch visibility               | ready with warning | ACEP task-card-only wording is documented as a Compatibility Control Node candidate.                                                                                                          |
-| Rollback / compatibility readiness              | ready with warning | Strategy exists, but no rollback or compatibility retirement mechanics are implemented.                                                                                                       |
-| Manual graph/read-model parity output           | ready with warning | Manual parity artifacts make the read-model relationship reviewable for limited pilot discussion.                                                                                             |
-| Generated / validator-backed / CI-backed output | ready with warning | Generated output, local validator-backed Evidence, and reviewed non-enforcing CI-backed Evidence exist for Todo Search; broader/multi-slice coverage and enforcement remain future decisions. |
-| Public-doc cleanup                              | deferred           | Cleanup is deferred and must be accepted as a caveat or resolved before promotion approval.                                                                                                   |
+| Check                                           | Status                | Summary                                                                                                                                                                                       |
+| ----------------------------------------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Representative lifecycle demonstrated           | ready                 | Product -> Project -> Work -> Test -> Evidence -> Acceptance is reviewable for the selected slice.                                                                                            |
+| Source authority safety                         | ready                 | All updated artifacts preserve tree-native operational source authority.                                                                                                                      |
+| Check/Evidence safety                           | ready                 | AI self-report is excluded; command Evidence and exceptions are linked.                                                                                                                       |
+| Compatibility mismatch visibility               | ready with warning    | ACEP task-card-only wording is documented as a Compatibility Control Node candidate.                                                                                                          |
+| Rollback / compatibility readiness              | ready with warning    | Strategy exists, but no rollback or compatibility retirement mechanics are implemented.                                                                                                       |
+| Manual graph/read-model parity output           | ready with warning    | Manual parity artifacts make the read-model relationship reviewable for limited pilot discussion.                                                                                             |
+| Generated / validator-backed / CI-backed output | ready with warning    | Generated output, local validator-backed Evidence, and reviewed non-enforcing CI-backed Evidence exist for Todo Search; broader/multi-slice coverage and enforcement remain future decisions. |
+| Public-doc cleanup                              | partially implemented | Batch A is implemented as a review candidate; remaining Batch B/C/D cleanup must be accepted as a caveat, waived, or resolved before promotion approval.                                      |
 
 ### Remaining Judgment
 
@@ -302,7 +303,7 @@ concerns whether to:
 
 1. keep observing PR informational runs under [pr-informational-observation-policy.md](pr-informational-observation-policy.md),
    refine filters later, design enforcement policy, or prepare multi-slice validation,
-2. defer or require ACEP task-card public-doc cleanup before full promotion,
+2. review Batch A and defer, waive, or require remaining Batch B/C/D public-doc cleanup before full promotion,
 3. require full-product/runtime/UI Evidence before full promotion or only before full product parity claims, and
 4. use [broader-graph-source-promotion-review-inputs.md](broader-graph-source-promotion-review-inputs.md) to choose
    the next review branch, or keep observing the scoped pilot.
@@ -324,9 +325,9 @@ concerns whether to:
 Decision required
 ```
 
-Reason: the Graph-first Node/Edge/Tag baseline refresh, bounded scoped execution, active observation, and local
-validator-backed Evidence are recorded. Full promotion, broad source authority change, CI enforcement, and public-doc
-cleanup remain separate.
+Reason: the Graph-first Node/Edge/Tag baseline refresh, bounded scoped execution, active observation, local
+validator-backed Evidence, and Batch A public-doc cleanup are recorded. Full promotion, broad source authority change,
+CI enforcement, and remaining public-doc cleanup remain separate.
 
 ## Control Node / Risk Classification
 
@@ -335,7 +336,7 @@ cleanup remain separate.
 | Accept bounded fixture Evidence for readiness             | Decision Control Node        | Resolved for limited pilot / warning remains            | User accepted bounded fixture Evidence for limited pilot decision context; full runtime proof may still be required for full promotion. | Show in transition record and full-promotion review.                    |
 | Generated / validator-backed / CI-backed Evidence present | Evidence Control Node        | Resolved for scoped pilot / enforcement warning remains | Generated output, parity report, local validation report, and reviewed CI-backed artifact exist; enforcement remains unapproved.        | Show as Evidence and full-promotion/enforcement caveat.                 |
 | UI screenshot/manual visual Evidence partial              | Evidence Control Node        | Active warning                                          | UI proof remains partial but does not block source-model readiness by itself.                                                           | Show as warning if full product/UI parity is in scope.                  |
-| ACEP public-doc cleanup deferred                          | Compatibility Control Node   | Active / Deferred cleanup                               | Real wording mismatch is bounded by compatibility policy but remains a public-doc cleanup caveat.                                       | Show in promotion readiness and promotion decision review.              |
+| ACEP public-doc cleanup partially implemented             | Compatibility Control Node   | Active / Batch A review candidate                       | Batch A corrected the strongest matrix wording, but remaining public-doc shorthand remains a cleanup caveat.                            | Show in promotion readiness and promotion decision review.              |
 | Demo slice renewed Acceptance closed                      | Acceptance Control Node      | Closed with warnings                                    | User approved renewed demo-support Acceptance with warnings retained.                                                                   | Show as closed demo-slice acceptance, not promotion approval.           |
 | Source authority transition affects tree views            | Impact / Change Control Node | Deferred                                                | Any actual source transition would affect tree-native artifacts, projections, compatibility views, and rollback needs.                  | Show only if user asks to prepare an actual promotion decision package. |
 
@@ -368,7 +369,7 @@ cleanup remain separate.
 
 - Whether full promotion requires CI-backed graph/read-model Evidence or an explicit user waiver.
 - Whether bounded fixture Evidence is enough for the pilot decision surface.
-- Whether ACEP task-card public-doc cleanup must happen before promotion approval or may remain deferred with an
+- Whether remaining ACEP task-card public-doc cleanup must happen before promotion approval or may remain deferred with an
   explicit compatibility caveat.
 - Whether full-product/runtime/UI Evidence is required before promotion approval or only before full product parity
   claims.
@@ -383,7 +384,7 @@ cleanup remain separate.
 | Source Authority Safety Gate | PASS   | Tree-native artifacts remain current operational source.                                                                                                                                                                     |
 | Approval Boundary Gate       | PASS   | Readiness review, promotion decision, and promotion approval remain separate.                                                                                                                                                |
 | Control Node Visibility Gate | PASS   | Decision, Evidence, Compatibility, Acceptance, and Impact/Change control candidates are identified.                                                                                                                          |
-| Gap Honesty Gate             | PASS   | Public-doc cleanup, full-product Evidence, additional-slice CI-backed Evidence, aggregation, and pilot/full distinction remain visible.                                                                                      |
+| Gap Honesty Gate             | PASS   | Remaining public-doc cleanup, full-product Evidence, additional-slice CI-backed Evidence, aggregation, and pilot/full distinction remain visible.                                                                            |
 | Implementation Boundary Gate | PASS   | Scoped builder/validator exist for Todo Search and structure-only generation/validation exists for one canonical `.pbe` fixture; no CI enforcement, schema, runtime, model, migration, or full Todo implementation is added. |
 
 ## Final Non-Promotion Statement
