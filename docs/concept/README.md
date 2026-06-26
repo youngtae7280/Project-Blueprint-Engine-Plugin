@@ -465,8 +465,10 @@ The next implementation branch decision surface is now recorded:
 
 It records the first Graph source artifact/storage step for the promoted Todo Search scope:
 `examples/adoption/todo-search-slice/graph-source.json`, parser/projection tests, and the minimal
-`graph read-model project` CLI projection path. It does not change default generation, workflow behavior, validate-all
-registry behavior, fallback artifacts, or source authority beyond the limited Todo Search promoted scope.
+`graph read-model project` CLI projection path. Todo Search `graph read-model generate --slice` now uses that bounded
+graph source for generated nodes, edges, and Core View coverage while preserving 40/59/7 shape, parity, validation,
+fallback boundaries, and generated Evidence role. It does not change workflow behavior, validate-all registry behavior,
+fallback artifacts, Todo App structure-only status, or source authority beyond the limited Todo Search promoted scope.
 
 The public-doc cleanup or waiver decision package is now recorded:
 

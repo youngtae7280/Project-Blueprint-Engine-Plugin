@@ -1,6 +1,6 @@
 # Graph Source Artifact Storage And Projection Generation Design
 
-Status: first-artifact-implemented / minimal-cli-projection-path / no-workflow-change
+Status: first-artifact-implemented / minimal-cli-projection-path / graph-source-backed-generation / no-workflow-change
 
 ## Purpose
 
@@ -13,8 +13,9 @@ Graph source artifact/storage + projection generation
 It prepares and now records the first storage and projection step for the promoted Todo Search selected-slice scope. The
 first non-generated graph source artifact exists, and focused tests prove projection preserves the current Todo Search
 read-model shape. A minimal CLI projection path now writes an explicit generated projection artifact when invoked. This
-does not change default generation, workflows, retained fallback artifacts, or source authority beyond the executed
-limited scope.
+now also backs Todo Search default read-model generation from the bounded graph source records. It does not change
+workflows, retained fallback artifacts, Todo App structure-only behavior, or source authority beyond the executed limited
+scope.
 
 ## Current Baseline
 
@@ -85,6 +86,10 @@ projection artifact is:
 examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
 ```
 
+Todo Search `graph read-model generate --slice examples/adoption/todo-search-slice` now uses the same bounded graph
+source records for generated nodes, edges, and Core View coverage while preserving the existing generated Evidence role,
+manual parity pass, validation pass, and 40-node / 59-edge / 7-Core-View shape.
+
 Future projection generation hardening should:
 
 1. Read the promoted graph source artifact.
@@ -98,16 +103,15 @@ Future projection generation hardening should:
 Recommended sequence:
 
 1. Review the graph source projection helper, CLI surface, artifact shape, and contract hardening tests.
-2. Decide whether workflow/manual-PR review should observe the validate-all projection contract status.
+2. Keep manual/PR workflow observation of projection contract status visible.
 3. Add parity/validation tests for any new projection output shape before broadening its use.
-4. Keep `validate --all` positive registry behavior stable until the projection path is reviewed.
+4. Keep `validate --all` positive registry behavior bounded to the declared Todo Search and Todo App profiles.
 
 ## Non-Scope
 
 This design does not:
 
 - create a repo-wide graph source artifact
-- change default `graph read-model generate` behavior
 - modify workflow or CI
 - regenerate unrelated generated artifacts
 - add enforcement or required checks

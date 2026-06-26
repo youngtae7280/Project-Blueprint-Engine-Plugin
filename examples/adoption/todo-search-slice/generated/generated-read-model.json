@@ -2,9 +2,9 @@
   "version": "0.1.0-generated-read-model-evidence",
   "metadata": {
     "artifactRole": "generated_read_model_evidence",
-    "generatedAt": "2026-06-26T01:04:19.868Z",
+    "generatedAt": "2026-06-26T05:33:22.975Z",
     "commandIdentity": "pbe graph read-model generate --slice examples/adoption/todo-search-slice",
-    "sourceCommit": "79e1179",
+    "sourceCommit": "f517e13",
     "sourceSlice": "examples/adoption/todo-search-slice",
     "sliceProfile": "todo-search-selected-slice",
     "sliceProfileDisplayName": "Todo Search Adoption + Product Meaning Feedback",
@@ -29,14 +29,29 @@
       "docs/concept/scoped-source-authority-pilot-execution-record.md",
       "docs/concept/scoped-source-authority-pilot-review.md",
       "docs/concept/scoped-source-authority-pilot-active-observation.md",
-      "examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md"
+      "examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md",
+      "examples/adoption/todo-search-slice/graph-source.json"
     ],
     "generatedStatus": "generated-present",
     "sourceAuthority": "Tree-native selected-slice artifacts remain current operational source.",
     "nonPromotionStatement": "Generated output is reviewable Evidence only and cannot change source authority without later explicit user approval.",
     "taxonomyBasis": "docs/concept/graph-node-edge-tag-policy.md",
     "coreViewBasis": "docs/concept/view-tree-pack.md 7 Core Views",
-    "viewMembershipBoundary": "View membership is represented by includedInViewIds and coreViewCoverage. viewScopedTags contains only role tags."
+    "viewMembershipBoundary": "View membership is represented by includedInViewIds and coreViewCoverage. viewScopedTags contains only role tags.",
+    "readModelSourceMode": "graph-source-backed",
+    "graphSourceArtifact": "examples/adoption/todo-search-slice/graph-source.json",
+    "graphSourceProjectionRole": "graph_source_read_model_projection",
+    "graphSourcePromotionScope": "todo-search-selected-slice",
+    "graphSourceProjectionBoundary": "Generated read-model, parity, validation, aggregate, and CI artifacts are projections or Evidence derived from this limited graph source. They do not replace user acceptance, add enforcement, retire fallback artifacts, or promote Todo App PBE Run.",
+    "fallbackReferences": [
+      "examples/adoption/todo-search-slice/product-tree.json",
+      "examples/adoption/todo-search-slice/project-tree.json",
+      "examples/adoption/todo-search-slice/work-tree.json",
+      "examples/adoption/todo-search-slice/test-tree.json",
+      "examples/adoption/todo-search-slice/evidence-tree.json",
+      "examples/adoption/todo-search-slice/acceptance-tree.json",
+      "examples/adoption/todo-search-slice/maintainability-graph-read-model.json"
+    ]
   },
   "sourceInputs": [
     {
@@ -132,6 +147,11 @@
     {
       "relativePath": "examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md",
       "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\adoption\\compatibility-mismatch-slice\\compatibility-control-node.md",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/adoption/todo-search-slice/graph-source.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin\\examples\\adoption\\todo-search-slice\\graph-source.json",
       "status": "present"
     }
   ],

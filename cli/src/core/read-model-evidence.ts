@@ -492,6 +492,7 @@ export const todoSearchReadModelProfile: SliceReadModelConfig = {
     'docs/concept/scoped-source-authority-pilot-review.md',
     'docs/concept/scoped-source-authority-pilot-active-observation.md',
     'examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md',
+    'graph-source.json',
   ],
   retainedWarnings: [
     {
@@ -1036,9 +1037,10 @@ export async function generateReadModelEvidence(root: string, slice: string): Pr
   const commandIdentity = `pbe graph read-model generate --slice ${slice}`
   const generatedAt = new Date().toISOString()
   const sourceCommit = resolveSourceCommit(root)
-  const nodes = buildNodes(data, profile)
-  const edges = buildEdges(data, profile)
-  const coreViewCoverage = buildCoreViewCoverage(profile)
+  const readModelRecords = await buildGeneratedReadModelRecords(root, data, profile)
+  const nodes = readModelRecords.nodes
+  const edges = readModelRecords.edges
+  const coreViewCoverage = readModelRecords.coreViewCoverage
   const model: GeneratedReadModel = {
     version: '0.1.0-generated-read-model-evidence',
     metadata: {
@@ -1059,6 +1061,7 @@ export async function generateReadModelEvidence(root: string, slice: string): Pr
       coreViewBasis: 'docs/concept/view-tree-pack.md 7 Core Views',
       viewMembershipBoundary:
         'View membership is represented by includedInViewIds and coreViewCoverage. viewScopedTags contains only role tags.',
+      ...readModelRecords.metadata,
     },
     sourceInputs,
     taxonomy: {
@@ -1085,6 +1088,42 @@ export async function generateReadModelEvidence(root: string, slice: string): Pr
   await writeFormattedMarkdown(generatedMarkdownPath, renderGeneratedReadModelMarkdown(model))
   await writeFormattedJson(manifestPath, buildEvidenceManifest(model, generatedJsonPath, generatedMarkdownPath, root))
   return { generatedJsonPath, generatedMarkdownPath, manifestPath, model }
+}
+
+async function buildGeneratedReadModelRecords(
+  root: string,
+  data: Record<string, unknown>,
+  profile: SliceReadModelConfig,
+): Promise<
+  Pick<GeneratedReadModel, 'nodes' | 'edges' | 'coreViewCoverage'> & {
+    metadata: Record<string, unknown>
+  }
+> {
+  if (profile.artifacts.graphSource) {
+    const graphSourcePath = `${profile.supportedSlice}/${profile.artifacts.graphSource}`
+    const graphSource = await loadGraphSourceArtifact(root, graphSourcePath)
+    const projection = projectGraphSourceReadModel(graphSource, graphSourcePath).projection
+    return {
+      nodes: cloneJson(projection.nodes),
+      edges: cloneJson(projection.edges),
+      coreViewCoverage: cloneJson(projection.coreViewCoverage),
+      metadata: {
+        readModelSourceMode: 'graph-source-backed',
+        graphSourceArtifact: graphSourcePath,
+        graphSourceProjectionRole: projection.metadata.artifactRole,
+        graphSourcePromotionScope: projection.metadata.promotionScope,
+        graphSourceProjectionBoundary: projection.metadata.projectionBoundary,
+        fallbackReferences: cloneJson(projection.fallbackReferences),
+      },
+    }
+  }
+
+  return {
+    nodes: buildNodes(data, profile),
+    edges: buildEdges(data, profile),
+    coreViewCoverage: buildCoreViewCoverage(profile),
+    metadata: {},
+  }
 }
 
 export async function compareReadModelEvidence(

@@ -4,9 +4,9 @@ Status: generated-present / evidence-only / source-authority-unchanged
 
 ## Run Identity
 
-- Generated at: 2026-06-26T01:04:19.868Z
+- Generated at: 2026-06-26T05:33:22.975Z
 - Command identity: `pbe graph read-model generate --slice examples/adoption/todo-search-slice`
-- Source commit: 79e1179
+- Source commit: f517e13
 - Source slice: `examples/adoption/todo-search-slice`
 
 ## Boundary
@@ -36,6 +36,7 @@ Generated output is reviewable Evidence only and cannot change source authority 
 - docs/concept/scoped-source-authority-pilot-review.md: present
 - docs/concept/scoped-source-authority-pilot-active-observation.md: present
 - examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md: present
+- examples/adoption/todo-search-slice/graph-source.json: present
 
 ## Node / Edge / Tag Summary
 

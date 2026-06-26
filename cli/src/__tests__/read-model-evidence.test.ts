@@ -472,7 +472,13 @@ describe('read-model Evidence builder', () => {
       nodes: Array<{ viewScopedTags?: string[]; includedInViewIds?: string[] }>
       edges: unknown[]
       coreViewCoverage: Array<{ name: string; viewScopedTags?: string[] }>
-      metadata: { sliceProfile?: string }
+      metadata: {
+        sliceProfile?: string
+        readModelSourceMode?: string
+        graphSourceArtifact?: string
+        graphSourceProjectionRole?: string
+      }
+      sourceInputs: Array<{ relativePath: string }>
       sourceAuthorityBoundary: string
       nonPromotionStatement: string
     }
@@ -483,6 +489,12 @@ describe('read-model Evidence builder', () => {
     expect(generated.nodes).toHaveLength(todoSearchReadModelProfile.expectedCounts.nodes)
     expect(generated.edges).toHaveLength(todoSearchReadModelProfile.expectedCounts.edges)
     expect(generated.metadata.sliceProfile).toBe(todoSearchReadModelProfile.profileId)
+    expect(generated.metadata.readModelSourceMode).toBe('graph-source-backed')
+    expect(generated.metadata.graphSourceArtifact).toBe('examples/adoption/todo-search-slice/graph-source.json')
+    expect(generated.metadata.graphSourceProjectionRole).toBe('graph_source_read_model_projection')
+    expect(generated.sourceInputs.map((entry) => entry.relativePath)).toContain(
+      'examples/adoption/todo-search-slice/graph-source.json',
+    )
     expect(generated.nodes.length).toBeGreaterThan(0)
     expect(
       generated.nodes.some((entry) => Array.isArray(entry.includedInViewIds) && entry.includedInViewIds.length > 0),
@@ -493,6 +505,34 @@ describe('read-model Evidence builder', () => {
     ]
     expect(tags.every((tag) => allowedTags.has(tag))).toBe(true)
     expect(tags.some((tag) => tag.endsWith('-view'))).toBe(false)
+  })
+
+  it('uses Todo Search graph source records for generated read-model output', async () => {
+    const workspace = await createExampleWorkspace()
+    const graphSourcePath = join(workspace, 'examples/adoption/todo-search-slice/graph-source.json')
+    const graphSource = JSON.parse(await readFile(graphSourcePath, 'utf8')) as {
+      sourceRecords: { nodes: Array<{ id: string; title: string }> }
+    }
+    const targetNode = graphSource.sourceRecords.nodes.find((entry) => entry.id === 'AC-SEARCH-001')
+    expect(targetNode).toBeDefined()
+    targetNode!.title = 'Graph source backed generation smoke title'
+    await writeFile(graphSourcePath, JSON.stringify(graphSource, null, 2))
+
+    const result = await generateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const generated = JSON.parse(await readFile(result.generatedJsonPath, 'utf8')) as {
+      nodes: Array<{ id: string; title: string }>
+      edges: unknown[]
+      coreViewCoverage: unknown[]
+      metadata: { readModelSourceMode?: string }
+    }
+
+    expect(generated.metadata.readModelSourceMode).toBe('graph-source-backed')
+    expect(generated.nodes.find((entry) => entry.id === 'AC-SEARCH-001')?.title).toBe(
+      'Graph source backed generation smoke title',
+    )
+    expect(generated.nodes).toHaveLength(todoSearchReadModelProfile.expectedCounts.nodes)
+    expect(generated.edges).toHaveLength(todoSearchReadModelProfile.expectedCounts.edges)
+    expect(generated.coreViewCoverage).toHaveLength(coreViews.length)
   })
 
   it('writes a parity report without mutating manual artifacts', async () => {
