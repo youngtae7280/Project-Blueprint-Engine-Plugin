@@ -94,13 +94,13 @@ Ethernet도 이번 범위에 포함해주세요
 Codex automatically runs execution planning, coverage audit, UX audit, and ACEP generation, then writes
 `.pbe/codex-execution-pack/`.
 
-The generated pack includes traceability matrix, UI/UX spec, evidence checklist, task cards, completion criteria, and
-final coverage check.
+The generated pack includes traceability matrix, UI/UX spec, evidence checklist, task-card views, completion criteria,
+and final coverage check. Task-card views are execution-contract projections, not source authority.
 
 ## Run ACEP
 
-Codex automatically reads the execution manifest, follows the operating loop, implements task cards, validates, and
-prepares final review.
+Codex automatically reads the execution manifest, follows the operating loop, implements the selected scope through
+task-card views, validates, and prepares final review.
 
 Before reporting completion, Codex checks traceability, UI/UX evidence, and final coverage.
 

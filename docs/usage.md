@@ -82,8 +82,9 @@ The status card is the workflow status. The Codex memo is explanation.
 9. If the user approves the result, PBE moves to Next Slice Decision.
 10. The user can complete the current slice, start another slice, or complete the whole project.
 
-ACEP is a contract. When `generate acep` runs, Codex creates traceability, UI/UX, evidence, final coverage, execution
-strategy, and manifest files in addition to task cards.
+ACEP is a contract package. When `generate acep` runs, Codex creates traceability, UI/UX, evidence, final coverage,
+execution strategy, and manifest files in addition to task-card views. Those views carry execution-contract obligations;
+they do not replace the underlying trees or contracts.
 
 ## Example Start
 
@@ -140,7 +141,7 @@ Do not expect a React canvas, API key screen, or export UI. The files are the pr
 
 ## Completion Gate
 
-`run acep` should not finish only because task cards were attempted. It finishes after:
+`run acep` should not finish only because task-card views were attempted. It finishes after:
 
 - selected scope is linked to task coverage
 - required foundation is implemented and verified
