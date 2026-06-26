@@ -46,6 +46,11 @@ The current read-model Evidence stack is now summarized for future promotion rev
 review inputs easier to inspect, but it does not promote Maintainability Graph to source authority or retire tree-native
 artifacts.
 
+The candidate broader source-authority matrix is now documented in
+[source-authority-expansion-design-package.md](source-authority-expansion-design-package.md). It defines possible future
+roles for Maintainability Graph, generated read-models, tree artifacts, reports, CI manifests, contracts, and
+compatibility views, but it remains design-only and does not change the current read-model role.
+
 In that target:
 
 ```text
@@ -128,6 +133,10 @@ The promotion readiness review is recorded in
 and records that the earlier reviewable-with-warnings limited pilot recommendation has now been refreshed under the
 Graph-first Node/Edge/Tag taxonomy for limited pilot review. Promotion state remains `Decision required`; the review does
 not promote Maintainability Graph or change source authority.
+
+The source-authority expansion design package is now a review input for any later broader promotion package. It does not
+make Maintainability Graph the current source model and does not replace rollback, fallback, enforcement, or user
+approval decisions.
 
 The limited pilot user judgment surface is recorded in
 [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md). It is now refreshed for the

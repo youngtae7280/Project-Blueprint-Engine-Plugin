@@ -73,7 +73,9 @@ Batch A, Batch B, and Batch C implemented and ready for review. Batch D reviewed
 Recommended sequence:
 
 1. Review Batch A, Batch B, Batch C, and Batch D wording and confirm they resolve the strongest authority ambiguities.
-2. Keep any remaining public-doc cleanup or waiver question as an explicit promotion-decision caveat, not an implicit
+2. Use [source-authority-expansion-design-package.md](source-authority-expansion-design-package.md) as the next
+   authority-boundary review input if the user wants to continue toward broader promotion.
+3. Keep any remaining public-doc cleanup or waiver question as an explicit promotion-decision caveat, not an implicit
    approval.
 
 Do not combine cleanup with source authority expansion, workflow changes, or promotion approval.

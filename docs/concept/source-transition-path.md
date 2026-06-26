@@ -95,6 +95,11 @@ Batch C cleanup are now implemented as review candidates, and optional Batch D i
 needed. Waiver approval remains open. [public-doc-cleanup-implementation-plan.md](public-doc-cleanup-implementation-plan.md)
 records the staged cleanup sequence for that caveat; it does not change the transition stage or source authority.
 
+The candidate broader source-authority expansion design package is recorded in
+[source-authority-expansion-design-package.md](source-authority-expansion-design-package.md). It defines artifact-family
+roles and a staged expansion path for future review, but it does not change the current transition stage, source
+authority matrix, rollback/fallback obligations, or user approval requirements.
+
 ## Source Authority Matrix
 
 This matrix is conceptual. It does not define files, generators, validators, or migration behavior.
@@ -244,6 +249,10 @@ It records the earlier reviewable-with-warnings limited pilot recommendation and
 refresh of the Todo Search read-model parity artifact. The user later approved the bounded limited pilot decision option
 for the Todo Search selected slice, while full promotion and broad source authority change remain unapproved. Source
 authority remains unchanged.
+
+[source-authority-expansion-design-package.md](source-authority-expansion-design-package.md) is the current docs-only
+candidate authority matrix for any broader source-authority expansion discussion. It must be reviewed with rollback,
+fallback, compatibility, and user approval decisions before any promotion package can become executable.
 
 [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md) records the user judgment
 surface for that limited pilot decision. The package is refreshed for the Node/Edge/Tag baseline, and the user approved
@@ -398,6 +407,8 @@ Those remain later concept or implementation questions.
 ## Remaining Open Questions
 
 - How formal should projection/parity expectations be before promotion review?
+- Is the candidate authority matrix in `source-authority-expansion-design-package.md` acceptable as the basis for a
+  concrete rollback/fallback plan?
 - Does promotion review need a specialized Approval Brief template?
 - During Todo Search scoped pilot active observation, what trigger should cause validator/CI-backed Evidence,
   public-doc cleanup, broader promotion review, rollback/defer, or continued observation?

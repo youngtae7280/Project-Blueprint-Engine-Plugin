@@ -116,6 +116,10 @@ The cleanup implementation plan is recorded in
 Batch D are implemented or reviewed as candidates. Batch D required only the `AGENTS.md` wording clarification above,
 and no waiver is approved.
 
+The related source-authority expansion design input is recorded in
+[source-authority-expansion-design-package.md](source-authority-expansion-design-package.md). That package defines the
+candidate authority matrix for future review but does not approve waiver, source authority expansion, or promotion.
+
 ## Non-Scope
 
 This package does not:

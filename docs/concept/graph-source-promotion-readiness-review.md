@@ -132,6 +132,11 @@ matured scoped pilot, generated/parity/validation reports, registry-backed `vali
 Evidence, local negative fixture coverage, and path-filter/failure-semantics policy as future promotion-review inputs.
 Its status is `promotion-review-inputs-ready-with-caveats`, not `promotion-ready` or `promotion-approved`.
 
+[source-authority-expansion-design-package.md](source-authority-expansion-design-package.md) now defines a docs-only
+candidate broader authority matrix, artifact roles, staged expansion path, and risks. It helps prepare a future
+promotion decision package, but it does not expand source authority, approve promotion, retire tree-native artifacts, or
+change user acceptance boundaries.
+
 [public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md) now records the public
 documentation cleanup or explicit waiver decision package for one of those caveats. It inventories public/user-facing
 docs and recommends cleanup before actual full promotion unless the user explicitly approves a visible waiver.
@@ -294,6 +299,7 @@ Acceptance is user-approved with warnings retained.
 | Manual graph/read-model parity output           | ready with warning       | Manual parity artifacts make the read-model relationship reviewable for limited pilot discussion.                                                                                             |
 | Generated / validator-backed / CI-backed output | ready with warning       | Generated output, local validator-backed Evidence, and reviewed non-enforcing CI-backed Evidence exist for Todo Search; broader/multi-slice coverage and enforcement remain future decisions. |
 | Public-doc cleanup                              | reviewed through Batch D | Batch A/B/C are implemented as review candidates; Batch D is reviewed and implemented only where needed; any waiver or promotion approval remains separate.                                   |
+| Source authority expansion design               | docs-only design package | Candidate artifact roles and authority matrix are documented for review; no source authority change or promotion is approved.                                                                 |
 
 ### Remaining Judgment
 
@@ -306,7 +312,9 @@ concerns whether to:
 2. review Batch A/B/C/D and decide whether cleanup is sufficient, whether a waiver is required, or whether more public-doc cleanup is needed before full promotion,
 3. require full-product/runtime/UI Evidence before full promotion or only before full product parity claims, and
 4. use [broader-graph-source-promotion-review-inputs.md](broader-graph-source-promotion-review-inputs.md) to choose
-   the next review branch, or keep observing the scoped pilot.
+   the next review branch, review the candidate authority matrix in
+   [source-authority-expansion-design-package.md](source-authority-expansion-design-package.md), or keep observing the
+   scoped pilot.
 
 ### Approval Choice Candidates
 
@@ -338,7 +346,7 @@ authority change, CI enforcement, and waiver judgment remain separate.
 | UI screenshot/manual visual Evidence partial              | Evidence Control Node        | Active warning                                          | UI proof remains partial but does not block source-model readiness by itself.                                                                                                   | Show as warning if full product/UI parity is in scope.                  |
 | ACEP public-doc cleanup reviewed through Batch D          | Compatibility Control Node   | Active / Batch A+B+C+D review candidate                 | Batch A/B/C corrected the strongest matrix, shorthand, examples, usage, traceability, and audit wording; Batch D reviewed optional docs and clarified `AGENTS.md` where needed. | Show in promotion readiness and promotion decision review.              |
 | Demo slice renewed Acceptance closed                      | Acceptance Control Node      | Closed with warnings                                    | User approved renewed demo-support Acceptance with warnings retained.                                                                                                           | Show as closed demo-slice acceptance, not promotion approval.           |
-| Source authority transition affects tree views            | Impact / Change Control Node | Deferred                                                | Any actual source transition would affect tree-native artifacts, projections, compatibility views, and rollback needs.                                                          | Show only if user asks to prepare an actual promotion decision package. |
+| Source authority transition affects tree views            | Impact / Change Control Node | Deferred / design package prepared                      | Any actual source transition would affect tree-native artifacts, projections, compatibility views, and rollback needs; a candidate matrix exists but is not approved.           | Show only if user asks to prepare an actual promotion decision package. |
 
 ## Remaining Blockers / Decisions
 
@@ -368,6 +376,7 @@ authority change, CI enforcement, and waiver judgment remain separate.
 ### Decisions Needed Before Promotion Approval
 
 - Whether full promotion requires CI-backed graph/read-model Evidence or an explicit user waiver.
+- Whether the candidate authority matrix is acceptable as the basis for a concrete rollback/fallback plan.
 - Whether bounded fixture Evidence is enough for the pilot decision surface.
 - Whether Batch A/B/C/D public-doc cleanup is sufficient for promotion approval or still needs an explicit compatibility
   waiver.

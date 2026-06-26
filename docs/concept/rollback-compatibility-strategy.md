@@ -46,6 +46,10 @@ Evidence stack as `promotion-review-inputs-ready-with-caveats`. That status is n
 authority change. Any actual Graph-source promotion still needs explicit rollback/fallback decisions, compatibility
 retirement conditions, and user approval before source authority can change.
 
+[source-authority-expansion-design-package.md](source-authority-expansion-design-package.md) now records a candidate
+broader authority matrix and staged expansion path. It is a design input for future rollback/fallback planning, not a
+rollback-ready state, source authority change, promotion decision, or compatibility retirement approval.
+
 [public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md) records the cleanup or
 explicit waiver decision surface for public compatibility wording. Deferring cleanup without an explicit waiver would
 leave a compatibility caveat unresolved for broader promotion review.
@@ -405,6 +409,8 @@ filter, failure-semantics, or enforcement changes. These do not change fallback 
 retire fallback artifacts, or expand source authority.
 [read-model-validate-all-contract.md](read-model-validate-all-contract.md) defines future all-slice validation semantics
 at concept level only; it does not introduce rollback enforcement, fallback retirement, or source-authority expansion.
+[source-authority-expansion-design-package.md](source-authority-expansion-design-package.md) identifies the artifact
+families that a concrete rollback/fallback plan would need to cover, but the plan itself remains unimplemented.
 
 ## Scope Boundaries
 
@@ -427,6 +433,7 @@ Those remain later concept or implementation questions.
 - How long should a post-promotion compatibility period last, and what default exit criteria should it use?
 - Which compatibility views must remain maintained after promotion?
 - How should a future validator or CI check rollback readiness without over-automating source authority decisions?
+- What concrete fallback precedence, snapshots, and recovery paths are required for the candidate authority matrix?
 - Does rollback review need a specialized Approval Brief template?
 - Who approves compatibility retirement, and at what review point?
 - During Todo Search scoped pilot active observation, what trigger should cause validator/CI-backed Evidence,

@@ -410,6 +410,14 @@ manual and PR CI-backed Evidence, local negative fixture coverage, and path-filt
 recommended status is `promotion-review-inputs-ready-with-caveats`; it is not promotion approval, source authority
 expansion, enforcement approval, public-doc cleanup, tree-native retirement, or user acceptance.
 
+The source-authority expansion design package is now recorded:
+
+- [source-authority-expansion-design-package.md](source-authority-expansion-design-package.md)
+
+The package defines a candidate future authority matrix, artifact roles, staged expansion path, and caveats for broader
+Graph-source promotion review. It is docs-only and does not change current tree-native source authority, promote
+Maintainability Graph, retire artifacts, add enforcement, or replace user acceptance.
+
 The public-doc cleanup or waiver decision package is now recorded:
 
 - [public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md)
