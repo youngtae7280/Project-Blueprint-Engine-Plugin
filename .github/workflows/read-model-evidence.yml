@@ -120,7 +120,7 @@ jobs:
           const todoAppProjectionContract =
             projectionContractStatus.find((entry) => entry.profileId === 'todo-app-pbe-run-structure-only') || null
           const todoSearchProjectionPass = todoSearchProjectionContract?.status === 'projection-contract-pass'
-          const todoAppProjectionPass = todoAppProjectionContract?.status === 'candidate-projection-contract-pass'
+          const todoAppProjectionPass = todoAppProjectionContract?.status === 'projection-contract-pass'
           const candidateObservationStatus =
             candidateObservationOutput?.candidateObservationStatus || candidateObservationOutput?.status || 'missing'
           const todoAppCandidateObservation =
@@ -129,7 +129,7 @@ jobs:
             ) || null
           const todoAppCandidateObservationPass =
             candidateObservationStatus === 'candidate-observation-pass' &&
-            todoAppCandidateObservation?.status === 'candidate-projection-contract-pass'
+            todoAppCandidateObservation?.status === 'projection-contract-pass'
           const e2eSmokeStatus = e2eSmokeOutput?.status || 'missing'
           const e2eSmokePass = e2eSmokeStatus === 'e2e-smoke-pass'
           const status =
@@ -191,12 +191,12 @@ jobs:
               parityStatus: todoAppValidation?.sliceValidationContract?.requirements?.parity?.status || 'not-required',
               projectionContractStatus: todoAppProjectionContract?.status || 'missing',
               candidateObservationStatus: todoAppCandidateObservation?.status || 'missing',
-              candidateProjection: {
-                graphSourceCandidate: `${todoAppSlice}/graph-source-candidate.json`,
-                projection: `${todoAppGeneratedDir}/graph-source-candidate-read-model-projection.json`,
+              graphSourceProjection: {
+                graphSource: `${todoAppSlice}/graph-source.json`,
+                projection: `${todoAppGeneratedDir}/graph-source-read-model-projection.json`,
                 status: todoAppProjectionContract?.status || 'missing',
                 observationStatus: todoAppCandidateObservation?.status || 'missing',
-                contractMode: 'structure-only-candidate',
+                contractMode: 'structure-only-confirmed',
               },
               checkCount: todoAppValidation?.summary?.checkCount ?? null,
               nodeCount: todoAppValidation?.sliceValidationContract?.expectedCounts?.nodes ?? null,
@@ -228,7 +228,7 @@ jobs:
               observedCandidates: candidateObservationOutput?.observedCandidates || [],
               artifactPath: candidateObservationOutputPath,
               positiveValidateAllBoundary:
-                'Candidate observation is captured as separate CI artifact metadata. The Todo App candidate projection is also checked by positive validate-all only as non-authority structure-only Evidence.',
+                'Candidate observation is retained as separate CI artifact metadata. The Todo App graph-source projection is also checked by positive validate-all as confirmed structure-only Evidence.',
             },
             projectionContractStatus,
             aggregateStatus: aggregateSummary?.status || 'missing',
@@ -261,7 +261,7 @@ jobs:
               `${todoAppGeneratedDir}/read-model-evidence-manifest.json`,
               `${todoAppGeneratedDir}/read-model-validation-report.json`,
               `${todoAppGeneratedDir}/read-model-validation-report.md`,
-              `${todoAppGeneratedDir}/graph-source-candidate-read-model-projection.json`,
+              `${todoAppGeneratedDir}/graph-source-read-model-projection.json`,
               `${aggregateDir}/read-model-aggregate-summary.json`,
               `${aggregateDir}/read-model-aggregate-summary.md`,
               validateAllOutputPath,
@@ -331,10 +331,10 @@ jobs:
             `- Todo Search projection contract status: \`${todoSearchProjection}\``,
             `- Todo App positive projection contract status: \`${todoAppProjection}\``,
             `- Candidate observation status: \`${candidateObservationStatus}\``,
-            `- Todo App candidate projection status: \`${todoAppCandidateObservation}\``,
+            `- Todo App observed projection status: \`${todoAppCandidateObservation}\``,
             `- Aggregate status: \`${aggregateStatus}\``,
             '- Boundary: CI-backed Evidence is Evidence only.',
-            '- Candidate observation is separate from positive validate-all and aggregate status.',
+            '- Candidate observation is retained as separate report-only metadata.',
             '- Informational only for pull requests.',
             '- Not a required check or branch protection rule.',
             '- No source authority change.',
@@ -370,7 +370,7 @@ jobs:
             examples/valid/todo-app-pbe-run/generated/read-model-evidence-manifest.json
             examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json
             examples/valid/todo-app-pbe-run/generated/read-model-validation-report.md
-            examples/valid/todo-app-pbe-run/generated/graph-source-candidate-read-model-projection.json
+            examples/valid/todo-app-pbe-run/generated/graph-source-read-model-projection.json
             examples/read-model-aggregate/generated/read-model-aggregate-summary.json
             examples/read-model-aggregate/generated/read-model-aggregate-summary.md
             examples/read-model-aggregate/generated/read-model-validate-all-output.json
