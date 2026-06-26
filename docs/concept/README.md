@@ -370,6 +370,14 @@ enforcement, source authority expansion, public-doc cleanup, `validate --all`, a
 unimplemented. PR #1 triggered run `28207822252`, which is reviewed as `pull_request-informational` /
 `ci-evidence-pass`; the temporary PR was closed without merge and its remote branch was deleted.
 
+The PR informational observation policy is now recorded:
+
+- [pr-informational-observation-policy.md](pr-informational-observation-policy.md)
+
+The policy defines what to observe across future PR informational runs, the recommended observation window, path-filter
+refinement criteria, failure classification, and escalation criteria. It does not change workflow triggers, create PRs,
+dispatch GitHub Actions, add required checks, introduce enforcement, expand source authority, or approve promotion.
+
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.

@@ -45,6 +45,10 @@ The PR informational trigger design and first run review are recorded in
 provides visible PR Evidence without becoming a required check, branch protection rule, source authority expansion, or
 user acceptance replacement.
 
+The follow-up observation policy is recorded in
+[pr-informational-observation-policy.md](pr-informational-observation-policy.md). It defines observation metrics,
+minimum observation window, path-filter refinement criteria, and escalation criteria without changing the workflow.
+
 Run `28156403793` also surfaced a GitHub Actions maintenance annotation that Node.js 20 is deprecated for
 `actions/checkout@v4`, `actions/setup-node@v4`, and `actions/upload-artifact@v4` execution. This is a retained CI hygiene
 warning for that historical run, not a failed Evidence run. The workflow now uses `actions/checkout@v7`,
@@ -340,10 +344,10 @@ one of:
 5. `Prepare broader Graph-source promotion review`
 6. `Defer broader CI mode changes`
 
-Recommended next step: keep the PR informational workflow non-enforcing and observe more PRs before deciding whether
-path filters or artifact naming need refinement. Enforcement design, public-doc cleanup, broader promotion review, and
-defer remain separate major branches. The Node.js 20 deprecation annotation from run `28156403793` has been handled by
-the Node 24 action/runtime update and reviewed post-update run `28157938343`.
+Recommended next step: keep the PR informational workflow non-enforcing and observe more PRs under the observation
+policy before deciding whether path filters or artifact naming need refinement. Enforcement design, public-doc cleanup,
+broader promotion review, and defer remain separate major branches. The Node.js 20 deprecation annotation from run
+`28156403793` has been handled by the Node 24 action/runtime update and reviewed post-update run `28157938343`.
 
 ## Approval Brief Draft
 
@@ -367,13 +371,13 @@ Source Transition Path, rollback, and compatibility.
 | CI enforcement             | not approved | Enforcement mode remains future-only.                                                                                                                                    |
 | Source authority boundary  | preserved    | CI Evidence would remain Evidence only.                                                                                                                                  |
 | Retained warnings          | visible      | Bounded fixture, partial UI, enforcement gap, and ACEP cleanup remain visible.                                                                                           |
-| Next user decision         | required     | User must choose whether to observe more PRs, refine filters, or branch into enforcement, cleanup, promotion review, or defer.                                           |
+| Next user decision         | required     | User must choose whether to continue observation, refine filters after enough PR signal, or branch into enforcement, cleanup, promotion review, or defer.                |
 
 ### Remaining Judgment
 
-The user must decide whether to observe more PR informational runs, refine path filters, design enforcement policy,
-prepare multi-slice validation, require public-doc cleanup before broader work, prepare broader promotion review, or
-rollback/defer the scoped pilot.
+The user must decide whether to continue observing PR informational runs under the observation policy, refine path
+filters after enough signal, design enforcement policy, prepare multi-slice validation, require public-doc cleanup
+before broader work, prepare broader promotion review, or rollback/defer the scoped pilot.
 
 ### State Label
 

@@ -603,6 +603,10 @@ per-slice independence, aggregate summary, aggregate-enabled CI-backed run revie
 implementation are now recorded. This does not add enforcement, `validate --all`, source authority expansion, or full
 promotion; the first real PR informational run review is now recorded.
 
+The observation policy for later PR informational runs is recorded in
+[pr-informational-observation-policy.md](pr-informational-observation-policy.md). Future PR run notes should use that
+policy before changing path filters, failure semantics, required-check policy, or validation scope.
+
 ## Gate Self-Check
 
 | Gate                             | Status | Result                                                                                                      |

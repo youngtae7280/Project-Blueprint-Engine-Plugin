@@ -216,12 +216,12 @@ do not justify full promotion by themselves.
 
 ## Retained Warnings Classification
 
-| Retained warning                                           | Classification                   | Promotion readiness meaning                                                                                                                                                                          | Required next action                                                                                                                                                          |
-| ---------------------------------------------------------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Bounded fixture Evidence, not full Todo app implementation | acceptable warning               | The bounded fixture is acceptable for representative lifecycle feasibility and limited pilot readiness discussion. It is not proof of full product runtime parity.                                   | Carry as a pilot/full distinction. Require full-product/runtime Evidence only if the user asks for full promotion confidence rather than limited pilot review.                |
-| UI screenshot/manual visual evidence partial               | acceptable warning               | The representative source-model promotion question is not blocked by missing UI screenshot Evidence because behavior Evidence and warning state are visible. It remains a product/UI evidence gap.   | Keep visible as a retained warning. Require screenshot/manual visual Evidence before claiming full UI/product parity.                                                         |
-| CI-backed read-model Evidence / enforcement missing        | later implementation requirement | Generated read-model output, parity comparison, local validator-backed Evidence, and reviewed CI-backed Evidence exist for Todo Search. CI enforcement and broader scope remain unapproved.          | Decide whether to keep observing, design PR informational triggers, design enforcement policy, broaden validation, clean up public docs, or prepare broader promotion review. |
-| ACEP task-card public-doc cleanup deferred                 | deferred cleanup                 | Existing policy bounds the mismatch, and supplemental Evidence makes it visible. Cleanup is not required to run this readiness review, but the user must accept or resolve the caveat for promotion. | Carry the Compatibility Control Node candidate into promotion decision. Decide cleanup-before-promotion or accepted deferred cleanup.                                         |
+| Retained warning                                           | Classification                   | Promotion readiness meaning                                                                                                                                                                                  | Required next action                                                                                                                                                                   |
+| ---------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bounded fixture Evidence, not full Todo app implementation | acceptable warning               | The bounded fixture is acceptable for representative lifecycle feasibility and limited pilot readiness discussion. It is not proof of full product runtime parity.                                           | Carry as a pilot/full distinction. Require full-product/runtime Evidence only if the user asks for full promotion confidence rather than limited pilot review.                         |
+| UI screenshot/manual visual evidence partial               | acceptable warning               | The representative source-model promotion question is not blocked by missing UI screenshot Evidence because behavior Evidence and warning state are visible. It remains a product/UI evidence gap.           | Keep visible as a retained warning. Require screenshot/manual visual Evidence before claiming full UI/product parity.                                                                  |
+| CI-backed read-model Evidence / enforcement missing        | later implementation requirement | Generated read-model output, parity comparison, local validator-backed Evidence, reviewed CI-backed Evidence, and a reviewed PR informational run exist. CI enforcement and broader scope remain unapproved. | Observe PR informational runs under policy; decide later whether to refine filters, design enforcement, broaden validation, clean up public docs, or prepare broader promotion review. |
+| ACEP task-card public-doc cleanup deferred                 | deferred cleanup                 | Existing policy bounds the mismatch, and supplemental Evidence makes it visible. Cleanup is not required to run this readiness review, but the user must accept or resolve the caveat for promotion.         | Carry the Compatibility Control Node candidate into promotion decision. Decide cleanup-before-promotion or accepted deferred cleanup.                                                  |
 
 ## Promotion Recommendation
 
@@ -282,11 +282,12 @@ Acceptance is user-approved with warnings retained.
 
 ### Remaining Judgment
 
-The user approved the bounded limited pilot option, dry-run, bounded scoped execution, active observation, and local
-validator-backed Evidence. Remaining judgment concerns whether to:
+The user approved the bounded limited pilot option, dry-run, bounded scoped execution, active observation, local
+validator-backed Evidence, non-enforcing CI-backed Evidence, and PR informational observation. Remaining judgment
+concerns whether to:
 
-1. keep observing the reviewed non-enforcing manual CI workflow artifact, design PR informational triggers, design
-   enforcement policy, or prepare multi-slice validation,
+1. keep observing PR informational runs under [pr-informational-observation-policy.md](pr-informational-observation-policy.md),
+   refine filters later, design enforcement policy, or prepare multi-slice validation,
 2. defer or require ACEP task-card public-doc cleanup before full promotion,
 3. require full-product/runtime/UI Evidence before full promotion or only before full product parity claims, and
 4. prepare broader promotion review inputs or keep observing the scoped pilot.
@@ -294,7 +295,8 @@ validator-backed Evidence. Remaining judgment concerns whether to:
 ### Approval Choice Candidates
 
 - `Keep scoped pilot active and observe with validator-backed and CI-backed Evidence`
-- `Design PR informational trigger`
+- `Keep PR informational mode non-enforcing and observe under policy`
+- `Refine PR informational path filters after enough observation`
 - `Design CI enforcement / required check policy`
 - `Require public-doc cleanup before promotion decision`
 - `Prepare broader Graph-source promotion review inputs`

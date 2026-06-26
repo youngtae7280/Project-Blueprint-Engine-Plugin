@@ -235,7 +235,7 @@ first non-enforcing manual CI workflow implementation, and reviewed run `2815129
 user decision surface is now:
 
 1. `Keep workflow manual/non-enforcing and continue observation`
-2. `Design PR informational trigger`
+2. `Observe PR informational runs under policy`
 3. `Design CI enforcement / required check policy`
 4. `Require public-doc cleanup before broader promotion`
 5. `Prepare broader Graph-source promotion review`
@@ -308,7 +308,7 @@ rollback/defer the pilot.
 ### Approval Choice Candidates
 
 - `Keep workflow manual/non-enforcing and continue observation`
-- `Design PR informational trigger`
+- `Observe PR informational runs under policy`
 - `Design CI enforcement / required check policy`
 - `Require public-doc cleanup before broader promotion`
 - `Prepare broader Graph-source promotion review`

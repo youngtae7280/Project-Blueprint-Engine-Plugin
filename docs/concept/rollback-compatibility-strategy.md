@@ -388,10 +388,11 @@ aggregation can preserve rollback and compatibility boundaries per slice. The fi
 reports as Evidence-only inputs, but it does not execute rollback checks, retire fallback artifacts, or implement broader
 aggregate validation.
 The non-enforcing manual workflow now can upload Todo Search, Todo App PBE Run, and aggregate summary artifacts together,
-and runs `28156403793` / `28157938343` reviewed that aggregate-enabled bundle as CI-backed Evidence. That does not
-change fallback precedence, create rollback enforcement, retire fallback artifacts, or expand source authority. A future
-PR informational trigger is designed separately as a visibility layer only; it also does not change fallback or rollback
-authority.
+and runs `28156403793` / `28157938343` reviewed that aggregate-enabled bundle as CI-backed Evidence. PR run
+`28207822252` reviewed the non-enforcing `pull_request-informational` visibility layer. The observation policy in
+[pr-informational-observation-policy.md](pr-informational-observation-policy.md) governs later PR observation before
+filter, failure-semantics, or enforcement changes. These do not change fallback precedence, create rollback enforcement,
+retire fallback artifacts, or expand source authority.
 
 ## Scope Boundaries
 

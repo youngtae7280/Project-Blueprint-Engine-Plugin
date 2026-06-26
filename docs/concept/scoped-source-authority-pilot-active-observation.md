@@ -183,7 +183,7 @@ of these is true:
 The next major decision should be one of:
 
 1. `Continue active observation`
-2. `Design PR informational trigger`
+2. `Observe PR informational runs under policy`
 3. `Design CI enforcement / required check policy`
 4. `Perform public-doc cleanup`
 5. `Prepare broader Graph-source promotion review`

@@ -246,7 +246,10 @@ The first real PR informational run is reviewed in
 
 ## Recommended Next Decision Surface
 
-After this implementation and first PR run review, the next choices are:
+The observation policy for this implemented trigger is recorded in
+[pr-informational-observation-policy.md](pr-informational-observation-policy.md).
+
+After this implementation, first PR run review, and observation-policy definition, the next choices are:
 
 1. `Keep PR informational mode non-enforcing and observe`
 2. `Refine PR path filters after observing more PRs`
@@ -257,8 +260,8 @@ After this implementation and first PR run review, the next choices are:
 Recommended next step:
 
 ```text
-Keep PR informational mode non-enforcing and observe more PRs before deciding whether path filters, artifact naming, or
-failure semantics need adjustment. Do not move to enforcement without a separate decision.
+Keep PR informational mode non-enforcing and observe according to the observation policy before deciding whether path
+filters, artifact naming, or failure semantics need adjustment. Do not move to enforcement without a separate decision.
 ```
 
 The implementation adds `pull_request` as informational only and uses the recommended path filters and failure semantics

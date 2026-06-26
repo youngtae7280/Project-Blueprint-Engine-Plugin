@@ -254,7 +254,7 @@ After scoped validator-backed Evidence and reviewed CI-backed Evidence are avail
 choose one of:
 
 1. `Keep workflow manual/non-enforcing and observe`
-2. `Design PR informational trigger`
+2. `Observe PR informational runs under policy`
 3. `Design CI enforcement / required check policy`
 4. `Require multi-slice validation design before broader CI`
 5. `Require public-doc cleanup before broader promotion`
@@ -267,7 +267,8 @@ and validation Evidence, both validation reports now carry self-contained per-sl
 `pbe graph read-model summarize --slices ...` can write the first aggregate summary. The second fixture is not
 parity-backed, pilot-marker-backed, CI-backed, or source-authority bearing. PR informational trigger behavior is now
 implemented and reviewed in PR run `28207822252` as a non-enforcing visibility signal. `validate --all`, enforcement,
-cleanup, broader promotion review, and rollback/defer remain separate decisions.
+cleanup, broader promotion review, and rollback/defer remain separate decisions. Further PR observation should follow
+[pr-informational-observation-policy.md](pr-informational-observation-policy.md).
 
 ## Gate Self-Check
 

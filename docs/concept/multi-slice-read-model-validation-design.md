@@ -369,6 +369,8 @@ The staged path is:
 3. Add aggregate summary only after per-slice validation is stable. This is now implemented as Evidence-only output.
 4. Add PR informational visibility only after manual and aggregate Evidence are stable. This is now implemented and
    reviewed in PR run `28207822252` as non-enforcing PR informational Evidence.
+5. Observe more PR informational runs under [pr-informational-observation-policy.md](pr-informational-observation-policy.md)
+   before changing filters, failure semantics, or enforcement policy.
 
 Do not move next to `validate --all`, required checks, enforcement, or broad CI changes without a separate user
 decision.
