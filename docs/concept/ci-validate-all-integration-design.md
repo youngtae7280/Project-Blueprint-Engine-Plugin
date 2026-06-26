@@ -86,6 +86,8 @@ Current candidate-observation capture:
 - Manual run `28221088498` reviewed this capture path as `ci-evidence-pass`; the uploaded manifest included
   `candidateObservationStatus: candidate-observation-pass`, Todo App candidate `candidate-projection-contract-pass`,
   positive Todo App projection `not-configured`, and both candidate observation/projection artifacts.
+- PR #6 run `28221326457` reviewed the same candidate-observation capture in `pull_request-informational` mode with PR
+  number, head/base SHA, and head/base ref metadata present.
 
 Reviewed manual run after switch:
 

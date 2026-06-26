@@ -171,6 +171,7 @@ Manual workflow run `28221088498` reviewed this candidate-observation capture on
 positive Todo App projection `not-configured`, `validateAllStatus: aggregate-pass`, and `aggregateStatus:
 aggregate-pass`. The artifact bundle included both `read-model-candidate-observation-output.json` and
 `graph-source-candidate-read-model-projection.json`.
+PR #6 run `28221326457` reviewed the same fields in `pull_request-informational` mode with PR metadata present.
 
 ## Initial Implementation Sequence
 

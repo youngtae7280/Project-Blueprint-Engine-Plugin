@@ -515,6 +515,10 @@ capture in run `28221088498` and a small manifest artifact list fix before that 
 manual/PR informational only and does not enroll Todo App in positive validate-all, source authority, enforcement, or
 promotion.
 
+DEC-112 does not supersede DEC-097 through DEC-111. It records PR informational review of candidate-observation artifact
+capture in PR #6 run `28221326457`. The review confirms PR metadata plus candidate observation fields while preserving
+positive validate-all, aggregate status, non-enforcement, and Todo App `structure-only` boundaries.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

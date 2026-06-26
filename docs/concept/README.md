@@ -483,9 +483,10 @@ not in the positive registry, not in aggregate status, and does not promote Todo
 The local `graph read-model observe-candidates` command now reports this candidate projection contract separately from
 positive validate-all semantics. The non-enforcing read-model Evidence workflow now captures that observation output as
 separate CI artifact metadata without enrolling the Todo App candidate in positive validate-all, source authority, or
-promotion scope. Manual CI run `28221088498` reviewed that capture path as `ci-evidence-pass`, including
-`candidateObservationStatus: candidate-observation-pass`, Todo App `candidate-projection-contract-pass`, the uploaded
-candidate observation output, and the uploaded candidate projection artifact.
+promotion scope. Manual CI run `28221088498` and PR #6 run `28221326457` reviewed that capture path as
+`ci-evidence-pass`, including `candidateObservationStatus: candidate-observation-pass`, Todo App
+`candidate-projection-contract-pass`, the uploaded candidate observation output, and the uploaded candidate projection
+artifact.
 
 The public-doc cleanup or waiver decision package is now recorded:
 
