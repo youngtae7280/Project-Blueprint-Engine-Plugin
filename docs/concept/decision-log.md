@@ -519,6 +519,10 @@ DEC-112 does not supersede DEC-097 through DEC-111. It records PR informational 
 capture in PR #6 run `28221326457`. The review confirms PR metadata plus candidate observation fields while preserving
 positive validate-all, aggregate status, non-enforcement, and Todo App `structure-only` boundaries.
 
+DEC-113 does not supersede DEC-097 through DEC-112. It prepares the Todo App graph-source enrollment decision package
+only. The recommended next safe branch is bounded non-authority enrollment in positive validate-all, but registry,
+workflow, CLI behavior, source authority, Todo App promotion, enforcement, and tree retirement remain unchanged.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

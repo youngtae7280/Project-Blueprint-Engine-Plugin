@@ -488,6 +488,14 @@ promotion scope. Manual CI run `28221088498` and PR #6 run `28221326457` reviewe
 `candidate-projection-contract-pass`, the uploaded candidate observation output, and the uploaded candidate projection
 artifact.
 
+The Todo App graph-source enrollment decision package is now recorded:
+
+- [todo-app-graph-source-enrollment-decision-package.md](todo-app-graph-source-enrollment-decision-package.md)
+
+It compares keeping Todo App candidate-only, bounded non-authority enrollment in positive validate-all, later promotion
+beyond structure-only, and deferral. The recommended next safe branch is bounded non-authority enrollment first, with no
+Todo App source-authority promotion.
+
 The public-doc cleanup or waiver decision package is now recorded:
 
 - [public-doc-cleanup-waiver-decision-package.md](public-doc-cleanup-waiver-decision-package.md)

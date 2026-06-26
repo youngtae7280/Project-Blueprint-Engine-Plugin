@@ -125,7 +125,8 @@ Implemented boundary:
 - `candidateScope: todo-app-pbe-run-structure-only`
 - `policyLevel: structure-only`
 - source records preserve the current 22-node / 38-edge / 7-Core-View structure-only projection
-- candidate boundaries state that the artifact is not consumed by validate-all, the positive registry, or CI
+- candidate boundaries state that the artifact is not consumed by positive validate-all, the positive registry, or
+  aggregate status
 
 Focused tests parse the candidate, compare its records to the existing Todo App structure-only generated read-model, and
 reject attempts to mark the candidate as promoted or validate-all consumed.
@@ -139,8 +140,8 @@ examples/valid/todo-app-pbe-run/generated/graph-source-candidate-read-model-proj
 The candidate projection preserves 22 nodes, 38 edges, and 7 Core Views. Its metadata uses
 `candidate_graph_source_read_model_projection` and `structure-only`; its boundaries state that it does not promote Todo
 App PBE Run, does not add parity or pilot marker requirements, and is not consumed by validate-all, the positive
-registry, or CI. Focused tests now validate the committed candidate projection contract directly and reject projection
-boundary drift, including source-authority creation claims.
+registry, or aggregate status. Focused tests now validate the committed candidate projection contract directly and
+reject projection boundary drift, including source-authority creation claims.
 
 The local observation command checks this candidate projection outside positive validate-all semantics:
 
@@ -172,6 +173,11 @@ positive Todo App projection `not-configured`, `validateAllStatus: aggregate-pas
 aggregate-pass`. The artifact bundle included both `read-model-candidate-observation-output.json` and
 `graph-source-candidate-read-model-projection.json`.
 PR #6 run `28221326457` reviewed the same fields in `pull_request-informational` mode with PR metadata present.
+
+The next decision surface is now recorded in
+[todo-app-graph-source-enrollment-decision-package.md](todo-app-graph-source-enrollment-decision-package.md). It
+recommends bounded non-authority enrollment into positive validate-all as the next safe branch if the user chooses to
+move beyond candidate-only observation.
 
 ## Initial Implementation Sequence
 
