@@ -560,6 +560,11 @@ DEC-120 does not supersede DEC-097 through DEC-119. It records manual CI review 
 candidate observation metadata without adding enforcement, repo-wide promotion, tree retirement, or Todo App
 source-authority promotion.
 
+DEC-121 does not supersede DEC-097 through DEC-120. It records PR informational review of E2E smoke observation in PR
+#8 run `28224088829`. The smoke PR was closed without merge and the branch was deleted; the reviewed artifact confirms
+the same E2E smoke, projection, validate-all, and candidate-observation statuses without adding enforcement, repo-wide
+promotion, tree retirement, or Todo App source-authority promotion.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
