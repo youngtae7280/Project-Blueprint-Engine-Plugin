@@ -1,9 +1,9 @@
 {
   "version": "0.1.0-read-model-aggregate-summary",
   "metadata": {
-    "summarizedAt": "2026-06-26T00:52:13.601Z",
+    "summarizedAt": "2026-06-26T01:04:20.679Z",
     "commandIdentity": "pbe graph read-model summarize --slices examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run",
-    "sourceCommit": "0148311",
+    "sourceCommit": "79e1179",
     "aggregateArtifactRole": "cross-slice-evidence-summary",
     "inputReportList": [
       "examples/adoption/todo-search-slice/generated/read-model-validation-report.json",

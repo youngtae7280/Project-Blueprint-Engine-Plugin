@@ -42,27 +42,8 @@ jobs:
       - name: Build CLI
         run: npm run build:cli
 
-      - name: Generate Todo Search read-model Evidence
-        run: node dist/cli/index.js graph read-model generate --slice "$PBE_TODO_SEARCH_SLICE" --json
-
-      - name: Compare Todo Search generated and manual read-model Evidence
-        run: >
-          node dist/cli/index.js graph read-model compare
-          --generated "$PBE_TODO_SEARCH_GENERATED_DIR/generated-read-model.json"
-          --manual "$PBE_TODO_SEARCH_SLICE/maintainability-graph-read-model.json"
-          --json
-
-      - name: Validate Todo Search read-model Evidence
-        run: node dist/cli/index.js graph read-model validate --slice "$PBE_TODO_SEARCH_SLICE" --json
-
-      - name: Generate Todo App PBE Run structure-only read-model Evidence
-        run: node dist/cli/index.js graph read-model generate --slice "$PBE_TODO_APP_SLICE" --json
-
-      - name: Validate Todo App PBE Run structure-only read-model Evidence
-        run: node dist/cli/index.js graph read-model validate --slice "$PBE_TODO_APP_SLICE" --json
-
-      - name: Summarize aggregate read-model Evidence
-        run: node dist/cli/index.js graph read-model summarize --slices "$PBE_AGGREGATE_SLICES" --json
+      - name: Validate all registry-backed read-model Evidence
+        run: node dist/cli/index.js graph read-model validate --all --json
 
       - name: Focused read-model Evidence tests
         run: npx vitest run cli/src/__tests__/read-model-evidence.test.ts
@@ -112,6 +93,7 @@ jobs:
             todoSearchValidation?.status === 'validation-pass' && todoSearchParity?.summary?.status === 'comparison-pass'
           const todoAppPass = todoAppValidation?.status === 'validation-pass'
           const aggregatePass = aggregateSummary?.status === 'aggregate-pass'
+          const validateAllStatus = aggregateSummary?.status || 'missing'
           const status = todoSearchPass && todoAppPass && aggregatePass ? 'ci-evidence-pass' : 'ci-evidence-blocked'
 
           const manifest = {
@@ -134,8 +116,9 @@ jobs:
                 }
               : null,
             sourceSlice: todoSearchSlice,
-            sourceMode: 'existing per-slice validation reports only for aggregate summary',
+            sourceMode: 'registry-backed validate-all',
             includedSlices: aggregateSlices,
+            validateAllStatus,
             generatedAt: new Date().toISOString(),
             status,
             todoSearch: {
@@ -158,7 +141,7 @@ jobs:
               status: aggregateSummary?.status || 'missing',
               includedSliceCount: aggregateSummary?.includedSliceCount ?? aggregateSlices.length,
               includedSlices: aggregateSummary?.includedSlices || aggregateSlices,
-              sourceMode: 'existing per-slice validation reports only',
+              sourceMode: 'registry-backed validate-all',
               artifactPaths: [
                 `${aggregateDir}/read-model-aggregate-summary.json`,
                 `${aggregateDir}/read-model-aggregate-summary.md`,
@@ -166,6 +149,7 @@ jobs:
             },
             validatorStatus: todoSearchValidation?.status || 'missing',
             parityStatus: todoSearchParity?.summary?.status || 'missing',
+            validateAllStatus,
             aggregateStatus: aggregateSummary?.status || 'missing',
             counts: {
               todoSearchValidationWarnings: todoSearchValidation?.summary?.warningCount ?? null,
@@ -238,6 +222,7 @@ jobs:
           const todoSearchParity = manifest?.todoSearch?.parityStatus || 'missing'
           const todoAppStatus = manifest?.todoAppPbeRun?.validatorStatus || 'missing'
           const aggregateStatus = manifest?.aggregate?.status || 'missing'
+          const validateAllStatus = manifest?.validateAllStatus || 'missing'
           const includedSlices = manifest?.includedSlices || []
 
           const markdown = [
@@ -250,6 +235,7 @@ jobs:
             `- Todo Search validator status: \`${todoSearchStatus}\``,
             `- Todo Search parity status: \`${todoSearchParity}\``,
             `- Todo App PBE Run validator status: \`${todoAppStatus}\``,
+            `- Validate-all status: \`${validateAllStatus}\``,
             `- Aggregate status: \`${aggregateStatus}\``,
             '- Boundary: CI-backed Evidence is Evidence only.',
             '- Informational only for pull requests.',
