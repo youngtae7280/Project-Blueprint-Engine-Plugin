@@ -35,6 +35,8 @@ The path-filter and failure-semantics refinement design is documented in
 [pr-informational-path-filter-refinement.md](pr-informational-path-filter-refinement.md); it keeps the current workflow
 unchanged after three successful PR observations.
 
+Temporary smoke note: projection-contract status PR observation trigger.
+
 ## Baseline Entries
 
 ### Baseline Entry 1: Manual Dispatch Run
