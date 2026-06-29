@@ -84,7 +84,8 @@ artifacts, create required checks, or approve tree-native retirement.
 
 The non-enforcing read-model Evidence workflow now captures the same health report as
 `read-model-health-report-output.json`; manual run `28350824272` reviewed the artifact and manifest fields as
-`graph-source-health-pass`.
+`graph-source-health-pass`. PR #13 run `28351078223` reviewed the same health report in
+`pull_request-informational` mode with PR metadata present.
 
 ## Boundaries
 

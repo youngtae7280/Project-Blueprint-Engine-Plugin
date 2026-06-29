@@ -1285,6 +1285,26 @@ Manual workflow run `28350824272` reviewed the non-enforcing graph-source health
 | Cleanup              | Artifact temp directory removed                                                                           |
 | Review result        | Manual CI confirms manifest, Step Summary fields, and uploaded health report artifact                     |
 
+PR #13 run `28351078223` reviewed the same graph-source health report visibility in `pull_request-informational` mode.
+The temporary draft PR used branch `pbe/pr-info-health-report-smoke-20260629`, was closed without merge after review,
+and the remote smoke branch plus downloaded temp artifacts were removed.
+
+| Field                | Value                                                                                                      |
+| -------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Event                | `pull_request`                                                                                             |
+| Trigger mode         | `pull_request-informational`                                                                               |
+| Source branch        | `pbe/pr-info-health-report-smoke-20260629`                                                                 |
+| Run URL              | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28351078223>                 |
+| Manifest             | `ci-evidence-pass`; PR number, head/base refs, and head/base SHAs present                                  |
+| Health status        | `graph-source-health-pass`                                                                                 |
+| Health validate-all  | `aggregate-pass`                                                                                           |
+| Health edgeIntent    | `intent-report-pass`; 2 edgeIntent records                                                                 |
+| Retirement readiness | `retirement-not-ready`; Todo Search `approval-candidate-not-approved`; Todo App `not-ready-structure-only` |
+| Enforcement status   | `non-enforcing`                                                                                            |
+| Artifact             | `read-model-aggregate/generated/read-model-health-report-output.json` present                              |
+| Cleanup              | PR closed unmerged; remote branch and artifact temp directory removed                                      |
+| Review result        | PR CI confirms health report visibility with PR metadata                                                   |
+
 ## Gate Self-Check
 
 | Gate                              | Status | Result                                                                                                              |
@@ -1307,6 +1327,7 @@ Manual workflow run `28350824272` reviewed the non-enforcing graph-source health
 | Todo App Confirmed PR Gate        | pass   | PR #10 run `28226357099` confirmed Todo App `projection-contract-pass` / `confirmed-structure-only-graph-source`.   |
 | edgeIntent Projection PR Gate     | pass   | PR #11 run `28346897073` confirmed native/retrofit `edge-intent-projection-pass` in PR artifacts.                   |
 | E2E Intent Report PR Gate         | pass   | PR #12 run `28348903718` confirmed E2E output contains `intentReport: intent-report-pass` with zero missing counts. |
+| Health Report PR Gate             | pass   | PR #13 run `28351078223` confirmed `graph-source-health-pass` and uploaded health report artifact.                  |
 | PR Informational Run Gate         | pass   | PR #1, PR #2, PR #3, PR #4, and PR #5 triggered `pull_request` runs and completed successfully.                     |
 | CI-Backed Artifact Review Gate    | pass   | Expanded artifact bundle `pbe-todo-search-read-model-evidence` was downloaded and inspected.                        |
 | CI Manifest Integrity Gate        | pass   | Manifest is `ci-backed` / `ci-evidence-pass` and includes Todo Search, Todo App, aggregate, and boundaries.         |

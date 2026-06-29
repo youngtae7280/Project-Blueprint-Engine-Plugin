@@ -701,6 +701,13 @@ non-enforcing read-model Evidence workflow and records manual run `28350824272` 
 retirement readiness `retirement-not-ready`, and enforcement status `non-enforcing`. This is CI observation only and
 does not add required checks, enforcement, or tree-native retirement.
 
+DEC-143 does not supersede DEC-097 through DEC-142. It records PR #13 run `28351078223` reviewing the same graph-source
+health report visibility in `pull_request-informational` mode. The reviewed artifact confirms PR metadata,
+`healthReportStatus: graph-source-health-pass`, validate-all `aggregate-pass`, edgeIntent `intent-report-pass` with 2
+edgeIntent records, retirement readiness `retirement-not-ready`, and enforcement status `non-enforcing`; the smoke PR
+was closed unmerged and its branch/temp artifacts were removed. This remains PR health CI observation only and does not
+add actual retirement, enforcement, or required checks.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
