@@ -1,12 +1,12 @@
 # Graph-Source Required-Check Readiness
 
-Status: policy package / readiness only / not enabled
+Status: policy package / repo-side Candidate B check surface present / branch protection not configured
 
 ## Purpose
 
 This package defines when Graph-source health, E2E smoke, validate-all, and edgeIntent reporting could become required
-checks. It does not enable required checks, branch protection, merge blocking, CI enforcement, user acceptance, or
-tree-native retirement.
+checks. Candidate B now has a named repository-side script and CI job, but this package does not configure GitHub branch
+protection, source-authority expansion, user acceptance, or tree-native retirement.
 
 ## Current State
 
@@ -17,9 +17,11 @@ Current observations are strong enough for a readiness discussion:
 - tiny behavior-change dogfood: pass
 - `graph read-model report-health --json`: `graph-source-health-pass`
 - `npm run test:read-model:e2e`: `e2e-smoke-pass`
+- Candidate B repo-side command: `npm run check:graph-source:candidate-b`
+- Candidate B CI surface: `PBE CI / Candidate B Read-Model Check`
 - `graph read-model report-intent --json`: `intent-report-pass`
 - `graph read-model validate --all --json`: `aggregate-pass`
-- enforcement status: `non-enforcing`
+- branch protection status: `not-configured`
 - tree-native retirement: not executed
 
 The machine-readable status lives in
@@ -27,20 +29,20 @@ The machine-readable status lives in
 
 ## Candidate Options
 
-| Candidate                               | Scope                                                   | Current status                | Effect today                                                       |
-| --------------------------------------- | ------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------ |
-| A. Informational only                   | Manual/local/PR informational observation               | Active                        | No required check, no branch protection, no merge gate             |
-| B. Health + E2E soft-required candidate | `report-health` plus `test:read-model:e2e`              | Candidate, not enabled        | No required check yet; first candidate for explicit approval       |
-| C. Full read-model gate candidate       | `validate --all`, `report-health`, E2E, `report-intent` | Future candidate, not enabled | No required check yet; broader blocking semantics need more review |
+| Candidate                         | Scope                                                   | Current status                 | Effect today                                                       |
+| --------------------------------- | ------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------ |
+| A. Informational only             | Manual/local/PR informational observation               | Active                         | No required check, no branch protection, no merge gate             |
+| B. Health + E2E check surface     | `report-health` plus `test:read-model:e2e`              | Repo-side check surface exists | Named script and CI job exist; branch protection still manual      |
+| C. Full read-model gate candidate | `validate --all`, `report-health`, E2E, `report-intent` | Future candidate, not enabled  | No required check yet; broader blocking semantics need more review |
 
 ## Recommended Path
 
 Recommended sequence:
 
 1. Stay non-enforcing while recording readiness.
-2. Prepare Candidate B as a soft-required candidate only.
-3. Require explicit user approval before any branch protection or required check is implemented.
-4. Define waiver/failure policy before a check can block merge.
+2. Keep Candidate B as the first named repo-side check surface.
+3. Require explicit user approval before branch protection requires Candidate B.
+4. Define waiver/failure policy before Candidate B can block merge through branch protection.
 5. Keep enforcement readiness separate from tree-native retirement.
 
 Candidate C should wait until Candidate B is reviewed or the user explicitly accepts broader read-model blocking
@@ -48,7 +50,7 @@ semantics.
 
 ## Candidate B Soft-Required Package
 
-Candidate B is prepared as a policy candidate in
+Candidate B is recorded in
 [graph-source-soft-required-candidate-b-package.md](graph-source-soft-required-candidate-b-package.md).
 
 Candidate B is the narrow command pair:
@@ -58,16 +60,28 @@ node dist/cli/index.js graph read-model report-health --json
 npm.cmd run test:read-model:e2e
 ```
 
+The named repository command is:
+
+```text
+npm.cmd run check:graph-source:candidate-b
+```
+
+The CI surface is:
+
+```text
+PBE CI / Candidate B Read-Model Check
+```
+
 The package separates false positive handling, infrastructure failure handling, retained warning handling, and temporary
-GitHub Actions failure handling. It is still not approved as a required check, branch protection rule, merge gate, or CI
-enforcement mode.
+GitHub Actions failure handling. It is still not configured as a branch protection rule, GitHub required-check setting,
+source-authority promotion, Product acceptance, user acceptance, or tree-native retirement approval.
 
 ## Required Approval Before Implementation
 
-The following actions require explicit user approval and a separate implementation step:
+The following actions require explicit user approval and a separate settings or implementation step:
 
-- adding required checks;
-- turning PR informational observation into a merge gate;
+- configuring branch protection to require Candidate B;
+- turning Candidate B into a merge gate;
 - enabling branch protection;
 - treating health, E2E, validate-all, or intent report as user acceptance;
 - retiring tree-native artifacts.
@@ -76,11 +90,13 @@ The following actions require explicit user approval and a separate implementati
 
 Current blockers:
 
-- no explicit user approval for required checks;
-- waiver/failure policy exists only as an unapproved Candidate B package and is not active;
+- no explicit user approval for branch protection;
+- waiver/failure policy exists as Candidate B documentation but is not a branch-protection policy;
+- GitHub branch protection is not configured from this repository change;
 - tree-native retirement remains not approved and must not be bundled into enforcement readiness;
-- Candidate B has not been run as a named soft-required package with review signoff.
+- Candidate B has not yet been reviewed as a branch-protection-required PR check.
 
 ## Boundary
 
-This package is a decision surface. It changes documentation and readiness metadata only.
+This package is a decision surface plus a named repo-side check surface. It changes package script/CI naming,
+documentation, and readiness metadata only; it does not configure branch protection or change source authority.

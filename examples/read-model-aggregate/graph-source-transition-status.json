@@ -6,10 +6,10 @@
   "sourceDirection": "graph-source-confirmed-for-configured-read-model-slices",
   "treeNativeRole": "compatibility-fallback-reference-with-todo-search-deprecated-fallback",
   "nonRetirementStatement": "Tree-native artifacts are not deleted or physically retired by this status artifact. Todo Search selected-slice tree-native artifacts are now deprecated fallback/reference records, not source for graph-source-backed read-model generation; Todo App and repo-wide tree-native artifacts remain compatibility, fallback, and reference records unless a later explicit retirement decision changes that role.",
-  "nonEnforcementStatement": "This status artifact supports local validation and CI observation only. It does not create required checks, branch protection, merge enforcement, or user acceptance.",
+  "nonEnforcementStatement": "This status artifact supports local validation and repo-side CI observation only. It does not configure GitHub branch protection, merge enforcement, source-authority expansion, or user acceptance.",
   "enforcementReadiness": {
-    "status": "soft-required-candidate-not-approved",
-    "currentMode": "non-enforcing-informational",
+    "status": "candidate-b-repo-side-check-surface-present",
+    "currentMode": "repo-side-ci-check-non-branch-protected",
     "lastReviewedEvidence": {
       "localManualObservation": "pass",
       "prInformationalObservation": "pass",
@@ -34,10 +34,10 @@
         "id": "candidate-b-soft-required-health-e2e",
         "label": "Soft-required health/E2E candidate",
         "scope": ["graph read-model report-health --json", "npm run test:read-model:e2e"],
-        "status": "candidate-not-enabled",
-        "requiredCheckEffect": "none-yet",
-        "branchProtectionEffect": "none-yet",
-        "recommendedUse": "Prepare as the first possible required-check scope only after explicit user approval and a documented waiver/failure policy."
+        "status": "repo-side-check-surface-present",
+        "requiredCheckEffect": "named package script and GitHub Actions job exist; branch protection is not configured",
+        "branchProtectionEffect": "none-manual-external",
+        "recommendedUse": "Use as the first possible required-check scope only if branch protection is explicitly approved and the waiver/failure policy is accepted."
       },
       {
         "id": "candidate-c-full-read-model-gate",
@@ -55,21 +55,22 @@
       }
     ],
     "recommendedPath": [
-      "stay-non-enforcing",
-      "prepare-soft-required-candidate",
-      "collect-explicit-user-approval",
-      "only-then-implement-required-check-or-branch-protection"
+      "run-repo-side-candidate-b-check",
+      "review-candidate-b-pr-signal",
+      "collect-explicit-user-approval-for-branch-protection",
+      "only-then-configure-required-check-or-branch-protection"
     ],
     "approvalRequiredBefore": [
-      "adding required checks",
-      "turning PR informational observation into a merge gate",
+      "configuring branch protection to require Candidate B",
+      "turning Candidate B into a merge gate",
       "enabling branch protection",
       "treating health or validate-all as user acceptance",
       "retiring tree-native artifacts"
     ],
     "blockingGaps": [
-      "no explicit user approval for required checks",
-      "no documented waiver/failure policy for false positives or retained warnings",
+      "no explicit user approval for branch protection",
+      "waiver/failure policy is documented but not accepted as a branch-protection policy",
+      "GitHub branch protection remains manual/external",
       "tree-native retirement remains not approved and must stay separate from enforcement readiness"
     ]
   },
@@ -272,7 +273,7 @@
   "repoWideBoundaries": {
     "repoWidePromotion": "not-complete",
     "treeNativeRetirement": "not-complete",
-    "requiredChecks": "not-enabled-soft-required-candidate-only",
+    "requiredChecks": "candidate-b-repo-side-check-surface-present-branch-protection-not-enabled",
     "branchProtection": "not-enabled",
     "ciEnforcement": "not-enabled",
     "todoAppBeyondStructureOnly": "not-approved"
