@@ -77,6 +77,36 @@ The pilot is blocked because the existing artifacts explicitly retain these limi
 
 Changing labels without resolving these blockers would be a paper promotion, not a real pilot.
 
+## Retry After Graph-Native Execution Contract Surface
+
+After the first graph-native execution contract report surface was added, the retry evaluated the configured Todo Search
+and Todo App slices with:
+
+```text
+node dist/cli/index.js graph execution-contract report --slice examples/adoption/todo-search-slice --json
+node dist/cli/index.js graph execution-contract report --slice examples/valid/todo-app-pbe-run --json
+```
+
+Observed result:
+
+| Slice       | Profile                           | Policy level          | Report signal                                                            | Pilot decision                           |
+| ----------- | --------------------------------- | --------------------- | ------------------------------------------------------------------------ | ---------------------------------------- |
+| Todo Search | `todo-search-selected-slice`      | `pilot-marker-backed` | Product/Work/Test/Evidence refs, source files, parity, pilot marker      | Preserve existing limited selected slice |
+| Todo App    | `todo-app-pbe-run-structure-only` | `structure-only`      | Product/Work/Test/Evidence refs and source files, no parity/pilot marker | Keep blocked beyond structure-only       |
+
+The new report surface improves reviewability, but it does not create the missing Todo App pilot evidence. Todo App
+still lacks required parity backing, scoped pilot marker evidence, runtime fixture policy, and explicit approval for
+source authority beyond `structure-only`.
+
+Retry decision:
+
+```text
+No new Todo App source-authority pilot metadata is promoted in this retry.
+```
+
+Todo Search remains the already configured limited Graph-source selected slice. This retry does not broaden Todo Search
+authority, enroll Todo App as a pilot, or change Candidate B required-check status.
+
 ## Minimum Real Pilot Requirements
 
 Before Todo App can become a limited source-authority pilot, PBE needs a separate approved implementation branch that

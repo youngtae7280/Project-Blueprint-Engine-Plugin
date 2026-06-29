@@ -612,6 +612,7 @@ describe('read-model Evidence builder', () => {
     expect(report.status).toBe('report-only')
     expect(report.source.profileId).toBe(todoSearchReadModelProfile.profileId)
     expect(report.source.sourceSlice).toBe(todoSearchReadModelProfile.supportedSlice)
+    expect(report.source.policyLevel).toBe('pilot-marker-backed')
     expect(report.source.readModelProjection).toBe(
       'examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json',
     )
@@ -627,10 +628,46 @@ describe('read-model Evidence builder', () => {
     expect(report.fileChangeGuardContract.sourceFiles).not.toContain(
       'examples/adoption/todo-search-slice/examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md',
     )
+    expect(report.verificationRequirements.requiredCommands).toContain('graph read-model compare')
+    expect(report.verificationRequirements.requiredArtifacts).toHaveProperty('parityReport')
+    expect(report.verificationRequirements.requiredArtifacts).toHaveProperty('scopedPilotMarker')
     expect(report.commandPlan.sequentialDefault).toBe(true)
     expect(report.compatibility.acepRemainsExecutionPackagingPath).toBe(true)
     expect(report.compatibility.note).toContain('ACEP')
     expect(report.limitations).toContain('does not mutate .pbe active state')
+  })
+
+  it('keeps the Todo App graph-native execution contract report structure-only after the pilot retry', async () => {
+    const report = await buildGraphExecutionContractReport(
+      resolve('.'),
+      todoAppPbeRunStructureOnlyProfile.supportedSlice,
+    )
+
+    expect(report.status).toBe('report-only')
+    expect(report.source.profileId).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
+    expect(report.source.sourceSlice).toBe(todoAppPbeRunStructureOnlyProfile.supportedSlice)
+    expect(report.source.policyLevel).toBe('structure-only')
+    expect(report.selectedSliceSummary).toMatchObject({
+      nodeCount: 22,
+      edgeCount: 38,
+      coreViewCount: 7,
+    })
+    expect(report.references.productNodeIds).toContain('PT-1')
+    expect(report.references.workNodeIds).toContain('WT-1')
+    expect(report.verificationRequirements.testNodeIds).toContain('TT-1')
+    expect(report.fileChangeGuardContract.sourceFiles).toContain(
+      'examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json',
+    )
+    expect(report.verificationRequirements.requiredCommands).toEqual([
+      'graph read-model generate',
+      'graph read-model validate',
+    ])
+    expect(report.verificationRequirements.requiredArtifacts).not.toHaveProperty('parityReport')
+    expect(report.verificationRequirements.requiredArtifacts).not.toHaveProperty('scopedPilotMarker')
+    expect(report.sourceAuthorityBoundary).toContain('structure-only')
+    expect(report.nonPromotionStatement).toContain('does not promote Todo App')
+    expect(report.compatibility.acepRemainsExecutionPackagingPath).toBe(true)
+    expect(report.limitations).toContain('does not expand source authority')
   })
 
   it('reports graph-native execution contract JSON through the CLI without mutating active state', async () => {
