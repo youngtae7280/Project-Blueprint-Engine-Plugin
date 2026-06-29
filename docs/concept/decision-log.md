@@ -715,6 +715,13 @@ review discoverability for overall health, source status, validate-all/E2E/edgeI
 retirement package status, boundaries, and reproduction commands. It does not add actual retirement, enforcement,
 required checks, or source authority changes.
 
+DEC-145 does not supersede DEC-097 through DEC-144. It records manual workflow run `28351612200` reviewing the health
+Markdown summary artifact after DEC-144. The artifact bundle includes
+`examples/read-model-aggregate/generated/read-model-health-report-output.md`; the CI manifest includes the Markdown
+artifact path; the Markdown content includes overall health, Todo Search/Todo App source status, validate-all,
+edgeIntent, retirement readiness/package status, non-enforcement boundaries, and reproduction commands. This remains
+manual CI observation only and does not add actual retirement, enforcement, or required checks.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

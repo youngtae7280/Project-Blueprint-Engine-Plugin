@@ -1305,6 +1305,24 @@ and the remote smoke branch plus downloaded temp artifacts were removed.
 | Cleanup              | PR closed unmerged; remote branch and artifact temp directory removed                                      |
 | Review result        | PR CI confirms health report visibility with PR metadata                                                   |
 
+Manual workflow run `28351612200` reviewed the workflow after the graph-source health report gained a human-readable
+Markdown companion artifact.
+
+| Field                   | Value                                                                                       |
+| ----------------------- | ------------------------------------------------------------------------------------------- |
+| Run ID                  | `28351612200`                                                                               |
+| Run URL                 | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28351612200>  |
+| Event                   | `workflow_dispatch`                                                                         |
+| Commit                  | `c1b20f7`                                                                                   |
+| Conclusion              | `success`                                                                                   |
+| Manifest                | `ci-evidence-pass`; `healthReportStatus: graph-source-health-pass`                          |
+| Markdown artifact path  | `examples/read-model-aggregate/generated/read-model-health-report-output.md`                |
+| Artifact review         | Markdown file present; manifest `artifactPaths` includes it                                 |
+| Markdown content review | Overall status, Todo Search/Todo App status, aggregate, edgeIntent, retirement, boundaries  |
+| Reproduction command    | `graph read-model report-health --json --markdown <path>` present                           |
+| Cleanup                 | Artifact temp directory removed                                                             |
+| Review result           | Manual CI confirms health Markdown summary is visible in artifact bundle and manifest paths |
+
 ## Gate Self-Check
 
 | Gate                              | Status | Result                                                                                                              |
@@ -1317,6 +1335,7 @@ and the remote smoke branch plus downloaded temp artifacts were removed.
 | E2E Smoke Manual Gate             | pass   | Run `28223860233` confirmed `e2eSmokeStatus: e2e-smoke-pass` in manifest and uploaded smoke output.                 |
 | E2E Intent Report Manual Gate     | pass   | Run `28348764191` confirmed E2E output contains `intentReport: intent-report-pass` with zero missing counts.        |
 | Health Report Manual Gate         | pass   | Run `28350824272` confirmed `healthReportStatus: graph-source-health-pass` and uploaded health report artifact.     |
+| Health Markdown Manual Gate       | pass   | Run `28351612200` confirmed uploaded `read-model-health-report-output.md` and manifest path visibility.             |
 | Todo App Generation Manual Gate   | pass   | Run `28224636333` confirmed Todo App `graph-source-backed` / `non-authority-structure-only` metadata.               |
 | Todo App Confirmed Manual Gate    | pass   | Run `28226270934` confirmed Todo App `projection-contract-pass` / `confirmed-structure-only-graph-source`.          |
 | edgeIntent Projection Manual Gate | pass   | Run `28346777344` confirmed native/retrofit `edge-intent-projection-pass` in manifest and artifacts.                |
