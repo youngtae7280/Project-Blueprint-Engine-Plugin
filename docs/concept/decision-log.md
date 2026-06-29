@@ -695,6 +695,12 @@ existing validate-all aggregate output, projection contracts, edgeIntent report 
 readiness, and retirement approval package statuses. It is local reporting only and does not rerun E2E, mutate generated
 artifacts, add required checks, enforce CI, or approve tree-native retirement.
 
+DEC-142 does not supersede DEC-097 through DEC-141. It captures `graph read-model report-health --json` in the
+non-enforcing read-model Evidence workflow and records manual run `28350824272` reviewing
+`healthReportStatus: graph-source-health-pass`, validate-all `aggregate-pass`, edgeIntent `intent-report-pass`,
+retirement readiness `retirement-not-ready`, and enforcement status `non-enforcing`. This is CI observation only and
+does not add required checks, enforcement, or tree-native retirement.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

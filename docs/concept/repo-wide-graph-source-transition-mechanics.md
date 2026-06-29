@@ -82,6 +82,10 @@ state. It reads existing validate-all aggregate output, projection contracts, ed
 status, retirement readiness, and retirement approval package statuses. It does not rerun E2E, mutate generated
 artifacts, create required checks, or approve tree-native retirement.
 
+The non-enforcing read-model Evidence workflow now captures the same health report as
+`read-model-health-report-output.json`; manual run `28350824272` reviewed the artifact and manifest fields as
+`graph-source-health-pass`.
+
 ## Boundaries
 
 This mechanics step is intentionally not:

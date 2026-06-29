@@ -1265,6 +1265,26 @@ PR run `28348903718` reviewed the same E2E `intentReport` visibility through the
 | Cleanup             | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted      |
 | Review result       | PR CI confirms uploaded E2E smoke output exposes `intentReport` with PR metadata           |
 
+Manual workflow run `28350824272` reviewed the non-enforcing graph-source health report artifact after
+`graph read-model report-health --json` was added to the workflow.
+
+| Field                | Value                                                                                                     |
+| -------------------- | --------------------------------------------------------------------------------------------------------- |
+| Run ID               | `28350824272`                                                                                             |
+| Run URL              | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28350824272>                |
+| Event                | `workflow_dispatch`                                                                                       |
+| Commit               | `d467b90`                                                                                                 |
+| Conclusion           | `success`                                                                                                 |
+| Manifest             | `ci-evidence-pass`; `healthReportStatus: graph-source-health-pass`                                        |
+| Health validate-all  | `aggregate-pass`                                                                                          |
+| Health edgeIntent    | `intent-report-pass`; 2 edgeIntents                                                                       |
+| Retirement readiness | `retirement-not-ready`                                                                                    |
+| Retirement package   | Todo Search `approval-candidate-not-approved`; Todo App `not-ready-structure-only`; repo-wide `not-ready` |
+| Enforcement status   | `non-enforcing`                                                                                           |
+| Artifact             | `read-model-aggregate/generated/read-model-health-report-output.json` present                             |
+| Cleanup              | Artifact temp directory removed                                                                           |
+| Review result        | Manual CI confirms manifest, Step Summary fields, and uploaded health report artifact                     |
+
 ## Gate Self-Check
 
 | Gate                              | Status | Result                                                                                                              |
@@ -1276,6 +1296,7 @@ PR run `28348903718` reviewed the same E2E `intentReport` visibility through the
 | Todo App Projection Manual Gate   | pass   | Run `28222731063` confirmed Todo App `candidate-projection-contract-pass` in positive validate-all artifacts.       |
 | E2E Smoke Manual Gate             | pass   | Run `28223860233` confirmed `e2eSmokeStatus: e2e-smoke-pass` in manifest and uploaded smoke output.                 |
 | E2E Intent Report Manual Gate     | pass   | Run `28348764191` confirmed E2E output contains `intentReport: intent-report-pass` with zero missing counts.        |
+| Health Report Manual Gate         | pass   | Run `28350824272` confirmed `healthReportStatus: graph-source-health-pass` and uploaded health report artifact.     |
 | Todo App Generation Manual Gate   | pass   | Run `28224636333` confirmed Todo App `graph-source-backed` / `non-authority-structure-only` metadata.               |
 | Todo App Confirmed Manual Gate    | pass   | Run `28226270934` confirmed Todo App `projection-contract-pass` / `confirmed-structure-only-graph-source`.          |
 | edgeIntent Projection Manual Gate | pass   | Run `28346777344` confirmed native/retrofit `edge-intent-projection-pass` in manifest and artifacts.                |
