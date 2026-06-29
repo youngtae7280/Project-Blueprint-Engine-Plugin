@@ -524,6 +524,22 @@ for `structure-only`, and tree-native artifacts remain compatibility/fallback/re
 that status artifact while preserving no tree retirement, no enforcement, no required checks, no invalid-fixture CI, and
 no Todo App promotion beyond `structure-only`.
 
+The current health/status entry points are:
+
+- `graph read-model report-health --json` for a local non-enforcing health summary.
+- `npm run test:read-model:e2e` for local dogfood coverage of validate-all, projection contracts, transition status, and
+  edgeIntent `report-intent`.
+- `examples/read-model-aggregate/graph-source-transition-status.json` for machine-readable source role and retirement
+  readiness status.
+- [tree-native-retirement-approval-package.md](tree-native-retirement-approval-package.md) for retirement approval
+  candidates and missing approvals.
+- [edge-level-intent-vocabulary-design.md](edge-level-intent-vocabulary-design.md) and
+  [intent-critical-maintenance-examples.md](intent-critical-maintenance-examples.md) for edgeIntent projection/report
+  details.
+
+Manual and PR CI observations now show validate-all, E2E smoke, health reporting, and edgeIntent visibility passing.
+The workflow remains non-enforcing; no required check, branch protection, or tree-native retirement is configured.
+
 The intent-critical maintenance examples are now recorded:
 
 - [intent-critical-maintenance-examples.md](intent-critical-maintenance-examples.md)

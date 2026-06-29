@@ -15,6 +15,9 @@
 - [State Machine](state-machine.md)
 - [PBE Philosophy](pbe-philosophy.md)
 - [Runtime Architecture Concept Repository](concept/README.md)
+- [Current Graph-source transition mechanics](concept/repo-wide-graph-source-transition-mechanics.md) ??Status entry for
+  `graph read-model report-health --json`, `npm run test:read-model:e2e`, transition status, retirement approval, and
+  edgeIntent projection/report surfaces.
 
 ## Workflow Guides
 

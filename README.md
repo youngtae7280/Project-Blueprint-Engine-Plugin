@@ -87,6 +87,9 @@ Useful entry points:
 - Install PBE locally: [docs/install.md](docs/install.md)
 - CLI Reference: [docs/cli-reference.md](docs/cli-reference.md)
 - Documentation Index: [docs/index.md](docs/index.md)
+- Current Graph-source health/status: `graph read-model report-health --json`,
+  [repo-wide transition mechanics](docs/concept/repo-wide-graph-source-transition-mechanics.md), and
+  [transition status artifact](examples/read-model-aggregate/graph-source-transition-status.json)
 - Examples Index: [examples/README.md](examples/README.md)
 - Todo search adoption example: [examples/adoption/todo-search-slice](examples/adoption/todo-search-slice/README.md)
 - PBE v0.5.0-beta Readiness: [docs/beta-readiness.md](docs/beta-readiness.md)
@@ -120,6 +123,22 @@ explicit compatibility and fallback boundaries.
   silently change behavior. Intent is modeled primarily as graph edge annotation with a short project-specific `claim`;
   PBE does not create a separate intent ledger as another source. The first intent-critical projections expose that
   edgeIntent for human-readable review through `graph read-model project-intent` without broad validate-all enforcement.
+
+Health/status quick checks:
+
+- `graph read-model report-health --json` summarizes validate-all, projection contracts, edgeIntent report health,
+  retirement readiness, retirement approval package status, and non-enforcement status.
+- `npm run test:read-model:e2e` dogfoods the configured Graph-source flow, including edgeIntent `report-intent`.
+- The machine-readable transition status lives at
+  [examples/read-model-aggregate/graph-source-transition-status.json](examples/read-model-aggregate/graph-source-transition-status.json).
+- Retirement decision material lives in
+  [docs/concept/tree-native-retirement-approval-package.md](docs/concept/tree-native-retirement-approval-package.md);
+  retirement is not executed.
+- EdgeIntent projection/report details live in
+  [docs/concept/edge-level-intent-vocabulary-design.md](docs/concept/edge-level-intent-vocabulary-design.md) and
+  [docs/concept/intent-critical-maintenance-examples.md](docs/concept/intent-critical-maintenance-examples.md).
+- Manual and PR CI observations have passed for validate-all, E2E smoke, health reporting, and edgeIntent visibility,
+  but the workflow remains non-enforcing and no required check is configured.
 
 ## What Gets Created
 
