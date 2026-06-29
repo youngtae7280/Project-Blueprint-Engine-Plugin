@@ -5,6 +5,7 @@ import {
   observeReadModelCandidateProjections,
   projectGraphSourceReadModelToFile,
   projectIntentCriticalGraphSourceToFile,
+  reportIntentCriticalProjection,
   summarizeReadModelEvidence,
   validateAllReadModelEvidence,
   validateReadModelEvidence,
@@ -138,6 +139,34 @@ export async function graphReadModelProjectIntentCommand(context: CommandContext
         }),
       ],
     }
+  }
+}
+
+export async function graphReadModelReportIntentCommand(context: CommandContext): Promise<CommandResult> {
+  const graphSourcePaths = context.options.graphSource ? [context.options.graphSource] : undefined
+  const result = await reportIntentCriticalProjection(context.options.root, graphSourcePaths)
+  const failed = result.status === 'intent-report-blocked'
+  return {
+    ok: !failed,
+    command: 'graph read-model report-intent',
+    exitCode: failed ? ExitCode.ValidationFailed : ExitCode.Success,
+    message: failed ? 'Edge intent projection report blocked.' : 'Edge intent projection report passed.',
+    issues: failed
+      ? result.fixtures
+          .filter((fixture) => fixture.status === 'intent-projection-blocked')
+          .map((fixture) =>
+            issue({
+              validator: 'EdgeIntentProjectionReport',
+              code: 'EDGE_INTENT_REPORT_BLOCKED',
+              severity: 'error',
+              file: fixture.graphSource,
+              message: fixture.error || 'Edge intent projection report blocked.',
+              suggestedFix:
+                'Restore required edgeIntent vocabulary classifications, project-specific claim text, and source signal anchors.',
+            }),
+          )
+      : [],
+    data: { ...result },
   }
 }
 

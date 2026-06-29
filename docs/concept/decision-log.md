@@ -651,6 +651,13 @@ remote branch was deleted; the reviewed artifact confirms PR metadata, `edgeInte
 edge-intent-projection-pass`, native and retrofit `intent-projection-pass`, validate-all `aggregate-pass`, and E2E smoke
 pass without required checks, broad intent schema enforcement, or tree retirement.
 
+DEC-135 does not supersede DEC-097 through DEC-134. It adds the local
+`graph read-model report-intent --json` report/validation surface for native and retrofit edgeIntent projections. The
+report summarizes fixture count, edgeIntent count, claim count, classification count, anchor count, missing
+classification count, and missing anchor count, and blocks locally when required classifications or anchors are missing.
+It remains local intent report/validation only and does not add broad validate-all intent enforcement, required checks,
+or tree retirement.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

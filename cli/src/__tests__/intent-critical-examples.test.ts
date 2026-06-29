@@ -77,6 +77,33 @@ interface EdgeIntentProjection {
   }
 }
 
+interface EdgeIntentProjectionReport {
+  status: 'intent-report-pass' | 'intent-report-blocked'
+  projectedFixtureCount: number
+  edgeIntentCount: number
+  claimCount: number
+  classificationCount: number
+  anchorCount: number
+  missingClassificationCount: number
+  missingAnchorCount: number
+  fixtures: Array<{
+    graphSource: string
+    sourceExampleKind: 'native-pbe' | 'retrofit-pbe' | 'unknown'
+    status: 'intent-projection-pass' | 'intent-projection-blocked'
+    edgeIntentCount: number
+    claimCount: number
+    classificationCount: number
+    anchorCount: number
+    missingClassificationCount: number
+    missingAnchorCount: number
+    claims: string[]
+    error?: string
+  }>
+  nonEnforcementStatement: string
+  requiredCheckBoundary: string
+  validateAllBoundary: string
+}
+
 async function readIntentExample(path: string): Promise<IntentCriticalExample> {
   return JSON.parse(await readFile(resolve(path), 'utf8')) as IntentCriticalExample
 }
@@ -99,6 +126,15 @@ async function runProjectIntentCli(graphSource: string, output: string): Promise
   }
   expect(payload.status).toBe('intent-projection-pass')
   return readProjection(payload.projection)
+}
+
+async function runIntentReportCli(extraArgs: string[] = []): Promise<EdgeIntentProjectionReport> {
+  const result = await runPbeCli(['graph', 'read-model', 'report-intent', ...extraArgs, '--json'], {
+    cwd: resolve('.'),
+  })
+  expect(result.stderr).toBe('')
+  expect(result.exitCode).toBe(0)
+  return JSON.parse(result.stdout) as EdgeIntentProjectionReport
 }
 
 function expectIntentPreservationFixture(example: IntentCriticalExample): void {
@@ -275,6 +311,31 @@ describe('intent-critical Graph-source examples', () => {
     }
   })
 
+  it('reports native and retrofit edgeIntent projection health without broad enforcement', async () => {
+    const report = await runIntentReportCli()
+
+    expect(report.status).toBe('intent-report-pass')
+    expect(report.projectedFixtureCount).toBe(2)
+    expect(report.edgeIntentCount).toBe(2)
+    expect(report.claimCount).toBe(2)
+    expect(report.classificationCount).toBeGreaterThanOrEqual(12)
+    expect(report.anchorCount).toBeGreaterThanOrEqual(4)
+    expect(report.missingClassificationCount).toBe(0)
+    expect(report.missingAnchorCount).toBe(0)
+    expect(report.nonEnforcementStatement).toContain('does not introduce CI enforcement')
+    expect(report.requiredCheckBoundary).toContain('not a required check')
+    expect(report.validateAllBoundary).toContain('separate from broad validate-all')
+
+    const native = report.fixtures.find((fixture) => fixture.sourceExampleKind === 'native-pbe')
+    const retrofit = report.fixtures.find((fixture) => fixture.sourceExampleKind === 'retrofit-pbe')
+    expect(native?.status).toBe('intent-projection-pass')
+    expect(retrofit?.status).toBe('intent-projection-pass')
+    expect(native?.claims).toContain('empty search restores the full list after clearing a query')
+    expect(retrofit?.claims).toContain('compatibility export stays until explicit retirement approval')
+    expect(native?.claims[0]).not.toBe('ux-acceptance')
+    expect(retrofit?.claims[0]).not.toBe('compatibility-retention')
+  })
+
   it('blocks project-intent when vocabulary classification or anchors are missing', async () => {
     const tempRoot = await mkdtemp(join(tmpdir(), 'pbe-intent-projection-invalid-'))
     try {
@@ -303,6 +364,37 @@ describe('intent-critical Graph-source examples', () => {
       expect(result.stdout).toBe('')
       expect(result.stderr).toContain('riskKind')
       expect(result.stderr).toContain('anchors')
+    } finally {
+      await rm(tempRoot, { recursive: true, force: true })
+    }
+  })
+
+  it('reports blocked intent projection summary when classification or anchors are missing', async () => {
+    const tempRoot = await mkdtemp(join(tmpdir(), 'pbe-intent-report-invalid-'))
+    try {
+      const source = await readIntentExample('examples/intent-critical/native-pbe-maintenance/graph-source-intent.json')
+      delete (
+        source.intentRecords[0].edgeIntent as Partial<IntentCriticalExample['intentRecords'][number]['edgeIntent']>
+      ).intentKind
+      source.intentRecords[0].edgeIntent.anchors = []
+      const invalidPath = join(tempRoot, 'invalid-graph-source-intent.json')
+      await writeFile(invalidPath, `${JSON.stringify(source, null, 2)}\n`, 'utf8')
+
+      const result = await runPbeCli(
+        ['graph', 'read-model', 'report-intent', '--graph-source', invalidPath, '--json'],
+        { cwd: resolve('.') },
+      )
+      expect(result.exitCode).not.toBe(0)
+      expect(result.stdout).toBe('')
+      const report = JSON.parse(result.stderr) as EdgeIntentProjectionReport & { issues: unknown[] }
+      expect(report.status).toBe('intent-report-blocked')
+      expect(report.projectedFixtureCount).toBe(0)
+      expect(report.missingClassificationCount).toBeGreaterThanOrEqual(1)
+      expect(report.missingAnchorCount).toBe(1)
+      expect(report.fixtures[0].status).toBe('intent-projection-blocked')
+      expect(report.fixtures[0].error).toContain('intentKind')
+      expect(report.fixtures[0].error).toContain('anchors')
+      expect(report.issues).toHaveLength(1)
     } finally {
       await rm(tempRoot, { recursive: true, force: true })
     }

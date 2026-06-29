@@ -92,6 +92,16 @@ node dist/cli/index.js graph read-model project-intent --graph-source <path> --o
 
 This command is intentionally separate from broad `validate --all` semantics.
 
+Local projection health can be summarized with:
+
+```bash
+node dist/cli/index.js graph read-model report-intent --json
+```
+
+The report covers the native and retrofit fixtures, returns `intent-report-pass` or `intent-report-blocked`, and reports
+fixture count, edgeIntent count, claim count, classification count, anchor count, missing classification count, and
+missing anchor count. It remains local validation Evidence and is not a required check.
+
 The non-enforcing read-model Evidence workflow now runs the same command for the native and retrofit fixtures as
 report-only CI observation. The uploaded artifact bundle includes the regenerated projection files and command outputs,
 and the CI manifest records `edgeIntentProjectionObservationStatus`. This visibility does not enroll intent projection

@@ -416,6 +416,41 @@ interface EdgeIntentProjectionFileResult {
   projection: EdgeIntentReadModelProjection
 }
 
+interface EdgeIntentProjectionReportResult {
+  status: 'intent-report-pass' | 'intent-report-blocked'
+  projectedFixtureCount: number
+  edgeIntentCount: number
+  claimCount: number
+  classificationCount: number
+  anchorCount: number
+  missingClassificationCount: number
+  missingAnchorCount: number
+  fixtures: EdgeIntentProjectionFixtureSummary[]
+  nonEnforcementStatement: string
+  requiredCheckBoundary: string
+  validateAllBoundary: string
+}
+
+interface EdgeIntentProjectionFixtureSummary {
+  graphSource: string
+  sourceExampleKind: 'native-pbe' | 'retrofit-pbe' | 'unknown'
+  status: 'intent-projection-pass' | 'intent-projection-blocked'
+  edgeIntentCount: number
+  claimCount: number
+  classificationCount: number
+  anchorCount: number
+  missingClassificationCount: number
+  missingAnchorCount: number
+  claims: string[]
+  classificationFields: string[]
+  error?: string
+}
+
+const defaultIntentCriticalGraphSourcePaths = [
+  'examples/intent-critical/native-pbe-maintenance/graph-source-intent.json',
+  'examples/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json',
+]
+
 interface TreeNode {
   id: string
   title?: string
@@ -1078,6 +1113,51 @@ export async function projectIntentCriticalGraphSourceToFile(
   }
 }
 
+export async function reportIntentCriticalProjection(
+  root: string,
+  graphSourcePaths = defaultIntentCriticalGraphSourcePaths,
+): Promise<EdgeIntentProjectionReportResult> {
+  const fixtures: EdgeIntentProjectionFixtureSummary[] = []
+  for (const graphSourcePath of graphSourcePaths) {
+    const normalizedGraphSourcePath = normalizePath(graphSourcePath)
+    const absoluteGraphSourcePath = path.resolve(root, normalizedGraphSourcePath)
+    const parsed = await readJsonSafe<unknown>(absoluteGraphSourcePath)
+    if (!parsed.ok) {
+      fixtures.push(blockedEdgeIntentFixtureSummary(normalizedGraphSourcePath, `Unable to read: ${parsed.error}`))
+      continue
+    }
+
+    try {
+      const graphSource = normalizeIntentCriticalGraphSourceExample(parsed.value, normalizedGraphSourcePath)
+      const projection = projectIntentCriticalGraphSource(graphSource, normalizedGraphSourcePath)
+      fixtures.push(summarizeEdgeIntentProjectionFixture(normalizedGraphSourcePath, projection))
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      fixtures.push(blockedEdgeIntentFixtureSummary(normalizedGraphSourcePath, message))
+    }
+  }
+
+  const status = fixtures.every((fixture) => fixture.status === 'intent-projection-pass')
+    ? 'intent-report-pass'
+    : 'intent-report-blocked'
+
+  return {
+    status,
+    projectedFixtureCount: fixtures.filter((fixture) => fixture.status === 'intent-projection-pass').length,
+    edgeIntentCount: sumFixtureField(fixtures, 'edgeIntentCount'),
+    claimCount: sumFixtureField(fixtures, 'claimCount'),
+    classificationCount: sumFixtureField(fixtures, 'classificationCount'),
+    anchorCount: sumFixtureField(fixtures, 'anchorCount'),
+    missingClassificationCount: sumFixtureField(fixtures, 'missingClassificationCount'),
+    missingAnchorCount: sumFixtureField(fixtures, 'missingAnchorCount'),
+    fixtures,
+    nonEnforcementStatement:
+      'Intent projection report is local validation Evidence only and does not introduce CI enforcement.',
+    requiredCheckBoundary: 'Intent projection report is not a required check, branch protection rule, or merge gate.',
+    validateAllBoundary: 'Intent projection report remains separate from broad validate-all intent enforcement.',
+  }
+}
+
 export function projectIntentCriticalGraphSource(
   graphSource: IntentCriticalGraphSourceExample,
   graphSourcePath: string,
@@ -1104,6 +1184,65 @@ export function projectIntentCriticalGraphSource(
         'The claim is preserved as short project-specific language and is not replaced by a global enum or table.',
     },
   }
+}
+
+function summarizeEdgeIntentProjectionFixture(
+  graphSourcePath: string,
+  projection: EdgeIntentReadModelProjection,
+): EdgeIntentProjectionFixtureSummary {
+  const classificationFields = projection.vocabularyBoundary.classificationFields
+  return {
+    graphSource: normalizePath(graphSourcePath),
+    sourceExampleKind: projection.sourceExampleKind,
+    status: projection.projectionStatus,
+    edgeIntentCount: projection.edgeIntentProjections.length,
+    claimCount: projection.edgeIntentProjections.filter((entry) => entry.claim.length > 0).length,
+    classificationCount: projection.edgeIntentProjections.length * classificationFields.length,
+    anchorCount: projection.edgeIntentProjections.reduce((sum, entry) => sum + entry.anchors.length, 0),
+    missingClassificationCount: 0,
+    missingAnchorCount: 0,
+    claims: projection.edgeIntentProjections.map((entry) => entry.claim),
+    classificationFields,
+  }
+}
+
+function blockedEdgeIntentFixtureSummary(graphSourcePath: string, error: string): EdgeIntentProjectionFixtureSummary {
+  return {
+    graphSource: normalizePath(graphSourcePath),
+    sourceExampleKind: 'unknown',
+    status: 'intent-projection-blocked',
+    edgeIntentCount: 0,
+    claimCount: 0,
+    classificationCount: 0,
+    anchorCount: 0,
+    missingClassificationCount: countEdgeIntentClassificationProblems(error),
+    missingAnchorCount: countEdgeIntentAnchorProblems(error),
+    claims: [],
+    classificationFields: ['edgeType', 'intentKind', 'riskKind', 'confidence', 'enforcement', 'anchors.signalKind'],
+    error,
+  }
+}
+
+function countEdgeIntentClassificationProblems(message: string): number {
+  return ['edgeType', 'intentKind', 'riskKind', 'confidence', 'enforcement'].filter((field) => message.includes(field))
+    .length
+}
+
+function countEdgeIntentAnchorProblems(message: string): number {
+  return message.includes('anchors') ? 1 : 0
+}
+
+function sumFixtureField(
+  fixtures: EdgeIntentProjectionFixtureSummary[],
+  field:
+    | 'edgeIntentCount'
+    | 'claimCount'
+    | 'classificationCount'
+    | 'anchorCount'
+    | 'missingClassificationCount'
+    | 'missingAnchorCount',
+): number {
+  return fixtures.reduce((sum, fixture) => sum + fixture[field], 0)
 }
 
 function renderEdgeIntentSummary(edgeIntent: EdgeIntentAnnotation): string {
