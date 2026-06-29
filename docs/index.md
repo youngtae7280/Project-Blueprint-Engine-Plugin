@@ -44,6 +44,9 @@
   retirement-candidate boundary for tree-native, blueprint, ACEP, profile, docs, and validator compatibility surfaces.
 - [Graph-first primary workflow](concept/graph-first-primary-workflow.md) - Current source-authority, projection,
   Evidence, validation, compatibility, and user-acceptance boundaries for Graph-first PBE.
+- [Adoption-safe validation path design](concept/adoption-safe-validation-path-design.md) - Design package for
+  separating PBE plugin repository self-validation from initialized/external project validation without behavior
+  changes.
 
 ## Workflow Guides
 
