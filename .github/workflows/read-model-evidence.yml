@@ -29,6 +29,13 @@ jobs:
       PBE_CANDIDATE_OBSERVATION_OUTPUT: examples/read-model-aggregate/generated/read-model-candidate-observation-output.json
       PBE_AGGREGATE_SLICES: examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run
       PBE_E2E_SMOKE_OUTPUT: examples/read-model-aggregate/generated/read-model-e2e-smoke-output.json
+      PBE_INTENT_NATIVE_GRAPH_SOURCE: examples/intent-critical/native-pbe-maintenance/graph-source-intent.json
+      PBE_INTENT_NATIVE_PROJECTION: examples/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json
+      PBE_INTENT_NATIVE_OUTPUT: examples/read-model-aggregate/generated/read-model-edge-intent-native-output.json
+      PBE_INTENT_RETROFIT_GRAPH_SOURCE: examples/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json
+      PBE_INTENT_RETROFIT_PROJECTION: examples/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json
+      PBE_INTENT_RETROFIT_OUTPUT: examples/read-model-aggregate/generated/read-model-edge-intent-retrofit-output.json
+      PBE_EDGE_INTENT_OBSERVATION_OUTPUT: examples/read-model-aggregate/generated/read-model-edge-intent-observation-output.json
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -59,6 +66,53 @@ jobs:
           mkdir -p "$PBE_AGGREGATE_DIR"
           node scripts/read-model-e2e-smoke.js --output "$PBE_E2E_SMOKE_OUTPUT"
 
+      - name: Observe intent-critical edgeIntent projections
+        run: |
+          mkdir -p "$PBE_AGGREGATE_DIR"
+          mkdir -p "$(dirname "$PBE_INTENT_NATIVE_PROJECTION")" "$(dirname "$PBE_INTENT_RETROFIT_PROJECTION")"
+          node dist/cli/index.js graph read-model project-intent --graph-source "$PBE_INTENT_NATIVE_GRAPH_SOURCE" --output "$PBE_INTENT_NATIVE_PROJECTION" --json 2>&1 | tee "$PBE_INTENT_NATIVE_OUTPUT"
+          node dist/cli/index.js graph read-model project-intent --graph-source "$PBE_INTENT_RETROFIT_GRAPH_SOURCE" --output "$PBE_INTENT_RETROFIT_PROJECTION" --json 2>&1 | tee "$PBE_INTENT_RETROFIT_OUTPUT"
+          node <<'NODE'
+          const fs = require('node:fs')
+
+          function readJson(filePath) {
+            return JSON.parse(fs.readFileSync(filePath, 'utf8'))
+          }
+
+          const nativeOutputPath = process.env.PBE_INTENT_NATIVE_OUTPUT
+          const retrofitOutputPath = process.env.PBE_INTENT_RETROFIT_OUTPUT
+          const nativeOutput = readJson(nativeOutputPath)
+          const retrofitOutput = readJson(retrofitOutputPath)
+          const nativePass = nativeOutput.status === 'intent-projection-pass'
+          const retrofitPass = retrofitOutput.status === 'intent-projection-pass'
+
+          const observation = {
+            status: nativePass && retrofitPass ? 'edge-intent-projection-pass' : 'edge-intent-projection-blocked',
+            edgeIntentProjectionObservationStatus:
+              nativePass && retrofitPass ? 'edge-intent-projection-pass' : 'edge-intent-projection-blocked',
+            sourceMode: 'intent-critical-edge-intent-projection-observation',
+            native: {
+              graphSource: process.env.PBE_INTENT_NATIVE_GRAPH_SOURCE,
+              projection: process.env.PBE_INTENT_NATIVE_PROJECTION,
+              output: nativeOutputPath,
+              status: nativeOutput.status || 'missing',
+              projectedIntentCount: nativeOutput.projectedIntentCount ?? null,
+            },
+            retrofit: {
+              graphSource: process.env.PBE_INTENT_RETROFIT_GRAPH_SOURCE,
+              projection: process.env.PBE_INTENT_RETROFIT_PROJECTION,
+              output: retrofitOutputPath,
+              status: retrofitOutput.status || 'missing',
+              projectedIntentCount: retrofitOutput.projectedIntentCount ?? null,
+            },
+            boundary:
+              'Intent-critical edgeIntent projection is non-enforcing CI observation only and is not enrolled in broad validate-all intent enforcement.',
+          }
+
+          fs.writeFileSync(process.env.PBE_EDGE_INTENT_OBSERVATION_OUTPUT, `${JSON.stringify(observation, null, 2)}\n`)
+          if (observation.status !== 'edge-intent-projection-pass') process.exitCode = 1
+          NODE
+
       - name: Focused read-model Evidence tests
         run: npx vitest run cli/src/__tests__/read-model-evidence.test.ts
 
@@ -86,6 +140,7 @@ jobs:
           const validateAllOutputPath = process.env.PBE_VALIDATE_ALL_OUTPUT
           const candidateObservationOutputPath = process.env.PBE_CANDIDATE_OBSERVATION_OUTPUT
           const e2eSmokeOutputPath = process.env.PBE_E2E_SMOKE_OUTPUT
+          const edgeIntentObservationOutputPath = process.env.PBE_EDGE_INTENT_OBSERVATION_OUTPUT
           const aggregateSlices = (process.env.PBE_AGGREGATE_SLICES || '')
             .split(',')
             .map((slice) => slice.trim())
@@ -103,6 +158,7 @@ jobs:
           const validateAllOutput = readJson(validateAllOutputPath)
           const candidateObservationOutput = readJson(candidateObservationOutputPath)
           const e2eSmokeOutput = readJson(e2eSmokeOutputPath)
+          const edgeIntentObservationOutput = readJson(edgeIntentObservationOutputPath)
           const eventName = process.env.GITHUB_EVENT_NAME || 'workflow_dispatch'
           const eventPayload = readJson(process.env.GITHUB_EVENT_PATH || '') || {}
           const pullRequest = eventPayload.pull_request || null
@@ -132,6 +188,11 @@ jobs:
             todoAppCandidateObservation?.status === 'projection-contract-pass'
           const e2eSmokeStatus = e2eSmokeOutput?.status || 'missing'
           const e2eSmokePass = e2eSmokeStatus === 'e2e-smoke-pass'
+          const edgeIntentProjectionObservationStatus =
+            edgeIntentObservationOutput?.edgeIntentProjectionObservationStatus ||
+            edgeIntentObservationOutput?.status ||
+            'missing'
+          const edgeIntentProjectionPass = edgeIntentProjectionObservationStatus === 'edge-intent-projection-pass'
           const status =
             todoSearchPass &&
             todoAppPass &&
@@ -140,7 +201,8 @@ jobs:
             todoSearchProjectionPass &&
             todoAppProjectionPass &&
             todoAppCandidateObservationPass &&
-            e2eSmokePass
+            e2eSmokePass &&
+            edgeIntentProjectionPass
               ? 'ci-evidence-pass'
               : 'ci-evidence-blocked'
 
@@ -169,6 +231,7 @@ jobs:
             validateAllStatus,
             candidateObservationStatus,
             e2eSmokeStatus,
+            edgeIntentProjectionObservationStatus,
             generatedAt: new Date().toISOString(),
             status,
             todoSearch: {
@@ -222,6 +285,15 @@ jobs:
               artifactPath: e2eSmokeOutputPath,
               summary: e2eSmokeOutput || null,
             },
+            edgeIntentProjectionObservation: {
+              status: edgeIntentProjectionObservationStatus,
+              sourceMode: 'intent-critical-edge-intent-projection-observation',
+              artifactPath: edgeIntentObservationOutputPath,
+              native: edgeIntentObservationOutput?.native || null,
+              retrofit: edgeIntentObservationOutput?.retrofit || null,
+              validateAllBoundary:
+                'Intent-critical edgeIntent projections are observed separately and are not broad validate-all intent enforcement.',
+            },
             candidateObservation: {
               status: candidateObservationStatus,
               sourceMode: 'candidate-observation-only',
@@ -267,6 +339,11 @@ jobs:
               validateAllOutputPath,
               candidateObservationOutputPath,
               e2eSmokeOutputPath,
+              edgeIntentObservationOutputPath,
+              process.env.PBE_INTENT_NATIVE_OUTPUT,
+              process.env.PBE_INTENT_NATIVE_PROJECTION,
+              process.env.PBE_INTENT_RETROFIT_OUTPUT,
+              process.env.PBE_INTENT_RETROFIT_PROJECTION,
             ],
             sourceAuthorityBoundary:
               'CI-backed Evidence is Evidence only for declared read-model reports, aggregate summary, and separate candidate-observation metadata. Todo Search remains the only scoped pilot; Todo App PBE Run remains structure-only. This workflow does not expand source authority.',
@@ -314,6 +391,7 @@ jobs:
           const todoAppProjection = manifest?.todoAppPbeRun?.projectionContractStatus || 'missing'
           const candidateObservationStatus = manifest?.candidateObservationStatus || 'missing'
           const todoAppCandidateObservation = manifest?.todoAppPbeRun?.candidateObservationStatus || 'missing'
+          const edgeIntentProjectionObservationStatus = manifest?.edgeIntentProjectionObservationStatus || 'missing'
           const includedSlices = manifest?.includedSlices || []
 
           const markdown = [
@@ -332,9 +410,11 @@ jobs:
             `- Todo App positive projection contract status: \`${todoAppProjection}\``,
             `- Candidate observation status: \`${candidateObservationStatus}\``,
             `- Todo App observed projection status: \`${todoAppCandidateObservation}\``,
+            `- edgeIntent projection observation status: \`${edgeIntentProjectionObservationStatus}\``,
             `- Aggregate status: \`${aggregateStatus}\``,
             '- Boundary: CI-backed Evidence is Evidence only.',
             '- Candidate observation is retained as separate report-only metadata.',
+            '- edgeIntent projection observation is retained as separate report-only metadata.',
             '- Informational only for pull requests.',
             '- Not a required check or branch protection rule.',
             '- No source authority change.',
@@ -376,3 +456,8 @@ jobs:
             examples/read-model-aggregate/generated/read-model-validate-all-output.json
             examples/read-model-aggregate/generated/read-model-candidate-observation-output.json
             examples/read-model-aggregate/generated/read-model-e2e-smoke-output.json
+            examples/read-model-aggregate/generated/read-model-edge-intent-observation-output.json
+            examples/read-model-aggregate/generated/read-model-edge-intent-native-output.json
+            examples/read-model-aggregate/generated/read-model-edge-intent-retrofit-output.json
+            examples/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json
+            examples/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json

@@ -74,6 +74,11 @@ After that review, local positive `validate --all` now enrolls the Todo App cand
 non-authority structure-only check and reports `candidate-projection-contract-pass`. Manual run `28222731063` confirms
 that field in workflow artifacts; PR #7 run `28223010185` confirms the same field in PR informational artifacts.
 
+The workflow also observes intent-critical native and retrofit edgeIntent projections by running
+`graph read-model project-intent --graph-source <path> --output <path> --json`. The manifest and Step Summary record
+`edgeIntentProjectionObservationStatus`, and the artifact bundle includes both projection files plus command outputs.
+This is report-only visibility and does not add broad validate-all intent enforcement.
+
 Run `28156403793` also surfaced a GitHub Actions maintenance annotation that Node.js 20 is deprecated for
 `actions/checkout@v4`, `actions/setup-node@v4`, and `actions/upload-artifact@v4` execution. This is a retained CI hygiene
 warning for that historical run, not a failed Evidence run. The workflow now uses `actions/checkout@v7`,

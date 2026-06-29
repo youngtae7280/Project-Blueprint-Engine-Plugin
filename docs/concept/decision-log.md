@@ -632,6 +632,12 @@ the existing edge-intent read-model projection shape, preserves project-specific
 and reports clear validation failures when required classifications or anchors are missing. It remains separate from
 broad validate-all, enforcement, required checks, and tree retirement.
 
+DEC-132 does not supersede DEC-097 through DEC-131. It adds non-enforcing CI observation of the native and retrofit
+edgeIntent projection command to `.github/workflows/read-model-evidence.yml`. The workflow now records
+`edgeIntentProjectionObservationStatus` in the CI manifest and Step Summary and uploads the native/retrofit projection
+files plus command outputs. This is intent projection CI observation only and does not integrate intent projection into
+broad validate-all enforcement, required checks, or tree retirement.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

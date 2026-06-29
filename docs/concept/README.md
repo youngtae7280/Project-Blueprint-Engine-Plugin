@@ -525,6 +525,8 @@ such as type, intent kind, risk kind, signal kind, confidence, enforcement, sour
 The first native/retrofit fixture projections now expose that edgeIntent in
 `generated/edge-intent-read-model-projection.json` without integrating it into broad validate-all semantics. The
 projection can be regenerated through `graph read-model project-intent --graph-source <path> --output <path> --json`.
+The read-model Evidence workflow observes the same native/retrofit projection command as report-only CI metadata through
+`edgeIntentProjectionObservationStatus`.
 
 Manual workflow run `28222731063` reviewed the Todo App bounded non-authority positive validate-all projection status:
 Todo App reports `candidate-projection-contract-pass`, Todo Search remains `projection-contract-pass`, aggregate remains

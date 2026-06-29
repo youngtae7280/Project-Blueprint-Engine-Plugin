@@ -92,6 +92,11 @@ node dist/cli/index.js graph read-model project-intent --graph-source <path> --o
 
 This command is intentionally separate from broad `validate --all` semantics.
 
+The non-enforcing read-model Evidence workflow now runs the same command for the native and retrofit fixtures as
+report-only CI observation. The uploaded artifact bundle includes the regenerated projection files and command outputs,
+and the CI manifest records `edgeIntentProjectionObservationStatus`. This visibility does not enroll intent projection
+in broad `validate --all` enforcement.
+
 ## Fixture Alignment
 
 The current fixture alignment is:
