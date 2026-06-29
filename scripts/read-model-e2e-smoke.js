@@ -151,12 +151,51 @@ try {
   assertEqual(validateAll.aggregateStatus, 'aggregate-pass', 'aggregate summary status')
   assertEqual(validateAll.sliceCount, 2, 'validate-all slice count')
 
+  const transitionStatus = readJson('examples/read-model-aggregate/graph-source-transition-status.json')
+  assertEqual(
+    transitionStatus.status,
+    'confirmed-graph-source-transition-mechanics',
+    'Graph-source transition mechanics status',
+  )
+  assertEqual(
+    transitionStatus.sourceDirection,
+    'graph-source-confirmed-for-configured-read-model-slices',
+    'Graph-source transition source direction',
+  )
+  assertEqual(
+    transitionStatus.treeNativeRole,
+    'compatibility-fallback-reference',
+    'Tree-native compatibility/fallback role',
+  )
+  assertEqual(
+    transitionStatus.repoWideBoundaries?.treeNativeRetirement,
+    'not-complete',
+    'Tree-native retirement boundary',
+  )
+  assertEqual(transitionStatus.repoWideBoundaries?.ciEnforcement, 'not-enabled', 'CI enforcement boundary')
+
   const todoSearchProfile = validateAll.perSliceResults.find(
     (entry) => entry.profileId === 'todo-search-selected-slice',
   )
   const todoAppProfile = validateAll.perSliceResults.find(
     (entry) => entry.profileId === 'todo-app-pbe-run-structure-only',
   )
+  const todoSearchTransition = transitionStatus.configuredSlices.find(
+    (entry) => entry.profileId === 'todo-search-selected-slice',
+  )
+  const todoAppTransition = transitionStatus.configuredSlices.find(
+    (entry) => entry.profileId === 'todo-app-pbe-run-structure-only',
+  )
+  assertEqual(todoSearchTransition?.sourceRole, 'limited-graph-source-promoted', 'Todo Search transition source role')
+  assertEqual(todoSearchTransition?.generationMode, 'graph-source-backed', 'Todo Search transition generation mode')
+  assertEqual(todoSearchTransition?.expectedCounts?.nodes, 40, 'Todo Search transition node count')
+  assertEqual(todoSearchTransition?.expectedCounts?.edges, 59, 'Todo Search transition edge count')
+  assertEqual(todoSearchTransition?.expectedCounts?.coreViews, 7, 'Todo Search transition Core View count')
+  assertEqual(todoAppTransition?.sourceRole, 'confirmed-structure-only-graph-source', 'Todo App transition source role')
+  assertEqual(todoAppTransition?.generationMode, 'graph-source-backed', 'Todo App transition generation mode')
+  assertEqual(todoAppTransition?.expectedCounts?.nodes, 22, 'Todo App transition node count')
+  assertEqual(todoAppTransition?.expectedCounts?.edges, 38, 'Todo App transition edge count')
+  assertEqual(todoAppTransition?.expectedCounts?.coreViews, 7, 'Todo App transition Core View count')
   const todoSearchProjection = commandResult(todoSearchProfile, 'project-contract')
   assertEqual(todoSearchProjection.status, 'projection-contract-pass', 'Todo Search projection contract status')
   assertEqual(todoSearchProjection.nodeCount, 40, 'Todo Search projection node count')
@@ -214,6 +253,13 @@ try {
       status: validateAll.status,
       aggregateStatus: validateAll.aggregateStatus,
       sliceCount: validateAll.sliceCount,
+    },
+    graphSourceTransition: {
+      status: transitionStatus.status,
+      sourceDirection: transitionStatus.sourceDirection,
+      treeNativeRole: transitionStatus.treeNativeRole,
+      repoWidePromotion: transitionStatus.repoWideBoundaries.repoWidePromotion,
+      treeNativeRetirement: transitionStatus.repoWideBoundaries.treeNativeRetirement,
     },
     candidateObservation: {
       status: candidateObservation.status,

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "registryRole": "read-model-slice-registry-fixture",
-  "status": "candidate-not-consumed-by-cli",
-  "sourceAuthorityBoundary": "This registry is execution metadata for future read-model validation only. Tree-native selected-slice artifacts and canonical .pbe artifacts remain current operational source unless a separate source-authority decision changes that boundary.",
-  "nonPromotionStatement": "Registry inclusion is not Graph-source promotion, source authority expansion, CI enforcement, or user acceptance.",
+  "status": "active-consumed-by-validate-all",
+  "sourceAuthorityBoundary": "This registry is execution metadata for configured read-model validation. Todo Search is limited graph-source-promoted, Todo App PBE Run is confirmed graph-source-backed for structure-only, and tree-native artifacts remain compatibility/fallback/reference unless a later explicit retirement decision changes that role.",
+  "nonPromotionStatement": "Registry inclusion is not repo-wide Graph-source promotion, tree-native retirement, CI enforcement, required-check configuration, or user acceptance.",
   "mutationBoundary": "Future parsers may read and normalize this registry, but validation commands must not silently mutate it. Registry edits require an explicit reviewed config update.",
   "profiles": [
     {
@@ -57,8 +57,8 @@
       ],
       "ciInclusion": "manual-and-pr-informational",
       "boundaryStatements": {
-        "sourceAuthorityBoundary": "Todo Search registry inclusion is scoped read-model validation metadata only; tree-native selected-slice artifacts remain fallback/reference and current operational source.",
-        "nonPromotionStatement": "This profile does not approve full Graph-source promotion or repo-wide source authority change.",
+        "sourceAuthorityBoundary": "Todo Search registry inclusion reflects the limited graph-source-promoted selected-slice source role; tree-native selected-slice artifacts remain maintained compatibility/fallback/reference records.",
+        "nonPromotionStatement": "This profile does not approve repo-wide Graph-source promotion, tree-native retirement, CI enforcement, or required-check configuration.",
         "userAcceptanceBoundary": "Validation, parity, CI Evidence, aggregate status, and registry inclusion do not replace user acceptance authority."
       }
     },
@@ -106,8 +106,8 @@
       "fallbackReferences": ["canonical .pbe artifacts under examples/valid/todo-app-pbe-run"],
       "ciInclusion": "manual-and-pr-informational",
       "boundaryStatements": {
-        "sourceAuthorityBoundary": "Todo App PBE Run registry inclusion is structure-only validation metadata; canonical .pbe artifacts remain source/reference.",
-        "nonPromotionStatement": "This profile does not promote Todo App PBE Run to parity-backed, pilot-marker-backed, CI-authoritative, or source-authority-bearing status.",
+        "sourceAuthorityBoundary": "Todo App PBE Run registry inclusion reflects confirmed graph-source-backed generation for structure-only only; canonical .pbe artifacts remain compatibility/fallback/reference records.",
+        "nonPromotionStatement": "This profile does not promote Todo App PBE Run beyond structure-only, add parity backing, add pilot-marker backing, retire tree-native artifacts, or create CI enforcement.",
         "userAcceptanceBoundary": "Validation, aggregate status, CI Evidence, and registry inclusion do not replace user acceptance authority."
       }
     }

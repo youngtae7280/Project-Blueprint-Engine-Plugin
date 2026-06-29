@@ -5,7 +5,7 @@ no-promotion-change
 
 ## Purpose
 
-`npm run test:read-model:e2e` is a local dogfood smoke for the current mixed Graph-source transition. It copies the
+`npm run test:read-model:e2e` is a local dogfood smoke for the current configured Graph-source transition. It copies the
 read-model examples into a temporary workspace, runs the CLI against that workspace, and removes the temporary files after
 the run so the repository's generated artifacts do not churn.
 
@@ -29,6 +29,8 @@ The smoke checks:
 - Todo App PBE Run structure-only generation and validation, 22 nodes / 38 edges / 7 Core Views
 - Todo App positive validate-all projection status `projection-contract-pass`
 - registry-backed `graph read-model validate --all --json` status `aggregate-pass`
+- `examples/read-model-aggregate/graph-source-transition-status.json` source roles and no-retirement/no-enforcement
+  boundaries
 - candidate observation status `candidate-observation-pass` as separate report-only metadata
 
 ## Boundary

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "graph-source-transition-status",
+  "status": "confirmed-graph-source-transition-mechanics",
+  "transitionScope": "repo-wide-mechanics",
+  "sourceDirection": "graph-source-confirmed-for-configured-read-model-slices",
+  "treeNativeRole": "compatibility-fallback-reference",
+  "nonRetirementStatement": "Tree-native artifacts are not deleted, retired, or treated as obsolete by this status artifact. They remain compatibility, fallback, and reference records unless a later explicit retirement decision changes that role.",
+  "nonEnforcementStatement": "This status artifact supports local validation and CI observation only. It does not create required checks, branch protection, merge enforcement, or user acceptance.",
+  "invalidFixtureBoundary": "Invalid read-model fixtures remain local focused test inputs and are not enrolled in positive validate-all or CI.",
+  "configuredSlices": [
+    {
+      "profileId": "todo-search-selected-slice",
+      "sourceSlice": "examples/adoption/todo-search-slice",
+      "graphSourceArtifact": "examples/adoption/todo-search-slice/graph-source.json",
+      "generatedProjectionArtifact": "examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json",
+      "sourceRole": "limited-graph-source-promoted",
+      "generationMode": "graph-source-backed",
+      "policyLevel": "pilot-marker-backed",
+      "expectedCounts": {
+        "nodes": 40,
+        "edges": 59,
+        "coreViews": 7,
+        "validationChecks": 20
+      },
+      "positiveValidateAllRole": "source-backed-projection-contract",
+      "fallbackRole": "tree-native-selected-slice-artifacts-maintained-as-compatibility-fallback-reference"
+    },
+    {
+      "profileId": "todo-app-pbe-run-structure-only",
+      "sourceSlice": "examples/valid/todo-app-pbe-run",
+      "graphSourceArtifact": "examples/valid/todo-app-pbe-run/graph-source.json",
+      "generatedProjectionArtifact": "examples/valid/todo-app-pbe-run/generated/graph-source-read-model-projection.json",
+      "sourceRole": "confirmed-structure-only-graph-source",
+      "generationMode": "graph-source-backed",
+      "policyLevel": "structure-only",
+      "expectedCounts": {
+        "nodes": 22,
+        "edges": 38,
+        "coreViews": 7,
+        "validationChecks": 16
+      },
+      "positiveValidateAllRole": "confirmed-structure-only-projection-contract",
+      "fallbackRole": "canonical-pbe-artifacts-maintained-as-compatibility-fallback-reference"
+    }
+  ],
+  "repoWideBoundaries": {
+    "repoWidePromotion": "not-complete",
+    "treeNativeRetirement": "not-complete",
+    "requiredChecks": "not-enabled",
+    "branchProtection": "not-enabled",
+    "ciEnforcement": "not-enabled",
+    "todoAppBeyondStructureOnly": "not-approved"
+  },
+  "validatedBy": ["npm run test:read-model:e2e", "node dist/cli/index.js graph read-model validate --all --json"]
+}

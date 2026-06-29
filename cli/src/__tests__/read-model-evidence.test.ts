@@ -449,9 +449,9 @@ describe('read-model Evidence builder', () => {
 
     expect(registry.schemaVersion).toBe(1)
     expect(registry.registryRole).toBe('read-model-slice-registry-fixture')
-    expect(registry.status).toBe('candidate-not-consumed-by-cli')
-    expect(registry.sourceAuthorityBoundary).toContain('execution metadata')
-    expect(registry.nonPromotionStatement).toContain('not Graph-source promotion')
+    expect(registry.status).toBe('active-consumed-by-validate-all')
+    expect(registry.sourceAuthorityBoundary).toContain('configured read-model validation')
+    expect(registry.nonPromotionStatement).toContain('not repo-wide Graph-source promotion')
     expect(registry.mutationBoundary).toContain('must not silently mutate')
     expect(registry.profiles.map((entry) => entry.profileId)).toEqual([
       todoSearchReadModelProfile.profileId,

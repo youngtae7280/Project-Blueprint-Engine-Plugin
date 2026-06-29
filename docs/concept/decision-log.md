@@ -597,6 +597,14 @@ reviewing confirmed Todo App graph-source-backed metadata in non-enforcing CI. T
 Workflow triggers remain manual plus PR informational; no enforcement, required check, tree retirement, invalid-fixture
 CI, or promotion beyond `structure-only` is introduced.
 
+DEC-127 does not supersede DEC-097 through DEC-126. It records repo-wide Graph-source transition mechanics after Todo
+Search and Todo App PBE Run both became graph-source-backed configured read-model slices.
+`examples/read-model-aggregate/graph-source-transition-status.json` records the confirmed source direction, Todo Search
+as `limited-graph-source-promoted`, Todo App as `confirmed-structure-only-graph-source`, and tree-native artifacts as
+compatibility/fallback/reference. The slice registry is marked `active-consumed-by-validate-all`, and the local E2E
+smoke checks the status artifact. This mechanics step does not retire tree-native artifacts, add required checks, enable
+CI enforcement, include invalid fixtures in CI, or promote Todo App beyond `structure-only`.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

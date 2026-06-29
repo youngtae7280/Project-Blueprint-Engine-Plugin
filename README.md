@@ -99,16 +99,18 @@ Useful entry points:
 
 ## Current Graph-Source Transition State
 
-PBE is in a mixed transition state, not a repo-wide Graph-source completion state.
+PBE now treats Graph-source as the confirmed direction for the configured read-model slices, while still preserving
+explicit compatibility and fallback boundaries.
 
 - Todo Search selected scope is limited Graph-source promoted and its read-model generation is graph-source-backed.
-- Tree-native artifacts remain the source for unpromoted scopes and remain maintained fallback/reference artifacts for
-  the promoted Todo Search scope.
-- Todo App PBE Run is now graph-source-backed for its confirmed `structure-only` slice: positive `validate --all` checks
-  its projection contract at 22 nodes / 38 edges / 7 Core Views. It is still not parity-backed, pilot-marker-backed, or
+- Todo App PBE Run is graph-source-backed for its confirmed `structure-only` slice: positive `validate --all` checks its
+  projection contract at 22 nodes / 38 edges / 7 Core Views. It is still not parity-backed, pilot-marker-backed, or
   promoted beyond `structure-only`.
-- Repo-wide Graph-source promotion, tree-native retirement, required checks, branch protection, and CI enforcement are
-  not complete and still require explicit user approval.
+- Tree-native artifacts are not retired. They remain maintained compatibility/fallback/reference artifacts for the
+  configured graph-source-backed slices and remain the source/fallback basis for scopes that have not been explicitly
+  converted.
+- Repo-wide tree retirement, required checks, branch protection, CI enforcement, invalid-fixture CI, and Todo App
+  promotion beyond `structure-only` are not complete.
 
 ## What Gets Created
 

@@ -501,6 +501,16 @@ is limited promoted and graph-source-backed, Todo App PBE Run is confirmed graph
 slice, tree-native artifacts remain fallback/reference/compatibility where applicable, and repo-wide promotion, tree
 retirement, enforcement, and required checks are still incomplete.
 
+The repo-wide transition mechanics status is now recorded:
+
+- [repo-wide-graph-source-transition-mechanics.md](repo-wide-graph-source-transition-mechanics.md)
+
+`examples/read-model-aggregate/graph-source-transition-status.json` records Graph-source as the confirmed direction for
+the configured read-model slices: Todo Search is limited graph-source-promoted, Todo App is confirmed graph-source-backed
+for `structure-only`, and tree-native artifacts remain compatibility/fallback/reference. The local E2E smoke now checks
+that status artifact while preserving no tree retirement, no enforcement, no required checks, no invalid-fixture CI, and
+no Todo App promotion beyond `structure-only`.
+
 Manual workflow run `28222731063` reviewed the Todo App bounded non-authority positive validate-all projection status:
 Todo App reports `candidate-projection-contract-pass`, Todo Search remains `projection-contract-pass`, aggregate remains
 `aggregate-pass`, and candidate observation stays separate.
