@@ -100,7 +100,7 @@ Commands:
   validate             Run all PBE validators
   gate <stage>         Check whether a stage can be entered, including review-result
   gate assess          Assess Human Gate clarity and hard triggers without changing state
-  profile recommend    Recommend full, lite, or bypass from a task brief
+  profile recommend    Recommend workflow depth from a task brief
   context recommend    Recommend skills, agent-context cards, and optional full docs
   context pack         Create a prompt-ready bundle from recommended readFirst context
   rpd check            Check RPD/Product Tree status
@@ -163,7 +163,7 @@ Options:
   --no-color           Disable colored output. Reserved for compatibility.
   --force              Allow init to overwrite existing PBE files.
   --all                Run all configured read-model registry profiles for graph read-model validate.
-  --profile <value>    init profile: full, lite, or bypass. Defaults to full.
+  --profile <value>    Compatibility workflow-depth hint: full, lite, or bypass. Defaults to full.
   --brief <text>       init project brief.
   --max-chars <n>      Maximum context pack bundle characters. Defaults to 12000.
   --text <text>        Text to assess for Human Gate clarity.

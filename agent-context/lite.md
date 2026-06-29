@@ -1,4 +1,4 @@
-# Lite Context
+# Compact Depth Context
 
 Use when:
 
@@ -6,20 +6,24 @@ Use when:
 - Existing PBE artifacts or a clear local scope already exist.
 - The work is low-risk and does not need full ACEP packaging.
 
+This card remains at `agent-context/lite.md` for compatibility with existing context recommendations. Treat `lite` as a
+compatibility profile value for compact workflow depth, not as a separate public PBE mode.
+
 Do:
 
-- Remember that Lite is not bypass.
+- Remember that compact depth is not bypass.
 - Keep mini acceptance criteria, expected files, minimal Test/Evidence, and user-only acceptance.
 - Keep File Change Guard active.
 - Keep Product -> Work -> Test/Evidence traceability even when reduced.
-- Escalate to Full when risk grows.
+- Increase to full planning depth when risk grows.
 
 Do not:
 
-- Treat Lite as permission to skip acceptance criteria.
+- Treat compact depth as permission to skip acceptance criteria.
 - Skip user review or user-only acceptance.
 - Expand into broad repo conversion.
-- Use Lite for unclear product meaning, visual redesign, architecture runway, permissions, DB/schema, API, hardware, concurrency, or repeated rejection.
+- Use compact depth for unclear product meaning, visual redesign, architecture runway, permissions, DB/schema, API,
+  hardware, concurrency, or repeated rejection.
 
 Escalate / read full docs when:
 

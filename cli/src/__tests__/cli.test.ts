@@ -441,6 +441,7 @@ describe('PBE CLI', () => {
       confidence: 'medium',
       suggestedInitCommand: 'pbe init --profile lite --brief "README 링크 문구 한 줄 정리"',
     })
+    expect(payload.workflowDepth).toBe('compact')
     expect(payload.escalationTriggers).toContain('product meaning change')
     expect(payload.notes).toContain('This is a recommendation only. It does not initialize PBE.')
     expect(existsSync(join(workspace, '.pbe'))).toBe(false)
@@ -488,12 +489,12 @@ describe('PBE CLI', () => {
     expect(payload.readFirst).toContain('agent-context/evidence.md')
   })
 
-  it('adds Lite context and docs when profile is lite', async () => {
+  it('adds compact context and docs when profile is lite', async () => {
     const recommendation = recommendContext({ stage: 'vd', profile: 'lite' })
 
     expect(recommendation.readFirst).toContain('agent-context/lite.md')
     expect(recommendation.readOnlyIfNeeded).toContain('docs/lite-mode-policy.md')
-    expect(recommendation.reasons).toContain('lite profile adds Lite guard guidance')
+    expect(recommendation.reasons).toContain('compact workflow depth adds guard guidance')
   })
 
   it('detects documentation context from troubleshooting npm brief', async () => {
@@ -692,7 +693,7 @@ describe('PBE CLI', () => {
     expect(result.stdout).toContain('## Read Only If Needed')
     expect(result.stdout).toContain('## Do Not Read By Default')
     expect(result.stdout).toContain('### agent-context/lite.md')
-    expect(result.stdout).toContain('# Lite Context')
+    expect(result.stdout).toContain('# Compact Depth Context')
   })
 
   it('prints context pack JSON with only readFirst files included', async () => {
@@ -1041,7 +1042,7 @@ describe('PBE CLI', () => {
     expect(payload.recommendedContext.readFirst).toEqual(['agent-context/start.md'])
   })
 
-  it('shows Lite guidance in status text output', async () => {
+  it('shows compact guidance in status text output', async () => {
     const workspace = createWorkspace()
     writePbeState(workspace, 'WPD_DONE', { profile: 'lite' })
 
@@ -1050,12 +1051,12 @@ describe('PBE CLI', () => {
     expect(result.exitCode).toBe(ExitCode.Success)
     expect(result.stdout).toContain('Profile: lite')
     expect(result.stdout).toContain('Recommended next command: pbe vd close')
-    expect(result.stdout).toContain('Lite guidance:')
-    expect(result.stdout).toContain('Lite mode is a smaller PBE workflow')
-    expect(result.stdout).toContain('Escalate to full if product meaning change')
+    expect(result.stdout).toContain('Compact workflow guidance:')
+    expect(result.stdout).toContain('compact PBE guidance for a bounded low-risk slice')
+    expect(result.stdout).toContain('Increase to full planning depth if product meaning change')
   })
 
-  it('includes Lite profile guidance in status JSON without changing next command', async () => {
+  it('includes compact profile guidance in status JSON without changing next command', async () => {
     const workspace = createWorkspace()
     writePbeState(workspace, 'WPD_DONE', { profile: 'lite' })
 
@@ -1067,18 +1068,20 @@ describe('PBE CLI', () => {
     expect(payload.recommendedNextCommand).toBe('pbe vd close')
     expect(payload.profileGuidance).toMatchObject({
       profile: 'lite',
-      summary: 'Lite mode is a smaller PBE workflow for bounded low-risk slices, not a safety bypass.',
+      workflowDepth: 'compact',
+      summary:
+        'This run uses compact PBE guidance for a bounded low-risk slice. It is not a separate mode or a safety bypass.',
     })
     expect(payload.profileGuidance.mustKeepGuards).toContain('expectedFiles / File Change Guard')
     expect(payload.profileGuidance.mustKeepGuards).toContain('minimal Test/Evidence')
     expect(payload.profileGuidance.escalationTriggers).toContain('product meaning change')
     expect(payload.profileGuidance.escalationTriggers).toContain('Product Patch required')
-    expect(payload.profileGuidance.limitations).toContain('No dedicated pbe lite command yet')
+    expect(payload.profileGuidance.limitations).toContain('No dedicated pbe lite command')
   })
 
   it.each([
-    ['full', 'Full guidance:'],
-    ['bypass', 'Bypass guidance:'],
+    ['full', 'Full-depth workflow guidance:'],
+    ['bypass', 'No-tracking guidance:'],
   ] as const)('does not fail status for %s profile guidance', async (profile, expectedText) => {
     const workspace = createWorkspace()
     writePbeState(workspace, 'INIT', { profile })

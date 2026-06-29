@@ -105,19 +105,19 @@ node C:\Users\김영태\Documents\PBE\dist\cli\index.js init --profile lite --br
 Result:
 
 - `.pbe/` initialized successfully.
-- `pbe status --json` showed `profile: lite` and Lite profile guidance.
+- `pbe status --json` showed `profile: lite` compatibility metadata and compact-depth guidance.
 
 ## Blocking Findings
 
-### 1. Lite init still creates broad artifact skeletons
+### 1. Compact-depth init still creates broad artifact skeletons
 
-Even for a tiny one-file Lite slice, `pbe init --profile lite` generated the broad `.pbe` artifact set.
+Even for a tiny one-file compact slice, `pbe init --profile lite` generated the broad `.pbe` artifact set.
 
-This matches the known Lite limitation:
+This matches the known compatibility profile limitation:
 
 ```text
-No dedicated pbe lite command yet.
-No reduced artifact initialization yet.
+No dedicated pbe lite command.
+No reduced artifact initialization.
 ```
 
 ### 2. External project validation is not yet adoption-safe
@@ -152,8 +152,8 @@ This suggests external dogfooding needs clearer separation between:
 
 ## What This Run Proved
 
-- PBE can recommend `lite` for a bounded external one-file slice.
-- `pbe status` profile-aware Lite guidance is useful in an external clone.
+- PBE can map a bounded external one-file slice to compact workflow depth using the `lite` compatibility value.
+- `pbe status` compatibility profile guidance is useful in an external clone.
 - The actual app slice can be implemented and verified with targeted checks.
 - Current `pbe validate` is not yet safe as a generic external-project adoption command.
 

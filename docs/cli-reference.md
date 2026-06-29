@@ -26,9 +26,10 @@ For parallel execution and validation safety, see [Parallel Safety Policy](paral
 
 For repeated review rejection and realignment, see [Review Failure Recovery](review-failure-recovery.md).
 
-For Lite profile expectations and escalation rules, see [Lite Mode Policy](lite-mode-policy.md).
+For adaptive workflow depth expectations and escalation rules, see
+[Adaptive Workflow Depth Policy](lite-mode-policy.md).
 
-`pbe status` is profile-aware: for `lite`, it shows must-keep guards and escalation triggers. This is guidance only; it
+`pbe status` can read stored compatibility profile metadata and show workflow-depth guidance. This is guidance only; it
 does not create a separate `pbe lite` command or reduced artifact initialization.
 
 ## App-First Usage
@@ -64,7 +65,8 @@ Most commands follow this pattern:
 - `--root <path>`: target project root. Defaults to the current directory.
 - `--json`: print stable JSON for automation.
 - `--brief <text>`: task description for recommendation commands.
-- `--profile <full|lite|bypass>`: execution profile for init and recommendation commands.
+- `--profile <full|lite|bypass>`: compatibility workflow-depth hint for init and recommendation commands. PBE has one
+  public workflow; these values should not be treated as separate user-facing modes.
 - `--stage <stage>`: traceability/evidence stage mode for `pbe trace check`, or context stage for
   `pbe context recommend`.
 - `--text <text>`: text to assess for `pbe gate assess`.
@@ -151,20 +153,21 @@ pbe gate assess --text "make the UI clean" --transition product-tree --profile l
 
 ### `pbe profile recommend`
 
-- Purpose: Recommend `full`, `lite`, or `bypass` from a task brief and optional expected file list.
+- Purpose: Recommend workflow depth from a task brief and optional expected file list. The command keeps
+  `recommendedProfile` for compatibility with existing artifacts and tests.
 - Typical state before running: Before `pbe init`, or when deciding whether a small request needs PBE tracking.
 - Options: `--brief <text>` is required. `--files <comma-separated paths>` is optional and is treated conservatively.
 - What it checks: Deterministic keyword and file-path heuristics. It does not perform semantic product analysis.
 - What it writes: Nothing. It does not run `pbe init`.
-- Success result: Prints `recommendedProfile`, confidence, reasons, escalation triggers, notes, and a suggested
-  `pbe init --profile ...` command.
-- JSON output: Includes `recommendedProfile`, `confidence`, `reasons`, `escalationTriggers`, `suggestedInitCommand`, and
-  `notes`.
+- Success result: Prints workflow depth, compatibility profile value, confidence, reasons, escalation triggers, notes,
+  and a suggested `pbe init --profile ...` command.
+- JSON output: Includes `recommendedProfile`, `workflowDepth`, `confidence`, `reasons`, `escalationTriggers`,
+  `suggestedInitCommand`, and `notes`.
 - Common failures: missing or empty `--brief`.
-- Next command: User or Codex confirms the recommendation, then runs `pbe init --profile <profile> --brief "..."` if PBE
-  tracking is desired.
+- Next command: User or Codex confirms the target task, then runs `pbe init --profile <profile> --brief "..."` if PBE
+  tracking is desired. App users do not need to choose a public mode.
 - Conservative rule: if the brief or files indicate uncertainty, product meaning, UI/UX, CLI/validator/schema/state,
-  CI/package, fixture, or broad implementation risk, the recommendation is `full`.
+  CI/package, fixture, or broad implementation risk, use full planning depth.
 
 ### `pbe context recommend`
 

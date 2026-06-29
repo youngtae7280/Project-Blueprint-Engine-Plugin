@@ -4,14 +4,14 @@ Use when:
 
 - The user starts PBE with `@project-blueprint-engine start`.
 - The user asks to apply PBE to a new or existing repository.
-- The current task is about initialization, profile choice, or first-slice setup.
+- The current task is about initialization, workflow-depth sizing, or first-slice setup.
 
 Do:
 
 - Treat `start` alone as valid.
 - Do not require a `Brief:` label.
 - Inspect minimal repo signals before initializing: existing `.pbe`, README, package/project metadata, current conversation task.
-- Recommend or infer a profile only after the task or slice is reasonably clear.
+- Recommend or infer workflow depth only after the task or slice is reasonably clear.
 - Use `pbe profile recommend --brief "<brief>"` when a target task is available.
 - Explain that start does not mean broad repo conversion.
 - Ask one concise question when the target task or slice is unclear.
@@ -27,7 +27,7 @@ Do not:
 
 Escalate / read full docs when:
 
-- The profile is unclear after minimal inspection.
+- The workflow depth is unclear after minimal inspection.
 - The task involves UI/UX, architecture, hardware, migration, parallel work, or repeated review failure.
 - The user asks how PBE start works in detail.
 

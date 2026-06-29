@@ -46,7 +46,7 @@ control risk, evidence, review, or acceptance.
 `@project-blueprint-engine start` means:
 
 - inspect current repo state lightly
-- recommend profile
+- choose the smallest safe workflow depth
 - identify the next task/slice
 - ask one concise question if unclear
 - initialize only after the target is clear
@@ -61,11 +61,11 @@ It does not mean:
 
 Repo-wide adoption requires a separate explicit request and user confirmation.
 
-## Lite Workload Cap
+## Compact Workload Cap
 
-Lite is workload-limited. It is not a safety bypass.
+Compact workflow depth is workload-limited. It is not a safety bypass.
 
-Default Lite limits:
+Default compact limits:
 
 - expectedFiles should normally be 1 to 3 files
 - no AGENTS.md changes unless explicitly approved
@@ -76,7 +76,7 @@ Default Lite limits:
 - no full validation/test/build by default
 - no long report by default
 
-Default Lite artifacts:
+Default compact artifacts:
 
 - mini Product/AC summary
 - expectedFiles
@@ -92,11 +92,12 @@ unclear, ask a focused Human Gate question instead of expanding into broad analy
 Examples:
 
 - "Selection UI is unspecified. Use button list, Combobox, or card list?"
-- "This change needs package/schema updates and exceeds Lite cap. Escalate to Full?"
+- "This change needs package/schema updates and exceeds the compact cap. Increase to full planning depth?"
 
-## Full Workload Cap
+## Full-Depth Workload Cap
 
-Full is broader than Lite, but it is not unlimited. Even in Full, these require prior notice or confirmation:
+Full planning depth is broader than compact depth, but it is not unlimited. Even in full depth, these require prior
+notice or confirmation:
 
 - AGENTS.md changes
 - CI/package/script changes
@@ -125,9 +126,9 @@ Interactive report:
 - validation summary
 - next action
 
-### Compact Lite Completion Report
+### Compact Completion Report
 
-A normal Lite completion report should usually include:
+A normal compact completion report should usually include:
 
 - changed files
 - AC result
@@ -152,7 +153,7 @@ Full report:
 
 ## Escalation Rules
 
-Stop and propose Full when Lite work encounters:
+Stop and propose full planning depth when compact work encounters:
 
 - expectedFiles exceed the cap
 - new process docs are needed
@@ -164,13 +165,13 @@ Stop and propose Full when Lite work encounters:
 
 ## Examples
 
-Good Lite behavior:
+Good compact behavior:
 
 - update one troubleshooting paragraph
 - run focused checks
 - report the changed file and validation result
 
-Poor Lite behavior:
+Poor compact behavior:
 
 - create a repo-wide workflow adaptation report
 - rewrite AGENTS.md

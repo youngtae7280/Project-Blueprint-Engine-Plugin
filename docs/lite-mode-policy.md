@@ -1,20 +1,55 @@
-# Lite Mode Policy
+# Adaptive Workflow Depth Policy
 
 ## Purpose
 
-Lite Mode defines the smallest safe PBE path for bounded, low-risk slices. It exists so small work does not feel like a
-full project-construction workflow, but it must still preserve enough traceability for review and acceptance.
+PBE has one public workflow: keep user intent, scope, work, tests, evidence, review, and acceptance connected.
 
-Lite mode is not a safety bypass.
+This document replaces the earlier "Lite Mode" framing with adaptive workflow depth. Small work should use a compact PBE
+path, but that path is not a separate mode and is not a safety bypass.
 
-Lite mode is a smaller PBE workflow for bounded, low-risk slices.
+The file path remains `docs/lite-mode-policy.md` for compatibility with existing links, CLI output, and context packs.
 
-If Lite cannot preserve traceability from request -> AC -> Work -> Test/Evidence -> user review, it should escalate to
-Full.
+## Public Model
 
-## What Lite Mode Is
+Users should not have to choose between public PBE modes.
 
-Lite is appropriate for:
+The normal app-first entry is:
+
+```text
+@project-blueprint-engine start
+```
+
+PBE/Codex should inspect the current repository, identify the target task or slice, and choose the smallest depth that
+still preserves traceability.
+
+## Compatibility Profile Values
+
+The CLI still accepts `full`, `lite`, and `bypass` as compatibility profile metadata because existing artifacts, tests,
+and helper commands already use those values.
+
+Treat them as depth hints:
+
+| Compatibility value | Workflow depth | Meaning                                                                                              |
+| ------------------- | -------------- | ---------------------------------------------------------------------------------------------------- |
+| `full`              | standard       | Use normal full planning depth for unclear, high-risk, UI/UX, multi-module, or product-meaning work. |
+| `lite`              | compact        | Use the same PBE workflow with shorter planning/reporting for bounded low-risk slices.               |
+| `bypass`            | none           | Do not initialize PBE tracking unless traceability becomes necessary.                                |
+
+These values are not separate product workflows. They must not be presented as a replacement for the normal PBE flow.
+
+## Compact Depth Is Not Bypass
+
+Compact depth is appropriate only when PBE can still preserve:
+
+```text
+request -> AC -> Work -> Test/Evidence -> review -> user acceptance
+```
+
+If that chain cannot be preserved, increase to full planning depth.
+
+## When Compact Depth Is Appropriate
+
+Use compact depth for:
 
 - existing project / existing blueprint
 - small bounded change
@@ -24,16 +59,13 @@ Lite is appropriate for:
 - no major UI/UX taste exploration
 - no DB/schema/auth/permission/API/hardware/concurrency change
 
-Lite keeps the PBE control chain, but it keeps the planning surface short.
+Compact depth keeps the PBE control chain, but keeps the planning surface short.
 
-Lite can be selected by the user or recommended by PBE/Codex after inspecting the request. App users do not need to know
-the exact `pbe init --profile lite` command; Codex may run it after profile recommendation and user confirmation.
+## What Compact Depth Is Not
 
-## What Lite Mode Is Not
+Compact depth is:
 
-Lite is:
-
-- not bypass
+- not a safety bypass
 - not no-evidence mode
 - not no-review mode
 - not Codex self-acceptance
@@ -41,22 +73,12 @@ Lite is:
 - not a way to skip File Change Guard
 - not a replacement for Product Patch when product meaning changes
 
-## When To Use Lite
-
-Use Lite when the user asks for a small, bounded slice in an existing project and the likely file scope is easy to name
-before implementation starts.
-
-Good Lite candidates have a clear expected result, a small expectedFiles list, and a verification path that can be
-summarized without a deep RPD/WPD/VD pass.
-
-If the request grows while triaging or executing the work, switch to Full before continuing.
-
-## Lite Minimal Workflow
+## Minimal Workflow
 
 ```text
 Rough request
--> Lite triage
--> Mini Product/AC summary
+-> triage
+-> mini Product/AC summary
 -> expectedFiles
 -> minimal Test/Evidence plan
 -> execution
@@ -77,47 +99,49 @@ pbe review submit
 pbe accept
 ```
 
-This is not a new Lite-specific command flow. It uses commands that exist today and documents the expected Lite
-discipline around them.
+This is not a new `pbe lite` command flow. It uses existing commands and records `lite` only as compatibility metadata.
 
 ## Must-Keep Guards
 
 - user-only acceptance: Codex must not accept work on behalf of the user.
 - no direct pbe-state edit: state transitions must still go through the CLI.
-- expectedFiles / File Change Guard: changed source files must be explainable by the bounded Work or Revision scope.
+- expectedFiles / File Change Guard: changed source files must be explainable by bounded Work or Revision scope.
 - minimal Acceptance Criteria: the slice still needs concrete user-visible or reviewer-visible success criteria.
 - minimal Test/Evidence link: evidence must prove the relevant Test or AC, even when the plan is small.
 - evidence freshness/currentness: stale proof should not close the slice.
 - review submit before accept: review and acceptance remain separate gates.
-- Product Patch for product meaning changes: Lite must not silently mutate Product Tree meaning.
+- Product Patch for product meaning changes: compact depth must not silently mutate Product Tree meaning.
 - Change/Impact for accepted-branch changes: already accepted work must reopen through the controlled change path.
 
-## What Lite May Reduce
+## What Compact Depth May Reduce
 
-Lite may reduce:
+Compact depth may reduce:
 
-- full RPD interview depth
-- full WPD decomposition depth
-- full VD rubric depth, when the change is not verification-heavy
-- full visual design contract, when no UI/UX visual change exists
+- RPD interview depth
+- WPD decomposition depth
+- VD rubric depth, when the change is not verification-heavy
+- visual design contract depth, when no UI/UX visual change exists
 - parallel safety analysis, when work is strictly sequential
 - product patch flow, when product meaning does not change
+- reporting length
+- default validation breadth during interactive work
 
-Reduce does not mean skip all. Lite should still leave a minimal summary, expectedFiles, and reviewable evidence.
+Reduce does not mean skip all. Compact depth should still leave a minimal summary, expectedFiles, and reviewable
+evidence.
 
 ## Workload Cap
 
-Lite is workload-limited. It should not create repo-wide process docs, modify AGENTS.md, or run full
+Compact work is workload-limited. It should not create repo-wide process docs, modify AGENTS.md, or run full
 validation/test/build by default unless explicitly approved.
 
-Expected files should normally be 1 to 3 files. Keep default Lite artifacts to a mini Product/AC summary, expectedFiles,
-minimal Test/Evidence, files check, and compact review summary.
+Expected files should normally be 1 to 3 files. Keep default compact artifacts to a mini Product/AC summary,
+expectedFiles, minimal Test/Evidence, files check, and compact review summary.
 
 See [Workload Cap and Artifact Minimalism](workload-cap-and-artifact-minimalism.md).
 
-## Escalation To Full
+## Increase To Full Planning Depth
 
-Escalate to Full when any of these appear:
+Increase to full planning depth when any of these appear:
 
 - Product meaning changes
 - AC cannot be made concrete
@@ -132,17 +156,17 @@ Escalate to Full when any of these appear:
 - ambiguity blocks acceptance criteria
 - file changes exceed expectedFiles
 
-## Bypass vs Lite vs Full
+## Bypass vs Compact vs Full Depth
 
-| Profile | Use when                                                        | Still required                                                | Escalate when                  |
+| Depth   | Use when                                                        | Still required                                                | Increase when                  |
 | ------- | --------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------ |
-| bypass  | no PBE tracking is needed or user explicitly opts out           | none beyond normal project discipline                         | any PBE traceability is needed |
-| lite    | small bounded low-risk slice                                    | mini AC, expectedFiles, minimal evidence, review, user accept | scope/product/risk grows       |
+| none    | no PBE tracking is needed or user explicitly opts out           | normal project discipline                                     | any PBE traceability is needed |
+| compact | small bounded low-risk slice                                    | mini AC, expectedFiles, minimal evidence, review, user accept | scope/product/risk grows       |
 | full    | new feature, unclear scope, UI/UX, multi-module, high-risk work | full PBE workflow                                             | default for uncertainty        |
 
 ## Examples
 
-Good Lite examples:
+Good compact-depth examples:
 
 - typo/copy fix with expectedFiles
 - docs clarification
@@ -150,7 +174,7 @@ Good Lite examples:
 - test fixture wording correction
 - low-risk config/doc-only change
 
-Poor Lite examples:
+Poor compact-depth examples:
 
 - redesign admin page
 - add new search behavior with unclear target fields
@@ -159,15 +183,19 @@ Poor Lite examples:
 - integrate hardware/API
 - repeated user rejection
 
-## Future Implementation Candidates
+## Current CLI Support
 
-`pbe profile recommend` can recommend a profile from a brief and optional expected files, and `--profile lite` receives
-profile-aware guidance in `pbe status`. The recommendation does not initialize PBE, does not create a dedicated Lite
-command, and does not reduce artifact initialization behavior.
+`pbe profile recommend` can recommend a compatibility profile value and workflow depth from a brief and optional
+expected files. It does not initialize PBE.
+
+`pbe status` can show guidance for the stored compatibility profile metadata. This guidance does not change state
+transitions, does not add a `pbe lite` command, and does not reduce artifact initialization behavior.
+
+## Future Implementation Candidates
 
 These are candidates only. Do not implement them until they satisfy the Complexity Governance criteria:
 
-- `pbe lite check`
-- `pbe lite ready`
-- lite minimal artifact policy
-- lite escalation checklist validator
+- adaptive-depth status wording cleanup across all commands
+- compact artifact policy
+- compact-depth escalation checklist validator
+- profile metadata migration or rename, if compatibility allows

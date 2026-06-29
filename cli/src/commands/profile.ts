@@ -42,7 +42,8 @@ type ProfileRecommendation = ReturnType<typeof recommendProfile>
 
 function formatProfileRecommendation(recommendation: ProfileRecommendation): string {
   return [
-    `Recommended profile: ${recommendation.recommendedProfile}`,
+    `Recommended workflow depth: ${recommendation.workflowDepth}`,
+    `Compatibility profile value: ${recommendation.recommendedProfile}`,
     `Confidence: ${recommendation.confidence}`,
     '',
     'Reasons:',

@@ -2,7 +2,11 @@
 
 ## Purpose
 
-This audit measures whether Lite mode materially reduces generated PBE artifacts compared with Full mode.
+This audit measures whether the `lite` compatibility profile value materially reduces generated PBE artifacts compared
+with `full`.
+
+`lite`, `full`, and `bypass` are compatibility profile values in the current CLI. They should be interpreted as
+workflow-depth hints, not separate public product modes.
 
 ## Method
 
@@ -29,7 +33,7 @@ Each profile was initialized in its own temporary folder:
 
 ## Summary
 
-Lite, Full, and Bypass currently generate the same `.pbe` artifact footprint.
+Lite, Full, and Bypass compatibility values currently generate the same `.pbe` artifact footprint.
 
 The profiles differ in stored profile metadata and brief-derived initial content, but not in generated file count,
 directory count, or artifact families.

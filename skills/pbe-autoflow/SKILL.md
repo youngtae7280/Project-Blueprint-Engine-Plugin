@@ -27,9 +27,9 @@ Do not start broad workflow adaptation or repo-wide conversion before user confi
 - Full workflow adaptation requires explicit user confirmation.
 - PBE tracks decisions, scope, tests, evidence, changes, and acceptance records; it does not persist every explanation.
 
-## Lite Fast Path and Compact Reporting
+## Compact Fast Path and Compact Reporting
 
-- For Lite or small scoped work, use compact reports by default.
+- For small scoped work, use compact reports by default.
 - Do not expand a small request into long process narration.
 - Keep the PBE control chain intact: intent, expectedFiles, AC, evidence, review, acceptance.
 - Prefer `pbe context pack` or `agent-context` before long docs.

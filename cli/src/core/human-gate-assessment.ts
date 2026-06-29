@@ -572,7 +572,7 @@ function buildReasons(
     reasons.push('The request touches restricted or high-risk areas that should not be finalized by assumption.')
   }
   if (profile === 'lite' && hardTriggers.includes('expected-files-cap-exceeded')) {
-    reasons.push('The request appears to exceed the Lite workload cap.')
+    reasons.push('The request appears to exceed the compact workload cap.')
   }
   if (signals.hasProductMeaningChange || transition === 'product-patch') {
     reasons.push('Product meaning or acceptance basis may change and needs explicit confirmation.')

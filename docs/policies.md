@@ -16,40 +16,41 @@ summary and an original document disagree, the original document wins.
 
 ## Policy Index
 
-- [Lite Mode Policy](lite-mode-policy.md)
+- [Adaptive Workflow Depth Policy](lite-mode-policy.md)
 - [Workload Cap and Artifact Minimalism](workload-cap-and-artifact-minimalism.md)
 - [Complexity Governance](complexity-governance.md)
 - [Parallel Safety](parallel-safety.md)
 - [Migration Policy](migration-policy.md)
 - [Review Failure Recovery](review-failure-recovery.md)
 
-## Lite Mode Policy
+## Adaptive Workflow Depth
 
-Lite mode is a smaller PBE path for bounded, low-risk slices.
+PBE has one public workflow. The stored `full`, `lite`, and `bypass` profile values are compatibility metadata and depth
+hints, not separate product modes.
 
-Use Lite when the request is small, the expected files are easy to name, and the work can still preserve traceability
-from request to acceptance.
+Use compact depth when the request is small, the expected files are easy to name, and the work can still preserve
+traceability from request to acceptance.
 
 Core rules:
 
-- Lite is workload-limited, not safety-bypassed.
+- Compact depth is workload-limited, not safety-bypassed.
 - Keep user-only acceptance, File Change Guard, review, and evidence.
 - Prefer 1 to 3 expected files.
 - Avoid repo-wide analysis, long reports, process docs, `AGENTS.md` changes, and CI/package/schema/template changes
   unless explicitly approved.
-- Escalate to Full when product meaning, high-risk evidence, repeated rejection, UI/UX taste work, or broad file changes
-  appear.
+- Increase to full planning depth when product meaning, high-risk evidence, repeated rejection, UI/UX taste work, or
+  broad file changes appear.
 
-Read the original when choosing or defending the profile boundary:
+Read the original when choosing or defending the depth boundary:
 
-- [Lite Mode Policy](lite-mode-policy.md)
+- [Adaptive Workflow Depth Policy](lite-mode-policy.md)
 
-## Lite Fast Path and Compact Reporting
+## Compact Fast Path and Compact Reporting
 
-Lite Fast Path is not a shortcut around PBE controls. It is a compact execution path that preserves traceability while
-reducing explanation length, context loading, reporting volume, and validation scope.
+The compact fast path is not a shortcut around PBE controls. It preserves traceability while reducing explanation
+length, context loading, reporting volume, and validation scope.
 
-Lite work must still preserve:
+Compact work must still preserve:
 
 - task intent
 - expectedFiles
@@ -59,7 +60,7 @@ Lite work must still preserve:
 - user acceptance
 - change/impact/revision when needed
 
-For Lite work, prefer:
+For compact work, prefer:
 
 - `pbe context pack` before opening long-form docs
 - target/stage checks over full validation by default
@@ -70,7 +71,7 @@ For Lite work, prefer:
 Escalate or expand reporting when:
 
 - product meaning changes
-- selected files exceed the Lite cap
+- selected files exceed the compact cap
 - evidence is high-risk or manual-only
 - repeated rejection occurs
 - release/checkpoint validation is requested
@@ -122,7 +123,7 @@ Hard triggers require a Human Gate regardless of clarity score:
 - product meaning change
 - user-facing UI/UX choice not specified by the user
 - implementation alternatives materially affect user experience
-- expectedFiles exceed Lite cap
+- expectedFiles exceed the compact cap
 - AGENTS.md, CI, package, schema, template, auth, security, permission, payment, data migration, or destructive changes
 - manual-only or subjective evidence
 - weak evidence for a high-risk AC

@@ -186,23 +186,24 @@ For each task:
 - Use `docs/evidence-quality-rubric.md` and `templates/evidence-quality-checklist-template.md` when evidence quality is
   non-obvious.
 
-## Lite Profile Execution
+## Compact Execution
 
-Lite does not disable ACEP safety. In Lite profile, still keep:
+Compact workflow depth does not disable ACEP safety. For small bounded work, still keep:
 
 - `pbe files check`
 - minimal evidence linked to the Test or AC
 - `pbe review submit`
 - explicit user acceptance through `pbe accept`
 
-Do not skip evidence because the profile is Lite. If execution reveals broader file changes, product meaning changes,
-or risk beyond the expectedFiles scope, stop and escalate through Change/Impact/Product Patch or the Full flow before
+Do not skip evidence because the work is small. If execution reveals broader file changes, product meaning changes, or
+risk beyond the expectedFiles scope, stop and escalate through Change/Impact/Product Patch or full planning depth before
 continuing.
 
-For Lite work, keep evidence and review but avoid long reports. Do not run full validation/test/build by default during
-interactive execution. Use target/stage checks unless checkpoint/release or user request requires full verification.
+For compact work, keep evidence and review but avoid long reports. Do not run full validation/test/build by default
+during interactive execution. Use target/stage checks unless checkpoint/release or user request requires full
+verification.
 
-Lite Fast Path:
+Compact Fast Path:
 
 - Use `pbe context pack` or the smallest available recommended context before opening long docs.
 - Preserve AC, evidence, review, and acceptance.
@@ -212,7 +213,7 @@ Lite Fast Path:
 - Avoid long RPD/WPD/VD explanations unless needed.
 - Do not create separate long reports unless requested or required by release/checkpoint/audit/high-risk/repeated-failure context.
 
-Lite completion report shape:
+Compact completion report shape:
 
 - Changed: `<files>`
 - AC: pass/fail summary

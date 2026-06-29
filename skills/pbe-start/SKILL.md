@@ -56,9 +56,12 @@ PBE v2 is tree-native. The Product Tree is the source of truth. Existing RPD, WP
 `start` enables Autoflow. The user should not need to type each internal step
 manually after start.
 
-PBE is optimized for safe, reviewable, staged project construction, not for speed. Default to the `full` execution profile for new projects, large features, UI/UX work, multi-module changes, architecture decisions, parallel work, or future-module impact.
+PBE is optimized for safe, reviewable, staged project construction, not for speed. PBE has one public workflow. Use
+the smallest planning depth that preserves traceability, and increase to full planning depth for new projects, large
+features, UI/UX work, multi-module changes, architecture decisions, parallel work, or future-module impact.
 
-Use `bypass` only when the request is a typo, single-file edit, or clearly bounded small bug fix. Use `lite` only when a blueprint already exists and the user asks for a small slice that does not need full ACEP execution.
+The CLI still stores `full`, `lite`, and `bypass` as compatibility profile metadata. Do not present them as separate
+public modes that the user must understand.
 
 ## App-First Start UX
 
@@ -68,8 +71,9 @@ If no brief or target task is provided, inspect the current repository before in
 briefs, work boards, package metadata, existing `.pbe`, and current conversation context. If the task or slice still
 cannot be inferred, ask one concise question before initializing.
 
-When possible, use `pbe profile recommend --brief "<brief>"` after a target task is clear. Report the recommended
-profile and reason before initialization. The user may override the recommended profile.
+When possible, use `pbe profile recommend --brief "<brief>"` after a target task is clear. Treat the result as a
+workflow-depth hint and compatibility profile value, not as a separate public mode. Report the proposed depth and
+reason before initialization. The user may override the recommendation.
 
 Do not silently initialize with an arbitrary brief when the task is unclear.
 
@@ -89,7 +93,8 @@ existing pattern, or the assumption is recorded and safe.
 
 ## Required Actions
 
-Prefer `pbe init --profile <full|lite|bypass> --brief "<user brief>"` when initializing deterministic PBE artifacts. After creating or updating `.pbe` artifacts, run:
+Prefer `pbe init --profile <full|lite|bypass> --brief "<user brief>"` when initializing deterministic PBE artifacts.
+The `--profile` value is compatibility metadata for workflow depth. After creating or updating `.pbe` artifacts, run:
 
 ```bash
 pbe status
@@ -101,8 +106,8 @@ If either command fails, do not proceed to RPD until the blocking issue is fixed
 1. Inspect the target repository enough to understand whether this is a new project or a change to an existing project.
 2. Check whether `.pbe` already exists and whether there is an active run to resume.
 3. If no active run exists, infer or ask for the target task or slice.
-4. Run or emulate profile recommendation once the target task is clear.
-5. Report the recommended profile and reason.
+4. Run or emulate depth recommendation once the target task is clear.
+5. Report the recommended workflow depth, compatibility profile value, and reason.
 6. Ask for confirmation if the task or slice is still unclear.
 7. Run `pbe init --profile <profile> --brief "<brief>"` only after the target is clear.
 8. Run `pbe status` and `pbe validate`.
@@ -123,10 +128,10 @@ If either command fails, do not proceed to RPD until the blocking issue is fixed
 22. Create `.pbe/blueprint/requirement-tree.md`, `.pbe/blueprint/rpd-interview-log.md`, and `.pbe/blueprint/rpd-summary.md`.
 23. Initialize UI/UX confirmation placeholders when UI work may be involved.
     23a. Initialize Visual Design Contract placeholders when visual UI work may be involved: visual reference, theme spec, design tokens, component style contract, UI surface inventory, component style inventory, visual verification profile, and visual audit report path.
-24. Confirm `pbe init` initialized Autoflow with the chosen profile and a CLI-reported first next action.
+24. Confirm `pbe init` initialized Autoflow with the chosen compatibility profile metadata and a CLI-reported first next action.
 
 25. Confirm tree-native artifact paths are discoverable through the initialized PBE state so later stages can find Product, Project, Work, Test, Cycle, Decision, Change, Impact, Evidence, and Acceptance trees without guessing paths.
-26. Immediately begin RPD/Product Tree growth unless the selected profile is `bypass`.
+26. Immediately begin RPD/Product Tree growth unless the user explicitly opts out of PBE tracking.
 27. If the provided project brief is clear, propose the Root requirement summary and child structure, then stop at the `root_confirmation` gate.
 28. If RPD needs more information before a safe proposal, ask exactly one RPD question. The user should answer naturally; do not require `@project-blueprint-engine rpd`.
 29. Do not create code, documents, slide decks, spreadsheets, images, generated assets, or review reports until the Root requirement and decomposition decision are user-confirmed.
@@ -208,7 +213,7 @@ Prefer `pbe init --profile <profile> --brief "<user request>"` for initial `.pbe
 
 Use `pbe init` so the CLI creates the initial Autoflow state.
 
-`pbe init` should use the chosen profile. If no profile is explicitly requested, use `full`.
+`pbe init` should use the chosen compatibility profile metadata. If no value is explicitly requested, use `full`.
 
 `pbe init` should make these artifact paths discoverable:
 
@@ -246,19 +251,21 @@ Do not force parity/completeness artifacts for small non-UI or non-parity tasks.
 
 Do not generate WPD, VD, ACEP, review, feedback, or revision files during start unless RPD is already complete and the next deterministic step can safely continue. Stop at UI/UX confirmation when UI/UX judgment is required.
 
-## Profile Decision
+## Workflow Depth Decision
 
-Report the chosen profile and why:
+Report the proposed workflow depth and why:
 
-- `bypass`: PBE not needed; tell the user the direct coding path is safer and faster.
-- `lite`: small slice with known blueprint and limited dependency impact.
-- `full`: project construction, multi-module scope, UI/UX, parallel work, architecture runway, or future-impact risk.
+- no tracking / `bypass`: PBE is not needed; tell the user the direct path is safer and faster.
+- compact / `lite`: small bounded slice with limited dependency impact.
+- full depth / `full`: project construction, multi-module scope, UI/UX, parallel work, architecture runway, or future-impact risk.
 
-If profile is `bypass`, do not manufacture `.pbe` artifacts unless the user explicitly wants them.
+If the recommendation is no tracking / `bypass`, do not manufacture `.pbe` artifacts unless the user explicitly wants
+them.
 
-Lite is not a bypass. Use Lite only for small, bounded, low-risk slices. If unsure, choose Full.
+Compact depth is not a bypass. Use compact depth only for small, bounded, low-risk slices. If unsure, use full planning
+depth.
 
-Lite should still produce or confirm:
+Compact depth should still produce or confirm:
 
 - mini Acceptance Criteria
 - expectedFiles
@@ -266,9 +273,9 @@ Lite should still produce or confirm:
 - review submission
 - explicit user acceptance
 
-Escalate Lite to Full when product meaning, UI/UX taste or visual design, permission, DB/schema, API/hardware,
-concurrency, repeated rejection, or high ambiguity appears. If Lite cannot preserve request -> AC -> Work ->
-Test/Evidence -> user review traceability, use Full.
+Increase compact work to full planning depth when product meaning, UI/UX taste or visual design, permission,
+DB/schema, API/hardware, concurrency, repeated rejection, or high ambiguity appears. If compact depth cannot preserve
+request -> AC -> Work -> Test/Evidence -> user review traceability, use full planning depth.
 
 ## Autoflow Behavior
 

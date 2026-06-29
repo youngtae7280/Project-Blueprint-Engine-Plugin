@@ -38,17 +38,19 @@
   status, non-enforcement boundaries, and remaining approval branches before external dogfooding.
 - [First external dogfooding run](concept/first-external-dogfooding-run.md) - `mdn/todo-vue` Lite slice observation,
   verification result, and adoption-safe validation blockers.
+- [Graph-first cleanup audit and compatibility boundary](concept/graph-first-cleanup-audit-and-compatibility-boundary.md)
+  - Cleanup boundary for graph-source core, tree-based compatibility layers, and future retirement candidates.
 
 ## Workflow Guides
 
-- [PBE Policies](policies.md) — Compact policy index for Lite mode, workload cap, complexity, parallel safety,
+- [PBE Policies](policies.md) — Compact policy index for adaptive depth, workload cap, complexity, parallel safety,
   migration, and review recovery.
 - [RPD Interview Mode](rpd-interview-mode.md)
 - [Ambiguity Taxonomy](ambiguity-taxonomy.md)
 - [Product Patch Proposals](product-patch-proposals.md)
 - [Review Failure Recovery](review-failure-recovery.md)
 - [Parallel Safety Policy](parallel-safety.md)
-- [Lite Mode Policy](lite-mode-policy.md)
+- [Adaptive Workflow Depth Policy](lite-mode-policy.md)
 - [Workload Cap and Artifact Minimalism](workload-cap-and-artifact-minimalism.md)
 - [Migration / Compatibility Policy](migration-policy.md)
 - [Dogfooding PBE on an Existing Project](dogfooding-existing-project.md)

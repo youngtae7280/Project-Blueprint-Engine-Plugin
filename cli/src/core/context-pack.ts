@@ -119,7 +119,7 @@ function formatContextPackMarkdown(
     '- Read this context pack first.',
     '- Do not read broad docs by default.',
     '- Read `readOnlyIfNeeded` files only when the task requires that detail.',
-    '- For Lite work, keep scope compact and avoid long reports.',
+    '- For compact work, keep scope bounded and avoid long reports.',
     '',
     '## Included Context',
     '',

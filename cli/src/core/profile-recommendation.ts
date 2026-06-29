@@ -1,4 +1,5 @@
 export type PbeExecutionProfile = 'bypass' | 'lite' | 'full'
+export type PbeWorkflowDepth = 'none' | 'compact' | 'standard'
 export type RecommendationConfidence = 'high' | 'medium' | 'low'
 
 export interface ProfileRecommendationInput {
@@ -8,6 +9,7 @@ export interface ProfileRecommendationInput {
 
 export interface ProfileRecommendation {
   recommendedProfile: PbeExecutionProfile
+  workflowDepth: PbeWorkflowDepth
   confidence: RecommendationConfidence
   reasons: string[]
   escalationTriggers: string[]
@@ -25,7 +27,8 @@ const escalationTriggers = [
 
 const notes = [
   'This is a recommendation only. It does not initialize PBE.',
-  'If uncertain, choose full.',
+  '`full`, `lite`, and `bypass` are compatibility profile values; the product direction is one PBE flow with adjustable depth.',
+  'If uncertain, use the normal full-depth PBE flow.',
   'The heuristic is deterministic and conservative; it is not full semantic product analysis.',
 ]
 
@@ -190,12 +193,23 @@ function buildRecommendation(
 ): ProfileRecommendation {
   return {
     recommendedProfile: profile,
+    workflowDepth: workflowDepthForProfile(profile),
     confidence,
     reasons: unique(reasons),
     escalationTriggers,
     suggestedInitCommand: `pbe init --profile ${profile} --brief ${quoteBriefForCommand(brief)}`,
     notes,
   }
+}
+
+function workflowDepthForProfile(profile: PbeExecutionProfile): PbeWorkflowDepth {
+  if (profile === 'bypass') {
+    return 'none'
+  }
+  if (profile === 'lite') {
+    return 'compact'
+  }
+  return 'standard'
 }
 
 function collectFullFileReasons(files: string[]): string[] {

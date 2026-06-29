@@ -107,6 +107,7 @@ type PbeProfile = 'full' | 'lite' | 'bypass'
 
 interface ProfileGuidance {
   profile: PbeProfile
+  workflowDepth: 'standard' | 'compact' | 'none'
   summary: string
   mustKeepGuards: string[]
   escalationTriggers: string[]
@@ -116,7 +117,9 @@ interface ProfileGuidance {
 const profileGuidanceByProfile: Record<PbeProfile, ProfileGuidance> = {
   lite: {
     profile: 'lite',
-    summary: 'Lite mode is a smaller PBE workflow for bounded low-risk slices, not a safety bypass.',
+    workflowDepth: 'compact',
+    summary:
+      'This run uses compact PBE guidance for a bounded low-risk slice. It is not a separate mode or a safety bypass.',
     mustKeepGuards: [
       'user-only acceptance',
       'no direct pbe-state edit',
@@ -139,19 +142,26 @@ const profileGuidanceByProfile: Record<PbeProfile, ProfileGuidance> = {
       'Product Patch required',
       'high-risk manual-only evidence',
     ],
-    limitations: ['No dedicated pbe lite command yet', 'No reduced artifact initialization yet'],
+    limitations: [
+      '`lite` is compatibility metadata, not a separate public workflow',
+      'No dedicated pbe lite command',
+      'No reduced artifact initialization',
+    ],
   },
   full: {
     profile: 'full',
-    summary: 'Follow the full PBE workflow for unclear, high-risk, UI/UX, multi-module, or product-meaning work.',
+    workflowDepth: 'standard',
+    summary:
+      'Follow the normal PBE workflow with full planning depth for unclear, high-risk, UI/UX, multi-module, or product-meaning work.',
     mustKeepGuards: [],
     escalationTriggers: [],
     limitations: [],
   },
   bypass: {
     profile: 'bypass',
+    workflowDepth: 'none',
     summary:
-      'Bypass means PBE tracking is not active for this work. Escalate to lite/full if traceability, evidence, review, or acceptance control is needed.',
+      'Bypass means PBE tracking is not active for this work. Use the normal PBE flow if traceability, evidence, review, or acceptance control is needed.',
     mustKeepGuards: [],
     escalationTriggers: ['any PBE traceability is needed', 'evidence, review, or acceptance control is needed'],
     limitations: [],
@@ -168,17 +178,17 @@ function normalizeProfile(value: unknown): PbeProfile | null {
 function formatProfileGuidance(guidance: ProfileGuidance): string[] {
   if (guidance.profile === 'lite') {
     return [
-      'Lite guidance:',
+      'Compact workflow guidance:',
       `- ${guidance.summary}`,
       `- Keep ${guidance.mustKeepGuards.join(', ')}.`,
-      `- Escalate to full if ${guidance.escalationTriggers.join(', ')} appears.`,
+      `- Increase to full planning depth if ${guidance.escalationTriggers.join(', ')} appears.`,
       `- Current limitations: ${guidance.limitations.join('; ')}.`,
     ]
   }
   if (guidance.profile === 'full') {
-    return ['Full guidance:', `- ${guidance.summary}`]
+    return ['Full-depth workflow guidance:', `- ${guidance.summary}`]
   }
-  return ['Bypass guidance:', `- ${guidance.summary}`]
+  return ['No-tracking guidance:', `- ${guidance.summary}`]
 }
 
 const recommendedNextCommandByState: Record<PbeState, string | null> = {

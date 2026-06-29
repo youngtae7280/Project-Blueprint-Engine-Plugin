@@ -132,11 +132,7 @@ export function recommendContext(input: ContextRecommendationInput): ContextReco
       readOnlyIfNeeded: [],
       doNotReadByDefault: fullDocs,
       reasons: [stageResult.reason, 'bypass profile requested; keep context minimal'],
-      notes: [
-        ...notes,
-        'bypass means PBE tracking is not active.',
-        'Escalate to lite or full if traceability is needed.',
-      ],
+      notes: [...notes, 'bypass means PBE tracking is not active.', 'Use PBE tracking if traceability is needed.'],
     }
   }
 
@@ -147,9 +143,9 @@ export function recommendContext(input: ContextRecommendationInput): ContextReco
   if (profile === 'lite') {
     readFirst.push('agent-context/lite.md')
     readOnlyIfNeeded.push('docs/lite-mode-policy.md')
-    reasons.push('lite profile adds Lite guard guidance')
+    reasons.push('compact workflow depth adds guard guidance')
   } else if (profile === 'full') {
-    reasons.push('full profile requested')
+    reasons.push('full planning depth requested')
   }
 
   return {
@@ -216,7 +212,7 @@ function stageReason(stage: CanonicalContextStageOption): string {
     revision: 'Revision work requires Change/Impact bounded-scope guidance',
     'product-patch': 'Product Patch work requires Product meaning change control',
     parallel: 'Parallel work requires dependency and shared-resource safety guidance',
-    documentation: 'Documentation work should use Lite guard and evidence guidance without broad docs scanning',
+    documentation: 'Documentation work should use compact guard and evidence guidance without broad docs scanning',
   }
   return reasons[stage]
 }
