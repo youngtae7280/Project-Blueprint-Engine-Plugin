@@ -54,6 +54,14 @@ Current operational source:
 limited Graph-source promoted for Todo Search selected-slice; tree-native artifacts elsewhere
 ```
 
+Current transition mechanics:
+
+```text
+Todo Search and Todo App configured read-model slices are graph-source-backed, while tree-native artifacts remain
+compatibility/fallback/reference. Tree-native retirement readiness is recorded as criteria only:
+Todo Search is closer-but-not-retirement-ready, and Todo App is not-retirement-ready.
+```
+
 Current conceptual alignment model:
 
 ```text

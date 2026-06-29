@@ -20,10 +20,34 @@ The artifact records:
 
 - `sourceDirection: graph-source-confirmed-for-configured-read-model-slices`
 - `treeNativeRole: compatibility-fallback-reference`
+- `retirementReadinessSummary.status: retirement-not-ready`
 - Todo Search source role: `limited-graph-source-promoted`
 - Todo App source role: `confirmed-structure-only-graph-source`
 - repo-wide boundaries: promotion not complete, tree-native retirement not complete, required checks/branch protection/CI
   enforcement not enabled, Todo App beyond `structure-only` not approved
+
+## Tree-Native Retirement Readiness
+
+The same status artifact now records criteria for deciding when tree-native artifacts could move from
+compatibility/fallback/reference into retired or deprecated status. The criteria are intentionally stricter than current
+operation:
+
+- graph-source-backed generation is stable
+- projection/read-model parity passes, or the slice has accepted structure-only status
+- validate-all reports `aggregate-pass`
+- E2E smoke passes, including `intentReport`
+- manual and PR CI observation have reviewed the relevant fields
+- rollback/fallback planning is present
+- user acceptance and source-authority boundaries are clear
+- no stale Evidence or hidden warning is concealed
+- explicit user-approved retirement action is in scope
+
+Current readiness remains `retirement-not-ready`.
+
+| Slice                             | Current readiness                 | Why retirement is not executed                                                                                               |
+| --------------------------------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `todo-search-selected-slice`      | `closer-but-not-retirement-ready` | Health criteria are mostly passing, but explicit tree-native retirement approval is missing and retirement is out of scope.  |
+| `todo-app-pbe-run-structure-only` | `not-retirement-ready`            | The slice is confirmed graph-source-backed for `structure-only`, but source authority beyond structure-only is not approved. |
 
 ## Registry Alignment
 
@@ -45,6 +69,7 @@ The registry still has exactly two positive validate-all profiles:
 - Todo App remains 22 nodes / 38 edges / 7 Core Views with confirmed structure-only projection contract.
 - tree-native artifacts remain compatibility/fallback/reference.
 - repo-wide promotion, tree-native retirement, and CI enforcement remain incomplete.
+- retirement readiness remains criteria/readiness only, with Todo Search closer-but-not-ready and Todo App not-ready.
 
 ## Boundaries
 
@@ -64,5 +89,5 @@ The next bounded decision should choose one of:
 
 - continue observing the two graph-source-backed configured slices
 - design repo-wide transition mechanics for additional slice enrollment
-- design tree-native compatibility/fallback retirement criteria without executing retirement
+- prepare an explicit tree-native retirement approval package, or continue retaining compatibility/fallback/reference
 - design enforcement/required-check policy separately

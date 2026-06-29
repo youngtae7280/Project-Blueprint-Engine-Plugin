@@ -676,6 +676,13 @@ branch was deleted; the reviewed artifact confirms PR metadata, `e2eSmokeStatus:
 `intentReport.status: intent-report-pass`, native/retrofit summaries, zero missing classification/anchor counts, and
 validate-all `aggregate-pass` without broad intent schema enforcement, required checks, or tree retirement.
 
+DEC-139 does not supersede DEC-097 through DEC-138. It records tree-native compatibility/fallback/reference retirement
+readiness criteria in `examples/read-model-aggregate/graph-source-transition-status.json` and verifies those fields in
+the local E2E smoke. Current readiness remains `retirement-not-ready`: Todo Search is
+`closer-but-not-retirement-ready` pending explicit retirement approval, and Todo App is `not-retirement-ready` because
+source authority beyond `structure-only` is not approved. This is retirement criteria/readiness only and does not retire
+tree-native artifacts, add enforcement, or enable required checks.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

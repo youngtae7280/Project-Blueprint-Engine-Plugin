@@ -39,6 +39,8 @@ The smoke checks:
 - registry-backed `graph read-model validate --all --json` status `aggregate-pass`
 - `examples/read-model-aggregate/graph-source-transition-status.json` source roles and no-retirement/no-enforcement
   boundaries
+- tree-native retirement readiness criteria/status: overall `retirement-not-ready`, Todo Search
+  `closer-but-not-retirement-ready`, and Todo App `not-retirement-ready`
 - candidate observation status `candidate-observation-pass` as separate report-only metadata
 - local `graph read-model report-intent --json` status `intent-report-pass`, with native/retrofit fixture summaries,
   nonzero edgeIntent/claim/classification/anchor counts, and zero missing classification/anchor counts

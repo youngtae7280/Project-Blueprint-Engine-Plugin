@@ -174,6 +174,27 @@ try {
     'Tree-native retirement boundary',
   )
   assertEqual(transitionStatus.repoWideBoundaries?.ciEnforcement, 'not-enabled', 'CI enforcement boundary')
+  assertEqual(
+    transitionStatus.retirementReadinessSummary?.status,
+    'retirement-not-ready',
+    'Tree-native retirement readiness summary',
+  )
+  assertEqual(
+    transitionStatus.retirementReadinessSummary?.explicitRetirementApproval,
+    'not-approved',
+    'Tree-native explicit retirement approval boundary',
+  )
+  assertEqual(
+    transitionStatus.retirementReadinessSummary?.retirementAction,
+    'not-in-scope',
+    'Tree-native retirement action boundary',
+  )
+  if (
+    !Array.isArray(transitionStatus.retirementReadinessCriteria) ||
+    transitionStatus.retirementReadinessCriteria.length < 8
+  ) {
+    throw new Error('Tree-native retirement readiness criteria must remain explicit')
+  }
 
   const todoSearchProfile = validateAll.perSliceResults.find(
     (entry) => entry.profileId === 'todo-search-selected-slice',
@@ -192,11 +213,31 @@ try {
   assertEqual(todoSearchTransition?.expectedCounts?.nodes, 40, 'Todo Search transition node count')
   assertEqual(todoSearchTransition?.expectedCounts?.edges, 59, 'Todo Search transition edge count')
   assertEqual(todoSearchTransition?.expectedCounts?.coreViews, 7, 'Todo Search transition Core View count')
+  assertEqual(
+    todoSearchTransition?.retirementReadiness?.status,
+    'closer-but-not-retirement-ready',
+    'Todo Search retirement readiness status',
+  )
+  assertEqual(
+    todoSearchTransition?.retirementReadiness?.criteriaStatus?.explicitRetirementApprovalPresent,
+    'missing',
+    'Todo Search explicit retirement approval readiness',
+  )
   assertEqual(todoAppTransition?.sourceRole, 'confirmed-structure-only-graph-source', 'Todo App transition source role')
   assertEqual(todoAppTransition?.generationMode, 'graph-source-backed', 'Todo App transition generation mode')
   assertEqual(todoAppTransition?.expectedCounts?.nodes, 22, 'Todo App transition node count')
   assertEqual(todoAppTransition?.expectedCounts?.edges, 38, 'Todo App transition edge count')
   assertEqual(todoAppTransition?.expectedCounts?.coreViews, 7, 'Todo App transition Core View count')
+  assertEqual(
+    todoAppTransition?.retirementReadiness?.status,
+    'not-retirement-ready',
+    'Todo App retirement readiness status',
+  )
+  assertEqual(
+    todoAppTransition?.retirementReadiness?.criteriaStatus?.sourceAuthorityBeyondStructureOnly,
+    'not-approved',
+    'Todo App source authority beyond structure-only readiness',
+  )
   const todoSearchProjection = commandResult(todoSearchProfile, 'project-contract')
   assertEqual(todoSearchProjection.status, 'projection-contract-pass', 'Todo Search projection contract status')
   assertEqual(todoSearchProjection.nodeCount, 40, 'Todo Search projection node count')
@@ -285,6 +326,9 @@ try {
       treeNativeRole: transitionStatus.treeNativeRole,
       repoWidePromotion: transitionStatus.repoWideBoundaries.repoWidePromotion,
       treeNativeRetirement: transitionStatus.repoWideBoundaries.treeNativeRetirement,
+      retirementReadinessStatus: transitionStatus.retirementReadinessSummary.status,
+      todoSearchRetirementReadiness: todoSearchTransition.retirementReadiness.status,
+      todoAppRetirementReadiness: todoAppTransition.retirementReadiness.status,
     },
     candidateObservation: {
       status: candidateObservation.status,

@@ -140,7 +140,9 @@ The repo-wide transition mechanics status is recorded in
 `examples/read-model-aggregate/graph-source-transition-status.json`. That artifact records Graph-source as confirmed for
 the configured read-model slices while preserving tree-native compatibility/fallback/reference roles, no tree
 retirement, no required checks, no CI enforcement, no invalid-fixture CI, and no Todo App promotion beyond
-`structure-only`.
+`structure-only`. It now also records tree-native retirement readiness criteria and current per-slice readiness:
+Todo Search is closer but not retirement-ready without explicit retirement approval, and Todo App is not
+retirement-ready because source authority beyond `structure-only` is not approved.
 
 ## Source Authority Matrix
 

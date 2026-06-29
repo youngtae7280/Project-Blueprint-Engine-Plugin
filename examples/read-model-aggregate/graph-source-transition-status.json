@@ -8,6 +8,60 @@
   "nonRetirementStatement": "Tree-native artifacts are not deleted, retired, or treated as obsolete by this status artifact. They remain compatibility, fallback, and reference records unless a later explicit retirement decision changes that role.",
   "nonEnforcementStatement": "This status artifact supports local validation and CI observation only. It does not create required checks, branch protection, merge enforcement, or user acceptance.",
   "invalidFixtureBoundary": "Invalid read-model fixtures remain local focused test inputs and are not enrolled in positive validate-all or CI.",
+  "retirementReadinessCriteria": [
+    {
+      "id": "graph-source-backed-generation-stable",
+      "required": true,
+      "description": "Configured slice generation is graph-source-backed and stable for the slice under review."
+    },
+    {
+      "id": "projection-or-parity-accepted",
+      "required": true,
+      "description": "The slice has projection/read-model parity pass or an explicitly accepted structure-only status."
+    },
+    {
+      "id": "validate-all-aggregate-pass",
+      "required": true,
+      "description": "Registry-backed validate-all reports aggregate-pass for the positive configured slices."
+    },
+    {
+      "id": "e2e-smoke-intent-report-pass",
+      "required": true,
+      "description": "The local E2E smoke passes, including intentReport coverage with no missing classification or anchor counts."
+    },
+    {
+      "id": "manual-and-pr-ci-observation-pass",
+      "required": true,
+      "description": "Manual and PR informational CI observation have both reviewed the relevant status fields as passing."
+    },
+    {
+      "id": "rollback-fallback-plan-present",
+      "required": true,
+      "description": "Rollback/fallback criteria are documented and the current fallback/reference artifacts remain available."
+    },
+    {
+      "id": "user-acceptance-source-authority-boundary-clear",
+      "required": true,
+      "description": "User acceptance and source-authority boundaries are explicit and cannot be replaced by CI or generated Evidence."
+    },
+    {
+      "id": "no-stale-evidence-or-hidden-warning",
+      "required": true,
+      "description": "No stale Evidence, hidden retained warning, blocking status, or decision-required status is concealed from review."
+    },
+    {
+      "id": "explicit-retirement-approval-present",
+      "required": true,
+      "description": "A later explicit user-approved retirement action is in scope and names replacement, fallback, and review points."
+    }
+  ],
+  "retirementReadinessSummary": {
+    "status": "retirement-not-ready",
+    "treeNativeRole": "compatibility-fallback-reference",
+    "explicitRetirementApproval": "not-approved",
+    "retirementAction": "not-in-scope",
+    "boundary": "Criteria/readiness only; no tree-native artifact is retired, deleted, or deprecated by this status artifact."
+  },
   "configuredSlices": [
     {
       "profileId": "todo-search-selected-slice",
@@ -24,7 +78,23 @@
         "validationChecks": 20
       },
       "positiveValidateAllRole": "source-backed-projection-contract",
-      "fallbackRole": "tree-native-selected-slice-artifacts-maintained-as-compatibility-fallback-reference"
+      "fallbackRole": "tree-native-selected-slice-artifacts-maintained-as-compatibility-fallback-reference",
+      "retirementReadiness": {
+        "status": "closer-but-not-retirement-ready",
+        "criteriaStatus": {
+          "graphSourceBackedGenerationStable": "pass",
+          "projectionOrParityAccepted": "pass",
+          "validateAllAggregatePass": "pass",
+          "e2eSmokeIntentReportPass": "pass",
+          "manualAndPrCiObservationPass": "pass",
+          "rollbackFallbackPlanPresent": "pass",
+          "userAcceptanceSourceAuthorityBoundaryClear": "pass",
+          "noStaleEvidenceOrHiddenWarning": "pass",
+          "explicitRetirementApprovalPresent": "missing"
+        },
+        "blockingReason": "Tree-native selected-slice artifacts remain compatibility/fallback/reference until explicit retirement approval is in scope.",
+        "recommendedRole": "maintained-compatibility-fallback-reference"
+      }
     },
     {
       "profileId": "todo-app-pbe-run-structure-only",
@@ -41,7 +111,24 @@
         "validationChecks": 16
       },
       "positiveValidateAllRole": "confirmed-structure-only-projection-contract",
-      "fallbackRole": "canonical-pbe-artifacts-maintained-as-compatibility-fallback-reference"
+      "fallbackRole": "canonical-pbe-artifacts-maintained-as-compatibility-fallback-reference",
+      "retirementReadiness": {
+        "status": "not-retirement-ready",
+        "criteriaStatus": {
+          "graphSourceBackedGenerationStable": "pass",
+          "projectionOrParityAccepted": "pass-structure-only",
+          "validateAllAggregatePass": "pass",
+          "e2eSmokeIntentReportPass": "pass",
+          "manualAndPrCiObservationPass": "pass",
+          "rollbackFallbackPlanPresent": "pass",
+          "userAcceptanceSourceAuthorityBoundaryClear": "structure-only-boundary-clear",
+          "noStaleEvidenceOrHiddenWarning": "pass",
+          "sourceAuthorityBeyondStructureOnly": "not-approved",
+          "explicitRetirementApprovalPresent": "missing"
+        },
+        "blockingReason": "Todo App is confirmed structure-only graph-source-backed, but source authority beyond structure-only and explicit retirement approval are not approved.",
+        "recommendedRole": "maintained-compatibility-fallback-reference"
+      }
     }
   ],
   "repoWideBoundaries": {
