@@ -663,6 +663,13 @@ DEC-136 does not supersede DEC-097 through DEC-135. It adds `report-intent` cove
 edgeIntent/claim/classification/anchor counts, and zero missing classification/anchor counts while preserving the same
 non-enforcing E2E boundary.
 
+DEC-137 does not supersede DEC-097 through DEC-136. It records manual workflow run `28348764191` reviewing the E2E
+smoke after `report-intent` coverage was added. The artifact manifest records `e2eSmokeStatus: e2e-smoke-pass`, and the
+uploaded E2E output records `intentReport.status: intent-report-pass`, native/retrofit fixture summaries, nonzero
+edgeIntent/claim/classification/anchor counts, zero missing classification/anchor counts, and validate-all
+`aggregate-pass`. This remains manual CI observation only and does not add broad intent schema enforcement, required
+checks, or tree retirement.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

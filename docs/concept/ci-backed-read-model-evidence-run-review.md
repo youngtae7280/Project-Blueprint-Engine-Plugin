@@ -1228,6 +1228,24 @@ PR run `28346897073` reviewed the same edgeIntent projection observation fields 
 | Cleanup               | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted      |
 | Review result         | PR CI confirms edgeIntent projection observation status and uploaded projection artifacts  |
 
+Manual run `28348764191` reviewed the workflow after local E2E smoke began checking `report-intent`.
+
+| Field               | Value                                                                                      |
+| ------------------- | ------------------------------------------------------------------------------------------ |
+| Run ID              | `28348764191`                                                                              |
+| Run URL             | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28348764191> |
+| Event               | `workflow_dispatch`                                                                        |
+| Commit              | `bb975d05f1f08754cc4dd075e546eb554372755f`                                                 |
+| Conclusion          | `success`                                                                                  |
+| Manifest            | `ci-evidence-pass`; `e2eSmokeStatus: e2e-smoke-pass`                                       |
+| E2E intent report   | `intent-report-pass`; native/retrofit summaries present                                    |
+| Intent counts       | 2 edgeIntents; 2 claims; 12 classifications; 4 anchors                                     |
+| Missing counts      | 0 missing classifications; 0 missing anchors                                               |
+| Positive read-model | `validateAllStatus: aggregate-pass`; `aggregateStatus: aggregate-pass`                     |
+| Boundary            | Manual CI observation only; no broad intent schema enforcement                             |
+| Cleanup             | Artifact temp directory removed                                                            |
+| Review result       | Manual CI confirms uploaded E2E smoke output now exposes `intentReport`                    |
+
 ## Gate Self-Check
 
 | Gate                              | Status | Result                                                                                                            |
@@ -1238,6 +1256,7 @@ PR run `28346897073` reviewed the same edgeIntent projection observation fields 
 | Graph-Source-Backed Manual Gate   | pass   | Run `28219396764` confirmed graph-source-backed Todo Search generation in CI artifacts.                           |
 | Todo App Projection Manual Gate   | pass   | Run `28222731063` confirmed Todo App `candidate-projection-contract-pass` in positive validate-all artifacts.     |
 | E2E Smoke Manual Gate             | pass   | Run `28223860233` confirmed `e2eSmokeStatus: e2e-smoke-pass` in manifest and uploaded smoke output.               |
+| E2E Intent Report Manual Gate     | pass   | Run `28348764191` confirmed E2E output contains `intentReport: intent-report-pass` with zero missing counts.      |
 | Todo App Generation Manual Gate   | pass   | Run `28224636333` confirmed Todo App `graph-source-backed` / `non-authority-structure-only` metadata.             |
 | Todo App Confirmed Manual Gate    | pass   | Run `28226270934` confirmed Todo App `projection-contract-pass` / `confirmed-structure-only-graph-source`.        |
 | edgeIntent Projection Manual Gate | pass   | Run `28346777344` confirmed native/retrofit `edge-intent-projection-pass` in manifest and artifacts.              |

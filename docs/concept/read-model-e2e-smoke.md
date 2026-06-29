@@ -17,6 +17,10 @@ Manual workflow run `28223860233` reviewed the CI observation path after integra
 with `projection-contract-pass`, Todo App 22/38/7 with `projection-contract-pass`, validate-all `aggregate-pass`, and
 separate candidate observation `candidate-observation-pass`.
 
+Manual workflow run `28348764191` reviewed the same E2E artifact after `report-intent` coverage was added. The uploaded
+E2E output recorded `intentReport.status: intent-report-pass`, native/retrofit fixture summaries, nonzero
+edgeIntent/claim/classification/anchor counts, and zero missing classification/anchor counts.
+
 PR #8 run `28224088829` then reviewed the same E2E smoke visibility through the non-enforcing
 `pull_request-informational` path. The smoke PR was closed without merge, and the remote/local smoke branch plus temp
 artifact download were cleaned up.
