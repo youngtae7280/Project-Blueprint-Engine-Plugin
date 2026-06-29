@@ -195,3 +195,15 @@ The boundary remains strict for real artifacts:
 - a fresh initialized external project should pass validation when no visual work is selected;
 - malformed present visual verification profiles still fail when they reference missing required tree nodes;
 - selected visual work can still require visual contract, inventory, screenshot/manual evidence, and review closure.
+
+## Regression Surface
+
+Step 2 hardened this as a temp fixture-style smoke rather than a committed external fixture. The CLI test suite now
+covers the fresh external initialized path end to end:
+
+- ordinary external README plus `pbe init --profile lite`;
+- `pbe validate --json` skips repository-only README, skills, templates, and examples checks;
+- neutral visual verification profile defaults do not block v2 validation;
+- a present malformed visual verification profile still fails with the missing tree-node reference.
+
+This keeps the adoption-safe boundary visible without adding `examples/valid` or `examples/invalid` fixture semantics.

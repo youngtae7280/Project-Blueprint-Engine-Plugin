@@ -476,7 +476,7 @@ describe('PBE CLI', () => {
     expect(legacyReport.output).not.toContain('✓ Examples')
   })
 
-  it('validates a freshly initialized external project without visual placeholder reference failures', async () => {
+  it('keeps the external initialized project smoke fixture adoption-safe after fresh init', async () => {
     const workspace = createWorkspace()
     writeText(join(workspace, 'README.md'), '# External app\n\nOrdinary project README.\n')
 
@@ -501,7 +501,52 @@ describe('PBE CLI', () => {
 
     expect(result.exitCode).toBe(ExitCode.Success)
     const payload = JSON.parse(result.stdout)
+    const legacyReport = payload.validators.find((entry: { name: string }) => entry.name === 'legacy validate:pbe')
+    expect(legacyReport.output).not.toContain('README_LAYOUT_TERM_MISSING')
+    expect(legacyReport.output).not.toContain('??Skills')
+    expect(legacyReport.output).not.toContain('??Templates')
+    expect(legacyReport.output).not.toContain('??Examples')
+    expect(payload.validators.find((entry: { name: string }) => entry.name === 'v2 tree system').ok).toBe(true)
     expect(JSON.stringify(payload)).not.toContain('visual profile VVP-001 references missing product node')
+  })
+
+  it('rejects a malformed present visual profile in an external initialized project smoke fixture', async () => {
+    const workspace = createWorkspace()
+    writeText(join(workspace, 'README.md'), '# External app\n\nOrdinary project README.\n')
+
+    const init = await runPbeCli(
+      ['init', '--profile', 'lite', '--brief', 'Fresh external validation smoke', '--json'],
+      {
+        cwd: workspace,
+        pluginRoot,
+      },
+    )
+
+    expect(init.exitCode).toBe(ExitCode.Success)
+    const visualProfilePath = join(workspace, '.pbe', 'control', 'visual-verification-profile.json')
+    const visualProfile = JSON.parse(readFileSync(visualProfilePath, 'utf8'))
+    visualProfile.profiles = [
+      {
+        id: 'VVP-REGRESSION-INVALID',
+        surfaceId: 'SURFACE-REGRESSION',
+        title: 'Invalid present visual profile',
+        applicability: 'required',
+        productNodeIds: ['PT-MISSING'],
+        projectNodeIds: [],
+        workNodeIds: [],
+        testNodeIds: [],
+        evidenceNodeIds: [],
+        checks: [],
+      },
+    ]
+    writeJson(visualProfilePath, visualProfile)
+
+    const result = await runPbeCli(['validate', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.stringify(JSON.parse(result.stderr))).toContain(
+      'visual profile VVP-REGRESSION-INVALID references missing product node: PT-MISSING',
+    )
   })
 
   it('allows missing full ACEP package in an external project when state does not require ACEP', async () => {
