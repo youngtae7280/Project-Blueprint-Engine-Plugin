@@ -15,13 +15,13 @@ Evidence without changing workflow behavior.
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
 | Manual dispatch baseline  | Run `28207696557`, `workflow_dispatch`, `success`, `ci-evidence-pass`                                    |
 | First real PR run         | PR `#1`, run `28207822252`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`  |
-| Latest PR run             | PR `#10`, run `28226357099`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass` |
+| Latest PR run             | PR `#11`, run `28346897073`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass` |
 | Current workflow mode     | `workflow_dispatch` plus non-enforcing `pull_request-informational`                                      |
 | Included slices           | `examples/adoption/todo-search-slice`; `examples/valid/todo-app-pbe-run`; aggregate summary              |
 | Workflow command mode     | registry-backed `validate --all` after manual run `28210541509`                                          |
 | Observation policy        | [pr-informational-observation-policy.md](pr-informational-observation-policy.md)                         |
 | Refinement design         | [pr-informational-path-filter-refinement.md](pr-informational-path-filter-refinement.md)                 |
-| Current real PR run count | 7 reviewed real PR informational runs                                                                    |
+| Current real PR run count | 8 reviewed real PR informational runs                                                                    |
 | Target before refinement  | Run-count threshold satisfied; refinement may be considered but is not automatic.                        |
 | Enforcement / authority   | Not approved. PR Evidence is informational only and does not change source authority.                    |
 
@@ -245,6 +245,28 @@ unchanged after three successful PR observations.
 | Boundary visibility     | Informational PR Evidence only; no enforcement, required check, tree retirement, or invalid fixture CI                                              |
 | Failure / noise class   | No failure; docs-only smoke verified PR visibility after Todo App confirmed graph-source-backed rename                                              |
 | Cleanup                 | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted                                                               |
+
+### Baseline Entry 9: edgeIntent Projection PR Informational Run
+
+| Field                             | Value                                                                                                                             |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Entry type                        | PR informational smoke review for edgeIntent projection observation artifact capture                                              |
+| PR                                | `#11`; draft temporary smoke PR; closed without merge                                                                             |
+| Run ID                            | `28346897073`                                                                                                                     |
+| Run URL                           | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28346897073`                                        |
+| Event / trigger mode              | `pull_request` / `pull_request-informational`                                                                                     |
+| Head SHA / base SHA               | `78ecd973feee35e580c5c783aeaaccb8fc9e4343` / `bfb4714b76d304e23c5a23b140ddd63db0af9f21`                                           |
+| Head ref / base ref               | `pbe/pr-info-edge-intent-smoke-20260629` / `main`                                                                                 |
+| Artifact bundle                   | Present and reviewed; native/retrofit edgeIntent projection artifacts and command outputs uploaded                                |
+| Manifest status                   | `ci-evidence-pass`; PR metadata present                                                                                           |
+| edgeIntent projection observation | `edgeIntentProjectionObservationStatus: edge-intent-projection-pass`                                                              |
+| Native / retrofit intent fixture  | Native `intent-projection-pass`; retrofit `intent-projection-pass`; 1 projected intent each                                       |
+| Validate-all / E2E                | `aggregate-pass`; `e2e-smoke-pass`                                                                                                |
+| Todo Search / Todo App projection | Todo Search `projection-contract-pass`; Todo App `projection-contract-pass`                                                       |
+| Boundary visibility               | PR intent projection observation only; no broad validate-all intent enforcement, required check, or tree retirement               |
+| Failure / noise class             | No failure; docs-only smoke verified PR visibility after edgeIntent projection observation was added to CI                        |
+| Cleanup                           | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted                                             |
+| Recommended next interpretation   | Continue toward any next intent projection decision separately; do not treat this observation as broad intent schema enforcement. |
 
 ## Future Observation Entry Template
 

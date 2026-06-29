@@ -77,8 +77,8 @@ that field in workflow artifacts; PR #7 run `28223010185` confirms the same fiel
 The workflow also observes intent-critical native and retrofit edgeIntent projections by running
 `graph read-model project-intent --graph-source <path> --output <path> --json`. The manifest and Step Summary record
 `edgeIntentProjectionObservationStatus`, and the artifact bundle includes both projection files plus command outputs.
-Manual run `28346777344` reviewed this capture as `ci-evidence-pass` with native and retrofit projection pass. This is
-report-only visibility and does not add broad validate-all intent enforcement.
+Manual run `28346777344` and PR #11 run `28346897073` reviewed this capture as `ci-evidence-pass` with native and
+retrofit projection pass. This is report-only visibility and does not add broad validate-all intent enforcement.
 
 Run `28156403793` also surfaced a GitHub Actions maintenance annotation that Node.js 20 is deprecated for
 `actions/checkout@v4`, `actions/setup-node@v4`, and `actions/upload-artifact@v4` execution. This is a retained CI hygiene

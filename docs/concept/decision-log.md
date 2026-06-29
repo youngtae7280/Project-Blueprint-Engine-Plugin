@@ -645,6 +645,12 @@ edgeIntent projection CI observation surface. The artifact manifest records
 smoke remains `e2e-smoke-pass`. This review does not add PR-required enforcement, broad intent schema enforcement, or
 tree retirement.
 
+DEC-134 does not supersede DEC-097 through DEC-133. It records PR #11 run `28346897073` reviewing the same edgeIntent
+projection CI observation surface in `pull_request-informational` mode. The smoke PR was closed without merge and its
+remote branch was deleted; the reviewed artifact confirms PR metadata, `edgeIntentProjectionObservationStatus:
+edge-intent-projection-pass`, native and retrofit `intent-projection-pass`, validate-all `aggregate-pass`, and E2E smoke
+pass without required checks, broad intent schema enforcement, or tree retirement.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

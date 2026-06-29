@@ -1209,6 +1209,25 @@ added as non-enforcing CI observation artifacts.
 | Cleanup               | Artifact temp directory removed                                                               |
 | Review result         | Manual CI confirms edgeIntent projection observation status and uploaded projection artifacts |
 
+PR run `28346897073` reviewed the same edgeIntent projection observation fields through the non-enforcing
+`pull_request-informational` trigger.
+
+| Field                 | Value                                                                                      |
+| --------------------- | ------------------------------------------------------------------------------------------ |
+| PR                    | `#11`; draft temporary smoke PR; closed without merge                                      |
+| Run ID                | `28346897073`                                                                              |
+| Run URL               | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28346897073> |
+| Event                 | `pull_request`; `pull_request-informational`                                               |
+| Head / base           | `pbe/pr-info-edge-intent-smoke-20260629` / `main`                                          |
+| Manifest              | `ci-evidence-pass`; PR metadata present; `edgeIntentProjectionObservationStatus: pass`     |
+| Native intent fixture | `intent-projection-pass`; 1 projected intent; projection artifact present                  |
+| Retrofit fixture      | `intent-projection-pass`; 1 projected intent; projection artifact present                  |
+| Positive read-model   | `validateAllStatus: aggregate-pass`; `aggregateStatus: aggregate-pass`                     |
+| E2E smoke             | `e2e-smoke-pass`                                                                           |
+| Boundary              | PR intent projection observation only; no broad validate-all intent enforcement            |
+| Cleanup               | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted      |
+| Review result         | PR CI confirms edgeIntent projection observation status and uploaded projection artifacts  |
+
 ## Gate Self-Check
 
 | Gate                              | Status | Result                                                                                                            |
@@ -1227,6 +1246,7 @@ added as non-enforcing CI observation artifacts.
 | E2E Smoke PR Gate                 | pass   | PR #8 run `28224088829` confirmed `e2eSmokeStatus: e2e-smoke-pass` in PR artifacts.                               |
 | Todo App Generation PR Gate       | pass   | PR #9 run `28224878648` confirmed Todo App `graph-source-backed` / `non-authority-structure-only` metadata.       |
 | Todo App Confirmed PR Gate        | pass   | PR #10 run `28226357099` confirmed Todo App `projection-contract-pass` / `confirmed-structure-only-graph-source`. |
+| edgeIntent Projection PR Gate     | pass   | PR #11 run `28346897073` confirmed native/retrofit `edge-intent-projection-pass` in PR artifacts.                 |
 | PR Informational Run Gate         | pass   | PR #1, PR #2, PR #3, PR #4, and PR #5 triggered `pull_request` runs and completed successfully.                   |
 | CI-Backed Artifact Review Gate    | pass   | Expanded artifact bundle `pbe-todo-search-read-model-evidence` was downloaded and inspected.                      |
 | CI Manifest Integrity Gate        | pass   | Manifest is `ci-backed` / `ci-evidence-pass` and includes Todo Search, Todo App, aggregate, and boundaries.       |
