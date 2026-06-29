@@ -21,6 +21,19 @@ interface IntentCriticalExample {
     fallbackReason: string
     evidenceReason: string
     compatibilityReason: string
+    edgeIntent: {
+      edgeType: string
+      intentKind: string
+      riskKind: string
+      claim: string
+      confidence: string
+      enforcement: string
+      anchors: Array<{
+        signalKind: string
+        sourceRole: string
+        artifact: string
+      }>
+    }
   }>
   readModelIntentFields: {
     required: string[]
@@ -54,6 +67,19 @@ function expectIntentPreservationFixture(example: IntentCriticalExample): void {
   expect(intent.fallbackReason).toMatch(/fallback|reference/i)
   expect(intent.evidenceReason).toMatch(/Evidence|check|validation|review/i)
   expect(intent.compatibilityReason).toMatch(/compatibility|Task-card|Retrofit|legacy|audit/i)
+  expect(intent.edgeIntent.edgeType).toBe('preserves-intent')
+  expect(intent.edgeIntent.intentKind).toMatch(/^[a-z-]+$/)
+  expect(intent.edgeIntent.riskKind).toMatch(/^[a-z-]+$/)
+  expect(intent.edgeIntent.claim.length).toBeGreaterThan(20)
+  expect(intent.edgeIntent.claim).not.toBe(intent.statement)
+  expect(intent.edgeIntent.confidence).toMatch(/user-confirmed|history-derived/)
+  expect(intent.edgeIntent.enforcement).toMatch(/validation-evidence|review-required/)
+  expect(intent.edgeIntent.anchors.length).toBeGreaterThanOrEqual(2)
+  for (const anchor of intent.edgeIntent.anchors) {
+    expect(anchor.signalKind).toMatch(/acceptance|evidence|compatibility|fallback/)
+    expect(anchor.sourceRole).toMatch(/signal/)
+    expect(anchor.artifact.length).toBeGreaterThan(5)
+  }
 
   expect(example.readModelIntentFields.required).toContain('statement')
   expect(example.readModelIntentFields.required).toContain('maintenanceRiskIfMissing')
@@ -78,6 +104,10 @@ describe('intent-critical Graph-source examples', () => {
     expect(example.exampleKind).toBe('native-pbe')
     expect(example.sourceMode).toBe('graph-source-intent-first')
     expect(example.intentRecords[0].intentType).toBe('ux-acceptance-intent')
+    expect(example.intentRecords[0].edgeIntent.intentKind).toBe('ux-acceptance')
+    expect(example.intentRecords[0].edgeIntent.riskKind).toBe('behavior-regression')
+    expect(example.intentRecords[0].edgeIntent.confidence).toBe('user-confirmed')
+    expect(example.intentRecords[0].edgeIntent.enforcement).toBe('validation-evidence')
     expect(example.intentRecords[0].statement).toContain('empty')
     expect(example.intentRecords[0].statement).toContain('full list')
     expect(example.intentRecords[0].nonGoal).toContain('hides all todos')
@@ -92,6 +122,10 @@ describe('intent-critical Graph-source examples', () => {
     expect(example.exampleKind).toBe('retrofit-pbe')
     expect(example.sourceMode).toBe('retrofit-intent-recovered')
     expect(example.intentRecords[0].intentType).toBe('compatibility-rollback-intent')
+    expect(example.intentRecords[0].edgeIntent.intentKind).toBe('compatibility-retention')
+    expect(example.intentRecords[0].edgeIntent.riskKind).toBe('fallback-loss')
+    expect(example.intentRecords[0].edgeIntent.confidence).toBe('history-derived')
+    expect(example.intentRecords[0].edgeIntent.enforcement).toBe('review-required')
     expect(example.intentRecords[0].statement).toContain('compatibility export')
     expect(example.intentRecords[0].preservationRule).toContain('explicit retirement decision')
     expect(example.intentRecords[0].nonGoal).toContain('permission to delete')

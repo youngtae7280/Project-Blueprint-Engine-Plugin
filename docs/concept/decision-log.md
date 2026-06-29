@@ -611,6 +611,14 @@ fallback/rollback reasons, evidence reasons, and compatibility reasons so AI-ass
 behavior when original intent is missing. This is example/validation surface only; it does not add tree retirement,
 enforcement, required checks, invalid-fixture CI, or repo-wide source authority expansion.
 
+DEC-129 does not supersede DEC-097 through DEC-128. It records the edge-level intent vocabulary direction:
+Graph-source remains the single source direction, intent is primarily graph edge annotation, node intent is supporting
+context, concrete intent stays as short project-specific edge `claim` text, and vocabulary/table values are limited to
+repeatable classifications such as type, intent kind, risk kind, signal kind, confidence, enforcement, source role, and
+lifecycle status. Native and retrofit PBE use the same edge-intent model and differ by signal origin/confidence only.
+This is design/fixture alignment only and does not add broad schema enforcement, required checks, tree retirement, or a
+separate intent source.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

@@ -7,6 +7,10 @@ Status: bounded examples / focused validation / non-enforcing
 Graph-source PBE exists to preserve more than generated shape. It should keep the development-time intent that prevents
 AI-assisted maintenance from changing behavior just because a simpler rewrite looks plausible.
 
+The edge-level vocabulary decision is recorded in
+[edge-level-intent-vocabulary-design.md](edge-level-intent-vocabulary-design.md). These examples align to that decision:
+intent is represented as graph edge annotation, not as a separate source ledger.
+
 The first intent-critical examples are:
 
 - `examples/intent-critical/native-pbe-maintenance`
@@ -26,6 +30,7 @@ Captured intent:
 - hiding all todos is a non-goal
 - runtime/validation Evidence should prove clear-search behavior
 - task-card or read-model projections must not weaken acceptance meaning
+- edge claim: `empty search restores the full list after clearing a query`
 
 ## Retrofit PBE Example
 
@@ -41,11 +46,13 @@ Captured intent:
 - retirement needs an explicit decision
 - generated graph-source projections do not authorize deleting compatibility artifacts
 - maintenance review should compare both generated projection and retained compatibility evidence
+- edge claim: `compatibility export stays until explicit retirement approval`
 
 ## Focused Validation
 
 `cli/src/__tests__/intent-critical-examples.test.ts` checks both fixtures for:
 
+- edge-level `intent.kind`, `risk`, `claim`, `confidence`, `enforcement`, and anchors
 - maintenance scenario and vibe-coding risk
 - intent statement
 - maintenance risk if missing

@@ -117,7 +117,8 @@ explicit compatibility and fallback boundaries.
   promotion beyond `structure-only` are not complete.
 - The Graph-source purpose is not just shape parity: intent-critical examples now show how native and retrofit PBE
   records preserve UX, non-goal, fallback, evidence, and compatibility intent so AI-assisted maintenance does not
-  silently change behavior.
+  silently change behavior. Intent is modeled primarily as graph edge annotation with a short project-specific `claim`;
+  PBE does not create a separate intent ledger as another source.
 
 ## What Gets Created
 

@@ -17,7 +17,27 @@
       "nonGoal": "Do not treat empty search as a filter that intentionally hides all todos.",
       "fallbackReason": "If graph-source projection is unavailable, the Product Tree acceptance criterion remains the fallback/reference for this intent.",
       "evidenceReason": "A runtime or validation check should prove that clearing the query restores the full list.",
-      "compatibilityReason": "Task-card or read-model views may summarize this behavior, but they must not weaken the acceptance intent."
+      "compatibilityReason": "Task-card or read-model views may summarize this behavior, but they must not weaken the acceptance intent.",
+      "edgeIntent": {
+        "edgeType": "preserves-intent",
+        "intentKind": "ux-acceptance",
+        "riskKind": "behavior-regression",
+        "claim": "empty search restores the full list after clearing a query",
+        "confidence": "user-confirmed",
+        "enforcement": "validation-evidence",
+        "anchors": [
+          {
+            "signalKind": "acceptance",
+            "sourceRole": "native-product-signal",
+            "artifact": "Product Tree acceptance criterion"
+          },
+          {
+            "signalKind": "evidence",
+            "sourceRole": "runtime-validation-signal",
+            "artifact": "clear-search behavior check"
+          }
+        ]
+      }
     }
   ],
   "readModelIntentFields": {

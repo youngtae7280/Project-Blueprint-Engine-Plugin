@@ -17,7 +17,27 @@
       "nonGoal": "Do not interpret graph-source-backed generation as permission to delete tree-native or compatibility artifacts.",
       "fallbackReason": "The compatibility export remains the fallback/reference artifact when generated graph-source projections are stale, blocked, or disputed.",
       "evidenceReason": "Maintenance review should show both the graph-source projection and the retained compatibility export when evaluating retirement readiness.",
-      "compatibilityReason": "Retrofit PBE must preserve legacy/audit vocabulary long enough for users to compare old and new maintenance surfaces."
+      "compatibilityReason": "Retrofit PBE must preserve legacy/audit vocabulary long enough for users to compare old and new maintenance surfaces.",
+      "edgeIntent": {
+        "edgeType": "preserves-intent",
+        "intentKind": "compatibility-retention",
+        "riskKind": "fallback-loss",
+        "claim": "compatibility export stays until explicit retirement approval",
+        "confidence": "history-derived",
+        "enforcement": "review-required",
+        "anchors": [
+          {
+            "signalKind": "compatibility",
+            "sourceRole": "retrofit-compat-signal",
+            "artifact": "legacy compatibility export"
+          },
+          {
+            "signalKind": "fallback",
+            "sourceRole": "rollback-reference-signal",
+            "artifact": "rollback/audit review history"
+          }
+        ]
+      }
     }
   ],
   "readModelIntentFields": {

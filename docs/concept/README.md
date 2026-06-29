@@ -514,11 +514,14 @@ no Todo App promotion beyond `structure-only`.
 The intent-critical maintenance examples are now recorded:
 
 - [intent-critical-maintenance-examples.md](intent-critical-maintenance-examples.md)
+- [edge-level-intent-vocabulary-design.md](edge-level-intent-vocabulary-design.md)
 
 `examples/intent-critical/native-pbe-maintenance` and `examples/intent-critical/retrofit-pbe-maintenance` show why
 Graph-source records must preserve development-time intent, not just generated shape. Focused tests check UX/non-goal,
 fallback, evidence, compatibility, and user-approval intent fields so AI-assisted maintenance cannot silently erase
-critical context.
+critical context. The edge-level design keeps Graph-source as the single source direction: concrete intent is preserved
+as short project-specific edge `claim` text, while vocabulary/table values stay limited to repeatable classifications
+such as type, intent kind, risk kind, signal kind, confidence, enforcement, source role, and lifecycle status.
 
 Manual workflow run `28222731063` reviewed the Todo App bounded non-authority positive validate-all projection status:
 Todo App reports `candidate-projection-contract-pass`, Todo Search remains `projection-contract-pass`, aggregate remains
