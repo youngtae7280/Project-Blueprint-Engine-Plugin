@@ -92,6 +92,10 @@ Useful entry points:
 - PBE v0.5.0-beta Readiness: [docs/beta-readiness.md](docs/beta-readiness.md)
 - Known Limits: [docs/known-limits.md](docs/known-limits.md)
 
+Graph-source intent examples:
+
+- Native and retrofit intent-critical maintenance fixtures: [examples/intent-critical](examples/intent-critical/)
+
 ## Learn The Model
 
 - [Documentation Index](docs/index.md)
@@ -111,6 +115,9 @@ explicit compatibility and fallback boundaries.
   converted.
 - Repo-wide tree retirement, required checks, branch protection, CI enforcement, invalid-fixture CI, and Todo App
   promotion beyond `structure-only` are not complete.
+- The Graph-source purpose is not just shape parity: intent-critical examples now show how native and retrofit PBE
+  records preserve UX, non-goal, fallback, evidence, and compatibility intent so AI-assisted maintenance does not
+  silently change behavior.
 
 ## What Gets Created
 

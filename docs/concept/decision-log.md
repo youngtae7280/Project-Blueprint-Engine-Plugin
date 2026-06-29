@@ -605,6 +605,12 @@ compatibility/fallback/reference. The slice registry is marked `active-consumed-
 smoke checks the status artifact. This mechanics step does not retire tree-native artifacts, add required checks, enable
 CI enforcement, include invalid fixtures in CI, or promote Todo App beyond `structure-only`.
 
+DEC-128 does not supersede DEC-097 through DEC-127. It adds native and retrofit intent-critical Graph-source maintenance
+examples under `examples/intent-critical/` plus focused tests. The examples record UX/acceptance intent, non-goals,
+fallback/rollback reasons, evidence reasons, and compatibility reasons so AI-assisted maintenance cannot silently change
+behavior when original intent is missing. This is example/validation surface only; it does not add tree retirement,
+enforcement, required checks, invalid-fixture CI, or repo-wide source authority expansion.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

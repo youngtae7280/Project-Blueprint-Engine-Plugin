@@ -511,6 +511,15 @@ for `structure-only`, and tree-native artifacts remain compatibility/fallback/re
 that status artifact while preserving no tree retirement, no enforcement, no required checks, no invalid-fixture CI, and
 no Todo App promotion beyond `structure-only`.
 
+The intent-critical maintenance examples are now recorded:
+
+- [intent-critical-maintenance-examples.md](intent-critical-maintenance-examples.md)
+
+`examples/intent-critical/native-pbe-maintenance` and `examples/intent-critical/retrofit-pbe-maintenance` show why
+Graph-source records must preserve development-time intent, not just generated shape. Focused tests check UX/non-goal,
+fallback, evidence, compatibility, and user-approval intent fields so AI-assisted maintenance cannot silently erase
+critical context.
+
 Manual workflow run `28222731063` reviewed the Todo App bounded non-authority positive validate-all projection status:
 Todo App reports `candidate-projection-contract-pass`, Todo Search remains `projection-contract-pass`, aggregate remains
 `aggregate-pass`, and candidate observation stays separate.

@@ -11,8 +11,10 @@ adoption examples. Some examples are historical dogfooding records.
 
 1. Start with `examples/valid/todo-app-pbe-run` to understand a minimal valid PBE run.
 2. Read `examples/adoption/todo-search-slice` to understand adopting PBE into an existing project.
-3. Read `examples/dogfooding/windows-validation-sequential-run` to see PBE documenting its own improvement.
-4. Inspect `examples/invalid` only when learning validator failure behavior.
+3. Read `examples/intent-critical` to understand why Graph-source records preserve maintenance intent that can be lost
+   during vibe-coding cleanup.
+4. Read `examples/dogfooding/windows-validation-sequential-run` to see PBE documenting its own improvement.
+5. Inspect `examples/invalid` only when learning validator failure behavior.
 
 ## Test Fixtures
 
@@ -41,6 +43,18 @@ This example shows applying PBE to the next bounded feature slice of an existing
 project at once.
 
 It is a narrative example, not a test fixture, and it is not wired into `test:examples`.
+
+## Intent-Critical Maintenance Examples
+
+Intent-critical fixture path:
+
+```text
+examples/intent-critical/
+```
+
+These small Graph-source intent fixtures show native PBE and retrofit PBE maintenance risks where missing original
+intent can cause AI-assisted maintenance to change behavior incorrectly. They are checked by focused Vitest coverage, not
+by `test:examples`.
 
 ## Dogfooding Records
 
@@ -74,4 +88,5 @@ Do not convert narrative examples into fixtures without a separate design decisi
 | `examples/valid/todo-app-pbe-run`                       | valid fixture              | Minimal valid PBE run                | Yes                      |
 | `examples/invalid/*`                                    | invalid fixtures           | Expected validator failure cases     | Yes                      |
 | `examples/adoption/todo-search-slice`                   | narrative adoption example | Existing project next-slice adoption | No                       |
+| `examples/intent-critical/*`                            | focused intent fixtures    | Native/retrofit intent preservation  | No                       |
 | `examples/dogfooding/windows-validation-sequential-run` | dogfooding record          | PBE self-improvement record          | No                       |

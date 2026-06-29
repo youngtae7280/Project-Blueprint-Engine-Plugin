@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "intent-critical-graph-source-example",
+  "exampleKind": "native-pbe",
+  "status": "intent-preservation-fixture",
+  "sourceMode": "graph-source-intent-first",
+  "sourceSlice": "examples/intent-critical/native-pbe-maintenance",
+  "maintenanceScenario": "A maintainer changes empty Todo search to return no results because it appears simpler.",
+  "vibeCodingRisk": "Without the original UX intent, an AI-assisted maintenance pass may optimize the search implementation and accidentally remove the clear-search full-list behavior.",
+  "intentRecords": [
+    {
+      "id": "INTENT-NATIVE-EMPTY-SEARCH-FULL-LIST",
+      "intentType": "ux-acceptance-intent",
+      "statement": "When the Todo search query is empty, the UI must show the full list to preserve browsing context after clearing search.",
+      "maintenanceRiskIfMissing": "The empty-query branch may be rewritten to show no results, making clear-search feel like data loss.",
+      "preservationRule": "Do not change empty-query behavior unless Product acceptance explicitly changes.",
+      "nonGoal": "Do not treat empty search as a filter that intentionally hides all todos.",
+      "fallbackReason": "If graph-source projection is unavailable, the Product Tree acceptance criterion remains the fallback/reference for this intent.",
+      "evidenceReason": "A runtime or validation check should prove that clearing the query restores the full list.",
+      "compatibilityReason": "Task-card or read-model views may summarize this behavior, but they must not weaken the acceptance intent."
+    }
+  ],
+  "readModelIntentFields": {
+    "required": ["intentType", "statement", "maintenanceRiskIfMissing", "preservationRule", "evidenceReason"],
+    "projectionBoundary": "Read-model projections must carry intent-critical maintenance notes as Evidence/context, not as user acceptance replacement."
+  },
+  "boundaries": {
+    "sourceAuthorityBoundary": "This fixture demonstrates native intent capture only; it does not change repo-wide source authority.",
+    "nonPromotionStatement": "This fixture is not Graph-source promotion, enforcement, required-check configuration, or tree retirement.",
+    "userAcceptanceBoundary": "Only the user can approve changing the recorded intent."
+  }
+}
