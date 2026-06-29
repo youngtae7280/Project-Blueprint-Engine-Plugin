@@ -670,6 +670,12 @@ edgeIntent/claim/classification/anchor counts, zero missing classification/ancho
 `aggregate-pass`. This remains manual CI observation only and does not add broad intent schema enforcement, required
 checks, or tree retirement.
 
+DEC-138 does not supersede DEC-097 through DEC-137. It records PR #12 run `28348903718` reviewing the same E2E
+`intentReport` visibility in `pull_request-informational` mode. The smoke PR was closed without merge and its remote
+branch was deleted; the reviewed artifact confirms PR metadata, `e2eSmokeStatus: e2e-smoke-pass`,
+`intentReport.status: intent-report-pass`, native/retrofit summaries, zero missing classification/anchor counts, and
+validate-all `aggregate-pass` without broad intent schema enforcement, required checks, or tree retirement.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

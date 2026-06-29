@@ -15,13 +15,13 @@ Evidence without changing workflow behavior.
 | ------------------------- | -------------------------------------------------------------------------------------------------------- |
 | Manual dispatch baseline  | Run `28207696557`, `workflow_dispatch`, `success`, `ci-evidence-pass`                                    |
 | First real PR run         | PR `#1`, run `28207822252`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`  |
-| Latest PR run             | PR `#11`, run `28346897073`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass` |
+| Latest PR run             | PR `#12`, run `28348903718`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass` |
 | Current workflow mode     | `workflow_dispatch` plus non-enforcing `pull_request-informational`                                      |
 | Included slices           | `examples/adoption/todo-search-slice`; `examples/valid/todo-app-pbe-run`; aggregate summary              |
 | Workflow command mode     | registry-backed `validate --all` after manual run `28210541509`                                          |
 | Observation policy        | [pr-informational-observation-policy.md](pr-informational-observation-policy.md)                         |
 | Refinement design         | [pr-informational-path-filter-refinement.md](pr-informational-path-filter-refinement.md)                 |
-| Current real PR run count | 8 reviewed real PR informational runs                                                                    |
+| Current real PR run count | 9 reviewed real PR informational runs                                                                    |
 | Target before refinement  | Run-count threshold satisfied; refinement may be considered but is not automatic.                        |
 | Enforcement / authority   | Not approved. PR Evidence is informational only and does not change source authority.                    |
 
@@ -267,6 +267,27 @@ unchanged after three successful PR observations.
 | Failure / noise class             | No failure; docs-only smoke verified PR visibility after edgeIntent projection observation was added to CI                        |
 | Cleanup                           | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted                                             |
 | Recommended next interpretation   | Continue toward any next intent projection decision separately; do not treat this observation as broad intent schema enforcement. |
+
+### Baseline Entry 10: E2E intentReport PR Informational Run
+
+| Field                           | Value                                                                                                                            |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Entry type                      | PR informational smoke review for E2E `intentReport` visibility                                                                  |
+| PR                              | `#12`; draft temporary smoke PR; closed without merge                                                                            |
+| Run ID                          | `28348903718`                                                                                                                    |
+| Run URL                         | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28348903718`                                       |
+| Event / trigger mode            | `pull_request` / `pull_request-informational`                                                                                    |
+| Head SHA / base SHA             | `4d70b3708ba3730402e4de513c69672dbfffa1b3` / `aa0ee9cd88ccd23ee6fa99488e31ca7154b24470`                                          |
+| Head ref / base ref             | `pbe/pr-info-intent-report-e2e-smoke-20260629` / `main`                                                                          |
+| Artifact bundle                 | Present and reviewed; E2E smoke output uploaded                                                                                  |
+| Manifest status                 | `ci-evidence-pass`; PR metadata present                                                                                          |
+| E2E smoke / intent report       | `e2e-smoke-pass`; `intent-report-pass`; native/retrofit summaries present                                                        |
+| Intent counts                   | 2 edgeIntents; 2 claims; 12 classifications; 4 anchors; 0 missing classifications; 0 missing anchors                             |
+| Validate-all                    | `aggregate-pass`                                                                                                                 |
+| Boundary visibility             | PR E2E intent report observation only; no broad schema enforcement, required check, or tree retirement                           |
+| Failure / noise class           | No failure; docs-only smoke verified PR visibility after E2E smoke began checking `report-intent`                                |
+| Cleanup                         | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted                                            |
+| Recommended next interpretation | Continue toward any next intent reporting decision separately; do not treat this observation as broad intent schema enforcement. |
 
 ## Future Observation Entry Template
 
