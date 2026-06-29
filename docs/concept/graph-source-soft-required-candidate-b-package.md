@@ -148,6 +148,39 @@ npm run check:graph-source:candidate-b
 Do not enable it as a required check until the repository owner explicitly accepts the waiver/failure policy and confirms
 the exact required-check name in GitHub settings.
 
+## Latest Promotion Decision
+
+Current decision after the subsequent real external feature dogfooding and Todo App evidence-package work:
+
+```text
+Candidate B remains repo-side/manual and CI-observed.
+No GitHub branch protection setting was created or changed.
+```
+
+Additional observations:
+
+- real external feature dogfooding reached implementation/build evidence, but not external user acceptance or external
+  graph-source enrollment;
+- Todo App remains `structure-only` after the source-authority evidence package;
+- `main` is still not protected according to a read-only GitHub API check;
+- creating branch protection from scratch would be a repository governance action and should not be done silently by
+  this narrow Candidate B task.
+
+If the repository owner later promotes Candidate B, require the existing job:
+
+```text
+PBE CI / Candidate B Read-Model Check
+```
+
+which runs:
+
+```text
+npm run check:graph-source:candidate-b
+```
+
+Branch protection promotion must preserve any existing protections, verify the exact GitHub required-check context, and
+remain separate from source-authority expansion, user acceptance, and tree-native retirement.
+
 ## Next User Decision
 
 The next decision is an external repository setting decision:

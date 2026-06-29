@@ -93,6 +93,10 @@ Current blockers:
 - no explicit user approval for branch protection;
 - waiver/failure policy exists as Candidate B documentation but is not a branch-protection policy;
 - GitHub branch protection is not configured from this repository change;
+- real external feature dogfooding has implementation/build evidence, but external user acceptance and external
+  graph-source enrollment are still not complete;
+- Todo App remains `structure-only` after the source-authority evidence package and must not be used as a reason for
+  broader enforcement;
 - tree-native retirement remains not approved and must not be bundled into enforcement readiness;
 - Candidate B has not yet been reviewed as a branch-protection-required PR check.
 
@@ -156,6 +160,53 @@ npm run check:graph-source:candidate-b
 
 Before enabling that branch protection rule, confirm the exact required-check name in the GitHub branch protection UI
 and explicitly accept the failure/waiver policy.
+
+## Step 5 Branch Protection Promotion Decision
+
+Step 5 of the current external-dogfooding/source-authority sequence re-evaluated Candidate B after:
+
+- a real external `mdn/todo-vue` feature dogfooding run implemented and locally verified a bounded title-search slice;
+- external graph-source enrollment stayed design-only and did not register the external project;
+- Lite artifact initialization remained broad-skeleton by policy until lightweight slice authoring is clearer;
+- Todo App source-authority evidence was sharpened, but Todo App remained `structure-only`.
+
+Observed current facts:
+
+- `PBE CI` includes a stable job named `Candidate B Read-Model Check`;
+- the latest observed `PBE CI` push run succeeded;
+- the latest observed `Candidate B Read-Model Check` job succeeded;
+- read-only GitHub branch protection check for `main` returned `Branch not protected`;
+- Candidate B still does not expand source authority, approve Todo App beyond `structure-only`, replace user acceptance,
+  or retire tree-native artifacts.
+
+Decision:
+
+```text
+Do not configure branch protection in this step.
+Keep Candidate B as repo-side/manual and CI-observed until the repository owner explicitly decides to create or update
+branch protection.
+```
+
+Reason:
+
+- `main` is currently unprotected, so creating branch protection from scratch is a repository governance action, not a
+  narrow Candidate B code/docs task;
+- the exact check candidate is stable, but making it merge-blocking requires an explicit branch protection policy
+  decision;
+- real external feature dogfooding proved external implementation is possible, but user acceptance and external
+  graph-source enrollment are still separate unfinished decisions;
+- Todo App remains `structure-only`, reinforcing that Candidate B pass must stay separate from source-authority
+  expansion.
+
+Future owner action, if later approved:
+
+```text
+Create or update GitHub branch protection for main and require the existing check:
+PBE CI / Candidate B Read-Model Check
+```
+
+Confirm the exact required-check context in GitHub settings before enabling it, and do not loosen any existing
+protections if they are added later.
 
 ## Boundary
 
