@@ -1323,6 +1323,24 @@ Markdown companion artifact.
 | Cleanup                 | Artifact temp directory removed                                                             |
 | Review result           | Manual CI confirms health Markdown summary is visible in artifact bundle and manifest paths |
 
+PR #14 run `28351775566` reviewed the same health Markdown artifact visibility in `pull_request-informational` mode.
+The temporary draft PR used branch `pbe/pr-info-health-markdown-smoke-20260629`, was closed without merge after review,
+and the remote smoke branch plus downloaded temp artifacts were removed.
+
+| Field                   | Value                                                                                                    |
+| ----------------------- | -------------------------------------------------------------------------------------------------------- |
+| Event                   | `pull_request`                                                                                           |
+| Trigger mode            | `pull_request-informational`                                                                             |
+| Source branch           | `pbe/pr-info-health-markdown-smoke-20260629`                                                             |
+| Run URL                 | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28351775566>               |
+| Manifest                | `ci-evidence-pass`; PR number, head/base refs, and head/base SHAs present                                |
+| Health status           | `graph-source-health-pass`                                                                               |
+| Markdown artifact path  | `examples/read-model-aggregate/generated/read-model-health-report-output.md`                             |
+| Artifact review         | Markdown file present; manifest `artifactPaths` includes it                                              |
+| Markdown content review | `graph-source-health-pass`, `aggregate-pass`, `intent-report-pass`, retirement packages, `non-enforcing` |
+| Cleanup                 | PR closed unmerged; remote branch and artifact temp directory removed                                    |
+| Review result           | PR CI confirms health Markdown summary visibility with PR metadata                                       |
+
 ## Gate Self-Check
 
 | Gate                              | Status | Result                                                                                                              |
@@ -1347,6 +1365,7 @@ Markdown companion artifact.
 | edgeIntent Projection PR Gate     | pass   | PR #11 run `28346897073` confirmed native/retrofit `edge-intent-projection-pass` in PR artifacts.                   |
 | E2E Intent Report PR Gate         | pass   | PR #12 run `28348903718` confirmed E2E output contains `intentReport: intent-report-pass` with zero missing counts. |
 | Health Report PR Gate             | pass   | PR #13 run `28351078223` confirmed `graph-source-health-pass` and uploaded health report artifact.                  |
+| Health Markdown PR Gate           | pass   | PR #14 run `28351775566` confirmed uploaded `read-model-health-report-output.md` and manifest path visibility.      |
 | PR Informational Run Gate         | pass   | PR #1, PR #2, PR #3, PR #4, and PR #5 triggered `pull_request` runs and completed successfully.                     |
 | CI-Backed Artifact Review Gate    | pass   | Expanded artifact bundle `pbe-todo-search-read-model-evidence` was downloaded and inspected.                        |
 | CI Manifest Integrity Gate        | pass   | Manifest is `ci-backed` / `ci-evidence-pass` and includes Todo Search, Todo App, aggregate, and boundaries.         |

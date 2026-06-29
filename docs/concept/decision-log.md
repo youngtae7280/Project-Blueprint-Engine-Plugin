@@ -722,6 +722,13 @@ artifact path; the Markdown content includes overall health, Todo Search/Todo Ap
 edgeIntent, retirement readiness/package status, non-enforcement boundaries, and reproduction commands. This remains
 manual CI observation only and does not add actual retirement, enforcement, or required checks.
 
+DEC-146 does not supersede DEC-097 through DEC-145. It records PR #14 run `28351775566` reviewing health Markdown
+summary artifact visibility in `pull_request-informational` mode. The reviewed artifact confirms PR metadata,
+`read-model-health-report-output.md` presence, manifest artifact-path visibility, `graph-source-health-pass`,
+`aggregate-pass`, `intent-report-pass`, retirement readiness/package statuses, and the `non-enforcing` boundary. The
+smoke PR was closed unmerged and its branch/temp artifacts were removed. This remains PR health Markdown observation
+only and does not add actual retirement, enforcement, or required checks.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
