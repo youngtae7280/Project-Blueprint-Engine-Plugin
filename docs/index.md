@@ -47,6 +47,8 @@
 - [Adoption-safe validation path design](concept/adoption-safe-validation-path-design.md) - Design package for
   separating PBE plugin repository self-validation from initialized/external project validation without behavior
   changes.
+- [Graph-native execution contract design](concept/graph-native-execution-contract-design.md) - Design package for a
+  future graph-source execution handoff while ACEP and task-card views remain compatibility/execution views.
 
 ## Workflow Guides
 
