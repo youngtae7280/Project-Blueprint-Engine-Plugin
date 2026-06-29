@@ -1,4 +1,5 @@
 import { execFileSync } from 'node:child_process'
+import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import process from 'node:process'
@@ -18,27 +19,43 @@ import { createIssue, formatValidationReport } from './validator-utils/report-ut
 
 const pluginRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const targetRoot = process.cwd()
+const validationTarget = classifyValidationTarget(pluginRoot, targetRoot)
 
-const validators = [
+const repoValidators = [
   ['Plugin structure', runPluginStructureValidator, pluginRoot],
   ['Skills', runSkillsValidator, pluginRoot],
   ['Skills CLI sync', runSkillsCliSyncValidator, pluginRoot],
   ['Templates', runTemplatesValidator, pluginRoot],
   ['Schemas', runSchemasValidator, pluginRoot],
-  ['PBE layout', runPbeLayoutValidator, targetRoot],
+  ['Examples', runExamplesValidator, pluginRoot],
+]
+
+const projectValidators = [
+  [
+    'PBE layout',
+    runPbeLayoutValidator,
+    targetRoot,
+    { requireReadmeTerms: validationTarget.kind === 'plugin-repository' },
+  ],
   ['Autoflow state', runAutoflowStateValidator, targetRoot],
   ['RPD transition guard', runRpdTransitionValidator, targetRoot],
   ['WorkGraph', runWorkgraphValidator, targetRoot],
   ['ACEP manifest', runAcepManifestValidator, targetRoot],
   ['Revision', runRevisionValidator, targetRoot],
-  ['Examples', runExamplesValidator, pluginRoot],
 ]
+
+const validators =
+  validationTarget.kind === 'plugin-repository'
+    ? [...repoValidators, ...projectValidators]
+    : validationTarget.kind === 'initialized-project'
+      ? projectValidators
+      : []
 
 const results = []
 
-for (const [name, run, root] of validators) {
+for (const [name, run, root, options] of validators) {
   try {
-    results.push({ name, issues: run({ root }) })
+    results.push({ name, issues: run({ root, ...(options || {}) }) })
   } catch (error) {
     results.push({
       name,
@@ -54,7 +71,31 @@ for (const [name, run, root] of validators) {
     })
   }
 }
-results.push({ name: 'Compatibility core', issues: runCompatibilityCore(pluginRoot, targetRoot) })
+
+if (validationTarget.kind === 'plugin-repository') {
+  results.push({
+    name: 'Compatibility core',
+    issues: runCompatibilityCore(pluginRoot, targetRoot, validationTarget.kind),
+  })
+} else if (validationTarget.kind === 'initialized-project') {
+  results.push({
+    name: 'Project compatibility core',
+    issues: runCompatibilityCore(pluginRoot, targetRoot, validationTarget.kind),
+  })
+} else {
+  results.push({
+    name: 'PBE target',
+    issues: [
+      createIssue({
+        validator: 'PBE target',
+        file: '.pbe',
+        code: 'PBE_NOT_INITIALIZED',
+        message: 'Target root is not the PBE plugin repository and does not contain .pbe/.',
+        suggestedFix: 'Run `pbe init` for this project or run validation from an initialized PBE root.',
+      }),
+    ],
+  })
+}
 
 const report = formatValidationReport(results)
 console.log(report)
@@ -65,7 +106,21 @@ if (results.some((result) => result.issues.length > 0)) {
 
 console.log('PBE validation passed.')
 
-function runCompatibilityCore(repoRoot, cwd) {
+function classifyValidationTarget(repoRoot, cwd) {
+  const pluginMarkers = ['.codex-plugin/plugin.json', 'skills', 'templates', 'schemas', 'scripts/validate-pbe-files.js']
+  const isPluginRepository =
+    path.resolve(repoRoot) === path.resolve(cwd) && pluginMarkers.every((marker) => existsSync(path.join(cwd, marker)))
+
+  if (isPluginRepository) {
+    return { kind: 'plugin-repository' }
+  }
+  if (existsSync(path.join(cwd, '.pbe'))) {
+    return { kind: 'initialized-project' }
+  }
+  return { kind: 'uninitialized' }
+}
+
+function runCompatibilityCore(repoRoot, cwd, targetKind) {
   try {
     execFileSync(process.execPath, [path.join(repoRoot, 'scripts', 'validators', 'legacy-core.js')], {
       cwd: repoRoot,
@@ -73,6 +128,7 @@ function runCompatibilityCore(repoRoot, cwd) {
         ...process.env,
         PBE_REPO_ROOT: repoRoot,
         PBE_TARGET_ROOT: cwd,
+        PBE_VALIDATION_TARGET_KIND: targetKind,
       },
       encoding: 'utf8',
       stdio: 'pipe',

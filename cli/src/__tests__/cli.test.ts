@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { cpSync, existsSync, readFileSync } from 'node:fs'
+import { cpSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { runPbeCli } from '../app'
@@ -445,6 +445,70 @@ describe('PBE CLI', () => {
     expect(payload.escalationTriggers).toContain('product meaning change')
     expect(payload.notes).toContain('This is a recommendation only. It does not initialize PBE.')
     expect(existsSync(join(workspace, '.pbe'))).toBe(false)
+  })
+
+  it('keeps plugin repository validation on the strict repo path', async () => {
+    const result = await runPbeCli(['validate', '--json'], { cwd: pluginRoot, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    const payload = JSON.parse(result.stdout)
+    const legacyReport = payload.validators.find((entry: { name: string }) => entry.name === 'legacy validate:pbe')
+    expect(legacyReport.output).toContain('✓ Plugin structure')
+    expect(legacyReport.output).toContain('✓ Skills')
+    expect(legacyReport.output).toContain('✓ Templates')
+    expect(legacyReport.output).toContain('✓ Examples')
+    expect(legacyReport.output).toContain('✓ Compatibility core')
+  })
+
+  it('validates an external initialized project without requiring plugin README layout', async () => {
+    const workspace = createWorkspace()
+    writeExternalInitializedProject(workspace)
+
+    const result = await runPbeCli(['validate', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    const payload = JSON.parse(result.stdout)
+    const legacyReport = payload.validators.find((entry: { name: string }) => entry.name === 'legacy validate:pbe')
+    expect(legacyReport.output).toContain('✓ PBE layout')
+    expect(legacyReport.output).toContain('✓ Project compatibility core')
+    expect(legacyReport.output).not.toContain('README_LAYOUT_TERM_MISSING')
+    expect(legacyReport.output).not.toContain('✓ Skills')
+    expect(legacyReport.output).not.toContain('✓ Examples')
+  })
+
+  it('allows missing full ACEP package in an external project when state does not require ACEP', async () => {
+    const workspace = createWorkspace()
+    writeExternalInitializedProject(workspace)
+    mkdirSync(join(workspace, '.pbe', 'codex-execution-pack'), { recursive: true })
+
+    const result = await runPbeCli(['validate', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+  })
+
+  it('rejects an invalid present optional ACEP artifact in an external project', async () => {
+    const workspace = createWorkspace()
+    writeExternalInitializedProject(workspace)
+    writeJson(join(workspace, '.pbe', 'codex-execution-pack', 'execution-manifest.json'), {
+      phases: 'not-an-array',
+      validationCommands: [],
+      tasks: [],
+    })
+
+    const result = await runPbeCli(['validate', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.stringify(JSON.parse(result.stderr))).toContain('ACEP_MANIFEST_FIELD_INVALID')
+  })
+
+  it('fails validation for an uninitialized non-plugin root', async () => {
+    const workspace = createWorkspace()
+    writeText(join(workspace, 'README.md'), '# External app\n\nThis project has not initialized PBE.\n')
+
+    const result = await runPbeCli(['validate', '--json'], { cwd: workspace, pluginRoot })
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.stringify(JSON.parse(result.stderr))).toContain('PBE_NOT_INITIALIZED')
   })
 
   it('recommends RPD context for explicit stage', async () => {
@@ -3811,6 +3875,20 @@ function initGitRepository(workspace: string): void {
   execFileSync('git', ['config', 'user.name', 'PBE Test'], { cwd: workspace, stdio: 'ignore' })
   execFileSync('git', ['add', '.'], { cwd: workspace, stdio: 'ignore' })
   execFileSync('git', ['commit', '-m', 'baseline'], { cwd: workspace, stdio: 'ignore' })
+}
+
+function writeExternalInitializedProject(workspace: string): void {
+  writeText(join(workspace, 'README.md'), '# External app\n\nOrdinary project README.\n')
+  for (const relativePath of ['.pbe/tree', '.pbe/execution', '.pbe/control', '.pbe/evidence']) {
+    mkdirSync(join(workspace, relativePath), { recursive: true })
+  }
+  const state = JSON.parse(readFileSync(join(pluginRoot, 'templates', 'pbe-state.template.json'), 'utf8'))
+  state.projectId = 'external-app'
+  state.autoflow.state = 'INIT'
+  state.autoflow.completedSteps = ['start']
+  state.autoflow.currentGate = null
+  state.autoflow.nextStep = 'rpd'
+  writeJson(join(workspace, '.pbe', 'blueprint', 'pbe-state.json'), state)
 }
 
 function readControlText(workspace: string, fileName: string): string {

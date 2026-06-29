@@ -6,6 +6,8 @@ import Ajv2020 from 'ajv/dist/2020.js'
 
 const repoRoot = path.resolve(process.env.PBE_REPO_ROOT || process.cwd())
 const targetRoot = path.resolve(process.env.PBE_TARGET_ROOT || process.cwd())
+const validationTargetKind = process.env.PBE_VALIDATION_TARGET_KIND || 'plugin-repository'
+const projectValidationMode = validationTargetKind === 'initialized-project'
 const root = repoRoot
 const errors = []
 const targetContext = {}
@@ -185,13 +187,17 @@ const requiredPaths = [
   'AGENTS.md',
 ]
 
-for (const relativePath of requiredPaths) {
-  if (!existsSync(path.join(root, relativePath))) {
-    errors.push(`Missing required path: ${relativePath}`)
+if (!projectValidationMode) {
+  for (const relativePath of requiredPaths) {
+    if (!existsSync(path.join(root, relativePath))) {
+      errors.push(`Missing required path: ${relativePath}`)
+    }
   }
 }
 
-for (const relativePath of findJsonFiles(root, ['.codex-plugin', 'templates', 'schemas'])) {
+const repositoryJsonDirectories = projectValidationMode ? ['schemas'] : ['.codex-plugin', 'templates', 'schemas']
+
+for (const relativePath of findJsonFiles(root, repositoryJsonDirectories)) {
   try {
     const json = JSON.parse(readFileSync(path.join(root, relativePath), 'utf8'))
     if (relativePath.startsWith('schemas/')) {
@@ -203,8 +209,10 @@ for (const relativePath of findJsonFiles(root, ['.codex-plugin', 'templates', 's
 }
 
 validateJsonSchemas()
-validateSkillFrontmatter()
-validateStatusCardTemplates()
+if (!projectValidationMode) {
+  validateSkillFrontmatter()
+  validateStatusCardTemplates()
+}
 validateOptionalPbeTarget()
 validateOptionalAcepTarget()
 validateOptionalReviewTarget()
@@ -498,40 +506,63 @@ function validateOptionalAcepTarget() {
     'execution-manifest.json',
   ]
 
-  for (const relativePath of requiredAcepFiles) {
-    if (!existsSync(path.join(acepRoot, relativePath))) {
-      errors.push(`ACEP is missing required file: .pbe/codex-execution-pack/${relativePath}`)
+  const requireCompleteAcepPackage = !projectValidationMode || stateRequiresAcep(targetContext.state)
+
+  if (requireCompleteAcepPackage) {
+    for (const relativePath of requiredAcepFiles) {
+      if (!existsSync(path.join(acepRoot, relativePath))) {
+        errors.push(`ACEP is missing required file: .pbe/codex-execution-pack/${relativePath}`)
+      }
     }
   }
 
-  const manifest = parseTargetJson(
-    path.join(acepRoot, 'execution-manifest.json'),
-    '.pbe/codex-execution-pack/execution-manifest.json',
-  )
-  if (manifest) {
-    targetContext.executionManifest = manifest
-    validateExecutionManifest(manifest, acepRoot)
+  if (existsSync(path.join(acepRoot, 'execution-manifest.json'))) {
+    const manifest = parseTargetJson(
+      path.join(acepRoot, 'execution-manifest.json'),
+      '.pbe/codex-execution-pack/execution-manifest.json',
+    )
+    if (manifest) {
+      targetContext.executionManifest = manifest
+      validateExecutionManifest(manifest, acepRoot)
+    }
   }
 
-  const traceability = parseTargetJson(
-    path.join(acepRoot, '04-traceability-matrix.json'),
-    '.pbe/codex-execution-pack/04-traceability-matrix.json',
-  )
-  if (traceability) {
-    targetContext.acepTraceability = traceability
-    validateTraceabilityMatrix(traceability, '.pbe/codex-execution-pack/04-traceability-matrix.json')
+  if (existsSync(path.join(acepRoot, '04-traceability-matrix.json'))) {
+    const traceability = parseTargetJson(
+      path.join(acepRoot, '04-traceability-matrix.json'),
+      '.pbe/codex-execution-pack/04-traceability-matrix.json',
+    )
+    if (traceability) {
+      targetContext.acepTraceability = traceability
+      validateTraceabilityMatrix(traceability, '.pbe/codex-execution-pack/04-traceability-matrix.json')
+    }
   }
 
-  const uiUxSpec = parseTargetJson(
-    path.join(acepRoot, '05-ui-ux-spec.json'),
-    '.pbe/codex-execution-pack/05-ui-ux-spec.json',
-  )
-  if (uiUxSpec) {
-    targetContext.uiUxSpec = uiUxSpec
-    validateUiUxSpec(uiUxSpec)
+  if (existsSync(path.join(acepRoot, '05-ui-ux-spec.json'))) {
+    const uiUxSpec = parseTargetJson(
+      path.join(acepRoot, '05-ui-ux-spec.json'),
+      '.pbe/codex-execution-pack/05-ui-ux-spec.json',
+    )
+    if (uiUxSpec) {
+      targetContext.uiUxSpec = uiUxSpec
+      validateUiUxSpec(uiUxSpec)
+    }
   }
 
   validateAcepCrossArtifacts(targetContext)
+}
+
+function stateRequiresAcep(state) {
+  const value = state?.autoflow?.state
+  return new Set([
+    'ACEP_READY',
+    'EXECUTION_IN_PROGRESS',
+    'ACEP_RUN_DONE',
+    'VISUAL_AUDIT_DONE',
+    'WAITING_REVIEW_RESULT',
+    'ACCEPTED',
+    'DONE',
+  ]).has(value)
 }
 
 function parseTargetJson(absolutePath, label) {

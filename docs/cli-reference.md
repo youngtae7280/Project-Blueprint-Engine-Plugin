@@ -6,7 +6,8 @@ The `pbe` CLI is the deterministic transition and validation layer for Project B
 workflow, but stage closure, state transitions, file guard checks, and acceptance closure should go through CLI
 commands.
 
-Use `pbe status` when unsure. Use `pbe validate` for full repository and `.pbe` artifact validation.
+Use `pbe status` when unsure. Use `pbe validate` for repository self-validation or initialized `.pbe` project
+validation.
 
 See also: [Install PBE locally](install.md), [Troubleshooting](troubleshooting.md), and
 [PBE Complexity Governance](complexity-governance.md).
@@ -119,10 +120,14 @@ Most commands follow this pattern:
 
 ### `pbe validate`
 
-- Purpose: Run repository-level and `.pbe` validation.
+- Purpose: Run repository-level validation in the PBE plugin repo, or adoption-safe `.pbe` project validation in an
+  external initialized project.
 - Typical state before running: Any time a full health check is needed.
 - What it checks: Legacy repository validation, v2 tree system validation, state validator, acceptance actor validator,
   Change Tree, Impact Tree, Product Patch Tree, and visual validator when `.pbe` exists.
+- Target behavior: In the plugin repository, repo-only validators remain strict. In an initialized non-plugin project,
+  repo-only checks such as plugin README layout, skills inventory, templates/schemas inventory, and examples fixtures
+  are skipped; project artifacts that exist still validate.
 - What it writes: Nothing.
 - Success result: Validation passes with zero error issues.
 - Common failures: `LEGACY_PBE_VALIDATOR_FAILED`, `V2_TREE_VALIDATOR_FAILED`, `UNKNOWN_STATE`,

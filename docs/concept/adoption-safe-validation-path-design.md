@@ -1,16 +1,29 @@
 # Adoption-Safe Validation Path Design
 
-Status: design package / adoption-safe validation / docs-only / no-behavior-change
+Status: design package / adoption-safe validation / implemented narrow boundary
 
 ## Purpose
 
 This package designs how PBE validation should distinguish the PBE plugin repository from external initialized projects.
 
-It is design-only. It does not change CLI behavior, validators, schemas, templates, state transitions, CI behavior,
+The first implementation is intentionally narrow: it classifies validation targets and keeps repository-only validators
+out of external initialized project validation. It does not change schemas, templates, state transitions, CI behavior,
 branch protection, examples, source authority, or tree-native artifact retirement.
 
 The goal is to make future external dogfooding safe by avoiding plugin-repository assumptions when `pbe validate` is run
 inside an unrelated project that has been initialized with `.pbe/`.
+
+## Implemented Boundary
+
+`pbe validate` now distinguishes three observable targets:
+
+- PBE plugin repository root: strict repository self-validation remains active.
+- Initialized project root with `.pbe/`: project artifact validation runs without requiring PBE plugin README layout,
+  skill inventory, templates/schemas inventory, examples fixtures, or full ACEP package inventory.
+- Uninitialized non-plugin root: validation reports that PBE is not initialized.
+
+The boundary is automatic; no `--target` option was added. Missing optional project artifacts still pass unless current
+state requires them. Present optional artifacts, such as an ACEP execution manifest, still validate and can fail.
 
 ## First External Dogfooding Blocker
 

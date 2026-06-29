@@ -16,10 +16,10 @@ const requiredReadmeTerms = [
   'ACEP',
 ]
 
-export function runPbeLayoutValidator({ root }) {
+export function runPbeLayoutValidator({ root, requireReadmeTerms = true }) {
   const issues = []
 
-  if (fileExists(root, 'README.md')) {
+  if (requireReadmeTerms && fileExists(root, 'README.md')) {
     const readme = readText(root, 'README.md')
     for (const term of missingTerms(readme, requiredReadmeTerms)) {
       issues.push(
