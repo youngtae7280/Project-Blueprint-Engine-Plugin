@@ -1369,6 +1369,8 @@ Markdown companion artifact.
 
 ## Final Statement
 
+Temporary PR health Markdown visibility smoke note.
+
 This review records successful non-enforcing validate-all CI-backed Evidence for the declared read-model Evidence
 bundle. It does not promote Maintainability Graph, change current source authority, expand source-authority pilot scope,
 introduce CI enforcement, add required checks, retire tree-native artifacts, clean up public docs, or replace user
