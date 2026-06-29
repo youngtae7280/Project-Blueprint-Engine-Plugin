@@ -18,6 +18,8 @@
 - [Current Graph-source transition mechanics](concept/repo-wide-graph-source-transition-mechanics.md) ??Status entry for
   `graph read-model report-health --json`, `npm run test:read-model:e2e`, transition status, retirement approval, and
   edgeIntent projection/report surfaces.
+- [First bounded maintenance dogfood](concept/first-bounded-maintenance-dogfood.md) ??Report-only Graph-source PBE
+  maintenance pass showing how edgeIntent blocks accidental compatibility-export cleanup without enforcement changes.
 
 ## Workflow Guides
 

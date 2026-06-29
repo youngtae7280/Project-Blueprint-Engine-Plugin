@@ -6,9 +6,9 @@ Evidence level: validator-backed
 
 ## Run Identity
 
-- Validated at: 2026-06-26T01:04:20.251Z
+- Validated at: 2026-06-29T08:05:12.153Z
 - Command identity: `pbe graph read-model validate --slice examples/adoption/todo-search-slice`
-- Source commit: 79e1179
+- Source commit: 536a89b
 - Source slice: `examples/adoption/todo-search-slice`
 - Profile id: `todo-search-selected-slice`
 - Source layout: flat-demo-support
