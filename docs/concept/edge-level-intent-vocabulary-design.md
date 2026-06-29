@@ -76,6 +76,14 @@ human-readable vocabulary labels and preserve the project-specific `claim`.
 Projection should make intent inspectable, but it must not replace user acceptance, create enforcement, retire
 tree-native artifacts, or expand source authority.
 
+The first fixture projection surface is intentionally small:
+
+- `examples/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json`
+- `examples/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json`
+
+Each projection keeps classification fields (`edgeType`, `intentKind`, `riskKind`, `confidence`, `enforcement`, and
+anchor signal kinds) as vocabulary-style values while preserving `claim` as short project-specific text.
+
 ## Fixture Alignment
 
 The current fixture alignment is:
@@ -92,6 +100,8 @@ Both fixtures use `edgeIntent` with:
 - `confidence`
 - `enforcement`
 - `anchors`
+
+Both fixture projections expose the same fields under `edgeIntentProjections` for human-readable read-model review.
 
 Focused tests verify that native and retrofit examples use the same edge-intent shape while differing by signal
 origin/confidence.

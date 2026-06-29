@@ -53,6 +53,8 @@ Captured intent:
 `cli/src/__tests__/intent-critical-examples.test.ts` checks both fixtures for:
 
 - edge-level `intent.kind`, `risk`, `claim`, `confidence`, `enforcement`, and anchors
+- projection preservation through `generated/edge-intent-read-model-projection.json`
+- claim text preserved as project-specific text rather than replaced by enum/table values
 - maintenance scenario and vibe-coding risk
 - intent statement
 - maintenance risk if missing

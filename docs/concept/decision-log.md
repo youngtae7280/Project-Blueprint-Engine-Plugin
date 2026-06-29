@@ -619,6 +619,13 @@ lifecycle status. Native and retrofit PBE use the same edge-intent model and dif
 This is design/fixture alignment only and does not add broad schema enforcement, required checks, tree retirement, or a
 separate intent source.
 
+DEC-130 does not supersede DEC-097 through DEC-129. It adds a minimal intent-critical projection surface for the native
+and retrofit fixtures: `generated/edge-intent-read-model-projection.json` preserves edge-level intent classifications,
+project-specific `claim`, confidence, enforcement, anchors, and a human-readable summary. Focused tests compare the
+projection against the source `edgeIntent` and prove the claim is not replaced by enum/table vocabulary. This remains
+intent projection surface only and is not integrated into broad validate-all, enforcement, required checks, or tree
+retirement.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
