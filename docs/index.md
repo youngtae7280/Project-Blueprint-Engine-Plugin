@@ -42,6 +42,8 @@
   - Cleanup boundary for graph-source core, tree-based compatibility layers, and future retirement candidates.
 - [Tree-native artifact retirement candidates](concept/tree-native-artifact-retirement-candidates.md) - Non-destructive
   retirement-candidate boundary for tree-native, blueprint, ACEP, profile, docs, and validator compatibility surfaces.
+- [Graph-first primary workflow](concept/graph-first-primary-workflow.md) - Current source-authority, projection,
+  Evidence, validation, compatibility, and user-acceptance boundaries for Graph-first PBE.
 
 ## Workflow Guides
 
