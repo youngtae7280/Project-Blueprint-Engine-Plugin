@@ -7,6 +7,72 @@
   "treeNativeRole": "compatibility-fallback-reference",
   "nonRetirementStatement": "Tree-native artifacts are not deleted, retired, or treated as obsolete by this status artifact. They remain compatibility, fallback, and reference records unless a later explicit retirement decision changes that role.",
   "nonEnforcementStatement": "This status artifact supports local validation and CI observation only. It does not create required checks, branch protection, merge enforcement, or user acceptance.",
+  "enforcementReadiness": {
+    "status": "soft-required-candidate-not-approved",
+    "currentMode": "non-enforcing-informational",
+    "lastReviewedEvidence": {
+      "localManualObservation": "pass",
+      "prInformationalObservation": "pass",
+      "behaviorDogfood": "pass",
+      "reportHealth": "graph-source-health-pass",
+      "e2eSmoke": "e2e-smoke-pass",
+      "intentReport": "intent-report-pass",
+      "validateAll": "aggregate-pass",
+      "treeNativeRetirement": "not-executed"
+    },
+    "candidateOptions": [
+      {
+        "id": "candidate-a-informational-only",
+        "label": "Keep informational only",
+        "scope": ["manual observation", "PR informational observation", "local health/report commands"],
+        "status": "currently-active",
+        "requiredCheckEffect": "none",
+        "branchProtectionEffect": "none",
+        "recommendedUse": "Default until a user explicitly approves a stronger required-check policy."
+      },
+      {
+        "id": "candidate-b-soft-required-health-e2e",
+        "label": "Soft-required health/E2E candidate",
+        "scope": ["graph read-model report-health --json", "npm run test:read-model:e2e"],
+        "status": "candidate-not-enabled",
+        "requiredCheckEffect": "none-yet",
+        "branchProtectionEffect": "none-yet",
+        "recommendedUse": "Prepare as the first possible required-check scope only after explicit user approval and a documented waiver/failure policy."
+      },
+      {
+        "id": "candidate-c-full-read-model-gate",
+        "label": "Full validate-all + health + E2E + intent-report candidate",
+        "scope": [
+          "graph read-model validate --all --json",
+          "graph read-model report-health --json",
+          "npm run test:read-model:e2e",
+          "graph read-model report-intent --json"
+        ],
+        "status": "future-candidate-not-enabled",
+        "requiredCheckEffect": "none-yet",
+        "branchProtectionEffect": "none-yet",
+        "recommendedUse": "Do not enable until Candidate B has been reviewed or the user explicitly accepts broader blocking semantics."
+      }
+    ],
+    "recommendedPath": [
+      "stay-non-enforcing",
+      "prepare-soft-required-candidate",
+      "collect-explicit-user-approval",
+      "only-then-implement-required-check-or-branch-protection"
+    ],
+    "approvalRequiredBefore": [
+      "adding required checks",
+      "turning PR informational observation into a merge gate",
+      "enabling branch protection",
+      "treating health or validate-all as user acceptance",
+      "retiring tree-native artifacts"
+    ],
+    "blockingGaps": [
+      "no explicit user approval for required checks",
+      "no documented waiver/failure policy for false positives or retained warnings",
+      "tree-native retirement remains not approved and must stay separate from enforcement readiness"
+    ]
+  },
   "invalidFixtureBoundary": "Invalid read-model fixtures remain local focused test inputs and are not enrolled in positive validate-all or CI.",
   "retirementReadinessCriteria": [
     {
@@ -204,7 +270,7 @@
   "repoWideBoundaries": {
     "repoWidePromotion": "not-complete",
     "treeNativeRetirement": "not-complete",
-    "requiredChecks": "not-enabled",
+    "requiredChecks": "not-enabled-soft-required-candidate-only",
     "branchProtection": "not-enabled",
     "ciEnforcement": "not-enabled",
     "todoAppBeyondStructureOnly": "not-approved"

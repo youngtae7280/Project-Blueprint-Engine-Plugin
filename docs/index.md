@@ -32,6 +32,8 @@
   Todo Search dogfood coverage plus remaining policy decisions.
 - [Tiny behavior-change dogfood](concept/tiny-behavior-change-dogfood.md) ??Bounded Todo Search runtime fixture behavior
   change proving whitespace-normalized query matching through the Graph-source validation chain.
+- [Graph-source required-check readiness](concept/graph-source-required-check-readiness.md) - Policy and status package
+  for possible required-check promotion without enabling enforcement or branch protection.
 
 ## Workflow Guides
 
