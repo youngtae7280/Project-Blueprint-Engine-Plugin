@@ -638,6 +638,13 @@ edgeIntent projection command to `.github/workflows/read-model-evidence.yml`. Th
 files plus command outputs. This is intent projection CI observation only and does not integrate intent projection into
 broad validate-all enforcement, required checks, or tree retirement.
 
+DEC-133 does not supersede DEC-097 through DEC-132. It records manual workflow run `28346777344` reviewing the new
+edgeIntent projection CI observation surface. The artifact manifest records
+`edgeIntentProjectionObservationStatus: edge-intent-projection-pass`, native and retrofit command outputs both report
+`intent-projection-pass`, both projection artifacts are uploaded, validate-all remains `aggregate-pass`, and the E2E
+smoke remains `e2e-smoke-pass`. This review does not add PR-required enforcement, broad intent schema enforcement, or
+tree retirement.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
