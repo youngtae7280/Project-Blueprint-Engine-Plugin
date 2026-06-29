@@ -46,6 +46,8 @@
   implementation observation showing adoption-safe validation works while Work scope authoring remains the next gap.
 - [External graph-source enrollment design](concept/external-graph-source-enrollment-design.md) - Design-only path for
   enrolling bounded external feature slices without registering external repos or expanding source authority.
+- [Lite artifact initialization decision](concept/lite-artifact-initialization-decision.md) - Decision to retain broad
+  `lite` initialization until lightweight slice authoring and external enrollment are ready.
 - [Graph-first cleanup audit and compatibility boundary](concept/graph-first-cleanup-audit-and-compatibility-boundary.md)
   - Cleanup boundary for graph-source core, tree-based compatibility layers, and future retirement candidates.
 - [Tree-native artifact retirement candidates](concept/tree-native-artifact-retirement-candidates.md) - Non-destructive

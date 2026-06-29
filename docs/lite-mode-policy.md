@@ -191,6 +191,10 @@ expected files. It does not initialize PBE.
 `pbe status` can show guidance for the stored compatibility profile metadata. This guidance does not change state
 transitions, does not add a `pbe lite` command, and does not reduce artifact initialization behavior.
 
+Current decision: keep broad-skeleton initialization for `lite` until lightweight Product/Work/Test/Evidence authoring
+and external slice enrollment are clearer. See
+[Lite Artifact Initialization Decision](concept/lite-artifact-initialization-decision.md).
+
 ## Future Implementation Candidates
 
 These are candidates only. Do not implement them until they satisfy the Complexity Governance criteria:
