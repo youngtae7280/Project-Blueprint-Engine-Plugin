@@ -36,6 +36,7 @@
       "pkg/kubelet/kuberuntime/kuberuntime_container_test.go",
       "pkg/api/v1/pod/util_test.go",
       "pkg/api/v1/resource/helpers.go",
+      "staging/src/k8s.io/component-helpers/resource/helpers.go",
       "test/e2e_node/container_lifecycle_test.go"
     ],
     "expectedFlow": "Read-only intent recovery from KEP-753 into a graph-source map; no target repository mutation.",
@@ -76,7 +77,7 @@
       "status": "not-required"
     },
     "sourceReview": {
-      "status": "observed-kep-and-related-paths",
+      "status": "observed-kep-related-paths-symbols-and-test-anchors",
       "sourceMap": "examples/retrofit/open-source/kubernetes-sidecar-kep/support/kep753-source-map.json"
     }
   },
@@ -90,7 +91,8 @@
     ],
     "nextAllowedActions": [
       "Generate an instruction pack for read-only review.",
-      "Expand the graph with more KEP-linked code/test surfaces.",
+      "Review the symbol/test anchor map before selecting any Kubernetes target change.",
+      "Add one more KEP fixture if broader large-project generalization is needed.",
       "Select a tiny docs-only or test-only local change only after explicit approval."
     ]
   }

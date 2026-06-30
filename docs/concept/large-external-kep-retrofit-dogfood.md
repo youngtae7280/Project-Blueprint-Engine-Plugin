@@ -1,6 +1,6 @@
 # Large External KEP Retrofit Dogfood
 
-Status: read-only-kep-intent-recovery / instruction-pack-ready / no external mutation
+Status: read-only-kep-intent-recovery / symbol-anchor-expanded / instruction-pack-ready / no external mutation
 
 ## Purpose
 
@@ -41,16 +41,34 @@ The fixture maps these KEP intent surfaces:
 
 ## Related Kubernetes Surfaces
 
-The first pass intentionally keeps the related-code map compact:
+The first pass intentionally kept the related-code map compact. The second pass keeps the same read-only boundary but
+adds exact KEP section, code symbol, and test anchors so PBE can connect intent to implementation more precisely before
+any selected target change.
 
-| Surface                                                 | Role                                                             |
-| ------------------------------------------------------- | ---------------------------------------------------------------- |
-| `pkg/api/v1/pod/util.go`                                | restartable init-container helper surface                        |
-| `pkg/kubelet/kuberuntime/kuberuntime_container.go`      | kubelet lifecycle/action computation surface                     |
-| `pkg/kubelet/kuberuntime/kuberuntime_container_test.go` | kubelet runtime unit-test surface                                |
-| `pkg/api/v1/pod/util_test.go`                           | pod utility unit-test surface                                    |
-| `pkg/api/v1/resource/helpers.go`                        | candidate resource-accounting surface                            |
-| `test/e2e_node/container_lifecycle_test.go`             | node e2e lifecycle surface for restartable init/sidecar behavior |
+| Surface                                                    | Role                                                                |
+| ---------------------------------------------------------- | ------------------------------------------------------------------- |
+| `pkg/api/v1/pod/util.go`                                   | restartable init-container helper surface                           |
+| `pkg/kubelet/kuberuntime/kuberuntime_container.go`         | kubelet lifecycle/action computation surface                        |
+| `pkg/kubelet/kuberuntime/kuberuntime_container_test.go`    | kubelet runtime unit-test surface                                   |
+| `pkg/api/v1/pod/util_test.go`                              | pod utility unit-test surface                                       |
+| `pkg/api/v1/resource/helpers.go`                           | candidate resource-accounting surface                               |
+| `staging/src/k8s.io/component-helpers/resource/helpers.go` | resource aggregation surface with the KEP sidecar formula reference |
+| `test/e2e_node/container_lifecycle_test.go`                | node e2e lifecycle surface for restartable init/sidecar behavior    |
+
+## Symbol And Test Anchors
+
+The source map now records exact anchors including:
+
+- KEP sections: `Goals`, `Non-Goals`, `Risks and Mitigations`, resource calculation, test plan, upgrade/downgrade, and
+  version skew strategy;
+- code symbols: `IsRestartableInitContainer`, `IsContainerRestartable`, `ContainerShouldRestart`,
+  `computeInitContainerActions`, `HasAnyRegularContainerCreated`, `AggregateContainerRequests`, and
+  `GetResourceRequestQuantity`;
+- test anchors: `TestIsContainerRestartable`, `TestContainerHasRestartablePolicy`,
+  `TestLifeCycleHookForRestartableInitContainer`, and restartable init-container node e2e scenarios.
+
+These anchors are still Evidence for PBE retrofit analysis. They do not claim Kubernetes test execution or maintainer
+approval.
 
 ## Verification
 
@@ -85,7 +103,7 @@ This pass does not:
 
 Recommended next scaling order:
 
-1. Expand this KEP graph with more exact code/test paths from a pinned Kubernetes checkout.
+1. Keep this KEP graph under observation with exact code/test symbol anchors from the pinned Kubernetes refs.
 2. Add one more KEP fixture from another subsystem and verify the same graph shape generalizes.
 3. Only after those pass, select a tiny docs-only or test-only local change with explicit allowed files and forbidden
    flows.

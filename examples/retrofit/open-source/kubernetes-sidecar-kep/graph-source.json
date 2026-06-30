@@ -66,7 +66,7 @@
       "id": "surface.resource-accounting",
       "kind": "source-surface",
       "state": "candidate-observed",
-      "intentClaim": "pkg/api/v1/resource/helpers.go is connected to KEP resource request accounting concerns and should be checked before resource-related sidecar changes."
+      "intentClaim": "pkg/api/v1/resource/helpers.go and staging/src/k8s.io/component-helpers/resource/helpers.go connect to KEP resource request accounting concerns and should be checked before resource-related sidecar changes."
     },
     {
       "id": "surface.sidecar-unit-tests",
@@ -79,6 +79,54 @@
       "kind": "test-surface",
       "state": "observed",
       "intentClaim": "test/e2e_node/container_lifecycle_test.go contains node e2e coverage for sidecar/restartable init-container lifecycle scenarios."
+    },
+    {
+      "id": "symbol.pod-util-is-restartable-init-container",
+      "kind": "code-symbol",
+      "state": "observed",
+      "path": "pkg/api/v1/pod/util.go",
+      "symbol": "IsRestartableInitContainer",
+      "intentClaim": "IsRestartableInitContainer is the concrete helper that identifies restartable init containers from container restartPolicy."
+    },
+    {
+      "id": "symbol.kubelet-compute-init-container-actions",
+      "kind": "code-symbol",
+      "state": "observed",
+      "path": "pkg/kubelet/kuberuntime/kuberuntime_container.go",
+      "symbol": "computeInitContainerActions",
+      "intentClaim": "computeInitContainerActions is the kubelet runtime symbol that starts init containers and keeps restartable init containers running."
+    },
+    {
+      "id": "symbol.resource-aggregate-container-requests",
+      "kind": "code-symbol",
+      "state": "observed",
+      "path": "staging/src/k8s.io/component-helpers/resource/helpers.go",
+      "symbol": "AggregateContainerRequests",
+      "intentClaim": "AggregateContainerRequests explicitly references the KEP-753 sidecar container resource calculation formula."
+    },
+    {
+      "id": "test.unit-pod-util-restartability",
+      "kind": "test-anchor",
+      "state": "observed",
+      "path": "pkg/api/v1/pod/util_test.go",
+      "symbol": "TestIsContainerRestartable",
+      "intentClaim": "TestIsContainerRestartable covers pod utility restartability classification behavior related to restartable init containers."
+    },
+    {
+      "id": "test.unit-kubelet-restartable-init-lifecycle",
+      "kind": "test-anchor",
+      "state": "observed",
+      "path": "pkg/kubelet/kuberuntime/kuberuntime_container_test.go",
+      "symbol": "TestLifeCycleHookForRestartableInitContainer",
+      "intentClaim": "TestLifeCycleHookForRestartableInitContainer anchors kubelet runtime lifecycle coverage for restartable init containers."
+    },
+    {
+      "id": "test.e2e-node-restartable-init-lifecycle",
+      "kind": "test-anchor",
+      "state": "observed",
+      "path": "test/e2e_node/container_lifecycle_test.go",
+      "symbol": "restartable init container ginkgo scenarios",
+      "intentClaim": "The node e2e lifecycle file contains restartable init-container scenarios covering termination, restart, image update, and serial/together execution behavior."
     },
     {
       "id": "boundary.no-kubernetes-target-change",
@@ -174,6 +222,39 @@
       }
     },
     {
+      "id": "edge.pod-util-surface-anchors-restartable-symbol",
+      "from": "surface.pod-util-restartable-init",
+      "to": "symbol.pod-util-is-restartable-init-container",
+      "kind": "symbol-anchor",
+      "edgeIntent": {
+        "classifications": ["restartable-init-container", "code-symbol"],
+        "claim": "The pod utility surface is anchored by IsRestartableInitContainer for concrete restartable init-container classification.",
+        "confidence": "observed-high"
+      }
+    },
+    {
+      "id": "edge.kubelet-surface-anchors-init-actions-symbol",
+      "from": "surface.kubelet-runtime-lifecycle",
+      "to": "symbol.kubelet-compute-init-container-actions",
+      "kind": "symbol-anchor",
+      "edgeIntent": {
+        "classifications": ["kubelet-lifecycle", "code-symbol"],
+        "claim": "The kubelet runtime surface is anchored by computeInitContainerActions for concrete restartable init-container action selection.",
+        "confidence": "observed-high"
+      }
+    },
+    {
+      "id": "edge.resource-surface-anchors-aggregate-requests-symbol",
+      "from": "surface.resource-accounting",
+      "to": "symbol.resource-aggregate-container-requests",
+      "kind": "symbol-anchor",
+      "edgeIntent": {
+        "classifications": ["resource-accounting", "code-symbol"],
+        "claim": "The resource-accounting surface is anchored by AggregateContainerRequests because its comment names the KEP sidecar resource formula.",
+        "confidence": "observed-high"
+      }
+    },
+    {
       "id": "edge.kep-test-plan-links-unit-tests",
       "from": "surface.kep753-design",
       "to": "surface.sidecar-unit-tests",
@@ -192,6 +273,39 @@
       "edgeIntent": {
         "classifications": ["e2e-test", "verification"],
         "claim": "The KEP lifecycle and restart scenarios map to node e2e container lifecycle coverage.",
+        "confidence": "observed-high"
+      }
+    },
+    {
+      "id": "edge.unit-tests-cover-pod-util-symbol",
+      "from": "test.unit-pod-util-restartability",
+      "to": "symbol.pod-util-is-restartable-init-container",
+      "kind": "verification-anchor",
+      "edgeIntent": {
+        "classifications": ["unit-test", "restartable-init-container"],
+        "claim": "Pod utility unit tests cover the restartability classification path associated with the restartable init-container helper surface.",
+        "confidence": "observed-high"
+      }
+    },
+    {
+      "id": "edge.unit-tests-cover-kubelet-lifecycle-symbol",
+      "from": "test.unit-kubelet-restartable-init-lifecycle",
+      "to": "symbol.kubelet-compute-init-container-actions",
+      "kind": "verification-anchor",
+      "edgeIntent": {
+        "classifications": ["unit-test", "kubelet-lifecycle"],
+        "claim": "Kubelet runtime unit tests anchor lifecycle behavior for restartable init containers connected to init-container action computation.",
+        "confidence": "observed-high"
+      }
+    },
+    {
+      "id": "edge.e2e-tests-cover-restartable-lifecycle-scenarios",
+      "from": "test.e2e-node-restartable-init-lifecycle",
+      "to": "surface.sidecar-e2e-tests",
+      "kind": "verification-anchor",
+      "edgeIntent": {
+        "classifications": ["e2e-test", "lifecycle-semantics"],
+        "claim": "Node e2e restartable init-container scenarios preserve lifecycle semantics beyond unit-level symbol coverage.",
         "confidence": "observed-high"
       }
     },

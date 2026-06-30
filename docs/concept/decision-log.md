@@ -812,6 +812,13 @@ fixture, preserve edgeIntent coverage, expose forbidden boundaries, and keep ext
 run Kubernetes tests, claim maintainer approval, create upstream PRs, enroll Kubernetes in positive validate-all, add
 enforcement, or expand source authority.
 
+DEC-159 does not supersede DEC-097 through DEC-158. It expands the Kubernetes KEP-753 retrofit fixture from broad
+source/test surfaces to exact KEP section, code symbol, and test anchors. The graph now records symbols such as
+`IsRestartableInitContainer`, `computeInitContainerActions`, and `AggregateContainerRequests`, plus unit/e2e test anchors
+for restartable init-container behavior. Focused tests verify the expanded anchor map and updated graph counts. This
+remains read-only external dogfood Evidence and still does not clone or mutate Kubernetes, run Kubernetes tests, claim
+maintainer approval, create upstream PRs, enable enforcement, or expand source authority.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
