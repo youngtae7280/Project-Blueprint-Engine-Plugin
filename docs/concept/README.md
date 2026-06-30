@@ -169,6 +169,14 @@ It uses a local `component/escape-html` checkout, recovers stringification and e
 applies a tiny Symbol input behavior change, passes the project test suite, and records the graph delta plus graph update
 proposal without claiming upstream approval.
 
+The first large external formal-design-document retrofit pass is recorded in:
+
+- [large-external-kep-retrofit-dogfood.md](large-external-kep-retrofit-dogfood.md)
+
+It maps Kubernetes KEP-753 Sidecar Containers from KEP goals, non-goals, risks, test-plan, and rollout intent to related
+Kubernetes code/test surfaces. This pass is read-only and proves instruction-pack readiness without cloning, mutating,
+testing, or claiming maintainer approval for Kubernetes.
+
 The following readiness artifact is complete at documentation level:
 
 - [representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md)

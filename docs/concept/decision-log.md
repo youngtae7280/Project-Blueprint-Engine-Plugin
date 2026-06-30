@@ -804,6 +804,14 @@ that CLI sequence without touching external projects or committed graph-source f
 regression coverage only; it does not add required checks, enforcement, target patching, upstream PR creation, source
 authority expansion, or tree-native retirement.
 
+DEC-158 does not supersede DEC-097 through DEC-157. It adds a read-only large external KEP retrofit dogfood fixture for
+Kubernetes KEP-753 Sidecar Containers. The fixture maps formal KEP intent from `kubernetes/enhancements` to related
+`kubernetes/kubernetes` source/test surfaces, forbidden boundaries, and an instruction-pack-ready record without cloning
+or mutating Kubernetes. Focused tests verify `graph retrofit plan` and `graph operation generate-pack` can read the
+fixture, preserve edgeIntent coverage, expose forbidden boundaries, and keep external mutation disabled. This does not
+run Kubernetes tests, claim maintainer approval, create upstream PRs, enroll Kubernetes in positive validate-all, add
+enforcement, or expand source authority.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

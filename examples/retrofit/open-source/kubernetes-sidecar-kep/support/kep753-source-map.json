@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "external-kep-source-map-v0",
+  "status": "read-only-source-map",
+  "externalProject": {
+    "name": "Kubernetes",
+    "kepRepository": "https://github.com/kubernetes/enhancements",
+    "codeRepository": "https://github.com/kubernetes/kubernetes",
+    "kepObservedRef": "481e3710995d9996e27c7364b14d9ab870b65e74",
+    "codeObservedRef": "2846ba9cdbbde11f02435cfdfccf1850d99be47b"
+  },
+  "kep": {
+    "id": "KEP-753",
+    "title": "Sidecar containers",
+    "path": "keps/sig-node/753-sidecar-containers/README.md",
+    "url": "https://github.com/kubernetes/enhancements/blob/master/keps/sig-node/753-sidecar-containers/README.md",
+    "intentSections": [
+      "Summary",
+      "Motivation",
+      "Goals",
+      "Non-Goals",
+      "Proposal",
+      "Risks and Mitigations",
+      "Resources calculation for scheduling and pod admission",
+      "Test Plan",
+      "Upgrade / Downgrade Strategy",
+      "Version Skew Strategy"
+    ]
+  },
+  "relatedKubernetesSurfaces": [
+    {
+      "path": "pkg/api/v1/pod/util.go",
+      "role": "restartable init-container classification helpers"
+    },
+    {
+      "path": "pkg/kubelet/kuberuntime/kuberuntime_container.go",
+      "role": "kubelet init-container/sidecar lifecycle action computation"
+    },
+    {
+      "path": "pkg/kubelet/kuberuntime/kuberuntime_container_test.go",
+      "role": "kubelet runtime unit tests for container lifecycle behavior"
+    },
+    {
+      "path": "pkg/api/v1/pod/util_test.go",
+      "role": "pod utility unit tests for restartable init-container classification"
+    },
+    {
+      "path": "pkg/api/v1/resource/helpers.go",
+      "role": "resource request helper surface connected to KEP resource accounting concerns"
+    },
+    {
+      "path": "test/e2e_node/container_lifecycle_test.go",
+      "role": "node e2e lifecycle coverage for restartable init containers and sidecar behavior"
+    }
+  ],
+  "boundaries": {
+    "readOnly": true,
+    "externalReposMutated": false,
+    "maintainerIntentClaimed": false,
+    "upstreamPrCreated": false,
+    "kubernetesBuildOrE2eRun": false
+  }
+}
