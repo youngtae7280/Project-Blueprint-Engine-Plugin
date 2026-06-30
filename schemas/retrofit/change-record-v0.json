@@ -1,0 +1,87 @@
+{
+  "$id": "https://project-blueprint-engine.local/schemas/retrofit/change-record-v0.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "artifactRole": "retrofit-change-record-schema-v0",
+  "status": "draft-active",
+  "purpose": "Standardize how retrofit PBE records a change from user intent through code anchors, implementation, evidence, and optional rollback.",
+  "hardwareEvidenceCloseProtocol": "schemas/retrofit/hardware-evidence-close-protocol-v0.json",
+  "requiredTopLevelFields": [
+    "schemaVersion",
+    "artifactRole",
+    "status",
+    "target",
+    "userConfirmedIntent",
+    "observedAnchors",
+    "candidateMatch",
+    "implementationPlan",
+    "forbiddenFlows",
+    "evidence",
+    "finalState"
+  ],
+  "statusVocabulary": [
+    "candidate-only",
+    "planned-not-implemented",
+    "implemented-build-pending",
+    "implemented-build-pass-runtime-pass",
+    "implemented-build-pass-hardware-pending",
+    "implemented-build-pass-hardware-pass",
+    "implemented-build-pass-ui-review-pending",
+    "implemented-build-pass-ui-review-pass",
+    "validated-then-reverted",
+    "blocked-needs-user-decision",
+    "blocked-validation-failed"
+  ],
+  "evidenceStatusVocabulary": [
+    "not-run",
+    "pass",
+    "fail",
+    "pending",
+    "not-applicable",
+    "manual-review-pending",
+    "user-confirmed-ui-pass",
+    "user-confirmed-pass"
+  ],
+  "fieldContracts": {
+    "target": {
+      "required": ["projectName", "repoPath", "slice", "writeBoundary"],
+      "purpose": "Identify the external project and the bounded maintenance slice."
+    },
+    "userConfirmedIntent": {
+      "required": ["summary", "includedBehavior", "excludedBehavior"],
+      "purpose": "Record what the user actually asked for and what must not happen."
+    },
+    "observedAnchors": {
+      "itemRequired": ["path", "anchor", "meaning", "confidence"],
+      "purpose": "Connect the intent to observed code, docs, tests, or hardware behavior."
+    },
+    "candidateMatch": {
+      "required": ["status", "recommendedShape", "whyThisShape", "risksIfWrong"],
+      "purpose": "Explain why this candidate implementation path was selected."
+    },
+    "implementationPlan": {
+      "required": ["expectedFiles", "expectedFlow", "nonGoals"],
+      "purpose": "List the smallest expected source files, execution flow, and explicit non-goals."
+    },
+    "forbiddenFlows": {
+      "itemRequired": ["flow", "reason"],
+      "purpose": "Prevent the most likely wrong maintenance expansion."
+    },
+    "evidence": {
+      "required": ["build", "runtime", "hardware"],
+      "purpose": "Separate build/test evidence from real-device or user acceptance evidence."
+    },
+    "finalState": {
+      "required": ["status", "activeCodeState", "remainingRisks", "nextAllowedActions"],
+      "purpose": "Say whether the external code still contains the change, whether it was reverted, and what can safely happen next."
+    }
+  },
+  "guardrails": [
+    "Do not treat inferred retrofit anchors as source authority without user confirmation.",
+    "Do not omit forbidden flows for behavior changes.",
+    "Do not merge build pass with hardware pass.",
+    "If code is reverted after validation, keep the evidence but set finalState.activeCodeState to reverted.",
+    "If external repo writes are forbidden or later reverted, record that explicitly instead of deleting the learning record.",
+    "When possible, validate reverted records against the external repo so rollback-specific signatures are absent even if the same files later change for another approved task."
+  ]
+}

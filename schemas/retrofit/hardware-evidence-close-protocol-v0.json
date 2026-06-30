@@ -1,0 +1,40 @@
+{
+  "$id": "https://project-blueprint-engine.local/schemas/retrofit/hardware-evidence-close-protocol-v0.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "artifactRole": "retrofit-hardware-evidence-close-protocol-v0",
+  "status": "draft-active",
+  "purpose": "Standardize how user-observed hardware validation closes a retrofit PBE change record.",
+  "whenRequired": [
+    "The change reads from or writes to real hardware.",
+    "Build or automated tests cannot prove device-level behavior.",
+    "The user explicitly needs real-device confirmation before acceptance."
+  ],
+  "allowedHardwareEvidenceStatuses": ["pending", "user-confirmed-pass", "user-confirmed-fail", "not-applicable"],
+  "requiredCloseFields": [
+    "hardwareStatus",
+    "observedBy",
+    "observedBehavior",
+    "scopeConfirmed",
+    "excludedBehaviorStillExcluded"
+  ],
+  "recommendedUserAnswerFormat": {
+    "hardwareStatus": "pass | fail | not-run",
+    "observedBehavior": "what happened on the device",
+    "unexpectedBehavior": "none | describe",
+    "excludedBehaviorStillExcluded": "yes | no | unknown"
+  },
+  "smart51TestExample": {
+    "hardwareStatus": "pass",
+    "observedBy": "user",
+    "observedBehavior": "The SMART-51 Factory test field displays correctly after actual GetConfig.",
+    "scopeConfirmed": "GetConfig display only",
+    "excludedBehaviorStillExcluded": "Set/save/load behavior remains outside the requested scope."
+  },
+  "guardrails": [
+    "Do not convert build pass into hardware pass.",
+    "Do not infer hardware pass without a user/device observation.",
+    "If excluded behavior was not checked, keep that part unknown rather than claiming full acceptance.",
+    "Hardware pass closes only the confirmed scope, not future broader behavior."
+  ]
+}

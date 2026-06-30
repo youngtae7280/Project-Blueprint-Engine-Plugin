@@ -146,6 +146,13 @@ acceptance storage by itself.
 
 ## Readiness Artifacts
 
+The current local operation-chain productization package is recorded in:
+
+- [graph-operation-chain-productization.md](graph-operation-chain-productization.md)
+
+It covers native and retrofit dogfood through `graph-source -> instruction pack -> local change -> graph delta -> graph
+update proposal`, but remains non-enforcing.
+
 The following readiness artifact is complete at documentation level:
 
 - [representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md)

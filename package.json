@@ -13,6 +13,8 @@
     "pbe": "node dist/cli/index.js",
     "validate:pbe": "npm run build:cli && node dist/cli/index.js validate",
     "validate:pbe:v2": "node scripts/validate-pbe-tree-system.js",
+    "validate:pbe:operation-chain": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/invoke-pbe-v0.ps1 -Command operation-chain",
+    "validate:pbe:dogfood": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/invoke-pbe-v0.ps1 -Command evaluate-dogfood",
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:examples": "npm run build:cli && node scripts/test-examples.js",

@@ -1,0 +1,28 @@
+{
+  "$id": "https://project-blueprint-engine.local/schemas/pbe/graph-source-v0.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "artifactRole": "pbe-graph-source-schema-v0",
+  "status": "draft-active",
+  "purpose": "Common graph-source contract for native and retrofit PBE.",
+  "requiredTopLevelFields": [
+    "schemaVersion",
+    "artifactRole",
+    "status",
+    "target",
+    "graphPolicy",
+    "records",
+    "nodes",
+    "edges"
+  ],
+  "artifactRoleVocabulary": ["native-graph-source-v0", "retrofit-graph-source-v0"],
+  "statusVocabulary": ["active-native-graph-source", "active-retrofit-graph-source"],
+  "graphPolicy": {
+    "required": ["nativeRetrofitModel", "intentLocation", "implementationRule"],
+    "intentLocation": "node-and-edge-intent"
+  },
+  "nodeRequiredFields": ["id", "kind", "state", "intentClaim"],
+  "edgeRequiredFields": ["id", "from", "to", "kind", "edgeIntent"],
+  "edgeIntentRequiredFields": ["classifications", "claim", "confidence"],
+  "recordRequiredFields": ["id", "path", "expectedStatus", "expectedActiveCodeState"]
+}

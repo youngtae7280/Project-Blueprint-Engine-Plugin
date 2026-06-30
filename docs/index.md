@@ -34,6 +34,8 @@
   change proving whitespace-normalized query matching through the Graph-source validation chain.
 - [Graph-source required-check readiness](concept/graph-source-required-check-readiness.md) - Policy and status package
   for possible required-check promotion without enabling enforcement or branch protection.
+- [Graph operation-chain productization](concept/graph-operation-chain-productization.md) - Local native/retrofit
+  dogfood package for `graph-source -> instruction pack -> local change -> graph delta -> graph update proposal`.
 - [Candidate C full read-model gate evaluation](concept/candidate-c-full-read-model-gate-evaluation.md) - Evaluation
   keeping the broader validate-all/health/E2E/CI read-model gate non-enforcing until promotion prerequisites are met.
 - [External dogfooding readiness summary](concept/external-dogfooding-readiness-summary.md) - Current Graph-source
@@ -105,3 +107,5 @@
 - [Examples Index](../examples/README.md)
 - [Todo search adoption example](../examples/adoption/todo-search-slice/README.md)
 - [Self-dogfooding: Windows sequential validation guidance](../examples/dogfooding/windows-validation-sequential-run/README.md)
+- [Native graph operation examples](../examples/native/README.md)
+- [Retrofit graph operation examples](../examples/retrofit/README.md)

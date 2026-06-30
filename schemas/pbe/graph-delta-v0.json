@@ -1,0 +1,27 @@
+{
+  "$id": "https://project-blueprint-engine.local/schemas/pbe/graph-delta-v0.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": 1,
+  "artifactRole": "pbe-graph-delta-schema-v0",
+  "status": "draft-active",
+  "purpose": "Common graph-delta contract generated from a target repo diff and the instruction pack that bounded it.",
+  "artifactRoleVocabulary": ["native-graph-delta-v0", "retrofit-graph-delta-v0"],
+  "requiredTopLevelFields": [
+    "schemaVersion",
+    "artifactRole",
+    "status",
+    "graphSourcePath",
+    "instructionPackPath",
+    "sourceRecordId",
+    "targetRepoPath",
+    "changedFiles",
+    "dirtyFileCount",
+    "allowedFileStatus",
+    "graphUpdate",
+    "boundaries"
+  ],
+  "boundaryRequirements": {
+    "appliesPatch": false,
+    "maintainerIntentClaimed": false
+  }
+}

@@ -13,8 +13,10 @@ adoption examples. Some examples are historical dogfooding records.
 2. Read `examples/adoption/todo-search-slice` to understand adopting PBE into an existing project.
 3. Read `examples/intent-critical` to understand why Graph-source records preserve maintenance intent that can be lost
    during vibe-coding cleanup.
-4. Read `examples/dogfooding/windows-validation-sequential-run` to see PBE documenting its own improvement.
-5. Inspect `examples/invalid` only when learning validator failure behavior.
+4. Read `examples/native` and `examples/retrofit` to see the shared Graph-source operation chain:
+   `graph-source -> instruction pack -> local change -> graph delta`.
+5. Read `examples/dogfooding/windows-validation-sequential-run` to see PBE documenting its own improvement.
+6. Inspect `examples/invalid` only when learning validator failure behavior.
 
 ## Test Fixtures
 
@@ -56,6 +58,29 @@ These small Graph-source intent fixtures show native PBE and retrofit PBE mainte
 intent can cause AI-assisted maintenance to change behavior incorrectly. They are checked by focused Vitest coverage, not
 by `test:examples`.
 
+## Graph Operation Chain Examples
+
+Operation-chain paths:
+
+```text
+examples/native/
+examples/retrofit/
+```
+
+These examples prove the shared PBE maintenance loop for authored native intent and recovered retrofit intent:
+
+```text
+graph-source -> instruction pack -> local change -> graph delta -> graph update proposal
+```
+
+Validate them with:
+
+```powershell
+npm run validate:pbe:operation-chain
+```
+
+They are non-enforcing dogfood examples, not required checks.
+
 ## Dogfooding Records
 
 Dogfooding record path:
@@ -89,4 +114,6 @@ Do not convert narrative examples into fixtures without a separate design decisi
 | `examples/invalid/*`                                    | invalid fixtures           | Expected validator failure cases     | Yes                      |
 | `examples/adoption/todo-search-slice`                   | narrative adoption example | Existing project next-slice adoption | No                       |
 | `examples/intent-critical/*`                            | focused intent fixtures    | Native/retrofit intent preservation  | No                       |
+| `examples/native/*`                                     | operation-chain dogfood    | Native graph operation proof         | No                       |
+| `examples/retrofit/*`                                   | operation-chain dogfood    | Retrofit graph operation proof       | No                       |
 | `examples/dogfooding/windows-validation-sequential-run` | dogfooding record          | PBE self-improvement record          | No                       |
