@@ -441,6 +441,30 @@ node dist/cli/index.js graph operation apply-proposal `
   --markdown outputs/retrofit/open-source/escape-html/proposal-apply-report.md
 ```
 
+### `pbe graph operation run-chain`
+
+- Purpose: Run the local PBE operation-chain wrapper without requiring users to know the underlying PowerShell script
+  path.
+- Typical state before running: After building the CLI, when you want to run or inspect the plugin-local graph operation
+  chain.
+- Options: `--dry-run` returns the planned wrapped command without running PowerShell. `--chain-command <name>` selects
+  a supported wrapper command and defaults to `operation-chain`. `--output <file>` writes the JSON report.
+- Supported chain commands: `operation-chain`, `artifact-inventory`, `core-schemas`, `retrofit-smoke`,
+  `evaluate-dogfood`.
+- What it checks: command allow-list and wrapped script execution result.
+- What it writes: Nothing in `--dry-run` mode. Without `--dry-run`, the wrapped script may refresh existing operation
+  outputs under `outputs/`, matching the previous script behavior.
+- Success result: command plan or execution report with boundary flags.
+- Common failures: unsupported chain command, missing PowerShell runtime, wrapped script failure.
+- Next command: Review generated outputs, then use `pbe graph operation apply-proposal` for any approved graph update
+  proposal.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph operation run-chain --dry-run --json
+```
+
 ### `pbe acep check`
 
 - Purpose: Check ACEP execution pack readiness.

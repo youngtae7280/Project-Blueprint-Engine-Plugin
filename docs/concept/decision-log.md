@@ -775,6 +775,12 @@ alignment and stale current-state boundaries, and only writes graph-source node/
 `--apply` is provided. This is implementation/UX completion for the proposal application flow; it does not apply target
 code patches, create upstream PRs, enable enforcement, add required checks, or retire tree-native artifacts.
 
+DEC-154 does not supersede DEC-097 through DEC-153. It adds `pbe graph operation run-chain` as a CLI wrapper around the
+existing plugin-local operation-chain script. `--dry-run` returns the wrapped command plan without executing PowerShell;
+running without `--dry-run` delegates to `scripts/invoke-pbe-v0.ps1` and preserves the script's existing output behavior.
+This improves implementation/UX by removing the need to remember the script path. It does not replace the script
+implementation, apply graph proposals, enable enforcement, add required checks, or retire tree-native artifacts.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

@@ -138,6 +138,12 @@ Preview a graph update proposal before applying it to graph-source:
 node dist/cli/index.js graph operation apply-proposal --proposal outputs/retrofit/open-source/escape-html/graph-update-proposals/symbol-stringification.graph-update-proposal.json --json
 ```
 
+Preview the local operation-chain wrapper without needing to know the script path:
+
+```bash
+node dist/cli/index.js graph operation run-chain --dry-run --json
+```
+
 ## Where To Go Next
 
 - [Documentation index](docs/index.md)

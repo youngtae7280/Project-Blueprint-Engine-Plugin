@@ -12,6 +12,38 @@ afterEach(() => {
 })
 
 describe('graph operation CLI', () => {
+  it('previews the operation-chain wrapper without running scripts', async () => {
+    const result = await runPbeCli(['graph', 'operation', 'run-chain', '--dry-run', '--json'], {
+      cwd: pluginRoot,
+      pluginRoot,
+    })
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    const payload = JSON.parse(result.stdout)
+    expect(payload.status).toBe('pbe-operation-chain-plan-pass')
+    expect(payload.command).toBe('graph operation run-chain')
+    expect(payload.chainCommand).toBe('operation-chain')
+    expect(payload.dryRun).toBe(true)
+    expect(payload.scriptPath).toBe('scripts/invoke-pbe-v0.ps1')
+    expect(payload.args).toContain('operation-chain')
+    expect(payload.boundaries.mutatesSourceCode).toBe(false)
+    expect(payload.boundaries.appliesGraphProposal).toBe(false)
+    expect(payload.boundaries.enablesEnforcement).toBe(false)
+  })
+
+  it('rejects unsupported operation-chain wrapper commands', async () => {
+    const result = await runPbeCli(
+      ['graph', 'operation', 'run-chain', '--chain-command', 'unknown-command', '--dry-run', '--json'],
+      {
+        cwd: pluginRoot,
+        pluginRoot,
+      },
+    )
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(result.stderr).issues[0].message).toContain('Unsupported graph operation chain command')
+  })
+
   it('previews a committed graph update proposal without mutating graph-source', async () => {
     const graphSourcePath = join(pluginRoot, 'examples/retrofit/open-source/escape-html/graph-source.json')
     const before = readFileSync(graphSourcePath, 'utf8')

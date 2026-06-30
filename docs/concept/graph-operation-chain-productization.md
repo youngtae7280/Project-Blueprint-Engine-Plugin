@@ -18,6 +18,7 @@ graph-source -> instruction pack -> local change -> graph delta -> graph update 
 - Native dogfood examples under `examples/native/`.
 - Retrofit dogfood examples under `examples/retrofit/`.
 - Local PowerShell entry point: `scripts/invoke-pbe-v0.ps1`.
+- CLI operation-chain entry point: `pbe graph operation run-chain`.
 - CLI graph update proposal entry point: `pbe graph operation apply-proposal`.
 - Generated observation reports under `outputs/`.
 - Non-enforcing CI observation through `.github/workflows/read-model-evidence.yml`.
@@ -35,6 +36,15 @@ npm run validate:pbe:dogfood
 The operation-chain command recreates small ignored target repos under `work/`
 and validates graph-source, instruction pack, graph delta, graph update
 proposal, and dogfood evaluation surfaces.
+
+The CLI wrapper exposes the same operation-chain script path through a stable command:
+
+```powershell
+node dist/cli/index.js graph operation run-chain --dry-run --json
+```
+
+`--dry-run` previews the wrapped command. Running without `--dry-run` delegates to the existing script and preserves its
+output behavior.
 
 Graph update proposals can now be previewed or applied through the CLI:
 

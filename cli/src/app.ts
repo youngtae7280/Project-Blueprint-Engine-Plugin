@@ -93,6 +93,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     noColor: false,
     force: false,
     apply: false,
+    dryRun: false,
     all: false,
     profile: undefined as 'full' | 'lite' | 'bypass' | undefined,
     brief: undefined as string | undefined,
@@ -119,6 +120,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     output: undefined as string | undefined,
     markdown: undefined as string | undefined,
     proposal: undefined as string | undefined,
+    chainCommand: undefined as string | undefined,
   }
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -133,6 +135,8 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
       options.force = true
     } else if (arg === '--apply') {
       options.apply = true
+    } else if (arg === '--dry-run') {
+      options.dryRun = true
     } else if (arg === '--all') {
       options.all = true
     } else if (arg === '--root') {
@@ -310,6 +314,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--proposal requires a file path.' }
       }
       options.proposal = value
+      index += 1
+    } else if (arg === '--chain-command') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--chain-command requires a command name.' }
+      }
+      options.chainCommand = value
       index += 1
     } else if (arg === '--stage') {
       const value = argv[index + 1]

@@ -54,6 +54,7 @@ export interface CliOptions {
   noColor: boolean
   force: boolean
   apply: boolean
+  dryRun: boolean
   all: boolean
   profile?: 'full' | 'lite' | 'bypass'
   brief?: string
@@ -80,6 +81,7 @@ export interface CliOptions {
   output?: string
   markdown?: string
   proposal?: string
+  chainCommand?: string
 }
 
 export interface CliEnvironment {
