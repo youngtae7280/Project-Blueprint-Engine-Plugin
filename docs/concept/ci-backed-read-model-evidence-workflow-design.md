@@ -86,6 +86,12 @@ The workflow also captures graph-source health as both machine-readable JSON and
 validate-all/E2E/edgeIntent status, retirement readiness, retirement approval package status, non-enforcement
 boundaries, and reproduction commands without reading the JSON artifact first.
 
+The workflow now also observes the local PBE operation chain by running `scripts/invoke-pbe-v0.ps1` with
+`operation-chain` and `evaluate-dogfood` under `pwsh`. The manifest and Step Summary record `operationChainStatus` and
+`dogfoodEvaluationStatus`, and the artifact bundle includes the generated `outputs/` reports. This keeps
+`graph-source -> instruction pack -> local change -> graph delta -> graph update proposal` visible in CI without making
+it a required check, branch protection rule, tree-retirement action, or source-authority expansion.
+
 Run `28156403793` also surfaced a GitHub Actions maintenance annotation that Node.js 20 is deprecated for
 `actions/checkout@v4`, `actions/setup-node@v4`, and `actions/upload-artifact@v4` execution. This is a retained CI hygiene
 warning for that historical run, not a failed Evidence run. The workflow now uses `actions/checkout@v7`,

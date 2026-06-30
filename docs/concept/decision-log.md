@@ -735,6 +735,12 @@ source for graph-source-backed Todo Search read-model generation, and still reta
 `not-ready-structure-only`, repo-wide retirement remains `not-ready`, no files are deleted, and no required check,
 branch protection, or enforcement setting is enabled.
 
+DEC-148 does not supersede DEC-097 through DEC-147. It adds non-enforcing CI observation for the PBE operation-chain
+dogfood package by running `scripts/invoke-pbe-v0.ps1 -Command operation-chain` and `-Command evaluate-dogfood` in the
+read-model Evidence workflow. The CI manifest, Step Summary, and artifact bundle now expose `operationChainStatus`,
+`dogfoodEvaluationStatus`, and the generated `outputs/` reports. This is observation only and does not add required
+checks, branch protection, tree retirement, enforcement, or source-authority expansion.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

@@ -7,9 +7,16 @@ on:
       - .github/workflows/read-model-evidence.yml
       - cli/src/**
       - scripts/**
+      - package.json
+      - schemas/**
       - examples/adoption/todo-search-slice/**
       - examples/valid/todo-app-pbe-run/**
       - examples/read-model-aggregate/**
+      - examples/native/**
+      - examples/retrofit/**
+      - examples/README.md
+      - outputs/**
+      - docs/index.md
       - docs/concept/**
 
 permissions:
@@ -38,6 +45,8 @@ jobs:
       PBE_EDGE_INTENT_OBSERVATION_OUTPUT: examples/read-model-aggregate/generated/read-model-edge-intent-observation-output.json
       PBE_HEALTH_REPORT_OUTPUT: examples/read-model-aggregate/generated/read-model-health-report-output.json
       PBE_HEALTH_REPORT_MARKDOWN: examples/read-model-aggregate/generated/read-model-health-report-output.md
+      PBE_OPERATION_CHAIN_REPORT: outputs/pbe-operation-chain/operation-chain-report.json
+      PBE_DOGFOOD_EVALUATION_REPORT: outputs/pbe-operation-chain/dogfood-evaluation.json
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -119,6 +128,12 @@ jobs:
         run: |
           node dist/cli/index.js graph read-model report-health --json --markdown "$PBE_HEALTH_REPORT_MARKDOWN" 2>&1 | tee "$PBE_HEALTH_REPORT_OUTPUT"
 
+      - name: Observe PBE operation chain dogfood
+        shell: pwsh
+        run: |
+          ./scripts/invoke-pbe-v0.ps1 -Command operation-chain
+          ./scripts/invoke-pbe-v0.ps1 -Command evaluate-dogfood
+
       - name: Focused read-model Evidence tests
         run: npx vitest run cli/src/__tests__/read-model-evidence.test.ts
 
@@ -149,6 +164,8 @@ jobs:
           const edgeIntentObservationOutputPath = process.env.PBE_EDGE_INTENT_OBSERVATION_OUTPUT
           const healthReportOutputPath = process.env.PBE_HEALTH_REPORT_OUTPUT
           const healthReportMarkdownPath = process.env.PBE_HEALTH_REPORT_MARKDOWN
+          const operationChainReportPath = process.env.PBE_OPERATION_CHAIN_REPORT
+          const dogfoodEvaluationReportPath = process.env.PBE_DOGFOOD_EVALUATION_REPORT
           const aggregateSlices = (process.env.PBE_AGGREGATE_SLICES || '')
             .split(',')
             .map((slice) => slice.trim())
@@ -168,6 +185,8 @@ jobs:
           const e2eSmokeOutput = readJson(e2eSmokeOutputPath)
           const edgeIntentObservationOutput = readJson(edgeIntentObservationOutputPath)
           const healthReportOutput = readJson(healthReportOutputPath)
+          const operationChainReport = readJson(operationChainReportPath)
+          const dogfoodEvaluationReport = readJson(dogfoodEvaluationReportPath)
           const eventName = process.env.GITHUB_EVENT_NAME || 'workflow_dispatch'
           const eventPayload = readJson(process.env.GITHUB_EVENT_PATH || '') || {}
           const pullRequest = eventPayload.pull_request || null
@@ -204,6 +223,10 @@ jobs:
           const edgeIntentProjectionPass = edgeIntentProjectionObservationStatus === 'edge-intent-projection-pass'
           const healthReportStatus = healthReportOutput?.status || 'missing'
           const healthReportPass = healthReportStatus === 'graph-source-health-pass'
+          const operationChainStatus = operationChainReport?.status || 'missing'
+          const operationChainPass = operationChainStatus === 'pbe-operation-chain-pass'
+          const dogfoodEvaluationStatus = dogfoodEvaluationReport?.status || 'missing'
+          const dogfoodEvaluationPass = dogfoodEvaluationStatus === 'pbe-dogfood-evaluation-pass'
           const status =
             todoSearchPass &&
             todoAppPass &&
@@ -214,7 +237,9 @@ jobs:
             todoAppCandidateObservationPass &&
             e2eSmokePass &&
             edgeIntentProjectionPass &&
-            healthReportPass
+            healthReportPass &&
+            operationChainPass &&
+            dogfoodEvaluationPass
               ? 'ci-evidence-pass'
               : 'ci-evidence-blocked'
 
@@ -245,6 +270,8 @@ jobs:
             e2eSmokeStatus,
             edgeIntentProjectionObservationStatus,
             healthReportStatus,
+            operationChainStatus,
+            dogfoodEvaluationStatus,
             generatedAt: new Date().toISOString(),
             status,
             todoSearch: {
@@ -318,6 +345,26 @@ jobs:
               nonEnforcementStatement: healthReportOutput?.nonEnforcementStatement || null,
               requiredCheckBoundary: healthReportOutput?.requiredCheckBoundary || null,
             },
+            pbeOperationChain: {
+              status: operationChainStatus,
+              artifactPath: operationChainReportPath,
+              operationChain: operationChainReport?.operationChain || null,
+              checks: operationChainReport?.checks || null,
+              graphSourceStatuses: operationChainReport?.graphSourceStatuses || null,
+              instructionPackStatuses: operationChainReport?.instructionPackStatuses || null,
+              graphDeltaStatuses: operationChainReport?.graphDeltaStatuses || null,
+              boundaries: operationChainReport?.boundaries || null,
+              sourceMode:
+                'non-enforcing CI observation for graph-source -> instruction pack -> local change -> graph delta dogfood',
+            },
+            pbeDogfoodEvaluation: {
+              status: dogfoodEvaluationStatus,
+              artifactPath: dogfoodEvaluationReportPath,
+              score: dogfoodEvaluationReport?.score || null,
+              criteria: dogfoodEvaluationReport?.criteria || [],
+              boundaries: dogfoodEvaluationReport?.boundaries || null,
+              sourceMode: 'non-enforcing CI observation for operation-chain dogfood criteria',
+            },
             candidateObservation: {
               status: candidateObservationStatus,
               sourceMode: 'candidate-observation-only',
@@ -370,6 +417,8 @@ jobs:
               process.env.PBE_INTENT_RETROFIT_PROJECTION,
               healthReportOutputPath,
               healthReportMarkdownPath,
+              operationChainReportPath,
+              dogfoodEvaluationReportPath,
             ],
             sourceAuthorityBoundary:
               'CI-backed Evidence is Evidence only for declared read-model reports, aggregate summary, and separate candidate-observation metadata. Todo Search remains the only scoped pilot; Todo App PBE Run remains structure-only. This workflow does not expand source authority.',
@@ -425,6 +474,8 @@ jobs:
           const healthEdgeIntentCount = manifest?.healthReport?.edgeIntent?.edgeIntentCount ?? 'missing'
           const healthRetirement = manifest?.healthReport?.treeNativeRetirement?.readinessStatus || 'missing'
           const healthEnforcement = manifest?.healthReport?.enforcementStatus || 'missing'
+          const operationChainStatus = manifest?.operationChainStatus || 'missing'
+          const dogfoodEvaluationStatus = manifest?.dogfoodEvaluationStatus || 'missing'
           const includedSlices = manifest?.includedSlices || []
 
           const markdown = [
@@ -450,6 +501,8 @@ jobs:
             `- Health edgeIntent status/count: \`${healthEdgeIntent}\` / \`${healthEdgeIntentCount}\``,
             `- Health retirement readiness: \`${healthRetirement}\``,
             `- Health enforcement status: \`${healthEnforcement}\``,
+            `- PBE operation-chain status: \`${operationChainStatus}\``,
+            `- PBE dogfood evaluation status: \`${dogfoodEvaluationStatus}\``,
             `- Aggregate status: \`${aggregateStatus}\``,
             '- Boundary: CI-backed Evidence is Evidence only.',
             '- Candidate observation is retained as separate report-only metadata.',
@@ -500,5 +553,8 @@ jobs:
             examples/read-model-aggregate/generated/read-model-edge-intent-retrofit-output.json
             examples/read-model-aggregate/generated/read-model-health-report-output.json
             examples/read-model-aggregate/generated/read-model-health-report-output.md
+            outputs/pbe-operation-chain/**
+            outputs/native/**
+            outputs/retrofit/**
             examples/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json
             examples/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json
