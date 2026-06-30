@@ -6,3 +6,6 @@ Current target:
 
 - `cjson/`
   - read-only graph-source and planned instruction-pack dogfood for cJSON
+- `todo-vue/`
+  - real `mdn/todo-vue` local checkout dogfood with README-only instruction pack, graph delta, graph update proposal,
+    dogfood report, and external baseline-tooling blocker separation

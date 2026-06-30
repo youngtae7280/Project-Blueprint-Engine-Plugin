@@ -44,6 +44,8 @@ Step Summary. This is observation only; it is not a required check.
 
 - CardPrinterConfig retrofit fixture smoke in fixture-only mode.
 - cJSON-style open-source retrofit dogfood with maintainer-intent boundary.
+- Real `mdn/todo-vue` external checkout dogfood with README-only instruction pack, graph delta, graph update proposal,
+  and local Node/toolchain baseline blocker separation.
 - Native graph-notes README-only dogfood.
 - Native graph-counter behavior dogfood with a runtime test.
 

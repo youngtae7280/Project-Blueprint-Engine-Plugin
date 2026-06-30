@@ -753,6 +753,14 @@ operation-chain CI observation in `pull_request-informational` mode. The artifac
 operation-chain and dogfood reports are present in the artifact bundle. The temporary PR was closed unmerged and the
 smoke branch was deleted. This remains non-enforcing CI observation only.
 
+DEC-151 does not supersede DEC-097 through DEC-150. It records the first real external operation-chain dogfood against a
+local `mdn/todo-vue` checkout at `8a7ef579f1d117a8ac9530a52f5c5a81c3e99676`. PBE recovered a bounded retrofit graph
+source, generated an instruction pack, applied only a local README clarification, captured a graph delta with one dirty
+file and three additions, and generated a graph update proposal without mutating graph-source. `npm ci` passed, while
+`npm run build` was recorded as blocked by the local Node/toolchain baseline rather than the selected README-only slice.
+No upstream PR, maintainer approval claim, required check, enforcement, source-authority expansion, or tree retirement is
+introduced.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

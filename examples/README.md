@@ -65,6 +65,7 @@ Operation-chain paths:
 ```text
 examples/native/
 examples/retrofit/
+examples/retrofit/open-source/todo-vue/
 ```
 
 These examples prove the shared PBE maintenance loop for authored native intent and recovered retrofit intent:
@@ -80,6 +81,10 @@ npm run validate:pbe:operation-chain
 ```
 
 They are non-enforcing dogfood examples, not required checks.
+
+The `open-source/todo-vue` example records one real external checkout pass against `mdn/todo-vue`: a local README-only
+change, instruction pack, graph delta, graph update proposal, and baseline-tooling blocker separation. It does not create
+an upstream PR or claim maintainer approval.
 
 ## Dogfooding Records
 
@@ -116,4 +121,5 @@ Do not convert narrative examples into fixtures without a separate design decisi
 | `examples/intent-critical/*`                            | focused intent fixtures    | Native/retrofit intent preservation  | No                       |
 | `examples/native/*`                                     | operation-chain dogfood    | Native graph operation proof         | No                       |
 | `examples/retrofit/*`                                   | operation-chain dogfood    | Retrofit graph operation proof       | No                       |
+| `examples/retrofit/open-source/todo-vue`                | external operation-chain   | Real external README-only dogfood    | No                       |
 | `examples/dogfooding/windows-validation-sequential-run` | dogfooding record          | PBE self-improvement record          | No                       |

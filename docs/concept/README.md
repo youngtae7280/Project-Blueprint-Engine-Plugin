@@ -153,6 +153,14 @@ The current local operation-chain productization package is recorded in:
 It covers native and retrofit dogfood through `graph-source -> instruction pack -> local change -> graph delta -> graph
 update proposal`, but remains non-enforcing.
 
+The first real external operation-chain dogfood is recorded in:
+
+- [real-external-operation-chain-dogfood.md](real-external-operation-chain-dogfood.md)
+
+It uses a local `mdn/todo-vue` checkout, applies only a README clarification, captures the resulting graph delta and
+graph update proposal, and records the external Node/toolchain build blocker separately from the selected README-only
+slice.
+
 The following readiness artifact is complete at documentation level:
 
 - [representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md)
