@@ -65,6 +65,7 @@ Operation-chain paths:
 ```text
 examples/native/
 examples/retrofit/
+examples/retrofit/open-source/escape-html/
 examples/retrofit/open-source/todo-vue/
 ```
 
@@ -85,6 +86,10 @@ They are non-enforcing dogfood examples, not required checks.
 The `open-source/todo-vue` example records one real external checkout pass against `mdn/todo-vue`: a local README-only
 change, instruction pack, graph delta, graph update proposal, and baseline-tooling blocker separation. It does not create
 an upstream PR or claim maintainer approval.
+
+The `open-source/escape-html` example records one real external behavior-change pass against `component/escape-html`:
+intent recovery from README/source/tests, a Symbol input code/test change, project test pass, graph delta, and graph
+update proposal. It does not create an upstream PR or claim maintainer approval.
 
 ## Dogfooding Records
 
@@ -121,5 +126,6 @@ Do not convert narrative examples into fixtures without a separate design decisi
 | `examples/intent-critical/*`                            | focused intent fixtures    | Native/retrofit intent preservation  | No                       |
 | `examples/native/*`                                     | operation-chain dogfood    | Native graph operation proof         | No                       |
 | `examples/retrofit/*`                                   | operation-chain dogfood    | Retrofit graph operation proof       | No                       |
+| `examples/retrofit/open-source/escape-html`             | external behavior dogfood  | Real external code/test dogfood      | No                       |
 | `examples/retrofit/open-source/todo-vue`                | external operation-chain   | Real external README-only dogfood    | No                       |
 | `examples/dogfooding/windows-validation-sequential-run` | dogfooding record          | PBE self-improvement record          | No                       |

@@ -761,6 +761,14 @@ file and three additions, and generated a graph update proposal without mutating
 No upstream PR, maintainer approval claim, required check, enforcement, source-authority expansion, or tree retirement is
 introduced.
 
+DEC-152 does not supersede DEC-097 through DEC-151. It records the first real external behavior-change dogfood against a
+local `component/escape-html` checkout at `b42947eefa79efff01b3fe988c4c7e7b051ec8d8`. PBE recovered stringification and
+escaping intent from README/source/tests, generated an instruction pack, applied a bounded code/test change
+(`String(value)` coercion plus a Symbol assertion), passed the external project's `npm test` suite with 31 tests, captured
+a graph delta for `index.js` and `test/index.js`, and generated a graph update proposal without mutating graph-source.
+No upstream PR, maintainer approval claim, required check, enforcement, source-authority expansion, or tree retirement is
+introduced.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

@@ -46,6 +46,8 @@ Step Summary. This is observation only; it is not a required check.
 - cJSON-style open-source retrofit dogfood with maintainer-intent boundary.
 - Real `mdn/todo-vue` external checkout dogfood with README-only instruction pack, graph delta, graph update proposal,
   and local Node/toolchain baseline blocker separation.
+- Real `component/escape-html` external checkout dogfood with recovered stringification/escaping intent, a Symbol input
+  code/test behavior change, project test pass, graph delta, and graph update proposal.
 - Native graph-notes README-only dogfood.
 - Native graph-counter behavior dogfood with a runtime test.
 

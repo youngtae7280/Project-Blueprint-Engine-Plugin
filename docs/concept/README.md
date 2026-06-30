@@ -161,6 +161,14 @@ It uses a local `mdn/todo-vue` checkout, applies only a README clarification, ca
 graph update proposal, and records the external Node/toolchain build blocker separately from the selected README-only
 slice.
 
+The first real external behavior-change dogfood is recorded in:
+
+- [real-external-behavior-change-dogfood.md](real-external-behavior-change-dogfood.md)
+
+It uses a local `component/escape-html` checkout, recovers stringification and escaping intent from README/source/tests,
+applies a tiny Symbol input behavior change, passes the project test suite, and records the graph delta plus graph update
+proposal without claiming upstream approval.
+
 The following readiness artifact is complete at documentation level:
 
 - [representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md)

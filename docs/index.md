@@ -50,6 +50,8 @@
   implementation observation showing adoption-safe validation works while Work scope authoring remains the next gap.
 - [Real external operation-chain dogfood](concept/real-external-operation-chain-dogfood.md) - `mdn/todo-vue` README-only
   operation-chain pass proving external graph delta capture and baseline-tooling blocker separation.
+- [Real external behavior-change dogfood](concept/real-external-behavior-change-dogfood.md) - `component/escape-html`
+  behavior-change pass proving recovered intent can drive a bounded code/test change.
 - [External graph-source enrollment design](concept/external-graph-source-enrollment-design.md) - Design-only path for
   enrolling bounded external feature slices without registering external repos or expanding source authority.
 - [Lite artifact initialization decision](concept/lite-artifact-initialization-decision.md) - Decision to retain broad
