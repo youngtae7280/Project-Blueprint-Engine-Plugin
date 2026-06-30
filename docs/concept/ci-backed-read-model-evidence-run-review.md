@@ -1341,6 +1341,26 @@ and the remote smoke branch plus downloaded temp artifacts were removed.
 | Cleanup                 | PR closed unmerged; remote branch and artifact temp directory removed                                    |
 | Review result           | PR CI confirms health Markdown summary visibility with PR metadata                                       |
 
+Manual workflow run `28423595270` reviewed the workflow after the PBE operation-chain dogfood reports were added to
+non-enforcing CI observation. Earlier run `28423430000` exposed Linux portability/BOM parsing gaps in the new
+operation-chain step; commit `c407bff` fixed record discovery, nested PowerShell invocation, and BOM-tolerant manifest
+parsing before this successful rerun.
+
+| Field                     | Value                                                                                      |
+| ------------------------- | ------------------------------------------------------------------------------------------ |
+| Run ID                    | `28423595270`                                                                              |
+| Run URL                   | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28423595270> |
+| Event                     | `workflow_dispatch`                                                                        |
+| Commit                    | `c407bff`                                                                                  |
+| Conclusion                | `success`                                                                                  |
+| Manifest                  | `ci-evidence-pass`                                                                         |
+| Operation-chain status    | `pbe-operation-chain-pass`                                                                 |
+| Dogfood evaluation status | `pbe-dogfood-evaluation-pass`                                                              |
+| Operation report          | `outputs/pbe-operation-chain/operation-chain-report.json` present                          |
+| Dogfood report            | `outputs/pbe-operation-chain/dogfood-evaluation.json` present                              |
+| Cleanup                   | Artifact temp directory removed                                                            |
+| Review result             | Manual CI confirms operation-chain and dogfood status visibility in manifest/artifacts     |
+
 ## Gate Self-Check
 
 | Gate                              | Status | Result                                                                                                              |
@@ -1354,6 +1374,7 @@ and the remote smoke branch plus downloaded temp artifacts were removed.
 | E2E Intent Report Manual Gate     | pass   | Run `28348764191` confirmed E2E output contains `intentReport: intent-report-pass` with zero missing counts.        |
 | Health Report Manual Gate         | pass   | Run `28350824272` confirmed `healthReportStatus: graph-source-health-pass` and uploaded health report artifact.     |
 | Health Markdown Manual Gate       | pass   | Run `28351612200` confirmed uploaded `read-model-health-report-output.md` and manifest path visibility.             |
+| Operation-Chain Manual Gate       | pass   | Run `28423595270` confirmed `pbe-operation-chain-pass` and `pbe-dogfood-evaluation-pass` in artifacts.              |
 | Todo App Generation Manual Gate   | pass   | Run `28224636333` confirmed Todo App `graph-source-backed` / `non-authority-structure-only` metadata.               |
 | Todo App Confirmed Manual Gate    | pass   | Run `28226270934` confirmed Todo App `projection-contract-pass` / `confirmed-structure-only-graph-source`.          |
 | edgeIntent Projection Manual Gate | pass   | Run `28346777344` confirmed native/retrofit `edge-intent-projection-pass` in manifest and artifacts.                |

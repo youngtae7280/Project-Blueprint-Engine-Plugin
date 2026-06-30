@@ -741,6 +741,12 @@ read-model Evidence workflow. The CI manifest, Step Summary, and artifact bundle
 `dogfoodEvaluationStatus`, and the generated `outputs/` reports. This is observation only and does not add required
 checks, branch protection, tree retirement, enforcement, or source-authority expansion.
 
+DEC-149 does not supersede DEC-097 through DEC-148. It records manual workflow run `28423595270` reviewing the
+operation-chain CI observation after a failed first run exposed Linux path and BOM parsing portability gaps. The
+successful rerun records `ci-evidence-pass`, `operationChainStatus: pbe-operation-chain-pass`, and
+`dogfoodEvaluationStatus: pbe-dogfood-evaluation-pass`, with both `outputs/pbe-operation-chain` reports present in the
+artifact bundle. This remains non-enforcing CI observation only.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
