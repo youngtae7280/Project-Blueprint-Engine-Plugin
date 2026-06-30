@@ -747,6 +747,12 @@ successful rerun records `ci-evidence-pass`, `operationChainStatus: pbe-operatio
 `dogfoodEvaluationStatus: pbe-dogfood-evaluation-pass`, with both `outputs/pbe-operation-chain` reports present in the
 artifact bundle. This remains non-enforcing CI observation only.
 
+DEC-150 does not supersede DEC-097 through DEC-149. It records PR #15 run `28423731988` reviewing the same
+operation-chain CI observation in `pull_request-informational` mode. The artifact manifest includes PR metadata,
+`operationChainStatus: pbe-operation-chain-pass`, and `dogfoodEvaluationStatus: pbe-dogfood-evaluation-pass`; the
+operation-chain and dogfood reports are present in the artifact bundle. The temporary PR was closed unmerged and the
+smoke branch was deleted. This remains non-enforcing CI observation only.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

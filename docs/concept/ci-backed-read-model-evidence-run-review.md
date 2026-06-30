@@ -1361,6 +1361,27 @@ parsing before this successful rerun.
 | Cleanup                   | Artifact temp directory removed                                                            |
 | Review result             | Manual CI confirms operation-chain and dogfood status visibility in manifest/artifacts     |
 
+PR #15 run `28423731988` reviewed the same operation-chain dogfood visibility in `pull_request-informational` mode. The
+temporary draft PR used branch `pbe/pr-info-operation-chain-smoke-20260630`, was closed without merge after review, and
+the remote smoke branch plus downloaded temp artifacts were removed.
+
+| Field                     | Value                                                                                      |
+| ------------------------- | ------------------------------------------------------------------------------------------ |
+| Run ID                    | `28423731988`                                                                              |
+| Run URL                   | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28423731988> |
+| Event                     | `pull_request`                                                                             |
+| Trigger mode              | `pull_request-informational`                                                               |
+| PR                        | `#15`                                                                                      |
+| Source branch             | `pbe/pr-info-operation-chain-smoke-20260630`                                               |
+| Conclusion                | `success`                                                                                  |
+| Manifest                  | `ci-evidence-pass`; PR metadata present                                                    |
+| Operation-chain status    | `pbe-operation-chain-pass`                                                                 |
+| Dogfood evaluation status | `pbe-dogfood-evaluation-pass`                                                              |
+| Operation report          | `outputs/pbe-operation-chain/operation-chain-report.json` present                          |
+| Dogfood report            | `outputs/pbe-operation-chain/dogfood-evaluation.json` present                              |
+| Cleanup                   | PR closed unmerged; remote branch and artifact temp directory removed                      |
+| Review result             | PR CI confirms operation-chain and dogfood status visibility with PR metadata              |
+
 ## Gate Self-Check
 
 | Gate                              | Status | Result                                                                                                              |
@@ -1387,6 +1408,7 @@ parsing before this successful rerun.
 | E2E Intent Report PR Gate         | pass   | PR #12 run `28348903718` confirmed E2E output contains `intentReport: intent-report-pass` with zero missing counts. |
 | Health Report PR Gate             | pass   | PR #13 run `28351078223` confirmed `graph-source-health-pass` and uploaded health report artifact.                  |
 | Health Markdown PR Gate           | pass   | PR #14 run `28351775566` confirmed uploaded `read-model-health-report-output.md` and manifest path visibility.      |
+| Operation-Chain PR Gate           | pass   | PR #15 run `28423731988` confirmed operation-chain and dogfood status visibility with PR metadata.                  |
 | PR Informational Run Gate         | pass   | PR #1, PR #2, PR #3, PR #4, and PR #5 triggered `pull_request` runs and completed successfully.                     |
 | CI-Backed Artifact Review Gate    | pass   | Expanded artifact bundle `pbe-todo-search-read-model-evidence` was downloaded and inspected.                        |
 | CI Manifest Integrity Gate        | pass   | Manifest is `ci-backed` / `ci-evidence-pass` and includes Todo Search, Todo App, aggregate, and boundaries.         |
