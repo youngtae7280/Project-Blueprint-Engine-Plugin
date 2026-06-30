@@ -787,6 +787,15 @@ reference records, forbidden-flow boundaries, edgeIntent coverage, and next inpu
 target-code changes. It does not mutate the target project, apply patches, infer maintainer approval, enable enforcement,
 or retire tree-native artifacts.
 
+DEC-156 does not supersede DEC-097 through DEC-155. It adds explicit CLI operation-chain steps:
+`pbe graph operation generate-pack`, `pbe graph operation capture-delta`, and `pbe graph operation propose-update`.
+Together they cover graph-source record selection, instruction-pack generation, target git-diff capture, graph-delta
+creation, and graph update proposal generation without requiring users to call the underlying PowerShell scripts
+directly. `generate-pack` preserves the existing `generated-from-graph-source` instruction-pack status,
+`capture-delta` blocks dirty files outside the allowed instruction-pack scope, and `propose-update` creates a
+review-required graph update proposal. These commands do not patch target repos, mutate graph-source automatically,
+claim maintainer approval, enable enforcement, add required checks, or retire tree-native artifacts.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

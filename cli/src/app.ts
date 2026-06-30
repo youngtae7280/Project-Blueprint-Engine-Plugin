@@ -116,6 +116,10 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     slices: undefined as string | undefined,
     generated: undefined as string | undefined,
     graphSource: undefined as string | undefined,
+    record: undefined as string | undefined,
+    instructionPack: undefined as string | undefined,
+    graphDelta: undefined as string | undefined,
+    targetRepo: undefined as string | undefined,
     manual: undefined as string | undefined,
     output: undefined as string | undefined,
     markdown: undefined as string | undefined,
@@ -286,6 +290,34 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--graph-source requires a file path.' }
       }
       options.graphSource = value
+      index += 1
+    } else if (arg === '--record') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--record requires a record id.' }
+      }
+      options.record = value
+      index += 1
+    } else if (arg === '--instruction-pack') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--instruction-pack requires a file path.' }
+      }
+      options.instructionPack = value
+      index += 1
+    } else if (arg === '--graph-delta') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--graph-delta requires a file path.' }
+      }
+      options.graphDelta = value
+      index += 1
+    } else if (arg === '--target-repo') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--target-repo requires a path.' }
+      }
+      options.targetRepo = value
       index += 1
     } else if (arg === '--manual') {
       const value = argv[index + 1]

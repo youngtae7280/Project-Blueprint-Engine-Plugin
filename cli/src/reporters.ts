@@ -139,6 +139,12 @@ Commands:
                        Report a graph-native execution contract view for a configured slice
   graph operation apply-proposal
                        Preview or apply a graph update proposal to graph-source; dry-run unless --apply is provided
+  graph operation generate-pack
+                       Generate a graph instruction pack for one selected record
+  graph operation capture-delta
+                       Capture a graph delta from an allowed target repo diff
+  graph operation propose-update
+                       Generate a graph update proposal from a graph delta
   graph operation run-chain
                        Run or plan the local PBE operation-chain wrapper without knowing the underlying script path
   graph retrofit plan  Summarize a retrofit graph-source before implementation without touching the target project
@@ -194,6 +200,11 @@ Options:
   --generated <file>   Generated read-model file for graph read-model comparison.
   --graph-source <file>
                        Graph source artifact for graph read-model projection, retrofit plan, project-intent, or report-intent.
+  --record <id>        Graph source record id for graph operation generate-pack.
+  --instruction-pack <file>
+                       Graph instruction pack file for graph operation capture-delta.
+  --graph-delta <file> Graph delta file for graph operation propose-update.
+  --target-repo <path> Target git repository path for graph operation capture-delta.
   --manual <file>      Manual parity artifact for graph read-model comparison.
   --output <file>      Output file for graph read-model projection or project-intent.
   --markdown <file>    Optional Markdown summary output for graph read-model report-health.

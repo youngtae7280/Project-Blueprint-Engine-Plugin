@@ -19,6 +19,9 @@ graph-source -> instruction pack -> local change -> graph delta -> graph update 
 - Retrofit dogfood examples under `examples/retrofit/`.
 - Local PowerShell entry point: `scripts/invoke-pbe-v0.ps1`.
 - CLI operation-chain entry point: `pbe graph operation run-chain`.
+- CLI graph instruction-pack generation entry point: `pbe graph operation generate-pack`.
+- CLI graph delta capture entry point: `pbe graph operation capture-delta`.
+- CLI graph update proposal generation entry point: `pbe graph operation propose-update`.
 - CLI graph update proposal entry point: `pbe graph operation apply-proposal`.
 - CLI retrofit planning entry point: `pbe graph retrofit plan`.
 - Generated observation reports under `outputs/`.
@@ -46,6 +49,17 @@ node dist/cli/index.js graph operation run-chain --dry-run --json
 
 `--dry-run` previews the wrapped command. Running without `--dry-run` delegates to the existing script and preserves its
 output behavior.
+
+The operation chain can also be driven as explicit CLI steps:
+
+```powershell
+node dist/cli/index.js graph operation generate-pack --graph-source <graph-source.json> --record <record-id> --json
+node dist/cli/index.js graph operation capture-delta --graph-source <graph-source.json> --instruction-pack <pack.json> --target-repo <target-repo> --json
+node dist/cli/index.js graph operation propose-update --graph-delta <delta.json> --json
+```
+
+These commands preserve the same boundaries as the script artifacts: instruction packs do not apply changes, graph deltas
+only read git diff, and update proposals do not mutate graph-source until reviewed through `apply-proposal`.
 
 Graph update proposals can now be previewed or applied through the CLI:
 

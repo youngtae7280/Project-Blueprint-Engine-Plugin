@@ -1,6 +1,12 @@
 import { relativePath } from '../core/fs.js'
 import { buildGraphExecutionContractReport } from '../core/graph-execution-contract.js'
-import { applyGraphUpdateProposal, runGraphOperationChain } from '../core/graph-operation.js'
+import {
+  applyGraphUpdateProposal,
+  captureGraphDelta,
+  generateGraphInstructionPack,
+  proposeGraphUpdate,
+  runGraphOperationChain,
+} from '../core/graph-operation.js'
 import { buildRetrofitPlan } from '../core/graph-retrofit.js'
 import {
   compareReadModelEvidence,
@@ -110,6 +116,102 @@ export async function graphOperationRunChainCommand(context: CommandContext): Pr
   }
 }
 
+export async function graphOperationGeneratePackCommand(context: CommandContext): Promise<CommandResult> {
+  const graphSource = context.options.graphSource
+  const recordId = context.options.record
+  if (!graphSource) {
+    return invalidCommand('graph operation generate-pack requires --graph-source <file>.')
+  }
+  if (!recordId) {
+    return invalidCommand('graph operation generate-pack requires --record <id>.')
+  }
+
+  try {
+    const result = await generateGraphInstructionPack(context.options.root, graphSource, {
+      recordId,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph operation generate-pack',
+      exitCode: ExitCode.Success,
+      message: 'Graph instruction pack generated.',
+      issues: [],
+      data: {
+        ...result,
+        next: 'Use this instruction pack for the bounded local change, then run graph operation capture-delta.',
+      },
+    }
+  } catch (error) {
+    return graphOperationBlocked('graph operation generate-pack', 'GRAPH_OPERATION_GENERATE_PACK_BLOCKED', error)
+  }
+}
+
+export async function graphOperationCaptureDeltaCommand(context: CommandContext): Promise<CommandResult> {
+  const graphSource = context.options.graphSource
+  const instructionPack = context.options.instructionPack
+  const targetRepo = context.options.targetRepo
+  if (!graphSource) {
+    return invalidCommand('graph operation capture-delta requires --graph-source <file>.')
+  }
+  if (!instructionPack) {
+    return invalidCommand('graph operation capture-delta requires --instruction-pack <file>.')
+  }
+  if (!targetRepo) {
+    return invalidCommand('graph operation capture-delta requires --target-repo <path>.')
+  }
+
+  try {
+    const result = await captureGraphDelta(context.options.root, graphSource, {
+      instructionPackPath: instructionPack,
+      targetRepoPath: targetRepo,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph operation capture-delta',
+      exitCode: ExitCode.Success,
+      message: 'Graph delta captured from target diff.',
+      issues: [],
+      data: {
+        ...result,
+        next: 'Review changedFiles, then run graph operation propose-update.',
+      },
+    }
+  } catch (error) {
+    return graphOperationBlocked('graph operation capture-delta', 'GRAPH_OPERATION_CAPTURE_DELTA_BLOCKED', error)
+  }
+}
+
+export async function graphOperationProposeUpdateCommand(context: CommandContext): Promise<CommandResult> {
+  const graphDelta = context.options.graphDelta
+  if (!graphDelta) {
+    return invalidCommand('graph operation propose-update requires --graph-delta <file>.')
+  }
+
+  try {
+    const result = await proposeGraphUpdate(context.options.root, graphDelta, {
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph operation propose-update',
+      exitCode: ExitCode.Success,
+      message: 'Graph update proposal generated.',
+      issues: [],
+      data: {
+        ...result,
+        next: 'Review the proposal, then run graph operation apply-proposal in preview mode.',
+      },
+    }
+  } catch (error) {
+    return graphOperationBlocked('graph operation propose-update', 'GRAPH_OPERATION_PROPOSE_UPDATE_BLOCKED', error)
+  }
+}
+
 export async function graphRetrofitPlanCommand(context: CommandContext): Promise<CommandResult> {
   const graphSource = context.options.graphSource
   if (!graphSource) {
@@ -150,6 +252,25 @@ export async function graphRetrofitPlanCommand(context: CommandContext): Promise
         }),
       ],
     }
+  }
+}
+
+function graphOperationBlocked(command: string, code: string, error: unknown): CommandResult {
+  const message = error instanceof Error ? error.message : String(error)
+  return {
+    ok: false,
+    command,
+    exitCode: ExitCode.ValidationFailed,
+    message: 'Graph operation command blocked.',
+    issues: [
+      issue({
+        validator: 'GraphOperation',
+        code,
+        severity: 'error',
+        message,
+        suggestedFix: 'Check the graph-source, selected record, instruction pack, target diff, and boundary fields.',
+      }),
+    ],
   }
 }
 

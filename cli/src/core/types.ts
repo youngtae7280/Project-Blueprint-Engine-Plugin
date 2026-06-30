@@ -77,6 +77,10 @@ export interface CliOptions {
   slices?: string
   generated?: string
   graphSource?: string
+  record?: string
+  instructionPack?: string
+  graphDelta?: string
+  targetRepo?: string
   manual?: string
   output?: string
   markdown?: string

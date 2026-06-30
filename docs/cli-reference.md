@@ -441,6 +441,74 @@ node dist/cli/index.js graph operation apply-proposal `
   --markdown outputs/retrofit/open-source/escape-html/proposal-apply-report.md
 ```
 
+### `pbe graph operation generate-pack`
+
+- Purpose: Generate a graph instruction pack for one selected graph-source record.
+- Typical state before running: After `pbe graph retrofit plan` identifies an implementation-ready record.
+- Options: `--graph-source <file>` and `--record <id>` are required. `--output <file>` and `--markdown <file>` may write
+  review artifacts.
+- What it checks: graph-source shape, selected record reference, record status/active-code-state alignment, related
+  node/edge context, allowed files, forbidden flows, and verification state.
+- What it writes: Nothing unless `--output` or `--markdown` is provided.
+- Success result: instruction pack with user intent, allowed scope, forbidden scope, graph context, verification, and
+  execution boundary.
+- Common failures: missing record, record status drift, missing record file, malformed graph-source.
+- Next command: Use the pack for the bounded local change, then run `pbe graph operation capture-delta`.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph operation generate-pack `
+  --graph-source examples/retrofit/cardprinterconfig/graph-source.json `
+  --record change.laminator-tag-layout `
+  --output outputs/retrofit/instruction-packs/laminator-tag-layout.instruction-pack.json `
+  --markdown outputs/retrofit/instruction-packs/laminator-tag-layout.instruction-pack.md
+```
+
+### `pbe graph operation capture-delta`
+
+- Purpose: Capture a graph delta from the target repository's current git diff.
+- Typical state before running: After the bounded local target change has been made under the instruction pack.
+- Options: `--graph-source <file>`, `--instruction-pack <file>`, and `--target-repo <path>` are required.
+  `--output <file>` and `--markdown <file>` may write review artifacts.
+- What it checks: instruction-pack ownership, target git diff, and dirty files staying inside allowed files.
+- What it writes: Nothing unless `--output` or `--markdown` is provided. It never patches the target repo.
+- Success result: graph delta with changed files, related graph context, final state, and boundary flags.
+- Common failures: target repo missing, dirty file outside allowed scope, instruction-pack graph-source mismatch.
+- Next command: Review changed files, then run `pbe graph operation propose-update`.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph operation capture-delta `
+  --graph-source examples/retrofit/cardprinterconfig/graph-source.json `
+  --instruction-pack outputs/retrofit/instruction-packs/laminator-tag-layout.instruction-pack.json `
+  --target-repo C:/path/to/target `
+  --output outputs/retrofit/graph-deltas/laminator-tag-layout.graph-delta.json `
+  --markdown outputs/retrofit/graph-deltas/laminator-tag-layout.graph-delta.md
+```
+
+### `pbe graph operation propose-update`
+
+- Purpose: Generate a graph update proposal from a graph delta.
+- Typical state before running: After a graph delta has been captured from an allowed target diff.
+- Options: `--graph-delta <file>` is required. `--output <file>` and `--markdown <file>` may write review artifacts.
+- What it checks: graph delta JSON readability.
+- What it writes: Nothing unless `--output` or `--markdown` is provided.
+- Success result: proposal with changed files, proposed node/record state, edgeIntent summary, and review-required
+  boundary flags.
+- Common failures: missing or malformed graph delta.
+- Next command: Review the proposal, then run `pbe graph operation apply-proposal` in preview mode.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph operation propose-update `
+  --graph-delta outputs/retrofit/graph-deltas/laminator-tag-layout.graph-delta.json `
+  --output outputs/retrofit/graph-update-proposals/laminator-tag-layout.graph-update-proposal.json `
+  --markdown outputs/retrofit/graph-update-proposals/laminator-tag-layout.graph-update-proposal.md
+```
+
 ### `pbe graph operation run-chain`
 
 - Purpose: Run the local PBE operation-chain wrapper without requiring users to know the underlying PowerShell script

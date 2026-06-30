@@ -150,6 +150,14 @@ Inspect a retrofit graph before implementation, without touching the target proj
 node dist/cli/index.js graph retrofit plan --graph-source examples/retrofit/cardprinterconfig/graph-source.json --json
 ```
 
+Run the graph operation chain as CLI steps:
+
+```bash
+node dist/cli/index.js graph operation generate-pack --graph-source examples/retrofit/cardprinterconfig/graph-source.json --record change.laminator-tag-layout --json
+node dist/cli/index.js graph operation capture-delta --graph-source examples/retrofit/cardprinterconfig/graph-source.json --instruction-pack outputs/retrofit/instruction-packs/laminator-tag-layout.instruction-pack.json --target-repo C:/path/to/target --json
+node dist/cli/index.js graph operation propose-update --graph-delta outputs/retrofit/graph-deltas/example.graph-delta.json --json
+```
+
 ## Where To Go Next
 
 - [Documentation index](docs/index.md)
