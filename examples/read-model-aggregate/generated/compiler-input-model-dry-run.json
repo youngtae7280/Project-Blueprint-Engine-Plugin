@@ -75,15 +75,15 @@
     {
       "id": "scope-runtime-search-filter",
       "scopeKind": "code",
-      "paths": ["examples/adoption/todo-search-slice/runtime-fixture/search-filter.ts"],
-      "derivedFrom": ["graph-source:node:todo-search-runtime-filter"],
+      "paths": ["examples/adoption/todo-search-slice/runtime-fixture/todo-search.js"],
+      "derivedFrom": ["graph-source:node:CODE-RUNTIME-SEARCH-HELPER"],
       "confidence": "graph-backed-candidate"
     },
     {
       "id": "scope-runtime-search-test",
       "scopeKind": "test",
-      "paths": ["examples/adoption/todo-search-slice/runtime-fixture/search-filter.test.ts"],
-      "derivedFrom": ["graph-source:node:todo-search-runtime-test"],
+      "paths": ["examples/adoption/todo-search-slice/runtime-fixture/todo-search.test.js"],
+      "derivedFrom": ["graph-source:node:CODE-RUNTIME-SEARCH-TEST"],
       "confidence": "graph-backed-candidate"
     }
   ],

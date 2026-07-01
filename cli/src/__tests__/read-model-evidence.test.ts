@@ -1309,10 +1309,45 @@ describe('read-model Evidence builder', () => {
     input.compiledExecutionContract = { id: 'not-allowed' }
 
     const schemaValidation = validateCompilerInputSchema(schema)
-    const inputValidation = validateCompilerInputDryRun(input)
+    const inputValidation = await validateCompilerInputDryRun(input)
 
     expect(schemaValidation.blocking.join('\n')).toContain('inputDefinitions.graphSnapshot.authority must be one of')
     expect(inputValidation.blocking.join('\n')).toContain('must not contain compiledExecutionContract')
+  })
+
+  it('blocks Compiler Input Model dry-run inputs with broken artifact and graph references', async () => {
+    const inputPath = 'examples/read-model-aggregate/generated/compiler-input-model-dry-run.json'
+    const input = JSON.parse(await readFile(inputPath, 'utf8')) as {
+      graphSnapshot: { artifacts: Array<Record<string, unknown>> }
+      evidenceIndex: { entries: Array<Record<string, unknown>> }
+      targetScopeCandidates: Array<Record<string, unknown>>
+      policySnapshot: { policies: Array<Record<string, unknown>> }
+      packSchema: { requiredInputGroups: string[] }
+    }
+    input.graphSnapshot.artifacts[0].path = 'examples/missing/graph-source.json'
+    input.evidenceIndex.entries[0].artifact = 'examples/missing/evidence.md'
+    input.evidenceIndex.entries[0].freshness = 'stale-whenever'
+    input.targetScopeCandidates[0].paths = ['examples/missing/search-filter.ts']
+    input.targetScopeCandidates[0].derivedFrom = ['graph-source:node:DOES-NOT-EXIST']
+    input.targetScopeCandidates[0].scopeKind = 'database'
+    input.targetScopeCandidates[0].confidence = 'ai-guessed'
+    input.policySnapshot.policies[0].authority = 'ai-prose'
+    input.policySnapshot.policies[0].status = 'maybe'
+    input.packSchema.requiredInputGroups = ['humanRequest', 'magicContext']
+
+    const validation = await validateCompilerInputDryRun(input, resolve('.'))
+    const blocking = validation.blocking.join('\n')
+
+    expect(blocking).toContain('graphSnapshot.artifacts[0].path does not exist')
+    expect(blocking).toContain('evidenceIndex.entries[0].artifact does not exist')
+    expect(blocking).toContain('evidenceIndex.entries[0].freshness must be one of')
+    expect(blocking).toContain('targetScopeCandidates[0].paths references missing file or artifact')
+    expect(blocking).toContain('targetScopeCandidates[0].derivedFrom references unknown graph node')
+    expect(blocking).toContain('targetScopeCandidates[0].scopeKind must be one of')
+    expect(blocking).toContain('targetScopeCandidates[0].confidence must be one of')
+    expect(blocking).toContain('policySnapshot.policies[0].authority must be one of')
+    expect(blocking).toContain('policySnapshot.policies[0].status must be one of')
+    expect(blocking).toContain('packSchema.requiredInputGroups contains unknown groups: magicContext')
   })
 
   it('exposes graph-source health through the CLI without creating enforcement', async () => {

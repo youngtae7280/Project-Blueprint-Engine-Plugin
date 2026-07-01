@@ -191,7 +191,8 @@ expansion, or tree-native retirement.
 
 The Compiler Input Model MVP defines the machine-readable input surface for a future Actual Contract Compiler:
 human request, graph snapshot, pack schema, policy snapshot, evidence index, and target scope candidates. It validates
-those inputs through `graph read-model report-compiler-input --json`; it does not compile contracts or execute AI.
+those inputs and their basic artifact/graph cross-references through `graph read-model report-compiler-input --json`; it
+does not compile contracts or execute AI.
 
 The following readiness artifact is complete at documentation level:
 

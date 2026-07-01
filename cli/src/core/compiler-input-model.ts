@@ -1,4 +1,5 @@
 import path from 'node:path'
+import { existsSync, readFileSync } from 'node:fs'
 import { readJsonSafe } from './fs.js'
 
 export type CompilerInputModelStatus = 'compiler-input-model-pass' | 'compiler-input-model-blocked'
@@ -38,6 +39,17 @@ const requiredInputGroups = [
 ]
 
 const allowedInputAuthorities = ['human', 'graph', 'policy', 'validator', 'evidence-index']
+const allowedPolicyAuthorities = ['compiler-boundary-validator', 'contract-fixture-validator', 'policy', 'validator']
+const allowedPolicyStatuses = ['compiler-boundary-mvp-pass', 'contract-schema-pass', 'non-enforcing', 'policy-active']
+const allowedEvidenceFreshness = [
+  'required-after-source-change',
+  'required-after-graph-or-artifact-change',
+  'required-after-policy-change',
+  'required-after-contract-change',
+  'required-before-acceptance',
+]
+const allowedScopeKinds = ['code', 'test', 'docs', 'evidence', 'workflow', 'product', 'graph']
+const allowedScopeConfidence = ['graph-backed-candidate', 'policy-backed-candidate', 'human-seeded-candidate']
 
 export async function reportCompilerInputModel(root: string): Promise<CompilerInputModelReport> {
   const schemaResult = await readJsonSafe<unknown>(path.resolve(root, inputSchemaPath))
@@ -47,7 +59,7 @@ export async function reportCompilerInputModel(root: string): Promise<CompilerIn
     ? validateCompilerInputSchema(schemaResult.value)
     : { blocking: [`Unable to read compiler input model schema: ${schemaResult.error}`], warnings: [] }
   const inputIssues = inputResult.ok
-    ? validateCompilerInputDryRun(inputResult.value)
+    ? await validateCompilerInputDryRun(inputResult.value, root)
     : { blocking: [`Unable to read compiler input model dry-run input: ${inputResult.error}`], warnings: [] }
   const blockingReasons = [...schemaIssues.blocking, ...inputIssues.blocking]
   const warnings = [...schemaIssues.warnings, ...inputIssues.warnings]
@@ -133,7 +145,10 @@ export function validateCompilerInputSchema(schema: unknown): { blocking: string
   return { blocking, warnings }
 }
 
-export function validateCompilerInputDryRun(inputModel: unknown): { blocking: string[]; warnings: string[] } {
+export async function validateCompilerInputDryRun(
+  inputModel: unknown,
+  root = process.cwd(),
+): Promise<{ blocking: string[]; warnings: string[] }> {
   const blocking: string[] = []
   const warnings: string[] = []
   const record = asRecord(inputModel)
@@ -154,11 +169,12 @@ export function validateCompilerInputDryRun(inputModel: unknown): { blocking: st
   }
 
   validateHumanRequest(asRecord(record.humanRequest), blocking)
-  validateGraphSnapshot(asRecord(record.graphSnapshot), blocking)
+  const graphSnapshot = asRecord(record.graphSnapshot)
+  validateGraphSnapshot(graphSnapshot, root, blocking)
   validatePackSchema(asRecord(record.packSchema), blocking)
   validatePolicySnapshot(asRecord(record.policySnapshot), blocking)
-  validateEvidenceIndex(asRecord(record.evidenceIndex), blocking)
-  validateTargetScopeCandidates(arrayValue(record.targetScopeCandidates), blocking)
+  validateEvidenceIndex(asRecord(record.evidenceIndex), root, blocking)
+  validateTargetScopeCandidates(arrayValue(record.targetScopeCandidates), root, graphSnapshot, blocking)
 
   if ('compiledExecutionContract' in record) {
     blocking.push('Compiler input dry-run must not contain compiledExecutionContract; this MVP validates inputs only.')
@@ -173,15 +189,28 @@ function validateHumanRequest(record: Record<string, unknown>, blocking: string[
   validateRequiredStringFields('Compiler input dry-run humanRequest', record, ['id', 'source', 'text'], blocking)
 }
 
-function validateGraphSnapshot(record: Record<string, unknown>, blocking: string[]): void {
+function validateGraphSnapshot(record: Record<string, unknown>, root: string, blocking: string[]): void {
   validateRequiredStringFields('Compiler input dry-run graphSnapshot', record, ['id'], blocking)
   validateArtifactEntries('Compiler input dry-run graphSnapshot.artifacts', arrayValue(record.artifacts), blocking)
+  for (const [index, artifact] of arrayValue(record.artifacts).entries()) {
+    const artifactPath = stringValue(artifact.path, '')
+    if (artifactPath && !fileExists(root, artifactPath)) {
+      blocking.push(`Compiler input dry-run graphSnapshot.artifacts[${index}].path does not exist: ${artifactPath}.`)
+    }
+  }
 }
 
 function validatePackSchema(record: Record<string, unknown>, blocking: string[]): void {
   validateRequiredStringFields('Compiler input dry-run packSchema', record, ['id', 'changeType'], blocking)
-  if (stringArrayValue(record.requiredInputGroups).length === 0) {
+  const requiredGroups = stringArrayValue(record.requiredInputGroups)
+  if (requiredGroups.length === 0) {
     blocking.push('Compiler input dry-run packSchema.requiredInputGroups must be a non-empty string array.')
+  }
+  const unknownGroups = requiredGroups.filter((group) => !requiredInputGroups.includes(group))
+  if (unknownGroups.length > 0) {
+    blocking.push(
+      `Compiler input dry-run packSchema.requiredInputGroups contains unknown groups: ${unknownGroups.join(', ')}.`,
+    )
   }
 }
 
@@ -198,10 +227,26 @@ function validatePolicySnapshot(record: Record<string, unknown>, blocking: strin
       ['id', 'authority', 'status'],
       blocking,
     )
+    const authority = stringValue(policy.authority, '')
+    if (authority && !allowedPolicyAuthorities.includes(authority)) {
+      blocking.push(
+        `Compiler input dry-run policySnapshot.policies[${index}].authority must be one of: ${allowedPolicyAuthorities.join(
+          ', ',
+        )}.`,
+      )
+    }
+    const status = stringValue(policy.status, '')
+    if (status && !allowedPolicyStatuses.includes(status)) {
+      blocking.push(
+        `Compiler input dry-run policySnapshot.policies[${index}].status must be one of: ${allowedPolicyStatuses.join(
+          ', ',
+        )}.`,
+      )
+    }
   }
 }
 
-function validateEvidenceIndex(record: Record<string, unknown>, blocking: string[]): void {
+function validateEvidenceIndex(record: Record<string, unknown>, root: string, blocking: string[]): void {
   validateRequiredStringFields('Compiler input dry-run evidenceIndex', record, ['id'], blocking)
   const entries = arrayValue(record.entries)
   if (entries.length === 0) {
@@ -214,21 +259,58 @@ function validateEvidenceIndex(record: Record<string, unknown>, blocking: string
       ['id', 'artifact', 'evidenceType', 'freshness'],
       blocking,
     )
+    const artifact = stringValue(entry.artifact, '')
+    if (artifact && !fileExists(root, artifact)) {
+      blocking.push(`Compiler input dry-run evidenceIndex.entries[${index}].artifact does not exist: ${artifact}.`)
+    }
+    const freshness = stringValue(entry.freshness, '')
+    if (freshness && !allowedEvidenceFreshness.includes(freshness)) {
+      blocking.push(
+        `Compiler input dry-run evidenceIndex.entries[${index}].freshness must be one of: ${allowedEvidenceFreshness.join(
+          ', ',
+        )}.`,
+      )
+    }
   }
 }
 
-function validateTargetScopeCandidates(scopes: Array<Record<string, unknown>>, blocking: string[]): void {
+function validateTargetScopeCandidates(
+  scopes: Array<Record<string, unknown>>,
+  root: string,
+  graphSnapshot: Record<string, unknown>,
+  blocking: string[],
+): void {
   if (scopes.length === 0) {
     blocking.push('Compiler input dry-run targetScopeCandidates is required.')
   }
   for (const [index, scope] of scopes.entries()) {
     const label = `Compiler input dry-run targetScopeCandidates[${index}]`
     validateRequiredStringFields(label, scope, ['id', 'scopeKind', 'confidence'], blocking)
-    if (stringArrayValue(scope.paths).length === 0) {
+    const scopeKind = stringValue(scope.scopeKind, '')
+    if (scopeKind && !allowedScopeKinds.includes(scopeKind)) {
+      blocking.push(`${label}.scopeKind must be one of: ${allowedScopeKinds.join(', ')}.`)
+    }
+    const confidence = stringValue(scope.confidence, '')
+    if (confidence && !allowedScopeConfidence.includes(confidence)) {
+      blocking.push(`${label}.confidence must be one of: ${allowedScopeConfidence.join(', ')}.`)
+    }
+    const paths = stringArrayValue(scope.paths)
+    if (paths.length === 0) {
       blocking.push(`${label}.paths must be a non-empty string array.`)
     }
-    if (stringArrayValue(scope.derivedFrom).length === 0) {
+    for (const scopePath of paths) {
+      if (!fileExists(root, scopePath)) {
+        blocking.push(`${label}.paths references missing file or artifact: ${scopePath}.`)
+      }
+    }
+    const derivedFrom = stringArrayValue(scope.derivedFrom)
+    if (derivedFrom.length === 0) {
       blocking.push(`${label}.derivedFrom must be a non-empty string array.`)
+    }
+    for (const ref of derivedFrom) {
+      if (!isKnownGraphReference(root, graphSnapshot, ref)) {
+        blocking.push(`${label}.derivedFrom references unknown graph node: ${ref}.`)
+      }
     }
   }
 }
@@ -240,6 +322,38 @@ function validateArtifactEntries(label: string, artifacts: Array<Record<string, 
   for (const [index, artifact] of artifacts.entries()) {
     validateRequiredStringFields(`${label}[${index}]`, artifact, ['id', 'path', 'role'], blocking)
   }
+}
+
+function isKnownGraphReference(root: string, graphSnapshot: Record<string, unknown>, reference: string): boolean {
+  const match = /^graph-source:node:(.+)$/.exec(reference)
+  if (!match) return false
+  const nodeId = match[1]
+  for (const artifact of arrayValue(graphSnapshot.artifacts)) {
+    const artifactPath = stringValue(artifact.path, '')
+    if (!artifactPath.endsWith('graph-source.json')) continue
+    const graphSource = readGraphSourceNodeIds(root, artifactPath)
+    if (graphSource.has(nodeId)) return true
+  }
+  return false
+}
+
+function readGraphSourceNodeIds(root: string, artifactPath: string): Set<string> {
+  try {
+    const artifact = readFileSync(path.resolve(root, artifactPath), 'utf8')
+    const parsed = JSON.parse(artifact) as Record<string, unknown>
+    const sourceRecords = asRecord(parsed.sourceRecords)
+    return new Set(
+      arrayValue(sourceRecords.nodes)
+        .map((node) => stringValue(node.id, ''))
+        .filter(Boolean),
+    )
+  } catch {
+    return new Set()
+  }
+}
+
+function fileExists(root: string, relativePath: string): boolean {
+  return existsSync(path.resolve(root, relativePath))
 }
 
 function asRecord(value: unknown): Record<string, unknown> {

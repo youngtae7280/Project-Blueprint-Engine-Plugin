@@ -10,13 +10,13 @@
     {
       "id": "scope-runtime-search-filter",
       "scopeKind": "code",
-      "paths": ["examples/adoption/todo-search-slice/runtime-fixture/search-filter.ts"],
+      "paths": ["examples/adoption/todo-search-slice/runtime-fixture/todo-search.js"],
       "derivedFrom": ["work:WT-SEARCH-001", "test:VT-SEARCH-001"]
     },
     {
       "id": "scope-runtime-search-test",
       "scopeKind": "test",
-      "paths": ["examples/adoption/todo-search-slice/runtime-fixture/search-filter.test.ts"],
+      "paths": ["examples/adoption/todo-search-slice/runtime-fixture/todo-search.test.js"],
       "derivedFrom": ["test:VT-SEARCH-001"]
     },
     {
@@ -59,7 +59,7 @@
     {
       "id": "check-todo-search-runtime-fixture",
       "command": "npx vitest run examples/adoption/todo-search-slice/runtime-fixture",
-      "validates": ["examples/adoption/todo-search-slice/runtime-fixture/search-filter.ts"]
+      "validates": ["examples/adoption/todo-search-slice/runtime-fixture/todo-search.js"]
     },
     {
       "id": "check-read-model-validate-all",

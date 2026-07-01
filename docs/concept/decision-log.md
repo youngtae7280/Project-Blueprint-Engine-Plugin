@@ -849,6 +849,14 @@ inside the input fixture. This remains non-executing and does not create an Actu
 branch protection rule, automatic AI execution path, graph delta application, acceptance authority, source-authority
 expansion, or tree-native retirement.
 
+DEC-164 does not supersede DEC-097 through DEC-163. It hardens the Compiler Input Model MVP with cross-reference
+validation: graph snapshot and evidence artifact paths must exist, target scope candidate paths must exist,
+`graph-source:node:<id>` derivations must resolve to known graph-source node ids, pack schema required groups must use
+known input groups, and policy/status/freshness/scope-kind/confidence values must stay within bounded vocabularies. This
+remains input validation only and does not create an Actual Contract Compiler, required check, branch protection rule,
+automatic AI execution path, graph delta application, acceptance authority, source-authority expansion, or tree-native
+retirement.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

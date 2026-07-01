@@ -1,6 +1,6 @@
 # Compiler Input Model MVP
 
-Status: MVP implemented / dry-run input fixture validator / local non-enforcing report
+Status: MVP implemented / dry-run input fixture validator / cross-reference validation / local non-enforcing report
 
 ## Purpose
 
@@ -40,9 +40,17 @@ The MVP blocks:
 - dry-run inputs with missing human request, graph snapshot, pack schema, policy snapshot, evidence index, or target
   scope candidates;
 - graph snapshot artifacts without id/path/role;
+- graph snapshot artifact paths that do not exist;
 - policy entries without id/authority/status;
+- policy entries with authority or status outside the current bounded vocabulary;
 - evidence entries without id/artifact/evidenceType/freshness;
+- evidence entries whose artifact path does not exist;
+- evidence freshness outside the current bounded vocabulary;
 - target scope candidates without paths or derivation;
+- target scope candidate paths that do not exist;
+- target scope candidate `derivedFrom` references that do not point at a known `graph-source:node:<id>`;
+- target scope candidate scope kind or confidence outside the current bounded vocabulary;
+- pack schema required input groups outside the current input group vocabulary;
 - any `compiledExecutionContract` claim inside the input fixture.
 
 ## Boundary
