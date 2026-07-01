@@ -60,8 +60,8 @@ The smoke checks:
   metadata
 - contract source authority gap preview status `contract-source-authority-gap-preview-pass`, with remaining
   semantic/policy loss count and next recommended resolver visible as non-enforcing preview metadata. The current
-  fixture preserves `forbiddenScope` and `stopConditions` from source authority entries and recommends
-  `evidence-source-authority` next.
+  fixture preserves `forbiddenScope`, `stopConditions`, and `requiredEvidence` from source authority entries and
+  recommends `context-source-authority` next.
 
 The separate `graph read-model report-health --json` command summarizes the same transition state from existing
 artifacts and report surfaces. It is useful for a quick local health snapshot, while `npm run test:read-model:e2e`

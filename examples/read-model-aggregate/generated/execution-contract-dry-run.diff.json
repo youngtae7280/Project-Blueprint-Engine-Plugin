@@ -11,7 +11,6 @@
     "allowedScope",
     "requiredContext",
     "requiredChecks",
-    "requiredEvidence",
     "knownRisks",
     "nonExecutionStatement"
   ],
@@ -23,7 +22,7 @@
     { "field": "forbiddenScope", "status": "same" },
     { "field": "requiredContext", "status": "different" },
     { "field": "requiredChecks", "status": "different" },
-    { "field": "requiredEvidence", "status": "different" },
+    { "field": "requiredEvidence", "status": "same" },
     { "field": "knownRisks", "status": "different" },
     { "field": "openUnknowns", "status": "same" },
     { "field": "humanDecisions", "status": "same" },
@@ -64,8 +63,8 @@
       "field": "requiredEvidence",
       "handWrittenCount": 2,
       "generatedCount": 2,
-      "missingIdsInGenerated": ["evidence-validate-all-result"],
-      "extraIdsInGenerated": ["evidence-read-model-health"]
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
     },
     {
       "field": "knownRisks",
@@ -132,30 +131,6 @@
       "extraIdsInGenerated": ["check-read-model-health-report"]
     },
     {
-      "field": "requiredEvidence",
-      "targetField": "requiredEvidence",
-      "diffDirection": "missingIdsInGenerated",
-      "matchedRuleId": "semantic-diff-rule-required-evidence-missing-semantic-loss",
-      "classification": "semantic-loss",
-      "reviewSeverity": "high",
-      "promotionImpact": "blocks-promotion",
-      "reason": "The generated candidate is missing required Evidence from the hand-written contract, so semantic equivalence is not ready.",
-      "missingIdsInGenerated": ["evidence-validate-all-result"],
-      "extraIdsInGenerated": []
-    },
-    {
-      "field": "requiredEvidence",
-      "targetField": "requiredEvidence",
-      "diffDirection": "extraIdsInGenerated",
-      "matchedRuleId": "semantic-diff-rule-required-evidence-extra-evidence-chain-mismatch",
-      "classification": "evidence-chain-mismatch",
-      "reviewSeverity": "medium",
-      "promotionImpact": "review-required",
-      "reason": "The generated candidate adds required Evidence beyond the hand-written contract; review the Evidence chain before promotion.",
-      "missingIdsInGenerated": [],
-      "extraIdsInGenerated": ["evidence-read-model-health"]
-    },
-    {
       "field": "knownRisks",
       "targetField": "knownRisks",
       "diffDirection": "missingIdsInGenerated",
@@ -206,17 +181,16 @@
   ],
   "semanticClassificationCounts": {
     "conservative-restriction": 1,
-    "semantic-loss": 3,
+    "semantic-loss": 2,
     "safe-additive": 3,
-    "evidence-chain-mismatch": 1,
     "metadata-only": 2
   },
   "highestReviewSeverity": "high",
   "compilerPromotionReadiness": "compiler-promotion-not-ready",
   "promotionReadiness": "compiler-promotion-not-ready",
   "semanticDiffRuleCoverage": {
-    "totalDiffs": 10,
-    "classifiedDiffs": 10,
+    "totalDiffs": 8,
+    "classifiedDiffs": 8,
     "unknownDiffs": 0,
     "matchedRuleIds": [
       "semantic-diff-rule-allowed-scope-missing-conservative-restriction",
@@ -226,8 +200,6 @@
       "semantic-diff-rule-required-checks-extra-safe-additive",
       "semantic-diff-rule-required-context-extra-safe-additive",
       "semantic-diff-rule-required-context-missing-semantic-loss",
-      "semantic-diff-rule-required-evidence-extra-evidence-chain-mismatch",
-      "semantic-diff-rule-required-evidence-missing-semantic-loss",
       "semantic-diff-rule-source-mode-field-metadata-only"
     ],
     "unknownFields": []

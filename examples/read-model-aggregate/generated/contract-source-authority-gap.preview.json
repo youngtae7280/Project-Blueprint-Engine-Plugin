@@ -42,14 +42,14 @@
     },
     {
       "field": "requiredEvidence",
-      "currentDiffStatus": "field-diff-detected",
-      "semanticClassifications": ["evidence-chain-mismatch", "semantic-loss"],
-      "missingIdsInGenerated": ["evidence-validate-all-result"],
-      "extraIdsInGenerated": ["evidence-read-model-health"],
-      "likelyMissingSourceAuthority": "Evidence source authority and check binding do not yet preserve the hand-written Evidence chain.",
+      "currentDiffStatus": "field-diff-none",
+      "semanticClassifications": [],
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": [],
+      "likelyMissingSourceAuthority": "No source-authority gap detected for the current dry-run diff.",
       "candidateSourceAuthorityType": "evidence-source-authority",
-      "resolverRequired": true,
-      "preservationStatus": "source-authority-gap-open"
+      "resolverRequired": false,
+      "preservationStatus": "source-authority-preserved"
     },
     {
       "field": "knownRisks",
@@ -76,13 +76,13 @@
   ],
   "summary": {
     "status": "contract-source-authority-gap-preview-pass",
-    "remainingLossCount": 3,
+    "remainingLossCount": 2,
     "remainingPolicyLossCount": 0,
-    "remainingSemanticLossCount": 3,
-    "fieldsRequiringSourceAuthority": ["allowedScope", "requiredContext", "requiredEvidence", "knownRisks"],
-    "nextRecommendedResolver": "evidence-source-authority",
+    "remainingSemanticLossCount": 2,
+    "fieldsRequiringSourceAuthority": ["allowedScope", "requiredContext", "knownRisks"],
+    "nextRecommendedResolver": "context-source-authority",
     "promotionBlockedBy": ["semantic-loss"],
-    "equivalenceBlockedBy": ["allowedScope", "requiredContext", "requiredEvidence", "knownRisks"]
+    "equivalenceBlockedBy": ["allowedScope", "requiredContext", "knownRisks"]
   },
   "nonExecutionStatement": "This gap preview is non-enforcing review metadata only. It does not execute AI, apply graph deltas, accept work, enable required checks, configure branch protection, retire tree-native artifacts, or promote the compiler candidate."
 }

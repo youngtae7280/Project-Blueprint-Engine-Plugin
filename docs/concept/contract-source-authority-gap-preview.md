@@ -21,9 +21,10 @@ examples/read-model-aggregate/generated/contract-source-authority-gap.preview.js
 The artifact records:
 
 - remaining semantic and policy loss counts;
-- field-level gaps for `allowedScope`, `requiredContext`, `requiredEvidence`, and `knownRisks`;
+- field-level gaps for `allowedScope`, `requiredContext`, and `knownRisks`;
 - `forbiddenScope` as preserved for the current fixture after policy source authority resolution;
 - `stopConditions` as preserved for the current fixture after stop-condition source authority resolution;
+- `requiredEvidence` as preserved for the current fixture after Evidence source authority resolution;
 - missing and extra ids from the generated candidate;
 - candidate source-authority type for each field;
 - whether a resolver is required;
@@ -34,13 +35,14 @@ The artifact records:
 The current preview recommends:
 
 ```text
-evidence-source-authority
+context-source-authority
 ```
 
 This is selected because `forbiddenScope` is now generated from `policySnapshot.forbiddenScopeRules[]` and
-`stopConditions` are now generated from `stopConditionSources[]`. Policy-loss is currently zero, while semantic-loss
-still remains in required Evidence, context, and risk coverage. Evidence source authority is the narrowest next resolver
-candidate before attempting broader context or risk resolution.
+`stopConditions` are now generated from `stopConditionSources[]`, and required Evidence is generated from
+`evidenceIndex.entries[]` plus `policySnapshot.evidenceCheckMappings[]`. Policy-loss and evidence-chain mismatch are
+currently zero, while semantic-loss still remains in context and risk coverage. Context source authority is the narrowest
+next resolver candidate before attempting broader risk resolution.
 
 ## Boundaries
 

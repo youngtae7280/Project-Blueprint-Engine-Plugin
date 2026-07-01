@@ -84,9 +84,9 @@
       "freshness": "required-after-source-change"
     },
     {
-      "id": "evidence-read-model-health",
-      "evidenceType": "health_report",
-      "fromCheck": "check-read-model-health-report",
+      "id": "evidence-validate-all-result",
+      "evidenceType": "validator_output",
+      "fromCheck": "check-read-model-validate-all",
       "freshness": "required-after-graph-or-artifact-change"
     }
   ],

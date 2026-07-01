@@ -17,6 +17,7 @@ import {
   buildNotRunContractSourceAuthorityGapPreview,
   type ContractSourceAuthorityGapPreviewSummary,
 } from './contract-source-authority-gap.js'
+import { resolveRequiredEvidenceFromSourceAuthority } from './evidence-source-authority.js'
 import { resolveOutputRequirementsFromSourceAuthority } from './output-requirement-source-authority.js'
 import { resolveForbiddenScopeFromPolicySourceAuthority } from './policy-forbidden-scope-source-authority.js'
 import { resolveStopConditionsFromSourceAuthority } from './stop-condition-source-authority.js'
@@ -319,36 +320,19 @@ function compileBugFixContractCandidate(input: Record<string, unknown>): {
     },
   ]
   const requiredCheckIds = new Set(requiredChecks.map((check) => check.id))
-  const evidenceMappings = buildEvidenceCheckMapping(policySnapshot)
-  if (evidenceMappings.size === 0) {
-    blocking.push('Contract Compiler Dry-Run v0.2 requires policySnapshot.evidenceCheckMappings.')
-  }
-  const requiredEvidence = arrayValue(evidenceIndex.entries)
-    .map((entry) => {
-      const evidenceType = stringValue(entry.evidenceType)
-      const mapping = evidenceMappings.get(evidenceType)
-      if (!mapping) {
-        blocking.push(`Contract Compiler Dry-Run v0.2 has no evidenceCheckMapping for evidenceType: ${evidenceType}.`)
-        return undefined
-      }
-      if (!requiredCheckIds.has(mapping.requiredCheckId)) {
-        blocking.push(
-          `Contract Compiler Dry-Run v0.2 policySnapshot.evidenceCheckMappings for evidenceType ${evidenceType} references unknown required check id: ${mapping.requiredCheckId}. Known check ids: ${Array.from(
-            requiredCheckIds,
-          ).join(', ')}.`,
-        )
-        return undefined
-      }
-      return {
-        id: stringValue(entry.id),
-        evidenceType: mapping.compiledEvidenceType,
-        fromCheck: mapping.requiredCheckId,
-        freshness: stringValue(entry.freshness),
-      }
-    })
-    .filter((entry): entry is { id: string; evidenceType: string; fromCheck: string; freshness: string } =>
-      Boolean(entry),
+  const evidenceResolution = resolveRequiredEvidenceFromSourceAuthority({
+    evidenceEntries: arrayValue(evidenceIndex.entries),
+    evidenceCheckMappings: arrayValue(policySnapshot.evidenceCheckMappings),
+    requiredCheckIds,
+  })
+  for (const unresolved of evidenceResolution.unresolvedSources) {
+    blocking.push(
+      `Contract Compiler Dry-Run v0.2 could not derive required evidence ${unresolved.id}: ${unresolved.reason}.`,
     )
+  }
+  if (evidenceResolution.requiredEvidence.length === 0) {
+    blocking.push('Contract Compiler Dry-Run v0.2 requires source-authority-derived required evidence.')
+  }
 
   const forbiddenScopeResolution = resolveForbiddenScopeFromPolicySourceAuthority(policySnapshot)
   const forbiddenScope = forbiddenScopeResolution.forbiddenScope
@@ -404,7 +388,7 @@ function compileBugFixContractCandidate(input: Record<string, unknown>): {
         role: stringValue(artifact.role),
       })),
       requiredChecks,
-      requiredEvidence,
+      requiredEvidence: evidenceResolution.requiredEvidence,
       knownRisks: [
         {
           id: 'risk-compiler-dry-run-scope-drift',
@@ -422,21 +406,6 @@ function compileBugFixContractCandidate(input: Record<string, unknown>): {
     },
     blocking: [],
   }
-}
-
-function buildEvidenceCheckMapping(
-  policySnapshot: Record<string, unknown>,
-): Map<string, { requiredCheckId: string; compiledEvidenceType: string }> {
-  const mappings = new Map<string, { requiredCheckId: string; compiledEvidenceType: string }>()
-  for (const mapping of arrayValue(policySnapshot.evidenceCheckMappings)) {
-    const evidenceType = stringValue(mapping.evidenceType)
-    if (!evidenceType) continue
-    mappings.set(evidenceType, {
-      requiredCheckId: stringValue(mapping.requiredCheckId),
-      compiledEvidenceType: stringValue(mapping.compiledEvidenceType),
-    })
-  }
-  return mappings
 }
 
 interface ContractDiffReportInternal {

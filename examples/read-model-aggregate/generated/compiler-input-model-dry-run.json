@@ -68,9 +68,9 @@
         "compiledEvidenceType": "unit_test_result"
       },
       {
-        "evidenceType": "health_report",
-        "requiredCheckId": "check-read-model-health-report",
-        "compiledEvidenceType": "health_report"
+        "evidenceType": "validate_all_result",
+        "requiredCheckId": "check-read-model-validate-all",
+        "compiledEvidenceType": "validator_output"
       }
     ],
     "forbiddenScopeRules": [
@@ -98,9 +98,9 @@
         "freshness": "required-after-source-change"
       },
       {
-        "id": "evidence-read-model-health",
-        "artifact": "examples/read-model-aggregate/generated/read-model-health-report-output.json",
-        "evidenceType": "health_report",
+        "id": "evidence-validate-all-result",
+        "artifact": "examples/read-model-aggregate/generated/read-model-aggregate-summary.json",
+        "evidenceType": "validate_all_result",
         "freshness": "required-after-graph-or-artifact-change"
       }
     ]

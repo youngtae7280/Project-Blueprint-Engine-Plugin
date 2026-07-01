@@ -973,6 +973,16 @@ remaining policy losses, keeps `compilerPromotionReadiness` as `compiler-promoti
 AI, apply graph deltas, accept work, enable required checks, configure branch protection, expand source authority beyond
 stop conditions, retire tree-native artifacts, or widen changeType support.
 
+DEC-178 does not supersede DEC-097 through DEC-177. It connects Evidence source authority to the current Contract
+Compiler Dry-Run candidate for `requiredEvidence` only. Generated required Evidence is now derived from
+`evidenceIndex.entries[]` plus `policySnapshot.evidenceCheckMappings[]`; the hand-written dry-run contract remains a
+comparison fixture and is not a compiler source. The generated-vs-hand-written diff no longer reports required-Evidence
+semantic loss or evidence-chain mismatch for the current Todo Search `bug_fix` fixture. The source-authority gap preview
+now reports two remaining semantic losses, zero remaining policy losses, keeps `compilerPromotionReadiness` as
+`compiler-promotion-not-ready`, keeps `equivalenceProven` false, and recommends `context-source-authority` as the next
+narrow resolver. This does not execute AI, apply graph deltas, accept work, enable required checks, configure branch
+protection, expand source authority beyond required Evidence, retire tree-native artifacts, or widen changeType support.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
