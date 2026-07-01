@@ -197,8 +197,9 @@ does not compile contracts or execute AI.
 
 Contract Compiler Dry-Run v0.1 consumes that validated input for the current `bug_fix` fixture, deterministically writes
 a candidate execution contract, revalidates the candidate through the Contract Fixture Validator, and writes a
-generated-vs-hand-written diff report via `graph read-model compile-contract --dry-run --json`. It remains
-local/non-enforcing and does not execute AI or apply graph deltas.
+generated-vs-hand-written diff report via `graph read-model compile-contract --dry-run --json`. A passing compiler
+candidate does not imply equivalence with the hand-written dry-run contract while the diff reports
+`compiler-equivalence-not-proven`. It remains local/non-enforcing and does not execute AI or apply graph deltas.
 
 The following readiness artifact is complete at documentation level:
 

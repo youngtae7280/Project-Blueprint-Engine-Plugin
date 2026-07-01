@@ -499,8 +499,11 @@ interface GraphSourceHealthReport {
     requiredEvidenceCount: number
     outputCandidate: string
     candidateDiffStatus: string
+    candidateDiffReviewStatus: string
+    candidateEquivalenceStatus: string
     differingFieldCount: number
     diffReport: string
+    diffReviewBoundary: string
   }
   treeNativeRetirement: {
     readinessStatus: string
@@ -1434,8 +1437,11 @@ export async function reportGraphSourceHealth(root: string): Promise<GraphSource
       requiredEvidenceCount: contractCompilerDryRun.candidate.requiredEvidenceCount,
       outputCandidate: contractCompilerDryRun.paths.outputCandidate,
       candidateDiffStatus: contractCompilerDryRun.candidateDiff.status,
+      candidateDiffReviewStatus: contractCompilerDryRun.candidateDiff.reviewStatus,
+      candidateEquivalenceStatus: contractCompilerDryRun.candidateDiff.equivalenceStatus,
       differingFieldCount: contractCompilerDryRun.candidateDiff.differingFieldCount,
       diffReport: contractCompilerDryRun.paths.diffReport,
+      diffReviewBoundary: contractCompilerDryRun.candidateDiff.reviewBoundary,
     },
     treeNativeRetirement: {
       readinessStatus: String(retirementReadinessSummary.status || 'missing'),
@@ -1498,7 +1504,9 @@ Status: \`${report.status}\`
 | Dry-run compiler input | \`${report.compilerInputModel.dryRunInputStatus}\`; \`${report.compilerInputModel.dryRunChangeId}\`; ${report.compilerInputModel.graphSnapshotArtifactCount} graph artifacts / ${report.compilerInputModel.policyCount} policies / ${report.compilerInputModel.evidenceEntryCount} evidence entries / ${report.compilerInputModel.targetScopeCandidateCount} scope candidates |
 | Contract Compiler Dry-Run v0.1 | \`${report.contractCompilerDryRun.status}\` |
 | Compiled contract candidate | \`${report.contractCompilerDryRun.candidateStatus}\`; \`${report.contractCompilerDryRun.dryRunChangeId}\`; ${report.contractCompilerDryRun.requiredCheckCount} checks / ${report.contractCompilerDryRun.requiredEvidenceCount} evidence requirements |
-| Generated vs hand-written contract diff | \`${report.contractCompilerDryRun.candidateDiffStatus}\`; ${report.contractCompilerDryRun.differingFieldCount} differing fields; \`${report.contractCompilerDryRun.diffReport}\` |
+| Generated vs hand-written contract diff | \`${report.contractCompilerDryRun.candidateDiffStatus}\`; \`${report.contractCompilerDryRun.candidateDiffReviewStatus}\`; \`${report.contractCompilerDryRun.candidateEquivalenceStatus}\`; ${report.contractCompilerDryRun.differingFieldCount} differing fields; \`${report.contractCompilerDryRun.diffReport}\` |
+
+${report.contractCompilerDryRun.diffReviewBoundary}
 
 ## Retirement And Enforcement
 

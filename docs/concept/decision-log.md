@@ -871,6 +871,16 @@ Evidence/check derivation comes from `policySnapshot.evidenceCheckMappings`, for
 does not execute AI, apply graph deltas, accept work, enable required checks, configure branch protection, expand source
 authority, or retire tree-native artifacts.
 
+DEC-167 does not supersede DEC-097 through DEC-166. It clarifies Contract Compiler Dry-Run review semantics:
+`contract-compiler-dry-run-pass` and `contract-candidate-pass` do not imply compiler/hand-written equivalence. Health,
+E2E, and the diff artifact now expose `non-blocking-review-diff` and `compiler-equivalence-not-proven` while a diff is
+present. The diff report also includes id-based summaries for scopes, checks, and Evidence, and compiler input
+validation requires `policy:<id>` forbidden-scope derivations to resolve to known `policySnapshot.policies[].id` values.
+Supported-but-uncompilable inputs now report `contract-candidate-blocked`, while unsupported inputs remain
+`contract-candidate-not-run`. This remains dry-run review Evidence only and does not execute AI, apply graph deltas,
+accept work, enable required checks, configure branch protection, expand source authority, or retire tree-native
+artifacts.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

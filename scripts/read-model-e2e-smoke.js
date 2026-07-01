@@ -365,6 +365,16 @@ try {
     'contract-diff-detected',
     'contract compiler generated-vs-handwritten diff status',
   )
+  assertEqual(
+    contractCompilerDryRun.candidateDiff.reviewStatus,
+    'non-blocking-review-diff',
+    'contract compiler diff review status',
+  )
+  assertEqual(
+    contractCompilerDryRun.candidateDiff.equivalenceStatus,
+    'compiler-equivalence-not-proven',
+    'contract compiler equivalence status',
+  )
   if (contractCompilerDryRun.candidate.requiredCheckCount <= 0) {
     throw new Error('Contract compiler dry-run candidate must include required checks')
   }
@@ -469,6 +479,8 @@ try {
       requiredEvidenceCount: contractCompilerDryRun.candidate.requiredEvidenceCount,
       outputCandidate: contractCompilerDryRun.paths.outputCandidate,
       candidateDiffStatus: contractCompilerDryRun.candidateDiff.status,
+      candidateDiffReviewStatus: contractCompilerDryRun.candidateDiff.reviewStatus,
+      candidateEquivalenceStatus: contractCompilerDryRun.candidateDiff.equivalenceStatus,
       differingFieldCount: contractCompilerDryRun.candidateDiff.differingFieldCount,
       diffReport: contractCompilerDryRun.paths.diffReport,
       nonExecuting: true,

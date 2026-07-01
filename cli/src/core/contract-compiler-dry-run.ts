@@ -29,8 +29,22 @@ export interface ContractCompilerDryRunReport {
   }
   candidateDiff: {
     status: 'contract-diff-detected' | 'contract-diff-none' | 'contract-diff-not-run' | 'contract-diff-blocked'
+    reviewStatus: 'non-blocking-review-diff' | 'no-review-diff' | 'review-diff-not-run' | 'review-diff-blocked'
+    equivalenceStatus:
+      | 'compiler-equivalence-not-proven'
+      | 'compiler-equivalence-field-match'
+      | 'compiler-equivalence-not-run'
+      | 'compiler-equivalence-blocked'
     differingFieldCount: number
     differingFields: string[]
+    idBasedSummaries: Array<{
+      field: string
+      handWrittenCount: number
+      generatedCount: number
+      missingIdsInGenerated: string[]
+      extraIdsInGenerated: string[]
+    }>
+    reviewBoundary: string
   }
   blockingReasons: string[]
   warnings: string[]
@@ -57,6 +71,7 @@ export async function compileExecutionContractDryRun(
   const compilerBlocking: string[] = []
   const candidateBlocking: string[] = []
   const warnings: string[] = []
+  let compilerAttempted = false
 
   if (!schemaResult.ok) {
     inputBlocking.push(`Unable to read compiler input schema: ${schemaResult.error}`)
@@ -78,6 +93,7 @@ export async function compileExecutionContractDryRun(
       const unsupported = validateSupportedInput(input)
       compilerBlocking.push(...unsupported)
       if (unsupported.length === 0) {
+        compilerAttempted = true
         const compileResult = compileBugFixContractCandidate(input)
         compilerBlocking.push(...compileResult.blocking)
         candidate = compileResult.candidate
@@ -100,7 +116,9 @@ export async function compileExecutionContractDryRun(
   const blockingReasons = [...inputBlocking, ...compilerBlocking, ...candidateBlocking]
   const candidateStatus =
     candidate === undefined
-      ? 'contract-candidate-not-run'
+      ? compilerAttempted
+        ? 'contract-candidate-blocked'
+        : 'contract-candidate-not-run'
       : candidateBlocking.length > 0
         ? 'contract-candidate-blocked'
         : 'contract-candidate-pass'
@@ -126,8 +144,12 @@ export async function compileExecutionContractDryRun(
     candidate: summarizeCandidate(candidate),
     candidateDiff: {
       status: candidateDiff.status,
+      reviewStatus: candidateDiff.reviewStatus,
+      equivalenceStatus: candidateDiff.equivalenceStatus,
       differingFieldCount: candidateDiff.differingFields.length,
       differingFields: candidateDiff.differingFields,
+      idBasedSummaries: candidateDiff.idBasedSummaries,
+      reviewBoundary: candidateDiff.reviewBoundary,
     },
     blockingReasons,
     warnings,
@@ -211,7 +233,9 @@ function compileBugFixContractCandidate(input: Record<string, unknown>): {
       }
       if (!requiredCheckIds.has(mapping.requiredCheckId)) {
         blocking.push(
-          `Contract Compiler Dry-Run v0.1 evidenceCheckMapping for ${evidenceType} references unknown check: ${mapping.requiredCheckId}.`,
+          `Contract Compiler Dry-Run v0.1 policySnapshot.evidenceCheckMappings for evidenceType ${evidenceType} references unknown required check id: ${mapping.requiredCheckId}. Known check ids: ${Array.from(
+            requiredCheckIds,
+          ).join(', ')}.`,
         )
         return undefined
       }
@@ -318,11 +342,25 @@ interface ContractDiffReportInternal {
   schemaVersion: 1
   artifactRole: 'execution-contract-dry-run-diff-report'
   status: ContractDiffStatus
+  reviewStatus: 'non-blocking-review-diff' | 'no-review-diff' | 'review-diff-not-run' | 'review-diff-blocked'
+  equivalenceStatus:
+    | 'compiler-equivalence-not-proven'
+    | 'compiler-equivalence-field-match'
+    | 'compiler-equivalence-not-run'
+    | 'compiler-equivalence-blocked'
   sourceCandidate: string
   comparedWith: string
   differingFields: string[]
   comparedFields: Array<{ field: string; status: 'same' | 'different' }>
+  idBasedSummaries: Array<{
+    field: string
+    handWrittenCount: number
+    generatedCount: number
+    missingIdsInGenerated: string[]
+    extraIdsInGenerated: string[]
+  }>
   blockingReasons: string[]
+  reviewBoundary: string
   nonExecutionStatement: string
 }
 
@@ -355,11 +393,16 @@ async function buildContractDiffReport(
       schemaVersion: 1,
       artifactRole: 'execution-contract-dry-run-diff-report',
       status: 'contract-diff-blocked',
+      reviewStatus: 'review-diff-blocked',
+      equivalenceStatus: 'compiler-equivalence-blocked',
       sourceCandidate: relativePath(root, path.resolve(root, outputCandidatePath)),
       comparedWith: handWrittenPath,
       differingFields: [],
       comparedFields: [],
+      idBasedSummaries: [],
       blockingReasons: [`Unable to read hand-written dry-run contract: ${handWritten.error}`],
+      reviewBoundary:
+        'Diff report generation was blocked. The compiled candidate cannot be reviewed for equivalence against the hand-written dry-run contract.',
       nonExecutionStatement:
         'This diff report is review Evidence only and does not execute work, accept changes, or make the compiled candidate authoritative.',
     }
@@ -373,16 +416,24 @@ async function buildContractDiffReport(
         : ('different' as const),
   }))
   const differingFields = comparedFields.filter((field) => field.status === 'different').map((field) => field.field)
+  const idBasedSummaries = buildIdBasedDiffSummaries(candidate, asRecord(handWritten.value))
+  const hasDiff = differingFields.length > 0
 
   return {
     schemaVersion: 1,
     artifactRole: 'execution-contract-dry-run-diff-report',
-    status: differingFields.length > 0 ? 'contract-diff-detected' : 'contract-diff-none',
+    status: hasDiff ? 'contract-diff-detected' : 'contract-diff-none',
+    reviewStatus: hasDiff ? 'non-blocking-review-diff' : 'no-review-diff',
+    equivalenceStatus: hasDiff ? 'compiler-equivalence-not-proven' : 'compiler-equivalence-field-match',
     sourceCandidate: relativePath(root, path.resolve(root, outputCandidatePath)),
     comparedWith: handWrittenPath,
     differingFields,
     comparedFields,
+    idBasedSummaries,
     blockingReasons: [],
+    reviewBoundary: hasDiff
+      ? 'The compiler candidate is valid, but equivalence with the hand-written contract is not proven. Review the differing fields before relying on the candidate.'
+      : 'No compared contract fields differ. This still remains dry-run review Evidence, not execution authority.',
     nonExecutionStatement:
       'This diff report is review Evidence only and does not execute work, accept changes, or make the compiled candidate authoritative.',
   }
@@ -393,11 +444,16 @@ function buildNotRunDiffReport(outputCandidatePath: string, handWrittenPath: str
     schemaVersion: 1,
     artifactRole: 'execution-contract-dry-run-diff-report',
     status: 'contract-diff-not-run',
+    reviewStatus: 'review-diff-not-run',
+    equivalenceStatus: 'compiler-equivalence-not-run',
     sourceCandidate: outputCandidatePath,
     comparedWith: handWrittenPath,
     differingFields: [],
     comparedFields: [],
+    idBasedSummaries: [],
     blockingReasons: [],
+    reviewBoundary:
+      'No compiler candidate was produced, so equivalence with the hand-written contract was not reviewed.',
     nonExecutionStatement:
       'This diff report is review Evidence only and does not execute work, accept changes, or make the compiled candidate authoritative.',
   }
@@ -408,6 +464,31 @@ function stripInternalDiffFields(
 ): Omit<ContractDiffReportInternal, 'blockingReasons'> {
   const { blockingReasons: _blockingReasons, ...artifact } = diff
   return artifact
+}
+
+function buildIdBasedDiffSummaries(
+  generated: Record<string, unknown>,
+  handWritten: Record<string, unknown>,
+): ContractDiffReportInternal['idBasedSummaries'] {
+  return ['allowedScope', 'forbiddenScope', 'requiredChecks', 'requiredEvidence'].map((field) =>
+    buildIdBasedDiffSummary(field, arrayValue(handWritten[field]), arrayValue(generated[field])),
+  )
+}
+
+function buildIdBasedDiffSummary(
+  field: string,
+  handWrittenEntries: Array<Record<string, unknown>>,
+  generatedEntries: Array<Record<string, unknown>>,
+): ContractDiffReportInternal['idBasedSummaries'][number] {
+  const handWrittenIds = handWrittenEntries.map((entry) => stringValue(entry.id)).filter(Boolean)
+  const generatedIds = generatedEntries.map((entry) => stringValue(entry.id)).filter(Boolean)
+  return {
+    field,
+    handWrittenCount: handWrittenIds.length,
+    generatedCount: generatedIds.length,
+    missingIdsInGenerated: handWrittenIds.filter((id) => !generatedIds.includes(id)),
+    extraIdsInGenerated: generatedIds.filter((id) => !handWrittenIds.includes(id)),
+  }
 }
 
 function summarizeCandidate(candidate: Record<string, unknown> | undefined): ContractCompilerDryRunReport['candidate'] {

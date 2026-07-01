@@ -217,6 +217,7 @@ function validatePackSchema(record: Record<string, unknown>, blocking: string[])
 function validatePolicySnapshot(record: Record<string, unknown>, root: string, blocking: string[]): void {
   validateRequiredStringFields('Compiler input dry-run policySnapshot', record, ['id'], blocking)
   const policies = arrayValue(record.policies)
+  const policyIds = new Set<string>()
   if (policies.length === 0) {
     blocking.push('Compiler input dry-run policySnapshot.policies is required.')
   }
@@ -227,6 +228,10 @@ function validatePolicySnapshot(record: Record<string, unknown>, root: string, b
       ['id', 'authority', 'status'],
       blocking,
     )
+    const id = stringValue(policy.id, '')
+    if (id) {
+      policyIds.add(id)
+    }
     const authority = stringValue(policy.authority, '')
     if (authority && !allowedPolicyAuthorities.includes(authority)) {
       blocking.push(
@@ -245,7 +250,7 @@ function validatePolicySnapshot(record: Record<string, unknown>, root: string, b
     }
   }
   validateEvidenceCheckMappings(record, blocking)
-  validateForbiddenScopeRules(record, root, blocking)
+  validateForbiddenScopeRules(record, root, policyIds, blocking)
 }
 
 function validateEvidenceCheckMappings(record: Record<string, unknown>, blocking: string[]): void {
@@ -265,7 +270,12 @@ function validateEvidenceCheckMappings(record: Record<string, unknown>, blocking
   }
 }
 
-function validateForbiddenScopeRules(record: Record<string, unknown>, root: string, blocking: string[]): void {
+function validateForbiddenScopeRules(
+  record: Record<string, unknown>,
+  root: string,
+  policyIds: Set<string>,
+  blocking: string[],
+): void {
   const rules = arrayValue(record.forbiddenScopeRules)
   if (rules.length === 0) {
     blocking.push('Compiler input dry-run policySnapshot.forbiddenScopeRules is required.')
@@ -286,8 +296,15 @@ function validateForbiddenScopeRules(record: Record<string, unknown>, root: stri
         blocking.push(`${label}.paths references missing file or artifact: ${rulePath}.`)
       }
     }
-    if (stringArrayValue(rule.derivedFrom).length === 0) {
+    const derivedFrom = stringArrayValue(rule.derivedFrom)
+    if (derivedFrom.length === 0) {
       blocking.push(`${label}.derivedFrom must be a non-empty string array.`)
+    }
+    for (const reference of derivedFrom) {
+      const policyReference = /^policy:(.+)$/.exec(reference)
+      if (policyReference && !policyIds.has(policyReference[1])) {
+        blocking.push(`${label}.derivedFrom references unknown policy id: ${reference}.`)
+      }
     }
   }
 }

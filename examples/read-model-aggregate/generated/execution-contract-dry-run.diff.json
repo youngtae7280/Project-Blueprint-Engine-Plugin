@@ -2,6 +2,8 @@
   "schemaVersion": 1,
   "artifactRole": "execution-contract-dry-run-diff-report",
   "status": "contract-diff-detected",
+  "reviewStatus": "non-blocking-review-diff",
+  "equivalenceStatus": "compiler-equivalence-not-proven",
   "sourceCandidate": "examples/read-model-aggregate/generated/execution-contract-dry-run.generated.json",
   "comparedWith": "examples/read-model-aggregate/generated/execution-contract-dry-run.json",
   "differingFields": [
@@ -32,5 +34,36 @@
     { "field": "outputRequirements", "status": "different" },
     { "field": "nonExecutionStatement", "status": "different" }
   ],
+  "idBasedSummaries": [
+    {
+      "field": "allowedScope",
+      "handWrittenCount": 3,
+      "generatedCount": 2,
+      "missingIdsInGenerated": ["scope-todo-search-evidence"],
+      "extraIdsInGenerated": []
+    },
+    {
+      "field": "forbiddenScope",
+      "handWrittenCount": 2,
+      "generatedCount": 2,
+      "missingIdsInGenerated": ["scope-no-product-meaning-expansion"],
+      "extraIdsInGenerated": ["scope-no-tree-retirement"]
+    },
+    {
+      "field": "requiredChecks",
+      "handWrittenCount": 3,
+      "generatedCount": 4,
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": ["check-read-model-health-report"]
+    },
+    {
+      "field": "requiredEvidence",
+      "handWrittenCount": 2,
+      "generatedCount": 2,
+      "missingIdsInGenerated": ["evidence-validate-all-result"],
+      "extraIdsInGenerated": ["evidence-read-model-health"]
+    }
+  ],
+  "reviewBoundary": "The compiler candidate is valid, but equivalence with the hand-written contract is not proven. Review the differing fields before relying on the candidate.",
   "nonExecutionStatement": "This diff report is review Evidence only and does not execute work, accept changes, or make the compiled candidate authoritative."
 }

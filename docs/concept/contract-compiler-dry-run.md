@@ -58,7 +58,21 @@ Expected current status:
 
 - `candidateStatus`: `contract-candidate-pass`
 - `candidateDiff.status`: `contract-diff-detected`
+- `candidateDiff.reviewStatus`: `non-blocking-review-diff`
+- `candidateDiff.equivalenceStatus`: `compiler-equivalence-not-proven`
 - `candidateDiff.differingFields`: visible fields to review before relying on the generated candidate
+
+`contract-compiler-dry-run-pass` means the compiler candidate was produced and passed the Contract Fixture Validator.
+It does not mean the compiler-produced candidate is semantically equivalent to the hand-written contract. While
+`candidateDiff.status` remains `contract-diff-detected`, the generated candidate is reviewable but equivalence is not
+proven.
+
+The diff report keeps field-level status and id-based summaries for:
+
+- `allowedScope`
+- `forbiddenScope`
+- `requiredChecks`
+- `requiredEvidence`
 
 ## Boundaries
 

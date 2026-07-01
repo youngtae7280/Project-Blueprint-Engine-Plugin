@@ -980,6 +980,15 @@ describe('read-model Evidence builder', () => {
     })
     expect(report.compilerBoundary.requiredCheckCount).toBeGreaterThan(0)
     expect(report.compilerBoundary.requiredEvidenceCount).toBeGreaterThan(0)
+    expect(report.contractCompilerDryRun).toMatchObject({
+      status: 'contract-compiler-dry-run-pass',
+      candidateStatus: 'contract-candidate-pass',
+      candidateDiffStatus: 'contract-diff-detected',
+      candidateDiffReviewStatus: 'non-blocking-review-diff',
+      candidateEquivalenceStatus: 'compiler-equivalence-not-proven',
+    })
+    expect(report.contractCompilerDryRun.differingFieldCount).toBeGreaterThan(0)
+    expect(report.contractCompilerDryRun.diffReviewBoundary).toContain('equivalence with the hand-written contract')
     expect(report.edgeIntent.edgeIntentCount).toBeGreaterThan(0)
     expect(report.treeNativeRetirement).toMatchObject({
       readinessStatus: 'retirement-not-ready',
@@ -1341,7 +1350,7 @@ describe('read-model Evidence builder', () => {
     input.policySnapshot.policies[0].status = 'maybe'
     input.policySnapshot.evidenceCheckMappings[0].requiredCheckId = ''
     input.policySnapshot.forbiddenScopeRules[0].paths = ['examples/missing/policy-boundary.json']
-    input.policySnapshot.forbiddenScopeRules[0].derivedFrom = []
+    input.policySnapshot.forbiddenScopeRules[0].derivedFrom = ['policy:does-not-exist']
     input.packSchema.requiredInputGroups = ['humanRequest', 'magicContext']
 
     const validation = await validateCompilerInputDryRun(input, resolve('.'))
@@ -1358,7 +1367,7 @@ describe('read-model Evidence builder', () => {
     expect(blocking).toContain('policySnapshot.policies[0].status must be one of')
     expect(blocking).toContain('policySnapshot.evidenceCheckMappings[0].requiredCheckId is required')
     expect(blocking).toContain('policySnapshot.forbiddenScopeRules[0].paths references missing file or artifact')
-    expect(blocking).toContain('policySnapshot.forbiddenScopeRules[0].derivedFrom must be a non-empty string array')
+    expect(blocking).toContain('policySnapshot.forbiddenScopeRules[0].derivedFrom references unknown policy id')
     expect(blocking).toContain('packSchema.requiredInputGroups contains unknown groups: magicContext')
   })
 
@@ -1374,6 +1383,9 @@ describe('read-model Evidence builder', () => {
     expect(report.inputModelStatus).toBe('compiler-input-model-pass')
     expect(report.candidateStatus).toBe('contract-candidate-pass')
     expect(report.candidateDiff.status).toBe('contract-diff-detected')
+    expect(report.candidateDiff.reviewStatus).toBe('non-blocking-review-diff')
+    expect(report.candidateDiff.equivalenceStatus).toBe('compiler-equivalence-not-proven')
+    expect(report.candidateDiff.reviewBoundary).toContain('equivalence with the hand-written contract')
     expect(report.paths.diffReport).toBe('examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json')
     expect(report.candidate).toMatchObject({
       changeId: 'change-todo-search-whitespace-normalization-dogfood',
@@ -1388,9 +1400,30 @@ describe('read-model Evidence builder', () => {
     const diffReport = JSON.parse(await readFile(join(workspace, report.paths.diffReport), 'utf8')) as {
       status: string
       differingFields: string[]
+      reviewStatus: string
+      equivalenceStatus: string
+      idBasedSummaries: Array<{
+        field: string
+        handWrittenCount: number
+        generatedCount: number
+        missingIdsInGenerated: string[]
+        extraIdsInGenerated: string[]
+      }>
     }
     expect(diffReport.status).toBe('contract-diff-detected')
+    expect(diffReport.reviewStatus).toBe('non-blocking-review-diff')
+    expect(diffReport.equivalenceStatus).toBe('compiler-equivalence-not-proven')
     expect(diffReport.differingFields).toContain('sourceMode')
+    expect(diffReport.idBasedSummaries.find((entry) => entry.field === 'allowedScope')).toMatchObject({
+      handWrittenCount: 3,
+      generatedCount: 2,
+      missingIdsInGenerated: ['scope-todo-search-evidence'],
+    })
+    expect(diffReport.idBasedSummaries.find((entry) => entry.field === 'requiredChecks')).toMatchObject({
+      handWrittenCount: 3,
+      generatedCount: 4,
+      extraIdsInGenerated: ['check-read-model-health-report'],
+    })
     expect(validation.blocking).toEqual([])
     expect(report.nonExecutionStatement).toContain('does not execute AI')
   })
@@ -1409,7 +1442,13 @@ describe('read-model Evidence builder', () => {
       candidateStatus: string
       paths: { outputCandidate: string; diffReport: string }
       candidate: { requiredCheckCount: number; requiredEvidenceCount: number }
-      candidateDiff: { status: string; differingFieldCount: number }
+      candidateDiff: {
+        status: string
+        reviewStatus: string
+        equivalenceStatus: string
+        differingFieldCount: number
+        idBasedSummaries: unknown[]
+      }
     }
 
     expect(result.exitCode).toBe(0)
@@ -1422,7 +1461,10 @@ describe('read-model Evidence builder', () => {
     )
     expect(output.paths.diffReport).toBe('examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json')
     expect(output.candidateDiff.status).toBe('contract-diff-detected')
+    expect(output.candidateDiff.reviewStatus).toBe('non-blocking-review-diff')
+    expect(output.candidateDiff.equivalenceStatus).toBe('compiler-equivalence-not-proven')
     expect(output.candidateDiff.differingFieldCount).toBeGreaterThan(0)
+    expect(output.candidateDiff.idBasedSummaries.length).toBeGreaterThan(0)
     expect(output.candidate.requiredCheckCount).toBeGreaterThan(0)
     expect(output.candidate.requiredEvidenceCount).toBeGreaterThan(0)
   })
@@ -1447,6 +1489,26 @@ describe('read-model Evidence builder', () => {
     expect(blocking).toContain('only supports bug_fix changeType')
   })
 
+  it('blocks Contract Compiler Dry-Run v0.1 candidate generation for supported inputs with bad policy mappings', async () => {
+    const workspace = await createExampleWorkspace()
+    const inputPath = join(workspace, 'examples/read-model-aggregate/generated/compiler-input-model-dry-run.json')
+    const input = JSON.parse(await readFile(inputPath, 'utf8')) as {
+      policySnapshot: { evidenceCheckMappings: Array<Record<string, unknown>> }
+    }
+    input.policySnapshot.evidenceCheckMappings[0].requiredCheckId = 'check-does-not-exist'
+    await writeFile(inputPath, JSON.stringify(input, null, 2))
+
+    const report = await compileExecutionContractDryRun(workspace, { writeOutput: false })
+    const blocking = report.blockingReasons.join('\n')
+
+    expect(report.status).toBe('contract-compiler-dry-run-blocked')
+    expect(report.inputModelStatus).toBe('compiler-input-model-pass')
+    expect(report.candidateStatus).toBe('contract-candidate-blocked')
+    expect(report.candidateDiff.status).toBe('contract-diff-not-run')
+    expect(blocking).toContain('policySnapshot.evidenceCheckMappings for evidenceType runtime_fixture_result')
+    expect(blocking).toContain('references unknown required check id: check-does-not-exist')
+  })
+
   it('exposes graph-source health through the CLI without creating enforcement', async () => {
     const workspace = await createExampleWorkspace()
     await copyWorkspacePath('examples/intent-critical', workspace)
@@ -1469,8 +1531,11 @@ describe('read-model Evidence builder', () => {
         dryRunChangeId: string
         candidateStatus: string
         candidateDiffStatus: string
+        candidateDiffReviewStatus: string
+        candidateEquivalenceStatus: string
         differingFieldCount: number
         diffReport: string
+        diffReviewBoundary: string
       }
     }
     const markdown = await readFile(markdownPath, 'utf8')
@@ -1487,10 +1552,13 @@ describe('read-model Evidence builder', () => {
     expect(output.contractCompilerDryRun.status).toBe('contract-compiler-dry-run-pass')
     expect(output.contractCompilerDryRun.candidateStatus).toBe('contract-candidate-pass')
     expect(output.contractCompilerDryRun.candidateDiffStatus).toBe('contract-diff-detected')
+    expect(output.contractCompilerDryRun.candidateDiffReviewStatus).toBe('non-blocking-review-diff')
+    expect(output.contractCompilerDryRun.candidateEquivalenceStatus).toBe('compiler-equivalence-not-proven')
     expect(output.contractCompilerDryRun.differingFieldCount).toBeGreaterThan(0)
     expect(output.contractCompilerDryRun.diffReport).toBe(
       'examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json',
     )
+    expect(output.contractCompilerDryRun.diffReviewBoundary).toContain('equivalence with the hand-written contract')
     expect(output.contractCompilerDryRun.dryRunChangeId).toBe('change-todo-search-whitespace-normalization-dogfood')
     expect(output.treeNativeRetirement.todoSearchApprovalStatus).toBe('retirement-candidate-not-deleted')
     expect(output.treeNativeRetirement.repoWideApprovalStatus).toBe('not-ready')
@@ -1504,6 +1572,9 @@ describe('read-model Evidence builder', () => {
     expect(markdown).toContain('`compiler-input-model-pass`')
     expect(markdown).toContain('`contract-compiler-dry-run-pass`')
     expect(markdown).toContain('`contract-diff-detected`')
+    expect(markdown).toContain('`non-blocking-review-diff`')
+    expect(markdown).toContain('`compiler-equivalence-not-proven`')
+    expect(markdown).toContain('equivalence with the hand-written contract')
     expect(markdown).toContain('`retirement-not-ready`')
     expect(markdown).toContain('`non-enforcing`')
     expect(markdown).toContain('node dist/cli/index.js graph read-model report-health --json --markdown')
