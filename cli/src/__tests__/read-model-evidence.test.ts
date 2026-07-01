@@ -1107,10 +1107,13 @@ describe('read-model Evidence builder', () => {
       fieldDefinitions: Record<string, Record<string, unknown>>
     }
     delete schema.fieldDefinitions.requiredChecks.authority
+    schema.fieldDefinitions.goal.authority = 'llm-prose'
 
     const validation = validateContractSchema(schema)
 
-    expect(validation.blocking.join('\n')).toContain('fieldDefinitions.requiredChecks.authority is required')
+    const blocking = validation.blocking.join('\n')
+    expect(blocking).toContain('fieldDefinitions.requiredChecks.authority is required')
+    expect(blocking).toContain('fieldDefinitions.goal.authority must be one of')
   })
 
   it('blocks dry-run contracts with status or sourceMode drift in the dry-run bucket', async () => {
@@ -1148,7 +1151,9 @@ describe('read-model Evidence builder', () => {
     contract.allowedScope[0].derivedFrom = []
     contract.requiredChecks[0].validates = []
     contract.requiredEvidence[0].fromCheck = 'check-does-not-exist'
+    contract.requiredEvidence[0].freshness = 'eventually'
     delete contract.stopConditions[0].action
+    contract.stopConditions[1].action = 'continue-without-evidence'
 
     const validation = validateExecutionContract(contract)
     const blocking = validation.blocking.join('\n')
@@ -1157,7 +1162,9 @@ describe('read-model Evidence builder', () => {
     expect(blocking).toContain('allowedScope[0].derivedFrom must be a non-empty string array')
     expect(blocking).toContain('requiredChecks[0].validates must be a non-empty string array')
     expect(blocking).toContain('requiredEvidence[0].fromCheck must reference an existing requiredChecks.id')
+    expect(blocking).toContain('requiredEvidence[0].freshness must be one of')
     expect(blocking).toContain('stopConditions[0].action is required')
+    expect(blocking).toContain('stopConditions[1].action must be one of')
   })
 
   it('blocks dry-run contracts with critical or blocking unknowns and unresolved high risks', async () => {
@@ -1191,6 +1198,15 @@ describe('read-model Evidence builder', () => {
       'high risk without human decision',
     )
 
+    const selfMitigatedHighRiskContract = {
+      ...contract,
+      knownRisks: [{ id: 'risk-driver-protocol', severity: 'high', status: 'mitigated' }],
+      humanDecisions: [],
+    }
+    expect(validateExecutionContract(selfMitigatedHighRiskContract).blocking.join('\n')).toContain(
+      'high risk without human decision',
+    )
+
     const acceptedRiskContract = {
       ...contract,
       knownRisks: [{ id: 'risk-driver-protocol', severity: 'high', status: 'open' }],
@@ -1204,6 +1220,37 @@ describe('read-model Evidence builder', () => {
       ],
     }
     expect(validateExecutionContract(acceptedRiskContract).blocking.join('\n')).not.toContain('risk-driver-protocol')
+  })
+
+  it('blocks durable invalid compiler-boundary fixture when high risk lacks linked human decision', async () => {
+    const fixturePath =
+      'examples/read-model-aggregate/invalid-compiler-boundary-fixtures/high-risk-mitigated-without-human-decision.json'
+    const contract = JSON.parse(await readFile(fixturePath, 'utf8')) as Record<string, unknown>
+
+    const validation = validateExecutionContract(contract)
+
+    expect(validation.blocking.join('\n')).toContain(
+      'Execution contract has high risk without human decision: risk-self-declared-mitigation',
+    )
+  })
+
+  it('blocks human decisions that point at unknown contract targets', async () => {
+    const contractPath = 'examples/read-model-aggregate/generated/execution-contract-dry-run.json'
+    const contract = JSON.parse(await readFile(contractPath, 'utf8')) as Record<string, unknown>
+    contract.humanDecisions = [
+      {
+        id: 'decision-unknown-target',
+        decides: 'risk-does-not-exist',
+        status: 'accepted',
+        decision: 'Invalid target.',
+      },
+    ]
+
+    const validation = validateExecutionContract(contract)
+
+    expect(validation.blocking.join('\n')).toContain(
+      'humanDecisions[0].decides must reference a known risk, unknown, scope, or change id',
+    )
   })
 
   it('exposes graph-source health through the CLI without creating enforcement', async () => {

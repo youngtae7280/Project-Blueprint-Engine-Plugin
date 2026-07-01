@@ -95,12 +95,19 @@ The Contract Fixture Validator currently blocks:
 - allowed/forbidden scope entries without paths or graph/policy derivation
 - required checks without command or validation target
 - required Evidence not linked to an existing required Check
+- required Evidence with unknown freshness policy
 - stop conditions without an action
+- stop conditions with unknown action policy
 - open critical or blocking unknowns
 - critical, high, or blocking risks without a matching accepted or mitigated human decision
+- human decisions that do not point at a known risk, unknown, scope, or change id
+- schema field authority values outside the current compiler-boundary vocabulary
 
 The report preserves the original top-level status fields and also exposes `validationBuckets` for task registry,
 contract schema, and dry-run contract issues. Buckets keep failures attributable without relying on string matching.
+
+High, critical, and blocking risks cannot self-declare safety through `risk.status = mitigated`. They require an explicit
+`humanDecisions[]` entry whose `decides` value points at the risk id and whose status is `accepted` or `mitigated`.
 
 ## Health And E2E Integration
 

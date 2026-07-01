@@ -833,6 +833,14 @@ layer is explicitly separated from a future Actual Contract Compiler. This remai
 required checks, branch protection, automatic AI execution, graph delta application, acceptance, source-authority
 expansion, or tree-native retirement.
 
+DEC-162 does not supersede DEC-097 through DEC-161. It closes the next Compiler Boundary validator gaps: high, critical,
+and blocking risks now require a linked accepted or mitigated human decision even when the risk itself claims
+`mitigated`; schema field authorities, Evidence freshness, stop-condition actions, and human-decision targets are checked
+against bounded vocabularies or known ids; and a durable invalid fixture records the self-mitigated high-risk case. This
+remains Contract Fixture Validator hardening only and does not create an Actual Contract Compiler, required check,
+branch protection rule, automatic AI execution path, acceptance authority, graph delta application, source-authority
+expansion, or tree-native retirement.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

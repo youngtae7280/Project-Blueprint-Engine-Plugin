@@ -14,6 +14,7 @@ export type CompilerBoundarySubStatus =
 
 type TaskClassification = 'compiler-required' | 'ai-advisory'
 type ContractSeverity = 'info' | 'warning' | 'blocking' | 'critical' | 'high'
+type ContractAuthority = 'compiler' | 'policy' | 'graph' | 'human' | 'validator' | 'ai-advisory'
 type CompilerBoundaryBucketStatus =
   | 'task-registry-pass'
   | 'task-registry-blocked'
@@ -201,6 +202,23 @@ const requiredContractFields = [
   'stopConditions',
   'outputRequirements',
 ]
+
+const allowedContractAuthorities: ContractAuthority[] = [
+  'compiler',
+  'policy',
+  'graph',
+  'human',
+  'validator',
+  'ai-advisory',
+]
+const allowedEvidenceFreshness = [
+  'required-after-source-change',
+  'required-after-graph-or-artifact-change',
+  'required-after-policy-change',
+  'required-after-contract-change',
+  'required-before-acceptance',
+]
+const allowedStopConditionActions = ['stop-and-request-human-decision', 'stop-and-record-missing-evidence']
 
 export async function reportCompilerBoundary(root: string): Promise<CompilerBoundaryReport> {
   const registry = await readJsonSafe<CompilerBoundaryTaskRegistry>(path.resolve(root, taskRegistryPath))
@@ -399,6 +417,10 @@ export function validateContractSchema(schema: unknown): { blocking: string[]; w
     }
     if (!stringValue(definition.authority, '')) {
       blocking.push(`Contract schema fieldDefinitions.${field}.authority is required.`)
+    } else if (!allowedContractAuthorities.includes(stringValue(definition.authority, '') as ContractAuthority)) {
+      blocking.push(
+        `Contract schema fieldDefinitions.${field}.authority must be one of: ${allowedContractAuthorities.join(', ')}.`,
+      )
     }
   }
   if (!stringValue(record.nonEnforcementStatement, '').includes('does not enable required checks')) {
@@ -443,6 +465,15 @@ export function validateExecutionContract(contract: unknown): { blocking: string
   const openUnknowns = arrayValue(record.openUnknowns)
   const decisions = arrayValue(record.humanDecisions)
   const stopConditions = arrayValue(record.stopConditions)
+  const decisionTargetIds = new Set(
+    [
+      stringValue(record.changeId, ''),
+      ...allowedScope.map((scope) => stringValue(scope.id, '')),
+      ...forbiddenScope.map((scope) => stringValue(scope.id, '')),
+      ...knownRisks.map((risk) => stringValue(risk.id, '')),
+      ...openUnknowns.map((unknown) => stringValue(unknown.id, '')),
+    ].filter(Boolean),
+  )
   if (allowedScope.length === 0) {
     blocking.push('Execution contract allowedScope is required.')
   }
@@ -481,6 +512,10 @@ export function validateExecutionContract(contract: unknown): { blocking: string
     if (fromCheck && !checkIds.has(fromCheck)) {
       blocking.push(`${label}.fromCheck must reference an existing requiredChecks.id: ${fromCheck}.`)
     }
+    const freshness = stringValue(evidence.freshness, '')
+    if (freshness && !allowedEvidenceFreshness.includes(freshness)) {
+      blocking.push(`${label}.freshness must be one of: ${allowedEvidenceFreshness.join(', ')}.`)
+    }
   }
   for (const unknown of openUnknowns) {
     validateRequiredStringFields(
@@ -500,6 +535,12 @@ export function validateExecutionContract(contract: unknown): { blocking: string
       ['id', 'decides', 'status', 'decision'],
       blocking,
     )
+    const target = stringValue(decision.decides, '')
+    if (target && !decisionTargetIds.has(target)) {
+      blocking.push(
+        `Execution contract humanDecisions[${index}].decides must reference a known risk, unknown, scope, or change id: ${target}.`,
+      )
+    }
   }
   const acceptedRiskIds = new Set(
     decisions
@@ -520,6 +561,12 @@ export function validateExecutionContract(contract: unknown): { blocking: string
       ['id', 'condition', 'action'],
       blocking,
     )
+    const action = stringValue(stopCondition.action, '')
+    if (action && !allowedStopConditionActions.includes(action)) {
+      blocking.push(
+        `Execution contract stopConditions[${index}].action must be one of: ${allowedStopConditionActions.join(', ')}.`,
+      )
+    }
   }
   if (stringArrayValue(record.outputRequirements).length === 0) {
     blocking.push('Execution contract outputRequirements must be a non-empty string array.')
@@ -599,10 +646,7 @@ function isUnknownBlocking(unknown: Record<string, unknown>): boolean {
 }
 
 function isRiskDecisionRequired(risk: Record<string, unknown>): boolean {
-  return (
-    ['critical', 'high', 'blocking'].includes(stringValue(risk.severity, '')) &&
-    stringValue(risk.status, '') !== 'mitigated'
-  )
+  return ['critical', 'high', 'blocking'].includes(stringValue(risk.severity, ''))
 }
 
 export function compilerBoundaryRelativePath(root: string, absolutePath: string): string {
