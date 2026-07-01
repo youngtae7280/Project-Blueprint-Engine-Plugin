@@ -14,7 +14,7 @@
       "missingIdsInGenerated": ["scope-todo-search-evidence"],
       "extraIdsInGenerated": [],
       "likelyMissingSourceAuthority": "Allowed execution and evidence/write-target scope source authority is not yet complete.",
-      "candidateSourceAuthorityType": "scope-source-authority",
+      "candidateSourceAuthorityType": "allowed-scope-source-authority",
       "resolverRequired": true,
       "preservationStatus": "source-authority-gap-review-required"
     },
@@ -53,14 +53,14 @@
     },
     {
       "field": "knownRisks",
-      "currentDiffStatus": "field-diff-detected",
-      "semanticClassifications": ["safe-additive", "semantic-loss"],
-      "missingIdsInGenerated": ["risk-query-tokenization-regression"],
-      "extraIdsInGenerated": ["risk-compiler-dry-run-scope-drift"],
-      "likelyMissingSourceAuthority": "Risk source authority does not yet preserve the hand-written risk set.",
+      "currentDiffStatus": "field-diff-none",
+      "semanticClassifications": [],
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": [],
+      "likelyMissingSourceAuthority": "No source-authority gap detected for the current dry-run diff.",
       "candidateSourceAuthorityType": "risk-source-authority",
-      "resolverRequired": true,
-      "preservationStatus": "source-authority-gap-open"
+      "resolverRequired": false,
+      "preservationStatus": "source-authority-preserved"
     },
     {
       "field": "stopConditions",
@@ -76,13 +76,13 @@
   ],
   "summary": {
     "status": "contract-source-authority-gap-preview-pass",
-    "remainingLossCount": 1,
+    "remainingLossCount": 0,
     "remainingPolicyLossCount": 0,
-    "remainingSemanticLossCount": 1,
-    "fieldsRequiringSourceAuthority": ["allowedScope", "knownRisks"],
-    "nextRecommendedResolver": "risk-source-authority",
-    "promotionBlockedBy": ["semantic-loss"],
-    "equivalenceBlockedBy": ["allowedScope", "knownRisks"]
+    "remainingSemanticLossCount": 0,
+    "fieldsRequiringSourceAuthority": ["allowedScope"],
+    "nextRecommendedResolver": "allowed-scope-source-authority",
+    "promotionBlockedBy": [],
+    "equivalenceBlockedBy": ["allowedScope"]
   },
   "nonExecutionStatement": "This gap preview is non-enforcing review metadata only. It does not execute AI, apply graph deltas, accept work, enable required checks, configure branch protection, retire tree-native artifacts, or promote the compiler candidate."
 }

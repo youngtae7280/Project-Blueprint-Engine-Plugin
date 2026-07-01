@@ -6,7 +6,7 @@
   "equivalenceStatus": "compiler-equivalence-not-proven",
   "sourceCandidate": "examples/read-model-aggregate/generated/execution-contract-dry-run.generated.json",
   "comparedWith": "examples/read-model-aggregate/generated/execution-contract-dry-run.json",
-  "differingFields": ["sourceMode", "allowedScope", "requiredChecks", "knownRisks", "nonExecutionStatement"],
+  "differingFields": ["sourceMode", "allowedScope", "requiredChecks", "nonExecutionStatement"],
   "comparedFields": [
     { "field": "sourceMode", "status": "different" },
     { "field": "changeType", "status": "same" },
@@ -16,7 +16,7 @@
     { "field": "requiredContext", "status": "same" },
     { "field": "requiredChecks", "status": "different" },
     { "field": "requiredEvidence", "status": "same" },
-    { "field": "knownRisks", "status": "different" },
+    { "field": "knownRisks", "status": "same" },
     { "field": "openUnknowns", "status": "same" },
     { "field": "humanDecisions", "status": "same" },
     { "field": "stopConditions", "status": "same" },
@@ -63,8 +63,8 @@
       "field": "knownRisks",
       "handWrittenCount": 1,
       "generatedCount": 1,
-      "missingIdsInGenerated": ["risk-query-tokenization-regression"],
-      "extraIdsInGenerated": ["risk-compiler-dry-run-scope-drift"]
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
     },
     {
       "field": "stopConditions",
@@ -100,30 +100,6 @@
       "extraIdsInGenerated": ["check-read-model-health-report"]
     },
     {
-      "field": "knownRisks",
-      "targetField": "knownRisks",
-      "diffDirection": "missingIdsInGenerated",
-      "matchedRuleId": "semantic-diff-rule-known-risks-missing-semantic-loss",
-      "classification": "semantic-loss",
-      "reviewSeverity": "high",
-      "promotionImpact": "blocks-promotion",
-      "reason": "The generated candidate is missing a known risk from the hand-written contract, so risk semantics are not preserved.",
-      "missingIdsInGenerated": ["risk-query-tokenization-regression"],
-      "extraIdsInGenerated": []
-    },
-    {
-      "field": "knownRisks",
-      "targetField": "knownRisks",
-      "diffDirection": "extraIdsInGenerated",
-      "matchedRuleId": "semantic-diff-rule-known-risks-extra-safe-additive",
-      "classification": "safe-additive",
-      "reviewSeverity": "low",
-      "promotionImpact": "review-required",
-      "reason": "The generated candidate adds a known risk beyond the hand-written contract; this is additive but still review-only.",
-      "missingIdsInGenerated": [],
-      "extraIdsInGenerated": ["risk-compiler-dry-run-scope-drift"]
-    },
-    {
       "field": "sourceMode",
       "targetField": "sourceMode",
       "diffDirection": "fieldDifferent",
@@ -148,23 +124,16 @@
       "extraIdsInGenerated": []
     }
   ],
-  "semanticClassificationCounts": {
-    "conservative-restriction": 1,
-    "safe-additive": 2,
-    "semantic-loss": 1,
-    "metadata-only": 2
-  },
-  "highestReviewSeverity": "high",
+  "semanticClassificationCounts": { "conservative-restriction": 1, "safe-additive": 1, "metadata-only": 2 },
+  "highestReviewSeverity": "medium",
   "compilerPromotionReadiness": "compiler-promotion-not-ready",
   "promotionReadiness": "compiler-promotion-not-ready",
   "semanticDiffRuleCoverage": {
-    "totalDiffs": 6,
-    "classifiedDiffs": 6,
+    "totalDiffs": 4,
+    "classifiedDiffs": 4,
     "unknownDiffs": 0,
     "matchedRuleIds": [
       "semantic-diff-rule-allowed-scope-missing-conservative-restriction",
-      "semantic-diff-rule-known-risks-extra-safe-additive",
-      "semantic-diff-rule-known-risks-missing-semantic-loss",
       "semantic-diff-rule-non-execution-statement-field-metadata-only",
       "semantic-diff-rule-required-checks-extra-safe-additive",
       "semantic-diff-rule-source-mode-field-metadata-only"

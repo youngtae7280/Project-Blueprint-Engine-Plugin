@@ -34,7 +34,8 @@
       "evidenceIndex",
       "targetScopeCandidates",
       "outputRequirementSources",
-      "stopConditionSources"
+      "stopConditionSources",
+      "riskSources"
     ]
   },
   "policySnapshot": {
@@ -190,6 +191,26 @@
         ]
       },
       "relatedFields": ["requiredChecks", "requiredEvidence"]
+    }
+  ],
+  "riskSources": [
+    {
+      "sourceId": "risk-source-query-tokenization-regression",
+      "sourceType": "evidence",
+      "derivedRiskId": "risk-query-tokenization-regression",
+      "riskType": "query-tokenization-regression",
+      "severity": "warning",
+      "status": "mitigated",
+      "mitigation": "Runtime fixture must prove repeated whitespace does not prevent matching.",
+      "contextBinding": {
+        "requiredContextIds": ["context-todo-search-graph-source"]
+      },
+      "evidenceBinding": {
+        "evidenceIds": ["evidence-runtime-fixture-result"]
+      },
+      "scopeBinding": {
+        "targetScopeCandidateIds": ["scope-runtime-search-test"]
+      }
     }
   ],
   "nonExecutionStatement": "This compiler input dry-run validates Actual Contract Compiler inputs only and does not compile an execution contract, execute AI, apply graph deltas, accept work, enable required checks, or retire tree-native artifacts."

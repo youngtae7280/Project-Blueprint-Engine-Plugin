@@ -21,6 +21,7 @@ import { resolveRequiredContextFromSourceAuthority } from './context-source-auth
 import { resolveRequiredEvidenceFromSourceAuthority } from './evidence-source-authority.js'
 import { resolveOutputRequirementsFromSourceAuthority } from './output-requirement-source-authority.js'
 import { resolveForbiddenScopeFromPolicySourceAuthority } from './policy-forbidden-scope-source-authority.js'
+import { resolveKnownRisksFromSourceAuthority } from './risk-source-authority.js'
 import { resolveStopConditionsFromSourceAuthority } from './stop-condition-source-authority.js'
 
 export type ContractCompilerDryRunStatus = 'contract-compiler-dry-run-pass' | 'contract-compiler-dry-run-blocked'
@@ -344,6 +345,21 @@ function compileBugFixContractCandidate(input: Record<string, unknown>): {
     blocking.push('Contract Compiler Dry-Run v0.2 requires source-authority-derived required evidence.')
   }
 
+  const policyIds = new Set(arrayValue(policySnapshot.policies).map((policy) => stringValue(policy.id)))
+  const riskResolution = resolveKnownRisksFromSourceAuthority({
+    riskSources: arrayValue(input.riskSources),
+    requiredContextIds: new Set(contextResolution.requiredContext.map((entry) => entry.id)),
+    requiredEvidenceIds: new Set(evidenceResolution.requiredEvidence.map((entry) => entry.id)),
+    policyIds,
+    targetScopeCandidateIds: new Set(targetScopes.map((scope) => stringValue(scope.id))),
+  })
+  for (const unresolved of riskResolution.unresolvedSources) {
+    blocking.push(`Contract Compiler Dry-Run v0.2 could not derive known risk ${unresolved.id}: ${unresolved.reason}.`)
+  }
+  if (riskResolution.knownRisks.length === 0) {
+    blocking.push('Contract Compiler Dry-Run v0.2 requires source-authority-derived known risks.')
+  }
+
   const forbiddenScopeResolution = resolveForbiddenScopeFromPolicySourceAuthority(policySnapshot)
   const forbiddenScope = forbiddenScopeResolution.forbiddenScope
   for (const unresolved of forbiddenScopeResolution.unresolvedRules) {
@@ -395,14 +411,7 @@ function compileBugFixContractCandidate(input: Record<string, unknown>): {
       requiredContext: contextResolution.requiredContext,
       requiredChecks,
       requiredEvidence: evidenceResolution.requiredEvidence,
-      knownRisks: [
-        {
-          id: 'risk-compiler-dry-run-scope-drift',
-          severity: 'warning',
-          status: 'tracked',
-          mitigation: 'Compiled candidate must pass Contract Fixture Validator before it can be reviewed.',
-        },
-      ],
+      knownRisks: riskResolution.knownRisks,
       openUnknowns: [],
       humanDecisions: [],
       stopConditions: stopConditionResolution.stopConditions,

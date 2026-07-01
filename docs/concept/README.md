@@ -217,14 +217,15 @@ command-output Evidence, validation-result, and boundary reporting obligations t
 compiler now derives generated `outputRequirements` from those entries. The compiler also derives `forbiddenScope[]`
 from `policySnapshot.forbiddenScopeRules[]`, `stopConditions[]` from `stopConditionSources[]`, `requiredEvidence[]`
 from `evidenceIndex.entries[]` plus `policySnapshot.evidenceCheckMappings[]`, and `requiredContext[]` from
-`graphSnapshot.artifacts[]`. It reports `generated-output-requirements-preserved`, required-Evidence preservation, and
-required-context preservation for the current fixture while keeping whole-contract equivalence unproven.
+`graphSnapshot.artifacts[]`. It also derives `knownRisks[]` from `riskSources[]`. It reports
+`generated-output-requirements-preserved`, required-Evidence preservation, required-context preservation, and risk
+preservation for the current fixture while keeping whole-contract equivalence unproven.
 
 Contract Source Authority Gap Preview v0.2 writes `contract-source-authority-gap.preview.json` to explain the remaining
-semantic losses by field. It now reports one remaining semantic loss, with source-authority attention on `allowedScope`
-and `knownRisks`; `forbiddenScope`, `stopConditions`, `requiredEvidence`, and `requiredContext` are preserved from
-source authority entries. The next recommended resolver is `risk-source-authority`. This is review metadata only, not
-enforcement or compiler promotion.
+semantic losses by field. It now reports zero remaining semantic/policy loss, with source-authority attention on
+`allowedScope`; `forbiddenScope`, `stopConditions`, `requiredEvidence`, `requiredContext`, and `knownRisks` are
+preserved from source authority entries. The next recommended resolver is `allowed-scope-source-authority`. This is
+review metadata only, not enforcement or compiler promotion.
 
 The following readiness artifact is complete at documentation level:
 

@@ -87,10 +87,10 @@
   ],
   "knownRisks": [
     {
-      "id": "risk-compiler-dry-run-scope-drift",
+      "id": "risk-query-tokenization-regression",
       "severity": "warning",
-      "status": "tracked",
-      "mitigation": "Compiled candidate must pass Contract Fixture Validator before it can be reviewed."
+      "status": "mitigated",
+      "mitigation": "Runtime fixture must prove repeated whitespace does not prevent matching."
     }
   ],
   "openUnknowns": [],

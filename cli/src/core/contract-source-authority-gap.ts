@@ -52,7 +52,7 @@ const fieldSourceAuthority: Record<
   { candidateSourceAuthorityType: string; likelyMissingSourceAuthority: string }
 > = {
   allowedScope: {
-    candidateSourceAuthorityType: 'scope-source-authority',
+    candidateSourceAuthorityType: 'allowed-scope-source-authority',
     likelyMissingSourceAuthority:
       'Allowed execution and evidence/write-target scope source authority is not yet complete.',
   },

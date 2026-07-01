@@ -355,6 +355,9 @@ try {
   if (compilerInputModel.dryRunInput.targetScopeCandidateCount <= 0) {
     throw new Error('Compiler input model must include target scope candidates')
   }
+  if (compilerInputModel.dryRunInput.riskSourceCount <= 0) {
+    throw new Error('Compiler input model must include risk sources')
+  }
 
   const contractCompilerDryRun = runCli(['graph', 'read-model', 'compile-contract', '--dry-run', '--json'])
   assertEqual(contractCompilerDryRun.status, 'contract-compiler-dry-run-pass', 'contract compiler dry-run status')
@@ -380,8 +383,11 @@ try {
     'compiler-promotion-not-ready',
     'contract compiler promotion readiness',
   )
-  if ((contractCompilerDryRun.candidateDiff.semanticClassificationCounts['semantic-loss'] || 0) <= 0) {
-    throw new Error('Contract compiler semantic diff summary must include semantic-loss')
+  if ((contractCompilerDryRun.candidateDiff.semanticClassificationCounts['semantic-loss'] || 0) !== 0) {
+    throw new Error('Contract compiler semantic-loss should be resolved by risk source authority mapping')
+  }
+  if ((contractCompilerDryRun.candidateDiff.semanticClassificationCounts['conservative-restriction'] || 0) <= 0) {
+    throw new Error('Contract compiler semantic diff summary must retain allowed-scope conservative review debt')
   }
   if ((contractCompilerDryRun.candidateDiff.semanticClassificationCounts['policy-loss'] || 0) !== 0) {
     throw new Error('Contract compiler policy-loss should be resolved by stop-condition source authority mapping')
@@ -450,12 +456,12 @@ try {
   )
   assertEqual(
     contractCompilerDryRun.sourceAuthorityGapPreview.remainingLossCount,
-    1,
+    0,
     'contract source authority remaining loss count',
   )
   assertEqual(
     contractCompilerDryRun.sourceAuthorityGapPreview.nextRecommendedResolver,
-    'risk-source-authority',
+    'allowed-scope-source-authority',
     'contract source authority next recommended resolver',
   )
 
@@ -542,6 +548,7 @@ try {
       policyCount: compilerInputModel.dryRunInput.policyCount,
       evidenceEntryCount: compilerInputModel.dryRunInput.evidenceEntryCount,
       targetScopeCandidateCount: compilerInputModel.dryRunInput.targetScopeCandidateCount,
+      riskSourceCount: compilerInputModel.dryRunInput.riskSourceCount,
       nonExecuting: true,
     },
     contractCompilerDryRun: {

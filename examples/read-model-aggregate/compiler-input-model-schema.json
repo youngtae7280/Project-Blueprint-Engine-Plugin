@@ -10,7 +10,8 @@
     "evidenceIndex",
     "targetScopeCandidates",
     "outputRequirementSources",
-    "stopConditionSources"
+    "stopConditionSources",
+    "riskSources"
   ],
   "inputDefinitions": {
     "humanRequest": {
@@ -43,6 +44,10 @@
     },
     "stopConditionSources": {
       "source": "Policy, validator, and compiler-status bindings that define dry-run stop conditions",
+      "authority": "policy"
+    },
+    "riskSources": {
+      "source": "Graph, Evidence, context, policy, and scope bindings that define known risk obligations",
       "authority": "policy"
     }
   },

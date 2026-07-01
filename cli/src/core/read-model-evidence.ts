@@ -494,6 +494,7 @@ interface GraphSourceHealthReport {
     targetScopeCandidateCount: number
     outputRequirementSourceCount: number
     stopConditionSourceCount: number
+    riskSourceCount: number
   }
   contractCompilerDryRun: Pick<ContractCompilerDryRunReport, 'status' | 'inputModelStatus' | 'candidateStatus'> & {
     dryRunChangeId: string
@@ -1451,6 +1452,7 @@ export async function reportGraphSourceHealth(root: string): Promise<GraphSource
       targetScopeCandidateCount: compilerInputModel.dryRunInput.targetScopeCandidateCount,
       outputRequirementSourceCount: compilerInputModel.dryRunInput.outputRequirementSourceCount,
       stopConditionSourceCount: compilerInputModel.dryRunInput.stopConditionSourceCount,
+      riskSourceCount: compilerInputModel.dryRunInput.riskSourceCount,
     },
     contractCompilerDryRun: {
       status: contractCompilerDryRun.status,
@@ -1545,7 +1547,7 @@ Status: \`${report.status}\`
 | Dry-run contract | \`${report.compilerBoundary.dryRunContractStatus}\`; \`${report.compilerBoundary.dryRunChangeId}\`; ${report.compilerBoundary.requiredCheckCount} checks / ${report.compilerBoundary.requiredEvidenceCount} evidence requirements |
 | Compiler Input Model MVP | \`${report.compilerInputModel.status}\` |
 | Compiler input schema | \`${report.compilerInputModel.inputSchemaStatus}\` |
-| Dry-run compiler input | \`${report.compilerInputModel.dryRunInputStatus}\`; \`${report.compilerInputModel.dryRunChangeId}\`; ${report.compilerInputModel.graphSnapshotArtifactCount} graph artifacts / ${report.compilerInputModel.policyCount} policies / ${report.compilerInputModel.evidenceEntryCount} evidence entries / ${report.compilerInputModel.targetScopeCandidateCount} scope candidates / ${report.compilerInputModel.outputRequirementSourceCount} output sources / ${report.compilerInputModel.stopConditionSourceCount} stop sources |
+| Dry-run compiler input | \`${report.compilerInputModel.dryRunInputStatus}\`; \`${report.compilerInputModel.dryRunChangeId}\`; ${report.compilerInputModel.graphSnapshotArtifactCount} graph artifacts / ${report.compilerInputModel.policyCount} policies / ${report.compilerInputModel.evidenceEntryCount} evidence entries / ${report.compilerInputModel.targetScopeCandidateCount} scope candidates / ${report.compilerInputModel.outputRequirementSourceCount} output sources / ${report.compilerInputModel.stopConditionSourceCount} stop sources / ${report.compilerInputModel.riskSourceCount} risk sources |
 | Contract Compiler Dry-Run | \`${report.contractCompilerDryRun.status}\` |
 | Compiled contract candidate | \`${report.contractCompilerDryRun.candidateStatus}\`; \`${report.contractCompilerDryRun.dryRunChangeId}\`; ${report.contractCompilerDryRun.requiredCheckCount} checks / ${report.contractCompilerDryRun.requiredEvidenceCount} evidence requirements |
 | Generated vs hand-written contract diff | \`${report.contractCompilerDryRun.candidateDiffStatus}\`; \`${report.contractCompilerDryRun.candidateDiffReviewStatus}\`; \`${report.contractCompilerDryRun.candidateEquivalenceStatus}\`; ${report.contractCompilerDryRun.differingFieldCount} differing fields; \`${report.contractCompilerDryRun.diffReport}\` |

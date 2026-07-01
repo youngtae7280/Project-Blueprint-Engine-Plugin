@@ -21,11 +21,12 @@ examples/read-model-aggregate/generated/contract-source-authority-gap.preview.js
 The artifact records:
 
 - remaining semantic and policy loss counts;
-- field-level gaps for `allowedScope` and `knownRisks`;
+- field-level gaps for `allowedScope`;
 - `forbiddenScope` as preserved for the current fixture after policy source authority resolution;
 - `stopConditions` as preserved for the current fixture after stop-condition source authority resolution;
 - `requiredEvidence` as preserved for the current fixture after Evidence source authority resolution;
 - `requiredContext` as preserved for the current fixture after context source authority resolution;
+- `knownRisks` as preserved for the current fixture after risk source authority resolution;
 - missing and extra ids from the generated candidate;
 - candidate source-authority type for each field;
 - whether a resolver is required;
@@ -36,15 +37,15 @@ The artifact records:
 The current preview recommends:
 
 ```text
-risk-source-authority
+allowed-scope-source-authority
 ```
 
 This is selected because `forbiddenScope` is now generated from `policySnapshot.forbiddenScopeRules[]` and
 `stopConditions` are now generated from `stopConditionSources[]`, and required Evidence is generated from
 `evidenceIndex.entries[]` plus `policySnapshot.evidenceCheckMappings[]`. Required context is now generated from
-`graphSnapshot.artifacts[]`. Policy-loss, evidence-chain mismatch, and context semantic-loss are currently zero, while
-semantic-loss still remains in risk coverage. Risk source authority is the narrowest next resolver candidate; allowed
-scope remains conservative review debt and is not solved by this preview.
+`graphSnapshot.artifacts[]`, and known risks are generated from `riskSources[]`. Policy-loss, semantic-loss,
+evidence-chain mismatch, context semantic-loss, and risk semantic-loss are currently zero. Allowed scope remains
+conservative review debt and is the final source-authority resolver candidate for this fixture.
 
 ## Boundaries
 

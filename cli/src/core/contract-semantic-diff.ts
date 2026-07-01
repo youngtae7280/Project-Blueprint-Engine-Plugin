@@ -403,6 +403,7 @@ export function deriveCompilerPromotionReadiness(
         diff.classification === 'policy-loss' ||
         diff.classification === 'output-requirement-loss' ||
         diff.classification === 'unknown-review-required' ||
+        (diff.field === 'allowedScope' && diff.classification === 'conservative-restriction') ||
         diff.reviewSeverity === 'high' ||
         diff.promotionImpact === 'blocks-promotion',
     )

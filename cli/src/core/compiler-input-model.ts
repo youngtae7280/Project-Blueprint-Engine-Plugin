@@ -21,6 +21,7 @@ export interface CompilerInputModelReport {
     targetScopeCandidateCount: number
     outputRequirementSourceCount: number
     stopConditionSourceCount: number
+    riskSourceCount: number
   }
   blockingReasons: string[]
   warnings: string[]
@@ -40,6 +41,7 @@ const requiredInputGroups = [
   'targetScopeCandidates',
   'outputRequirementSources',
   'stopConditionSources',
+  'riskSources',
 ]
 
 const allowedInputAuthorities = ['human', 'graph', 'policy', 'validator', 'evidence-index']
@@ -71,6 +73,10 @@ const allowedStopConditionTriggerTypes = [
   'source-authority-loss',
 ]
 const allowedStopConditionActions = ['stop-and-request-human-decision', 'stop-and-record-missing-evidence']
+const allowedRiskSourceTypes = ['graph', 'policy', 'evidence', 'context', 'scope', 'boundary']
+const allowedRiskTypes = ['query-tokenization-regression', 'source-authority-loss', 'scope-drift']
+const allowedRiskSeverities = ['info', 'warning', 'high', 'critical', 'blocking']
+const allowedRiskStatuses = ['open', 'tracked', 'mitigated']
 
 export async function reportCompilerInputModel(root: string): Promise<CompilerInputModelReport> {
   const schemaResult = await readJsonSafe<unknown>(path.resolve(root, inputSchemaPath))
@@ -110,6 +116,7 @@ export async function reportCompilerInputModel(root: string): Promise<CompilerIn
       targetScopeCandidateCount: arrayValue(input.targetScopeCandidates).length,
       outputRequirementSourceCount: arrayValue(input.outputRequirementSources).length,
       stopConditionSourceCount: arrayValue(input.stopConditionSources).length,
+      riskSourceCount: arrayValue(input.riskSources).length,
     },
     blockingReasons,
     warnings,
@@ -200,6 +207,7 @@ export async function validateCompilerInputDryRun(
   validateTargetScopeCandidates(arrayValue(record.targetScopeCandidates), root, graphSnapshot, blocking)
   validateOutputRequirementSources(record, blocking)
   validateStopConditionSources(record, blocking)
+  validateRiskSources(record, blocking)
 
   if ('compiledExecutionContract' in record) {
     blocking.push('Compiler input dry-run must not contain compiledExecutionContract; this MVP validates inputs only.')
@@ -295,6 +303,73 @@ function validateStopConditionSources(record: Record<string, unknown>, blocking:
         blocking.push(
           `${label}.commandBinding.requiredCheckIds references unknown required check id: ${requiredCheckId}.`,
         )
+      }
+    }
+  }
+}
+
+function validateRiskSources(record: Record<string, unknown>, blocking: string[]): void {
+  const sources = arrayValue(record.riskSources)
+  if (sources.length === 0) {
+    blocking.push('Compiler input dry-run riskSources is required.')
+  }
+  const evidenceIds = new Set(arrayValue(asRecord(record.evidenceIndex).entries).map((entry) => stringValue(entry.id)))
+  const policyIds = new Set(
+    arrayValue(asRecord(record.policySnapshot).policies).map((policy) => stringValue(policy.id)),
+  )
+  const contextIds = new Set(
+    arrayValue(asRecord(record.graphSnapshot).artifacts)
+      .map((artifact) => stringValue(artifact.id))
+      .filter((id) => id.length > 0)
+      .map((id) => `context-${id}`),
+  )
+  const targetScopeCandidateIds = new Set(
+    arrayValue(record.targetScopeCandidates).map((scope) => stringValue(scope.id)),
+  )
+  for (const [index, source] of sources.entries()) {
+    const label = `Compiler input dry-run riskSources[${index}]`
+    validateRequiredStringFields(
+      label,
+      source,
+      ['sourceId', 'sourceType', 'derivedRiskId', 'riskType', 'severity', 'status', 'mitigation'],
+      blocking,
+    )
+    const sourceType = stringValue(source.sourceType, '')
+    if (sourceType && !allowedRiskSourceTypes.includes(sourceType)) {
+      blocking.push(`${label}.sourceType must be one of: ${allowedRiskSourceTypes.join(', ')}.`)
+    }
+    const riskType = stringValue(source.riskType, '')
+    if (riskType && !allowedRiskTypes.includes(riskType)) {
+      blocking.push(`${label}.riskType must be one of: ${allowedRiskTypes.join(', ')}.`)
+    }
+    const severity = stringValue(source.severity, '')
+    if (severity && !allowedRiskSeverities.includes(severity)) {
+      blocking.push(`${label}.severity must be one of: ${allowedRiskSeverities.join(', ')}.`)
+    }
+    const status = stringValue(source.status, '')
+    if (status && !allowedRiskStatuses.includes(status)) {
+      blocking.push(`${label}.status must be one of: ${allowedRiskStatuses.join(', ')}.`)
+    }
+    for (const evidenceId of stringArrayValue(asRecord(source.evidenceBinding).evidenceIds)) {
+      if (!evidenceIds.has(evidenceId)) {
+        blocking.push(`${label}.evidenceBinding.evidenceIds references unknown evidence id: ${evidenceId}.`)
+      }
+    }
+    for (const policyId of stringArrayValue(asRecord(source.policyBinding).policyIds)) {
+      if (!policyIds.has(policyId)) {
+        blocking.push(`${label}.policyBinding.policyIds references unknown policy id: ${policyId}.`)
+      }
+    }
+    for (const requiredContextId of stringArrayValue(asRecord(source.contextBinding).requiredContextIds)) {
+      if (!contextIds.has(requiredContextId)) {
+        blocking.push(
+          `${label}.contextBinding.requiredContextIds references unknown required context id: ${requiredContextId}.`,
+        )
+      }
+    }
+    for (const scopeId of stringArrayValue(asRecord(source.scopeBinding).targetScopeCandidateIds)) {
+      if (!targetScopeCandidateIds.has(scopeId)) {
+        blocking.push(`${label}.scopeBinding.targetScopeCandidateIds references unknown scope id: ${scopeId}.`)
       }
     }
   }

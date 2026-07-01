@@ -993,6 +993,16 @@ recommends `risk-source-authority` as the next narrow resolver. This does not ex
 work, enable required checks, configure branch protection, expand source authority beyond required context, retire
 tree-native artifacts, or widen changeType support.
 
+DEC-180 does not supersede DEC-097 through DEC-179. It connects risk source authority to the current Contract Compiler
+Dry-Run candidate for `knownRisks` only. The Compiler Input Model now includes `riskSources[]`, and generated known risks
+are derived from those source authority entries rather than from the hand-written comparison contract or ad hoc compiler
+self-risk text. The generated-vs-hand-written diff no longer reports known-risk semantic loss for the current Todo Search
+`bug_fix` fixture. The source-authority gap preview now reports zero remaining semantic/policy losses, keeps
+`compilerPromotionReadiness` as `compiler-promotion-not-ready` because allowed scope still has conservative review debt,
+keeps `equivalenceProven` false, and recommends `allowed-scope-source-authority` as the next narrow resolver. This does
+not execute AI, apply graph deltas, accept work, enable required checks, configure branch protection, expand source
+authority beyond known risks, retire tree-native artifacts, or widen changeType support.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
