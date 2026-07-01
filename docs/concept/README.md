@@ -182,6 +182,7 @@ The first Compiler Boundary MVP and hardened Contract Fixture Validator are reco
 - [pbe-compiler-boundary.md](pbe-compiler-boundary.md)
 - [compiler-input-model.md](compiler-input-model.md)
 - [contract-compiler-dry-run.md](contract-compiler-dry-run.md)
+- [output-requirement-source-authority.md](output-requirement-source-authority.md)
 
 It separates compiler-required work from AI-advisory work, adds a machine-readable task registry and Execution Contract
 MVP schema, validates a Todo Search dry-run contract with bucketed registry/schema/contract issues, requires severe risks
@@ -208,6 +209,12 @@ hand-written changed-file and command-derived Evidence reporting obligations. Th
 unknown fields and is marked `contract-compiler-dry-run-v0.1-classification-complete`, but `equivalenceProven` remains
 `false` and it remains local/non-enforcing. The recommended v0.2 direction is Output Requirement Source Authority or a
 source-authority resolver before any pack-schema widening, executor automation, or graph delta application.
+
+Output Requirement Source Authority v0.2 preview adds `outputRequirementSources[]` to the current Compiler Input Model
+fixture and writes `output-requirement-source-authority.preview.json`. The preview maps the hand-written changed-file,
+command-output Evidence, validation-result, and boundary reporting obligations to source authority entries, while still
+reporting `generated-output-requirements-not-preserved` because the generated candidate does not yet use that authority
+to preserve output obligations.
 
 The following readiness artifact is complete at documentation level:
 

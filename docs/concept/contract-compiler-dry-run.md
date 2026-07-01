@@ -154,3 +154,14 @@ The next layer should not be an executor. The recommended v0.2 candidate is Outp
 broader source-authority resolver, so the compiler can reconstruct output requirements from graph, policy, Evidence,
 and check sources instead of replacing execution-result reporting obligations with compiler self-reporting. Pack schema
 expansion should wait until that source-authority path is clearer.
+
+The first v0.2 preview is now recorded in
+[output-requirement-source-authority.md](output-requirement-source-authority.md) and emitted as:
+
+```text
+examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json
+```
+
+This preview maps hand-written output obligations to `outputRequirementSources[]`, but reports
+`generated-output-requirements-not-preserved` because generated output requirements still do not preserve changed-file,
+command-output Evidence, and validation-result reporting obligations.

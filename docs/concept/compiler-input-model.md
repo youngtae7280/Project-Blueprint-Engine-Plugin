@@ -16,7 +16,8 @@ This layer exists so future contract compilation does not start from AI prose. I
 - pack schema;
 - policy snapshot;
 - evidence index;
-- target scope candidates.
+- target scope candidates;
+- output requirement sources.
 
 ## Current MVP Artifacts
 
@@ -59,6 +60,10 @@ The MVP blocks:
 - target scope candidate paths that do not exist;
 - target scope candidate `derivedFrom` references that do not point at a known `graph-source:node:<id>`;
 - target scope candidate scope kind or confidence outside the current bounded vocabulary;
+- output requirement sources without source id/type, derived output requirement id, obligation type, or report target;
+- output requirement source obligation types outside the current bounded vocabulary;
+- output requirement source Evidence or command bindings that reference unknown Evidence or required-check ids;
+- changed-file or git-diff output obligations without diff binding;
 - pack schema required input groups outside the current input group vocabulary;
 - any `compiledExecutionContract` claim inside the input fixture.
 

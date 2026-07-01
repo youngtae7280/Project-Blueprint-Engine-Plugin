@@ -925,6 +925,15 @@ source-authority resolver before pack-schema widening. This remains non-enforcin
 execute AI, apply graph deltas, accept work, enable required checks, configure branch protection, expand source
 authority, or retire tree-native artifacts.
 
+DEC-173 does not supersede DEC-097 through DEC-172. It begins Contract Compiler Dry-Run v0.2 as Output Requirement
+Source Authority preview only. The Compiler Input Model dry-run fixture now includes `outputRequirementSources[]`, and
+the compiler writes `output-requirement-source-authority.preview.json` showing source authority entries, derived output
+requirement candidates, hand-written output requirement mappings, generated preservation status, and unresolved
+obligations. The preview explains `output-requirement-loss` as source authority being present while compiler output
+mapping is not yet applied. It does not rewrite generated output requirements, prove equivalence, execute AI, apply
+graph deltas, accept work, enable required checks, configure branch protection, expand source authority, retire
+tree-native artifacts, or widen changeType support.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

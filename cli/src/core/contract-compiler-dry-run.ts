@@ -19,6 +19,10 @@ export type ContractCompilerDryRunV01CloseoutStatus =
   | 'contract-compiler-dry-run-v0.1-classification-complete'
   | 'contract-compiler-dry-run-v0.1-classification-incomplete'
 
+export type OutputRequirementSourceAuthorityPreviewStatus =
+  | 'output-requirement-source-authority-preview-pass'
+  | 'output-requirement-source-authority-preview-not-run'
+
 export interface ContractCompilerDryRunReport {
   status: ContractCompilerDryRunStatus
   inputModelStatus: 'compiler-input-model-pass' | 'compiler-input-model-blocked'
@@ -29,6 +33,7 @@ export interface ContractCompilerDryRunReport {
     outputCandidate: string
     handWrittenDryRunContract: string
     diffReport: string
+    outputRequirementSourceAuthorityPreview: string
   }
   candidate: {
     changeId: string
@@ -70,6 +75,17 @@ export interface ContractCompilerDryRunReport {
     equivalenceProven: boolean
     reviewBoundary: string
   }
+  outputRequirementSourceAuthorityPreview: {
+    status: OutputRequirementSourceAuthorityPreviewStatus
+    sourceAuthorityEntryCount: number
+    derivedOutputRequirementCount: number
+    mappedHandWrittenOutputRequirementCount: number
+    unresolvedObligationCount: number
+    generatedPreservationStatus:
+      | 'generated-output-requirements-preserved'
+      | 'generated-output-requirements-not-preserved'
+    lossExplanation: string
+  }
   blockingReasons: string[]
   warnings: string[]
   nonExecutionStatement: string
@@ -81,6 +97,8 @@ const dryRunInputPath = 'examples/read-model-aggregate/generated/compiler-input-
 const handWrittenDryRunContractPath = 'examples/read-model-aggregate/generated/execution-contract-dry-run.json'
 const defaultOutputCandidatePath = 'examples/read-model-aggregate/generated/execution-contract-dry-run.generated.json'
 const defaultDiffReportPath = 'examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json'
+const defaultOutputRequirementPreviewPath =
+  'examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json'
 
 export async function compileExecutionContractDryRun(
   root: string,
@@ -96,6 +114,7 @@ export async function compileExecutionContractDryRun(
   const candidateBlocking: string[] = []
   const warnings: string[] = []
   let compilerAttempted = false
+  let compilerInput: Record<string, unknown> | undefined
 
   if (!schemaResult.ok) {
     inputBlocking.push(`Unable to read compiler input schema: ${schemaResult.error}`)
@@ -114,6 +133,7 @@ export async function compileExecutionContractDryRun(
     warnings.push(...inputIssues.warnings.map((reason) => `compiler input dry-run: ${reason}`))
     if (inputIssues.blocking.length === 0) {
       const input = asRecord(inputResult.value)
+      compilerInput = input
       const unsupported = validateSupportedInput(input)
       compilerBlocking.push(...unsupported)
       if (unsupported.length === 0) {
@@ -133,6 +153,15 @@ export async function compileExecutionContractDryRun(
   const candidateDiff = candidate
     ? await buildContractDiffReport(root, candidate, outputCandidatePath, handWrittenDryRunContractPath)
     : buildNotRunDiffReport(outputCandidatePath, handWrittenDryRunContractPath)
+  const outputRequirementPreview =
+    candidate && compilerInput
+      ? await buildOutputRequirementSourceAuthorityPreview(
+          root,
+          compilerInput,
+          candidate,
+          handWrittenDryRunContractPath,
+        )
+      : buildNotRunOutputRequirementSourceAuthorityPreview(defaultOutputRequirementPreviewPath)
   if (candidateDiff.status === 'contract-diff-blocked') {
     candidateBlocking.push(...candidateDiff.blockingReasons.map((reason) => `compiled contract diff: ${reason}`))
   }
@@ -152,6 +181,7 @@ export async function compileExecutionContractDryRun(
   if (status === 'contract-compiler-dry-run-pass' && candidate && options.writeOutput !== false) {
     await writeFormattedJson(path.resolve(root, outputCandidatePath), candidate)
     await writeFormattedJson(path.resolve(root, diffReportPath), stripInternalDiffFields(candidateDiff))
+    await writeFormattedJson(path.resolve(root, defaultOutputRequirementPreviewPath), outputRequirementPreview.artifact)
   }
 
   return {
@@ -164,6 +194,10 @@ export async function compileExecutionContractDryRun(
       outputCandidate: relativePath(root, path.resolve(root, outputCandidatePath)),
       handWrittenDryRunContract: handWrittenDryRunContractPath,
       diffReport: relativePath(root, path.resolve(root, diffReportPath)),
+      outputRequirementSourceAuthorityPreview: relativePath(
+        root,
+        path.resolve(root, defaultOutputRequirementPreviewPath),
+      ),
     },
     candidate: summarizeCandidate(candidate),
     candidateDiff: {
@@ -186,6 +220,7 @@ export async function compileExecutionContractDryRun(
       equivalenceProven: candidateDiff.equivalenceProven,
       reviewBoundary: candidateDiff.reviewBoundary,
     },
+    outputRequirementSourceAuthorityPreview: outputRequirementPreview.summary,
     blockingReasons,
     warnings,
     nonExecutionStatement:
@@ -534,6 +569,173 @@ function buildNotRunDiffReport(outputCandidatePath: string, handWrittenPath: str
       'No compiler candidate was produced, so equivalence with the hand-written contract was not reviewed.',
     nonExecutionStatement:
       'This diff report is review Evidence only and does not execute work, accept changes, or make the compiled candidate authoritative.',
+  }
+}
+
+interface OutputRequirementSourceAuthorityPreviewInternal {
+  artifact: {
+    schemaVersion: 1
+    artifactRole: 'output-requirement-source-authority-preview'
+    status: OutputRequirementSourceAuthorityPreviewStatus
+    sourceMode: 'contract-compiler-dry-run-v0.2-preview'
+    changeId: string
+    sourceAuthorityEntries: Array<Record<string, unknown>>
+    derivedOutputRequirementCandidates: Array<Record<string, unknown>>
+    handWrittenOutputRequirementMappings: Array<Record<string, unknown>>
+    generatedOutputRequirementMappings: Array<Record<string, unknown>>
+    generatedReplacementObligations: Array<Record<string, unknown>>
+    unresolvedObligations: Array<Record<string, unknown>>
+    mappingSummary: Record<string, unknown>
+    nonExecutionStatement: string
+  }
+  summary: ContractCompilerDryRunReport['outputRequirementSourceAuthorityPreview']
+}
+
+async function buildOutputRequirementSourceAuthorityPreview(
+  root: string,
+  input: Record<string, unknown>,
+  candidate: Record<string, unknown>,
+  handWrittenPath: string,
+): Promise<OutputRequirementSourceAuthorityPreviewInternal> {
+  const handWritten = await readJsonSafe<Record<string, unknown>>(path.resolve(root, handWrittenPath))
+  const handWrittenOutputRequirements = handWritten.ok
+    ? stringArrayValue(asRecord(handWritten.value).outputRequirements)
+    : []
+  const generatedOutputRequirements = stringArrayValue(candidate.outputRequirements)
+  const sourceAuthorityEntries = arrayValue(input.outputRequirementSources)
+  const derivedOutputRequirementCandidates = sourceAuthorityEntries.map((entry) => ({
+    id: stringValue(entry.derivedOutputRequirementId),
+    obligationType: stringValue(entry.obligationType),
+    requiredReportTarget: stringValue(entry.requiredReportTarget),
+    sourceId: stringValue(entry.sourceId),
+    handWrittenRequirement: stringValue(entry.handWrittenRequirement),
+  }))
+  const handWrittenOutputRequirementMappings = derivedOutputRequirementCandidates.map((entry) => {
+    const requirement = stringValue(entry.handWrittenRequirement)
+    return {
+      derivedOutputRequirementId: stringValue(entry.id),
+      sourceId: stringValue(entry.sourceId),
+      handWrittenRequirement: requirement,
+      status: handWrittenOutputRequirements.includes(requirement)
+        ? 'hand-written-output-requirement-mapped'
+        : 'hand-written-output-requirement-unmapped',
+    }
+  })
+  const generatedOutputRequirementMappings = derivedOutputRequirementCandidates.map((entry) => {
+    const obligationType = stringValue(entry.obligationType)
+    const status =
+      obligationType === 'non-execution-boundary-statement' &&
+      generatedOutputRequirements.some(
+        (requirement) => requirement.includes('user acceptance') && requirement.includes('branch protection'),
+      )
+        ? 'generated-output-requirement-partially-preserved'
+        : 'generated-output-requirement-missing'
+    return {
+      derivedOutputRequirementId: stringValue(entry.id),
+      obligationType,
+      status,
+      reason:
+        status === 'generated-output-requirement-missing'
+          ? 'source-authority-present-but-compiler-output-mapping-not-applied'
+          : 'boundary wording is present, but full output equivalence still depends on the complete output requirement set',
+    }
+  })
+  const generatedReplacementObligations = generatedOutputRequirements
+    .filter((requirement) => requirement.includes('compiler') || requirement.includes('generated-versus-handwritten'))
+    .map((requirement) => ({
+      requirement,
+      status: 'compiler-self-report-not-execution-output',
+      reason:
+        'Compiler self-report is useful review metadata, but it does not replace execution-result output obligations.',
+    }))
+  const unresolvedObligations = generatedOutputRequirementMappings.filter(
+    (entry) => entry.status === 'generated-output-requirement-missing',
+  )
+  const mappedHandWrittenOutputRequirementCount = new Set(
+    handWrittenOutputRequirementMappings
+      .filter((entry) => entry.status === 'hand-written-output-requirement-mapped')
+      .map((entry) => String(entry.handWrittenRequirement)),
+  ).size
+  const generatedPreservationStatus =
+    unresolvedObligations.length === 0
+      ? 'generated-output-requirements-preserved'
+      : 'generated-output-requirements-not-preserved'
+  const lossExplanation =
+    unresolvedObligations.length === 0
+      ? 'Output requirement source authority preview has no unresolved generated output obligations.'
+      : 'Source authority entries exist, but the current compiler output requirement mapping does not preserve every hand-written execution-result reporting obligation.'
+  return {
+    artifact: {
+      schemaVersion: 1,
+      artifactRole: 'output-requirement-source-authority-preview',
+      status: 'output-requirement-source-authority-preview-pass',
+      sourceMode: 'contract-compiler-dry-run-v0.2-preview',
+      changeId: stringValue(input.changeId),
+      sourceAuthorityEntries,
+      derivedOutputRequirementCandidates,
+      handWrittenOutputRequirementMappings,
+      generatedOutputRequirementMappings,
+      generatedReplacementObligations,
+      unresolvedObligations,
+      mappingSummary: {
+        sourceAuthorityEntryCount: sourceAuthorityEntries.length,
+        derivedOutputRequirementCount: derivedOutputRequirementCandidates.length,
+        mappedHandWrittenOutputRequirementCount,
+        unresolvedObligationCount: unresolvedObligations.length,
+        generatedPreservationStatus,
+        lossExplanation,
+      },
+      nonExecutionStatement:
+        'This preview explains output requirement source authority only. It does not execute work, rewrite the generated contract, prove equivalence, apply graph deltas, accept work, enable required checks, or retire tree-native artifacts.',
+    },
+    summary: {
+      status: 'output-requirement-source-authority-preview-pass',
+      sourceAuthorityEntryCount: sourceAuthorityEntries.length,
+      derivedOutputRequirementCount: derivedOutputRequirementCandidates.length,
+      mappedHandWrittenOutputRequirementCount,
+      unresolvedObligationCount: unresolvedObligations.length,
+      generatedPreservationStatus,
+      lossExplanation,
+    },
+  }
+}
+
+function buildNotRunOutputRequirementSourceAuthorityPreview(
+  previewPath: string,
+): OutputRequirementSourceAuthorityPreviewInternal {
+  return {
+    artifact: {
+      schemaVersion: 1,
+      artifactRole: 'output-requirement-source-authority-preview',
+      status: 'output-requirement-source-authority-preview-not-run',
+      sourceMode: 'contract-compiler-dry-run-v0.2-preview',
+      changeId: 'missing',
+      sourceAuthorityEntries: [],
+      derivedOutputRequirementCandidates: [],
+      handWrittenOutputRequirementMappings: [],
+      generatedOutputRequirementMappings: [],
+      generatedReplacementObligations: [],
+      unresolvedObligations: [],
+      mappingSummary: {
+        sourceAuthorityEntryCount: 0,
+        derivedOutputRequirementCount: 0,
+        mappedHandWrittenOutputRequirementCount: 0,
+        unresolvedObligationCount: 0,
+        generatedPreservationStatus: 'generated-output-requirements-not-preserved',
+        lossExplanation: `Preview was not run; no artifact written to ${previewPath}.`,
+      },
+      nonExecutionStatement:
+        'This preview explains output requirement source authority only and was not run because no compiler candidate was produced.',
+    },
+    summary: {
+      status: 'output-requirement-source-authority-preview-not-run',
+      sourceAuthorityEntryCount: 0,
+      derivedOutputRequirementCount: 0,
+      mappedHandWrittenOutputRequirementCount: 0,
+      unresolvedObligationCount: 0,
+      generatedPreservationStatus: 'generated-output-requirements-not-preserved',
+      lossExplanation: `Preview was not run; no artifact written to ${previewPath}.`,
+    },
   }
 }
 

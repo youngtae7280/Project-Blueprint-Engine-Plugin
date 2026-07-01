@@ -55,6 +55,9 @@ The smoke checks:
   `output-requirement-loss` visible as non-enforcing review metadata
 - compiler dry-run v0.1 closeout metadata: `contract-compiler-dry-run-v0.1-classification-complete`,
   `semantic-diff-unknowns-zero`, `semanticDiffCoverageComplete: true`, and `equivalenceProven: false`
+- output requirement source authority preview status `output-requirement-source-authority-preview-pass`, with
+  `generated-output-requirements-not-preserved` and unresolved generated obligations visible as non-enforcing preview
+  metadata
 
 The separate `graph read-model report-health --json` command summarizes the same transition state from existing
 artifacts and report surfaces. It is useful for a quick local health snapshot, while `npm run test:read-model:e2e`

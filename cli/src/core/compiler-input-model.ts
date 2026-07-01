@@ -19,6 +19,7 @@ export interface CompilerInputModelReport {
     policyCount: number
     evidenceEntryCount: number
     targetScopeCandidateCount: number
+    outputRequirementSourceCount: number
   }
   blockingReasons: string[]
   warnings: string[]
@@ -36,6 +37,7 @@ const requiredInputGroups = [
   'policySnapshot',
   'evidenceIndex',
   'targetScopeCandidates',
+  'outputRequirementSources',
 ]
 
 const allowedInputAuthorities = ['human', 'graph', 'policy', 'validator', 'evidence-index']
@@ -50,6 +52,14 @@ const allowedEvidenceFreshness = [
 ]
 const allowedScopeKinds = ['code', 'test', 'docs', 'evidence', 'workflow', 'product', 'graph']
 const allowedScopeConfidence = ['graph-backed-candidate', 'policy-backed-candidate', 'human-seeded-candidate']
+const allowedOutputRequirementSourceTypes = ['graph', 'policy', 'evidence', 'check', 'git-diff', 'boundary']
+const allowedOutputObligationTypes = [
+  'changed-files-report',
+  'git-diff-summary',
+  'command-output-evidence-status',
+  'validation-result-summary',
+  'non-execution-boundary-statement',
+]
 
 export async function reportCompilerInputModel(root: string): Promise<CompilerInputModelReport> {
   const schemaResult = await readJsonSafe<unknown>(path.resolve(root, inputSchemaPath))
@@ -87,6 +97,7 @@ export async function reportCompilerInputModel(root: string): Promise<CompilerIn
       policyCount: arrayValue(policySnapshot.policies).length,
       evidenceEntryCount: arrayValue(evidenceIndex.entries).length,
       targetScopeCandidateCount: arrayValue(input.targetScopeCandidates).length,
+      outputRequirementSourceCount: arrayValue(input.outputRequirementSources).length,
     },
     blockingReasons,
     warnings,
@@ -175,6 +186,7 @@ export async function validateCompilerInputDryRun(
   validatePolicySnapshot(asRecord(record.policySnapshot), root, blocking)
   validateEvidenceIndex(asRecord(record.evidenceIndex), root, blocking)
   validateTargetScopeCandidates(arrayValue(record.targetScopeCandidates), root, graphSnapshot, blocking)
+  validateOutputRequirementSources(record, blocking)
 
   if ('compiledExecutionContract' in record) {
     blocking.push('Compiler input dry-run must not contain compiledExecutionContract; this MVP validates inputs only.')
@@ -183,6 +195,53 @@ export async function validateCompilerInputDryRun(
     blocking.push('Compiler input dry-run nonExecutionStatement must state that this MVP does not compile contracts.')
   }
   return { blocking, warnings }
+}
+
+function validateOutputRequirementSources(record: Record<string, unknown>, blocking: string[]): void {
+  const sources = arrayValue(record.outputRequirementSources)
+  if (sources.length === 0) {
+    blocking.push('Compiler input dry-run outputRequirementSources is required.')
+  }
+  const evidenceIds = new Set(arrayValue(asRecord(record.evidenceIndex).entries).map((entry) => stringValue(entry.id)))
+  const policySnapshot = asRecord(record.policySnapshot)
+  const checkIds = new Set([
+    ...arrayValue(policySnapshot.evidenceCheckMappings).map((mapping) => stringValue(mapping.requiredCheckId)),
+    'check-todo-search-runtime-fixture',
+    'check-read-model-validate-all',
+    'check-read-model-health-report',
+    'check-read-model-e2e',
+  ])
+  for (const [index, source] of sources.entries()) {
+    const label = `Compiler input dry-run outputRequirementSources[${index}]`
+    validateRequiredStringFields(
+      label,
+      source,
+      ['sourceId', 'sourceType', 'derivedOutputRequirementId', 'obligationType', 'requiredReportTarget'],
+      blocking,
+    )
+    const sourceType = stringValue(source.sourceType, '')
+    if (sourceType && !allowedOutputRequirementSourceTypes.includes(sourceType)) {
+      blocking.push(`${label}.sourceType must be one of: ${allowedOutputRequirementSourceTypes.join(', ')}.`)
+    }
+    const obligationType = stringValue(source.obligationType, '')
+    if (obligationType && !allowedOutputObligationTypes.includes(obligationType)) {
+      blocking.push(`${label}.obligationType must be one of: ${allowedOutputObligationTypes.join(', ')}.`)
+    }
+    const evidenceBinding = asRecord(source.evidenceBinding)
+    const evidenceId = stringValue(evidenceBinding.evidenceId, '')
+    if (evidenceId && !evidenceIds.has(evidenceId)) {
+      blocking.push(`${label}.evidenceBinding.evidenceId references unknown evidence id: ${evidenceId}.`)
+    }
+    const commandBinding = asRecord(source.commandBinding)
+    const requiredCheckId = stringValue(commandBinding.requiredCheckId, '')
+    if (requiredCheckId && !checkIds.has(requiredCheckId)) {
+      blocking.push(`${label}.commandBinding.requiredCheckId references unknown required check id: ${requiredCheckId}.`)
+    }
+    const diffBinding = asRecord(source.diffBinding)
+    if ((obligationType === 'changed-files-report' || obligationType === 'git-diff-summary') && !diffBinding.mode) {
+      blocking.push(`${label}.diffBinding.mode is required for ${obligationType}.`)
+    }
+  }
 }
 
 function validateHumanRequest(record: Record<string, unknown>, blocking: string[]): void {

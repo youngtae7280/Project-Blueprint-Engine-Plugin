@@ -32,7 +32,14 @@
   "packSchema": {
     "id": "pack-schema-bug-fix",
     "changeType": "bug_fix",
-    "requiredInputGroups": ["humanRequest", "graphSnapshot", "policySnapshot", "evidenceIndex", "targetScopeCandidates"]
+    "requiredInputGroups": [
+      "humanRequest",
+      "graphSnapshot",
+      "policySnapshot",
+      "evidenceIndex",
+      "targetScopeCandidates",
+      "outputRequirementSources"
+    ]
   },
   "policySnapshot": {
     "id": "policy-snapshot-compiler-boundary-mvp",
@@ -111,6 +118,52 @@
       "paths": ["examples/adoption/todo-search-slice/runtime-fixture/todo-search.test.js"],
       "derivedFrom": ["graph-source:node:CODE-RUNTIME-SEARCH-TEST"],
       "confidence": "graph-backed-candidate"
+    }
+  ],
+  "outputRequirementSources": [
+    {
+      "sourceId": "output-source-git-diff-changed-files",
+      "sourceType": "git-diff",
+      "derivedOutputRequirementId": "output-report-changed-files",
+      "obligationType": "changed-files-report",
+      "requiredReportTarget": "actual git diff changed files",
+      "diffBinding": {
+        "mode": "actual-git-diff-only"
+      },
+      "handWrittenRequirement": "Report changed files from actual git diff only."
+    },
+    {
+      "sourceId": "output-source-command-evidence-status",
+      "sourceType": "evidence",
+      "derivedOutputRequirementId": "output-report-command-evidence-status",
+      "obligationType": "command-output-evidence-status",
+      "requiredReportTarget": "check and evidence status from command output",
+      "evidenceBinding": {
+        "evidenceId": "evidence-runtime-fixture-result"
+      },
+      "commandBinding": {
+        "requiredCheckId": "check-todo-search-runtime-fixture"
+      },
+      "handWrittenRequirement": "Report check and evidence status from command output only."
+    },
+    {
+      "sourceId": "output-source-validate-all-summary",
+      "sourceType": "check",
+      "derivedOutputRequirementId": "output-report-validation-result-summary",
+      "obligationType": "validation-result-summary",
+      "requiredReportTarget": "validate-all command result summary",
+      "commandBinding": {
+        "requiredCheckId": "check-read-model-validate-all"
+      },
+      "handWrittenRequirement": "Report check and evidence status from command output only."
+    },
+    {
+      "sourceId": "output-source-non-execution-boundary",
+      "sourceType": "boundary",
+      "derivedOutputRequirementId": "output-report-non-execution-boundary",
+      "obligationType": "non-execution-boundary-statement",
+      "requiredReportTarget": "dry-run non-execution, non-acceptance, and non-enforcement boundary",
+      "handWrittenRequirement": "Do not treat this dry-run contract as user acceptance or branch protection."
     }
   ],
   "nonExecutionStatement": "This compiler input dry-run validates Actual Contract Compiler inputs only and does not compile an execution contract, execute AI, apply graph deltas, accept work, enable required checks, or retire tree-native artifacts."

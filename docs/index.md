@@ -41,6 +41,8 @@
   Compiler, validated through a non-executing dry-run fixture.
 - [Contract Compiler Dry-Run v0.1](concept/contract-compiler-dry-run.md) - Deterministic non-executing contract
   candidate compilation plus generated-vs-hand-written diff from the validated Compiler Input Model.
+- [Output Requirement Source Authority](concept/output-requirement-source-authority.md) - v0.2 preview surface for
+  tracing output reporting obligations to graph, policy, Evidence, check, and diff source authority without execution.
 - [Graph operation-chain productization](concept/graph-operation-chain-productization.md) - Local native/retrofit
   dogfood package for `graph-source -> instruction pack -> local change -> graph delta -> graph update proposal`.
 - [Candidate C full read-model gate evaluation](concept/candidate-c-full-read-model-gate-evaluation.md) - Evaluation

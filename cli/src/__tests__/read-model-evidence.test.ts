@@ -1285,6 +1285,7 @@ describe('read-model Evidence builder', () => {
     })
     expect(report.dryRunInput.graphSnapshotArtifactCount).toBeGreaterThan(0)
     expect(report.dryRunInput.targetScopeCandidateCount).toBeGreaterThan(0)
+    expect(report.dryRunInput.outputRequirementSourceCount).toBe(4)
     expect(report.nonExecutionStatement).toContain('does not compile an execution contract')
     expect(report.blockingReasons).toEqual([])
   })
@@ -1339,6 +1340,7 @@ describe('read-model Evidence builder', () => {
         forbiddenScopeRules: Array<Record<string, unknown>>
       }
       packSchema: { requiredInputGroups: string[] }
+      outputRequirementSources: Array<Record<string, unknown>>
     }
     input.graphSnapshot.artifacts[0].path = 'examples/missing/graph-source.json'
     input.evidenceIndex.entries[0].artifact = 'examples/missing/evidence.md'
@@ -1353,6 +1355,10 @@ describe('read-model Evidence builder', () => {
     input.policySnapshot.forbiddenScopeRules[0].paths = ['examples/missing/policy-boundary.json']
     input.policySnapshot.forbiddenScopeRules[0].derivedFrom = ['policy:does-not-exist']
     input.packSchema.requiredInputGroups = ['humanRequest', 'magicContext']
+    input.outputRequirementSources[0].diffBinding = {}
+    input.outputRequirementSources[1].evidenceBinding = { evidenceId: 'evidence-does-not-exist' }
+    input.outputRequirementSources[1].commandBinding = { requiredCheckId: 'check-does-not-exist' }
+    input.outputRequirementSources[2].obligationType = 'ai-summary'
 
     const validation = await validateCompilerInputDryRun(input, resolve('.'))
     const blocking = validation.blocking.join('\n')
@@ -1370,6 +1376,10 @@ describe('read-model Evidence builder', () => {
     expect(blocking).toContain('policySnapshot.forbiddenScopeRules[0].paths references missing file or artifact')
     expect(blocking).toContain('policySnapshot.forbiddenScopeRules[0].derivedFrom references unknown policy id')
     expect(blocking).toContain('packSchema.requiredInputGroups contains unknown groups: magicContext')
+    expect(blocking).toContain('outputRequirementSources[0].diffBinding.mode is required')
+    expect(blocking).toContain('outputRequirementSources[1].evidenceBinding.evidenceId references unknown evidence id')
+    expect(blocking).toContain('outputRequirementSources[1].commandBinding.requiredCheckId references unknown')
+    expect(blocking).toContain('outputRequirementSources[2].obligationType must be one of')
   })
 
   it('compiles a deterministic dry-run contract candidate from the Compiler Input Model', async () => {
@@ -1388,6 +1398,17 @@ describe('read-model Evidence builder', () => {
     expect(report.candidateDiff.equivalenceStatus).toBe('compiler-equivalence-not-proven')
     expect(report.candidateDiff.reviewBoundary).toContain('equivalence with the hand-written contract')
     expect(report.paths.diffReport).toBe('examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json')
+    expect(report.paths.outputRequirementSourceAuthorityPreview).toBe(
+      'examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json',
+    )
+    expect(report.outputRequirementSourceAuthorityPreview).toMatchObject({
+      status: 'output-requirement-source-authority-preview-pass',
+      sourceAuthorityEntryCount: 4,
+      derivedOutputRequirementCount: 4,
+      mappedHandWrittenOutputRequirementCount: 3,
+      unresolvedObligationCount: 3,
+      generatedPreservationStatus: 'generated-output-requirements-not-preserved',
+    })
     expect(report.candidate).toMatchObject({
       changeId: 'change-todo-search-whitespace-normalization-dogfood',
       changeType: 'bug_fix',
@@ -1398,6 +1419,44 @@ describe('read-model Evidence builder', () => {
     expect(candidate.goal).toBe('Preserve Todo Search matching when a multi-word query contains repeated whitespace.')
     expect(JSON.stringify(candidate)).toContain('examples/adoption/todo-search-slice/runtime-fixture/todo-search.js')
     expect(JSON.stringify(candidate)).toContain('graph-source:node:CODE-RUNTIME-SEARCH-HELPER')
+    const outputRequirementPreview = JSON.parse(
+      await readFile(join(workspace, report.paths.outputRequirementSourceAuthorityPreview), 'utf8'),
+    ) as {
+      status: string
+      sourceAuthorityEntries: unknown[]
+      derivedOutputRequirementCandidates: unknown[]
+      handWrittenOutputRequirementMappings: Array<{ status: string }>
+      generatedOutputRequirementMappings: Array<{ status: string; reason: string }>
+      unresolvedObligations: Array<{ derivedOutputRequirementId: string; reason: string }>
+      generatedReplacementObligations: Array<{ status: string }>
+      mappingSummary: {
+        sourceAuthorityEntryCount: number
+        derivedOutputRequirementCount: number
+        mappedHandWrittenOutputRequirementCount: number
+        unresolvedObligationCount: number
+        generatedPreservationStatus: string
+        lossExplanation: string
+      }
+    }
+    expect(outputRequirementPreview.status).toBe('output-requirement-source-authority-preview-pass')
+    expect(outputRequirementPreview.mappingSummary).toMatchObject({
+      sourceAuthorityEntryCount: 4,
+      derivedOutputRequirementCount: 4,
+      mappedHandWrittenOutputRequirementCount: 3,
+      unresolvedObligationCount: 3,
+      generatedPreservationStatus: 'generated-output-requirements-not-preserved',
+    })
+    expect(outputRequirementPreview.unresolvedObligations.map((entry) => entry.derivedOutputRequirementId)).toEqual([
+      'output-report-changed-files',
+      'output-report-command-evidence-status',
+      'output-report-validation-result-summary',
+    ])
+    expect(outputRequirementPreview.unresolvedObligations[0].reason).toBe(
+      'source-authority-present-but-compiler-output-mapping-not-applied',
+    )
+    expect(outputRequirementPreview.generatedReplacementObligations[0].status).toBe(
+      'compiler-self-report-not-execution-output',
+    )
     const diffReport = JSON.parse(await readFile(join(workspace, report.paths.diffReport), 'utf8')) as {
       status: string
       differingFields: string[]
@@ -1683,8 +1742,16 @@ describe('read-model Evidence builder', () => {
       status: string
       inputModelStatus: string
       candidateStatus: string
-      paths: { outputCandidate: string; diffReport: string }
+      paths: { outputCandidate: string; diffReport: string; outputRequirementSourceAuthorityPreview: string }
       candidate: { requiredCheckCount: number; requiredEvidenceCount: number }
+      outputRequirementSourceAuthorityPreview: {
+        status: string
+        sourceAuthorityEntryCount: number
+        derivedOutputRequirementCount: number
+        mappedHandWrittenOutputRequirementCount: number
+        unresolvedObligationCount: number
+        generatedPreservationStatus: string
+      }
       candidateDiff: {
         status: string
         reviewStatus: string
@@ -1713,6 +1780,17 @@ describe('read-model Evidence builder', () => {
       'examples/read-model-aggregate/generated/execution-contract-dry-run.generated.json',
     )
     expect(output.paths.diffReport).toBe('examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json')
+    expect(output.paths.outputRequirementSourceAuthorityPreview).toBe(
+      'examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json',
+    )
+    expect(output.outputRequirementSourceAuthorityPreview).toMatchObject({
+      status: 'output-requirement-source-authority-preview-pass',
+      sourceAuthorityEntryCount: 4,
+      derivedOutputRequirementCount: 4,
+      mappedHandWrittenOutputRequirementCount: 3,
+      unresolvedObligationCount: 3,
+      generatedPreservationStatus: 'generated-output-requirements-not-preserved',
+    })
     expect(output.candidateDiff.status).toBe('contract-diff-detected')
     expect(output.candidateDiff.reviewStatus).toBe('non-blocking-review-diff')
     expect(output.candidateDiff.equivalenceStatus).toBe('compiler-equivalence-not-proven')
@@ -1814,6 +1892,15 @@ describe('read-model Evidence builder', () => {
         semanticDiffUnknownsStatus: string
         semanticDiffCoverageComplete: boolean
         equivalenceProven: boolean
+        outputRequirementSourceAuthorityPreview: {
+          status: string
+          sourceAuthorityEntryCount: number
+          derivedOutputRequirementCount: number
+          mappedHandWrittenOutputRequirementCount: number
+          unresolvedObligationCount: number
+          generatedPreservationStatus: string
+        }
+        outputRequirementSourceAuthorityPreviewPath: string
       }
     }
     const markdown = await readFile(markdownPath, 'utf8')
@@ -1839,6 +1926,17 @@ describe('read-model Evidence builder', () => {
     expect(output.contractCompilerDryRun.semanticDiffUnknownsStatus).toBe('semantic-diff-unknowns-zero')
     expect(output.contractCompilerDryRun.semanticDiffCoverageComplete).toBe(true)
     expect(output.contractCompilerDryRun.equivalenceProven).toBe(false)
+    expect(output.contractCompilerDryRun.outputRequirementSourceAuthorityPreview).toMatchObject({
+      status: 'output-requirement-source-authority-preview-pass',
+      sourceAuthorityEntryCount: 4,
+      derivedOutputRequirementCount: 4,
+      mappedHandWrittenOutputRequirementCount: 3,
+      unresolvedObligationCount: 3,
+      generatedPreservationStatus: 'generated-output-requirements-not-preserved',
+    })
+    expect(output.contractCompilerDryRun.outputRequirementSourceAuthorityPreviewPath).toBe(
+      'examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json',
+    )
     expect(output.contractCompilerDryRun.highestReviewSeverity).toBe('high')
     expect(output.contractCompilerDryRun.semanticClassificationCounts['semantic-loss']).toBe(3)
     expect(output.contractCompilerDryRun.semanticClassificationCounts['policy-loss']).toBe(2)
@@ -1870,6 +1968,12 @@ describe('read-model Evidence builder', () => {
     expect(markdown).toContain('`semantic-diff-unknowns-zero`')
     expect(markdown).toContain('coverage complete `true`')
     expect(markdown).toContain('equivalence proven `false`')
+    expect(markdown).toContain('`output-requirement-source-authority-preview-pass`')
+    expect(markdown).toContain('4 source entries / 4 derived requirements / 3 unresolved')
+    expect(markdown).toContain('`generated-output-requirements-not-preserved`')
+    expect(markdown).toContain(
+      '`examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json`',
+    )
     expect(markdown).toContain('`compiler-promotion-not-ready`')
     expect(markdown).toContain('semantic-loss: 3')
     expect(markdown).toContain('policy-loss: 2')

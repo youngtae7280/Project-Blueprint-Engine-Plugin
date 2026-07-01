@@ -425,6 +425,21 @@ try {
   if (!contractCompilerDryRun.paths.diffReport) {
     throw new Error('Contract compiler dry-run must expose a diff report path')
   }
+  assertEqual(
+    contractCompilerDryRun.outputRequirementSourceAuthorityPreview.status,
+    'output-requirement-source-authority-preview-pass',
+    'output requirement source authority preview status',
+  )
+  assertEqual(
+    contractCompilerDryRun.outputRequirementSourceAuthorityPreview.unresolvedObligationCount,
+    3,
+    'output requirement source authority unresolved obligation count',
+  )
+  assertEqual(
+    contractCompilerDryRun.outputRequirementSourceAuthorityPreview.generatedPreservationStatus,
+    'generated-output-requirements-not-preserved',
+    'output requirement generated preservation status',
+  )
 
   const payload = {
     ok: true,
@@ -532,6 +547,8 @@ try {
       semanticDiffUnknownsResolved: contractCompilerDryRun.candidateDiff.semanticDiffUnknownsResolved,
       semanticDiffCoverageComplete: contractCompilerDryRun.candidateDiff.semanticDiffCoverageComplete,
       equivalenceProven: contractCompilerDryRun.candidateDiff.equivalenceProven,
+      outputRequirementSourceAuthorityPreview: contractCompilerDryRun.outputRequirementSourceAuthorityPreview,
+      outputRequirementSourceAuthorityPreviewPath: contractCompilerDryRun.paths.outputRequirementSourceAuthorityPreview,
       differingFieldCount: contractCompilerDryRun.candidateDiff.differingFieldCount,
       diffReport: contractCompilerDryRun.paths.diffReport,
       nonExecuting: true,

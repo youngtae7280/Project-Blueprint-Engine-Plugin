@@ -8,7 +8,8 @@
     "packSchema",
     "policySnapshot",
     "evidenceIndex",
-    "targetScopeCandidates"
+    "targetScopeCandidates",
+    "outputRequirementSources"
   ],
   "inputDefinitions": {
     "humanRequest": {
@@ -34,6 +35,10 @@
     "targetScopeCandidates": {
       "source": "Graph-derived candidate scopes before contract compilation",
       "authority": "graph"
+    },
+    "outputRequirementSources": {
+      "source": "Graph, policy, Evidence, check, and diff bindings that define output reporting obligations",
+      "authority": "policy"
     }
   },
   "nonExecutionStatement": "This input model schema validates Actual Contract Compiler inputs only and does not compile execution contracts, execute AI, apply graph deltas, accept work, enable required checks, or retire tree-native artifacts."
