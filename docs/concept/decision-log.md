@@ -906,6 +906,14 @@ DEC-170 does not supersede DEC-097 through DEC-169. It triages Contract Compiler
 non-enforcing review metadata only and does not execute AI, apply graph deltas, accept work, enable required checks,
 configure branch protection, expand source authority, or retire tree-native artifacts.
 
+DEC-171 does not supersede DEC-097 through DEC-170. It closes the current Contract Compiler Dry-Run unknown semantic
+diff set by classifying `outputRequirements` as `output-requirement-loss`. The generated candidate replaces the
+hand-written obligations to report actual git-diff changed files and command-derived Evidence status with compiler
+input/candidate/diff status reporting, so output obligations are not equivalent and compiler promotion remains
+`compiler-promotion-not-ready`. The current dry-run diff set is fully classified, but this remains non-enforcing review
+metadata only and does not execute AI, apply graph deltas, accept work, enable required checks, configure branch
+protection, expand source authority, or retire tree-native artifacts.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

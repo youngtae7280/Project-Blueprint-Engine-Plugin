@@ -202,8 +202,10 @@ candidate does not imply equivalence with the hand-written dry-run contract whil
 `compiler-equivalence-not-proven`. The diff report now adds semantic review classifications and
 `compilerPromotionReadiness`; the current fixture remains `compiler-promotion-not-ready` because semantic/policy losses
 must be reviewed before any compiler promotion. Those classifications now come from explicit dry-run v0.1 rule ids, and
-unmatched differences are counted as `unknown-review-required`. Current triage leaves only `outputRequirements` as
-unknown review debt. It remains local/non-enforcing and does not execute AI or apply graph deltas.
+unmatched differences are counted as `unknown-review-required`. Current triage classifies the former
+`outputRequirements` unknown as `output-requirement-loss` because the compiler candidate does not preserve the
+hand-written changed-file and command-derived Evidence reporting obligations. The current dry-run diff set has no
+unknown fields, but it remains local/non-enforcing and does not execute AI or apply graph deltas.
 
 The following readiness artifact is complete at documentation level:
 

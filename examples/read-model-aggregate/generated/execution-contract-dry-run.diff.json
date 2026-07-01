@@ -246,11 +246,11 @@
       "field": "outputRequirements",
       "targetField": "outputRequirements",
       "diffDirection": "fieldDifferent",
-      "matchedRuleId": "semantic-diff-rule-unknown",
-      "classification": "unknown-review-required",
-      "reviewSeverity": "medium",
-      "promotionImpact": "review-required",
-      "reason": "id-summary-not-available; no-semantic-rule-for-field; manual-review-required",
+      "matchedRuleId": "semantic-diff-rule-output-requirements-field-output-requirement-loss",
+      "classification": "output-requirement-loss",
+      "reviewSeverity": "high",
+      "promotionImpact": "blocks-promotion",
+      "reason": "The generated candidate does not preserve the hand-written output reporting obligations for changed files and command-derived Evidence status; output requirements are not equivalent.",
       "missingIdsInGenerated": [],
       "extraIdsInGenerated": []
     },
@@ -275,14 +275,14 @@
     "safe-additive": 3,
     "evidence-chain-mismatch": 1,
     "metadata-only": 2,
-    "unknown-review-required": 1
+    "output-requirement-loss": 1
   },
   "highestReviewSeverity": "high",
   "compilerPromotionReadiness": "compiler-promotion-not-ready",
   "semanticDiffRuleCoverage": {
     "totalDiffs": 15,
-    "classifiedDiffs": 14,
-    "unknownDiffs": 1,
+    "classifiedDiffs": 15,
+    "unknownDiffs": 0,
     "matchedRuleIds": [
       "semantic-diff-rule-allowed-scope-missing-conservative-restriction",
       "semantic-diff-rule-forbidden-scope-extra-policy-expansion",
@@ -290,6 +290,7 @@
       "semantic-diff-rule-known-risks-extra-safe-additive",
       "semantic-diff-rule-known-risks-missing-semantic-loss",
       "semantic-diff-rule-non-execution-statement-field-metadata-only",
+      "semantic-diff-rule-output-requirements-field-output-requirement-loss",
       "semantic-diff-rule-required-checks-extra-safe-additive",
       "semantic-diff-rule-required-context-extra-safe-additive",
       "semantic-diff-rule-required-context-missing-semantic-loss",
@@ -297,10 +298,9 @@
       "semantic-diff-rule-required-evidence-missing-semantic-loss",
       "semantic-diff-rule-source-mode-field-metadata-only",
       "semantic-diff-rule-stop-conditions-extra-policy-expansion",
-      "semantic-diff-rule-stop-conditions-missing-policy-loss",
-      "semantic-diff-rule-unknown"
+      "semantic-diff-rule-stop-conditions-missing-policy-loss"
     ],
-    "unknownFields": ["outputRequirements"]
+    "unknownFields": []
   },
   "reviewBoundary": "The compiler candidate is valid, but equivalence with the hand-written contract is not proven. Review the differing fields before relying on the candidate.",
   "nonExecutionStatement": "This diff report is review Evidence only and does not execute work, accept changes, or make the compiled candidate authoritative."

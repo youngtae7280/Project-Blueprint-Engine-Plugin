@@ -386,8 +386,15 @@ try {
   if ((contractCompilerDryRun.candidateDiff.semanticClassificationCounts['policy-loss'] || 0) <= 0) {
     throw new Error('Contract compiler semantic diff summary must include policy-loss')
   }
-  if ((contractCompilerDryRun.candidateDiff.semanticDiffRuleCoverage.unknownDiffs || 0) <= 0) {
-    throw new Error('Contract compiler semantic diff coverage must expose unknown diffs')
+  if ((contractCompilerDryRun.candidateDiff.semanticClassificationCounts['output-requirement-loss'] || 0) <= 0) {
+    throw new Error('Contract compiler semantic diff summary must include output-requirement-loss')
+  }
+  const semanticDiffCoverage = contractCompilerDryRun.candidateDiff.semanticDiffRuleCoverage
+  if (
+    semanticDiffCoverage.totalDiffs !== semanticDiffCoverage.classifiedDiffs + semanticDiffCoverage.unknownDiffs ||
+    semanticDiffCoverage.unknownDiffs !== 0
+  ) {
+    throw new Error('Contract compiler semantic diff coverage must classify the current dry-run diff set')
   }
   if (contractCompilerDryRun.candidate.requiredCheckCount <= 0) {
     throw new Error('Contract compiler dry-run candidate must include required checks')

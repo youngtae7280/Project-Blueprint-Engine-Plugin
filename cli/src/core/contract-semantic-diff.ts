@@ -12,6 +12,7 @@ export type ContractSemanticDiffClassification =
   | 'policy-expansion'
   | 'safe-additive'
   | 'evidence-chain-mismatch'
+  | 'output-requirement-loss'
   | 'semantic-loss'
   | 'unknown-review-required'
 
@@ -218,6 +219,16 @@ export const contractSemanticDiffRules: readonly ContractSemanticDiffRule[] = [
     reason:
       'The nonExecutionStatement wording differs between hand-written and compiler-produced artifacts; review boundary wording, but do not treat this as execution-scope loss.',
   },
+  {
+    ruleId: 'semantic-diff-rule-output-requirements-field-output-requirement-loss',
+    targetField: 'outputRequirements',
+    condition: 'fieldDifferent',
+    classification: 'output-requirement-loss',
+    reviewSeverity: 'high',
+    promotionImpact: 'blocks-promotion',
+    reason:
+      'The generated candidate does not preserve the hand-written output reporting obligations for changed files and command-derived Evidence status; output requirements are not equivalent.',
+  },
 ]
 
 export function classifyContractDiffSemantics(
@@ -390,6 +401,7 @@ export function deriveCompilerPromotionReadiness(
       (diff) =>
         diff.classification === 'semantic-loss' ||
         diff.classification === 'policy-loss' ||
+        diff.classification === 'output-requirement-loss' ||
         diff.classification === 'unknown-review-required' ||
         diff.reviewSeverity === 'high' ||
         diff.promotionImpact === 'blocks-promotion',

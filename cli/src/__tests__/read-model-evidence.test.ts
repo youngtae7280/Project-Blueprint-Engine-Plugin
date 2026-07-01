@@ -1457,12 +1457,12 @@ describe('read-model Evidence builder', () => {
       'safe-additive': 3,
       'semantic-loss': 3,
       'evidence-chain-mismatch': 1,
-      'unknown-review-required': 1,
+      'output-requirement-loss': 1,
     })
     expect(diffReport.semanticDiffRuleCoverage).toMatchObject({
       totalDiffs: 15,
-      classifiedDiffs: 14,
-      unknownDiffs: 1,
+      classifiedDiffs: 15,
+      unknownDiffs: 0,
     })
     expect(diffReport.semanticDiffRuleCoverage.totalDiffs).toBe(
       diffReport.semanticDiffRuleCoverage.classifiedDiffs + diffReport.semanticDiffRuleCoverage.unknownDiffs,
@@ -1470,8 +1470,10 @@ describe('read-model Evidence builder', () => {
     expect(diffReport.semanticDiffRuleCoverage.matchedRuleIds).toContain(
       'semantic-diff-rule-required-evidence-missing-semantic-loss',
     )
-    expect(diffReport.semanticDiffRuleCoverage.matchedRuleIds).toContain('semantic-diff-rule-unknown')
-    expect(diffReport.semanticDiffRuleCoverage.unknownFields).toEqual(['outputRequirements'])
+    expect(diffReport.semanticDiffRuleCoverage.matchedRuleIds).toContain(
+      'semantic-diff-rule-output-requirements-field-output-requirement-loss',
+    )
+    expect(diffReport.semanticDiffRuleCoverage.unknownFields).toEqual([])
     expect(
       diffReport.semanticDiffs.find(
         (entry) => entry.field === 'requiredEvidence' && entry.classification === 'semantic-loss',
@@ -1532,14 +1534,14 @@ describe('read-model Evidence builder', () => {
     })
     expect(
       diffReport.semanticDiffs.find(
-        (entry) => entry.field === 'outputRequirements' && entry.classification === 'unknown-review-required',
+        (entry) => entry.field === 'outputRequirements' && entry.classification === 'output-requirement-loss',
       ),
     ).toMatchObject({
-      matchedRuleId: 'semantic-diff-rule-unknown',
+      matchedRuleId: 'semantic-diff-rule-output-requirements-field-output-requirement-loss',
       targetField: 'outputRequirements',
       diffDirection: 'fieldDifferent',
-      reason: 'id-summary-not-available; no-semantic-rule-for-field; manual-review-required',
-      promotionImpact: 'review-required',
+      reviewSeverity: 'high',
+      promotionImpact: 'blocks-promotion',
     })
     expect(validation.blocking).toEqual([])
     expect(report.nonExecutionStatement).toContain('does not execute AI')
@@ -1701,10 +1703,12 @@ describe('read-model Evidence builder', () => {
     expect(output.candidateDiff.semanticClassificationCounts['semantic-loss']).toBe(3)
     expect(output.candidateDiff.semanticClassificationCounts['policy-loss']).toBe(2)
     expect(output.candidateDiff.semanticClassificationCounts['metadata-only']).toBe(2)
-    expect(output.candidateDiff.semanticClassificationCounts['unknown-review-required']).toBe(1)
-    expect(output.candidateDiff.semanticDiffRuleCoverage.unknownDiffs).toBe(1)
-    expect(output.candidateDiff.semanticDiffRuleCoverage.unknownFields).toEqual(['outputRequirements'])
-    expect(output.candidateDiff.semanticDiffRuleCoverage.matchedRuleIds).toContain('semantic-diff-rule-unknown')
+    expect(output.candidateDiff.semanticClassificationCounts['output-requirement-loss']).toBe(1)
+    expect(output.candidateDiff.semanticDiffRuleCoverage.unknownDiffs).toBe(0)
+    expect(output.candidateDiff.semanticDiffRuleCoverage.unknownFields).toEqual([])
+    expect(output.candidateDiff.semanticDiffRuleCoverage.matchedRuleIds).toContain(
+      'semantic-diff-rule-output-requirements-field-output-requirement-loss',
+    )
     expect(output.candidateDiff.differingFieldCount).toBeGreaterThan(0)
     expect(output.candidateDiff.idBasedSummaries.length).toBeGreaterThan(0)
     expect(output.candidate.requiredCheckCount).toBeGreaterThan(0)
@@ -1805,8 +1809,9 @@ describe('read-model Evidence builder', () => {
     expect(output.contractCompilerDryRun.semanticClassificationCounts['semantic-loss']).toBe(3)
     expect(output.contractCompilerDryRun.semanticClassificationCounts['policy-loss']).toBe(2)
     expect(output.contractCompilerDryRun.semanticClassificationCounts['metadata-only']).toBe(2)
-    expect(output.contractCompilerDryRun.semanticDiffRuleCoverage.unknownDiffs).toBe(1)
-    expect(output.contractCompilerDryRun.semanticDiffRuleCoverage.unknownFields).toEqual(['outputRequirements'])
+    expect(output.contractCompilerDryRun.semanticClassificationCounts['output-requirement-loss']).toBe(1)
+    expect(output.contractCompilerDryRun.semanticDiffRuleCoverage.unknownDiffs).toBe(0)
+    expect(output.contractCompilerDryRun.semanticDiffRuleCoverage.unknownFields).toEqual([])
     expect(output.contractCompilerDryRun.differingFieldCount).toBeGreaterThan(0)
     expect(output.contractCompilerDryRun.diffReport).toBe(
       'examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json',
@@ -1831,8 +1836,9 @@ describe('read-model Evidence builder', () => {
     expect(markdown).toContain('semantic-loss: 3')
     expect(markdown).toContain('policy-loss: 2')
     expect(markdown).toContain('metadata-only: 2')
-    expect(markdown).toContain('unknown semantic diffs 1')
-    expect(markdown).toContain('unknown fields outputRequirements')
+    expect(markdown).toContain('output-requirement-loss: 1')
+    expect(markdown).toContain('unknown semantic diffs 0')
+    expect(markdown).toContain('unknown fields none')
     expect(markdown).toContain('Semantic diff classification is non-blocking review metadata only')
     expect(markdown).toContain('equivalence with the hand-written contract')
     expect(markdown).toContain('`retirement-not-ready`')
