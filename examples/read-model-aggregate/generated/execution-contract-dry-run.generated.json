@@ -22,16 +22,16 @@
   ],
   "forbiddenScope": [
     {
+      "id": "scope-no-product-meaning-expansion",
+      "scopeKind": "product",
+      "paths": ["examples/adoption/todo-search-slice/product-tree.json"],
+      "derivedFrom": ["intent:todo-search-selected-slice"]
+    },
+    {
       "id": "scope-no-ci-enforcement",
       "scopeKind": "workflow",
       "paths": [".github/workflows/read-model-evidence.yml"],
-      "derivedFrom": ["policy:non-enforcement-policy"]
-    },
-    {
-      "id": "scope-no-tree-retirement",
-      "scopeKind": "graph",
-      "paths": ["examples/read-model-aggregate/graph-source-transition-status.json"],
-      "derivedFrom": ["policy:non-enforcement-policy"]
+      "derivedFrom": ["policy:non-enforcing-read-model-evidence"]
     }
   ],
   "requiredContext": [

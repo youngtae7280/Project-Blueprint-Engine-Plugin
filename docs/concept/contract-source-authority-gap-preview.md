@@ -21,8 +21,8 @@ examples/read-model-aggregate/generated/contract-source-authority-gap.preview.js
 The artifact records:
 
 - remaining semantic and policy loss counts;
-- field-level gaps for `allowedScope`, `forbiddenScope`, `requiredContext`, `requiredEvidence`, `knownRisks`, and
-  `stopConditions`;
+- field-level gaps for `allowedScope`, `requiredContext`, `requiredEvidence`, `knownRisks`, and `stopConditions`;
+- `forbiddenScope` as preserved for the current fixture after policy source authority resolution;
 - missing and extra ids from the generated candidate;
 - candidate source-authority type for each field;
 - whether a resolver is required;
@@ -33,11 +33,12 @@ The artifact records:
 The current preview recommends:
 
 ```text
-policy-forbidden-scope-source-authority
+stop-condition-source-authority
 ```
 
-This is selected because policy-loss remains in `forbiddenScope`. It is the narrowest next resolver candidate before
-attempting broader context, Evidence, risk, or stop-condition resolution.
+This is selected because `forbiddenScope` is now generated from `policySnapshot.forbiddenScopeRules[]`, while policy-loss
+still remains in `stopConditions`. It is the narrowest next resolver candidate before attempting broader context,
+Evidence, or risk resolution.
 
 ## Boundaries
 

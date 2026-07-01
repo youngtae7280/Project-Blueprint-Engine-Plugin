@@ -165,8 +165,10 @@ examples/read-model-aggregate/generated/output-requirement-source-authority.prev
 
 This surface maps hand-written output obligations to `outputRequirementSources[]` for comparison and now uses those
 source authority entries to derive generated `outputRequirements`. The current preview reports
-`generated-output-requirements-preserved` with zero unresolved output obligations. This still does not prove full
-equivalence because scope, context, Evidence, risk, and stop-condition losses remain.
+`generated-output-requirements-preserved` with zero unresolved output obligations. The compiler also derives
+`forbiddenScope[]` from `policySnapshot.forbiddenScopeRules[]`, so the current fixture no longer carries
+forbidden-scope policy-loss. This still does not prove full equivalence because scope, context, Evidence, risk, and
+stop-condition losses remain.
 
 The remaining-loss preview is recorded in
 [contract-source-authority-gap-preview.md](contract-source-authority-gap-preview.md) and emitted as:
@@ -175,6 +177,7 @@ The remaining-loss preview is recorded in
 examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json
 ```
 
-It does not add another resolver. It explains the remaining source-authority gaps by field and currently recommends
-`policy-forbidden-scope-source-authority` as the next narrow resolver candidate because `forbiddenScope` still contains
-policy-loss.
+It explains the remaining source-authority gaps by field and currently recommends `stop-condition-source-authority` as
+the next narrow resolver candidate because `stopConditions` still contain policy-loss. The policy forbidden-scope
+resolver is intentionally narrow: it derives generated forbidden scope from policy source authority, not from the
+hand-written comparison fixture.

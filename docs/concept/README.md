@@ -218,10 +218,10 @@ compiler now derives generated `outputRequirements` from those entries. It repor
 `generated-output-requirements-preserved` for the current fixture while keeping whole-contract equivalence unproven.
 
 Contract Source Authority Gap Preview v0.2 writes `contract-source-authority-gap.preview.json` to explain the remaining
-semantic/policy losses by field. It currently reports five remaining semantic/policy losses across
-`allowedScope`, `forbiddenScope`, `requiredContext`, `requiredEvidence`, `knownRisks`, and `stopConditions`, and selects
-`policy-forbidden-scope-source-authority` as the next recommended resolver. This is review metadata only, not
-enforcement or compiler promotion.
+semantic/policy losses by field. It now reports four remaining semantic/policy losses across `allowedScope`,
+`requiredContext`, `requiredEvidence`, `knownRisks`, and `stopConditions`; `forbiddenScope` is preserved from
+`policySnapshot.forbiddenScopeRules[]`. The next recommended resolver is `stop-condition-source-authority`. This is
+review metadata only, not enforcement or compiler promotion.
 
 The following readiness artifact is complete at documentation level:
 

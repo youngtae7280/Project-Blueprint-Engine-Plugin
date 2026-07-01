@@ -953,6 +953,16 @@ source-authority types, remaining loss counts, and one next recommended resolver
 it does not implement the resolver, execute AI, apply graph deltas, accept work, enable required checks, configure
 branch protection, expand source authority, retire tree-native artifacts, or widen changeType support.
 
+DEC-176 does not supersede DEC-097 through DEC-175. It connects the policy forbidden-scope source authority resolver to
+the current Contract Compiler Dry-Run candidate for `forbiddenScope` only. Generated forbidden scope is now derived from
+`policySnapshot.forbiddenScopeRules[]`; the hand-written dry-run contract remains a comparison fixture and is not a
+compiler source. The generated-vs-hand-written diff no longer reports forbidden-scope policy-loss for the current Todo
+Search `bug_fix` fixture. The source-authority gap preview now reports four remaining losses, keeps
+`compilerPromotionReadiness` as `compiler-promotion-not-ready`, keeps `equivalenceProven` false, and recommends
+`stop-condition-source-authority` as the next narrow resolver. This does not execute AI, apply graph deltas, accept work,
+enable required checks, configure branch protection, expand source authority beyond forbidden scope, retire tree-native
+artifacts, or widen changeType support.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

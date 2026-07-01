@@ -42,6 +42,7 @@ import {
 import { compileExecutionContractDryRun } from '../core/contract-compiler-dry-run'
 import { classifyContractDiffSemantics, deriveCompilerPromotionReadiness } from '../core/contract-semantic-diff'
 import { resolveOutputRequirementsFromSourceAuthority } from '../core/output-requirement-source-authority'
+import { resolveForbiddenScopeFromPolicySourceAuthority } from '../core/policy-forbidden-scope-source-authority'
 
 const workspaces: string[] = []
 const exampleWorkspacePaths = [
@@ -1535,8 +1536,13 @@ describe('read-model Evidence builder', () => {
     expect(diffReport.equivalenceStatus).toBe('compiler-equivalence-not-proven')
     expect(diffReport.differingFields).toContain('sourceMode')
     expect(diffReport.differingFields).not.toContain('outputRequirements')
+    expect(diffReport.differingFields).not.toContain('forbiddenScope')
     expect(diffReport.comparedFields.find((entry) => entry.field === 'outputRequirements')).toMatchObject({
       field: 'outputRequirements',
+      status: 'same',
+    })
+    expect(diffReport.comparedFields.find((entry) => entry.field === 'forbiddenScope')).toMatchObject({
+      field: 'forbiddenScope',
       status: 'same',
     })
     expect(diffReport.idBasedSummaries.find((entry) => entry.field === 'allowedScope')).toMatchObject({
@@ -1560,15 +1566,15 @@ describe('read-model Evidence builder', () => {
     expect(diffReport.semanticClassificationCounts).toMatchObject({
       'metadata-only': 2,
       'conservative-restriction': 1,
-      'policy-loss': 2,
-      'policy-expansion': 2,
+      'policy-loss': 1,
+      'policy-expansion': 1,
       'safe-additive': 3,
       'semantic-loss': 3,
       'evidence-chain-mismatch': 1,
     })
     expect(diffReport.semanticDiffRuleCoverage).toMatchObject({
-      totalDiffs: 14,
-      classifiedDiffs: 14,
+      totalDiffs: 12,
+      classifiedDiffs: 12,
       unknownDiffs: 0,
     })
     expect(diffReport.semanticDiffRuleCoverage.totalDiffs).toBe(
@@ -1579,6 +1585,12 @@ describe('read-model Evidence builder', () => {
     )
     expect(diffReport.semanticDiffRuleCoverage.matchedRuleIds).not.toContain(
       'semantic-diff-rule-output-requirements-field-output-requirement-loss',
+    )
+    expect(diffReport.semanticDiffRuleCoverage.matchedRuleIds).not.toContain(
+      'semantic-diff-rule-forbidden-scope-missing-policy-loss',
+    )
+    expect(diffReport.semanticDiffRuleCoverage.matchedRuleIds).not.toContain(
+      'semantic-diff-rule-forbidden-scope-extra-policy-expansion',
     )
     expect(diffReport.semanticDiffRuleCoverage.unknownFields).toEqual([])
     expect(
@@ -1593,18 +1605,7 @@ describe('read-model Evidence builder', () => {
       promotionImpact: 'blocks-promotion',
       missingIdsInGenerated: ['evidence-validate-all-result'],
     })
-    expect(
-      diffReport.semanticDiffs.find(
-        (entry) => entry.field === 'forbiddenScope' && entry.classification === 'policy-loss',
-      ),
-    ).toMatchObject({
-      matchedRuleId: 'semantic-diff-rule-forbidden-scope-missing-policy-loss',
-      targetField: 'forbiddenScope',
-      diffDirection: 'missingIdsInGenerated',
-      reviewSeverity: 'high',
-      promotionImpact: 'blocks-promotion',
-      missingIdsInGenerated: ['scope-no-product-meaning-expansion'],
-    })
+    expect(diffReport.semanticDiffs.some((entry) => entry.field === 'forbiddenScope')).toBe(false)
     expect(
       diffReport.semanticDiffs.find(
         (entry) => entry.field === 'allowedScope' && entry.classification === 'conservative-restriction',
@@ -1643,15 +1644,14 @@ describe('read-model Evidence builder', () => {
     expect(gapPreview.status).toBe('contract-source-authority-gap-preview-pass')
     expect(gapPreview.outputRequirementPreservationStatus).toBe('generated-output-requirements-preserved')
     expect(gapPreview.summary).toMatchObject({
-      remainingLossCount: 5,
-      remainingPolicyLossCount: 2,
+      remainingLossCount: 4,
+      remainingPolicyLossCount: 1,
       remainingSemanticLossCount: 3,
-      nextRecommendedResolver: 'policy-forbidden-scope-source-authority',
+      nextRecommendedResolver: 'stop-condition-source-authority',
       promotionBlockedBy: ['policy-loss', 'semantic-loss'],
     })
     expect(gapPreview.summary.fieldsRequiringSourceAuthority).toEqual([
       'allowedScope',
-      'forbiddenScope',
       'requiredContext',
       'requiredEvidence',
       'knownRisks',
@@ -1659,11 +1659,11 @@ describe('read-model Evidence builder', () => {
     ])
     expect(gapPreview.fieldGaps.find((entry) => entry.field === 'forbiddenScope')).toMatchObject({
       candidateSourceAuthorityType: 'policy-forbidden-scope-source-authority',
-      semanticClassifications: ['policy-expansion', 'policy-loss'],
-      missingIdsInGenerated: ['scope-no-product-meaning-expansion'],
-      extraIdsInGenerated: ['scope-no-tree-retirement'],
-      resolverRequired: true,
-      preservationStatus: 'source-authority-gap-open',
+      semanticClassifications: [],
+      missingIdsInGenerated: [],
+      extraIdsInGenerated: [],
+      resolverRequired: false,
+      preservationStatus: 'source-authority-preserved',
     })
     expect(gapPreview.fieldGaps.find((entry) => entry.field === 'allowedScope')).toMatchObject({
       candidateSourceAuthorityType: 'scope-source-authority',
@@ -1691,6 +1691,71 @@ describe('read-model Evidence builder', () => {
 
     expect(candidate.outputRequirements).toContain('Report changed files from actual git diff only.')
     expect(candidate.outputRequirements).not.toContain('DO NOT COPY THIS HAND-WRITTEN COMPARISON TEXT.')
+  })
+
+  it('derives forbidden scope from policy source authority rather than hand-written comparison scope', async () => {
+    const workspace = await createExampleWorkspace()
+    const handWrittenPath = join(workspace, 'examples/read-model-aggregate/generated/execution-contract-dry-run.json')
+    const handWritten = JSON.parse(await readFile(handWrittenPath, 'utf8')) as {
+      forbiddenScope: Array<Record<string, unknown>>
+    }
+    handWritten.forbiddenScope = [
+      {
+        id: 'scope-hand-written-comparison-only',
+        scopeKind: 'graph',
+        paths: ['examples/read-model-aggregate/graph-source-transition-status.json'],
+        derivedFrom: ['comparison-fixture:not-compiler-source'],
+      },
+    ]
+    await writeFile(handWrittenPath, `${JSON.stringify(handWritten, null, 2)}\n`)
+
+    const report = await compileExecutionContractDryRun(workspace)
+    const candidate = JSON.parse(await readFile(join(workspace, report.paths.outputCandidate), 'utf8')) as {
+      forbiddenScope: Array<{ id: string; derivedFrom: string[] }>
+    }
+
+    expect(candidate.forbiddenScope.map((entry) => entry.id)).toEqual([
+      'scope-no-product-meaning-expansion',
+      'scope-no-ci-enforcement',
+    ])
+    expect(candidate.forbiddenScope.flatMap((entry) => entry.derivedFrom)).toContain(
+      'policy:non-enforcing-read-model-evidence',
+    )
+    expect(candidate.forbiddenScope.map((entry) => entry.id)).not.toContain('scope-hand-written-comparison-only')
+  })
+
+  it('resolves forbidden scope entries from policy source authority rules', () => {
+    const resolution = resolveForbiddenScopeFromPolicySourceAuthority({
+      forbiddenScopeRules: [
+        {
+          id: 'scope-no-ci-enforcement',
+          scopeKind: 'workflow',
+          paths: ['.github/workflows/read-model-evidence.yml'],
+          derivedFrom: ['policy:non-enforcing-read-model-evidence'],
+        },
+        {
+          id: 'scope-missing-paths',
+          scopeKind: 'graph',
+          paths: [],
+          derivedFrom: ['policy:non-enforcing-read-model-evidence'],
+        },
+      ],
+    })
+
+    expect(resolution.forbiddenScope).toEqual([
+      {
+        id: 'scope-no-ci-enforcement',
+        scopeKind: 'workflow',
+        paths: ['.github/workflows/read-model-evidence.yml'],
+        derivedFrom: ['policy:non-enforcing-read-model-evidence'],
+      },
+    ])
+    expect(resolution.unresolvedRules).toEqual([
+      {
+        id: 'scope-missing-paths',
+        reason: 'policy-forbidden-scope-rule-missing-required-fields',
+      },
+    ])
   })
 
   it('resolves output requirement obligations from typed source authority entries', () => {
@@ -1926,7 +1991,7 @@ describe('read-model Evidence builder', () => {
     expect(output.candidateDiff.semanticDiffCoverageComplete).toBe(true)
     expect(output.candidateDiff.equivalenceProven).toBe(false)
     expect(output.candidateDiff.semanticClassificationCounts['semantic-loss']).toBe(3)
-    expect(output.candidateDiff.semanticClassificationCounts['policy-loss']).toBe(2)
+    expect(output.candidateDiff.semanticClassificationCounts['policy-loss']).toBe(1)
     expect(output.candidateDiff.semanticClassificationCounts['metadata-only']).toBe(2)
     expect(output.candidateDiff.semanticClassificationCounts['output-requirement-loss']).toBeUndefined()
     expect(output.candidateDiff.semanticDiffRuleCoverage.unknownDiffs).toBe(0)
@@ -1936,13 +2001,13 @@ describe('read-model Evidence builder', () => {
     )
     expect(output.sourceAuthorityGapPreview).toMatchObject({
       status: 'contract-source-authority-gap-preview-pass',
-      remainingLossCount: 5,
-      remainingPolicyLossCount: 2,
+      remainingLossCount: 4,
+      remainingPolicyLossCount: 1,
       remainingSemanticLossCount: 3,
-      nextRecommendedResolver: 'policy-forbidden-scope-source-authority',
+      nextRecommendedResolver: 'stop-condition-source-authority',
     })
-    expect(output.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority).toContain('forbiddenScope')
-    expect(output.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority).toHaveLength(6)
+    expect(output.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority).not.toContain('forbiddenScope')
+    expect(output.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority).toHaveLength(5)
     expect(output.candidateDiff.differingFieldCount).toBeGreaterThan(0)
     expect(output.candidateDiff.idBasedSummaries.length).toBeGreaterThan(0)
     expect(output.candidate.requiredCheckCount).toBeGreaterThan(0)
@@ -2082,14 +2147,13 @@ describe('read-model Evidence builder', () => {
     )
     expect(output.contractCompilerDryRun.sourceAuthorityGapPreview).toMatchObject({
       status: 'contract-source-authority-gap-preview-pass',
-      remainingLossCount: 5,
-      remainingPolicyLossCount: 2,
+      remainingLossCount: 4,
+      remainingPolicyLossCount: 1,
       remainingSemanticLossCount: 3,
-      nextRecommendedResolver: 'policy-forbidden-scope-source-authority',
+      nextRecommendedResolver: 'stop-condition-source-authority',
     })
     expect(output.contractCompilerDryRun.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority).toEqual([
       'allowedScope',
-      'forbiddenScope',
       'requiredContext',
       'requiredEvidence',
       'knownRisks',
@@ -2100,7 +2164,7 @@ describe('read-model Evidence builder', () => {
     )
     expect(output.contractCompilerDryRun.highestReviewSeverity).toBe('high')
     expect(output.contractCompilerDryRun.semanticClassificationCounts['semantic-loss']).toBe(3)
-    expect(output.contractCompilerDryRun.semanticClassificationCounts['policy-loss']).toBe(2)
+    expect(output.contractCompilerDryRun.semanticClassificationCounts['policy-loss']).toBe(1)
     expect(output.contractCompilerDryRun.semanticClassificationCounts['metadata-only']).toBe(2)
     expect(output.contractCompilerDryRun.semanticClassificationCounts['output-requirement-loss']).toBeUndefined()
     expect(output.contractCompilerDryRun.semanticDiffRuleCoverage.unknownDiffs).toBe(0)
@@ -2133,15 +2197,15 @@ describe('read-model Evidence builder', () => {
     expect(markdown).toContain('4 source entries / 4 derived requirements / 0 unresolved')
     expect(markdown).toContain('`generated-output-requirements-preserved`')
     expect(markdown).toContain('`contract-source-authority-gap-preview-pass`')
-    expect(markdown).toContain('5 remaining losses (3 semantic / 2 policy)')
-    expect(markdown).toContain('next `policy-forbidden-scope-source-authority`')
+    expect(markdown).toContain('4 remaining losses (3 semantic / 1 policy)')
+    expect(markdown).toContain('next `stop-condition-source-authority`')
     expect(markdown).toContain('`examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json`')
     expect(markdown).toContain(
       '`examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json`',
     )
     expect(markdown).toContain('`compiler-promotion-not-ready`')
     expect(markdown).toContain('semantic-loss: 3')
-    expect(markdown).toContain('policy-loss: 2')
+    expect(markdown).toContain('policy-loss: 1')
     expect(markdown).toContain('metadata-only: 2')
     expect(markdown).not.toContain('output-requirement-loss: 1')
     expect(markdown).toContain('unknown semantic diffs 0')

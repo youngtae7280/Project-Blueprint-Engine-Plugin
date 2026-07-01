@@ -9,7 +9,6 @@
   "differingFields": [
     "sourceMode",
     "allowedScope",
-    "forbiddenScope",
     "requiredContext",
     "requiredChecks",
     "requiredEvidence",
@@ -22,7 +21,7 @@
     { "field": "changeType", "status": "same" },
     { "field": "goal", "status": "same" },
     { "field": "allowedScope", "status": "different" },
-    { "field": "forbiddenScope", "status": "different" },
+    { "field": "forbiddenScope", "status": "same" },
     { "field": "requiredContext", "status": "different" },
     { "field": "requiredChecks", "status": "different" },
     { "field": "requiredEvidence", "status": "different" },
@@ -45,8 +44,8 @@
       "field": "forbiddenScope",
       "handWrittenCount": 2,
       "generatedCount": 2,
-      "missingIdsInGenerated": ["scope-no-product-meaning-expansion"],
-      "extraIdsInGenerated": ["scope-no-tree-retirement"]
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
     },
     {
       "field": "requiredContext",
@@ -96,30 +95,6 @@
       "reason": "The generated candidate permits less execution scope than the hand-written contract; review before relying on the candidate.",
       "missingIdsInGenerated": ["scope-todo-search-evidence"],
       "extraIdsInGenerated": []
-    },
-    {
-      "field": "forbiddenScope",
-      "targetField": "forbiddenScope",
-      "diffDirection": "missingIdsInGenerated",
-      "matchedRuleId": "semantic-diff-rule-forbidden-scope-missing-policy-loss",
-      "classification": "policy-loss",
-      "reviewSeverity": "high",
-      "promotionImpact": "blocks-promotion",
-      "reason": "The generated candidate is missing a forbidden policy scope from the hand-written contract, so promotion is not ready.",
-      "missingIdsInGenerated": ["scope-no-product-meaning-expansion"],
-      "extraIdsInGenerated": []
-    },
-    {
-      "field": "forbiddenScope",
-      "targetField": "forbiddenScope",
-      "diffDirection": "extraIdsInGenerated",
-      "matchedRuleId": "semantic-diff-rule-forbidden-scope-extra-policy-expansion",
-      "classification": "policy-expansion",
-      "reviewSeverity": "low",
-      "promotionImpact": "review-required",
-      "reason": "The generated candidate adds a forbidden policy scope beyond the hand-written contract; review the policy expansion.",
-      "missingIdsInGenerated": [],
-      "extraIdsInGenerated": ["scope-no-tree-retirement"]
     },
     {
       "field": "requiredContext",
@@ -256,24 +231,22 @@
   ],
   "semanticClassificationCounts": {
     "conservative-restriction": 1,
-    "policy-loss": 2,
-    "policy-expansion": 2,
     "semantic-loss": 3,
     "safe-additive": 3,
     "evidence-chain-mismatch": 1,
+    "policy-loss": 1,
+    "policy-expansion": 1,
     "metadata-only": 2
   },
   "highestReviewSeverity": "high",
   "compilerPromotionReadiness": "compiler-promotion-not-ready",
   "promotionReadiness": "compiler-promotion-not-ready",
   "semanticDiffRuleCoverage": {
-    "totalDiffs": 14,
-    "classifiedDiffs": 14,
+    "totalDiffs": 12,
+    "classifiedDiffs": 12,
     "unknownDiffs": 0,
     "matchedRuleIds": [
       "semantic-diff-rule-allowed-scope-missing-conservative-restriction",
-      "semantic-diff-rule-forbidden-scope-extra-policy-expansion",
-      "semantic-diff-rule-forbidden-scope-missing-policy-loss",
       "semantic-diff-rule-known-risks-extra-safe-additive",
       "semantic-diff-rule-known-risks-missing-semantic-loss",
       "semantic-diff-rule-non-execution-statement-field-metadata-only",

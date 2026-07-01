@@ -205,6 +205,9 @@ function chooseNextRecommendedResolver(
   if (hasClassification(semanticDiffs, 'forbiddenScope', 'policy-loss')) {
     return 'policy-forbidden-scope-source-authority'
   }
+  if (hasClassification(semanticDiffs, 'stopConditions', 'policy-loss')) {
+    return 'stop-condition-source-authority'
+  }
   if (fieldGaps.some((gap) => gap.field === 'requiredEvidence' && gap.resolverRequired)) {
     return 'evidence-source-authority'
   }

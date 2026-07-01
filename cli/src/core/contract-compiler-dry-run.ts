@@ -18,6 +18,7 @@ import {
   type ContractSourceAuthorityGapPreviewSummary,
 } from './contract-source-authority-gap.js'
 import { resolveOutputRequirementsFromSourceAuthority } from './output-requirement-source-authority.js'
+import { resolveForbiddenScopeFromPolicySourceAuthority } from './policy-forbidden-scope-source-authority.js'
 
 export type ContractCompilerDryRunStatus = 'contract-compiler-dry-run-pass' | 'contract-compiler-dry-run-blocked'
 
@@ -348,12 +349,13 @@ function compileBugFixContractCandidate(input: Record<string, unknown>): {
       Boolean(entry),
     )
 
-  const forbiddenScope = arrayValue(policySnapshot.forbiddenScopeRules).map((rule) => ({
-    id: stringValue(rule.id),
-    scopeKind: stringValue(rule.scopeKind),
-    paths: stringArrayValue(rule.paths),
-    derivedFrom: stringArrayValue(rule.derivedFrom),
-  }))
+  const forbiddenScopeResolution = resolveForbiddenScopeFromPolicySourceAuthority(policySnapshot)
+  const forbiddenScope = forbiddenScopeResolution.forbiddenScope
+  for (const unresolved of forbiddenScopeResolution.unresolvedRules) {
+    blocking.push(
+      `Contract Compiler Dry-Run v0.2 could not derive forbidden scope ${unresolved.id}: ${unresolved.reason}.`,
+    )
+  }
   if (forbiddenScope.length === 0) {
     blocking.push('Contract Compiler Dry-Run v0.2 requires policySnapshot.forbiddenScopeRules.')
   }

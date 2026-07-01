@@ -447,12 +447,12 @@ try {
   )
   assertEqual(
     contractCompilerDryRun.sourceAuthorityGapPreview.remainingLossCount,
-    5,
+    4,
     'contract source authority remaining loss count',
   )
   assertEqual(
     contractCompilerDryRun.sourceAuthorityGapPreview.nextRecommendedResolver,
-    'policy-forbidden-scope-source-authority',
+    'stop-condition-source-authority',
     'contract source authority next recommended resolver',
   )
 
