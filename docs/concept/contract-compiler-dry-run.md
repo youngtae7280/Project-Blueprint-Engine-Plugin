@@ -88,9 +88,9 @@ The diff report now also classifies those id-based differences as semantic revie
 Dry-run v0.1 classifications are small fixture-specific rules, not a general policy engine. Earlier Todo Search
 whitespace-normalization diffs classified missing required Evidence as `semantic-loss` and missing forbidden scope as
 `policy-loss`; v0.2 source-authority resolvers now preserve those fields for the current fixture. The generated
-candidate still remains `compiler-promotion-not-ready` because required context and known risk semantics are not yet
-preserved. This status is review metadata only; it does not enable promotion, required checks, branch protection, or
-execution.
+candidate still remains `compiler-promotion-not-ready` because known risk semantics are not yet preserved and allowed
+scope still has conservative review debt. This status is review metadata only; it does not enable promotion, required
+checks, branch protection, or execution.
 
 Each semantic diff records the `matchedRuleId` that produced its classification. Differences without a dedicated v0.1
 rule use `matchedRuleId: semantic-diff-rule-unknown`, classify as `unknown-review-required`, and prevent promotion
@@ -99,9 +99,10 @@ readiness. `compilerPromotionReadiness` is derived from the semantic diffs; it i
 Current triage previously classified `outputRequirements` as `output-requirement-loss`. v0.2 now derives generated
 `outputRequirements` from `outputRequirementSources[]`, so the current generated candidate preserves the changed-file,
 command-output Evidence, validation-result, and boundary reporting obligations for this fixture. `sourceMode` and
-`nonExecutionStatement` are classified as `metadata-only`; `requiredEvidence`, `forbiddenScope`, and `stopConditions`
-are preserved from source authority; `requiredContext` and `knownRisks` still differ through id-based summaries. Unknown
-diffs remain possible for future fields, but the current dry-run diff set is fully classified.
+`nonExecutionStatement` are classified as `metadata-only`; `requiredEvidence`, `forbiddenScope`, `stopConditions`, and
+`requiredContext` are preserved from source authority; `knownRisks` still differs through id-based summaries, and
+`allowedScope` remains a conservative restriction. Unknown diffs remain possible for future fields, but the current
+dry-run diff set is fully classified.
 
 ## v0.1 Closeout
 
@@ -124,7 +125,7 @@ v0.1 does not prove:
 
 The current closeout status is `contract-compiler-dry-run-v0.1-classification-complete`, but
 `equivalenceProven` remains `false` and `compilerPromotionReadiness` remains `compiler-promotion-not-ready` because
-`semantic-loss` is still present for required context and known risk coverage.
+`semantic-loss` is still present for known risk coverage.
 
 ## Boundaries
 
@@ -171,7 +172,9 @@ source authority entries to derive generated `outputRequirements`. The current p
 forbidden-scope policy-loss. It also derives `stopConditions[]` from `stopConditionSources[]`, so the current fixture no
 longer carries stop-condition policy-loss. Finally, it derives `requiredEvidence[]` from `evidenceIndex.entries[]` plus
 `policySnapshot.evidenceCheckMappings[]`, so the current fixture no longer carries required-Evidence semantic loss or
-evidence-chain mismatch. This still does not prove full equivalence because scope, context, and risk losses remain.
+evidence-chain mismatch. It now derives `requiredContext[]` from `graphSnapshot.artifacts[]`, so the current fixture no
+longer carries required-context semantic loss. This still does not prove full equivalence because allowed-scope review
+debt and known-risk semantic loss remain.
 
 The remaining-loss preview is recorded in
 [contract-source-authority-gap-preview.md](contract-source-authority-gap-preview.md) and emitted as:
@@ -180,7 +183,7 @@ The remaining-loss preview is recorded in
 examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json
 ```
 
-It explains the remaining source-authority gaps by field and currently recommends `context-source-authority` as the
-next narrow resolver candidate because required Evidence is now preserved while required context still contains
-semantic-loss. The policy forbidden-scope, stop-condition, and Evidence resolvers are intentionally narrow: they derive
-generated fields from committed source authority entries, not from the hand-written comparison fixture.
+It explains the remaining source-authority gaps by field and currently recommends `risk-source-authority` as the next
+narrow resolver candidate because required context is now preserved while known risks still contain semantic-loss. The
+policy forbidden-scope, stop-condition, Evidence, and context resolvers are intentionally narrow: they derive generated
+fields from committed source authority entries, not from the hand-written comparison fixture.

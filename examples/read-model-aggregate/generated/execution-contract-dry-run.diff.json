@@ -6,21 +6,14 @@
   "equivalenceStatus": "compiler-equivalence-not-proven",
   "sourceCandidate": "examples/read-model-aggregate/generated/execution-contract-dry-run.generated.json",
   "comparedWith": "examples/read-model-aggregate/generated/execution-contract-dry-run.json",
-  "differingFields": [
-    "sourceMode",
-    "allowedScope",
-    "requiredContext",
-    "requiredChecks",
-    "knownRisks",
-    "nonExecutionStatement"
-  ],
+  "differingFields": ["sourceMode", "allowedScope", "requiredChecks", "knownRisks", "nonExecutionStatement"],
   "comparedFields": [
     { "field": "sourceMode", "status": "different" },
     { "field": "changeType", "status": "same" },
     { "field": "goal", "status": "same" },
     { "field": "allowedScope", "status": "different" },
     { "field": "forbiddenScope", "status": "same" },
-    { "field": "requiredContext", "status": "different" },
+    { "field": "requiredContext", "status": "same" },
     { "field": "requiredChecks", "status": "different" },
     { "field": "requiredEvidence", "status": "same" },
     { "field": "knownRisks", "status": "different" },
@@ -48,9 +41,9 @@
     {
       "field": "requiredContext",
       "handWrittenCount": 2,
-      "generatedCount": 3,
-      "missingIdsInGenerated": ["context-read-model-health", "context-todo-search-graph-source"],
-      "extraIdsInGenerated": ["context-graph-source", "context-transition-status", "context-read-model-registry"]
+      "generatedCount": 2,
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
     },
     {
       "field": "requiredChecks",
@@ -93,30 +86,6 @@
       "reason": "The generated candidate permits less execution scope than the hand-written contract; review before relying on the candidate.",
       "missingIdsInGenerated": ["scope-todo-search-evidence"],
       "extraIdsInGenerated": []
-    },
-    {
-      "field": "requiredContext",
-      "targetField": "requiredContext",
-      "diffDirection": "missingIdsInGenerated",
-      "matchedRuleId": "semantic-diff-rule-required-context-missing-semantic-loss",
-      "classification": "semantic-loss",
-      "reviewSeverity": "high",
-      "promotionImpact": "blocks-promotion",
-      "reason": "The generated candidate is missing required context from the hand-written contract, so the contract context is not equivalent.",
-      "missingIdsInGenerated": ["context-read-model-health", "context-todo-search-graph-source"],
-      "extraIdsInGenerated": []
-    },
-    {
-      "field": "requiredContext",
-      "targetField": "requiredContext",
-      "diffDirection": "extraIdsInGenerated",
-      "matchedRuleId": "semantic-diff-rule-required-context-extra-safe-additive",
-      "classification": "safe-additive",
-      "reviewSeverity": "low",
-      "promotionImpact": "review-required",
-      "reason": "The generated candidate adds required context beyond the hand-written contract; this is additive but still review-only.",
-      "missingIdsInGenerated": [],
-      "extraIdsInGenerated": ["context-graph-source", "context-transition-status", "context-read-model-registry"]
     },
     {
       "field": "requiredChecks",
@@ -181,16 +150,16 @@
   ],
   "semanticClassificationCounts": {
     "conservative-restriction": 1,
-    "semantic-loss": 2,
-    "safe-additive": 3,
+    "safe-additive": 2,
+    "semantic-loss": 1,
     "metadata-only": 2
   },
   "highestReviewSeverity": "high",
   "compilerPromotionReadiness": "compiler-promotion-not-ready",
   "promotionReadiness": "compiler-promotion-not-ready",
   "semanticDiffRuleCoverage": {
-    "totalDiffs": 8,
-    "classifiedDiffs": 8,
+    "totalDiffs": 6,
+    "classifiedDiffs": 6,
     "unknownDiffs": 0,
     "matchedRuleIds": [
       "semantic-diff-rule-allowed-scope-missing-conservative-restriction",
@@ -198,8 +167,6 @@
       "semantic-diff-rule-known-risks-missing-semantic-loss",
       "semantic-diff-rule-non-execution-statement-field-metadata-only",
       "semantic-diff-rule-required-checks-extra-safe-additive",
-      "semantic-diff-rule-required-context-extra-safe-additive",
-      "semantic-diff-rule-required-context-missing-semantic-loss",
       "semantic-diff-rule-source-mode-field-metadata-only"
     ],
     "unknownFields": []

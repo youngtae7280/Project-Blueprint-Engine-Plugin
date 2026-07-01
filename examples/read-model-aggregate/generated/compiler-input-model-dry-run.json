@@ -13,19 +13,14 @@
     "id": "graph-snapshot-todo-search-selected-slice",
     "artifacts": [
       {
-        "id": "graph-source",
+        "id": "read-model-health",
+        "path": "examples/read-model-aggregate/generated/read-model-health-report-output.json",
+        "role": "non-enforcing status context"
+      },
+      {
+        "id": "todo-search-graph-source",
         "path": "examples/adoption/todo-search-slice/graph-source.json",
-        "role": "limited Todo Search graph source"
-      },
-      {
-        "id": "transition-status",
-        "path": "examples/read-model-aggregate/graph-source-transition-status.json",
-        "role": "current graph-source transition status"
-      },
-      {
-        "id": "read-model-registry",
-        "path": "examples/read-model-aggregate/read-model-slices.json",
-        "role": "configured read-model validation registry"
+        "role": "limited graph-source context"
       }
     ]
   },

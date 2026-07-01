@@ -983,6 +983,16 @@ now reports two remaining semantic losses, zero remaining policy losses, keeps `
 narrow resolver. This does not execute AI, apply graph deltas, accept work, enable required checks, configure branch
 protection, expand source authority beyond required Evidence, retire tree-native artifacts, or widen changeType support.
 
+DEC-179 does not supersede DEC-097 through DEC-178. It connects context source authority to the current Contract Compiler
+Dry-Run candidate for `requiredContext` only. Generated required context is now derived from
+`graphSnapshot.artifacts[]`; the hand-written dry-run contract remains a comparison fixture and is not a compiler source.
+The generated-vs-hand-written diff no longer reports required-context semantic loss for the current Todo Search
+`bug_fix` fixture. The source-authority gap preview now reports one remaining semantic loss, zero remaining policy
+losses, keeps `compilerPromotionReadiness` as `compiler-promotion-not-ready`, keeps `equivalenceProven` false, and
+recommends `risk-source-authority` as the next narrow resolver. This does not execute AI, apply graph deltas, accept
+work, enable required checks, configure branch protection, expand source authority beyond required context, retire
+tree-native artifacts, or widen changeType support.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

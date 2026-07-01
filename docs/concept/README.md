@@ -215,16 +215,16 @@ Output Requirement Source Authority v0.2 adds `outputRequirementSources[]` to th
 and writes `output-requirement-source-authority.preview.json`. The preview maps the hand-written changed-file,
 command-output Evidence, validation-result, and boundary reporting obligations to source authority entries, and the
 compiler now derives generated `outputRequirements` from those entries. The compiler also derives `forbiddenScope[]`
-from `policySnapshot.forbiddenScopeRules[]`, `stopConditions[]` from `stopConditionSources[]`, and `requiredEvidence[]`
-from `evidenceIndex.entries[]` plus `policySnapshot.evidenceCheckMappings[]`. It reports
-`generated-output-requirements-preserved` and required-Evidence preservation for the current fixture while keeping
-whole-contract equivalence unproven.
+from `policySnapshot.forbiddenScopeRules[]`, `stopConditions[]` from `stopConditionSources[]`, `requiredEvidence[]`
+from `evidenceIndex.entries[]` plus `policySnapshot.evidenceCheckMappings[]`, and `requiredContext[]` from
+`graphSnapshot.artifacts[]`. It reports `generated-output-requirements-preserved`, required-Evidence preservation, and
+required-context preservation for the current fixture while keeping whole-contract equivalence unproven.
 
 Contract Source Authority Gap Preview v0.2 writes `contract-source-authority-gap.preview.json` to explain the remaining
-semantic losses by field. It now reports two remaining semantic losses across `allowedScope`, `requiredContext`, and
-`knownRisks`; `forbiddenScope`, `stopConditions`, and `requiredEvidence` are preserved from source authority entries. The
-next recommended resolver is `context-source-authority`. This is review metadata only, not enforcement or compiler
-promotion.
+semantic losses by field. It now reports one remaining semantic loss, with source-authority attention on `allowedScope`
+and `knownRisks`; `forbiddenScope`, `stopConditions`, `requiredEvidence`, and `requiredContext` are preserved from
+source authority entries. The next recommended resolver is `risk-source-authority`. This is review metadata only, not
+enforcement or compiler promotion.
 
 The following readiness artifact is complete at documentation level:
 

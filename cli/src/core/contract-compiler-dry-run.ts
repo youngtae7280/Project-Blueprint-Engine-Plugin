@@ -17,6 +17,7 @@ import {
   buildNotRunContractSourceAuthorityGapPreview,
   type ContractSourceAuthorityGapPreviewSummary,
 } from './contract-source-authority-gap.js'
+import { resolveRequiredContextFromSourceAuthority } from './context-source-authority.js'
 import { resolveRequiredEvidenceFromSourceAuthority } from './evidence-source-authority.js'
 import { resolveOutputRequirementsFromSourceAuthority } from './output-requirement-source-authority.js'
 import { resolveForbiddenScopeFromPolicySourceAuthority } from './policy-forbidden-scope-source-authority.js'
@@ -285,6 +286,15 @@ function compileBugFixContractCandidate(input: Record<string, unknown>): {
   const policySnapshot = asRecord(input.policySnapshot)
   const evidenceIndex = asRecord(input.evidenceIndex)
   const targetScopes = arrayValue(input.targetScopeCandidates)
+  const contextResolution = resolveRequiredContextFromSourceAuthority(arrayValue(graphSnapshot.artifacts))
+  for (const unresolved of contextResolution.unresolvedSources) {
+    blocking.push(
+      `Contract Compiler Dry-Run v0.2 could not derive required context ${unresolved.id}: ${unresolved.reason}.`,
+    )
+  }
+  if (contextResolution.requiredContext.length === 0) {
+    blocking.push('Contract Compiler Dry-Run v0.2 requires source-authority-derived required context.')
+  }
 
   const allowedScope = targetScopes.map((scope) => ({
     id: stringValue(scope.id),
@@ -382,11 +392,7 @@ function compileBugFixContractCandidate(input: Record<string, unknown>): {
       goal: stringValue(humanRequest.text),
       allowedScope,
       forbiddenScope,
-      requiredContext: arrayValue(graphSnapshot.artifacts).map((artifact) => ({
-        id: `context-${stringValue(artifact.id)}`,
-        artifact: stringValue(artifact.path),
-        role: stringValue(artifact.role),
-      })),
+      requiredContext: contextResolution.requiredContext,
       requiredChecks,
       requiredEvidence: evidenceResolution.requiredEvidence,
       knownRisks: [

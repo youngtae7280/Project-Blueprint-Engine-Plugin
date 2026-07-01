@@ -214,6 +214,9 @@ function chooseNextRecommendedResolver(
   if (fieldGaps.some((gap) => gap.field === 'requiredContext' && gap.resolverRequired)) {
     return 'context-source-authority'
   }
+  if (hasClassification(semanticDiffs, 'knownRisks', 'semantic-loss')) {
+    return 'risk-source-authority'
+  }
   return fieldGaps.find((gap) => gap.resolverRequired)?.candidateSourceAuthorityType || 'none'
 }
 
