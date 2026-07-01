@@ -1,6 +1,6 @@
 # PBE Compiler Boundary
 
-Status: MVP implemented / local report surface / non-enforcing
+Status: MVP implemented / Contract Fixture Validator hardened / local report surface / non-enforcing
 
 ## Purpose
 
@@ -30,8 +30,11 @@ node dist/cli/index.js graph read-model report-compiler-boundary --json
 ```
 
 The command validates the task registry, the Execution Contract MVP schema, and a dry-run contract for the Todo Search
-whitespace-normalization dogfood. It is local Evidence only and does not execute AI, enable required checks, configure
-branch protection, apply graph deltas, accept work, or retire tree-native artifacts.
+whitespace-normalization dogfood. This current layer is a Contract Fixture Validator: it proves that registry, schema,
+and one dry-run contract have compiler-owned shape and boundary metadata. It is not the Actual Contract Compiler yet.
+
+It is local Evidence only and does not execute AI, enable required checks, configure branch protection, apply graph
+deltas, accept work, or retire tree-native artifacts.
 
 ## Compiler-Required Work
 
@@ -79,15 +82,25 @@ The MVP schema fixes the minimum fields that an execution contract must carry:
 - `stopConditions`
 - `outputRequirements`
 
-The validator currently blocks:
+The Contract Fixture Validator currently blocks:
 
 - missing goal
 - missing allowed scope
 - missing forbidden scope
 - code scope without required checks
 - missing required Evidence
-- open critical unknowns
-- high risks without a human decision
+- registry status or boundary-principle drift
+- schema status, field source, field authority, or non-enforcement drift
+- dry-run contract status or source-mode drift
+- allowed/forbidden scope entries without paths or graph/policy derivation
+- required checks without command or validation target
+- required Evidence not linked to an existing required Check
+- stop conditions without an action
+- open critical or blocking unknowns
+- critical, high, or blocking risks without a matching accepted or mitigated human decision
+
+The report preserves the original top-level status fields and also exposes `validationBuckets` for task registry,
+contract schema, and dry-run contract issues. Buckets keep failures attributable without relying on string matching.
 
 ## Health And E2E Integration
 
@@ -118,3 +131,9 @@ This MVP does not:
 
 It only proves that the first compiler-boundary package can be read, validated, and observed through existing local
 Graph-source health and E2E surfaces.
+
+## Next Layer
+
+The next layer after this MVP is the Actual Contract Compiler. That compiler would derive request, scope, checks,
+Evidence, unknowns, risks, and stop conditions from graph and policy inputs. The current MVP does not perform that
+derivation; it only validates committed fixture artifacts that model the expected compiler boundary.

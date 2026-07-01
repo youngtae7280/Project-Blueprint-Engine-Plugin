@@ -14,6 +14,13 @@ export type CompilerBoundarySubStatus =
 
 type TaskClassification = 'compiler-required' | 'ai-advisory'
 type ContractSeverity = 'info' | 'warning' | 'blocking' | 'critical' | 'high'
+type CompilerBoundaryBucketStatus =
+  | 'task-registry-pass'
+  | 'task-registry-blocked'
+  | 'contract-schema-pass'
+  | 'contract-schema-blocked'
+  | 'dry-run-contract-pass'
+  | 'dry-run-contract-blocked'
 
 interface CompilerBoundaryTask {
   taskId: string
@@ -54,6 +61,31 @@ interface ExecutionContractScope {
   derivedFrom: string[]
 }
 
+interface ExecutionContractCheck {
+  id: string
+  command: string
+  validates: string[]
+}
+
+interface ExecutionContractEvidence {
+  id: string
+  evidenceType: string
+  fromCheck: string
+  freshness: string
+}
+
+interface ExecutionContractContext {
+  id: string
+  artifact: string
+  role: string
+}
+
+interface ExecutionContractStopCondition {
+  id: string
+  condition: string
+  action: string
+}
+
 interface ExecutionContractUnknown {
   id: string
   severity: ContractSeverity
@@ -85,13 +117,13 @@ interface ExecutionContractDryRun {
   goal: string
   allowedScope: ExecutionContractScope[]
   forbiddenScope: ExecutionContractScope[]
-  requiredContext: Array<Record<string, unknown>>
-  requiredChecks: Array<Record<string, unknown>>
-  requiredEvidence: Array<Record<string, unknown>>
+  requiredContext: ExecutionContractContext[]
+  requiredChecks: ExecutionContractCheck[]
+  requiredEvidence: ExecutionContractEvidence[]
   knownRisks: ExecutionContractRisk[]
   openUnknowns: ExecutionContractUnknown[]
   humanDecisions: ExecutionContractHumanDecision[]
-  stopConditions: Array<Record<string, unknown>>
+  stopConditions: ExecutionContractStopCondition[]
   outputRequirements: string[]
   nonExecutionStatement: string
 }
@@ -122,12 +154,32 @@ export interface CompilerBoundaryReport {
     requiredEvidenceCount: number
     stopConditionCount: number
   }
+  validationBuckets: {
+    taskRegistry: CompilerBoundaryIssueBucket<
+      Extract<CompilerBoundaryBucketStatus, 'task-registry-pass' | 'task-registry-blocked'>
+    >
+    contractSchema: CompilerBoundaryIssueBucket<
+      Extract<CompilerBoundaryBucketStatus, 'contract-schema-pass' | 'contract-schema-blocked'>
+    >
+    dryRunContract: CompilerBoundaryIssueBucket<
+      Extract<CompilerBoundaryBucketStatus, 'dry-run-contract-pass' | 'dry-run-contract-blocked'>
+    >
+  }
   blockingReasons: string[]
   warnings: string[]
   nonEnforcementStatement: string
   aiBoundary: string
   compilerBoundary: string
   humanDecisionBoundary: string
+}
+
+interface CompilerBoundaryIssues {
+  blocking: string[]
+  warnings: string[]
+}
+
+interface CompilerBoundaryIssueBucket<TStatus extends CompilerBoundaryBucketStatus> extends CompilerBoundaryIssues {
+  status: TStatus
 }
 
 const taskRegistryPath = 'examples/read-model-aggregate/compiler-boundary-task-registry.json'
@@ -151,19 +203,19 @@ const requiredContractFields = [
 ]
 
 export async function reportCompilerBoundary(root: string): Promise<CompilerBoundaryReport> {
-  const blockingReasons: string[] = []
-  const warnings: string[] = []
   const registry = await readJsonSafe<CompilerBoundaryTaskRegistry>(path.resolve(root, taskRegistryPath))
   const schema = await readJsonSafe<ExecutionContractSchema>(path.resolve(root, contractSchemaPath))
   const dryRun = await readJsonSafe<ExecutionContractDryRun>(path.resolve(root, dryRunContractPath))
 
   let taskCounts = { total: 0, compilerRequired: 0, aiAdvisory: 0 }
+  let registryIssues: CompilerBoundaryIssues
   if (!registry.ok) {
-    blockingReasons.push(`Unable to read compiler boundary task registry: ${registry.error}`)
+    registryIssues = {
+      blocking: [`Unable to read compiler boundary task registry: ${registry.error}`],
+      warnings: [],
+    }
   } else {
-    const registryIssues = validateTaskRegistry(registry.value)
-    blockingReasons.push(...registryIssues.blocking)
-    warnings.push(...registryIssues.warnings)
+    registryIssues = validateTaskRegistry(registry.value)
     taskCounts = {
       total: registry.value.tasks.length,
       compilerRequired: registry.value.tasks.filter((task) => task.classification === 'compiler-required').length,
@@ -171,14 +223,17 @@ export async function reportCompilerBoundary(root: string): Promise<CompilerBoun
     }
   }
 
+  let schemaIssues: CompilerBoundaryIssues
   if (!schema.ok) {
-    blockingReasons.push(`Unable to read execution contract schema: ${schema.error}`)
+    schemaIssues = {
+      blocking: [`Unable to read execution contract schema: ${schema.error}`],
+      warnings: [],
+    }
   } else {
-    const schemaIssues = validateContractSchema(schema.value)
-    blockingReasons.push(...schemaIssues.blocking)
-    warnings.push(...schemaIssues.warnings)
+    schemaIssues = validateContractSchema(schema.value)
   }
 
+  let contractIssues: CompilerBoundaryIssues
   let dryRunSummary = {
     changeId: 'missing',
     changeType: 'missing',
@@ -190,11 +245,12 @@ export async function reportCompilerBoundary(root: string): Promise<CompilerBoun
     stopConditionCount: 0,
   }
   if (!dryRun.ok) {
-    blockingReasons.push(`Unable to read dry-run execution contract: ${dryRun.error}`)
+    contractIssues = {
+      blocking: [`Unable to read dry-run execution contract: ${dryRun.error}`],
+      warnings: [],
+    }
   } else {
-    const contractIssues = validateExecutionContract(dryRun.value)
-    blockingReasons.push(...contractIssues.blocking)
-    warnings.push(...contractIssues.warnings)
+    contractIssues = validateExecutionContract(dryRun.value)
     dryRunSummary = {
       changeId: stringValue(dryRun.value.changeId, 'missing'),
       changeType: stringValue(dryRun.value.changeType, 'missing'),
@@ -207,21 +263,25 @@ export async function reportCompilerBoundary(root: string): Promise<CompilerBoun
     }
   }
 
-  const taskRegistryBlocked =
-    !registry.ok || blockingReasons.some((reason) => reason.toLowerCase().includes('task registry'))
-  const contractSchemaBlocked =
-    !schema.ok || blockingReasons.some((reason) => reason.toLowerCase().includes('contract schema'))
-  const dryRunContractBlocked =
-    !dryRun.ok || blockingReasons.some((reason) => reason.toLowerCase().includes('dry-run contract'))
-  const contractValidatorBlocked =
-    !dryRun.ok || blockingReasons.some((reason) => reason.toLowerCase().includes('execution contract'))
+  const taskRegistryBucket = buildIssueBucket(registryIssues, 'task-registry-pass', 'task-registry-blocked')
+  const contractSchemaBucket = buildIssueBucket(schemaIssues, 'contract-schema-pass', 'contract-schema-blocked')
+  const dryRunContractBucket = buildIssueBucket(contractIssues, 'dry-run-contract-pass', 'dry-run-contract-blocked')
+  const blockingReasons = [
+    ...taskRegistryBucket.blocking,
+    ...contractSchemaBucket.blocking,
+    ...dryRunContractBucket.blocking,
+  ]
+  const warnings = [...taskRegistryBucket.warnings, ...contractSchemaBucket.warnings, ...dryRunContractBucket.warnings]
 
   return {
     status: blockingReasons.length === 0 ? 'compiler-boundary-mvp-pass' : 'compiler-boundary-mvp-blocked',
-    taskRegistryStatus: taskRegistryBlocked ? 'task-registry-blocked' : 'task-registry-pass',
-    contractSchemaStatus: contractSchemaBlocked ? 'contract-schema-blocked' : 'contract-schema-pass',
-    contractValidatorStatus: contractValidatorBlocked ? 'contract-validator-blocked' : 'contract-validator-pass',
-    dryRunContractStatus: dryRunContractBlocked ? 'dry-run-contract-blocked' : 'dry-run-contract-pass',
+    taskRegistryStatus: taskRegistryBucket.status,
+    contractSchemaStatus: contractSchemaBucket.status,
+    contractValidatorStatus:
+      dryRunContractBucket.status === 'dry-run-contract-blocked'
+        ? 'contract-validator-blocked'
+        : 'contract-validator-pass',
+    dryRunContractStatus: dryRunContractBucket.status,
     taskCounts,
     paths: {
       taskRegistry: taskRegistryPath,
@@ -229,6 +289,11 @@ export async function reportCompilerBoundary(root: string): Promise<CompilerBoun
       dryRunContract: dryRunContractPath,
     },
     dryRunContract: dryRunSummary,
+    validationBuckets: {
+      taskRegistry: taskRegistryBucket,
+      contractSchema: contractSchemaBucket,
+      dryRunContract: dryRunContractBucket,
+    },
     blockingReasons,
     warnings,
     nonEnforcementStatement:
@@ -252,6 +317,19 @@ export function validateTaskRegistry(registry: unknown): { blocking: string[]; w
   if (record.artifactRole !== 'compiler-boundary-task-registry') {
     blocking.push('Task registry artifactRole must be compiler-boundary-task-registry.')
   }
+  if (record.status !== 'compiler-boundary-mvp') {
+    blocking.push('Task registry status must be compiler-boundary-mvp.')
+  }
+  const boundaryPrinciple = asRecord(record.boundaryPrinciple)
+  if (boundaryPrinciple.aiOutput !== 'advisory') {
+    blocking.push('Task registry boundaryPrinciple.aiOutput must be advisory.')
+  }
+  if (boundaryPrinciple.compilerOutput !== 'authoritative') {
+    blocking.push('Task registry boundaryPrinciple.compilerOutput must be authoritative.')
+  }
+  if (boundaryPrinciple.humanRole !== 'decides') {
+    blocking.push('Task registry boundaryPrinciple.humanRole must be decides.')
+  }
   const tasks = Array.isArray(record.tasks) ? record.tasks : []
   if (tasks.length === 0) {
     blocking.push('Task registry must contain at least one task.')
@@ -274,7 +352,7 @@ export function validateTaskRegistry(registry: unknown): { blocking: string[]; w
       const value = task[key]
       if (key === 'reason') {
         if (!stringValue(value, '')) blocking.push(`${label} must include reason.`)
-      } else if (!Array.isArray(value) || value.length === 0) {
+      } else if (nonEmptyStringArray(value).length === 0) {
         blocking.push(`${label} must include non-empty ${key}.`)
       }
     }
@@ -301,6 +379,9 @@ export function validateContractSchema(schema: unknown): { blocking: string[]; w
   if (record.artifactRole !== 'execution-contract-mvp-schema') {
     blocking.push('Contract schema artifactRole must be execution-contract-mvp-schema.')
   }
+  if (record.status !== 'compiler-boundary-mvp') {
+    blocking.push('Contract schema status must be compiler-boundary-mvp.')
+  }
   const requiredFields = stringArrayValue(record.requiredFields)
   const missingFields = requiredContractFields.filter((field) => !requiredFields.includes(field))
   if (missingFields.length > 0) {
@@ -308,8 +389,16 @@ export function validateContractSchema(schema: unknown): { blocking: string[]; w
   }
   const definitions = asRecord(record.fieldDefinitions)
   for (const field of requiredContractFields) {
-    if (!definitions[field]) {
+    const definition = asRecord(definitions[field])
+    if (Object.keys(definition).length === 0) {
       blocking.push(`Contract schema fieldDefinitions missing ${field}.`)
+      continue
+    }
+    if (!stringValue(definition.source, '')) {
+      blocking.push(`Contract schema fieldDefinitions.${field}.source is required.`)
+    }
+    if (!stringValue(definition.authority, '')) {
+      blocking.push(`Contract schema fieldDefinitions.${field}.authority is required.`)
     }
   }
   if (!stringValue(record.nonEnforcementStatement, '').includes('does not enable required checks')) {
@@ -331,6 +420,12 @@ export function validateExecutionContract(contract: unknown): { blocking: string
   if (record.artifactRole !== 'execution-contract-dry-run') {
     blocking.push('Execution contract artifactRole must be execution-contract-dry-run.')
   }
+  if (record.status !== 'contract-dry-run-valid') {
+    blocking.push('Execution contract status must be contract-dry-run-valid.')
+  }
+  if (record.sourceMode !== 'compiler-boundary-mvp-dry-run') {
+    blocking.push('Execution contract sourceMode must be compiler-boundary-mvp-dry-run.')
+  }
   for (const field of requiredContractFields) {
     if (!(field in record)) {
       blocking.push(`Execution contract missing required field: ${field}.`)
@@ -343,6 +438,11 @@ export function validateExecutionContract(contract: unknown): { blocking: string
   const forbiddenScope = arrayValue(record.forbiddenScope)
   const requiredChecks = arrayValue(record.requiredChecks)
   const requiredEvidence = arrayValue(record.requiredEvidence)
+  const requiredContext = arrayValue(record.requiredContext)
+  const knownRisks = arrayValue(record.knownRisks)
+  const openUnknowns = arrayValue(record.openUnknowns)
+  const decisions = arrayValue(record.humanDecisions)
+  const stopConditions = arrayValue(record.stopConditions)
   if (allowedScope.length === 0) {
     blocking.push('Execution contract allowedScope is required.')
   }
@@ -356,28 +456,90 @@ export function validateExecutionContract(contract: unknown): { blocking: string
   if (requiredEvidence.length === 0) {
     blocking.push('Execution contract requiredEvidence is required.')
   }
-  const openUnknowns = arrayValue(record.openUnknowns)
+  validateScopeEntries('allowedScope', allowedScope, blocking)
+  validateScopeEntries('forbiddenScope', forbiddenScope, blocking)
+  for (const [index, context] of requiredContext.entries()) {
+    validateRequiredStringFields(
+      `Execution contract requiredContext[${index}]`,
+      context,
+      ['id', 'artifact', 'role'],
+      blocking,
+    )
+  }
+  for (const [index, check] of requiredChecks.entries()) {
+    const label = `Execution contract requiredChecks[${index}]`
+    validateRequiredStringFields(label, check, ['id', 'command'], blocking)
+    if (nonEmptyStringArray(check.validates).length === 0) {
+      blocking.push(`${label}.validates must be a non-empty string array.`)
+    }
+  }
+  const checkIds = new Set(requiredChecks.map((check) => stringValue(check.id, '')).filter(Boolean))
+  for (const [index, evidence] of requiredEvidence.entries()) {
+    const label = `Execution contract requiredEvidence[${index}]`
+    validateRequiredStringFields(label, evidence, ['id', 'evidenceType', 'fromCheck', 'freshness'], blocking)
+    const fromCheck = stringValue(evidence.fromCheck, '')
+    if (fromCheck && !checkIds.has(fromCheck)) {
+      blocking.push(`${label}.fromCheck must reference an existing requiredChecks.id: ${fromCheck}.`)
+    }
+  }
   for (const unknown of openUnknowns) {
-    if (unknown.severity === 'critical' && unknown.status === 'open') {
+    validateRequiredStringFields(
+      'Execution contract openUnknowns[]',
+      unknown,
+      ['id', 'severity', 'status', 'question'],
+      blocking,
+    )
+    if (isUnknownBlocking(unknown)) {
       blocking.push(`Execution contract has blocking critical unknown: ${stringValue(unknown.id, 'unknown')}.`)
     }
   }
-  const decisions = arrayValue(record.humanDecisions)
+  for (const [index, decision] of decisions.entries()) {
+    validateRequiredStringFields(
+      `Execution contract humanDecisions[${index}]`,
+      decision,
+      ['id', 'decides', 'status', 'decision'],
+      blocking,
+    )
+  }
   const acceptedRiskIds = new Set(
     decisions
       .filter((decision) => ['accepted', 'mitigated'].includes(stringValue(decision.status, '')))
       .map((decision) => stringValue(decision.decides, '')),
   )
-  for (const risk of arrayValue(record.knownRisks)) {
+  for (const risk of knownRisks) {
+    validateRequiredStringFields('Execution contract knownRisks[]', risk, ['id', 'severity', 'status'], blocking)
     const riskId = stringValue(risk.id, '')
-    if (risk.severity === 'high' && !acceptedRiskIds.has(riskId)) {
+    if (isRiskDecisionRequired(risk) && !acceptedRiskIds.has(riskId)) {
       blocking.push(`Execution contract has high risk without human decision: ${riskId || 'unknown'}.`)
     }
   }
+  for (const [index, stopCondition] of stopConditions.entries()) {
+    validateRequiredStringFields(
+      `Execution contract stopConditions[${index}]`,
+      stopCondition,
+      ['id', 'condition', 'action'],
+      blocking,
+    )
+  }
+  if (stringArrayValue(record.outputRequirements).length === 0) {
+    blocking.push('Execution contract outputRequirements must be a non-empty string array.')
+  }
   if (!stringValue(record.nonExecutionStatement, '').includes('dry-run')) {
-    warnings.push('Execution contract nonExecutionStatement should state that this MVP contract is dry-run only.')
+    blocking.push('Execution contract nonExecutionStatement must state that this MVP contract is dry-run only.')
   }
   return { blocking, warnings }
+}
+
+function buildIssueBucket<TPass extends CompilerBoundaryBucketStatus, TBlocked extends CompilerBoundaryBucketStatus>(
+  issues: CompilerBoundaryIssues,
+  passStatus: TPass,
+  blockedStatus: TBlocked,
+): CompilerBoundaryIssueBucket<TPass | TBlocked> {
+  return {
+    status: issues.blocking.length === 0 ? passStatus : blockedStatus,
+    blocking: issues.blocking,
+    warnings: issues.warnings,
+  }
 }
 
 function asRecord(value: unknown): Record<string, unknown> {
@@ -392,8 +554,55 @@ function stringArrayValue(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === 'string') : []
 }
 
+function nonEmptyStringArray(value: unknown): string[] {
+  return stringArrayValue(value).filter((entry) => entry.trim().length > 0)
+}
+
 function stringValue(value: unknown, fallback = 'unknown'): string {
   return typeof value === 'string' ? value : fallback
+}
+
+function validateRequiredStringFields(
+  label: string,
+  record: Record<string, unknown>,
+  fields: string[],
+  blocking: string[],
+): void {
+  for (const field of fields) {
+    if (!stringValue(record[field], '')) {
+      blocking.push(`${label}.${field} is required.`)
+    }
+  }
+}
+
+function validateScopeEntries(
+  label: 'allowedScope' | 'forbiddenScope',
+  scopes: Array<Record<string, unknown>>,
+  blocking: string[],
+): void {
+  for (const [index, scope] of scopes.entries()) {
+    const scopeLabel = `Execution contract ${label}[${index}]`
+    validateRequiredStringFields(scopeLabel, scope, ['id', 'scopeKind'], blocking)
+    if (nonEmptyStringArray(scope.paths).length === 0) {
+      blocking.push(`${scopeLabel}.paths must be a non-empty string array.`)
+    }
+    if (nonEmptyStringArray(scope.derivedFrom).length === 0) {
+      blocking.push(`${scopeLabel}.derivedFrom must be a non-empty string array.`)
+    }
+  }
+}
+
+function isUnknownBlocking(unknown: Record<string, unknown>): boolean {
+  return (
+    ['critical', 'blocking'].includes(stringValue(unknown.severity, '')) && stringValue(unknown.status, '') === 'open'
+  )
+}
+
+function isRiskDecisionRequired(risk: Record<string, unknown>): boolean {
+  return (
+    ['critical', 'high', 'blocking'].includes(stringValue(risk.severity, '')) &&
+    stringValue(risk.status, '') !== 'mitigated'
+  )
 }
 
 export function compilerBoundaryRelativePath(root: string, absolutePath: string): string {

@@ -826,6 +826,13 @@ status. This proves that execution-affecting contract facts can be validated as 
 execution. It remains non-enforcing and does not enable required checks, branch protection, automatic AI execution,
 acceptance, graph delta application, source-authority expansion, or tree-native retirement.
 
+DEC-161 does not supersede DEC-097 through DEC-160. It hardens the Compiler Boundary MVP as a Contract Fixture Validator:
+registry, schema, and dry-run contract issues are bucketed separately; boundary-principle, status, source-mode, scope,
+check, Evidence, stop-condition, unknown, risk, and human-decision shapes are validated more strictly; and the current
+layer is explicitly separated from a future Actual Contract Compiler. This remains non-enforcing and does not enable
+required checks, branch protection, automatic AI execution, graph delta application, acceptance, source-authority
+expansion, or tree-native retirement.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

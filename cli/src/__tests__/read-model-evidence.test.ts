@@ -28,7 +28,12 @@ import {
   validateAllReadModelEvidence,
   validateReadModelEvidence,
 } from '../core/read-model-evidence'
-import { reportCompilerBoundary, validateExecutionContract, validateTaskRegistry } from '../core/compiler-boundary'
+import {
+  reportCompilerBoundary,
+  validateContractSchema,
+  validateExecutionContract,
+  validateTaskRegistry,
+} from '../core/compiler-boundary'
 
 const workspaces: string[] = []
 const exampleWorkspacePaths = [
@@ -991,6 +996,9 @@ describe('read-model Evidence builder', () => {
     expect(report.contractSchemaStatus).toBe('contract-schema-pass')
     expect(report.contractValidatorStatus).toBe('contract-validator-pass')
     expect(report.dryRunContractStatus).toBe('dry-run-contract-pass')
+    expect(report.validationBuckets.taskRegistry.status).toBe('task-registry-pass')
+    expect(report.validationBuckets.contractSchema.status).toBe('contract-schema-pass')
+    expect(report.validationBuckets.dryRunContract.status).toBe('dry-run-contract-pass')
     expect(report.taskCounts.compilerRequired).toBeGreaterThan(0)
     expect(report.taskCounts.aiAdvisory).toBeGreaterThan(0)
     expect(report.dryRunContract).toMatchObject({
@@ -1001,6 +1009,59 @@ describe('read-model Evidence builder', () => {
     expect(report.dryRunContract.requiredEvidenceCount).toBeGreaterThan(0)
     expect(report.nonEnforcementStatement).toContain('does not enable required checks')
     expect(report.blockingReasons).toEqual([])
+  })
+
+  it('isolates Compiler Boundary registry drift in the task registry bucket', async () => {
+    const workspace = await createExampleWorkspace()
+    const registryPath = join(workspace, 'examples/read-model-aggregate/compiler-boundary-task-registry.json')
+    const registry = JSON.parse(await readFile(registryPath, 'utf8')) as Record<string, unknown>
+    registry.status = 'drifted'
+    registry.boundaryPrinciple = {
+      aiOutput: 'advisory',
+      compilerOutput: 'advisory',
+      humanRole: 'decides',
+    }
+    await writeFile(registryPath, JSON.stringify(registry, null, 2))
+
+    const report = await reportCompilerBoundary(workspace)
+
+    expect(report.status).toBe('compiler-boundary-mvp-blocked')
+    expect(report.taskRegistryStatus).toBe('task-registry-blocked')
+    expect(report.contractSchemaStatus).toBe('contract-schema-pass')
+    expect(report.contractValidatorStatus).toBe('contract-validator-pass')
+    expect(report.validationBuckets.taskRegistry.blocking.join('\n')).toContain(
+      'Task registry status must be compiler-boundary-mvp',
+    )
+    expect(report.validationBuckets.taskRegistry.blocking.join('\n')).toContain(
+      'boundaryPrinciple.compilerOutput must be authoritative',
+    )
+  })
+
+  it('isolates Compiler Boundary schema drift in the contract schema bucket', async () => {
+    const workspace = await createExampleWorkspace()
+    const schemaPath = join(workspace, 'examples/read-model-aggregate/execution-contract-schema.json')
+    const schema = JSON.parse(await readFile(schemaPath, 'utf8')) as {
+      status: string
+      nonEnforcementStatement: string
+      fieldDefinitions: Record<string, Record<string, unknown>>
+    }
+    schema.status = 'drifted'
+    schema.nonEnforcementStatement = 'required checks may be enabled'
+    schema.fieldDefinitions.goal.source = ''
+    await writeFile(schemaPath, JSON.stringify(schema, null, 2))
+
+    const report = await reportCompilerBoundary(workspace)
+
+    expect(report.status).toBe('compiler-boundary-mvp-blocked')
+    expect(report.taskRegistryStatus).toBe('task-registry-pass')
+    expect(report.contractSchemaStatus).toBe('contract-schema-blocked')
+    expect(report.contractValidatorStatus).toBe('contract-validator-pass')
+    expect(report.validationBuckets.contractSchema.blocking.join('\n')).toContain(
+      'Contract schema status must be compiler-boundary-mvp',
+    )
+    expect(report.validationBuckets.contractSchema.blocking.join('\n')).toContain(
+      'fieldDefinitions.goal.source is required',
+    )
   })
 
   it('exposes the Compiler Boundary MVP through the CLI', async () => {
@@ -1040,7 +1101,66 @@ describe('read-model Evidence builder', () => {
     expect(validation.blocking.join('\n')).toContain('ai-advisory task must have executionAuthority false')
   })
 
-  it('blocks dry-run contracts with critical unknowns or high risks without human decisions', async () => {
+  it('blocks Compiler Boundary schema entries that omit source or authority', async () => {
+    const schemaPath = 'examples/read-model-aggregate/execution-contract-schema.json'
+    const schema = JSON.parse(await readFile(schemaPath, 'utf8')) as {
+      fieldDefinitions: Record<string, Record<string, unknown>>
+    }
+    delete schema.fieldDefinitions.requiredChecks.authority
+
+    const validation = validateContractSchema(schema)
+
+    expect(validation.blocking.join('\n')).toContain('fieldDefinitions.requiredChecks.authority is required')
+  })
+
+  it('blocks dry-run contracts with status or sourceMode drift in the dry-run bucket', async () => {
+    const workspace = await createExampleWorkspace()
+    const contractPath = join(workspace, 'examples/read-model-aggregate/generated/execution-contract-dry-run.json')
+    const contract = JSON.parse(await readFile(contractPath, 'utf8')) as Record<string, unknown>
+    contract.status = 'drifted'
+    contract.sourceMode = 'ai-authored'
+    await writeFile(contractPath, JSON.stringify(contract, null, 2))
+
+    const report = await reportCompilerBoundary(workspace)
+
+    expect(report.status).toBe('compiler-boundary-mvp-blocked')
+    expect(report.taskRegistryStatus).toBe('task-registry-pass')
+    expect(report.contractSchemaStatus).toBe('contract-schema-pass')
+    expect(report.contractValidatorStatus).toBe('contract-validator-blocked')
+    expect(report.dryRunContractStatus).toBe('dry-run-contract-blocked')
+    expect(report.validationBuckets.dryRunContract.blocking.join('\n')).toContain(
+      'Execution contract status must be contract-dry-run-valid',
+    )
+    expect(report.validationBuckets.dryRunContract.blocking.join('\n')).toContain(
+      'Execution contract sourceMode must be compiler-boundary-mvp-dry-run',
+    )
+  })
+
+  it('blocks dry-run contracts with invalid scope, check, evidence, or stop-condition shapes', async () => {
+    const contractPath = 'examples/read-model-aggregate/generated/execution-contract-dry-run.json'
+    const contract = JSON.parse(await readFile(contractPath, 'utf8')) as {
+      allowedScope: Array<Record<string, unknown>>
+      requiredChecks: Array<Record<string, unknown>>
+      requiredEvidence: Array<Record<string, unknown>>
+      stopConditions: Array<Record<string, unknown>>
+    }
+    contract.allowedScope[0].paths = []
+    contract.allowedScope[0].derivedFrom = []
+    contract.requiredChecks[0].validates = []
+    contract.requiredEvidence[0].fromCheck = 'check-does-not-exist'
+    delete contract.stopConditions[0].action
+
+    const validation = validateExecutionContract(contract)
+    const blocking = validation.blocking.join('\n')
+
+    expect(blocking).toContain('allowedScope[0].paths must be a non-empty string array')
+    expect(blocking).toContain('allowedScope[0].derivedFrom must be a non-empty string array')
+    expect(blocking).toContain('requiredChecks[0].validates must be a non-empty string array')
+    expect(blocking).toContain('requiredEvidence[0].fromCheck must reference an existing requiredChecks.id')
+    expect(blocking).toContain('stopConditions[0].action is required')
+  })
+
+  it('blocks dry-run contracts with critical or blocking unknowns and unresolved high risks', async () => {
     const contractPath = 'examples/read-model-aggregate/generated/execution-contract-dry-run.json'
     const contract = JSON.parse(await readFile(contractPath, 'utf8')) as Record<string, unknown>
 
@@ -1054,6 +1174,14 @@ describe('read-model Evidence builder', () => {
       'blocking critical unknown',
     )
 
+    const blockingUnknownContract = {
+      ...contract,
+      openUnknowns: [{ id: 'unknown-safe-default', severity: 'blocking', status: 'open', question: 'Which fallback?' }],
+    }
+    expect(validateExecutionContract(blockingUnknownContract).blocking.join('\n')).toContain(
+      'blocking critical unknown',
+    )
+
     const highRiskContract = {
       ...contract,
       knownRisks: [{ id: 'risk-driver-protocol', severity: 'high', status: 'open' }],
@@ -1062,6 +1190,20 @@ describe('read-model Evidence builder', () => {
     expect(validateExecutionContract(highRiskContract).blocking.join('\n')).toContain(
       'high risk without human decision',
     )
+
+    const acceptedRiskContract = {
+      ...contract,
+      knownRisks: [{ id: 'risk-driver-protocol', severity: 'high', status: 'open' }],
+      humanDecisions: [
+        {
+          id: 'decision-driver-protocol',
+          decides: 'risk-driver-protocol',
+          status: 'accepted',
+          decision: 'Accept dry-run risk for validator fixture only.',
+        },
+      ],
+    }
+    expect(validateExecutionContract(acceptedRiskContract).blocking.join('\n')).not.toContain('risk-driver-protocol')
   })
 
   it('exposes graph-source health through the CLI without creating enforcement', async () => {
