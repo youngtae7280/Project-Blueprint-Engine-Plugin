@@ -37,6 +37,14 @@ export type OutputRequirementSourceAuthorityPreviewStatus =
   | 'output-requirement-source-authority-preview-pass'
   | 'output-requirement-source-authority-preview-not-run'
 
+export type ContractCompilerPromotionReviewStatus =
+  | 'promotion-review-not-started'
+  | 'promotion-review-required'
+  | 'promotion-review-blocked'
+  | 'promotion-review-ready-for-human'
+  | 'promotion-review-approved'
+  | 'promotion-review-rejected'
+
 export interface ContractCompilerDryRunReport {
   status: ContractCompilerDryRunStatus
   inputModelStatus: 'compiler-input-model-pass' | 'compiler-input-model-blocked'
@@ -49,6 +57,7 @@ export interface ContractCompilerDryRunReport {
     diffReport: string
     outputRequirementSourceAuthorityPreview: string
     sourceAuthorityGapPreview: string
+    promotionReviewPacket: string
   }
   candidate: {
     changeId: string
@@ -103,6 +112,21 @@ export interface ContractCompilerDryRunReport {
     lossExplanation: string
   }
   sourceAuthorityGapPreview: ContractSourceAuthorityGapPreviewSummary
+  promotionReview: {
+    status: ContractCompilerPromotionReviewStatus
+    approvalStatus: 'not-approved'
+    packetPath: string
+    equivalenceCandidate: boolean
+    equivalenceProven: boolean
+    reviewOnlyDiffCount: number
+    blockingSemanticLossCount: number
+    unknownDiffCount: number
+    checklistPassCount: number
+    checklistDecisionRequiredCount: number
+    checklistBlockedCount: number
+    requiredHumanDecision: boolean
+    nonExecutionBoundary: string
+  }
   blockingReasons: string[]
   warnings: string[]
   nonExecutionStatement: string
@@ -118,6 +142,8 @@ const defaultOutputRequirementPreviewPath =
   'examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json'
 const defaultSourceAuthorityGapPreviewPath =
   'examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json'
+const defaultPromotionReviewPacketPath =
+  'examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json'
 
 export async function compileExecutionContractDryRun(
   root: string,
@@ -211,12 +237,27 @@ export async function compileExecutionContractDryRun(
         : 'contract-candidate-pass'
   const inputModelStatus = inputBlocking.length > 0 ? 'compiler-input-model-blocked' : 'compiler-input-model-pass'
   const status = blockingReasons.length === 0 ? 'contract-compiler-dry-run-pass' : 'contract-compiler-dry-run-blocked'
+  const promotionReviewPacket = buildContractCompilerPromotionReviewPacket({
+    changeId: summarizeCandidate(candidate).changeId,
+    status,
+    inputModelStatus,
+    candidateStatus,
+    outputCandidatePath: relativePath(root, path.resolve(root, outputCandidatePath)),
+    handWrittenDryRunContractPath,
+    diffReportPath: relativePath(root, path.resolve(root, diffReportPath)),
+    outputRequirementPreviewPath: relativePath(root, path.resolve(root, defaultOutputRequirementPreviewPath)),
+    sourceAuthorityGapPreviewPath: relativePath(root, path.resolve(root, defaultSourceAuthorityGapPreviewPath)),
+    promotionReviewPacketPath: relativePath(root, path.resolve(root, defaultPromotionReviewPacketPath)),
+    candidateDiff,
+    sourceAuthorityGapPreview: sourceAuthorityGapPreview.summary,
+  })
 
   if (status === 'contract-compiler-dry-run-pass' && candidate && options.writeOutput !== false) {
     await writeFormattedJson(path.resolve(root, outputCandidatePath), candidate)
     await writeFormattedJson(path.resolve(root, diffReportPath), stripInternalDiffFields(candidateDiff))
     await writeFormattedJson(path.resolve(root, defaultOutputRequirementPreviewPath), outputRequirementPreview.artifact)
     await writeFormattedJson(path.resolve(root, defaultSourceAuthorityGapPreviewPath), sourceAuthorityGapPreview)
+    await writeFormattedJson(path.resolve(root, defaultPromotionReviewPacketPath), promotionReviewPacket.artifact)
   }
 
   return {
@@ -234,6 +275,7 @@ export async function compileExecutionContractDryRun(
         path.resolve(root, defaultOutputRequirementPreviewPath),
       ),
       sourceAuthorityGapPreview: relativePath(root, path.resolve(root, defaultSourceAuthorityGapPreviewPath)),
+      promotionReviewPacket: relativePath(root, path.resolve(root, defaultPromotionReviewPacketPath)),
     },
     candidate: summarizeCandidate(candidate),
     candidateDiff: {
@@ -259,6 +301,7 @@ export async function compileExecutionContractDryRun(
     },
     outputRequirementSourceAuthorityPreview: outputRequirementPreview.summary,
     sourceAuthorityGapPreview: sourceAuthorityGapPreview.summary,
+    promotionReview: promotionReviewPacket.summary,
     blockingReasons,
     warnings,
     nonExecutionStatement:
@@ -624,6 +667,303 @@ function buildNotRunDiffReport(outputCandidatePath: string, handWrittenPath: str
     nonExecutionStatement:
       'This diff report is review Evidence only and does not execute work, accept changes, or make the compiled candidate authoritative.',
   }
+}
+
+interface ContractCompilerPromotionReviewPacketInternal {
+  artifact: {
+    schemaVersion: 1
+    artifactRole: 'contract-compiler-promotion-review-preview'
+    status: ContractCompilerPromotionReviewStatus
+    sourceMode: 'contract-compiler-dry-run-v0.2-promotion-review-preview'
+    changeId: string
+    approvalStatus: 'not-approved'
+    reviewedArtifacts: {
+      compilerCandidate: string
+      handWrittenComparisonFixture: string
+      semanticDiffReport: string
+      outputRequirementSourceAuthorityPreview: string
+      sourceAuthorityGapPreview: string
+    }
+    equivalencePolicyStatus: ContractEquivalenceReadinessPolicySummary
+    sourceAuthorityPreservationStatus: string
+    reviewOnlyDiffSummary: {
+      status: string
+      count: number
+      differingFields: string[]
+      reviewOnlyDiffs: Array<{
+        field: string
+        classification: string
+        matchedRuleId: string
+        reason: string
+      }>
+    }
+    blockingSemanticLossCount: number
+    unknownDiffCount: number
+    validationCommands: Array<{
+      id: string
+      command: string
+      status: 'pass' | 'blocked' | 'required-before-approval'
+      validates: string
+    }>
+    humanReviewChecklist: Array<{
+      id: string
+      status: 'pass' | 'blocked' | 'decision-required'
+      prompt: string
+      evidence: string
+    }>
+    explicitNonGoals: string[]
+    summary: ContractCompilerDryRunReport['promotionReview']
+    nonExecutionStatement: string
+  }
+  summary: ContractCompilerDryRunReport['promotionReview']
+}
+
+function buildContractCompilerPromotionReviewPacket(input: {
+  changeId: string
+  status: ContractCompilerDryRunStatus
+  inputModelStatus: ContractCompilerDryRunReport['inputModelStatus']
+  candidateStatus: ContractCompilerDryRunReport['candidateStatus']
+  outputCandidatePath: string
+  handWrittenDryRunContractPath: string
+  diffReportPath: string
+  outputRequirementPreviewPath: string
+  sourceAuthorityGapPreviewPath: string
+  promotionReviewPacketPath: string
+  candidateDiff: ContractDiffReportInternal
+  sourceAuthorityGapPreview: ContractSourceAuthorityGapPreviewSummary
+}): ContractCompilerPromotionReviewPacketInternal {
+  const equivalencePolicy = input.candidateDiff.equivalencePolicy
+  const reviewOnlyDiffs = input.candidateDiff.semanticDiffs
+    .filter((diff) =>
+      ['format-only', 'metadata-only', 'safe-additive', 'policy-expansion'].includes(diff.classification),
+    )
+    .map((diff) => ({
+      field: diff.field,
+      classification: diff.classification,
+      matchedRuleId: diff.matchedRuleId,
+      reason: diff.reason,
+    }))
+  const humanReviewChecklist = buildPromotionReviewChecklist(input)
+  const checklistPassCount = humanReviewChecklist.filter((entry) => entry.status === 'pass').length
+  const checklistDecisionRequiredCount = humanReviewChecklist.filter(
+    (entry) => entry.status === 'decision-required',
+  ).length
+  const checklistBlockedCount = humanReviewChecklist.filter((entry) => entry.status === 'blocked').length
+  const reviewStatus = derivePromotionReviewStatus({
+    dryRunStatus: input.status,
+    candidateStatus: input.candidateStatus,
+    candidateDiffStatus: input.candidateDiff.status,
+    equivalencePolicy,
+    sourceAuthorityGapPreview: input.sourceAuthorityGapPreview,
+    checklistBlockedCount,
+  })
+  const nonExecutionBoundary =
+    'Promotion review packet is non-enforcing preview Evidence only. It collects review inputs for a human decision and does not approve equivalence, accept work, execute AI, apply graph deltas, create required checks, or retire tree-native artifacts.'
+  const summary: ContractCompilerDryRunReport['promotionReview'] = {
+    status: reviewStatus,
+    approvalStatus: 'not-approved',
+    packetPath: input.promotionReviewPacketPath,
+    equivalenceCandidate: equivalencePolicy.equivalenceCandidate,
+    equivalenceProven: false,
+    reviewOnlyDiffCount: equivalencePolicy.reviewOnlyDiffCount,
+    blockingSemanticLossCount: equivalencePolicy.blockingSemanticLossCount,
+    unknownDiffCount: equivalencePolicy.unknownDiffCount,
+    checklistPassCount,
+    checklistDecisionRequiredCount,
+    checklistBlockedCount,
+    requiredHumanDecision: true,
+    nonExecutionBoundary,
+  }
+
+  return {
+    artifact: {
+      schemaVersion: 1,
+      artifactRole: 'contract-compiler-promotion-review-preview',
+      status: reviewStatus,
+      sourceMode: 'contract-compiler-dry-run-v0.2-promotion-review-preview',
+      changeId: input.changeId,
+      approvalStatus: 'not-approved',
+      reviewedArtifacts: {
+        compilerCandidate: input.outputCandidatePath,
+        handWrittenComparisonFixture: input.handWrittenDryRunContractPath,
+        semanticDiffReport: input.diffReportPath,
+        outputRequirementSourceAuthorityPreview: input.outputRequirementPreviewPath,
+        sourceAuthorityGapPreview: input.sourceAuthorityGapPreviewPath,
+      },
+      equivalencePolicyStatus: equivalencePolicy,
+      sourceAuthorityPreservationStatus: equivalencePolicy.sourceAuthorityPreservationStatus,
+      reviewOnlyDiffSummary: {
+        status: equivalencePolicy.reviewOnlyDiffStatus,
+        count: equivalencePolicy.reviewOnlyDiffCount,
+        differingFields: input.candidateDiff.differingFields,
+        reviewOnlyDiffs,
+      },
+      blockingSemanticLossCount: equivalencePolicy.blockingSemanticLossCount,
+      unknownDiffCount: equivalencePolicy.unknownDiffCount,
+      validationCommands: [
+        {
+          id: 'compile-contract-dry-run',
+          command: 'node dist/cli/index.js graph read-model compile-contract --dry-run --json',
+          status: input.status === 'contract-compiler-dry-run-pass' ? 'pass' : 'blocked',
+          validates: 'deterministic candidate generation, Contract Fixture Validator pass, and review packet creation',
+        },
+        {
+          id: 'report-health',
+          command:
+            'node dist/cli/index.js graph read-model report-health --json --markdown examples/read-model-aggregate/generated/read-model-health-report-output.md',
+          status: 'required-before-approval',
+          validates: 'non-enforcing health summary includes compiler equivalence and promotion review metadata',
+        },
+        {
+          id: 'read-model-e2e-smoke',
+          command: 'npm run test:read-model:e2e',
+          status: 'required-before-approval',
+          validates: 'E2E smoke continues to observe the dry-run compiler without enabling enforcement',
+        },
+        {
+          id: 'validate-all',
+          command: 'node dist/cli/index.js graph read-model validate --all --json',
+          status: 'required-before-approval',
+          validates: 'aggregate read-model validation remains non-enforcing and green before any promotion review',
+        },
+      ],
+      humanReviewChecklist,
+      explicitNonGoals: [
+        'AI executor automation is not added.',
+        'Graph delta application is not automated.',
+        'User acceptance is not automated.',
+        'Required checks, branch protection, and CI enforcement are not enabled.',
+        'Tree-native artifacts are not retired.',
+        'Supported changeType values are not widened.',
+        'Compiler output is not promoted to execution authority.',
+        'The hand-written contract remains a comparison fixture, not a compiler source.',
+        'equivalenceProven remains false until a later approved policy and human decision.',
+      ],
+      summary,
+      nonExecutionStatement: nonExecutionBoundary,
+    },
+    summary,
+  }
+}
+
+function derivePromotionReviewStatus(input: {
+  dryRunStatus: ContractCompilerDryRunStatus
+  candidateStatus: ContractCompilerDryRunReport['candidateStatus']
+  candidateDiffStatus: ContractDiffReportInternal['status']
+  equivalencePolicy: ContractEquivalenceReadinessPolicySummary
+  sourceAuthorityGapPreview: ContractSourceAuthorityGapPreviewSummary
+  checklistBlockedCount: number
+}): ContractCompilerPromotionReviewStatus {
+  if (input.candidateDiffStatus === 'contract-diff-not-run') {
+    return 'promotion-review-not-started'
+  }
+  if (
+    input.dryRunStatus !== 'contract-compiler-dry-run-pass' ||
+    input.candidateStatus !== 'contract-candidate-pass' ||
+    input.candidateDiffStatus === 'contract-diff-blocked' ||
+    input.checklistBlockedCount > 0 ||
+    input.equivalencePolicy.blockingSemanticLossCount > 0 ||
+    input.equivalencePolicy.unknownDiffCount > 0 ||
+    input.equivalencePolicy.sourceAuthorityPreservationStatus !== 'source-authority-preserved' ||
+    input.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority.length > 0
+  ) {
+    return 'promotion-review-blocked'
+  }
+  if (input.equivalencePolicy.equivalenceCandidate && !input.equivalencePolicy.equivalenceProven) {
+    return 'promotion-review-ready-for-human'
+  }
+  return 'promotion-review-required'
+}
+
+function buildPromotionReviewChecklist(input: {
+  status: ContractCompilerDryRunStatus
+  inputModelStatus: ContractCompilerDryRunReport['inputModelStatus']
+  candidateStatus: ContractCompilerDryRunReport['candidateStatus']
+  candidateDiff: ContractDiffReportInternal
+  sourceAuthorityGapPreview: ContractSourceAuthorityGapPreviewSummary
+}): ContractCompilerPromotionReviewPacketInternal['artifact']['humanReviewChecklist'] {
+  const equivalencePolicy = input.candidateDiff.equivalencePolicy
+  return [
+    {
+      id: 'major-fields-source-authority-preserved',
+      status:
+        equivalencePolicy.sourceAuthorityPreservationStatus === 'source-authority-preserved' &&
+        input.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority.length === 0
+          ? 'pass'
+          : 'blocked',
+      prompt: 'Confirm major execution contract fields are preserved from source authority.',
+      evidence: input.sourceAuthorityGapPreview.status,
+    },
+    {
+      id: 'blocking-semantic-loss-zero',
+      status: equivalencePolicy.blockingSemanticLossCount === 0 ? 'pass' : 'blocked',
+      prompt: 'Confirm blocking semantic/policy/output/evidence/context/risk/scope loss is zero.',
+      evidence: String(equivalencePolicy.blockingSemanticLossCount),
+    },
+    {
+      id: 'unknown-diffs-zero',
+      status: equivalencePolicy.unknownDiffCount === 0 ? 'pass' : 'blocked',
+      prompt: 'Confirm semantic diff unknown count is zero.',
+      evidence: String(equivalencePolicy.unknownDiffCount),
+    },
+    {
+      id: 'review-only-diffs-acceptable',
+      status: equivalencePolicy.reviewOnlyDiffCount > 0 ? 'decision-required' : 'pass',
+      prompt: 'Human reviewer must decide whether remaining review-only diffs are acceptable.',
+      evidence: equivalencePolicy.reviewOnlyDiffStatus,
+    },
+    {
+      id: 'source-mode-difference-expected',
+      status: input.candidateDiff.differingFields.includes('sourceMode') ? 'decision-required' : 'pass',
+      prompt: 'Human reviewer must confirm the generated sourceMode difference is expected.',
+      evidence: input.candidateDiff.differingFields.includes('sourceMode') ? 'sourceMode differs' : 'sourceMode same',
+    },
+    {
+      id: 'additive-health-check-expected',
+      status: input.candidateDiff.differingFields.includes('requiredChecks') ? 'decision-required' : 'pass',
+      prompt: 'Human reviewer must confirm the additive health check is expected and non-weakening.',
+      evidence: input.candidateDiff.differingFields.includes('requiredChecks')
+        ? 'requiredChecks differs'
+        : 'requiredChecks same',
+    },
+    {
+      id: 'boundary-wording-non-weakening',
+      status: input.candidateDiff.differingFields.includes('nonExecutionStatement') ? 'decision-required' : 'pass',
+      prompt: 'Human reviewer must confirm boundary wording does not weaken the non-execution boundary.',
+      evidence: input.candidateDiff.differingFields.includes('nonExecutionStatement')
+        ? 'nonExecutionStatement differs'
+        : 'nonExecutionStatement same',
+    },
+    {
+      id: 'candidate-validator-pass',
+      status:
+        input.status === 'contract-compiler-dry-run-pass' &&
+        input.inputModelStatus === 'compiler-input-model-pass' &&
+        input.candidateStatus === 'contract-candidate-pass'
+          ? 'pass'
+          : 'blocked',
+      prompt: 'Confirm generated candidate passed the Contract Fixture Validator.',
+      evidence: `${input.inputModelStatus}; ${input.candidateStatus}`,
+    },
+    {
+      id: 'report-health-and-e2e-reviewed',
+      status: 'decision-required',
+      prompt: 'Human reviewer must confirm report-health, E2E smoke, and validate-all were run before approval.',
+      evidence: 'See validationCommands in this packet.',
+    },
+    {
+      id: 'compiler-output-not-execution-source',
+      status: 'pass',
+      prompt: 'Confirm compiler output is not treated as execution authority.',
+      evidence: 'non-execution boundary retained',
+    },
+    {
+      id: 'no-enforcement-or-branch-protection',
+      status: 'pass',
+      prompt: 'Confirm no required check, CI enforcement, or branch protection was introduced.',
+      evidence: 'explicit non-goal',
+    },
+  ]
 }
 
 interface OutputRequirementSourceAuthorityPreviewInternal {

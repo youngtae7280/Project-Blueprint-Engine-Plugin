@@ -47,6 +47,8 @@
   field-level remaining semantic/policy loss triage and next resolver selection.
 - [Contract Compiler Equivalence Policy](concept/contract-compiler-equivalence-policy.md) - Review-only policy that
   separates source-authority preservation, equivalence candidate status, and equivalence proof.
+- [Contract Compiler Promotion Review Policy](concept/contract-compiler-promotion-review-policy.md) - Human review
+  packet boundary for equivalence candidates without approving promotion, execution, or enforcement.
 - [Graph operation-chain productization](concept/graph-operation-chain-productization.md) - Local native/retrofit
   dogfood package for `graph-source -> instruction pack -> local change -> graph delta -> graph update proposal`.
 - [Candidate C full read-model gate evaluation](concept/candidate-c-full-read-model-gate-evaluation.md) - Evaluation

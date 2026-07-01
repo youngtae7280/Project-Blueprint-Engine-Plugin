@@ -1434,6 +1434,9 @@ describe('read-model Evidence builder', () => {
     expect(report.paths.sourceAuthorityGapPreview).toBe(
       'examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json',
     )
+    expect(report.paths.promotionReviewPacket).toBe(
+      'examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
+    )
     expect(report.outputRequirementSourceAuthorityPreview).toMatchObject({
       status: 'output-requirement-source-authority-preview-pass',
       sourceAuthorityEntryCount: 4,
@@ -1583,6 +1586,46 @@ describe('read-model Evidence builder', () => {
       }
       outputRequirementPreservationStatus: string
     }
+    const promotionReviewPacket = JSON.parse(
+      await readFile(join(workspace, report.paths.promotionReviewPacket), 'utf8'),
+    ) as {
+      status: string
+      approvalStatus: string
+      reviewedArtifacts: {
+        compilerCandidate: string
+        handWrittenComparisonFixture: string
+        semanticDiffReport: string
+        sourceAuthorityGapPreview: string
+      }
+      equivalencePolicyStatus: {
+        sourceAuthorityPreservationStatus: string
+        semanticDiffPolicyStatus: string
+        reviewOnlyDiffStatus: string
+        blockingSemanticLossCount: number
+        reviewOnlyDiffCount: number
+        unknownDiffCount: number
+        equivalenceCandidate: boolean
+        equivalenceProven: boolean
+      }
+      reviewOnlyDiffSummary: { status: string; count: number; differingFields: string[] }
+      validationCommands: Array<{ id: string; command: string; status: string }>
+      humanReviewChecklist: Array<{ id: string; status: string; evidence: string }>
+      explicitNonGoals: string[]
+      summary: {
+        status: string
+        approvalStatus: string
+        equivalenceCandidate: boolean
+        equivalenceProven: boolean
+        reviewOnlyDiffCount: number
+        blockingSemanticLossCount: number
+        unknownDiffCount: number
+        checklistPassCount: number
+        checklistDecisionRequiredCount: number
+        checklistBlockedCount: number
+        requiredHumanDecision: boolean
+      }
+      nonExecutionStatement: string
+    }
     expect(diffReport.status).toBe('contract-diff-detected')
     expect(diffReport.reviewStatus).toBe('non-blocking-review-diff')
     expect(diffReport.equivalenceStatus).toBe('compiler-equivalence-not-proven')
@@ -1659,6 +1702,77 @@ describe('read-model Evidence builder', () => {
       compilerPromotionReadiness: 'compiler-promotion-review-required',
     })
     expect(diffReport.equivalenceProven).toBe(false)
+    expect(report.promotionReview).toMatchObject({
+      status: 'promotion-review-ready-for-human',
+      approvalStatus: 'not-approved',
+      packetPath: 'examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
+      equivalenceCandidate: true,
+      equivalenceProven: false,
+      reviewOnlyDiffCount: 3,
+      blockingSemanticLossCount: 0,
+      unknownDiffCount: 0,
+      checklistBlockedCount: 0,
+      requiredHumanDecision: true,
+    })
+    expect(report.promotionReview.checklistPassCount).toBeGreaterThan(0)
+    expect(report.promotionReview.checklistDecisionRequiredCount).toBeGreaterThan(0)
+    expect(report.promotionReview.nonExecutionBoundary).toContain('does not approve equivalence')
+    expect(promotionReviewPacket.status).toBe('promotion-review-ready-for-human')
+    expect(promotionReviewPacket.approvalStatus).toBe('not-approved')
+    expect(promotionReviewPacket.reviewedArtifacts).toMatchObject({
+      compilerCandidate: 'examples/read-model-aggregate/generated/execution-contract-dry-run.generated.json',
+      handWrittenComparisonFixture: 'examples/read-model-aggregate/generated/execution-contract-dry-run.json',
+      semanticDiffReport: 'examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json',
+      sourceAuthorityGapPreview: 'examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json',
+    })
+    expect(promotionReviewPacket.equivalencePolicyStatus).toMatchObject({
+      sourceAuthorityPreservationStatus: 'source-authority-preserved',
+      semanticDiffPolicyStatus: 'semantic-diff-clean',
+      reviewOnlyDiffStatus: 'review-only-diff-detected',
+      blockingSemanticLossCount: 0,
+      reviewOnlyDiffCount: 3,
+      unknownDiffCount: 0,
+      equivalenceCandidate: true,
+      equivalenceProven: false,
+    })
+    expect(promotionReviewPacket.reviewOnlyDiffSummary).toMatchObject({
+      status: 'review-only-diff-detected',
+      count: 3,
+    })
+    expect(promotionReviewPacket.validationCommands.map((entry) => entry.id)).toEqual([
+      'compile-contract-dry-run',
+      'report-health',
+      'read-model-e2e-smoke',
+      'validate-all',
+    ])
+    expect(
+      promotionReviewPacket.validationCommands.find((entry) => entry.id === 'compile-contract-dry-run'),
+    ).toMatchObject({
+      status: 'pass',
+    })
+    expect(
+      promotionReviewPacket.humanReviewChecklist.find((entry) => entry.id === 'blocking-semantic-loss-zero'),
+    ).toMatchObject({ status: 'pass', evidence: '0' })
+    expect(promotionReviewPacket.humanReviewChecklist.find((entry) => entry.id === 'unknown-diffs-zero')).toMatchObject(
+      { status: 'pass', evidence: '0' },
+    )
+    expect(
+      promotionReviewPacket.humanReviewChecklist.find((entry) => entry.id === 'review-only-diffs-acceptable'),
+    ).toMatchObject({ status: 'decision-required' })
+    expect(promotionReviewPacket.summary).toMatchObject({
+      status: 'promotion-review-ready-for-human',
+      approvalStatus: 'not-approved',
+      equivalenceCandidate: true,
+      equivalenceProven: false,
+      reviewOnlyDiffCount: 3,
+      blockingSemanticLossCount: 0,
+      unknownDiffCount: 0,
+      checklistBlockedCount: 0,
+      requiredHumanDecision: true,
+    })
+    expect(promotionReviewPacket.explicitNonGoals.join('\n')).toContain('Required checks')
+    expect(promotionReviewPacket.explicitNonGoals.join('\n')).toContain('equivalenceProven remains false')
+    expect(promotionReviewPacket.nonExecutionStatement).toContain('does not approve equivalence')
     expect(diffReport.semanticClassificationCounts).toMatchObject({
       'metadata-only': 2,
       'safe-additive': 1,
@@ -2595,6 +2709,7 @@ describe('read-model Evidence builder', () => {
         diffReport: string
         outputRequirementSourceAuthorityPreview: string
         sourceAuthorityGapPreview: string
+        promotionReviewPacket: string
       }
       candidate: { requiredCheckCount: number; requiredEvidenceCount: number }
       outputRequirementSourceAuthorityPreview: {
@@ -2644,6 +2759,18 @@ describe('read-model Evidence builder', () => {
         promotionBlockedBy: string[]
         equivalenceBlockedBy: string[]
       }
+      promotionReview: {
+        status: string
+        approvalStatus: string
+        packetPath: string
+        equivalenceCandidate: boolean
+        equivalenceProven: boolean
+        reviewOnlyDiffCount: number
+        blockingSemanticLossCount: number
+        unknownDiffCount: number
+        checklistBlockedCount: number
+        requiredHumanDecision: boolean
+      }
     }
 
     expect(result.exitCode).toBe(0)
@@ -2660,6 +2787,9 @@ describe('read-model Evidence builder', () => {
     )
     expect(output.paths.sourceAuthorityGapPreview).toBe(
       'examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json',
+    )
+    expect(output.paths.promotionReviewPacket).toBe(
+      'examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
     )
     expect(output.outputRequirementSourceAuthorityPreview).toMatchObject({
       status: 'output-requirement-source-authority-preview-pass',
@@ -2716,6 +2846,18 @@ describe('read-model Evidence builder', () => {
     expect(output.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority).not.toContain('requiredContext')
     expect(output.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority).not.toContain('knownRisks')
     expect(output.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority).toEqual([])
+    expect(output.promotionReview).toMatchObject({
+      status: 'promotion-review-ready-for-human',
+      approvalStatus: 'not-approved',
+      packetPath: 'examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
+      equivalenceCandidate: true,
+      equivalenceProven: false,
+      reviewOnlyDiffCount: 3,
+      blockingSemanticLossCount: 0,
+      unknownDiffCount: 0,
+      checklistBlockedCount: 0,
+      requiredHumanDecision: true,
+    })
     expect(output.candidateDiff.differingFieldCount).toBeGreaterThan(0)
     expect(output.candidateDiff.idBasedSummaries.length).toBeGreaterThan(0)
     expect(output.candidate.requiredCheckCount).toBeGreaterThan(0)
@@ -2829,6 +2971,21 @@ describe('read-model Evidence builder', () => {
           equivalenceBlockedBy: string[]
         }
         sourceAuthorityGapPreviewPath: string
+        promotionReview: {
+          status: string
+          approvalStatus: string
+          packetPath: string
+          equivalenceCandidate: boolean
+          equivalenceProven: boolean
+          reviewOnlyDiffCount: number
+          blockingSemanticLossCount: number
+          unknownDiffCount: number
+          checklistPassCount: number
+          checklistDecisionRequiredCount: number
+          checklistBlockedCount: number
+          requiredHumanDecision: boolean
+        }
+        promotionReviewPacketPath: string
       }
     }
     const markdown = await readFile(markdownPath, 'utf8')
@@ -2888,6 +3045,23 @@ describe('read-model Evidence builder', () => {
     expect(output.contractCompilerDryRun.sourceAuthorityGapPreviewPath).toBe(
       'examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json',
     )
+    expect(output.contractCompilerDryRun.promotionReview).toMatchObject({
+      status: 'promotion-review-ready-for-human',
+      approvalStatus: 'not-approved',
+      packetPath: 'examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
+      equivalenceCandidate: true,
+      equivalenceProven: false,
+      reviewOnlyDiffCount: 3,
+      blockingSemanticLossCount: 0,
+      unknownDiffCount: 0,
+      checklistBlockedCount: 0,
+      requiredHumanDecision: true,
+    })
+    expect(output.contractCompilerDryRun.promotionReview.checklistPassCount).toBeGreaterThan(0)
+    expect(output.contractCompilerDryRun.promotionReview.checklistDecisionRequiredCount).toBeGreaterThan(0)
+    expect(output.contractCompilerDryRun.promotionReviewPacketPath).toBe(
+      'examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
+    )
     expect(output.contractCompilerDryRun.highestReviewSeverity).toBe('low')
     expect(output.contractCompilerDryRun.semanticClassificationCounts['semantic-loss']).toBeUndefined()
     expect(output.contractCompilerDryRun.semanticClassificationCounts['policy-loss']).toBeUndefined()
@@ -2933,7 +3107,14 @@ describe('read-model Evidence builder', () => {
     expect(markdown).toContain('`review-only-diff-detected`')
     expect(markdown).toContain('equivalence candidate `true`')
     expect(markdown).toContain('equivalence proven `false`')
+    expect(markdown).toContain('Contract compiler promotion review packet')
+    expect(markdown).toContain('`promotion-review-ready-for-human`')
+    expect(markdown).toContain('approval `not-approved`')
+    expect(markdown).toContain(
+      '`examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json`',
+    )
     expect(markdown).toContain('Equivalence candidate status is review metadata only')
+    expect(markdown).toContain('Promotion review packet is non-enforcing preview Evidence only')
     expect(markdown).toContain('`examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json`')
     expect(markdown).toContain(
       '`examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json`',

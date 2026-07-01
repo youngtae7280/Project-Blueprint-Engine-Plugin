@@ -185,6 +185,7 @@ The first Compiler Boundary MVP and hardened Contract Fixture Validator are reco
 - [output-requirement-source-authority.md](output-requirement-source-authority.md)
 - [contract-source-authority-gap-preview.md](contract-source-authority-gap-preview.md)
 - [contract-compiler-equivalence-policy.md](contract-compiler-equivalence-policy.md)
+- [contract-compiler-promotion-review-policy.md](contract-compiler-promotion-review-policy.md)
 
 It separates compiler-required work from AI-advisory work, adds a machine-readable task registry and Execution Contract
 MVP schema, validates a Todo Search dry-run contract with bucketed registry/schema/contract issues, requires severe risks
@@ -234,6 +235,13 @@ diff report marks `sourceAuthorityPreservationStatus: source-authority-preserved
 `semanticDiffPolicyStatus: semantic-diff-clean`, `reviewOnlyDiffStatus: review-only-diff-detected`,
 `equivalenceCandidate: true`, and `equivalenceProven: false`. This keeps the generated candidate reviewable without
 making it authoritative or executable.
+
+Contract Compiler Promotion Review Policy v0.2 adds a non-enforcing review packet at
+`examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json`. The packet gathers the
+candidate, comparison fixture, semantic diff, source-authority previews, validation commands, explicit non-goals, and
+human checklist. Its current status is `promotion-review-ready-for-human` with `approvalStatus: not-approved`; it does
+not set `equivalenceProven: true`, accept work, enable enforcement, or promote the generated contract to execution
+authority.
 
 The following readiness artifact is complete at documentation level:
 

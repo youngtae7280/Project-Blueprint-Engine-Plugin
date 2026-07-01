@@ -1024,6 +1024,15 @@ authoritative. It does not execute AI, apply graph deltas, accept work, enable r
 protection, expand source authority, retire tree-native artifacts, widen changeType support, or promote the compiler
 candidate to an execution source.
 
+DEC-183 does not supersede DEC-097 through DEC-182. It adds the Contract Compiler Promotion Review Policy and the
+generated `contract-compiler-promotion-review.preview.json` packet. The packet collects the generated candidate,
+hand-written comparison fixture, semantic diff artifact, source-authority previews, validation commands, explicit
+non-goals, and human checklist so a later reviewer can approve, reject, or request changes. Current status is
+`promotion-review-ready-for-human` with `approvalStatus: not-approved`, `equivalenceCandidate: true`, and
+`equivalenceProven: false`. This does not approve compiler promotion, accept user work, execute AI, apply graph deltas,
+enable required checks, configure branch protection, introduce CI enforcement, retire tree-native artifacts, widen
+changeType support, or make the generated contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

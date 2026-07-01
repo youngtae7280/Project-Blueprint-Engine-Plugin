@@ -460,6 +460,44 @@ try {
     false,
     'contract compiler equivalence policy proven flag',
   )
+  assertEqual(
+    contractCompilerDryRun.promotionReview.status,
+    'promotion-review-ready-for-human',
+    'contract compiler promotion review packet status',
+  )
+  assertEqual(
+    contractCompilerDryRun.promotionReview.approvalStatus,
+    'not-approved',
+    'contract compiler promotion review approval status',
+  )
+  assertEqual(
+    contractCompilerDryRun.promotionReview.equivalenceCandidate,
+    true,
+    'contract compiler promotion review equivalence candidate flag',
+  )
+  assertEqual(
+    contractCompilerDryRun.promotionReview.equivalenceProven,
+    false,
+    'contract compiler promotion review equivalence proven flag',
+  )
+  assertEqual(
+    contractCompilerDryRun.promotionReview.reviewOnlyDiffCount,
+    3,
+    'contract compiler promotion review-only diff count',
+  )
+  assertEqual(
+    contractCompilerDryRun.promotionReview.blockingSemanticLossCount,
+    0,
+    'contract compiler promotion review blocking semantic loss count',
+  )
+  assertEqual(
+    contractCompilerDryRun.promotionReview.unknownDiffCount,
+    0,
+    'contract compiler promotion review unknown diff count',
+  )
+  if (!contractCompilerDryRun.paths.promotionReviewPacket) {
+    throw new Error('Contract compiler dry-run must expose a promotion review packet path')
+  }
   if (contractCompilerDryRun.candidate.requiredCheckCount <= 0) {
     throw new Error('Contract compiler dry-run candidate must include required checks')
   }
@@ -612,6 +650,8 @@ try {
       outputRequirementSourceAuthorityPreviewPath: contractCompilerDryRun.paths.outputRequirementSourceAuthorityPreview,
       sourceAuthorityGapPreview: contractCompilerDryRun.sourceAuthorityGapPreview,
       sourceAuthorityGapPreviewPath: contractCompilerDryRun.paths.sourceAuthorityGapPreview,
+      promotionReview: contractCompilerDryRun.promotionReview,
+      promotionReviewPacketPath: contractCompilerDryRun.paths.promotionReviewPacket,
       differingFieldCount: contractCompilerDryRun.candidateDiff.differingFieldCount,
       diffReport: contractCompilerDryRun.paths.diffReport,
       nonExecuting: true,

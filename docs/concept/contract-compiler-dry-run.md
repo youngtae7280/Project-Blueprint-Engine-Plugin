@@ -221,3 +221,29 @@ That policy keeps these states separate:
 
 `equivalenceProven` is not set to `true` in this stage, even if a future fixture reaches a field match. Equivalence proof
 requires an explicitly approved policy and human review. The current dry-run remains non-enforcing review Evidence.
+
+## v0.2 Promotion Review Packet
+
+The promotion review boundary is recorded in
+[contract-compiler-promotion-review-policy.md](contract-compiler-promotion-review-policy.md). `equivalenceCandidate`
+means the current candidate is ready to be reviewed, not that it has been approved or accepted.
+
+`graph read-model compile-contract --dry-run --json` now also emits:
+
+```text
+examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json
+```
+
+The packet references the generated candidate, hand-written comparison fixture, semantic diff artifact, output
+requirement source-authority preview, and source-authority gap preview. It includes validation commands, review-only diff
+summary, explicit non-goals, and a human checklist. The current packet status is
+`promotion-review-ready-for-human`, while `approvalStatus` remains `not-approved` and `equivalenceProven` remains
+`false`.
+
+The optional decision template is:
+
+```text
+docs/templates/contract-compiler-promotion-decision.md
+```
+
+The template is for a later human decision record. It is not an automatic approval mechanism.
