@@ -899,6 +899,13 @@ v0.1 rule table with `ruleId`, `targetField`, `condition`, `classification`, `re
 non-enforcing review metadata only and does not execute AI, apply graph deltas, accept work, enable required checks,
 configure branch protection, expand source authority, or retire tree-native artifacts.
 
+DEC-170 does not supersede DEC-097 through DEC-169. It triages Contract Compiler Dry-Run unknown semantic diffs:
+`sourceMode` and `nonExecutionStatement` are classified as `metadata-only`, while `requiredContext`, `knownRisks`, and
+`stopConditions` are now covered by id-based semantic summaries and explicit rules. The remaining unknown field is
+`outputRequirements`, recorded as unclassified review debt in `semanticDiffRuleCoverage.unknownFields`. This remains
+non-enforcing review metadata only and does not execute AI, apply graph deltas, accept work, enable required checks,
+configure branch protection, expand source authority, or retire tree-native artifacts.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

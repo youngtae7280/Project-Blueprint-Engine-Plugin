@@ -512,6 +512,7 @@ interface GraphSourceHealthReport {
       classifiedDiffs: number
       unknownDiffs: number
       matchedRuleIds: string[]
+      unknownFields: string[]
     }
   }
   treeNativeRetirement: {
@@ -1489,6 +1490,9 @@ export function renderGraphSourceHealthMarkdown(report: GraphSourceHealthReport)
   const semanticDiffSummary = formatSemanticClassificationCounts(
     report.contractCompilerDryRun.semanticClassificationCounts,
   )
+  const unknownSemanticFields = formatUnknownSemanticFields(
+    report.contractCompilerDryRun.semanticDiffRuleCoverage.unknownFields,
+  )
 
   return `# Graph-Source Health Report
 
@@ -1521,7 +1525,7 @@ Status: \`${report.status}\`
 | Contract Compiler Dry-Run v0.1 | \`${report.contractCompilerDryRun.status}\` |
 | Compiled contract candidate | \`${report.contractCompilerDryRun.candidateStatus}\`; \`${report.contractCompilerDryRun.dryRunChangeId}\`; ${report.contractCompilerDryRun.requiredCheckCount} checks / ${report.contractCompilerDryRun.requiredEvidenceCount} evidence requirements |
 | Generated vs hand-written contract diff | \`${report.contractCompilerDryRun.candidateDiffStatus}\`; \`${report.contractCompilerDryRun.candidateDiffReviewStatus}\`; \`${report.contractCompilerDryRun.candidateEquivalenceStatus}\`; ${report.contractCompilerDryRun.differingFieldCount} differing fields; \`${report.contractCompilerDryRun.diffReport}\` |
-| Contract semantic diff review | \`${report.contractCompilerDryRun.compilerPromotionReadiness}\`; severity \`${report.contractCompilerDryRun.highestReviewSeverity}\`; unknown semantic diffs ${report.contractCompilerDryRun.semanticDiffRuleCoverage.unknownDiffs}; ${semanticDiffSummary} |
+| Contract semantic diff review | \`${report.contractCompilerDryRun.compilerPromotionReadiness}\`; severity \`${report.contractCompilerDryRun.highestReviewSeverity}\`; unknown semantic diffs ${report.contractCompilerDryRun.semanticDiffRuleCoverage.unknownDiffs}; unknown fields ${unknownSemanticFields}; ${semanticDiffSummary} |
 
 ${report.contractCompilerDryRun.diffReviewBoundary}
 
@@ -1566,6 +1570,10 @@ node dist/cli/index.js graph read-model report-health --json --markdown examples
 function formatSemanticClassificationCounts(counts: Record<string, number>): string {
   const entries = Object.entries(counts).filter(([, count]) => count > 0)
   return entries.length === 0 ? 'semantic diffs: none' : entries.map(([key, count]) => `${key}: ${count}`).join(', ')
+}
+
+function formatUnknownSemanticFields(fields: string[]): string {
+  return fields.length === 0 ? 'none' : fields.join(', ')
 }
 
 async function readGeneratedReadModelHealth(

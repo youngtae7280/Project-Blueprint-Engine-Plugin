@@ -50,6 +50,13 @@
       "extraIdsInGenerated": ["scope-no-tree-retirement"]
     },
     {
+      "field": "requiredContext",
+      "handWrittenCount": 2,
+      "generatedCount": 3,
+      "missingIdsInGenerated": ["context-read-model-health", "context-todo-search-graph-source"],
+      "extraIdsInGenerated": ["context-graph-source", "context-transition-status", "context-read-model-registry"]
+    },
+    {
       "field": "requiredChecks",
       "handWrittenCount": 3,
       "generatedCount": 4,
@@ -62,11 +69,27 @@
       "generatedCount": 2,
       "missingIdsInGenerated": ["evidence-validate-all-result"],
       "extraIdsInGenerated": ["evidence-read-model-health"]
+    },
+    {
+      "field": "knownRisks",
+      "handWrittenCount": 1,
+      "generatedCount": 1,
+      "missingIdsInGenerated": ["risk-query-tokenization-regression"],
+      "extraIdsInGenerated": ["risk-compiler-dry-run-scope-drift"]
+    },
+    {
+      "field": "stopConditions",
+      "handWrittenCount": 2,
+      "generatedCount": 2,
+      "missingIdsInGenerated": ["stop-if-scope-expands"],
+      "extraIdsInGenerated": ["stop-if-input-model-drifts"]
     }
   ],
   "semanticDiffs": [
     {
       "field": "allowedScope",
+      "targetField": "allowedScope",
+      "diffDirection": "missingIdsInGenerated",
       "matchedRuleId": "semantic-diff-rule-allowed-scope-missing-conservative-restriction",
       "classification": "conservative-restriction",
       "reviewSeverity": "medium",
@@ -77,6 +100,8 @@
     },
     {
       "field": "forbiddenScope",
+      "targetField": "forbiddenScope",
+      "diffDirection": "missingIdsInGenerated",
       "matchedRuleId": "semantic-diff-rule-forbidden-scope-missing-policy-loss",
       "classification": "policy-loss",
       "reviewSeverity": "high",
@@ -87,6 +112,8 @@
     },
     {
       "field": "forbiddenScope",
+      "targetField": "forbiddenScope",
+      "diffDirection": "extraIdsInGenerated",
       "matchedRuleId": "semantic-diff-rule-forbidden-scope-extra-policy-expansion",
       "classification": "policy-expansion",
       "reviewSeverity": "low",
@@ -96,7 +123,33 @@
       "extraIdsInGenerated": ["scope-no-tree-retirement"]
     },
     {
+      "field": "requiredContext",
+      "targetField": "requiredContext",
+      "diffDirection": "missingIdsInGenerated",
+      "matchedRuleId": "semantic-diff-rule-required-context-missing-semantic-loss",
+      "classification": "semantic-loss",
+      "reviewSeverity": "high",
+      "promotionImpact": "blocks-promotion",
+      "reason": "The generated candidate is missing required context from the hand-written contract, so the contract context is not equivalent.",
+      "missingIdsInGenerated": ["context-read-model-health", "context-todo-search-graph-source"],
+      "extraIdsInGenerated": []
+    },
+    {
+      "field": "requiredContext",
+      "targetField": "requiredContext",
+      "diffDirection": "extraIdsInGenerated",
+      "matchedRuleId": "semantic-diff-rule-required-context-extra-safe-additive",
+      "classification": "safe-additive",
+      "reviewSeverity": "low",
+      "promotionImpact": "review-required",
+      "reason": "The generated candidate adds required context beyond the hand-written contract; this is additive but still review-only.",
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": ["context-graph-source", "context-transition-status", "context-read-model-registry"]
+    },
+    {
       "field": "requiredChecks",
+      "targetField": "requiredChecks",
+      "diffDirection": "extraIdsInGenerated",
       "matchedRuleId": "semantic-diff-rule-required-checks-extra-safe-additive",
       "classification": "safe-additive",
       "reviewSeverity": "low",
@@ -107,6 +160,8 @@
     },
     {
       "field": "requiredEvidence",
+      "targetField": "requiredEvidence",
+      "diffDirection": "missingIdsInGenerated",
       "matchedRuleId": "semantic-diff-rule-required-evidence-missing-semantic-loss",
       "classification": "semantic-loss",
       "reviewSeverity": "high",
@@ -117,6 +172,8 @@
     },
     {
       "field": "requiredEvidence",
+      "targetField": "requiredEvidence",
+      "diffDirection": "extraIdsInGenerated",
       "matchedRuleId": "semantic-diff-rule-required-evidence-extra-evidence-chain-mismatch",
       "classification": "evidence-chain-mismatch",
       "reviewSeverity": "medium",
@@ -126,90 +183,124 @@
       "extraIdsInGenerated": ["evidence-read-model-health"]
     },
     {
-      "field": "sourceMode",
-      "matchedRuleId": "semantic-diff-rule-unknown",
-      "classification": "unknown-review-required",
-      "reviewSeverity": "medium",
-      "promotionImpact": "review-required",
-      "reason": "This contract difference has no dedicated dry-run v0.1 semantic rule and requires human review before promotion.",
-      "missingIdsInGenerated": [],
-      "extraIdsInGenerated": []
-    },
-    {
-      "field": "requiredContext",
-      "matchedRuleId": "semantic-diff-rule-unknown",
-      "classification": "unknown-review-required",
-      "reviewSeverity": "medium",
-      "promotionImpact": "review-required",
-      "reason": "This contract difference has no dedicated dry-run v0.1 semantic rule and requires human review before promotion.",
-      "missingIdsInGenerated": [],
+      "field": "knownRisks",
+      "targetField": "knownRisks",
+      "diffDirection": "missingIdsInGenerated",
+      "matchedRuleId": "semantic-diff-rule-known-risks-missing-semantic-loss",
+      "classification": "semantic-loss",
+      "reviewSeverity": "high",
+      "promotionImpact": "blocks-promotion",
+      "reason": "The generated candidate is missing a known risk from the hand-written contract, so risk semantics are not preserved.",
+      "missingIdsInGenerated": ["risk-query-tokenization-regression"],
       "extraIdsInGenerated": []
     },
     {
       "field": "knownRisks",
-      "matchedRuleId": "semantic-diff-rule-unknown",
-      "classification": "unknown-review-required",
-      "reviewSeverity": "medium",
+      "targetField": "knownRisks",
+      "diffDirection": "extraIdsInGenerated",
+      "matchedRuleId": "semantic-diff-rule-known-risks-extra-safe-additive",
+      "classification": "safe-additive",
+      "reviewSeverity": "low",
       "promotionImpact": "review-required",
-      "reason": "This contract difference has no dedicated dry-run v0.1 semantic rule and requires human review before promotion.",
+      "reason": "The generated candidate adds a known risk beyond the hand-written contract; this is additive but still review-only.",
       "missingIdsInGenerated": [],
+      "extraIdsInGenerated": ["risk-compiler-dry-run-scope-drift"]
+    },
+    {
+      "field": "stopConditions",
+      "targetField": "stopConditions",
+      "diffDirection": "missingIdsInGenerated",
+      "matchedRuleId": "semantic-diff-rule-stop-conditions-missing-policy-loss",
+      "classification": "policy-loss",
+      "reviewSeverity": "high",
+      "promotionImpact": "blocks-promotion",
+      "reason": "The generated candidate is missing a stop condition from the hand-written contract, so safety policy coverage is not equivalent.",
+      "missingIdsInGenerated": ["stop-if-scope-expands"],
       "extraIdsInGenerated": []
     },
     {
       "field": "stopConditions",
-      "matchedRuleId": "semantic-diff-rule-unknown",
-      "classification": "unknown-review-required",
-      "reviewSeverity": "medium",
+      "targetField": "stopConditions",
+      "diffDirection": "extraIdsInGenerated",
+      "matchedRuleId": "semantic-diff-rule-stop-conditions-extra-policy-expansion",
+      "classification": "policy-expansion",
+      "reviewSeverity": "low",
       "promotionImpact": "review-required",
-      "reason": "This contract difference has no dedicated dry-run v0.1 semantic rule and requires human review before promotion.",
+      "reason": "The generated candidate adds a stop condition beyond the hand-written contract; review the policy expansion.",
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": ["stop-if-input-model-drifts"]
+    },
+    {
+      "field": "sourceMode",
+      "targetField": "sourceMode",
+      "diffDirection": "fieldDifferent",
+      "matchedRuleId": "semantic-diff-rule-source-mode-field-metadata-only",
+      "classification": "metadata-only",
+      "reviewSeverity": "low",
+      "promotionImpact": "review-required",
+      "reason": "The sourceMode differs because one artifact is hand-written and the other is compiler-produced; review provenance but do not treat this as execution-scope loss.",
       "missingIdsInGenerated": [],
       "extraIdsInGenerated": []
     },
     {
       "field": "outputRequirements",
+      "targetField": "outputRequirements",
+      "diffDirection": "fieldDifferent",
       "matchedRuleId": "semantic-diff-rule-unknown",
       "classification": "unknown-review-required",
       "reviewSeverity": "medium",
       "promotionImpact": "review-required",
-      "reason": "This contract difference has no dedicated dry-run v0.1 semantic rule and requires human review before promotion.",
+      "reason": "id-summary-not-available; no-semantic-rule-for-field; manual-review-required",
       "missingIdsInGenerated": [],
       "extraIdsInGenerated": []
     },
     {
       "field": "nonExecutionStatement",
-      "matchedRuleId": "semantic-diff-rule-unknown",
-      "classification": "unknown-review-required",
-      "reviewSeverity": "medium",
+      "targetField": "nonExecutionStatement",
+      "diffDirection": "fieldDifferent",
+      "matchedRuleId": "semantic-diff-rule-non-execution-statement-field-metadata-only",
+      "classification": "metadata-only",
+      "reviewSeverity": "low",
       "promotionImpact": "review-required",
-      "reason": "This contract difference has no dedicated dry-run v0.1 semantic rule and requires human review before promotion.",
+      "reason": "The nonExecutionStatement wording differs between hand-written and compiler-produced artifacts; review boundary wording, but do not treat this as execution-scope loss.",
       "missingIdsInGenerated": [],
       "extraIdsInGenerated": []
     }
   ],
   "semanticClassificationCounts": {
     "conservative-restriction": 1,
-    "policy-loss": 1,
-    "policy-expansion": 1,
-    "safe-additive": 1,
-    "semantic-loss": 1,
+    "policy-loss": 2,
+    "policy-expansion": 2,
+    "semantic-loss": 3,
+    "safe-additive": 3,
     "evidence-chain-mismatch": 1,
-    "unknown-review-required": 6
+    "metadata-only": 2,
+    "unknown-review-required": 1
   },
   "highestReviewSeverity": "high",
   "compilerPromotionReadiness": "compiler-promotion-not-ready",
   "semanticDiffRuleCoverage": {
-    "totalDiffs": 12,
-    "classifiedDiffs": 6,
-    "unknownDiffs": 6,
+    "totalDiffs": 15,
+    "classifiedDiffs": 14,
+    "unknownDiffs": 1,
     "matchedRuleIds": [
       "semantic-diff-rule-allowed-scope-missing-conservative-restriction",
       "semantic-diff-rule-forbidden-scope-extra-policy-expansion",
       "semantic-diff-rule-forbidden-scope-missing-policy-loss",
+      "semantic-diff-rule-known-risks-extra-safe-additive",
+      "semantic-diff-rule-known-risks-missing-semantic-loss",
+      "semantic-diff-rule-non-execution-statement-field-metadata-only",
       "semantic-diff-rule-required-checks-extra-safe-additive",
+      "semantic-diff-rule-required-context-extra-safe-additive",
+      "semantic-diff-rule-required-context-missing-semantic-loss",
       "semantic-diff-rule-required-evidence-extra-evidence-chain-mismatch",
       "semantic-diff-rule-required-evidence-missing-semantic-loss",
+      "semantic-diff-rule-source-mode-field-metadata-only",
+      "semantic-diff-rule-stop-conditions-extra-policy-expansion",
+      "semantic-diff-rule-stop-conditions-missing-policy-loss",
       "semantic-diff-rule-unknown"
-    ]
+    ],
+    "unknownFields": ["outputRequirements"]
   },
   "reviewBoundary": "The compiler candidate is valid, but equivalence with the hand-written contract is not proven. Review the differing fields before relying on the candidate.",
   "nonExecutionStatement": "This diff report is review Evidence only and does not execute work, accept changes, or make the compiled candidate authoritative."

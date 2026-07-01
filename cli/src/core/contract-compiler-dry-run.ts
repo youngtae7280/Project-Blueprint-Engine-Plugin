@@ -504,9 +504,15 @@ function buildIdBasedDiffSummaries(
   generated: Record<string, unknown>,
   handWritten: Record<string, unknown>,
 ): ContractIdBasedDiffSummary[] {
-  return ['allowedScope', 'forbiddenScope', 'requiredChecks', 'requiredEvidence'].map((field) =>
-    buildIdBasedDiffSummary(field, arrayValue(handWritten[field]), arrayValue(generated[field])),
-  )
+  return [
+    'allowedScope',
+    'forbiddenScope',
+    'requiredContext',
+    'requiredChecks',
+    'requiredEvidence',
+    'knownRisks',
+    'stopConditions',
+  ].map((field) => buildIdBasedDiffSummary(field, arrayValue(handWritten[field]), arrayValue(generated[field])))
 }
 
 function buildIdBasedDiffSummary(

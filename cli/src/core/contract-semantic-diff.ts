@@ -5,6 +5,8 @@ export type ContractDiffStatus =
   | 'contract-diff-blocked'
 
 export type ContractSemanticDiffClassification =
+  | 'format-only'
+  | 'metadata-only'
   | 'conservative-restriction'
   | 'policy-loss'
   | 'policy-expansion'
@@ -32,6 +34,8 @@ export interface ContractIdBasedDiffSummary {
 
 export interface ContractSemanticDiff {
   field: string
+  targetField: string
+  diffDirection: ContractSemanticDiffDirection
   matchedRuleId: string
   classification: ContractSemanticDiffClassification
   reviewSeverity: ContractSemanticReviewSeverity
@@ -44,7 +48,7 @@ export interface ContractSemanticDiff {
 export interface ContractSemanticDiffRule {
   ruleId: string
   targetField: string
-  condition: 'missingIdsInGenerated' | 'extraIdsInGenerated'
+  condition: ContractSemanticDiffDirection
   classification: ContractSemanticDiffClassification
   reviewSeverity: ContractSemanticReviewSeverity
   promotionImpact: ContractSemanticPromotionImpact
@@ -56,11 +60,24 @@ export interface ContractSemanticDiffRuleCoverage {
   classifiedDiffs: number
   unknownDiffs: number
   matchedRuleIds: string[]
+  unknownFields: string[]
 }
 
 export const unknownSemanticDiffRuleId = 'semantic-diff-rule-unknown'
 
+export type ContractSemanticDiffDirection = 'missingIdsInGenerated' | 'extraIdsInGenerated' | 'fieldDifferent'
+
 export const contractSemanticDiffRules: readonly ContractSemanticDiffRule[] = [
+  {
+    ruleId: 'semantic-diff-rule-source-mode-field-metadata-only',
+    targetField: 'sourceMode',
+    condition: 'fieldDifferent',
+    classification: 'metadata-only',
+    reviewSeverity: 'low',
+    promotionImpact: 'review-required',
+    reason:
+      'The sourceMode differs because one artifact is hand-written and the other is compiler-produced; review provenance but do not treat this as execution-scope loss.',
+  },
   {
     ruleId: 'semantic-diff-rule-allowed-scope-missing-conservative-restriction',
     targetField: 'allowedScope',
@@ -90,6 +107,26 @@ export const contractSemanticDiffRules: readonly ContractSemanticDiffRule[] = [
     promotionImpact: 'review-required',
     reason:
       'The generated candidate adds a forbidden policy scope beyond the hand-written contract; review the policy expansion.',
+  },
+  {
+    ruleId: 'semantic-diff-rule-required-context-missing-semantic-loss',
+    targetField: 'requiredContext',
+    condition: 'missingIdsInGenerated',
+    classification: 'semantic-loss',
+    reviewSeverity: 'high',
+    promotionImpact: 'blocks-promotion',
+    reason:
+      'The generated candidate is missing required context from the hand-written contract, so the contract context is not equivalent.',
+  },
+  {
+    ruleId: 'semantic-diff-rule-required-context-extra-safe-additive',
+    targetField: 'requiredContext',
+    condition: 'extraIdsInGenerated',
+    classification: 'safe-additive',
+    reviewSeverity: 'low',
+    promotionImpact: 'review-required',
+    reason:
+      'The generated candidate adds required context beyond the hand-written contract; this is additive but still review-only.',
   },
   {
     ruleId: 'semantic-diff-rule-required-checks-extra-safe-additive',
@@ -131,6 +168,56 @@ export const contractSemanticDiffRules: readonly ContractSemanticDiffRule[] = [
     reason:
       'The generated candidate adds required Evidence beyond the hand-written contract; review the Evidence chain before promotion.',
   },
+  {
+    ruleId: 'semantic-diff-rule-known-risks-missing-semantic-loss',
+    targetField: 'knownRisks',
+    condition: 'missingIdsInGenerated',
+    classification: 'semantic-loss',
+    reviewSeverity: 'high',
+    promotionImpact: 'blocks-promotion',
+    reason:
+      'The generated candidate is missing a known risk from the hand-written contract, so risk semantics are not preserved.',
+  },
+  {
+    ruleId: 'semantic-diff-rule-known-risks-extra-safe-additive',
+    targetField: 'knownRisks',
+    condition: 'extraIdsInGenerated',
+    classification: 'safe-additive',
+    reviewSeverity: 'low',
+    promotionImpact: 'review-required',
+    reason:
+      'The generated candidate adds a known risk beyond the hand-written contract; this is additive but still review-only.',
+  },
+  {
+    ruleId: 'semantic-diff-rule-stop-conditions-missing-policy-loss',
+    targetField: 'stopConditions',
+    condition: 'missingIdsInGenerated',
+    classification: 'policy-loss',
+    reviewSeverity: 'high',
+    promotionImpact: 'blocks-promotion',
+    reason:
+      'The generated candidate is missing a stop condition from the hand-written contract, so safety policy coverage is not equivalent.',
+  },
+  {
+    ruleId: 'semantic-diff-rule-stop-conditions-extra-policy-expansion',
+    targetField: 'stopConditions',
+    condition: 'extraIdsInGenerated',
+    classification: 'policy-expansion',
+    reviewSeverity: 'low',
+    promotionImpact: 'review-required',
+    reason:
+      'The generated candidate adds a stop condition beyond the hand-written contract; review the policy expansion.',
+  },
+  {
+    ruleId: 'semantic-diff-rule-non-execution-statement-field-metadata-only',
+    targetField: 'nonExecutionStatement',
+    condition: 'fieldDifferent',
+    classification: 'metadata-only',
+    reviewSeverity: 'low',
+    promotionImpact: 'review-required',
+    reason:
+      'The nonExecutionStatement wording differs between hand-written and compiler-produced artifacts; review boundary wording, but do not treat this as execution-scope loss.',
+  },
 ]
 
 export function classifyContractDiffSemantics(
@@ -154,10 +241,10 @@ export function classifyContractDiffSemantics(
 
   const semanticDiffs = idBasedSummaries.flatMap((summary) => classifyIdBasedDiffSummary(summary))
   const semanticallyCoveredFields = new Set(semanticDiffs.map((diff) => diff.field))
-  const unknownFieldDiffs = differingFields
+  const fieldLevelDiffs = differingFields
     .filter((field) => !semanticallyCoveredFields.has(field))
-    .map((field) => buildUnknownSemanticDiff(field))
-  const allSemanticDiffs = [...semanticDiffs, ...unknownFieldDiffs]
+    .map((field) => buildFieldLevelSemanticDiff(field))
+  const allSemanticDiffs = [...semanticDiffs, ...fieldLevelDiffs]
 
   return buildSemanticSummary(allSemanticDiffs, deriveCompilerPromotionReadiness(allSemanticDiffs))
 }
@@ -182,6 +269,11 @@ function buildSemanticSummary(
   )
   const matchedRuleIds = Array.from(new Set(semanticDiffs.map((diff) => diff.matchedRuleId))).sort()
   const unknownDiffs = semanticDiffs.filter((diff) => diff.matchedRuleId === unknownSemanticDiffRuleId).length
+  const unknownFields = Array.from(
+    new Set(
+      semanticDiffs.filter((diff) => diff.matchedRuleId === unknownSemanticDiffRuleId).map((diff) => diff.targetField),
+    ),
+  ).sort()
 
   return {
     semanticDiffs,
@@ -193,6 +285,7 @@ function buildSemanticSummary(
       classifiedDiffs: semanticDiffs.length - unknownDiffs,
       unknownDiffs,
       matchedRuleIds,
+      unknownFields,
     },
   }
 }
@@ -210,7 +303,7 @@ function classifyIdBasedDiffSummary(summary: ContractIdBasedDiffSummary): Contra
 
 function buildSemanticDiff(
   summary: ContractIdBasedDiffSummary,
-  condition: ContractSemanticDiffRule['condition'],
+  condition: ContractSemanticDiffDirection,
 ): ContractSemanticDiff {
   const rule = contractSemanticDiffRules.find(
     (entry) => entry.targetField === summary.field && entry.condition === condition,
@@ -218,10 +311,18 @@ function buildSemanticDiff(
   const missingIdsInGenerated = condition === 'missingIdsInGenerated' ? summary.missingIdsInGenerated : []
   const extraIdsInGenerated = condition === 'extraIdsInGenerated' ? summary.extraIdsInGenerated : []
   if (!rule) {
-    return buildUnknownSemanticDiff(summary.field, missingIdsInGenerated, extraIdsInGenerated)
+    return buildUnknownSemanticDiff(
+      summary.field,
+      condition,
+      'no-semantic-rule-for-direction; manual-review-required',
+      missingIdsInGenerated,
+      extraIdsInGenerated,
+    )
   }
   return {
     field: summary.field,
+    targetField: summary.field,
+    diffDirection: condition,
     matchedRuleId: rule.ruleId,
     classification: rule.classification,
     reviewSeverity: rule.reviewSeverity,
@@ -232,19 +333,47 @@ function buildSemanticDiff(
   }
 }
 
+function buildFieldLevelSemanticDiff(field: string): ContractSemanticDiff {
+  const rule = contractSemanticDiffRules.find(
+    (entry) => entry.targetField === field && entry.condition === 'fieldDifferent',
+  )
+  if (!rule) {
+    return buildUnknownSemanticDiff(
+      field,
+      'fieldDifferent',
+      'id-summary-not-available; no-semantic-rule-for-field; manual-review-required',
+    )
+  }
+  return {
+    field,
+    targetField: field,
+    diffDirection: 'fieldDifferent',
+    matchedRuleId: rule.ruleId,
+    classification: rule.classification,
+    reviewSeverity: rule.reviewSeverity,
+    promotionImpact: rule.promotionImpact,
+    reason: rule.reason,
+    missingIdsInGenerated: [],
+    extraIdsInGenerated: [],
+  }
+}
+
 function buildUnknownSemanticDiff(
   field: string,
+  diffDirection: ContractSemanticDiffDirection,
+  reason: string,
   missingIdsInGenerated: string[] = [],
   extraIdsInGenerated: string[] = [],
 ): ContractSemanticDiff {
   return {
     field,
+    targetField: field,
+    diffDirection,
     matchedRuleId: unknownSemanticDiffRuleId,
     classification: 'unknown-review-required',
     reviewSeverity: 'medium',
     promotionImpact: 'review-required',
-    reason:
-      'This contract difference has no dedicated dry-run v0.1 semantic rule and requires human review before promotion.',
+    reason,
     missingIdsInGenerated,
     extraIdsInGenerated,
   }

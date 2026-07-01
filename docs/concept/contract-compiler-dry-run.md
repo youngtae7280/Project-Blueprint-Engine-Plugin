@@ -92,6 +92,10 @@ Each semantic diff records the `matchedRuleId` that produced its classification.
 rule use `matchedRuleId: semantic-diff-rule-unknown`, classify as `unknown-review-required`, and prevent promotion
 readiness. `compilerPromotionReadiness` is derived from the semantic diffs; it is not a manually asserted status.
 
+Current triage reduces the unknown set to `outputRequirements`. `sourceMode` and `nonExecutionStatement` are classified
+as `metadata-only`; `requiredContext`, `knownRisks`, and `stopConditions` are now compared through id-based summaries.
+The remaining unknown is an unclassified review debt, not a hidden pass.
+
 ## Boundaries
 
 This is not an executor.
