@@ -857,6 +857,12 @@ remains input validation only and does not create an Actual Contract Compiler, r
 automatic AI execution path, graph delta application, acceptance authority, source-authority expansion, or tree-native
 retirement.
 
+DEC-165 does not supersede DEC-097 through DEC-164. It adds Contract Compiler Dry-Run v0: a local deterministic compiler
+surface that consumes the current validated Compiler Input Model `bug_fix` fixture, writes a candidate
+`execution-contract-dry-run.generated.json`, and feeds that candidate back through the Contract Fixture Validator. This
+is still non-executing and non-enforcing. It does not execute AI, apply graph deltas, accept work, enable required
+checks, configure branch protection, expand source authority, or retire tree-native artifacts.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

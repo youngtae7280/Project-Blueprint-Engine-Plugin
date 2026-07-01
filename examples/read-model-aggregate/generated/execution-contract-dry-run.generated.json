@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "execution-contract-dry-run",
+  "status": "contract-dry-run-valid",
+  "sourceMode": "compiler-boundary-mvp-dry-run",
+  "changeId": "change-todo-search-whitespace-normalization-dogfood",
+  "changeType": "bug_fix",
+  "goal": "Preserve Todo Search matching when a multi-word query contains repeated whitespace.",
+  "allowedScope": [
+    {
+      "id": "scope-runtime-search-filter",
+      "scopeKind": "code",
+      "paths": ["examples/adoption/todo-search-slice/runtime-fixture/todo-search.js"],
+      "derivedFrom": ["graph-source:node:CODE-RUNTIME-SEARCH-HELPER"]
+    },
+    {
+      "id": "scope-runtime-search-test",
+      "scopeKind": "test",
+      "paths": ["examples/adoption/todo-search-slice/runtime-fixture/todo-search.test.js"],
+      "derivedFrom": ["graph-source:node:CODE-RUNTIME-SEARCH-TEST"]
+    }
+  ],
+  "forbiddenScope": [
+    {
+      "id": "scope-no-ci-enforcement",
+      "scopeKind": "workflow",
+      "paths": [".github/workflows/read-model-evidence.yml"],
+      "derivedFrom": ["policy:non-enforcement-policy"]
+    },
+    {
+      "id": "scope-no-tree-retirement",
+      "scopeKind": "graph",
+      "paths": ["examples/read-model-aggregate/graph-source-transition-status.json"],
+      "derivedFrom": ["policy:non-enforcement-policy"]
+    }
+  ],
+  "requiredContext": [
+    {
+      "id": "context-graph-source",
+      "artifact": "examples/adoption/todo-search-slice/graph-source.json",
+      "role": "limited Todo Search graph source"
+    },
+    {
+      "id": "context-transition-status",
+      "artifact": "examples/read-model-aggregate/graph-source-transition-status.json",
+      "role": "current graph-source transition status"
+    },
+    {
+      "id": "context-read-model-registry",
+      "artifact": "examples/read-model-aggregate/read-model-slices.json",
+      "role": "configured read-model validation registry"
+    }
+  ],
+  "requiredChecks": [
+    {
+      "id": "check-todo-search-runtime-fixture",
+      "command": "npx vitest run examples/adoption/todo-search-slice/runtime-fixture",
+      "validates": [
+        "examples/adoption/todo-search-slice/runtime-fixture/todo-search.js",
+        "examples/adoption/todo-search-slice/runtime-fixture/todo-search.test.js"
+      ]
+    },
+    {
+      "id": "check-read-model-validate-all",
+      "command": "node dist/cli/index.js graph read-model validate --all --json",
+      "validates": ["examples/read-model-aggregate/read-model-slices.json"]
+    },
+    {
+      "id": "check-read-model-health-report",
+      "command": "node dist/cli/index.js graph read-model report-health --json",
+      "validates": ["examples/read-model-aggregate/generated/read-model-health-report-output.json"]
+    },
+    {
+      "id": "check-read-model-e2e",
+      "command": "npm run test:read-model:e2e",
+      "validates": ["examples/read-model-aggregate/graph-source-transition-status.json"]
+    }
+  ],
+  "requiredEvidence": [
+    {
+      "id": "evidence-runtime-fixture-result",
+      "evidenceType": "unit_test_result",
+      "fromCheck": "check-todo-search-runtime-fixture",
+      "freshness": "required-after-source-change"
+    },
+    {
+      "id": "evidence-read-model-health",
+      "evidenceType": "health_report",
+      "fromCheck": "check-read-model-health-report",
+      "freshness": "required-after-graph-or-artifact-change"
+    }
+  ],
+  "knownRisks": [
+    {
+      "id": "risk-compiler-dry-run-scope-drift",
+      "severity": "warning",
+      "status": "tracked",
+      "mitigation": "Compiled candidate must pass Contract Fixture Validator before it can be reviewed."
+    }
+  ],
+  "openUnknowns": [],
+  "humanDecisions": [],
+  "stopConditions": [
+    {
+      "id": "stop-if-input-model-drifts",
+      "condition": "Compiler input model validation or graph-source cross-reference validation blocks.",
+      "action": "stop-and-request-human-decision"
+    },
+    {
+      "id": "stop-if-required-check-unavailable",
+      "condition": "Required runtime, health, validate-all, or E2E checks cannot be executed.",
+      "action": "stop-and-record-missing-evidence"
+    }
+  ],
+  "outputRequirements": [
+    "Report compiler input status from graph read-model report-compiler-input only.",
+    "Report compiled contract candidate status from Contract Fixture Validator output only.",
+    "Do not treat this dry-run candidate as execution, user acceptance, required check, or branch protection."
+  ],
+  "nonExecutionStatement": "This compiler-produced execution contract candidate is dry-run only. It does not execute work, enable required checks, apply graph deltas, or accept the change."
+}

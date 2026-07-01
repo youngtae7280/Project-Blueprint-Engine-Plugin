@@ -1,4 +1,5 @@
 import { relativePath } from '../core/fs.js'
+import { compileExecutionContractDryRun } from '../core/contract-compiler-dry-run.js'
 import { buildGraphExecutionContractReport } from '../core/graph-execution-contract.js'
 import { reportCompilerBoundary } from '../core/compiler-boundary.js'
 import { reportCompilerInputModel } from '../core/compiler-input-model.js'
@@ -547,6 +548,36 @@ export async function graphReadModelReportCompilerInputCommand(context: CommandC
             message,
             suggestedFix:
               'Restore the compiler input model schema and dry-run input fixture before contract compilation work.',
+          }),
+        )
+      : [],
+    data: { ...result },
+  }
+}
+
+export async function graphReadModelCompileContractCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.dryRun) {
+    return invalidCommand('graph read-model compile-contract requires --dry-run for this non-executing MVP surface.')
+  }
+  const result = await compileExecutionContractDryRun(context.options.root, {
+    output: context.options.output,
+    writeOutput: true,
+  })
+  const failed = result.status === 'contract-compiler-dry-run-blocked'
+  return {
+    ok: !failed,
+    command: 'graph read-model compile-contract',
+    exitCode: failed ? ExitCode.ValidationFailed : ExitCode.Success,
+    message: failed ? 'Contract Compiler Dry-Run v0 blocked.' : 'Contract Compiler Dry-Run v0 candidate created.',
+    issues: failed
+      ? result.blockingReasons.map((message) =>
+          issue({
+            validator: 'ContractCompilerDryRunV0',
+            code: 'CONTRACT_COMPILER_DRY_RUN_BLOCKED',
+            severity: 'error',
+            message,
+            suggestedFix:
+              'Restore the compiler input model fixture or contract validator requirements before compiling a candidate.',
           }),
         )
       : [],

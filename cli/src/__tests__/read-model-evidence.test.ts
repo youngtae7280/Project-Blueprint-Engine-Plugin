@@ -39,6 +39,7 @@ import {
   validateCompilerInputDryRun,
   validateCompilerInputSchema,
 } from '../core/compiler-input-model'
+import { compileExecutionContractDryRun } from '../core/contract-compiler-dry-run'
 
 const workspaces: string[] = []
 const exampleWorkspacePaths = [
@@ -1350,6 +1351,76 @@ describe('read-model Evidence builder', () => {
     expect(blocking).toContain('packSchema.requiredInputGroups contains unknown groups: magicContext')
   })
 
+  it('compiles a deterministic dry-run contract candidate from the Compiler Input Model', async () => {
+    const workspace = await createExampleWorkspace()
+
+    const report = await compileExecutionContractDryRun(workspace)
+    const candidatePath = join(workspace, report.paths.outputCandidate)
+    const candidate = JSON.parse(await readFile(candidatePath, 'utf8')) as Record<string, unknown>
+    const validation = validateExecutionContract(candidate)
+
+    expect(report.status).toBe('contract-compiler-dry-run-pass')
+    expect(report.inputModelStatus).toBe('compiler-input-model-pass')
+    expect(report.candidateStatus).toBe('contract-candidate-pass')
+    expect(report.candidate).toMatchObject({
+      changeId: 'change-todo-search-whitespace-normalization-dogfood',
+      changeType: 'bug_fix',
+      allowedScopeCount: 2,
+      forbiddenScopeCount: 2,
+    })
+    expect(candidate.goal).toBe('Preserve Todo Search matching when a multi-word query contains repeated whitespace.')
+    expect(JSON.stringify(candidate)).toContain('examples/adoption/todo-search-slice/runtime-fixture/todo-search.js')
+    expect(JSON.stringify(candidate)).toContain('graph-source:node:CODE-RUNTIME-SEARCH-HELPER')
+    expect(validation.blocking).toEqual([])
+    expect(report.nonExecutionStatement).toContain('does not execute AI')
+  })
+
+  it('exposes Contract Compiler Dry-Run v0 through the CLI', async () => {
+    const workspace = await createExampleWorkspace()
+
+    const result = await runPbeCli(['graph', 'read-model', 'compile-contract', '--dry-run', '--json'], {
+      cwd: workspace,
+      pluginRoot: resolve('.'),
+    })
+    const output = JSON.parse(result.stdout) as {
+      ok: boolean
+      status: string
+      inputModelStatus: string
+      candidateStatus: string
+      paths: { outputCandidate: string }
+      candidate: { requiredCheckCount: number; requiredEvidenceCount: number }
+    }
+
+    expect(result.exitCode).toBe(0)
+    expect(output.ok).toBe(true)
+    expect(output.status).toBe('contract-compiler-dry-run-pass')
+    expect(output.inputModelStatus).toBe('compiler-input-model-pass')
+    expect(output.candidateStatus).toBe('contract-candidate-pass')
+    expect(output.paths.outputCandidate).toBe(
+      'examples/read-model-aggregate/generated/execution-contract-dry-run.generated.json',
+    )
+    expect(output.candidate.requiredCheckCount).toBeGreaterThan(0)
+    expect(output.candidate.requiredEvidenceCount).toBeGreaterThan(0)
+  })
+
+  it('blocks Contract Compiler Dry-Run v0 for unsupported compiler input change types', async () => {
+    const workspace = await createExampleWorkspace()
+    const inputPath = join(workspace, 'examples/read-model-aggregate/generated/compiler-input-model-dry-run.json')
+    const input = JSON.parse(await readFile(inputPath, 'utf8')) as {
+      packSchema: { id: string; changeType: string }
+    }
+    input.packSchema.id = 'pack-schema-feature'
+    input.packSchema.changeType = 'feature'
+    await writeFile(inputPath, JSON.stringify(input, null, 2))
+
+    const report = await compileExecutionContractDryRun(workspace, { writeOutput: false })
+    const blocking = report.blockingReasons.join('\n')
+
+    expect(report.status).toBe('contract-compiler-dry-run-blocked')
+    expect(blocking).toContain('only supports pack-schema-bug-fix')
+    expect(blocking).toContain('only supports bug_fix changeType')
+  })
+
   it('exposes graph-source health through the CLI without creating enforcement', async () => {
     const workspace = await createExampleWorkspace()
     await copyWorkspacePath('examples/intent-critical', workspace)
@@ -1367,6 +1438,7 @@ describe('read-model Evidence builder', () => {
       treeNativeRetirement: { todoSearchApprovalStatus: string; repoWideApprovalStatus: string }
       compilerBoundary: { status: string; dryRunChangeId: string }
       compilerInputModel: { status: string; dryRunChangeId: string }
+      contractCompilerDryRun: { status: string; dryRunChangeId: string; candidateStatus: string }
     }
     const markdown = await readFile(markdownPath, 'utf8')
 
@@ -1379,6 +1451,9 @@ describe('read-model Evidence builder', () => {
     expect(output.compilerBoundary.dryRunChangeId).toBe('change-todo-search-whitespace-normalization-dogfood')
     expect(output.compilerInputModel.status).toBe('compiler-input-model-pass')
     expect(output.compilerInputModel.dryRunChangeId).toBe('change-todo-search-whitespace-normalization-dogfood')
+    expect(output.contractCompilerDryRun.status).toBe('contract-compiler-dry-run-pass')
+    expect(output.contractCompilerDryRun.candidateStatus).toBe('contract-candidate-pass')
+    expect(output.contractCompilerDryRun.dryRunChangeId).toBe('change-todo-search-whitespace-normalization-dogfood')
     expect(output.treeNativeRetirement.todoSearchApprovalStatus).toBe('retirement-candidate-not-deleted')
     expect(output.treeNativeRetirement.repoWideApprovalStatus).toBe('not-ready')
     expect(markdown).toContain('# Graph-Source Health Report')
@@ -1389,6 +1464,7 @@ describe('read-model Evidence builder', () => {
     expect(markdown).toContain('`intent-report-pass`')
     expect(markdown).toContain('`compiler-boundary-mvp-pass`')
     expect(markdown).toContain('`compiler-input-model-pass`')
+    expect(markdown).toContain('`contract-compiler-dry-run-pass`')
     expect(markdown).toContain('`retirement-not-ready`')
     expect(markdown).toContain('`non-enforcing`')
     expect(markdown).toContain('node dist/cli/index.js graph read-model report-health --json --markdown')

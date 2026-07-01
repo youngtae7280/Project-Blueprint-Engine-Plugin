@@ -31,6 +31,9 @@ node dist/cli/index.js graph read-model report-compiler-input --json
 
 The dry-run input uses the Todo Search whitespace-normalization dogfood as its first fixture.
 
+The next local dry-run layer consumes this input through
+[contract-compiler-dry-run.md](contract-compiler-dry-run.md).
+
 ## Validator Rules
 
 The MVP blocks:
@@ -55,7 +58,7 @@ The MVP blocks:
 
 ## Boundary
 
-This MVP does not compile an execution contract, execute AI, apply graph deltas, accept work, enable required checks,
-configure branch protection, expand source authority, or retire tree-native artifacts.
+This MVP does not compile an execution contract by itself, execute AI, apply graph deltas, accept work, enable required
+checks, configure branch protection, expand source authority, or retire tree-native artifacts.
 
 It only proves that a future Actual Contract Compiler has a machine-readable input surface to consume.

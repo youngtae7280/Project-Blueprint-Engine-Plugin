@@ -4,6 +4,7 @@ import path from 'node:path'
 import { format } from 'prettier'
 import { reportCompilerBoundary, type CompilerBoundaryReport } from './compiler-boundary.js'
 import { reportCompilerInputModel, type CompilerInputModelReport } from './compiler-input-model.js'
+import { compileExecutionContractDryRun, type ContractCompilerDryRunReport } from './contract-compiler-dry-run.js'
 import { readJsonSafe, readTextSafe, relativePath, writeTextAtomic } from './fs.js'
 
 const allowedViewScopedTags = ['target', 'context', 'candidate', 'guard', 'required', 'stale', 'blocked', 'output']
@@ -491,6 +492,12 @@ interface GraphSourceHealthReport {
     policyCount: number
     evidenceEntryCount: number
     targetScopeCandidateCount: number
+  }
+  contractCompilerDryRun: Pick<ContractCompilerDryRunReport, 'status' | 'inputModelStatus' | 'candidateStatus'> & {
+    dryRunChangeId: string
+    requiredCheckCount: number
+    requiredEvidenceCount: number
+    outputCandidate: string
   }
   treeNativeRetirement: {
     readinessStatus: string
@@ -1324,6 +1331,14 @@ export async function reportGraphSourceHealth(root: string): Promise<GraphSource
   }
   blockingReasons.push(...compilerInputModel.blockingReasons.map((reason) => `compiler input model: ${reason}`))
 
+  const contractCompilerDryRun = await compileExecutionContractDryRun(root, { writeOutput: false })
+  if (contractCompilerDryRun.status !== 'contract-compiler-dry-run-pass') {
+    blockingReasons.push(`contract compiler dry-run status is ${contractCompilerDryRun.status}`)
+  }
+  blockingReasons.push(
+    ...contractCompilerDryRun.blockingReasons.map((reason) => `contract compiler dry-run: ${reason}`),
+  )
+
   const todoSearchTransition = findByField(transitionSlices, 'profileId', todoSearchReadModelProfile.profileId)
   const todoAppTransition = findByField(transitionSlices, 'profileId', todoAppPbeRunStructureOnlyProfile.profileId)
   const todoSearchRetirement = asRecord(todoSearchTransition.retirementReadiness, 'todoSearch.retirementReadiness', [])
@@ -1407,6 +1422,15 @@ export async function reportGraphSourceHealth(root: string): Promise<GraphSource
       evidenceEntryCount: compilerInputModel.dryRunInput.evidenceEntryCount,
       targetScopeCandidateCount: compilerInputModel.dryRunInput.targetScopeCandidateCount,
     },
+    contractCompilerDryRun: {
+      status: contractCompilerDryRun.status,
+      inputModelStatus: contractCompilerDryRun.inputModelStatus,
+      candidateStatus: contractCompilerDryRun.candidateStatus,
+      dryRunChangeId: contractCompilerDryRun.candidate.changeId,
+      requiredCheckCount: contractCompilerDryRun.candidate.requiredCheckCount,
+      requiredEvidenceCount: contractCompilerDryRun.candidate.requiredEvidenceCount,
+      outputCandidate: contractCompilerDryRun.paths.outputCandidate,
+    },
     treeNativeRetirement: {
       readinessStatus: String(retirementReadinessSummary.status || 'missing'),
       todoSearchApprovalStatus: String(todoSearchPackage.status || 'missing'),
@@ -1466,6 +1490,8 @@ Status: \`${report.status}\`
 | Compiler Input Model MVP | \`${report.compilerInputModel.status}\` |
 | Compiler input schema | \`${report.compilerInputModel.inputSchemaStatus}\` |
 | Dry-run compiler input | \`${report.compilerInputModel.dryRunInputStatus}\`; \`${report.compilerInputModel.dryRunChangeId}\`; ${report.compilerInputModel.graphSnapshotArtifactCount} graph artifacts / ${report.compilerInputModel.policyCount} policies / ${report.compilerInputModel.evidenceEntryCount} evidence entries / ${report.compilerInputModel.targetScopeCandidateCount} scope candidates |
+| Contract Compiler Dry-Run v0 | \`${report.contractCompilerDryRun.status}\` |
+| Compiled contract candidate | \`${report.contractCompilerDryRun.candidateStatus}\`; \`${report.contractCompilerDryRun.dryRunChangeId}\`; ${report.contractCompilerDryRun.requiredCheckCount} checks / ${report.contractCompilerDryRun.requiredEvidenceCount} evidence requirements |
 
 ## Retirement And Enforcement
 
@@ -1495,6 +1521,7 @@ npm run build:cli
 node dist/cli/index.js graph read-model validate --all --json
 npm run test:read-model:e2e
 node dist/cli/index.js graph read-model report-compiler-boundary --json
+node dist/cli/index.js graph read-model compile-contract --dry-run --json
 node dist/cli/index.js graph read-model report-health --json --markdown examples/read-model-aggregate/generated/read-model-health-report-output.md
 \`\`\`
 `

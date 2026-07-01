@@ -355,6 +355,17 @@ try {
     throw new Error('Compiler input model must include target scope candidates')
   }
 
+  const contractCompilerDryRun = runCli(['graph', 'read-model', 'compile-contract', '--dry-run', '--json'])
+  assertEqual(contractCompilerDryRun.status, 'contract-compiler-dry-run-pass', 'contract compiler dry-run status')
+  assertEqual(contractCompilerDryRun.inputModelStatus, 'compiler-input-model-pass', 'contract compiler input status')
+  assertEqual(contractCompilerDryRun.candidateStatus, 'contract-candidate-pass', 'contract compiler candidate status')
+  if (contractCompilerDryRun.candidate.requiredCheckCount <= 0) {
+    throw new Error('Contract compiler dry-run candidate must include required checks')
+  }
+  if (contractCompilerDryRun.candidate.requiredEvidenceCount <= 0) {
+    throw new Error('Contract compiler dry-run candidate must include required evidence')
+  }
+
   const payload = {
     ok: true,
     command: 'test:read-model:e2e',
@@ -438,6 +449,16 @@ try {
       policyCount: compilerInputModel.dryRunInput.policyCount,
       evidenceEntryCount: compilerInputModel.dryRunInput.evidenceEntryCount,
       targetScopeCandidateCount: compilerInputModel.dryRunInput.targetScopeCandidateCount,
+      nonExecuting: true,
+    },
+    contractCompilerDryRun: {
+      status: contractCompilerDryRun.status,
+      inputModelStatus: contractCompilerDryRun.inputModelStatus,
+      candidateStatus: contractCompilerDryRun.candidateStatus,
+      dryRunChangeId: contractCompilerDryRun.candidate.changeId,
+      requiredCheckCount: contractCompilerDryRun.candidate.requiredCheckCount,
+      requiredEvidenceCount: contractCompilerDryRun.candidate.requiredEvidenceCount,
+      outputCandidate: contractCompilerDryRun.paths.outputCandidate,
       nonExecuting: true,
     },
   }

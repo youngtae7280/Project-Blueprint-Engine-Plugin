@@ -46,6 +46,35 @@
     "missingClassificationCount": 0,
     "missingAnchorCount": 0
   },
+  "compilerBoundary": {
+    "status": "compiler-boundary-mvp-pass",
+    "taskRegistryStatus": "task-registry-pass",
+    "contractSchemaStatus": "contract-schema-pass",
+    "contractValidatorStatus": "contract-validator-pass",
+    "dryRunContractStatus": "dry-run-contract-pass",
+    "dryRunChangeId": "change-todo-search-whitespace-normalization-dogfood",
+    "requiredCheckCount": 3,
+    "requiredEvidenceCount": 2
+  },
+  "compilerInputModel": {
+    "status": "compiler-input-model-pass",
+    "inputSchemaStatus": "compiler-input-schema-pass",
+    "dryRunInputStatus": "compiler-input-dry-run-pass",
+    "dryRunChangeId": "change-todo-search-whitespace-normalization-dogfood",
+    "graphSnapshotArtifactCount": 3,
+    "policyCount": 3,
+    "evidenceEntryCount": 2,
+    "targetScopeCandidateCount": 2
+  },
+  "contractCompilerDryRun": {
+    "status": "contract-compiler-dry-run-pass",
+    "inputModelStatus": "compiler-input-model-pass",
+    "candidateStatus": "contract-candidate-pass",
+    "dryRunChangeId": "change-todo-search-whitespace-normalization-dogfood",
+    "requiredCheckCount": 4,
+    "requiredEvidenceCount": 2,
+    "outputCandidate": "examples/read-model-aggregate/generated/execution-contract-dry-run.generated.json"
+  },
   "treeNativeRetirement": {
     "readinessStatus": "retirement-not-ready",
     "todoSearchApprovalStatus": "retirement-candidate-not-deleted",
