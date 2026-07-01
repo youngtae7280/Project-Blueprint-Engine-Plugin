@@ -41,7 +41,11 @@ import {
 } from '../core/compiler-input-model'
 import { resolveAllowedScopeFromSourceAuthority } from '../core/allowed-scope-source-authority'
 import { compileExecutionContractDryRun } from '../core/contract-compiler-dry-run'
-import { classifyContractDiffSemantics, deriveCompilerPromotionReadiness } from '../core/contract-semantic-diff'
+import {
+  classifyContractDiffSemantics,
+  deriveCompilerPromotionReadiness,
+  deriveContractEquivalenceReadinessPolicy,
+} from '../core/contract-semantic-diff'
 import { resolveRequiredContextFromSourceAuthority } from '../core/context-source-authority'
 import { resolveRequiredEvidenceFromSourceAuthority } from '../core/evidence-source-authority'
 import { resolveOutputRequirementsFromSourceAuthority } from '../core/output-requirement-source-authority'
@@ -1543,6 +1547,18 @@ describe('read-model Evidence builder', () => {
       semanticDiffUnknownsStatus: string
       semanticDiffUnknownsResolved: boolean
       semanticDiffCoverageComplete: boolean
+      equivalencePolicy: {
+        sourceAuthorityPreservationStatus: string
+        semanticDiffPolicyStatus: string
+        reviewOnlyDiffStatus: string
+        blockingSemanticLossCount: number
+        reviewOnlyDiffCount: number
+        unknownDiffCount: number
+        equivalenceCandidate: boolean
+        equivalenceProven: boolean
+        equivalenceProofStatus: string
+        compilerPromotionReadiness: string
+      }
       equivalenceProven: boolean
     }
     const gapPreview = JSON.parse(await readFile(join(workspace, report.paths.sourceAuthorityGapPreview), 'utf8')) as {
@@ -1630,6 +1646,18 @@ describe('read-model Evidence builder', () => {
     expect(diffReport.semanticDiffUnknownsStatus).toBe('semantic-diff-unknowns-zero')
     expect(diffReport.semanticDiffUnknownsResolved).toBe(true)
     expect(diffReport.semanticDiffCoverageComplete).toBe(true)
+    expect(diffReport.equivalencePolicy).toMatchObject({
+      sourceAuthorityPreservationStatus: 'source-authority-preserved',
+      semanticDiffPolicyStatus: 'semantic-diff-clean',
+      reviewOnlyDiffStatus: 'review-only-diff-detected',
+      blockingSemanticLossCount: 0,
+      reviewOnlyDiffCount: 3,
+      unknownDiffCount: 0,
+      equivalenceCandidate: true,
+      equivalenceProven: false,
+      equivalenceProofStatus: 'equivalence-proof-policy-not-approved',
+      compilerPromotionReadiness: 'compiler-promotion-review-required',
+    })
     expect(diffReport.equivalenceProven).toBe(false)
     expect(diffReport.semanticClassificationCounts).toMatchObject({
       'metadata-only': 2,
@@ -2432,6 +2460,124 @@ describe('read-model Evidence builder', () => {
     ).toBe('compiler-promotion-not-ready')
   })
 
+  it('separates equivalence candidate policy from equivalence proof', () => {
+    const semantic = classifyContractDiffSemantics(
+      [
+        {
+          field: 'requiredChecks',
+          handWrittenCount: 3,
+          generatedCount: 4,
+          missingIdsInGenerated: [],
+          extraIdsInGenerated: ['check-read-model-health-report'],
+        },
+      ],
+      ['sourceMode', 'requiredChecks', 'nonExecutionStatement'],
+      'contract-diff-detected',
+    )
+
+    const policy = deriveContractEquivalenceReadinessPolicy({
+      semanticDiffs: semantic.semanticDiffs,
+      semanticDiffRuleCoverage: semantic.semanticDiffRuleCoverage,
+      compilerPromotionReadiness: semantic.compilerPromotionReadiness,
+      isReviewable: true,
+    })
+
+    expect(policy).toMatchObject({
+      sourceAuthorityPreservationStatus: 'source-authority-preserved',
+      semanticDiffPolicyStatus: 'semantic-diff-clean',
+      reviewOnlyDiffStatus: 'review-only-diff-detected',
+      blockingSemanticLossCount: 0,
+      reviewOnlyDiffCount: 3,
+      unknownDiffCount: 0,
+      equivalenceCandidate: true,
+      equivalenceProven: false,
+      equivalenceProofStatus: 'equivalence-proof-policy-not-approved',
+      compilerPromotionReadiness: 'compiler-promotion-review-required',
+    })
+  })
+
+  it('keeps equivalence candidate false for semantic loss, unknown diffs, or source-authority gaps', () => {
+    const semanticLoss = classifyContractDiffSemantics(
+      [
+        {
+          field: 'requiredEvidence',
+          handWrittenCount: 1,
+          generatedCount: 0,
+          missingIdsInGenerated: ['evidence-required'],
+          extraIdsInGenerated: [],
+        },
+      ],
+      ['requiredEvidence'],
+      'contract-diff-detected',
+    )
+    const unknown = classifyContractDiffSemantics(
+      [
+        {
+          field: 'customContractField',
+          handWrittenCount: 1,
+          generatedCount: 0,
+          missingIdsInGenerated: ['custom-required-item'],
+          extraIdsInGenerated: [],
+        },
+      ],
+      ['customContractField'],
+      'contract-diff-detected',
+    )
+    const sourceAuthorityGap = classifyContractDiffSemantics(
+      [
+        {
+          field: 'allowedScope',
+          handWrittenCount: 2,
+          generatedCount: 1,
+          missingIdsInGenerated: ['scope-evidence'],
+          extraIdsInGenerated: [],
+        },
+      ],
+      ['allowedScope'],
+      'contract-diff-detected',
+    )
+
+    expect(
+      deriveContractEquivalenceReadinessPolicy({
+        semanticDiffs: semanticLoss.semanticDiffs,
+        semanticDiffRuleCoverage: semanticLoss.semanticDiffRuleCoverage,
+        compilerPromotionReadiness: semanticLoss.compilerPromotionReadiness,
+        isReviewable: true,
+      }),
+    ).toMatchObject({
+      sourceAuthorityPreservationStatus: 'source-authority-gaps-present',
+      semanticDiffPolicyStatus: 'semantic-diff-blocking-loss',
+      blockingSemanticLossCount: 1,
+      equivalenceCandidate: false,
+    })
+    expect(
+      deriveContractEquivalenceReadinessPolicy({
+        semanticDiffs: unknown.semanticDiffs,
+        semanticDiffRuleCoverage: unknown.semanticDiffRuleCoverage,
+        compilerPromotionReadiness: unknown.compilerPromotionReadiness,
+        isReviewable: true,
+      }),
+    ).toMatchObject({
+      sourceAuthorityPreservationStatus: 'source-authority-gaps-present',
+      semanticDiffPolicyStatus: 'semantic-diff-unknown-review-required',
+      unknownDiffCount: 1,
+      equivalenceCandidate: false,
+    })
+    expect(
+      deriveContractEquivalenceReadinessPolicy({
+        semanticDiffs: sourceAuthorityGap.semanticDiffs,
+        semanticDiffRuleCoverage: sourceAuthorityGap.semanticDiffRuleCoverage,
+        compilerPromotionReadiness: sourceAuthorityGap.compilerPromotionReadiness,
+        isReviewable: true,
+      }),
+    ).toMatchObject({
+      sourceAuthorityPreservationStatus: 'source-authority-gaps-present',
+      semanticDiffPolicyStatus: 'semantic-diff-clean',
+      reviewOnlyDiffStatus: 'review-only-diff-none',
+      equivalenceCandidate: false,
+    })
+  })
+
   it('exposes Contract Compiler Dry-Run v0.1 through the CLI', async () => {
     const workspace = await createExampleWorkspace()
 
@@ -2474,6 +2620,18 @@ describe('read-model Evidence builder', () => {
         semanticDiffUnknownsStatus: string
         semanticDiffUnknownsResolved: boolean
         semanticDiffCoverageComplete: boolean
+        equivalencePolicy: {
+          sourceAuthorityPreservationStatus: string
+          semanticDiffPolicyStatus: string
+          reviewOnlyDiffStatus: string
+          blockingSemanticLossCount: number
+          reviewOnlyDiffCount: number
+          unknownDiffCount: number
+          equivalenceCandidate: boolean
+          equivalenceProven: boolean
+          equivalenceProofStatus: string
+          compilerPromotionReadiness: string
+        }
         equivalenceProven: boolean
       }
       sourceAuthorityGapPreview: {
@@ -2521,6 +2679,18 @@ describe('read-model Evidence builder', () => {
     expect(output.candidateDiff.semanticDiffUnknownsStatus).toBe('semantic-diff-unknowns-zero')
     expect(output.candidateDiff.semanticDiffUnknownsResolved).toBe(true)
     expect(output.candidateDiff.semanticDiffCoverageComplete).toBe(true)
+    expect(output.candidateDiff.equivalencePolicy).toMatchObject({
+      sourceAuthorityPreservationStatus: 'source-authority-preserved',
+      semanticDiffPolicyStatus: 'semantic-diff-clean',
+      reviewOnlyDiffStatus: 'review-only-diff-detected',
+      blockingSemanticLossCount: 0,
+      reviewOnlyDiffCount: 3,
+      unknownDiffCount: 0,
+      equivalenceCandidate: true,
+      equivalenceProven: false,
+      equivalenceProofStatus: 'equivalence-proof-policy-not-approved',
+      compilerPromotionReadiness: 'compiler-promotion-review-required',
+    })
     expect(output.candidateDiff.equivalenceProven).toBe(false)
     expect(output.candidateDiff.semanticClassificationCounts['semantic-loss']).toBeUndefined()
     expect(output.candidateDiff.semanticClassificationCounts['policy-loss']).toBeUndefined()
@@ -2626,6 +2796,18 @@ describe('read-model Evidence builder', () => {
         v01CloseoutStatus: string
         semanticDiffUnknownsStatus: string
         semanticDiffCoverageComplete: boolean
+        equivalencePolicy: {
+          sourceAuthorityPreservationStatus: string
+          semanticDiffPolicyStatus: string
+          reviewOnlyDiffStatus: string
+          blockingSemanticLossCount: number
+          reviewOnlyDiffCount: number
+          unknownDiffCount: number
+          equivalenceCandidate: boolean
+          equivalenceProven: boolean
+          equivalenceProofStatus: string
+          compilerPromotionReadiness: string
+        }
         equivalenceProven: boolean
         outputRequirementSourceAuthorityPreview: {
           status: string
@@ -2671,6 +2853,18 @@ describe('read-model Evidence builder', () => {
     )
     expect(output.contractCompilerDryRun.semanticDiffUnknownsStatus).toBe('semantic-diff-unknowns-zero')
     expect(output.contractCompilerDryRun.semanticDiffCoverageComplete).toBe(true)
+    expect(output.contractCompilerDryRun.equivalencePolicy).toMatchObject({
+      sourceAuthorityPreservationStatus: 'source-authority-preserved',
+      semanticDiffPolicyStatus: 'semantic-diff-clean',
+      reviewOnlyDiffStatus: 'review-only-diff-detected',
+      blockingSemanticLossCount: 0,
+      reviewOnlyDiffCount: 3,
+      unknownDiffCount: 0,
+      equivalenceCandidate: true,
+      equivalenceProven: false,
+      equivalenceProofStatus: 'equivalence-proof-policy-not-approved',
+      compilerPromotionReadiness: 'compiler-promotion-review-required',
+    })
     expect(output.contractCompilerDryRun.equivalenceProven).toBe(false)
     expect(output.contractCompilerDryRun.outputRequirementSourceAuthorityPreview).toMatchObject({
       status: 'output-requirement-source-authority-preview-pass',
@@ -2733,6 +2927,13 @@ describe('read-model Evidence builder', () => {
     expect(markdown).toContain('`contract-source-authority-gap-preview-pass`')
     expect(markdown).toContain('0 remaining losses (0 semantic / 0 policy)')
     expect(markdown).toContain('fields none; next `none`')
+    expect(markdown).toContain('Contract equivalence/readiness policy')
+    expect(markdown).toContain('`source-authority-preserved`')
+    expect(markdown).toContain('`semantic-diff-clean`')
+    expect(markdown).toContain('`review-only-diff-detected`')
+    expect(markdown).toContain('equivalence candidate `true`')
+    expect(markdown).toContain('equivalence proven `false`')
+    expect(markdown).toContain('Equivalence candidate status is review metadata only')
     expect(markdown).toContain('`examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json`')
     expect(markdown).toContain(
       '`examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json`',

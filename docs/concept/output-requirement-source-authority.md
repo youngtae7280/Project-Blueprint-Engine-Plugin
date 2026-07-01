@@ -85,7 +85,8 @@ v0.2 preview does not:
 The current dry-run is `compiler-promotion-review-required`. Output requirement preservation is complete for the
 current fixture, and later source-authority resolvers now preserve forbidden scope, stop conditions, required Evidence,
 required context, known risks, and allowed scope. `equivalenceProven` still remains `false` because review-only
-generated-vs-hand-written differences remain.
+generated-vs-hand-written differences remain. The equivalence/readiness policy now marks this as
+`equivalenceCandidate: true`, not as proven equivalence.
 
 ## Next Step
 

@@ -55,6 +55,10 @@ The smoke checks:
   field gap for the current fixture
 - compiler dry-run v0.1 closeout metadata: `contract-compiler-dry-run-v0.1-classification-complete`,
   `semantic-diff-unknowns-zero`, `semanticDiffCoverageComplete: true`, and `equivalenceProven: false`
+- compiler dry-run equivalence/readiness policy summary:
+  `sourceAuthorityPreservationStatus: source-authority-preserved`, `semanticDiffPolicyStatus: semantic-diff-clean`,
+  `reviewOnlyDiffStatus: review-only-diff-detected`, `equivalenceCandidate: true`, and
+  `equivalenceProven: false`
 - output requirement source authority preview status `output-requirement-source-authority-preview-pass`, with
   `generated-output-requirements-preserved` and zero unresolved generated obligations visible as non-enforcing preview
   metadata

@@ -1015,6 +1015,15 @@ wording remain. This does not execute AI, apply graph deltas, accept work, enabl
 protection, expand source authority beyond allowed scope, retire tree-native artifacts, widen changeType support, or
 promote the compiler candidate to an execution source.
 
+DEC-182 does not supersede DEC-097 through DEC-181. It adds a Contract Compiler equivalence/readiness policy summary
+after v0.2 source-authority reconstruction. The diff artifact and health report now separate
+`source-authority-preserved`, `semantic-diff-clean`, `review-only-diff-detected`, `equivalenceCandidate: true`,
+`equivalenceProven: false`, and `compiler-promotion-review-required`. This makes the current Todo Search `bug_fix`
+candidate reviewable as an equivalence candidate while explicitly refusing to treat it as equivalence-proven or
+authoritative. It does not execute AI, apply graph deltas, accept work, enable required checks, configure branch
+protection, expand source authority, retire tree-native artifacts, widen changeType support, or promote the compiler
+candidate to an execution source.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

@@ -184,6 +184,7 @@ The first Compiler Boundary MVP and hardened Contract Fixture Validator are reco
 - [contract-compiler-dry-run.md](contract-compiler-dry-run.md)
 - [output-requirement-source-authority.md](output-requirement-source-authority.md)
 - [contract-source-authority-gap-preview.md](contract-source-authority-gap-preview.md)
+- [contract-compiler-equivalence-policy.md](contract-compiler-equivalence-policy.md)
 
 It separates compiler-required work from AI-advisory work, adds a machine-readable task registry and Execution Contract
 MVP schema, validates a Todo Search dry-run contract with bucketed registry/schema/contract issues, requires severe risks
@@ -227,6 +228,12 @@ source-authority status. It now reports zero remaining semantic/policy loss and 
 the current fixture; `allowedScope`, `forbiddenScope`, `stopConditions`, `requiredEvidence`, `requiredContext`, and
 `knownRisks` are preserved from source authority entries. The next recommended resolver is `none`. This is review
 metadata only, not enforcement or compiler promotion.
+
+Contract Compiler Equivalence Policy v0.2 separates source-authority preservation from equivalence proof. The current
+diff report marks `sourceAuthorityPreservationStatus: source-authority-preserved`,
+`semanticDiffPolicyStatus: semantic-diff-clean`, `reviewOnlyDiffStatus: review-only-diff-detected`,
+`equivalenceCandidate: true`, and `equivalenceProven: false`. This keeps the generated candidate reviewable without
+making it authoritative or executable.
 
 The following readiness artifact is complete at documentation level:
 

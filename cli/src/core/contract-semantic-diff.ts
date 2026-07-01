@@ -25,6 +25,36 @@ export type ContractCompilerPromotionReadiness =
   | 'compiler-promotion-review-required'
   | 'compiler-promotion-equivalence-candidate'
 
+export type ContractSourceAuthorityPreservationStatus =
+  | 'source-authority-preserved'
+  | 'source-authority-gaps-present'
+  | 'source-authority-not-reviewed'
+
+export type ContractSemanticDiffPolicyStatus =
+  | 'semantic-diff-clean'
+  | 'semantic-diff-blocking-loss'
+  | 'semantic-diff-unknown-review-required'
+  | 'semantic-diff-not-reviewed'
+
+export type ContractReviewOnlyDiffStatus =
+  | 'review-only-diff-detected'
+  | 'review-only-diff-none'
+  | 'review-only-diff-not-reviewed'
+
+export interface ContractEquivalenceReadinessPolicySummary {
+  sourceAuthorityPreservationStatus: ContractSourceAuthorityPreservationStatus
+  semanticDiffPolicyStatus: ContractSemanticDiffPolicyStatus
+  reviewOnlyDiffStatus: ContractReviewOnlyDiffStatus
+  blockingSemanticLossCount: number
+  reviewOnlyDiffCount: number
+  unknownDiffCount: number
+  equivalenceCandidate: boolean
+  equivalenceProven: false
+  equivalenceProofStatus: 'equivalence-proof-policy-not-approved'
+  compilerPromotionReadiness: ContractCompilerPromotionReadiness
+  policyBoundary: string
+}
+
 export interface ContractIdBasedDiffSummary {
   field: string
   handWrittenCount: number
@@ -411,6 +441,96 @@ export function deriveCompilerPromotionReadiness(
     return 'compiler-promotion-not-ready'
   }
   return 'compiler-promotion-review-required'
+}
+
+export function deriveContractEquivalenceReadinessPolicy(input: {
+  semanticDiffs: ContractSemanticDiff[]
+  semanticDiffRuleCoverage: ContractSemanticDiffRuleCoverage
+  compilerPromotionReadiness: ContractCompilerPromotionReadiness
+  isReviewable: boolean
+}): ContractEquivalenceReadinessPolicySummary {
+  if (!input.isReviewable) {
+    return {
+      sourceAuthorityPreservationStatus: 'source-authority-not-reviewed',
+      semanticDiffPolicyStatus: 'semantic-diff-not-reviewed',
+      reviewOnlyDiffStatus: 'review-only-diff-not-reviewed',
+      blockingSemanticLossCount: 0,
+      reviewOnlyDiffCount: 0,
+      unknownDiffCount: input.semanticDiffRuleCoverage.unknownDiffs,
+      equivalenceCandidate: false,
+      equivalenceProven: false,
+      equivalenceProofStatus: 'equivalence-proof-policy-not-approved',
+      compilerPromotionReadiness: input.compilerPromotionReadiness,
+      policyBoundary: equivalencePolicyBoundary,
+    }
+  }
+
+  const blockingSemanticLossCount = input.semanticDiffs.filter(isBlockingSemanticLoss).length
+  const sourceAuthorityGapCount = input.semanticDiffs.filter(isSourceAuthorityGapDiff).length
+  const reviewOnlyDiffCount = input.semanticDiffs.filter(isReviewOnlyDiff).length
+  const unknownDiffCount = input.semanticDiffRuleCoverage.unknownDiffs
+  const semanticDiffPolicyStatus =
+    unknownDiffCount > 0
+      ? 'semantic-diff-unknown-review-required'
+      : blockingSemanticLossCount > 0
+        ? 'semantic-diff-blocking-loss'
+        : 'semantic-diff-clean'
+  const sourceAuthorityPreservationStatus =
+    sourceAuthorityGapCount === 0 ? 'source-authority-preserved' : 'source-authority-gaps-present'
+  const reviewOnlyDiffStatus = reviewOnlyDiffCount > 0 ? 'review-only-diff-detected' : 'review-only-diff-none'
+  const equivalenceCandidate =
+    sourceAuthorityPreservationStatus === 'source-authority-preserved' &&
+    semanticDiffPolicyStatus === 'semantic-diff-clean' &&
+    unknownDiffCount === 0 &&
+    input.compilerPromotionReadiness !== 'compiler-promotion-not-ready'
+
+  return {
+    sourceAuthorityPreservationStatus,
+    semanticDiffPolicyStatus,
+    reviewOnlyDiffStatus,
+    blockingSemanticLossCount,
+    reviewOnlyDiffCount,
+    unknownDiffCount,
+    equivalenceCandidate,
+    equivalenceProven: false,
+    equivalenceProofStatus: 'equivalence-proof-policy-not-approved',
+    compilerPromotionReadiness: input.compilerPromotionReadiness,
+    policyBoundary: equivalencePolicyBoundary,
+  }
+}
+
+const equivalencePolicyBoundary =
+  'Equivalence candidate status is review metadata only. equivalenceProven remains false until an approved equivalence policy and human review explicitly promote it.'
+
+function isBlockingSemanticLoss(diff: ContractSemanticDiff): boolean {
+  return (
+    diff.classification === 'semantic-loss' ||
+    diff.classification === 'policy-loss' ||
+    diff.classification === 'evidence-chain-mismatch' ||
+    diff.classification === 'output-requirement-loss' ||
+    diff.promotionImpact === 'blocks-promotion' ||
+    diff.reviewSeverity === 'high'
+  )
+}
+
+function isSourceAuthorityGapDiff(diff: ContractSemanticDiff): boolean {
+  return (
+    isBlockingSemanticLoss(diff) ||
+    diff.classification === 'unknown-review-required' ||
+    (diff.field === 'allowedScope' && diff.classification === 'conservative-restriction')
+  )
+}
+
+function isReviewOnlyDiff(diff: ContractSemanticDiff): boolean {
+  if (isSourceAuthorityGapDiff(diff)) {
+    return false
+  }
+  return (
+    diff.classification === 'format-only' ||
+    diff.classification === 'metadata-only' ||
+    diff.classification === 'safe-additive' ||
+    diff.classification === 'policy-expansion'
+  )
 }
 
 function higherSeverity(

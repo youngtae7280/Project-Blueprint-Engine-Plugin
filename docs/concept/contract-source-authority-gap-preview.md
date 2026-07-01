@@ -9,7 +9,8 @@ Source Authority resolvers now preserve generated `outputRequirements`, `forbidd
 The remaining compiler question is no longer a field-level source-authority gap; it is whether and when review-only
 diffs can count as an equivalence candidate.
 
-This preview records those remaining differences as source-authority gaps before adding another resolver.
+This preview records whether remaining differences are source-authority gaps. For the current fixture it reports no
+remaining source-authority resolver work; the remaining differences are handled by the equivalence/readiness policy.
 
 ## Artifact
 
@@ -65,3 +66,6 @@ This preview does not:
 - implement every remaining resolver at once.
 
 `compilerPromotionReadiness` remains review-only, and `equivalenceProven` remains `false`.
+
+The next step is [contract-compiler-equivalence-policy.md](contract-compiler-equivalence-policy.md), not another field
+resolver.

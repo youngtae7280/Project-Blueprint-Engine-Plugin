@@ -84,6 +84,7 @@ The diff report now also classifies those id-based differences as semantic revie
 - `highestReviewSeverity`
 - `compilerPromotionReadiness`
 - `semanticDiffRuleCoverage`
+- `equivalencePolicy`
 
 Dry-run v0.1 classifications are small fixture-specific rules, not a general policy engine. Earlier Todo Search
 whitespace-normalization diffs classified missing required Evidence as `semantic-loss` and missing forbidden scope as
@@ -102,6 +103,19 @@ command-output Evidence, validation-result, and boundary reporting obligations f
 `nonExecutionStatement` are classified as `metadata-only`; `requiredEvidence`, `forbiddenScope`, `stopConditions`,
 `requiredContext`, `knownRisks`, and `allowedScope` are preserved from source authority. Unknown diffs remain possible
 for future fields, but the current dry-run diff set is fully classified.
+
+The diff artifact now also includes an equivalence/readiness policy summary:
+
+- `sourceAuthorityPreservationStatus: source-authority-preserved`
+- `semanticDiffPolicyStatus: semantic-diff-clean`
+- `reviewOnlyDiffStatus: review-only-diff-detected`
+- `blockingSemanticLossCount: 0`
+- `reviewOnlyDiffCount: 3`
+- `equivalenceCandidate: true`
+- `equivalenceProven: false`
+
+This separates "major fields are source-authority preserved" from "equivalence is proven." The current candidate is an
+equivalence candidate for review only; it is not an execution source.
 
 ## v0.1 Closeout
 
@@ -125,7 +139,8 @@ v0.1 does not prove:
 The current closeout status is `contract-compiler-dry-run-v0.1-classification-complete`, but
 `equivalenceProven` remains `false` and `compilerPromotionReadiness` remains `compiler-promotion-review-required`
 because the generated candidate still differs from the hand-written fixture in review-only fields such as source mode,
-check set, and non-execution wording.
+check set, and non-execution wording. The v0.2 policy summary marks this as `equivalenceCandidate: true`, while keeping
+`equivalenceProven: false` until a later approved equivalence policy and human review explicitly promote it.
 
 ## Boundaries
 
@@ -151,7 +166,7 @@ Compiler Input Model
 -> generated-vs-hand-written diff report
 ```
 
-## v0.2 Direction
+## v0.2 Source-Authority Reconstruction
 
 The next layer should not be an executor. The recommended v0.2 candidate is Output Requirement Source Authority, or a
 broader source-authority resolver, so the compiler can reconstruct output requirements from graph, policy, Evidence,
@@ -189,3 +204,20 @@ It explains source-authority gaps by field and currently recommends `none` for t
 is also preserved from source authority. The policy forbidden-scope, stop-condition, Evidence, context, risk, and
 allowed-scope resolvers are intentionally narrow: they derive generated fields from committed source authority entries,
 not from the hand-written comparison fixture.
+
+## v0.2 Equivalence/Readiness Policy
+
+The current next layer is not another resolver. It is the review policy recorded in
+[contract-compiler-equivalence-policy.md](contract-compiler-equivalence-policy.md).
+
+That policy keeps these states separate:
+
+- `source-authority-preserved`
+- `semantic-diff-clean`
+- `review-only-diff-detected`
+- `equivalence-candidate`
+- `compiler-promotion-review-required`
+- `equivalence-proven`
+
+`equivalenceProven` is not set to `true` in this stage, even if a future fixture reaches a field match. Equivalence proof
+requires an explicitly approved policy and human review. The current dry-run remains non-enforcing review Evidence.

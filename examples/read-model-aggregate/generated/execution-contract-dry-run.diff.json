@@ -132,6 +132,19 @@
   "semanticDiffUnknownsResolved": true,
   "semanticDiffCoverageComplete": true,
   "equivalenceProven": false,
+  "equivalencePolicy": {
+    "sourceAuthorityPreservationStatus": "source-authority-preserved",
+    "semanticDiffPolicyStatus": "semantic-diff-clean",
+    "reviewOnlyDiffStatus": "review-only-diff-detected",
+    "blockingSemanticLossCount": 0,
+    "reviewOnlyDiffCount": 3,
+    "unknownDiffCount": 0,
+    "equivalenceCandidate": true,
+    "equivalenceProven": false,
+    "equivalenceProofStatus": "equivalence-proof-policy-not-approved",
+    "compilerPromotionReadiness": "compiler-promotion-review-required",
+    "policyBoundary": "Equivalence candidate status is review metadata only. equivalenceProven remains false until an approved equivalence policy and human review explicitly promote it."
+  },
   "reviewBoundary": "The compiler candidate is valid, but equivalence with the hand-written contract is not proven. Review the differing fields before relying on the candidate.",
   "nonExecutionStatement": "This diff report is review Evidence only and does not execute work, accept changes, or make the compiled candidate authoritative."
 }

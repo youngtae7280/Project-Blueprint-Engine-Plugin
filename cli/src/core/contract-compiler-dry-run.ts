@@ -5,8 +5,10 @@ import { validateExecutionContract } from './compiler-boundary.js'
 import { validateCompilerInputDryRun, validateCompilerInputSchema } from './compiler-input-model.js'
 import {
   classifyContractDiffSemantics,
+  deriveContractEquivalenceReadinessPolicy,
   type ContractCompilerPromotionReadiness,
   type ContractDiffStatus,
+  type ContractEquivalenceReadinessPolicySummary,
   type ContractIdBasedDiffSummary,
   type ContractSemanticDiff,
   type ContractSemanticDiffRuleCoverage,
@@ -85,6 +87,7 @@ export interface ContractCompilerDryRunReport {
     semanticDiffUnknownsStatus: 'semantic-diff-unknowns-zero' | 'semantic-diff-unknowns-present'
     semanticDiffUnknownsResolved: boolean
     semanticDiffCoverageComplete: boolean
+    equivalencePolicy: ContractEquivalenceReadinessPolicySummary
     equivalenceProven: boolean
     reviewBoundary: string
   }
@@ -250,6 +253,7 @@ export async function compileExecutionContractDryRun(
       semanticDiffUnknownsStatus: candidateDiff.semanticDiffUnknownsStatus,
       semanticDiffUnknownsResolved: candidateDiff.semanticDiffUnknownsResolved,
       semanticDiffCoverageComplete: candidateDiff.semanticDiffCoverageComplete,
+      equivalencePolicy: candidateDiff.equivalencePolicy,
       equivalenceProven: candidateDiff.equivalenceProven,
       reviewBoundary: candidateDiff.reviewBoundary,
     },
@@ -457,6 +461,7 @@ interface ContractDiffReportInternal {
   semanticDiffUnknownsStatus: 'semantic-diff-unknowns-zero' | 'semantic-diff-unknowns-present'
   semanticDiffUnknownsResolved: boolean
   semanticDiffCoverageComplete: boolean
+  equivalencePolicy: ContractEquivalenceReadinessPolicySummary
   equivalenceProven: boolean
   blockingReasons: string[]
   reviewBoundary: string
@@ -514,6 +519,12 @@ async function buildContractDiffReport(
           isReviewable: false,
         },
       ),
+      equivalencePolicy: deriveContractEquivalenceReadinessPolicy({
+        semanticDiffs: semanticSummary.semanticDiffs,
+        semanticDiffRuleCoverage: semanticSummary.semanticDiffRuleCoverage,
+        compilerPromotionReadiness: semanticSummary.compilerPromotionReadiness,
+        isReviewable: false,
+      }),
       blockingReasons: [`Unable to read hand-written dry-run contract: ${handWritten.error}`],
       reviewBoundary:
         'Diff report generation was blocked. The compiled candidate cannot be reviewed for equivalence against the hand-written dry-run contract.',
@@ -543,6 +554,12 @@ async function buildContractDiffReport(
     semanticSummary.compilerPromotionReadiness,
     { equivalenceStatus, isReviewable: true },
   )
+  const equivalencePolicy = deriveContractEquivalenceReadinessPolicy({
+    semanticDiffs: semanticSummary.semanticDiffs,
+    semanticDiffRuleCoverage: semanticSummary.semanticDiffRuleCoverage,
+    compilerPromotionReadiness: semanticSummary.compilerPromotionReadiness,
+    isReviewable: true,
+  })
 
   return {
     schemaVersion: 1,
@@ -562,6 +579,7 @@ async function buildContractDiffReport(
     promotionReadiness: semanticSummary.compilerPromotionReadiness,
     semanticDiffRuleCoverage: semanticSummary.semanticDiffRuleCoverage,
     ...closeoutMetadata,
+    equivalencePolicy,
     blockingReasons: [],
     reviewBoundary: hasDiff
       ? 'The compiler candidate is valid, but equivalence with the hand-written contract is not proven. Review the differing fields before relying on the candidate.'
@@ -592,6 +610,12 @@ function buildNotRunDiffReport(outputCandidatePath: string, handWrittenPath: str
     semanticDiffRuleCoverage: semanticSummary.semanticDiffRuleCoverage,
     ...buildV01CloseoutMetadata(semanticSummary.semanticDiffRuleCoverage, semanticSummary.compilerPromotionReadiness, {
       equivalenceStatus: 'compiler-equivalence-not-run',
+      isReviewable: false,
+    }),
+    equivalencePolicy: deriveContractEquivalenceReadinessPolicy({
+      semanticDiffs: semanticSummary.semanticDiffs,
+      semanticDiffRuleCoverage: semanticSummary.semanticDiffRuleCoverage,
+      compilerPromotionReadiness: semanticSummary.compilerPromotionReadiness,
       isReviewable: false,
     }),
     blockingReasons: [],
@@ -789,11 +813,10 @@ function buildV01CloseoutMetadata(
   | 'semanticDiffCoverageComplete'
   | 'equivalenceProven'
 > {
+  void promotionReadiness
+  void options.equivalenceStatus
   const semanticDiffUnknownsResolved = coverage.unknownDiffs === 0
   const semanticDiffCoverageComplete = options.isReviewable && semanticDiffUnknownsResolved
-  const equivalenceProven =
-    options.equivalenceStatus === 'compiler-equivalence-field-match' &&
-    promotionReadiness === 'compiler-promotion-equivalence-candidate'
   return {
     v01CloseoutStatus: semanticDiffCoverageComplete
       ? 'contract-compiler-dry-run-v0.1-classification-complete'
@@ -803,7 +826,7 @@ function buildV01CloseoutMetadata(
       : 'semantic-diff-unknowns-present',
     semanticDiffUnknownsResolved,
     semanticDiffCoverageComplete,
-    equivalenceProven,
+    equivalenceProven: false,
   }
 }
 

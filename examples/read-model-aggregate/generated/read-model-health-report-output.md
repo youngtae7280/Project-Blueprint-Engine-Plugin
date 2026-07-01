@@ -30,6 +30,7 @@ Status: `graph-source-health-pass`
 | Compiled contract candidate                 | `contract-candidate-pass`; `change-todo-search-whitespace-normalization-dogfood`; 4 checks / 2 evidence requirements                                                                                                                                |
 | Generated vs hand-written contract diff     | `contract-diff-detected`; `non-blocking-review-diff`; `compiler-equivalence-not-proven`; 3 differing fields; `examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json`                                                         |
 | Contract compiler v0.1 closeout             | `contract-compiler-dry-run-v0.1-classification-complete`; `semantic-diff-unknowns-zero`; coverage complete `true`; equivalence proven `false`                                                                                                       |
+| Contract equivalence/readiness policy       | `source-authority-preserved`; `semantic-diff-clean`; `review-only-diff-detected`; blocking semantic loss 0; review-only diffs 3; equivalence candidate `true`; equivalence proven `false`                                                           |
 | Output requirement source authority preview | `output-requirement-source-authority-preview-pass`; 4 source entries / 4 derived requirements / 0 unresolved; `generated-output-requirements-preserved`; `examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json` |
 | Source authority gap preview                | `contract-source-authority-gap-preview-pass`; 0 remaining losses (0 semantic / 0 policy); fields none; next `none`; `examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json`                                            |
 | Contract semantic diff review               | `compiler-promotion-review-required`; severity `low`; unknown semantic diffs 0; unknown fields none; safe-additive: 1, metadata-only: 2                                                                                                             |
@@ -40,6 +41,9 @@ fields before relying on the candidate.
 Semantic diff classification is non-blocking review metadata only. `compiler-equivalence-not-proven` means the compiler
 candidate is valid, but promotion/equivalence is not proven; see
 `examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json` for the full semantic diff artifact.
+
+Equivalence candidate status is review metadata only. equivalenceProven remains false until an approved equivalence
+policy and human review explicitly promote it.
 
 ## Retirement And Enforcement
 

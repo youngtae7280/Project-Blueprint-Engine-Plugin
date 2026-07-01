@@ -425,6 +425,41 @@ try {
     false,
     'contract compiler equivalence proven flag',
   )
+  assertEqual(
+    contractCompilerDryRun.candidateDiff.equivalencePolicy.sourceAuthorityPreservationStatus,
+    'source-authority-preserved',
+    'contract compiler source authority preservation status',
+  )
+  assertEqual(
+    contractCompilerDryRun.candidateDiff.equivalencePolicy.semanticDiffPolicyStatus,
+    'semantic-diff-clean',
+    'contract compiler semantic diff policy status',
+  )
+  assertEqual(
+    contractCompilerDryRun.candidateDiff.equivalencePolicy.reviewOnlyDiffStatus,
+    'review-only-diff-detected',
+    'contract compiler review-only diff status',
+  )
+  assertEqual(
+    contractCompilerDryRun.candidateDiff.equivalencePolicy.blockingSemanticLossCount,
+    0,
+    'contract compiler blocking semantic loss count',
+  )
+  assertEqual(
+    contractCompilerDryRun.candidateDiff.equivalencePolicy.reviewOnlyDiffCount,
+    3,
+    'contract compiler review-only diff count',
+  )
+  assertEqual(
+    contractCompilerDryRun.candidateDiff.equivalencePolicy.equivalenceCandidate,
+    true,
+    'contract compiler equivalence candidate flag',
+  )
+  assertEqual(
+    contractCompilerDryRun.candidateDiff.equivalencePolicy.equivalenceProven,
+    false,
+    'contract compiler equivalence policy proven flag',
+  )
   if (contractCompilerDryRun.candidate.requiredCheckCount <= 0) {
     throw new Error('Contract compiler dry-run candidate must include required checks')
   }
@@ -571,6 +606,7 @@ try {
       semanticDiffUnknownsStatus: contractCompilerDryRun.candidateDiff.semanticDiffUnknownsStatus,
       semanticDiffUnknownsResolved: contractCompilerDryRun.candidateDiff.semanticDiffUnknownsResolved,
       semanticDiffCoverageComplete: contractCompilerDryRun.candidateDiff.semanticDiffCoverageComplete,
+      equivalencePolicy: contractCompilerDryRun.candidateDiff.equivalencePolicy,
       equivalenceProven: contractCompilerDryRun.candidateDiff.equivalenceProven,
       outputRequirementSourceAuthorityPreview: contractCompilerDryRun.outputRequirementSourceAuthorityPreview,
       outputRequirementSourceAuthorityPreviewPath: contractCompilerDryRun.paths.outputRequirementSourceAuthorityPreview,

@@ -522,6 +522,7 @@ interface GraphSourceHealthReport {
     semanticDiffUnknownsStatus: string
     semanticDiffUnknownsResolved: boolean
     semanticDiffCoverageComplete: boolean
+    equivalencePolicy: ContractCompilerDryRunReport['candidateDiff']['equivalencePolicy']
     equivalenceProven: boolean
     outputRequirementSourceAuthorityPreview: ContractCompilerDryRunReport['outputRequirementSourceAuthorityPreview']
     outputRequirementSourceAuthorityPreviewPath: string
@@ -1477,6 +1478,7 @@ export async function reportGraphSourceHealth(root: string): Promise<GraphSource
       semanticDiffUnknownsStatus: contractCompilerDryRun.candidateDiff.semanticDiffUnknownsStatus,
       semanticDiffUnknownsResolved: contractCompilerDryRun.candidateDiff.semanticDiffUnknownsResolved,
       semanticDiffCoverageComplete: contractCompilerDryRun.candidateDiff.semanticDiffCoverageComplete,
+      equivalencePolicy: contractCompilerDryRun.candidateDiff.equivalencePolicy,
       equivalenceProven: contractCompilerDryRun.candidateDiff.equivalenceProven,
       outputRequirementSourceAuthorityPreview: contractCompilerDryRun.outputRequirementSourceAuthorityPreview,
       outputRequirementSourceAuthorityPreviewPath: contractCompilerDryRun.paths.outputRequirementSourceAuthorityPreview,
@@ -1552,6 +1554,7 @@ Status: \`${report.status}\`
 | Compiled contract candidate | \`${report.contractCompilerDryRun.candidateStatus}\`; \`${report.contractCompilerDryRun.dryRunChangeId}\`; ${report.contractCompilerDryRun.requiredCheckCount} checks / ${report.contractCompilerDryRun.requiredEvidenceCount} evidence requirements |
 | Generated vs hand-written contract diff | \`${report.contractCompilerDryRun.candidateDiffStatus}\`; \`${report.contractCompilerDryRun.candidateDiffReviewStatus}\`; \`${report.contractCompilerDryRun.candidateEquivalenceStatus}\`; ${report.contractCompilerDryRun.differingFieldCount} differing fields; \`${report.contractCompilerDryRun.diffReport}\` |
 | Contract compiler v0.1 closeout | \`${report.contractCompilerDryRun.v01CloseoutStatus}\`; \`${report.contractCompilerDryRun.semanticDiffUnknownsStatus}\`; coverage complete \`${report.contractCompilerDryRun.semanticDiffCoverageComplete}\`; equivalence proven \`${report.contractCompilerDryRun.equivalenceProven}\` |
+| Contract equivalence/readiness policy | \`${report.contractCompilerDryRun.equivalencePolicy.sourceAuthorityPreservationStatus}\`; \`${report.contractCompilerDryRun.equivalencePolicy.semanticDiffPolicyStatus}\`; \`${report.contractCompilerDryRun.equivalencePolicy.reviewOnlyDiffStatus}\`; blocking semantic loss ${report.contractCompilerDryRun.equivalencePolicy.blockingSemanticLossCount}; review-only diffs ${report.contractCompilerDryRun.equivalencePolicy.reviewOnlyDiffCount}; equivalence candidate \`${report.contractCompilerDryRun.equivalencePolicy.equivalenceCandidate}\`; equivalence proven \`${report.contractCompilerDryRun.equivalencePolicy.equivalenceProven}\` |
 | Output requirement source authority preview | \`${report.contractCompilerDryRun.outputRequirementSourceAuthorityPreview.status}\`; ${report.contractCompilerDryRun.outputRequirementSourceAuthorityPreview.sourceAuthorityEntryCount} source entries / ${report.contractCompilerDryRun.outputRequirementSourceAuthorityPreview.derivedOutputRequirementCount} derived requirements / ${report.contractCompilerDryRun.outputRequirementSourceAuthorityPreview.unresolvedObligationCount} unresolved; \`${report.contractCompilerDryRun.outputRequirementSourceAuthorityPreview.generatedPreservationStatus}\`; \`${report.contractCompilerDryRun.outputRequirementSourceAuthorityPreviewPath}\` |
 | Source authority gap preview | \`${report.contractCompilerDryRun.sourceAuthorityGapPreview.status}\`; ${report.contractCompilerDryRun.sourceAuthorityGapPreview.remainingLossCount} remaining losses (${report.contractCompilerDryRun.sourceAuthorityGapPreview.remainingSemanticLossCount} semantic / ${report.contractCompilerDryRun.sourceAuthorityGapPreview.remainingPolicyLossCount} policy); fields ${formatFieldList(report.contractCompilerDryRun.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority)}; next \`${report.contractCompilerDryRun.sourceAuthorityGapPreview.nextRecommendedResolver}\`; \`${report.contractCompilerDryRun.sourceAuthorityGapPreviewPath}\` |
 | Contract semantic diff review | \`${report.contractCompilerDryRun.compilerPromotionReadiness}\`; severity \`${report.contractCompilerDryRun.highestReviewSeverity}\`; unknown semantic diffs ${report.contractCompilerDryRun.semanticDiffRuleCoverage.unknownDiffs}; unknown fields ${unknownSemanticFields}; ${semanticDiffSummary} |
@@ -1561,6 +1564,8 @@ ${report.contractCompilerDryRun.diffReviewBoundary}
 Semantic diff classification is non-blocking review metadata only. \`compiler-equivalence-not-proven\` means the compiler
 candidate is valid, but promotion/equivalence is not proven; see \`${report.contractCompilerDryRun.diffReport}\` for the
 full semantic diff artifact.
+
+${report.contractCompilerDryRun.equivalencePolicy.policyBoundary}
 
 ## Retirement And Enforcement
 
