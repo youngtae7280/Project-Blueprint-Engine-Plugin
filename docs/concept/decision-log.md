@@ -891,6 +891,14 @@ block promotion readiness. This remains non-enforcing review metadata only and d
 accept work, enable required checks, configure branch protection, expand source authority, or retire tree-native
 artifacts.
 
+DEC-169 does not supersede DEC-097 through DEC-168. It hardens semantic diff classification into an explicit dry-run
+v0.1 rule table with `ruleId`, `targetField`, `condition`, `classification`, `reviewSeverity`, `promotionImpact`, and
+`reason`. Each `semanticDiffs[]` entry records `matchedRuleId`; unmatched field differences use
+`semantic-diff-rule-unknown`, are counted in `semanticDiffRuleCoverage`, and prevent promotion readiness. The
+`compilerPromotionReadiness` value is derived from semantic diffs rather than asserted separately. This remains
+non-enforcing review metadata only and does not execute AI, apply graph deltas, accept work, enable required checks,
+configure branch protection, expand source authority, or retire tree-native artifacts.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

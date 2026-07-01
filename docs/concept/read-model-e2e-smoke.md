@@ -53,6 +53,8 @@ The smoke checks:
   `non-blocking-review-diff`, and `compiler-equivalence-not-proven`
 - compiler dry-run semantic diff review status `compiler-promotion-not-ready`, with `semantic-loss` and `policy-loss`
   visible as non-enforcing review metadata
+- compiler dry-run semantic rule coverage, including unknown semantic diff count for field differences that do not yet
+  have a dedicated dry-run v0.1 rule
 
 The separate `graph read-model report-health --json` command summarizes the same transition state from existing
 artifacts and report surfaces. It is useful for a quick local health snapshot, while `npm run test:read-model:e2e`

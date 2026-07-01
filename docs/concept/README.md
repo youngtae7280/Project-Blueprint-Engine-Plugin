@@ -201,8 +201,9 @@ generated-vs-hand-written diff report via `graph read-model compile-contract --d
 candidate does not imply equivalence with the hand-written dry-run contract while the diff reports
 `compiler-equivalence-not-proven`. The diff report now adds semantic review classifications and
 `compilerPromotionReadiness`; the current fixture remains `compiler-promotion-not-ready` because semantic/policy losses
-must be reviewed before any compiler promotion. It remains local/non-enforcing and does not execute AI or apply graph
-deltas.
+must be reviewed before any compiler promotion. Those classifications now come from explicit dry-run v0.1 rule ids, and
+unmatched differences are counted as `unknown-review-required`. It remains local/non-enforcing and does not execute AI or
+apply graph deltas.
 
 The following readiness artifact is complete at documentation level:
 

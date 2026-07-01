@@ -507,6 +507,12 @@ interface GraphSourceHealthReport {
     compilerPromotionReadiness: string
     highestReviewSeverity: string
     semanticClassificationCounts: Record<string, number>
+    semanticDiffRuleCoverage: {
+      totalDiffs: number
+      classifiedDiffs: number
+      unknownDiffs: number
+      matchedRuleIds: string[]
+    }
   }
   treeNativeRetirement: {
     readinessStatus: string
@@ -1448,6 +1454,7 @@ export async function reportGraphSourceHealth(root: string): Promise<GraphSource
       compilerPromotionReadiness: contractCompilerDryRun.candidateDiff.compilerPromotionReadiness,
       highestReviewSeverity: contractCompilerDryRun.candidateDiff.highestReviewSeverity,
       semanticClassificationCounts: contractCompilerDryRun.candidateDiff.semanticClassificationCounts,
+      semanticDiffRuleCoverage: contractCompilerDryRun.candidateDiff.semanticDiffRuleCoverage,
     },
     treeNativeRetirement: {
       readinessStatus: String(retirementReadinessSummary.status || 'missing'),
@@ -1514,7 +1521,7 @@ Status: \`${report.status}\`
 | Contract Compiler Dry-Run v0.1 | \`${report.contractCompilerDryRun.status}\` |
 | Compiled contract candidate | \`${report.contractCompilerDryRun.candidateStatus}\`; \`${report.contractCompilerDryRun.dryRunChangeId}\`; ${report.contractCompilerDryRun.requiredCheckCount} checks / ${report.contractCompilerDryRun.requiredEvidenceCount} evidence requirements |
 | Generated vs hand-written contract diff | \`${report.contractCompilerDryRun.candidateDiffStatus}\`; \`${report.contractCompilerDryRun.candidateDiffReviewStatus}\`; \`${report.contractCompilerDryRun.candidateEquivalenceStatus}\`; ${report.contractCompilerDryRun.differingFieldCount} differing fields; \`${report.contractCompilerDryRun.diffReport}\` |
-| Contract semantic diff review | \`${report.contractCompilerDryRun.compilerPromotionReadiness}\`; severity \`${report.contractCompilerDryRun.highestReviewSeverity}\`; ${semanticDiffSummary} |
+| Contract semantic diff review | \`${report.contractCompilerDryRun.compilerPromotionReadiness}\`; severity \`${report.contractCompilerDryRun.highestReviewSeverity}\`; unknown semantic diffs ${report.contractCompilerDryRun.semanticDiffRuleCoverage.unknownDiffs}; ${semanticDiffSummary} |
 
 ${report.contractCompilerDryRun.diffReviewBoundary}
 

@@ -3,6 +3,15 @@ import { format } from 'prettier'
 import { readJsonSafe, relativePath, writeTextAtomic } from './fs.js'
 import { validateExecutionContract } from './compiler-boundary.js'
 import { validateCompilerInputDryRun, validateCompilerInputSchema } from './compiler-input-model.js'
+import {
+  classifyContractDiffSemantics,
+  type ContractCompilerPromotionReadiness,
+  type ContractDiffStatus,
+  type ContractIdBasedDiffSummary,
+  type ContractSemanticDiff,
+  type ContractSemanticDiffRuleCoverage,
+  type ContractSemanticReviewSeverity,
+} from './contract-semantic-diff.js'
 
 export type ContractCompilerDryRunStatus = 'contract-compiler-dry-run-pass' | 'contract-compiler-dry-run-blocked'
 
@@ -48,48 +57,13 @@ export interface ContractCompilerDryRunReport {
     semanticClassificationCounts: Record<string, number>
     highestReviewSeverity: ContractSemanticReviewSeverity
     compilerPromotionReadiness: ContractCompilerPromotionReadiness
+    semanticDiffRuleCoverage: ContractSemanticDiffRuleCoverage
     reviewBoundary: string
   }
   blockingReasons: string[]
   warnings: string[]
   nonExecutionStatement: string
   compilerBoundary: string
-}
-
-export type ContractSemanticDiffClassification =
-  | 'conservative-restriction'
-  | 'policy-loss'
-  | 'policy-expansion'
-  | 'safe-additive'
-  | 'evidence-chain-mismatch'
-  | 'semantic-loss'
-  | 'unknown-review-required'
-
-export type ContractSemanticReviewSeverity = 'none' | 'low' | 'medium' | 'high'
-
-export type ContractSemanticPromotionImpact = 'none' | 'review-required' | 'blocks-promotion'
-
-export type ContractCompilerPromotionReadiness =
-  | 'compiler-promotion-not-ready'
-  | 'compiler-promotion-review-required'
-  | 'compiler-promotion-equivalence-candidate'
-
-export interface ContractIdBasedDiffSummary {
-  field: string
-  handWrittenCount: number
-  generatedCount: number
-  missingIdsInGenerated: string[]
-  extraIdsInGenerated: string[]
-}
-
-export interface ContractSemanticDiff {
-  field: string
-  classification: ContractSemanticDiffClassification
-  reviewSeverity: ContractSemanticReviewSeverity
-  promotionImpact: ContractSemanticPromotionImpact
-  reason: string
-  missingIdsInGenerated: string[]
-  extraIdsInGenerated: string[]
 }
 
 const inputSchemaPath = 'examples/read-model-aggregate/compiler-input-model-schema.json'
@@ -193,6 +167,7 @@ export async function compileExecutionContractDryRun(
       semanticClassificationCounts: candidateDiff.semanticClassificationCounts,
       highestReviewSeverity: candidateDiff.highestReviewSeverity,
       compilerPromotionReadiness: candidateDiff.compilerPromotionReadiness,
+      semanticDiffRuleCoverage: candidateDiff.semanticDiffRuleCoverage,
       reviewBoundary: candidateDiff.reviewBoundary,
     },
     blockingReasons,
@@ -376,12 +351,6 @@ function buildEvidenceCheckMapping(
   return mappings
 }
 
-export type ContractDiffStatus =
-  | 'contract-diff-detected'
-  | 'contract-diff-none'
-  | 'contract-diff-not-run'
-  | 'contract-diff-blocked'
-
 interface ContractDiffReportInternal {
   schemaVersion: 1
   artifactRole: 'execution-contract-dry-run-diff-report'
@@ -401,83 +370,11 @@ interface ContractDiffReportInternal {
   semanticClassificationCounts: Record<string, number>
   highestReviewSeverity: ContractSemanticReviewSeverity
   compilerPromotionReadiness: ContractCompilerPromotionReadiness
+  semanticDiffRuleCoverage: ContractSemanticDiffRuleCoverage
   blockingReasons: string[]
   reviewBoundary: string
   nonExecutionStatement: string
 }
-
-const semanticDiffRules: Array<{
-  field: string
-  direction: 'missing' | 'extra'
-  classification: ContractSemanticDiffClassification
-  reviewSeverity: ContractSemanticReviewSeverity
-  promotionImpact: ContractSemanticPromotionImpact
-  reason: string
-}> = [
-  {
-    field: 'allowedScope',
-    direction: 'missing',
-    classification: 'conservative-restriction',
-    reviewSeverity: 'medium',
-    promotionImpact: 'review-required',
-    reason:
-      'The generated candidate permits less execution scope than the hand-written contract; review before relying on the candidate.',
-  },
-  {
-    field: 'forbiddenScope',
-    direction: 'missing',
-    classification: 'policy-loss',
-    reviewSeverity: 'high',
-    promotionImpact: 'blocks-promotion',
-    reason:
-      'The generated candidate is missing a forbidden policy scope from the hand-written contract, so promotion is not ready.',
-  },
-  {
-    field: 'forbiddenScope',
-    direction: 'extra',
-    classification: 'policy-expansion',
-    reviewSeverity: 'low',
-    promotionImpact: 'review-required',
-    reason:
-      'The generated candidate adds a forbidden policy scope beyond the hand-written contract; review the policy expansion.',
-  },
-  {
-    field: 'requiredChecks',
-    direction: 'extra',
-    classification: 'safe-additive',
-    reviewSeverity: 'low',
-    promotionImpact: 'review-required',
-    reason:
-      'The generated candidate adds a required check beyond the hand-written contract; this is additive but still review-only.',
-  },
-  {
-    field: 'requiredChecks',
-    direction: 'missing',
-    classification: 'evidence-chain-mismatch',
-    reviewSeverity: 'high',
-    promotionImpact: 'blocks-promotion',
-    reason:
-      'The generated candidate is missing a required check from the hand-written contract, so its Evidence chain is incomplete.',
-  },
-  {
-    field: 'requiredEvidence',
-    direction: 'missing',
-    classification: 'semantic-loss',
-    reviewSeverity: 'high',
-    promotionImpact: 'blocks-promotion',
-    reason:
-      'The generated candidate is missing required Evidence from the hand-written contract, so semantic equivalence is not ready.',
-  },
-  {
-    field: 'requiredEvidence',
-    direction: 'extra',
-    classification: 'evidence-chain-mismatch',
-    reviewSeverity: 'medium',
-    promotionImpact: 'review-required',
-    reason:
-      'The generated candidate adds required Evidence beyond the hand-written contract; review the Evidence chain before promotion.',
-  },
-]
 
 const comparedContractFields = [
   'sourceMode',
@@ -520,6 +417,7 @@ async function buildContractDiffReport(
       semanticClassificationCounts: semanticSummary.semanticClassificationCounts,
       highestReviewSeverity: semanticSummary.highestReviewSeverity,
       compilerPromotionReadiness: semanticSummary.compilerPromotionReadiness,
+      semanticDiffRuleCoverage: semanticSummary.semanticDiffRuleCoverage,
       blockingReasons: [`Unable to read hand-written dry-run contract: ${handWritten.error}`],
       reviewBoundary:
         'Diff report generation was blocked. The compiled candidate cannot be reviewed for equivalence against the hand-written dry-run contract.',
@@ -559,6 +457,7 @@ async function buildContractDiffReport(
     semanticClassificationCounts: semanticSummary.semanticClassificationCounts,
     highestReviewSeverity: semanticSummary.highestReviewSeverity,
     compilerPromotionReadiness: semanticSummary.compilerPromotionReadiness,
+    semanticDiffRuleCoverage: semanticSummary.semanticDiffRuleCoverage,
     blockingReasons: [],
     reviewBoundary: hasDiff
       ? 'The compiler candidate is valid, but equivalence with the hand-written contract is not proven. Review the differing fields before relying on the candidate.'
@@ -585,6 +484,7 @@ function buildNotRunDiffReport(outputCandidatePath: string, handWrittenPath: str
     semanticClassificationCounts: semanticSummary.semanticClassificationCounts,
     highestReviewSeverity: semanticSummary.highestReviewSeverity,
     compilerPromotionReadiness: semanticSummary.compilerPromotionReadiness,
+    semanticDiffRuleCoverage: semanticSummary.semanticDiffRuleCoverage,
     blockingReasons: [],
     reviewBoundary:
       'No compiler candidate was produced, so equivalence with the hand-written contract was not reviewed.',
@@ -598,104 +498,6 @@ function stripInternalDiffFields(
 ): Omit<ContractDiffReportInternal, 'blockingReasons'> {
   const { blockingReasons: _blockingReasons, ...artifact } = diff
   return artifact
-}
-
-export function classifyContractDiffSemantics(
-  idBasedSummaries: ContractIdBasedDiffSummary[],
-  differingFields: string[],
-  status: ContractDiffStatus,
-): {
-  semanticDiffs: ContractSemanticDiff[]
-  semanticClassificationCounts: Record<string, number>
-  highestReviewSeverity: ContractSemanticReviewSeverity
-  compilerPromotionReadiness: ContractCompilerPromotionReadiness
-} {
-  if (status === 'contract-diff-blocked' || status === 'contract-diff-not-run') {
-    return {
-      semanticDiffs: [],
-      semanticClassificationCounts: {},
-      highestReviewSeverity: 'none',
-      compilerPromotionReadiness: 'compiler-promotion-not-ready',
-    }
-  }
-
-  if (differingFields.length === 0) {
-    return {
-      semanticDiffs: [],
-      semanticClassificationCounts: {},
-      highestReviewSeverity: 'none',
-      compilerPromotionReadiness: 'compiler-promotion-equivalence-candidate',
-    }
-  }
-
-  const semanticDiffs = idBasedSummaries.flatMap((summary) => classifyIdBasedDiffSummary(summary))
-  const semanticClassificationCounts = semanticDiffs.reduce<Record<string, number>>((counts, diff) => {
-    counts[diff.classification] = (counts[diff.classification] || 0) + 1
-    return counts
-  }, {})
-  const highestReviewSeverity = semanticDiffs.reduce<ContractSemanticReviewSeverity>(
-    (highest, diff) => higherSeverity(highest, diff.reviewSeverity),
-    'none',
-  )
-  const blocksPromotion = semanticDiffs.some(
-    (diff) =>
-      diff.promotionImpact === 'blocks-promotion' ||
-      diff.classification === 'semantic-loss' ||
-      diff.classification === 'policy-loss',
-  )
-
-  return {
-    semanticDiffs,
-    semanticClassificationCounts,
-    highestReviewSeverity,
-    compilerPromotionReadiness: blocksPromotion ? 'compiler-promotion-not-ready' : 'compiler-promotion-review-required',
-  }
-}
-
-function classifyIdBasedDiffSummary(summary: ContractIdBasedDiffSummary): ContractSemanticDiff[] {
-  const diffs: ContractSemanticDiff[] = []
-  if (summary.missingIdsInGenerated.length > 0) {
-    diffs.push(buildSemanticDiff(summary, 'missing'))
-  }
-  if (summary.extraIdsInGenerated.length > 0) {
-    diffs.push(buildSemanticDiff(summary, 'extra'))
-  }
-  return diffs
-}
-
-function buildSemanticDiff(summary: ContractIdBasedDiffSummary, direction: 'missing' | 'extra'): ContractSemanticDiff {
-  const rule = semanticDiffRules.find((entry) => entry.field === summary.field && entry.direction === direction)
-  const missingIdsInGenerated = direction === 'missing' ? summary.missingIdsInGenerated : []
-  const extraIdsInGenerated = direction === 'extra' ? summary.extraIdsInGenerated : []
-  if (!rule) {
-    return {
-      field: summary.field,
-      classification: 'unknown-review-required',
-      reviewSeverity: 'medium',
-      promotionImpact: 'review-required',
-      reason:
-        'This id-based contract difference has no dedicated dry-run v0.1 semantic rule and requires human review.',
-      missingIdsInGenerated,
-      extraIdsInGenerated,
-    }
-  }
-  return {
-    field: summary.field,
-    classification: rule.classification,
-    reviewSeverity: rule.reviewSeverity,
-    promotionImpact: rule.promotionImpact,
-    reason: rule.reason,
-    missingIdsInGenerated,
-    extraIdsInGenerated,
-  }
-}
-
-function higherSeverity(
-  left: ContractSemanticReviewSeverity,
-  right: ContractSemanticReviewSeverity,
-): ContractSemanticReviewSeverity {
-  const order: Record<ContractSemanticReviewSeverity, number> = { none: 0, low: 1, medium: 2, high: 3 }
-  return order[right] > order[left] ? right : left
 }
 
 function buildIdBasedDiffSummaries(

@@ -67,6 +67,7 @@
   "semanticDiffs": [
     {
       "field": "allowedScope",
+      "matchedRuleId": "semantic-diff-rule-allowed-scope-missing-conservative-restriction",
       "classification": "conservative-restriction",
       "reviewSeverity": "medium",
       "promotionImpact": "review-required",
@@ -76,6 +77,7 @@
     },
     {
       "field": "forbiddenScope",
+      "matchedRuleId": "semantic-diff-rule-forbidden-scope-missing-policy-loss",
       "classification": "policy-loss",
       "reviewSeverity": "high",
       "promotionImpact": "blocks-promotion",
@@ -85,6 +87,7 @@
     },
     {
       "field": "forbiddenScope",
+      "matchedRuleId": "semantic-diff-rule-forbidden-scope-extra-policy-expansion",
       "classification": "policy-expansion",
       "reviewSeverity": "low",
       "promotionImpact": "review-required",
@@ -94,6 +97,7 @@
     },
     {
       "field": "requiredChecks",
+      "matchedRuleId": "semantic-diff-rule-required-checks-extra-safe-additive",
       "classification": "safe-additive",
       "reviewSeverity": "low",
       "promotionImpact": "review-required",
@@ -103,6 +107,7 @@
     },
     {
       "field": "requiredEvidence",
+      "matchedRuleId": "semantic-diff-rule-required-evidence-missing-semantic-loss",
       "classification": "semantic-loss",
       "reviewSeverity": "high",
       "promotionImpact": "blocks-promotion",
@@ -112,12 +117,73 @@
     },
     {
       "field": "requiredEvidence",
+      "matchedRuleId": "semantic-diff-rule-required-evidence-extra-evidence-chain-mismatch",
       "classification": "evidence-chain-mismatch",
       "reviewSeverity": "medium",
       "promotionImpact": "review-required",
       "reason": "The generated candidate adds required Evidence beyond the hand-written contract; review the Evidence chain before promotion.",
       "missingIdsInGenerated": [],
       "extraIdsInGenerated": ["evidence-read-model-health"]
+    },
+    {
+      "field": "sourceMode",
+      "matchedRuleId": "semantic-diff-rule-unknown",
+      "classification": "unknown-review-required",
+      "reviewSeverity": "medium",
+      "promotionImpact": "review-required",
+      "reason": "This contract difference has no dedicated dry-run v0.1 semantic rule and requires human review before promotion.",
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
+    },
+    {
+      "field": "requiredContext",
+      "matchedRuleId": "semantic-diff-rule-unknown",
+      "classification": "unknown-review-required",
+      "reviewSeverity": "medium",
+      "promotionImpact": "review-required",
+      "reason": "This contract difference has no dedicated dry-run v0.1 semantic rule and requires human review before promotion.",
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
+    },
+    {
+      "field": "knownRisks",
+      "matchedRuleId": "semantic-diff-rule-unknown",
+      "classification": "unknown-review-required",
+      "reviewSeverity": "medium",
+      "promotionImpact": "review-required",
+      "reason": "This contract difference has no dedicated dry-run v0.1 semantic rule and requires human review before promotion.",
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
+    },
+    {
+      "field": "stopConditions",
+      "matchedRuleId": "semantic-diff-rule-unknown",
+      "classification": "unknown-review-required",
+      "reviewSeverity": "medium",
+      "promotionImpact": "review-required",
+      "reason": "This contract difference has no dedicated dry-run v0.1 semantic rule and requires human review before promotion.",
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
+    },
+    {
+      "field": "outputRequirements",
+      "matchedRuleId": "semantic-diff-rule-unknown",
+      "classification": "unknown-review-required",
+      "reviewSeverity": "medium",
+      "promotionImpact": "review-required",
+      "reason": "This contract difference has no dedicated dry-run v0.1 semantic rule and requires human review before promotion.",
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
+    },
+    {
+      "field": "nonExecutionStatement",
+      "matchedRuleId": "semantic-diff-rule-unknown",
+      "classification": "unknown-review-required",
+      "reviewSeverity": "medium",
+      "promotionImpact": "review-required",
+      "reason": "This contract difference has no dedicated dry-run v0.1 semantic rule and requires human review before promotion.",
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
     }
   ],
   "semanticClassificationCounts": {
@@ -126,10 +192,25 @@
     "policy-expansion": 1,
     "safe-additive": 1,
     "semantic-loss": 1,
-    "evidence-chain-mismatch": 1
+    "evidence-chain-mismatch": 1,
+    "unknown-review-required": 6
   },
   "highestReviewSeverity": "high",
   "compilerPromotionReadiness": "compiler-promotion-not-ready",
+  "semanticDiffRuleCoverage": {
+    "totalDiffs": 12,
+    "classifiedDiffs": 6,
+    "unknownDiffs": 6,
+    "matchedRuleIds": [
+      "semantic-diff-rule-allowed-scope-missing-conservative-restriction",
+      "semantic-diff-rule-forbidden-scope-extra-policy-expansion",
+      "semantic-diff-rule-forbidden-scope-missing-policy-loss",
+      "semantic-diff-rule-required-checks-extra-safe-additive",
+      "semantic-diff-rule-required-evidence-extra-evidence-chain-mismatch",
+      "semantic-diff-rule-required-evidence-missing-semantic-loss",
+      "semantic-diff-rule-unknown"
+    ]
+  },
   "reviewBoundary": "The compiler candidate is valid, but equivalence with the hand-written contract is not proven. Review the differing fields before relying on the candidate.",
   "nonExecutionStatement": "This diff report is review Evidence only and does not execute work, accept changes, or make the compiled candidate authoritative."
 }
