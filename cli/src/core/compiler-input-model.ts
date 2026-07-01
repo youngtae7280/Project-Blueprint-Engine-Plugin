@@ -20,6 +20,7 @@ export interface CompilerInputModelReport {
     evidenceEntryCount: number
     targetScopeCandidateCount: number
     outputRequirementSourceCount: number
+    stopConditionSourceCount: number
   }
   blockingReasons: string[]
   warnings: string[]
@@ -38,6 +39,7 @@ const requiredInputGroups = [
   'evidenceIndex',
   'targetScopeCandidates',
   'outputRequirementSources',
+  'stopConditionSources',
 ]
 
 const allowedInputAuthorities = ['human', 'graph', 'policy', 'validator', 'evidence-index']
@@ -60,6 +62,15 @@ const allowedOutputObligationTypes = [
   'validation-result-summary',
   'non-execution-boundary-statement',
 ]
+const allowedStopConditionSourceTypes = ['policy', 'validator', 'compiler-status', 'boundary']
+const allowedStopConditionTriggerTypes = [
+  'scope-expansion',
+  'required-check-unavailable',
+  'compiler-input-blocked',
+  'contract-validation-blocked',
+  'source-authority-loss',
+]
+const allowedStopConditionActions = ['stop-and-request-human-decision', 'stop-and-record-missing-evidence']
 
 export async function reportCompilerInputModel(root: string): Promise<CompilerInputModelReport> {
   const schemaResult = await readJsonSafe<unknown>(path.resolve(root, inputSchemaPath))
@@ -98,6 +109,7 @@ export async function reportCompilerInputModel(root: string): Promise<CompilerIn
       evidenceEntryCount: arrayValue(evidenceIndex.entries).length,
       targetScopeCandidateCount: arrayValue(input.targetScopeCandidates).length,
       outputRequirementSourceCount: arrayValue(input.outputRequirementSources).length,
+      stopConditionSourceCount: arrayValue(input.stopConditionSources).length,
     },
     blockingReasons,
     warnings,
@@ -187,6 +199,7 @@ export async function validateCompilerInputDryRun(
   validateEvidenceIndex(asRecord(record.evidenceIndex), root, blocking)
   validateTargetScopeCandidates(arrayValue(record.targetScopeCandidates), root, graphSnapshot, blocking)
   validateOutputRequirementSources(record, blocking)
+  validateStopConditionSources(record, blocking)
 
   if ('compiledExecutionContract' in record) {
     blocking.push('Compiler input dry-run must not contain compiledExecutionContract; this MVP validates inputs only.')
@@ -242,6 +255,60 @@ function validateOutputRequirementSources(record: Record<string, unknown>, block
       blocking.push(`${label}.diffBinding.mode is required for ${obligationType}.`)
     }
   }
+}
+
+function validateStopConditionSources(record: Record<string, unknown>, blocking: string[]): void {
+  const sources = arrayValue(record.stopConditionSources)
+  if (sources.length === 0) {
+    blocking.push('Compiler input dry-run stopConditionSources is required.')
+  }
+  const policyIds = new Set(
+    arrayValue(asRecord(record.policySnapshot).policies).map((policy) => stringValue(policy.id)),
+  )
+  const checkIds = buildKnownRequiredCheckIds(record)
+  for (const [index, source] of sources.entries()) {
+    const label = `Compiler input dry-run stopConditionSources[${index}]`
+    validateRequiredStringFields(
+      label,
+      source,
+      ['sourceId', 'sourceType', 'derivedStopConditionId', 'triggerType', 'condition', 'action'],
+      blocking,
+    )
+    const sourceType = stringValue(source.sourceType, '')
+    if (sourceType && !allowedStopConditionSourceTypes.includes(sourceType)) {
+      blocking.push(`${label}.sourceType must be one of: ${allowedStopConditionSourceTypes.join(', ')}.`)
+    }
+    const triggerType = stringValue(source.triggerType, '')
+    if (triggerType && !allowedStopConditionTriggerTypes.includes(triggerType)) {
+      blocking.push(`${label}.triggerType must be one of: ${allowedStopConditionTriggerTypes.join(', ')}.`)
+    }
+    const action = stringValue(source.action, '')
+    if (action && !allowedStopConditionActions.includes(action)) {
+      blocking.push(`${label}.action must be one of: ${allowedStopConditionActions.join(', ')}.`)
+    }
+    const policyId = stringValue(asRecord(source.policyBinding).policyId, '')
+    if (policyId && !policyIds.has(policyId)) {
+      blocking.push(`${label}.policyBinding.policyId references unknown policy id: ${policyId}.`)
+    }
+    for (const requiredCheckId of stringArrayValue(asRecord(source.commandBinding).requiredCheckIds)) {
+      if (!checkIds.has(requiredCheckId)) {
+        blocking.push(
+          `${label}.commandBinding.requiredCheckIds references unknown required check id: ${requiredCheckId}.`,
+        )
+      }
+    }
+  }
+}
+
+function buildKnownRequiredCheckIds(record: Record<string, unknown>): Set<string> {
+  const policySnapshot = asRecord(record.policySnapshot)
+  return new Set([
+    ...arrayValue(policySnapshot.evidenceCheckMappings).map((mapping) => stringValue(mapping.requiredCheckId)),
+    'check-todo-search-runtime-fixture',
+    'check-read-model-validate-all',
+    'check-read-model-health-report',
+    'check-read-model-e2e',
+  ])
 }
 
 function validateHumanRequest(record: Record<string, unknown>, blocking: string[]): void {

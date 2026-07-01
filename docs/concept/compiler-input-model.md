@@ -17,7 +17,8 @@ This layer exists so future contract compilation does not start from AI prose. I
 - policy snapshot;
 - evidence index;
 - target scope candidates;
-- output requirement sources.
+- output requirement sources;
+- stop condition sources.
 
 ## Current MVP Artifacts
 
@@ -64,6 +65,9 @@ The MVP blocks:
 - output requirement source obligation types outside the current bounded vocabulary;
 - output requirement source Evidence or command bindings that reference unknown Evidence or required-check ids;
 - changed-file or git-diff output obligations without diff binding;
+- stop condition sources without source id/type, derived stop condition id, trigger type, condition, or action;
+- stop condition source trigger types or actions outside the current bounded vocabulary;
+- stop condition source policy or command bindings that reference unknown policy or required-check ids;
 - pack schema required input groups outside the current input group vocabulary;
 - any `compiledExecutionContract` claim inside the input fixture.
 

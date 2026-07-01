@@ -43,6 +43,7 @@ import { compileExecutionContractDryRun } from '../core/contract-compiler-dry-ru
 import { classifyContractDiffSemantics, deriveCompilerPromotionReadiness } from '../core/contract-semantic-diff'
 import { resolveOutputRequirementsFromSourceAuthority } from '../core/output-requirement-source-authority'
 import { resolveForbiddenScopeFromPolicySourceAuthority } from '../core/policy-forbidden-scope-source-authority'
+import { resolveStopConditionsFromSourceAuthority } from '../core/stop-condition-source-authority'
 
 const workspaces: string[] = []
 const exampleWorkspacePaths = [
@@ -1288,6 +1289,7 @@ describe('read-model Evidence builder', () => {
     expect(report.dryRunInput.graphSnapshotArtifactCount).toBeGreaterThan(0)
     expect(report.dryRunInput.targetScopeCandidateCount).toBeGreaterThan(0)
     expect(report.dryRunInput.outputRequirementSourceCount).toBe(4)
+    expect(report.dryRunInput.stopConditionSourceCount).toBe(2)
     expect(report.nonExecutionStatement).toContain('does not compile an execution contract')
     expect(report.blockingReasons).toEqual([])
   })
@@ -1343,6 +1345,7 @@ describe('read-model Evidence builder', () => {
       }
       packSchema: { requiredInputGroups: string[] }
       outputRequirementSources: Array<Record<string, unknown>>
+      stopConditionSources: Array<Record<string, unknown>>
     }
     input.graphSnapshot.artifacts[0].path = 'examples/missing/graph-source.json'
     input.evidenceIndex.entries[0].artifact = 'examples/missing/evidence.md'
@@ -1361,6 +1364,10 @@ describe('read-model Evidence builder', () => {
     input.outputRequirementSources[1].evidenceBinding = { evidenceId: 'evidence-does-not-exist' }
     input.outputRequirementSources[1].commandBinding = { requiredCheckId: 'check-does-not-exist' }
     input.outputRequirementSources[2].obligationType = 'ai-summary'
+    input.stopConditionSources[0].triggerType = 'magic-trigger'
+    input.stopConditionSources[0].action = 'continue-without-evidence'
+    input.stopConditionSources[0].policyBinding = { policyId: 'does-not-exist' }
+    input.stopConditionSources[1].commandBinding = { requiredCheckIds: ['check-does-not-exist'] }
 
     const validation = await validateCompilerInputDryRun(input, resolve('.'))
     const blocking = validation.blocking.join('\n')
@@ -1382,6 +1389,10 @@ describe('read-model Evidence builder', () => {
     expect(blocking).toContain('outputRequirementSources[1].evidenceBinding.evidenceId references unknown evidence id')
     expect(blocking).toContain('outputRequirementSources[1].commandBinding.requiredCheckId references unknown')
     expect(blocking).toContain('outputRequirementSources[2].obligationType must be one of')
+    expect(blocking).toContain('stopConditionSources[0].triggerType must be one of')
+    expect(blocking).toContain('stopConditionSources[0].action must be one of')
+    expect(blocking).toContain('stopConditionSources[0].policyBinding.policyId references unknown policy id')
+    expect(blocking).toContain('stopConditionSources[1].commandBinding.requiredCheckIds references unknown')
   })
 
   it('compiles a deterministic dry-run contract candidate from the Compiler Input Model', async () => {
@@ -1426,6 +1437,18 @@ describe('read-model Evidence builder', () => {
       'Report changed files from actual git diff only.',
       'Report check and evidence status from command output only.',
       'Do not treat this dry-run contract as user acceptance or branch protection.',
+    ])
+    expect(candidate.stopConditions).toEqual([
+      {
+        id: 'stop-if-scope-expands',
+        condition: 'Any production, workflow, source-authority, or tree-retirement change is required.',
+        action: 'stop-and-request-human-decision',
+      },
+      {
+        id: 'stop-if-required-check-unavailable',
+        condition: 'Required runtime or read-model checks cannot be executed.',
+        action: 'stop-and-record-missing-evidence',
+      },
     ])
     expect(JSON.stringify(candidate)).toContain('examples/adoption/todo-search-slice/runtime-fixture/todo-search.js')
     expect(JSON.stringify(candidate)).toContain('graph-source:node:CODE-RUNTIME-SEARCH-HELPER')
@@ -1537,12 +1560,17 @@ describe('read-model Evidence builder', () => {
     expect(diffReport.differingFields).toContain('sourceMode')
     expect(diffReport.differingFields).not.toContain('outputRequirements')
     expect(diffReport.differingFields).not.toContain('forbiddenScope')
+    expect(diffReport.differingFields).not.toContain('stopConditions')
     expect(diffReport.comparedFields.find((entry) => entry.field === 'outputRequirements')).toMatchObject({
       field: 'outputRequirements',
       status: 'same',
     })
     expect(diffReport.comparedFields.find((entry) => entry.field === 'forbiddenScope')).toMatchObject({
       field: 'forbiddenScope',
+      status: 'same',
+    })
+    expect(diffReport.comparedFields.find((entry) => entry.field === 'stopConditions')).toMatchObject({
+      field: 'stopConditions',
       status: 'same',
     })
     expect(diffReport.idBasedSummaries.find((entry) => entry.field === 'allowedScope')).toMatchObject({
@@ -1566,15 +1594,15 @@ describe('read-model Evidence builder', () => {
     expect(diffReport.semanticClassificationCounts).toMatchObject({
       'metadata-only': 2,
       'conservative-restriction': 1,
-      'policy-loss': 1,
-      'policy-expansion': 1,
       'safe-additive': 3,
       'semantic-loss': 3,
       'evidence-chain-mismatch': 1,
     })
+    expect(diffReport.semanticClassificationCounts['policy-loss']).toBeUndefined()
+    expect(diffReport.semanticClassificationCounts['policy-expansion']).toBeUndefined()
     expect(diffReport.semanticDiffRuleCoverage).toMatchObject({
-      totalDiffs: 12,
-      classifiedDiffs: 12,
+      totalDiffs: 10,
+      classifiedDiffs: 10,
       unknownDiffs: 0,
     })
     expect(diffReport.semanticDiffRuleCoverage.totalDiffs).toBe(
@@ -1592,6 +1620,12 @@ describe('read-model Evidence builder', () => {
     expect(diffReport.semanticDiffRuleCoverage.matchedRuleIds).not.toContain(
       'semantic-diff-rule-forbidden-scope-extra-policy-expansion',
     )
+    expect(diffReport.semanticDiffRuleCoverage.matchedRuleIds).not.toContain(
+      'semantic-diff-rule-stop-conditions-missing-policy-loss',
+    )
+    expect(diffReport.semanticDiffRuleCoverage.matchedRuleIds).not.toContain(
+      'semantic-diff-rule-stop-conditions-extra-policy-expansion',
+    )
     expect(diffReport.semanticDiffRuleCoverage.unknownFields).toEqual([])
     expect(
       diffReport.semanticDiffs.find(
@@ -1606,6 +1640,7 @@ describe('read-model Evidence builder', () => {
       missingIdsInGenerated: ['evidence-validate-all-result'],
     })
     expect(diffReport.semanticDiffs.some((entry) => entry.field === 'forbiddenScope')).toBe(false)
+    expect(diffReport.semanticDiffs.some((entry) => entry.field === 'stopConditions')).toBe(false)
     expect(
       diffReport.semanticDiffs.find(
         (entry) => entry.field === 'allowedScope' && entry.classification === 'conservative-restriction',
@@ -1644,18 +1679,17 @@ describe('read-model Evidence builder', () => {
     expect(gapPreview.status).toBe('contract-source-authority-gap-preview-pass')
     expect(gapPreview.outputRequirementPreservationStatus).toBe('generated-output-requirements-preserved')
     expect(gapPreview.summary).toMatchObject({
-      remainingLossCount: 4,
-      remainingPolicyLossCount: 1,
+      remainingLossCount: 3,
+      remainingPolicyLossCount: 0,
       remainingSemanticLossCount: 3,
-      nextRecommendedResolver: 'stop-condition-source-authority',
-      promotionBlockedBy: ['policy-loss', 'semantic-loss'],
+      nextRecommendedResolver: 'evidence-source-authority',
+      promotionBlockedBy: ['semantic-loss'],
     })
     expect(gapPreview.summary.fieldsRequiringSourceAuthority).toEqual([
       'allowedScope',
       'requiredContext',
       'requiredEvidence',
       'knownRisks',
-      'stopConditions',
     ])
     expect(gapPreview.fieldGaps.find((entry) => entry.field === 'forbiddenScope')).toMatchObject({
       candidateSourceAuthorityType: 'policy-forbidden-scope-source-authority',
@@ -1670,6 +1704,14 @@ describe('read-model Evidence builder', () => {
       semanticClassifications: ['conservative-restriction'],
       resolverRequired: true,
       preservationStatus: 'source-authority-gap-review-required',
+    })
+    expect(gapPreview.fieldGaps.find((entry) => entry.field === 'stopConditions')).toMatchObject({
+      candidateSourceAuthorityType: 'stop-condition-source-authority',
+      semanticClassifications: [],
+      missingIdsInGenerated: [],
+      extraIdsInGenerated: [],
+      resolverRequired: false,
+      preservationStatus: 'source-authority-preserved',
     })
     expect(validation.blocking).toEqual([])
     expect(report.nonExecutionStatement).toContain('does not execute AI')
@@ -1754,6 +1796,80 @@ describe('read-model Evidence builder', () => {
       {
         id: 'scope-missing-paths',
         reason: 'policy-forbidden-scope-rule-missing-required-fields',
+      },
+    ])
+  })
+
+  it('derives stop conditions from source authority rather than hand-written comparison stops', async () => {
+    const workspace = await createExampleWorkspace()
+    const handWrittenPath = join(workspace, 'examples/read-model-aggregate/generated/execution-contract-dry-run.json')
+    const handWritten = JSON.parse(await readFile(handWrittenPath, 'utf8')) as {
+      stopConditions: Array<Record<string, unknown>>
+    }
+    handWritten.stopConditions = [
+      {
+        id: 'stop-hand-written-comparison-only',
+        condition: 'Do not copy this hand-written comparison stop condition.',
+        action: 'stop-and-request-human-decision',
+      },
+    ]
+    await writeFile(handWrittenPath, `${JSON.stringify(handWritten, null, 2)}\n`)
+
+    const report = await compileExecutionContractDryRun(workspace)
+    const candidate = JSON.parse(await readFile(join(workspace, report.paths.outputCandidate), 'utf8')) as {
+      stopConditions: Array<{ id: string; condition: string }>
+    }
+
+    expect(candidate.stopConditions.map((entry) => entry.id)).toEqual([
+      'stop-if-scope-expands',
+      'stop-if-required-check-unavailable',
+    ])
+    expect(candidate.stopConditions.map((entry) => entry.id)).not.toContain('stop-hand-written-comparison-only')
+    expect(candidate.stopConditions.map((entry) => entry.condition)).not.toContain(
+      'Do not copy this hand-written comparison stop condition.',
+    )
+  })
+
+  it('resolves stop conditions from typed source authority entries', () => {
+    const resolution = resolveStopConditionsFromSourceAuthority([
+      {
+        sourceId: 'stop-source-scope-expands',
+        sourceType: 'policy',
+        derivedStopConditionId: 'stop-if-scope-expands',
+        triggerType: 'scope-expansion',
+        condition: 'Any production, workflow, source-authority, or tree-retirement change is required.',
+        action: 'stop-and-request-human-decision',
+        relatedFields: ['allowedScope', 'forbiddenScope'],
+      },
+      {
+        sourceId: 'stop-source-unknown',
+        sourceType: 'policy',
+        derivedStopConditionId: 'stop-if-unknown',
+        triggerType: 'ai-guess',
+        condition: 'Unsupported trigger.',
+        action: 'stop-and-request-human-decision',
+      },
+    ])
+
+    expect(resolution.stopConditions).toEqual([
+      {
+        id: 'stop-if-scope-expands',
+        condition: 'Any production, workflow, source-authority, or tree-retirement change is required.',
+        action: 'stop-and-request-human-decision',
+      },
+    ])
+    expect(resolution.derivedStopConditions[0]).toMatchObject({
+      id: 'stop-if-scope-expands',
+      relatedFields: ['allowedScope', 'forbiddenScope'],
+      derivationReason: 'derived-from-stopConditionSources-not-hand-written-contract',
+    })
+    expect(resolution.unresolvedSources).toEqual([
+      {
+        id: 'stop-if-unknown',
+        sourceId: 'stop-source-unknown',
+        triggerType: 'ai-guess',
+        derivationStatus: 'derived-stop-condition-unresolved',
+        reason: 'unsupported-stop-condition-trigger-type:ai-guess',
       },
     ])
   })
@@ -1991,7 +2107,7 @@ describe('read-model Evidence builder', () => {
     expect(output.candidateDiff.semanticDiffCoverageComplete).toBe(true)
     expect(output.candidateDiff.equivalenceProven).toBe(false)
     expect(output.candidateDiff.semanticClassificationCounts['semantic-loss']).toBe(3)
-    expect(output.candidateDiff.semanticClassificationCounts['policy-loss']).toBe(1)
+    expect(output.candidateDiff.semanticClassificationCounts['policy-loss']).toBeUndefined()
     expect(output.candidateDiff.semanticClassificationCounts['metadata-only']).toBe(2)
     expect(output.candidateDiff.semanticClassificationCounts['output-requirement-loss']).toBeUndefined()
     expect(output.candidateDiff.semanticDiffRuleCoverage.unknownDiffs).toBe(0)
@@ -2001,13 +2117,14 @@ describe('read-model Evidence builder', () => {
     )
     expect(output.sourceAuthorityGapPreview).toMatchObject({
       status: 'contract-source-authority-gap-preview-pass',
-      remainingLossCount: 4,
-      remainingPolicyLossCount: 1,
+      remainingLossCount: 3,
+      remainingPolicyLossCount: 0,
       remainingSemanticLossCount: 3,
-      nextRecommendedResolver: 'stop-condition-source-authority',
+      nextRecommendedResolver: 'evidence-source-authority',
     })
     expect(output.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority).not.toContain('forbiddenScope')
-    expect(output.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority).toHaveLength(5)
+    expect(output.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority).not.toContain('stopConditions')
+    expect(output.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority).toHaveLength(4)
     expect(output.candidateDiff.differingFieldCount).toBeGreaterThan(0)
     expect(output.candidateDiff.idBasedSummaries.length).toBeGreaterThan(0)
     expect(output.candidate.requiredCheckCount).toBeGreaterThan(0)
@@ -2147,24 +2264,23 @@ describe('read-model Evidence builder', () => {
     )
     expect(output.contractCompilerDryRun.sourceAuthorityGapPreview).toMatchObject({
       status: 'contract-source-authority-gap-preview-pass',
-      remainingLossCount: 4,
-      remainingPolicyLossCount: 1,
+      remainingLossCount: 3,
+      remainingPolicyLossCount: 0,
       remainingSemanticLossCount: 3,
-      nextRecommendedResolver: 'stop-condition-source-authority',
+      nextRecommendedResolver: 'evidence-source-authority',
     })
     expect(output.contractCompilerDryRun.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority).toEqual([
       'allowedScope',
       'requiredContext',
       'requiredEvidence',
       'knownRisks',
-      'stopConditions',
     ])
     expect(output.contractCompilerDryRun.sourceAuthorityGapPreviewPath).toBe(
       'examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json',
     )
     expect(output.contractCompilerDryRun.highestReviewSeverity).toBe('high')
     expect(output.contractCompilerDryRun.semanticClassificationCounts['semantic-loss']).toBe(3)
-    expect(output.contractCompilerDryRun.semanticClassificationCounts['policy-loss']).toBe(1)
+    expect(output.contractCompilerDryRun.semanticClassificationCounts['policy-loss']).toBeUndefined()
     expect(output.contractCompilerDryRun.semanticClassificationCounts['metadata-only']).toBe(2)
     expect(output.contractCompilerDryRun.semanticClassificationCounts['output-requirement-loss']).toBeUndefined()
     expect(output.contractCompilerDryRun.semanticDiffRuleCoverage.unknownDiffs).toBe(0)
@@ -2197,15 +2313,15 @@ describe('read-model Evidence builder', () => {
     expect(markdown).toContain('4 source entries / 4 derived requirements / 0 unresolved')
     expect(markdown).toContain('`generated-output-requirements-preserved`')
     expect(markdown).toContain('`contract-source-authority-gap-preview-pass`')
-    expect(markdown).toContain('4 remaining losses (3 semantic / 1 policy)')
-    expect(markdown).toContain('next `stop-condition-source-authority`')
+    expect(markdown).toContain('3 remaining losses (3 semantic / 0 policy)')
+    expect(markdown).toContain('next `evidence-source-authority`')
     expect(markdown).toContain('`examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json`')
     expect(markdown).toContain(
       '`examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json`',
     )
     expect(markdown).toContain('`compiler-promotion-not-ready`')
     expect(markdown).toContain('semantic-loss: 3')
-    expect(markdown).toContain('policy-loss: 1')
+    expect(markdown).not.toContain('policy-loss: 1')
     expect(markdown).toContain('metadata-only: 2')
     expect(markdown).not.toContain('output-requirement-loss: 1')
     expect(markdown).toContain('unknown semantic diffs 0')

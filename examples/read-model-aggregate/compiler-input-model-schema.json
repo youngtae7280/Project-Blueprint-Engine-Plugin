@@ -9,7 +9,8 @@
     "policySnapshot",
     "evidenceIndex",
     "targetScopeCandidates",
-    "outputRequirementSources"
+    "outputRequirementSources",
+    "stopConditionSources"
   ],
   "inputDefinitions": {
     "humanRequest": {
@@ -38,6 +39,10 @@
     },
     "outputRequirementSources": {
       "source": "Graph, policy, Evidence, check, and diff bindings that define output reporting obligations",
+      "authority": "policy"
+    },
+    "stopConditionSources": {
+      "source": "Policy, validator, and compiler-status bindings that define dry-run stop conditions",
       "authority": "policy"
     }
   },

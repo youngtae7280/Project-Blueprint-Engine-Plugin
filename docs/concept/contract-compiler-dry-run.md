@@ -167,8 +167,9 @@ This surface maps hand-written output obligations to `outputRequirementSources[]
 source authority entries to derive generated `outputRequirements`. The current preview reports
 `generated-output-requirements-preserved` with zero unresolved output obligations. The compiler also derives
 `forbiddenScope[]` from `policySnapshot.forbiddenScopeRules[]`, so the current fixture no longer carries
-forbidden-scope policy-loss. This still does not prove full equivalence because scope, context, Evidence, risk, and
-stop-condition losses remain.
+forbidden-scope policy-loss. It also derives `stopConditions[]` from `stopConditionSources[]`, so the current fixture no
+longer carries stop-condition policy-loss. This still does not prove full equivalence because scope, context, Evidence,
+and risk losses remain.
 
 The remaining-loss preview is recorded in
 [contract-source-authority-gap-preview.md](contract-source-authority-gap-preview.md) and emitted as:
@@ -177,7 +178,7 @@ The remaining-loss preview is recorded in
 examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json
 ```
 
-It explains the remaining source-authority gaps by field and currently recommends `stop-condition-source-authority` as
-the next narrow resolver candidate because `stopConditions` still contain policy-loss. The policy forbidden-scope
-resolver is intentionally narrow: it derives generated forbidden scope from policy source authority, not from the
-hand-written comparison fixture.
+It explains the remaining source-authority gaps by field and currently recommends `evidence-source-authority` as the
+next narrow resolver candidate because required Evidence still contains semantic-loss. The policy forbidden-scope and
+stop-condition resolvers are intentionally narrow: they derive generated fields from committed source authority entries,
+not from the hand-written comparison fixture.

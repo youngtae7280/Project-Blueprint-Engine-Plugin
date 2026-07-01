@@ -214,14 +214,15 @@ remaining source-authority gaps before any pack-schema widening, executor automa
 Output Requirement Source Authority v0.2 adds `outputRequirementSources[]` to the current Compiler Input Model fixture
 and writes `output-requirement-source-authority.preview.json`. The preview maps the hand-written changed-file,
 command-output Evidence, validation-result, and boundary reporting obligations to source authority entries, and the
-compiler now derives generated `outputRequirements` from those entries. It reports
+compiler now derives generated `outputRequirements` from those entries. The compiler also derives `forbiddenScope[]`
+from `policySnapshot.forbiddenScopeRules[]` and `stopConditions[]` from `stopConditionSources[]`. It reports
 `generated-output-requirements-preserved` for the current fixture while keeping whole-contract equivalence unproven.
 
 Contract Source Authority Gap Preview v0.2 writes `contract-source-authority-gap.preview.json` to explain the remaining
-semantic/policy losses by field. It now reports four remaining semantic/policy losses across `allowedScope`,
-`requiredContext`, `requiredEvidence`, `knownRisks`, and `stopConditions`; `forbiddenScope` is preserved from
-`policySnapshot.forbiddenScopeRules[]`. The next recommended resolver is `stop-condition-source-authority`. This is
-review metadata only, not enforcement or compiler promotion.
+semantic losses by field. It now reports three remaining semantic losses across `allowedScope`, `requiredContext`,
+`requiredEvidence`, and `knownRisks`; `forbiddenScope` and `stopConditions` are preserved from source authority entries.
+The next recommended resolver is `evidence-source-authority`. This is review metadata only, not enforcement or compiler
+promotion.
 
 The following readiness artifact is complete at documentation level:
 

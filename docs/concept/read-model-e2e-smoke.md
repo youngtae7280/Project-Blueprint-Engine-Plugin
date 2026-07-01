@@ -51,8 +51,8 @@ The smoke checks:
 - local `graph read-model compile-contract --dry-run --json` status `contract-compiler-dry-run-pass`
 - compiler dry-run generated-vs-hand-written diff status `contract-diff-detected`,
   `non-blocking-review-diff`, and `compiler-equivalence-not-proven`
-- compiler dry-run semantic diff review status `compiler-promotion-not-ready`, with `semantic-loss` and `policy-loss`
-  visible as non-enforcing review metadata
+- compiler dry-run semantic diff review status `compiler-promotion-not-ready`, with remaining `semantic-loss` visible as
+  non-enforcing review metadata
 - compiler dry-run v0.1 closeout metadata: `contract-compiler-dry-run-v0.1-classification-complete`,
   `semantic-diff-unknowns-zero`, `semanticDiffCoverageComplete: true`, and `equivalenceProven: false`
 - output requirement source authority preview status `output-requirement-source-authority-preview-pass`, with
@@ -60,7 +60,8 @@ The smoke checks:
   metadata
 - contract source authority gap preview status `contract-source-authority-gap-preview-pass`, with remaining
   semantic/policy loss count and next recommended resolver visible as non-enforcing preview metadata. The current
-  fixture preserves `forbiddenScope` from policy source authority and recommends `stop-condition-source-authority` next.
+  fixture preserves `forbiddenScope` and `stopConditions` from source authority entries and recommends
+  `evidence-source-authority` next.
 
 The separate `graph read-model report-health --json` command summarizes the same transition state from existing
 artifacts and report surfaces. It is useful for a quick local health snapshot, while `npm run test:read-model:e2e`

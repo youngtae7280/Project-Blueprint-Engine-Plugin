@@ -38,7 +38,8 @@
       "policySnapshot",
       "evidenceIndex",
       "targetScopeCandidates",
-      "outputRequirementSources"
+      "outputRequirementSources",
+      "stopConditionSources"
     ]
   },
   "policySnapshot": {
@@ -164,6 +165,36 @@
       "obligationType": "non-execution-boundary-statement",
       "requiredReportTarget": "dry-run non-execution, non-acceptance, and non-enforcement boundary",
       "handWrittenRequirement": "Do not treat this dry-run contract as user acceptance or branch protection."
+    }
+  ],
+  "stopConditionSources": [
+    {
+      "sourceId": "stop-source-scope-expands",
+      "sourceType": "policy",
+      "derivedStopConditionId": "stop-if-scope-expands",
+      "triggerType": "scope-expansion",
+      "condition": "Any production, workflow, source-authority, or tree-retirement change is required.",
+      "action": "stop-and-request-human-decision",
+      "policyBinding": {
+        "policyId": "non-enforcing-read-model-evidence"
+      },
+      "relatedFields": ["allowedScope", "forbiddenScope"]
+    },
+    {
+      "sourceId": "stop-source-required-check-unavailable",
+      "sourceType": "validator",
+      "derivedStopConditionId": "stop-if-required-check-unavailable",
+      "triggerType": "required-check-unavailable",
+      "condition": "Required runtime or read-model checks cannot be executed.",
+      "action": "stop-and-record-missing-evidence",
+      "commandBinding": {
+        "requiredCheckIds": [
+          "check-todo-search-runtime-fixture",
+          "check-read-model-validate-all",
+          "check-read-model-e2e"
+        ]
+      },
+      "relatedFields": ["requiredChecks", "requiredEvidence"]
     }
   ],
   "nonExecutionStatement": "This compiler input dry-run validates Actual Contract Compiler inputs only and does not compile an execution contract, execute AI, apply graph deltas, accept work, enable required checks, or retire tree-native artifacts."

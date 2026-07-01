@@ -19,6 +19,7 @@ import {
 } from './contract-source-authority-gap.js'
 import { resolveOutputRequirementsFromSourceAuthority } from './output-requirement-source-authority.js'
 import { resolveForbiddenScopeFromPolicySourceAuthority } from './policy-forbidden-scope-source-authority.js'
+import { resolveStopConditionsFromSourceAuthority } from './stop-condition-source-authority.js'
 
 export type ContractCompilerDryRunStatus = 'contract-compiler-dry-run-pass' | 'contract-compiler-dry-run-blocked'
 
@@ -372,6 +373,16 @@ function compileBugFixContractCandidate(input: Record<string, unknown>): {
     blocking.push('Contract Compiler Dry-Run v0.2 requires source-authority-derived output requirements.')
   }
 
+  const stopConditionResolution = resolveStopConditionsFromSourceAuthority(arrayValue(input.stopConditionSources))
+  for (const unresolved of stopConditionResolution.unresolvedSources) {
+    blocking.push(
+      `Contract Compiler Dry-Run v0.2 could not derive stop condition ${unresolved.id}: ${unresolved.reason}.`,
+    )
+  }
+  if (stopConditionResolution.stopConditions.length === 0) {
+    blocking.push('Contract Compiler Dry-Run v0.2 requires source-authority-derived stop conditions.')
+  }
+
   if (blocking.length > 0) {
     return { candidate: undefined, blocking }
   }
@@ -404,18 +415,7 @@ function compileBugFixContractCandidate(input: Record<string, unknown>): {
       ],
       openUnknowns: [],
       humanDecisions: [],
-      stopConditions: [
-        {
-          id: 'stop-if-input-model-drifts',
-          condition: 'Compiler input model validation or graph-source cross-reference validation blocks.',
-          action: 'stop-and-request-human-decision',
-        },
-        {
-          id: 'stop-if-required-check-unavailable',
-          condition: 'Required runtime, health, validate-all, or E2E checks cannot be executed.',
-          action: 'stop-and-record-missing-evidence',
-        },
-      ],
+      stopConditions: stopConditionResolution.stopConditions,
       outputRequirements: outputRequirementResolution.outputRequirements,
       nonExecutionStatement:
         'This compiler-produced execution contract candidate is dry-run only. It does not execute work, enable required checks, apply graph deltas, or accept the change.',

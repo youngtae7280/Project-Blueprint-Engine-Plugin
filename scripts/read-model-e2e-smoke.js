@@ -383,8 +383,8 @@ try {
   if ((contractCompilerDryRun.candidateDiff.semanticClassificationCounts['semantic-loss'] || 0) <= 0) {
     throw new Error('Contract compiler semantic diff summary must include semantic-loss')
   }
-  if ((contractCompilerDryRun.candidateDiff.semanticClassificationCounts['policy-loss'] || 0) <= 0) {
-    throw new Error('Contract compiler semantic diff summary must include policy-loss')
+  if ((contractCompilerDryRun.candidateDiff.semanticClassificationCounts['policy-loss'] || 0) !== 0) {
+    throw new Error('Contract compiler policy-loss should be resolved by stop-condition source authority mapping')
   }
   if ((contractCompilerDryRun.candidateDiff.semanticClassificationCounts['output-requirement-loss'] || 0) !== 0) {
     throw new Error('Contract compiler output requirement loss should be resolved by source authority mapping')
@@ -447,12 +447,12 @@ try {
   )
   assertEqual(
     contractCompilerDryRun.sourceAuthorityGapPreview.remainingLossCount,
-    4,
+    3,
     'contract source authority remaining loss count',
   )
   assertEqual(
     contractCompilerDryRun.sourceAuthorityGapPreview.nextRecommendedResolver,
-    'stop-condition-source-authority',
+    'evidence-source-authority',
     'contract source authority next recommended resolver',
   )
 

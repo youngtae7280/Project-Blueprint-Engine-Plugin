@@ -13,7 +13,6 @@
     "requiredChecks",
     "requiredEvidence",
     "knownRisks",
-    "stopConditions",
     "nonExecutionStatement"
   ],
   "comparedFields": [
@@ -28,7 +27,7 @@
     { "field": "knownRisks", "status": "different" },
     { "field": "openUnknowns", "status": "same" },
     { "field": "humanDecisions", "status": "same" },
-    { "field": "stopConditions", "status": "different" },
+    { "field": "stopConditions", "status": "same" },
     { "field": "outputRequirements", "status": "same" },
     { "field": "nonExecutionStatement", "status": "different" }
   ],
@@ -79,8 +78,8 @@
       "field": "stopConditions",
       "handWrittenCount": 2,
       "generatedCount": 2,
-      "missingIdsInGenerated": ["stop-if-scope-expands"],
-      "extraIdsInGenerated": ["stop-if-input-model-drifts"]
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
     }
   ],
   "semanticDiffs": [
@@ -181,30 +180,6 @@
       "extraIdsInGenerated": ["risk-compiler-dry-run-scope-drift"]
     },
     {
-      "field": "stopConditions",
-      "targetField": "stopConditions",
-      "diffDirection": "missingIdsInGenerated",
-      "matchedRuleId": "semantic-diff-rule-stop-conditions-missing-policy-loss",
-      "classification": "policy-loss",
-      "reviewSeverity": "high",
-      "promotionImpact": "blocks-promotion",
-      "reason": "The generated candidate is missing a stop condition from the hand-written contract, so safety policy coverage is not equivalent.",
-      "missingIdsInGenerated": ["stop-if-scope-expands"],
-      "extraIdsInGenerated": []
-    },
-    {
-      "field": "stopConditions",
-      "targetField": "stopConditions",
-      "diffDirection": "extraIdsInGenerated",
-      "matchedRuleId": "semantic-diff-rule-stop-conditions-extra-policy-expansion",
-      "classification": "policy-expansion",
-      "reviewSeverity": "low",
-      "promotionImpact": "review-required",
-      "reason": "The generated candidate adds a stop condition beyond the hand-written contract; review the policy expansion.",
-      "missingIdsInGenerated": [],
-      "extraIdsInGenerated": ["stop-if-input-model-drifts"]
-    },
-    {
       "field": "sourceMode",
       "targetField": "sourceMode",
       "diffDirection": "fieldDifferent",
@@ -234,16 +209,14 @@
     "semantic-loss": 3,
     "safe-additive": 3,
     "evidence-chain-mismatch": 1,
-    "policy-loss": 1,
-    "policy-expansion": 1,
     "metadata-only": 2
   },
   "highestReviewSeverity": "high",
   "compilerPromotionReadiness": "compiler-promotion-not-ready",
   "promotionReadiness": "compiler-promotion-not-ready",
   "semanticDiffRuleCoverage": {
-    "totalDiffs": 12,
-    "classifiedDiffs": 12,
+    "totalDiffs": 10,
+    "classifiedDiffs": 10,
     "unknownDiffs": 0,
     "matchedRuleIds": [
       "semantic-diff-rule-allowed-scope-missing-conservative-restriction",
@@ -255,9 +228,7 @@
       "semantic-diff-rule-required-context-missing-semantic-loss",
       "semantic-diff-rule-required-evidence-extra-evidence-chain-mismatch",
       "semantic-diff-rule-required-evidence-missing-semantic-loss",
-      "semantic-diff-rule-source-mode-field-metadata-only",
-      "semantic-diff-rule-stop-conditions-extra-policy-expansion",
-      "semantic-diff-rule-stop-conditions-missing-policy-loss"
+      "semantic-diff-rule-source-mode-field-metadata-only"
     ],
     "unknownFields": []
   },
