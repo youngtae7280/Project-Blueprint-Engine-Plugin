@@ -1455,6 +1455,39 @@ The result preview remains conservative: `scopeComplianceResultStatus` is still 
 `checkerRun` is still `false`, and `evaluatedViolations` is still empty. No clean result, actual violation, rejection,
 enforcement, approval, runtime Evidence satisfaction, or equivalence proof is claimed.
 
+## Scope Compliance Not-Run Report Preview
+
+The scope compliance not-run report preview artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+- `status: scope-compliance-not-run-report-previewed`
+- `reportStatus: scope-compliance-not-run-report-previewed`
+- `stopReason: authoritative-changed-file-list-missing`
+- `nextRequiredInput: authoritative-changed-file-list`
+- `checkerRun: false`
+- `actualDiffInspected: false`
+- `changedFilesCollected: false`
+- `evaluatedViolations: []`
+
+This artifact previews how DevView should report a not-run scope compliance dry-run. It explains that fixture-provided
+changed-file lists are available only as preview input and cannot replace an authoritative changed-file list. Therefore
+no actual diff is inspected, no changed files are collected, no violation categories are evaluated, and no clean or
+actual violation result can be claimed.
+
+The third-fixture observation now links this preview with:
+
+```text
+scopeComplianceNotRunReportStatus: scope-compliance-not-run-report-previewed
+```
+
+The report is explanatory only. It does not implement the checker, run dry-run logic, evaluate fixture scenarios, reject
+diffs, enforce scope, wire CI, approve the fixture, satisfy runtime Evidence, or prove equivalence.
+
 ## Calibration Success Criteria
 
 A future calibration cycle is successful if:
@@ -1486,9 +1519,9 @@ This selection does not:
 
 ## Next Step
 
-The next task may define a static not-run result shape for one dry-run stage, if DevView is ready to describe how the
-skeleton reports missing authoritative input. It should not inspect actual git diffs, collect changed files from the
-worktree, broaden compiler support, wire additional fixtures into the supported command path, create promotion review
-packets, approve fixtures, claim runtime Evidence is satisfied, implement compliance checking, inspect or reject diffs,
-turn candidate checks into required checks, apply graph deltas, turn test Evidence into user acceptance, allow production
-source edits, enforce CI, or change the existing Todo App structure-only status.
+The next task may decide the first authoritative changed-file input boundary or continue shaping static preview results
+without evaluation. It should not inspect actual git diffs, collect changed files from the worktree, broaden compiler
+support, wire additional fixtures into the supported command path, create promotion review packets, approve fixtures,
+claim runtime Evidence is satisfied, implement compliance checking, inspect or reject diffs, turn candidate checks into
+required checks, apply graph deltas, turn test Evidence into user acceptance, allow production source edits, enforce CI,
+or change the existing Todo App structure-only status.

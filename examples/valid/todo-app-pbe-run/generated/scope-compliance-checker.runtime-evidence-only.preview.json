@@ -16,11 +16,13 @@
   "fixtureProvidedChangedFileListPreview": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
   "fixtureInputConsumptionPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
   "scopeComplianceDryRunSkeleton": "examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json",
+  "scopeComplianceNotRunReport": "examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json",
   "checkerPreviewStatus": "preview-only-not-implemented",
   "changedFileListAuthorityPreviewStatus": "changed-file-list-authority-previewed",
   "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
   "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
   "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",
+  "scopeComplianceNotRunReportStatus": "scope-compliance-not-run-report-previewed",
   "supportStatus": "not-supported",
   "compileEligibility": "not-eligible-current-command-not-wired",
   "expectedCandidateStatus": "contract-candidate-not-run",
@@ -135,6 +137,8 @@
     "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
     "dryRunSkeletonPreviewPath": "examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json",
     "dryRunSkeletonStatus": "preview-only-not-executable",
+    "notRunReportPreviewPath": "examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json",
+    "notRunReportStatus": "scope-compliance-not-run-report-previewed",
     "expectedFutureSource": "future actual changed-file list from diff/file modification inspection",
     "currentChangedFilesInspected": false,
     "currentChangedFileListAuthoritative": false,
@@ -219,6 +223,11 @@
       "previewId": "scope-compliance-dry-run-skeleton",
       "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json",
       "use": "Preview-only dry-run stage boundary; not executable and stopped before evaluation."
+    },
+    {
+      "previewId": "scope-compliance-not-run-report",
+      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json",
+      "use": "Preview-only report shape for explaining why the checker did not run; no clean or violation conclusion."
     },
     {
       "previewId": "test-only-scope-boundary",

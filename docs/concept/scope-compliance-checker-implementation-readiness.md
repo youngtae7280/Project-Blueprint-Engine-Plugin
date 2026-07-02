@@ -187,6 +187,35 @@ changed-file input requirement. The skeleton does not run checker dry-run logic,
 files, evaluate scenarios, report no-violation, report actual violations, reject changes, enforce scope, or promote any
 fixture.
 
+## Scope Compliance Not-Run Report Preview
+
+The not-run report shape preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+```text
+scope-compliance-not-run-report-previewed
+```
+
+This report shape documents why the checker did not run. It records:
+
+```text
+checkerRun: false
+stopReason: authoritative-changed-file-list-missing
+nextRequiredInput: authoritative-changed-file-list
+evaluatedViolations: []
+```
+
+The report explicitly keeps fixture-provided changed-file lists as preview-only input. They are useful for explaining
+future result shape, but they are not actual git diff output, collected changed files, execution metadata, or an
+authoritative changed-file list. Because no actual diff was inspected and no changed files were collected, the report
+does not claim a clean result, an actual violation, rejection, enforcement, approval, runtime Evidence satisfaction, or
+equivalence proof.
+
 ## Readiness Criteria
 
 The first implementation slice should not start until DevView can answer:
@@ -347,6 +376,7 @@ Reason:
 - fixture-provided changed-file list scenarios are previewed but not evaluated;
 - fixture-provided input consumption is previewed without checker execution;
 - dry-run skeleton is previewed but not executable;
+- not-run reporting shape is previewed without checker execution;
 - path normalization is unresolved;
 - result artifact exists only as a static preview, not an implemented output schema;
 - no checker is implemented.
@@ -354,13 +384,12 @@ Reason:
 Recommended next task:
 
 ```text
-preview-only-checker-dry-run-skeleton
+authoritative-changed-file-input-decision
 ```
 
-That next task may define a dry-run skeleton boundary that still avoids actual git diff inspection and still does not
-produce clean or violation conclusions. It should remain preview-only, non-authoritative, and non-enforcing. A
-git-derived changed-file list should wait until a later implementation slice defines base/head and path normalization
-rules.
+That next task may decide the first authoritative changed-file input boundary or keep shaping static preview results.
+It should still avoid actual git diff inspection until base/head and path normalization rules are explicit, and it
+should not produce clean or violation conclusions without authoritative inputs.
 
 ## Non-Goals
 

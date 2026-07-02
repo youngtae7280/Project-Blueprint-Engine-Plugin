@@ -7,6 +7,7 @@
   "checkerAxis": "scope-compliance-preview",
   "dryRunSkeletonStatus": "preview-only-not-executable",
   "resultStatus": "scope-compliance-dry-run-not-run",
+  "scopeComplianceNotRunReportStatus": "scope-compliance-not-run-report-previewed",
   "currentStageStatus": "stopped-before-evaluation",
   "stopReason": "authoritative-changed-file-list-missing",
   "supportStatus": "not-supported",
@@ -29,6 +30,7 @@
     "changedFileListAuthorityPreview": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
     "fixtureProvidedChangedFileListPreview": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
     "fixtureInputConsumptionPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
+    "scopeComplianceNotRunReport": "examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json",
     "testOnlyScopeBoundaryPreview": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json"
   },
   "requiredAuthoritativeInputs": [
@@ -146,6 +148,7 @@
     "actualDiffInspected": false,
     "changedFilesCollected": false,
     "evaluatedViolations": [],
+    "scopeComplianceNotRunReportStatus": "scope-compliance-not-run-report-previewed",
     "noViolationClaimed": false,
     "actualViolationClaimed": false,
     "enforcementStatus": "non-enforcing-preview"

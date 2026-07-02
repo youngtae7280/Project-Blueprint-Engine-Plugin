@@ -298,6 +298,18 @@ It records `dryRunSkeletonStatus: preview-only-not-executable`, `resultStatus: s
 `stopReason: authoritative-changed-file-list-missing`. This means a future dry-run sequence is described, but no checker
 dry-run logic has executed and no clean or violation result can be claimed.
 
+The not-run report shape preview is now recorded:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json
+```
+
+It records `reportStatus: scope-compliance-not-run-report-previewed`, `checkerRun: false`, `stopReason:
+authoritative-changed-file-list-missing`, and `nextRequiredInput: authoritative-changed-file-list`. This report explains
+why no dry-run result can be claimed: no actual diff was inspected, no changed files were collected, fixture-provided
+changed-file input is preview-only, and no violation categories were evaluated. It does not enforce scope, reject
+changes, approve the fixture, satisfy runtime Evidence, or prove equivalence.
+
 ## Decision
 
 Decision:
