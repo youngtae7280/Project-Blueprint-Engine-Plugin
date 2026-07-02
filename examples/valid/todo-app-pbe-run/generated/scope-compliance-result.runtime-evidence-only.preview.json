@@ -20,6 +20,7 @@
   "scopeCompliancePathMatchingHelperStatus": "helper-implemented-not-consumed-for-evaluation",
   "scopeComplianceViolationCategorySchemaStatus": "scope-compliance-violation-category-schema-previewed",
   "scopeComplianceEvaluationResultShapeStatus": "scope-compliance-evaluation-result-shape-previewed",
+  "scopeComplianceEvaluatorStatus": "non-enforcing-evaluator-implemented",
   "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
   "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
   "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",
@@ -50,6 +51,7 @@
     "scopeCompliancePathMatchingHelper": "cli/src/core/scope-compliance-path-pattern.ts",
     "scopeComplianceViolationCategorySchema": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
     "scopeComplianceEvaluationResultShape": "examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json",
+    "scopeComplianceEvaluation": "examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json",
     "collectionScopeDecision": "docs/concept/scope-compliance-checker-implementation-readiness.md#git-derived-changed-file-collection-scope-decision",
     "fixtureProvidedChangedFileListPreview": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
     "fixtureInputConsumptionPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
@@ -233,6 +235,20 @@
     "resultConclusion": "not-produced",
     "cleanResultAllowed": false
   },
+  "scopeComplianceEvaluationPreview": {
+    "status": "scope-compliance-evaluation-previewed",
+    "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json",
+    "scopeComplianceEvaluatorStatus": "non-enforcing-evaluator-implemented",
+    "checkerRun": true,
+    "nonEnforcing": true,
+    "scopeComplianceEvaluationStatus": "evaluation-blocked",
+    "scopeComplianceResult": "evaluation-blocked",
+    "evaluatedViolations": [],
+    "reviewRequiredFindingsPresent": true,
+    "blockingFindingsPresent": true,
+    "enforcementStatus": "not-enforced",
+    "resultConclusion": "advisory-non-enforcing"
+  },
   "dryRunSkeletonPreview": {
     "status": "preview-only-not-executable",
     "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json",
@@ -297,7 +313,9 @@
       "collectionArtifact": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
       "fixtureProvidedPreview": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
       "authoritativeBoundaryDecision": "git-derived-changed-files-selected-for-later-implementation",
-      "requiredBeforeNoViolationClaim": true
+      "requiredBeforeNoViolationClaim": false,
+      "currentStatus": "implemented-as-non-enforcing-advisory-evaluator",
+      "note": "The separate scope-compliance-evaluation artifact now runs non-enforcing evaluation. This collection-only result preview remains not evaluated."
     },
     {
       "inputId": "scope-evaluation-path-comparison-rules",

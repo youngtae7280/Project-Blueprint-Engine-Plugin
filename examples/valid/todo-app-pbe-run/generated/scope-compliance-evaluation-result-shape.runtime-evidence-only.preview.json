@@ -12,6 +12,8 @@
   "pathMatchingHelperArtifact": "cli/src/core/scope-compliance-path-pattern.ts",
   "pathMatchingHelperStatus": "helper-implemented-not-consumed-for-evaluation",
   "violationCategorySchemaArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
+  "scopeComplianceEvaluationArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json",
+  "scopeComplianceEvaluatorStatus": "non-enforcing-evaluator-implemented",
   "scopeComplianceResultPreviewArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
   "checkerRun": false,
   "inputConsumedForEvaluation": false,
@@ -106,6 +108,7 @@
     "scopeCompliancePathPatternPolicy": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
     "scopeCompliancePathMatchingHelper": "cli/src/core/scope-compliance-path-pattern.ts",
     "scopeComplianceViolationCategorySchema": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
+    "scopeComplianceEvaluation": "examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json",
     "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
     "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
     "implementationReadiness": "docs/concept/scope-compliance-checker-implementation-readiness.md"

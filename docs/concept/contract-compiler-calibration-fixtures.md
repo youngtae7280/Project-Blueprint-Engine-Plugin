@@ -1706,6 +1706,40 @@ Required boundary:
 
 The helper is implementation plumbing for a later non-enforcing evaluator. It is not itself scope compliance evaluation.
 
+## Scope Compliance Non-Enforcing Evaluator
+
+The first non-enforcing evaluator helper is:
+
+```text
+cli/src/core/scope-compliance-evaluator.ts
+```
+
+The first advisory evaluation artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json
+```
+
+Current artifact status:
+
+```text
+scopeComplianceEvaluatorStatus: non-enforcing-evaluator-implemented
+checkerRun: true
+nonEnforcing: true
+scopeComplianceEvaluationStatus: evaluation-blocked
+scopeComplianceResult: evaluation-blocked
+enforcementStatus: not-enforced
+```
+
+This is the first implementation slice that consumes the git-derived changed-file collection, allowed/forbidden scope
+binding, path pattern policy, path matching helper, violation category schema, and result shape. It remains advisory
+only. It does not inspect patch contents, reject diffs, enforce scope, wire CI, configure required checks, approve the
+fixture, satisfy runtime Evidence, apply graph deltas, or prove equivalence.
+
+The current Todo App runtime Evidence-only evaluation is blocked rather than clean because the draft still contains
+`unresolved:todo-app-runtime-proof-report`. Empty `evaluatedViolations: []` in this artifact must not be read as fixture
+approval or runtime Evidence satisfaction.
+
 ## Fixture-Provided Changed-File List Preview
 
 The first fixture-provided changed-file list preview artifact is:
@@ -1877,9 +1911,8 @@ This selection does not:
 
 ## Next Step
 
-The next task may decide a collection-only implementation scope for git-derived changed files. It should not evaluate
-scope compliance, report no-violation, report actual violations, broaden compiler support, wire additional fixtures into
-the supported command path, create promotion review packets, approve fixtures, claim runtime Evidence is satisfied,
-implement compliance checking beyond collection, inspect or reject diffs for enforcement, turn candidate checks into
-required checks, apply graph deltas, turn test Evidence into user acceptance, allow production source edits, enforce CI,
-or change the existing Todo App structure-only status.
+The next task may add a runtime budget or reporting smoke around the non-enforcing evaluator. It should not reject diffs,
+enforce scope, broaden compiler support, wire additional fixtures into the supported command path, create promotion
+review packets, approve fixtures, claim runtime Evidence is satisfied, inspect patch contents, turn candidate checks
+into required checks, apply graph deltas, turn test Evidence into user acceptance, allow production source edits, enforce
+CI, or change the existing Todo App structure-only status.

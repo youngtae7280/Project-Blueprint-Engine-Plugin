@@ -1664,6 +1664,24 @@ evaluation, does not generate clean or actual violation results, does not reject
 CI/required checks/branch protection, does not support or approve the fixture, does not satisfy runtime Evidence, and
 does not set `equivalenceProven: true`.
 
+## DEC-227 Implement Non-Enforcing Scope Compliance Evaluator
+
+DEC-227 does not supersede DEC-097 through DEC-226. It implements the first advisory scope compliance evaluator helper
+`cli/src/core/scope-compliance-evaluator.ts` and records the non-enforcing evaluation artifact
+`examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json`.
+
+The evaluator consumes normalized changed-file inputs, allowed scope patterns, forbidden scope patterns, the path
+matching helper, the violation category vocabulary, and the evaluation result shape. It is local and deterministic. It
+evaluates forbidden matches before allowed matches, treats unmatched paths as review-required, and treats unknown or
+unsupported patterns as evaluation-blocking. The Todo App runtime Evidence-only artifact records `checkerRun: true`,
+`nonEnforcing: true`, `scopeComplianceEvaluationStatus: evaluation-blocked`,
+`scopeComplianceResult: evaluation-blocked`, `enforcementStatus: not-enforced`, and `evaluatedViolations: []`.
+
+This decision does not introduce scope enforcement, diff rejection, CI required checks, branch protection, fixture
+support, promotion approval, runtime Evidence satisfaction, equivalence proof, executor automation, graph delta apply,
+or automated user acceptance. The evaluator is advisory only, and clean or blocking states from this slice are not
+approval or enforcement authority.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

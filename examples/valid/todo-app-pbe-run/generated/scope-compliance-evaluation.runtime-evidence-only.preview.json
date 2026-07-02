@@ -1,0 +1,264 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "scope-compliance-evaluation-preview",
+  "status": "scope-compliance-evaluation-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "checkerAxis": "scope-compliance-preview",
+  "evaluationMode": "non-enforcing-local-deterministic",
+  "scopeComplianceEvaluatorStatus": "non-enforcing-evaluator-implemented",
+  "changedFileInputArtifact": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+  "scopeInputBindingArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+  "pathPatternPolicyArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+  "pathMatchingHelperArtifact": "cli/src/core/scope-compliance-path-pattern.ts",
+  "violationCategorySchemaArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
+  "resultShapeArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json",
+  "checkerRun": true,
+  "nonEnforcing": true,
+  "inputConsumedForEvaluation": true,
+  "changedFileInputConsumedForEvaluation": true,
+  "scopeInputsConsumedForEvaluation": true,
+  "pathPolicyConsumedForEvaluation": true,
+  "pathMatchingHelperConsumedForEvaluation": true,
+  "categorySchemaConsumedForEvaluation": true,
+  "scopeComplianceEvaluationStatus": "evaluation-blocked",
+  "scopeComplianceResult": "evaluation-blocked",
+  "resultConfidence": "advisory-non-enforcing",
+  "enforcementStatus": "not-enforced",
+  "scopeEnforced": false,
+  "diffRejected": false,
+  "cleanClaimed": false,
+  "actualViolationClaimed": false,
+  "supportStatus": "not-supported",
+  "compileEligibility": "not-eligible-current-command-not-wired",
+  "expectedCandidateStatus": "contract-candidate-not-run",
+  "approvalStatus": "not-approved",
+  "equivalenceProven": false,
+  "currentRuntimeEvidenceStatus": "missing",
+  "evidenceCheckBindingStatus": "preview-only-not-satisfied",
+  "allowedScopePatterns": [
+    "examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json",
+    "examples/valid/todo-app-pbe-run/.pbe/evidence/evidence-tree.json",
+    "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt",
+    "unresolved:todo-app-runtime-proof-report"
+  ],
+  "forbiddenScopePatterns": [
+    "src/todos.ts",
+    "examples/read-model-aggregate/read-model-slices.json",
+    "examples/valid/todo-app-pbe-run/graph-source.json",
+    "examples/valid/todo-app-pbe-run/.pbe/control/acceptance-tree.json"
+  ],
+  "evaluatedFiles": [
+    {
+      "path": "cli/src/__tests__/git-derived-changed-file-collection.test.ts",
+      "status": "M",
+      "statusCode": "M",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "cli/src/__tests__/scope-compliance-path-pattern.test.ts",
+      "status": "A",
+      "statusCode": "A",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "cli/src/core/git-derived-changed-file-collection.ts",
+      "status": "M",
+      "statusCode": "M",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "cli/src/core/scope-compliance-path-pattern.ts",
+      "status": "A",
+      "statusCode": "A",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "docs/concept/contract-compiler-calibration-fixtures.md",
+      "status": "M",
+      "statusCode": "M",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "docs/concept/decision-log.md",
+      "status": "M",
+      "statusCode": "M",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "docs/concept/devview-compliance-checker-mvp-scope.md",
+      "status": "M",
+      "statusCode": "M",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "docs/concept/scope-compliance-checker-implementation-readiness.md",
+      "status": "M",
+      "statusCode": "M",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "examples/valid/todo-app-pbe-run/generated/compiler-input-calibration-observation.runtime-evidence-only.preview.json",
+      "status": "M",
+      "statusCode": "M",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+      "status": "M",
+      "statusCode": "M",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
+      "status": "M",
+      "statusCode": "M",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
+      "status": "M",
+      "statusCode": "M",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json",
+      "status": "M",
+      "statusCode": "M",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+      "status": "M",
+      "statusCode": "M",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
+      "status": "M",
+      "statusCode": "M",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+      "status": "M",
+      "statusCode": "M",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    },
+    {
+      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
+      "status": "M",
+      "statusCode": "M",
+      "allowedMatched": false,
+      "forbiddenMatched": false,
+      "matchedAllowedPatterns": [],
+      "matchedForbiddenPatterns": []
+    }
+  ],
+  "evaluatedViolations": [],
+  "reviewRequiredFindings": [
+    {
+      "category": "scope-unmatched-path",
+      "severity": "review-required",
+      "affectedChangedFileCount": 17,
+      "reason": "changed files do not match current allowed or forbidden scope patterns; this is review-required and not clean"
+    }
+  ],
+  "blockingFindings": [
+    {
+      "category": "unknown-pattern",
+      "pattern": "unresolved:todo-app-runtime-proof-report",
+      "severity": "blocking",
+      "affectedChangedFileCount": 17,
+      "reason": "unsupported-conceptual-unresolved-pattern"
+    }
+  ],
+  "unknownFindings": [
+    {
+      "category": "unknown-pattern",
+      "pattern": "unresolved:todo-app-runtime-proof-report",
+      "severity": "blocking",
+      "affectedChangedFileCount": 17,
+      "reason": "unsupported-conceptual-unresolved-pattern"
+    }
+  ],
+  "findingSummary": {
+    "evaluatedFileCount": 17,
+    "evaluatedViolationCount": 0,
+    "reviewRequiredFindingCount": 1,
+    "blockingFindingCount": 1,
+    "unknownFindingCount": 1,
+    "deduplicatedFindingSummaryApplied": true,
+    "emptyEvaluatedViolationsMeaning": "non-enforcing-evaluation-found-no-forbidden-scope-match-before-evaluation-blocked-by-unknown-pattern",
+    "cleanResultAllowed": false
+  },
+  "nonEnforcementBoundary": "This artifact records the first local deterministic scope compliance evaluator slice. It consumes the git-derived changed-file collection, scope input binding, path policy, path matching helper, category schema, and result shape, but it remains advisory and non-enforcing. It does not inspect patch contents, reject diffs, enforce scope, wire CI, configure required checks, approve fixtures, satisfy runtime Evidence, set equivalenceProven true, apply graph deltas, or replace user acceptance.",
+  "allowedUse": [
+    "review advisory scope evaluation output from the first non-enforcing evaluator slice",
+    "confirm unresolved scope patterns block clean classification",
+    "confirm unmatched changed paths are review-required and not silently clean",
+    "prepare a later supported evaluator/reporting decision"
+  ],
+  "forbiddenUse": [
+    "diff rejection",
+    "scope enforcement",
+    "CI enforcement",
+    "required check configuration",
+    "branch protection",
+    "fixture support",
+    "fixture approval",
+    "runtime Evidence satisfaction",
+    "equivalence proof",
+    "graph delta apply",
+    "user acceptance",
+    "production source edit permission"
+  ]
+}

@@ -470,6 +470,33 @@ helper-level match fields only; it does not consume the collection artifact as a
 set with allowedScope or forbiddenScope, does not classify violation categories, and does not produce clean or violation
 results.
 
+The first non-enforcing scope evaluator now exists at:
+
+```text
+cli/src/core/scope-compliance-evaluator.ts
+```
+
+The first advisory evaluation artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json
+```
+
+Status:
+
+```text
+scopeComplianceEvaluatorStatus: non-enforcing-evaluator-implemented
+checkerRun: true
+nonEnforcing: true
+enforcementStatus: not-enforced
+```
+
+The evaluator consumes the git-derived changed-file collection, scope input binding, path policy, helper, category
+schema, and result shape as local deterministic inputs. It is not a gate. It does not reject diffs, enforce scope, wire
+CI, configure required checks, approve fixtures, satisfy runtime Evidence, apply graph deltas, or prove equivalence. The
+Todo App artifact currently reports `evaluation-blocked` because unresolved scope patterns must not silently pass as
+clean.
+
 ## Decision
 
 Decision:

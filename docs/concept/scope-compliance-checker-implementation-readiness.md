@@ -543,15 +543,52 @@ scopeComplianceResult: no-result
 evaluatedViolations: []
 ```
 
-The helper is not an evaluator. It does not consume the git-derived collection artifact, does not consume
+The helper is not an evaluator by itself. It does not consume the git-derived collection artifact, does not consume
 `allowedScope` or `forbiddenScope`, does not classify categories, and does not produce clean or violation results.
 
-Remaining prerequisite before evaluation:
+## Non-Enforcing Scope Evaluator Implementation
 
-- non-enforcing scope evaluation implementation.
+The first non-enforcing evaluator helper is:
 
-The next checker step should define or implement a non-enforcing evaluator that consumes helper output carefully, but
-it still must not enforce, reject, approve, or claim runtime Evidence satisfaction.
+```text
+cli/src/core/scope-compliance-evaluator.ts
+```
+
+The first advisory evaluation artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json
+```
+
+Evaluator status:
+
+```text
+scopeComplianceEvaluatorStatus: non-enforcing-evaluator-implemented
+checkerRun: true
+nonEnforcing: true
+enforcementStatus: not-enforced
+```
+
+The evaluator consumes normalized changed files, allowed scope patterns, forbidden scope patterns, the path matching
+helper, the category vocabulary, and the result shape. It is local, deterministic, and advisory. It evaluates forbidden
+matches before allowed matches, treats unmatched changed paths as review-required, and treats unknown or unsupported
+patterns as evaluation-blocking.
+
+For the Todo App runtime Evidence-only preview artifact, the current result is:
+
+```text
+scopeComplianceEvaluationStatus: evaluation-blocked
+scopeComplianceResult: evaluation-blocked
+evaluatedViolations: []
+```
+
+This is intentionally not a clean result. The draft still contains the conceptual pattern
+`unresolved:todo-app-runtime-proof-report`, so the evaluator blocks clean classification instead of silently passing it.
+The empty `evaluatedViolations` array means no forbidden-scope match was emitted before evaluation was blocked; it does
+not approve the fixture, satisfy runtime Evidence, prove equivalence, reject diffs, or enforce scope.
+
+The evaluator must stay outside CI gates, required checks, branch protection, graph delta apply, fixture approval, and
+runtime Evidence satisfaction until a separate decision explicitly changes those boundaries.
 
 ## Fixture-Provided Changed-File List Preview
 
@@ -819,31 +856,31 @@ Reason:
   files;
 - git-derived changed-file input design is previewed;
 - git-derived changed-file collection scope is decided as collection-only;
-- git-derived changed-file collection remains unimplemented;
+- git-derived changed-file collection is implemented as collection-only;
 - fixture-provided changed-file list scenarios are previewed but not evaluated;
 - fixture-provided input consumption is previewed without checker execution;
 - dry-run skeleton is previewed but not executable;
 - not-run reporting shape is previewed without checker execution;
 - path normalization is unresolved;
-- result artifact exists only as a static preview, not an implemented output schema;
-- no checker is implemented.
+- result shape artifact exists as a preview;
+- a first non-enforcing evaluator helper and advisory artifact exist, but no enforcement, rejection, approval,
+  equivalence proof, or CI gate exists.
 
 Recommended next task:
 
 ```text
-git-derived-changed-file-collection-only-implementation
+scope-compliance-runtime-budget-and-reporting-smoke
 ```
 
-That next task may implement a non-enforcing collection-only artifact. It should still avoid scope compliance
-evaluation, rejection, enforcement, CI wiring, and clean or violation conclusions.
+That next task may measure and report the deterministic evaluator path without adding enforcement. It should still avoid
+diff rejection, CI wiring, required checks, fixture approval, runtime Evidence satisfaction, and equivalence claims.
 
 ## Non-Goals
 
-This readiness document does not:
+This readiness document and the first evaluator slice do not:
 
-- implement the compliance checker;
-- inspect actual diffs;
-- collect changed files;
+- implement an enforcing compliance checker;
+- inspect patch contents;
 - reject diffs;
 - enforce scope;
 - wire checker behavior into compiler execution;
