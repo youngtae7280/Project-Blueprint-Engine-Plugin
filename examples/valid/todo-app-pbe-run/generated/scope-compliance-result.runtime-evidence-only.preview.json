@@ -15,6 +15,7 @@
   "gitDerivedChangedFileCollectionScopeDecisionStatus": "git-derived-collection-scope-decided",
   "gitDerivedChangedFileCollectionStatus": "git-derived-changed-files-collected",
   "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
+  "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
   "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
   "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
   "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",
@@ -40,6 +41,7 @@
     "gitDerivedChangedFileInputDesign": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json",
     "gitDerivedChangedFileCollection": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
     "scopeComplianceCollectionInputConsumption": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
+    "scopeComplianceScopeInputBinding": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
     "collectionScopeDecision": "docs/concept/scope-compliance-checker-implementation-readiness.md#git-derived-changed-file-collection-scope-decision",
     "fixtureProvidedChangedFileListPreview": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
     "fixtureInputConsumptionPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
@@ -53,23 +55,26 @@
     {
       "inputId": "execution-contract-or-contract-equivalent-scope-source",
       "requiredFor": ["allowedScope", "forbiddenScope"],
-      "currentStatus": "preview-source-only",
-      "currentSource": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
-      "blockingReason": "The fixture has no supported generated contract candidate and remains contract-candidate-not-run."
+      "currentStatus": "scope-input-binding-previewed-not-consumed",
+      "currentSource": "examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
+      "bindingPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+      "blockingReason": "The fixture has no supported generated contract candidate and remains contract-candidate-not-run; the binding preview only identifies draft scope sources."
     },
     {
       "inputId": "allowedScope",
       "requiredFor": ["allowed-scope-violation"],
-      "currentStatus": "preview-source-only",
-      "currentSource": "test-only-scope-boundary-preview",
-      "blockingReason": "Allowed scope is available only as preview metadata, not as a supported checker input."
+      "currentStatus": "allowed-scope-source-binding-previewed-not-consumed",
+      "currentSource": "compiler-input-model-calibration-draft.targetScopeCandidates",
+      "bindingPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+      "blockingReason": "Allowed scope source is identified for future evaluation, but path matching and evaluation are not implemented."
     },
     {
       "inputId": "forbiddenScope",
       "requiredFor": ["forbidden-scope-violation", "production-source-modified-in-test-only-fixture"],
-      "currentStatus": "preview-source-only",
-      "currentSource": "test-only-scope-boundary-preview",
-      "blockingReason": "Forbidden scope is available only as preview metadata, not as a supported checker input."
+      "currentStatus": "forbidden-scope-source-binding-previewed-not-consumed",
+      "currentSource": "compiler-input-model-calibration-draft.policySnapshot.forbiddenScopeRules",
+      "bindingPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+      "blockingReason": "Forbidden scope source is identified for future evaluation, but path matching and evaluation are not implemented."
     },
     {
       "inputId": "authoritative-changed-file-list",
@@ -104,11 +109,14 @@
     }
   ],
   "scopeSourceStatus": {
-    "allowedScopeSourceStatus": "preview-only",
-    "forbiddenScopeSourceStatus": "preview-only",
+    "allowedScopeSourceStatus": "allowed-scope-source-binding-previewed-not-consumed",
+    "forbiddenScopeSourceStatus": "forbidden-scope-source-binding-previewed-not-consumed",
     "scopeSourceAuthoritative": false,
     "scopeSourceSupportedByChecker": false,
-    "reason": "The test-only scope boundary preview identifies expected allowed and forbidden scope, but the fixture is not supported and no checker consumes the preview."
+    "scopeInputsAcceptedForFutureEvaluation": true,
+    "scopeInputsConsumedForEvaluation": false,
+    "bindingPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+    "reason": "The calibration draft identifies allowed and forbidden scope sources for future evaluation, but the fixture is not supported and no checker consumes the binding."
   },
   "pathNormalizationStatus": {
     "status": "not-defined",
@@ -148,6 +156,19 @@
     "inputCollectionStatus": "git-derived-changed-files-collected",
     "inputAcceptedForFutureEvaluation": true,
     "inputConsumedForEvaluation": false,
+    "checkerRun": false,
+    "scopeComplianceEvaluationStatus": "not-evaluated",
+    "evaluatedViolations": [],
+    "resultConclusion": "not-produced"
+  },
+  "scopeComplianceScopeInputBindingPreview": {
+    "status": "scope-compliance-scope-input-binding-previewed",
+    "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+    "scopeSourceArtifact": "examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
+    "allowedScopeBindingStatus": "allowed-scope-source-binding-previewed",
+    "forbiddenScopeBindingStatus": "forbidden-scope-source-binding-previewed",
+    "scopeInputsAcceptedForFutureEvaluation": true,
+    "scopeInputsConsumedForEvaluation": false,
     "checkerRun": false,
     "scopeComplianceEvaluationStatus": "not-evaluated",
     "evaluatedViolations": [],

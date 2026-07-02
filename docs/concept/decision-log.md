@@ -1601,6 +1601,18 @@ no violation classification, no no-violation claim, no actual violation claim, n
 CI/required-check/branch-protection wiring, no fixture approval, no runtime Evidence satisfaction, and
 `equivalenceProven: false`.
 
+DEC-222 does not supersede DEC-097 through DEC-221. It adds the allowed/forbidden scope input binding preview artifact
+`examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json`.
+The preview records `bindingStatus: scope-compliance-scope-input-binding-previewed`, allowed scope bound to
+`compiler-input-model-calibration-draft.runtime-evidence-only.json` `targetScopeCandidates[]`, forbidden scope bound to
+the same draft's `policySnapshot.forbiddenScopeRules[]`, `scopeInputsAcceptedForFutureEvaluation: true`,
+`scopeInputsConsumedForEvaluation: false`, `checkerRun: false`, `scopeComplianceEvaluationStatus: not-evaluated`, and
+`evaluatedViolations: []`. This identifies scope input sources for a future checker only. It does not create a new
+source of truth, does not make the calibration draft a supported execution contract, does not implement path matching,
+does not compare changed files against allowedScope or forbiddenScope, does not classify violations, does not report
+clean or actual violation results, does not reject or enforce diffs, does not wire CI/required checks/branch protection,
+does not support or approve the fixture, does not satisfy runtime Evidence, and does not set `equivalenceProven: true`.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

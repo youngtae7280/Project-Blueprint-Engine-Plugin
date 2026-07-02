@@ -41,6 +41,7 @@ export interface GitDerivedChangedFileCollectionArtifact {
   checkerAxis: 'scope-compliance-preview'
   collectionStatus: 'git-derived-changed-files-collected'
   scopeComplianceCollectionInputConsumptionStatus: 'scope-compliance-collection-input-consumption-previewed'
+  scopeComplianceScopeInputBindingStatus: 'scope-compliance-scope-input-binding-previewed'
   authorityClass: 'git-derived-changed-files'
   collectionMode: 'explicit-base-head'
   baseRef: string
@@ -60,6 +61,7 @@ export interface GitDerivedChangedFileCollectionArtifact {
   actualViolationClaimed: false
   sourceArtifacts: {
     scopeComplianceCollectionInputConsumption: string
+    scopeComplianceScopeInputBinding: string
     scopeComplianceResultPreview: string
     scopeComplianceCheckerPreview: string
     scopeComplianceNotRunReport: string
@@ -206,6 +208,7 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
     checkerAxis: 'scope-compliance-preview',
     collectionStatus: 'git-derived-changed-files-collected',
     scopeComplianceCollectionInputConsumptionStatus: 'scope-compliance-collection-input-consumption-previewed',
+    scopeComplianceScopeInputBindingStatus: 'scope-compliance-scope-input-binding-previewed',
     authorityClass: 'git-derived-changed-files',
     collectionMode: 'explicit-base-head',
     baseRef: input.baseRef,
@@ -226,6 +229,8 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
     sourceArtifacts: {
       scopeComplianceCollectionInputConsumption:
         'examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json',
+      scopeComplianceScopeInputBinding:
+        'examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json',
       scopeComplianceResultPreview:
         'examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json',
       scopeComplianceCheckerPreview:

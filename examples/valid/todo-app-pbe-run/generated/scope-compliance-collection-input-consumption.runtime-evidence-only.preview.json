@@ -6,6 +6,7 @@
   "fixtureShape": "test-only-behavior-proof",
   "checkerAxis": "scope-compliance-preview",
   "consumptionStatus": "scope-compliance-collection-input-consumption-previewed",
+  "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
   "inputArtifact": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
   "inputAuthorityClass": "git-derived-changed-files",
   "inputCollectionStatus": "git-derived-changed-files-collected",
@@ -77,15 +78,15 @@
   "requiredNextInputs": [
     {
       "inputId": "allowedScope-source-binding",
-      "currentStatus": "preview-source-only",
+      "currentStatus": "scope-input-binding-previewed-not-consumed",
       "requiredBeforeEvaluation": true,
-      "reason": "The future checker needs a supported allowedScope source before comparing changed files."
+      "reason": "The future checker can identify the allowedScope source, but no evaluation consumes it yet."
     },
     {
       "inputId": "forbiddenScope-source-binding",
-      "currentStatus": "preview-source-only",
+      "currentStatus": "scope-input-binding-previewed-not-consumed",
       "requiredBeforeEvaluation": true,
-      "reason": "The future checker needs a supported forbiddenScope source before comparing changed files."
+      "reason": "The future checker can identify the forbiddenScope source, but no evaluation consumes it yet."
     },
     {
       "inputId": "path-pattern-matching-policy",
@@ -114,6 +115,7 @@
   ],
   "sourceArtifacts": {
     "gitDerivedChangedFileCollection": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+    "scopeComplianceScopeInputBinding": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
     "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
     "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
     "scopeComplianceNotRunReport": "examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json",

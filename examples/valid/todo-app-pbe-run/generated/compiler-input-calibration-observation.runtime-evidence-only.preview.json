@@ -70,6 +70,7 @@
     "gitDerivedChangedFileCollectionScopeDecisionStatus": "git-derived-collection-scope-decided",
     "gitDerivedChangedFileCollectionStatus": "git-derived-changed-files-collected",
     "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
+    "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
     "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
     "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
     "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",
@@ -137,6 +138,20 @@
     "remainingSupportStatus": "not-supported"
   },
   "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
+  "scopeComplianceScopeInputBindingPreview": {
+    "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+    "status": "scope-compliance-scope-input-binding-previewed",
+    "scopeSourceArtifact": "examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
+    "allowedScopeBindingStatus": "allowed-scope-source-binding-previewed",
+    "forbiddenScopeBindingStatus": "forbidden-scope-source-binding-previewed",
+    "scopeInputsAcceptedForFutureEvaluation": true,
+    "scopeInputsConsumedForEvaluation": false,
+    "checkerRun": false,
+    "scopeComplianceEvaluationStatus": "not-evaluated",
+    "evaluatedViolations": [],
+    "remainingSupportStatus": "not-supported"
+  },
+  "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
   "fixtureProvidedChangedFileListPreview": {
     "path": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
     "status": "fixture-provided-changed-file-list-previewed",
@@ -198,6 +213,7 @@
     "gitDerivedChangedFileInputDesignStatus": "git-derived-input-design-previewed",
     "gitDerivedChangedFileCollectionScopeDecisionStatus": "git-derived-collection-scope-decided",
     "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
+    "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
     "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
     "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
     "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",

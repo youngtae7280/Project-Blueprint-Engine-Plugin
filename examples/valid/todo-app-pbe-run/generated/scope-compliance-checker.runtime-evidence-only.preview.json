@@ -16,6 +16,7 @@
   "gitDerivedChangedFileInputDesign": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json",
   "gitDerivedChangedFileCollection": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
   "scopeComplianceCollectionInputConsumption": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
+  "scopeComplianceScopeInputBinding": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
   "fixtureProvidedChangedFileListPreview": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
   "fixtureInputConsumptionPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
   "scopeComplianceDryRunSkeleton": "examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json",
@@ -27,6 +28,7 @@
   "gitDerivedChangedFileCollectionScopeDecisionStatus": "git-derived-collection-scope-decided",
   "gitDerivedChangedFileCollectionStatus": "git-derived-changed-files-collected",
   "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
+  "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
   "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
   "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
   "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",
@@ -41,17 +43,19 @@
   "contractInputs": [
     {
       "inputId": "contract-allowed-scope",
-      "source": "test-only-scope-boundary-preview",
-      "sourcePath": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
+      "source": "compiler-input-model-calibration-draft.targetScopeCandidates",
+      "sourcePath": "examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
+      "bindingPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
       "expectedUse": "Compare future changed files against test, Evidence, command-output, and report-only candidate scope.",
-      "currentStatus": "previewed-not-supported"
+      "currentStatus": "binding-previewed-not-consumed"
     },
     {
       "inputId": "contract-forbidden-scope",
-      "source": "test-only-scope-boundary-preview",
-      "sourcePath": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
+      "source": "compiler-input-model-calibration-draft.policySnapshot.forbiddenScopeRules",
+      "sourcePath": "examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
+      "bindingPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
       "expectedUse": "Compare future changed files against production source, promotion/profile, and acceptance-state forbidden scope.",
-      "currentStatus": "previewed-not-supported"
+      "currentStatus": "binding-previewed-not-consumed"
     },
     {
       "inputId": "contract-stop-conditions",
@@ -99,8 +103,10 @@
     }
   ],
   "allowedScopeSource": {
-    "status": "previewed-from-test-only-scope-boundary",
-    "sourcePath": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
+    "status": "allowed-scope-source-binding-previewed-not-consumed",
+    "sourcePath": "examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
+    "sourceField": "targetScopeCandidates[]",
+    "bindingPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
     "expectedAllowedScopeCategories": [
       "test-files",
       "runtime-evidence-files",
@@ -115,11 +121,15 @@
       "unresolved:todo-app-runtime-proof-report",
       "unresolved:production-source-non-modification-report"
     ],
+    "scopeInputsAcceptedForFutureEvaluation": true,
+    "scopeInputsConsumedForEvaluation": false,
     "scopeEnforced": false
   },
   "forbiddenScopeSource": {
-    "status": "previewed-from-test-only-scope-boundary",
-    "sourcePath": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
+    "status": "forbidden-scope-source-binding-previewed-not-consumed",
+    "sourcePath": "examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
+    "sourceField": "policySnapshot.forbiddenScopeRules[]",
+    "bindingPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
     "expectedForbiddenScopeCategories": [
       "production-source",
       "profile-or-source-authority-promotion",
@@ -132,6 +142,8 @@
       "examples/valid/todo-app-pbe-run/.pbe/control/acceptance-tree.json"
     ],
     "sourceEditStopCondition": "runtime-proof-appears-to-require-production-source-edit",
+    "scopeInputsAcceptedForFutureEvaluation": true,
+    "scopeInputsConsumedForEvaluation": false,
     "scopeEnforced": false
   },
   "changedFileListSource": {
@@ -225,6 +237,11 @@
     }
   ],
   "linksToExistingPreviews": [
+    {
+      "previewId": "scope-input-binding",
+      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+      "use": "Preview-only binding for allowedScope and forbiddenScope source fields; no path matching or evaluation."
+    },
     {
       "previewId": "changed-file-list-authority",
       "path": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",

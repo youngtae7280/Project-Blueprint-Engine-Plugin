@@ -377,6 +377,28 @@ keeps `inputConsumedForEvaluation: false`, `checkerRun: false`, `scopeCompliance
 `evaluatedViolations: []`. Allowed/forbidden comparison, path matching, violation classification, clean results, and
 actual violation results remain later work.
 
+The first allowed/forbidden scope input binding preview now records:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json
+```
+
+Status:
+
+```text
+scopeComplianceScopeInputBindingStatus: scope-compliance-scope-input-binding-previewed
+```
+
+The binding identifies the current preview sources for future scope evaluation:
+
+- `targetScopeCandidates[]` in the runtime Evidence-only calibration draft for allowed scope;
+- `policySnapshot.forbiddenScopeRules[]` in the same calibration draft for forbidden scope.
+
+This is only input binding. It keeps `scopeInputsConsumedForEvaluation: false`, `checkerRun: false`,
+`scopeComplianceEvaluationStatus: not-evaluated`, and `evaluatedViolations: []`. The preferred future authoritative
+source remains a supported execution contract `allowedScope[]` / `forbiddenScope[]` if this fixture ever becomes
+eligible and wired. Path matching and clean/violation results remain later work.
+
 ## Decision
 
 Decision:

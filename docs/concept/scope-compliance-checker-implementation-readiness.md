@@ -308,16 +308,56 @@ Input accepted means the collection artifact can be used later as checker input.
 been compared with `allowedScope` or `forbiddenScope`, does not mean the result is clean, does not mean violations exist,
 and does not enable enforcement.
 
+The next checker step should bind allowed/forbidden scope inputs before any comparison implementation.
+
+## Allowed/Forbidden Scope Input Binding Preview
+
+The first scope input binding preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+```text
+scope-compliance-scope-input-binding-previewed
+```
+
+This preview records where a future scope compliance checker should read scope rules for the Todo App runtime
+Evidence-only fixture:
+
+- allowed scope source: `compiler-input-model-calibration-draft.runtime-evidence-only.json` `targetScopeCandidates[]`;
+- forbidden scope source: `compiler-input-model-calibration-draft.runtime-evidence-only.json`
+  `policySnapshot.forbiddenScopeRules[]`;
+- preferred future authoritative source: supported execution contract `allowedScope[]` and `forbiddenScope[]`, once the
+  fixture becomes eligible and wired.
+
+Required boundary:
+
+```text
+scopeInputsAcceptedForFutureEvaluation: true
+scopeInputsConsumedForEvaluation: false
+checkerRun: false
+scopeComplianceEvaluationStatus: not-evaluated
+evaluatedViolations: []
+```
+
+Scope input accepted means the checker can identify the source fields for future evaluation. It does not mean changed
+files have been compared with `allowedScope` or `forbiddenScope`, does not mean path matching is implemented, does not
+mean the result is clean, and does not mean violations exist. The calibration draft is used only as the current
+preview binding source because the third fixture has no supported generated contract candidate.
+
 Remaining prerequisites before evaluation:
 
-- allowedScope source binding;
-- forbiddenScope source binding;
 - path pattern matching policy;
+- path normalization compatibility between collection paths and scope patterns;
 - generated-file handling policy;
 - violation category schema;
-- evaluation result schema.
+- evaluation result schema;
+- unknown/unmatched path behavior.
 
-The next checker step should bind allowed/forbidden scope inputs before any comparison implementation.
+The next checker step should define path matching policy before any comparison implementation.
 
 ## Fixture-Provided Changed-File List Preview
 

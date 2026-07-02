@@ -1497,6 +1497,46 @@ Required boundary:
 Remaining future inputs include allowedScope binding, forbiddenScope binding, path pattern matching policy,
 generated-file handling policy, violation category schema, and evaluation result schema.
 
+## Scope Compliance Scope Input Binding Preview
+
+The allowed/forbidden scope input binding preview artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+```text
+scopeComplianceScopeInputBindingStatus: scope-compliance-scope-input-binding-previewed
+```
+
+This artifact identifies where a future scope compliance checker should read comparison scope for the third fixture:
+
+- allowed scope: `targetScopeCandidates[]` in
+  `compiler-input-model-calibration-draft.runtime-evidence-only.json`;
+- forbidden scope: `policySnapshot.forbiddenScopeRules[]` in the same calibration draft.
+
+This does not create a new source of truth and does not promote preview docs into checker authority. The preferred
+future authority remains a supported execution contract with `allowedScope[]` and `forbiddenScope[]`, but the Todo App
+runtime Evidence-only fixture is not supported, not wired, and has no contract candidate.
+
+Required boundary:
+
+- `scopeInputsAcceptedForFutureEvaluation: true`;
+- `scopeInputsConsumedForEvaluation: false`;
+- `checkerRun: false`;
+- `scopeComplianceEvaluationStatus: not-evaluated`;
+- `evaluatedViolations: []`;
+- no changed-file comparison against allowedScope;
+- no changed-file comparison against forbiddenScope;
+- no path pattern matching;
+- no clean or violation result;
+- no rejection, enforcement, CI wiring, fixture approval, runtime Evidence satisfaction, or equivalence proof.
+
+With this preview, the changed-file input and the scope-rule input are both identifiable for future evaluation. The next
+safe step is path pattern matching policy, not scope compliance evaluation.
+
 ## Fixture-Provided Changed-File List Preview
 
 The first fixture-provided changed-file list preview artifact is:
