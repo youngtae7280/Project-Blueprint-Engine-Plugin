@@ -332,6 +332,16 @@ committed range, with working-tree, staged, and untracked modes deferred. It als
 generated-churn handling requirements. No `git diff` command has run, no changed files were collected, and the checker
 result remains not-run/input-missing.
 
+The git-derived changed-file collection scope is now decided:
+
+```text
+gitDerivedChangedFileCollectionScopeDecisionStatus: git-derived-collection-scope-decided
+```
+
+The next implementation slice is collection-only with explicit base/head refs first. It should create only a
+changed-file collection artifact. Collection success still keeps `checkerRun: false`, `evaluatedViolations: []`, and
+`scopeComplianceEvaluationStatus: not-evaluated`; scope matching and clean/violation results remain later work.
+
 ## Decision
 
 Decision:

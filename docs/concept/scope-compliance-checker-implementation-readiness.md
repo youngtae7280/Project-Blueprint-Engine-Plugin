@@ -185,6 +185,58 @@ Generated churn policy:
 The current checker result remains `scope-compliance-input-missing`; `checkerRun`, `actualDiffInspected`,
 `changedFilesCollected`, and `evaluatedViolations` remain false/empty.
 
+## Git-Derived Changed-File Collection Scope Decision
+
+Decision status:
+
+```text
+git-derived-collection-scope-decided
+```
+
+First implementation slice:
+
+- collection-only;
+- explicit base/head refs first;
+- committed range such as `HEAD~1..HEAD` remains a convenience candidate after explicit-ref handling is defined;
+- no working-tree mode;
+- no staged mode;
+- no untracked mode;
+- no allowedScope or forbiddenScope evaluation;
+- no clean result and no violation result;
+- no CI enforcement, rejection, approval, or equivalence proof.
+
+The first implementation should produce a collection artifact only. It should not produce a scope compliance result.
+
+Future collection artifact shape:
+
+```text
+collectionStatus
+authorityClass
+baseRef
+headRef
+collectionMode
+changedFiles
+normalizedChangedFiles
+pathNormalization
+renameDeleteHandling
+generatedFileHandling
+collectionWarnings
+allowedUse
+forbiddenUse
+```
+
+Future state transition after collection-only implementation:
+
+```text
+changedFilesCollected: true
+checkerRun: false
+evaluatedViolations: []
+scopeComplianceEvaluationStatus: not-evaluated
+```
+
+Collection success will not imply scope compliance. The scope compliance checker must remain not-run until a later
+evaluation slice explicitly consumes a collection artifact with allowedScope/forbiddenScope comparison logic.
+
 ## Fixture-Provided Changed-File List Preview
 
 The first fixture-provided changed-file list preview is:
@@ -446,6 +498,7 @@ Reason:
 - changed-file list authority is previewed and its first real authoritative candidate is decided as git-derived changed
   files;
 - git-derived changed-file input design is previewed;
+- git-derived changed-file collection scope is decided as collection-only;
 - git-derived changed-file collection remains unimplemented;
 - fixture-provided changed-file list scenarios are previewed but not evaluated;
 - fixture-provided input consumption is previewed without checker execution;
@@ -458,10 +511,10 @@ Reason:
 Recommended next task:
 
 ```text
-git-derived-changed-file-collection-scope-decision
+git-derived-changed-file-collection-only-implementation
 ```
 
-That next task may decide the first collection-only implementation scope. It should still avoid scope compliance
+That next task may implement a non-enforcing collection-only artifact. It should still avoid scope compliance
 evaluation, rejection, enforcement, CI wiring, and clean or violation conclusions.
 
 ## Non-Goals

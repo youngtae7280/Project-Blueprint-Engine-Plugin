@@ -1406,6 +1406,28 @@ gitDerivedChangedFileInputDesignStatus: git-derived-input-design-previewed
 The result preview still reports `scope-compliance-input-missing`. No `git diff` output is encoded, no actual diff is
 inspected, no changed files are collected, no fixture scenario is evaluated, and no clean or violation result is claimed.
 
+## Git-Derived Changed-File Collection Scope Decision
+
+The first git-derived collection implementation scope is now decided:
+
+```text
+gitDerivedChangedFileCollectionScopeDecisionStatus: git-derived-collection-scope-decided
+```
+
+Decision:
+
+- first slice is collection-only;
+- explicit base/head refs are first;
+- committed range such as `HEAD~1..HEAD` remains a convenience candidate after explicit-ref handling is defined;
+- working-tree, staged, and untracked modes remain deferred;
+- collection should produce a collection artifact only;
+- collection success does not imply scope compliance;
+- scope evaluation, clean result, violation result, rejection, enforcement, CI wiring, approval, and equivalence proof
+  remain later tasks.
+
+Future collection-only state may set `changedFilesCollected: true`, but it must keep `checkerRun: false`,
+`evaluatedViolations: []`, and `scopeComplianceEvaluationStatus: not-evaluated` until a later evaluation slice exists.
+
 ## Fixture-Provided Changed-File List Preview
 
 The first fixture-provided changed-file list preview artifact is:

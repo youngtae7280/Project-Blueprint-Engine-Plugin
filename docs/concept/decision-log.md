@@ -1553,6 +1553,26 @@ contract candidates, approve fixtures, claim runtime Evidence is satisfied, prom
 compiler output, set `equivalenceProven: true`, execute AI, apply graph deltas, automate user acceptance, retire
 tree-native artifacts, rename PBE compatibility surfaces, or make any generated contract authoritative.
 
+DEC-219 does not supersede DEC-097 through DEC-218. It decides the implementation scope for the first git-derived
+changed-file collection slice without implementing collection. The decision records
+`gitDerivedChangedFileCollectionScopeDecisionStatus: git-derived-collection-scope-decided`: the next implementation
+slice is collection-only, explicit base/head refs are first, a committed range such as `HEAD~1..HEAD` remains a
+convenience candidate after explicit-ref handling is defined, working-tree/staged/untracked modes remain deferred, and
+the future output is a collection artifact rather than a scope compliance result. The future collection-only state may
+set `changedFilesCollected: true`, but must keep `checkerRun: false`, `evaluatedViolations: []`, and
+`scopeComplianceEvaluationStatus: not-evaluated`; collection success does not imply scope compliance. The git-derived
+input design preview, result preview, dry-run skeleton, not-run report, checker preview, observation, and docs now link
+this scope decision while preserving the current state: `checkerRun: false`, `actualDiffInspected: false`,
+`changedFilesCollected: false`, `evaluatedViolations: []`, no clean result, no actual violation, no rejection, no
+enforcement, no fixture approval, no runtime Evidence satisfaction, and `equivalenceProven: false`. This does not
+implement changed-file collection, run `git diff` as checker input, inspect actual diffs, run the compliance checker,
+evaluate allowedScope or forbiddenScope, evaluate fixture-provided changed-file scenarios, normalize paths in code,
+compare scope, report no-violation, report actual violations, reject diffs, enforce scope, wire checker behavior into
+compiler execution, CI, required checks, or branch protection, mark calibration fixtures supported, generate contract
+candidates, approve fixtures, claim runtime Evidence is satisfied, execute AI, apply graph deltas, automate user
+acceptance, retire tree-native artifacts, rename PBE compatibility surfaces, or make any generated contract
+authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

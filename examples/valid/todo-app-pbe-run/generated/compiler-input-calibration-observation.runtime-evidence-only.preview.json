@@ -67,6 +67,7 @@
     "changedFileListAuthorityPreviewStatus": "changed-file-list-authority-previewed",
     "authoritativeChangedFileInputBoundaryDecisionStatus": "authoritative-changed-file-input-boundary-decided",
     "gitDerivedChangedFileInputDesignStatus": "git-derived-input-design-previewed",
+    "gitDerivedChangedFileCollectionScopeDecisionStatus": "git-derived-collection-scope-decided",
     "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
     "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
     "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",
@@ -93,6 +94,7 @@
     "path": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json",
     "status": "git-derived-input-design-previewed",
     "authorityClass": "git-diff-derived-authoritative-candidate",
+    "collectionScopeDecisionStatus": "git-derived-collection-scope-decided",
     "collectionImplementationStatus": "not-implemented",
     "actualDiffInspected": false,
     "changedFilesCollected": false,
@@ -101,6 +103,7 @@
     "remainingSupportStatus": "not-supported"
   },
   "gitDerivedChangedFileInputDesignStatus": "git-derived-input-design-previewed",
+  "gitDerivedChangedFileCollectionScopeDecisionStatus": "git-derived-collection-scope-decided",
   "fixtureProvidedChangedFileListPreview": {
     "path": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
     "status": "fixture-provided-changed-file-list-previewed",
@@ -160,6 +163,7 @@
     "changedFileListStatus": "missing-or-not-authoritative",
     "changedFileListAuthorityPreviewStatus": "changed-file-list-authority-previewed",
     "gitDerivedChangedFileInputDesignStatus": "git-derived-input-design-previewed",
+    "gitDerivedChangedFileCollectionScopeDecisionStatus": "git-derived-collection-scope-decided",
     "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
     "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
     "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",

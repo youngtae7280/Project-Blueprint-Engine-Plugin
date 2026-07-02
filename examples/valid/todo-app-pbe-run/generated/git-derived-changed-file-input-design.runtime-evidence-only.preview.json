@@ -6,6 +6,7 @@
   "fixtureShape": "test-only-behavior-proof",
   "checkerAxis": "scope-compliance-preview",
   "inputDesignStatus": "git-derived-input-design-previewed",
+  "collectionScopeDecisionStatus": "git-derived-collection-scope-decided",
   "authorityClass": "git-diff-derived-authoritative-candidate",
   "supportStatus": "not-supported",
   "compileEligibility": "not-eligible-current-command-not-wired",
@@ -27,7 +28,43 @@
     "scopeComplianceNotRunReport": "examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json",
     "scopeComplianceDryRunSkeleton": "examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json",
     "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
+    "collectionScopeDecision": "docs/concept/scope-compliance-checker-implementation-readiness.md#git-derived-changed-file-collection-scope-decision",
     "implementationReadiness": "docs/concept/scope-compliance-checker-implementation-readiness.md"
+  },
+  "collectionScopeDecision": {
+    "decisionStatus": "git-derived-collection-scope-decided",
+    "firstImplementationSlice": "collection-only",
+    "firstBaseHeadInputPolicy": "explicit-base-head-refs-first",
+    "committedRangeCandidate": "HEAD~1..HEAD",
+    "workingTreeMode": "deferred",
+    "stagedMode": "deferred",
+    "untrackedMode": "deferred",
+    "scopeEvaluation": "not-in-first-slice",
+    "collectionArtifactOnly": true,
+    "checkerRunAfterCollection": false,
+    "scopeComplianceEvaluationStatusAfterCollection": "not-evaluated"
+  },
+  "futureCollectionArtifactShape": {
+    "collectionStatus": "git-derived-collection-preview-or-pass",
+    "authorityClass": "git-diff-derived-authoritative-candidate",
+    "baseRef": "explicit-base-ref",
+    "headRef": "explicit-head-ref",
+    "collectionMode": "explicit-base-head",
+    "changedFiles": [],
+    "normalizedChangedFiles": [],
+    "pathNormalization": "repository-root-relative-posix-paths",
+    "renameDeleteHandling": "status-aware-fields-optional-after-name-only-first-slice",
+    "generatedFileHandling": "report-generated-files-honestly",
+    "collectionWarnings": [],
+    "allowedUse": ["changed-file collection input for later scope evaluation"],
+    "forbiddenUse": ["scope compliance evaluation", "clean result", "violation result", "enforcement"]
+  },
+  "futureCollectionOnlyStateTransition": {
+    "changedFilesCollected": true,
+    "checkerRun": false,
+    "evaluatedViolations": [],
+    "scopeComplianceEvaluationStatus": "not-evaluated",
+    "scopeComplianceConclusionProduced": false
   },
   "futureCollectionCommandCandidates": [
     {
