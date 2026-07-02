@@ -1364,6 +1364,23 @@ fixtures, claim runtime Evidence is satisfied, promote static preview artifacts 
 checks into required checks, set `equivalenceProven: true`, execute AI, apply graph deltas, automate user acceptance,
 retire tree-native artifacts, rename PBE compatibility surfaces, or make any generated contract authoritative.
 
+DEC-209 does not supersede DEC-097 through DEC-208. It adds the preview-only scope compliance checker artifact
+`examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json` for the Todo App
+runtime Evidence-only calibration fixture and links it from the third-fixture observation artifact. The preview narrows
+the first compliance-checker MVP axis to `scope-compliance-preview`, records future checker inputs such as contract
+allowed/forbidden scope, future actual changed-file list, future diff summary, agent output report, and source
+non-modification Evidence, and names conceptual violation categories such as `allowed-scope-violation`,
+`forbidden-scope-violation`, `production-source-modified-in-test-only-fixture`, `missing-changed-file-list`, and
+`scope-status-overclaim`. The observation now records `scopeCompliancePreviewStatus:
+scope-compliance-checker-previewed` while preserving `not-supported`, `not-eligible-current-command-not-wired`,
+`contract-candidate-not-run`, `not-approved`, `equivalenceProven: false`, missing runtime Evidence, and unsatisfied
+evidence/check binding. This does not implement the compliance checker, inspect actual diffs, collect changed files,
+reject diffs, enforce scope, wire checker behavior into compiler execution, CI, required checks, or branch protection,
+mark calibration fixtures supported, generate contract candidates, approve fixtures, claim runtime Evidence is
+satisfied, promote static preview artifacts into compiler output, turn candidate checks into required checks, execute
+AI, apply graph deltas, automate user acceptance, retire tree-native artifacts, rename PBE compatibility surfaces, or
+make any generated contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

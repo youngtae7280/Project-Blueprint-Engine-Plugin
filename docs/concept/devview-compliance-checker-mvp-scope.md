@@ -213,28 +213,37 @@ This scope decision does not set `equivalenceProven: true` and does not change g
 
 ## Next Step
 
-Recommended next task:
-
-```text
-create-scope-compliance-checker-preview-artifact
-```
-
-Preferred first target fixture:
-
-```text
-Todo App add-todo runtime Evidence-only calibration
-```
-
-Expected future artifact:
+The first scope compliance checker preview artifact is now recorded:
 
 ```text
 examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json
 ```
 
-That future artifact should be preview-only. It should describe expected checker inputs, candidate scope checks,
-unresolved input gaps, and non-enforcement boundaries. It should not implement diff inspection, enforce scope, reject
-changes, support the fixture, generate a contract candidate, approve runtime Evidence, or turn preview artifacts into
-compiler execution output.
+Target fixture:
+
+```text
+Todo App add-todo runtime Evidence-only calibration
+```
+
+Preview status:
+
+```text
+scope-compliance-checker-previewed
+```
+
+The artifact describes expected checker inputs, candidate scope checks, unresolved input gaps, conceptual violation
+categories, and non-enforcement boundaries. It does not implement diff inspection, collect changed files, enforce scope,
+reject changes, support the fixture, generate a contract candidate, approve runtime Evidence, or turn preview artifacts
+into compiler execution output.
+
+Recommended next task:
+
+```text
+scope-compliance-preview-closeout-or-input-schema-decision
+```
+
+That next task should remain planning-only unless a separate implementation decision narrows the checker input schema and
+report format.
 
 ## Decision
 

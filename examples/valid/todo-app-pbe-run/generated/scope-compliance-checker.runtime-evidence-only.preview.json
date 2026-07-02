@@ -1,0 +1,256 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "scope-compliance-checker-preview",
+  "status": "scope-compliance-checker-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "mvpAxis": "scope-compliance-preview",
+  "draftInputPath": "examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
+  "observationPath": "examples/valid/todo-app-pbe-run/generated/compiler-input-calibration-observation.runtime-evidence-only.preview.json",
+  "testOnlyScopeBoundaryPreview": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
+  "runtimeEvidenceAuthorityPreview": "examples/valid/todo-app-pbe-run/generated/runtime-evidence-authority.runtime-evidence-only.preview.json",
+  "evidenceCheckBindingPreview": "examples/valid/todo-app-pbe-run/generated/evidence-check-binding.runtime-evidence-only.preview.json",
+  "outputRequirementForTestEvidencePreview": "examples/valid/todo-app-pbe-run/generated/output-requirement-for-test-evidence.runtime-evidence-only.preview.json",
+  "complianceCheckerBridgePreview": "examples/valid/todo-app-pbe-run/generated/compliance-checker-bridge.runtime-evidence-only.preview.json",
+  "checkerPreviewStatus": "preview-only-not-implemented",
+  "supportStatus": "not-supported",
+  "compileEligibility": "not-eligible-current-command-not-wired",
+  "expectedCandidateStatus": "contract-candidate-not-run",
+  "approvalStatus": "not-approved",
+  "equivalenceProven": false,
+  "currentRuntimeEvidenceStatus": "missing",
+  "evidenceCheckBindingStatus": "preview-only-not-satisfied",
+  "contractInputs": [
+    {
+      "inputId": "contract-allowed-scope",
+      "source": "test-only-scope-boundary-preview",
+      "sourcePath": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
+      "expectedUse": "Compare future changed files against test, Evidence, command-output, and report-only candidate scope.",
+      "currentStatus": "previewed-not-supported"
+    },
+    {
+      "inputId": "contract-forbidden-scope",
+      "source": "test-only-scope-boundary-preview",
+      "sourcePath": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
+      "expectedUse": "Compare future changed files against production source, promotion/profile, and acceptance-state forbidden scope.",
+      "currentStatus": "previewed-not-supported"
+    },
+    {
+      "inputId": "contract-stop-conditions",
+      "source": "compiler-input-model-calibration-draft",
+      "sourcePath": "examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
+      "expectedUse": "Preserve stop/report behavior when runtime proof appears to require production source edits.",
+      "currentStatus": "previewed-not-supported"
+    },
+    {
+      "inputId": "contract-output-requirements",
+      "source": "output-requirement-for-test-evidence-preview",
+      "sourcePath": "examples/valid/todo-app-pbe-run/generated/output-requirement-for-test-evidence.runtime-evidence-only.preview.json",
+      "expectedUse": "Check future reports for source modification statements, stop condition statements, Evidence status, and missing Evidence disclosure.",
+      "currentStatus": "previewed-not-supported"
+    }
+  ],
+  "futureExecutionInputs": [
+    {
+      "inputId": "actual-changed-file-list",
+      "expectedSource": "future diff or file-modification collector",
+      "currentAvailability": "unresolved",
+      "authorityStatus": "not-authoritative-input-yet",
+      "reason": "No implemented compliance checker, diff inspection, or changed-file collector exists in this task."
+    },
+    {
+      "inputId": "actual-diff-summary",
+      "expectedSource": "future non-enforcing compliance preview report",
+      "currentAvailability": "unresolved",
+      "authorityStatus": "not-authoritative-input-yet",
+      "reason": "This artifact does not inspect diffs or reject changes."
+    },
+    {
+      "inputId": "agent-output-report",
+      "expectedSource": "future agent result report",
+      "currentAvailability": "unresolved",
+      "authorityStatus": "not-authoritative-input-yet",
+      "reason": "No result report is attached to this preview."
+    },
+    {
+      "inputId": "source-non-modification-evidence",
+      "expectedSource": "future diff/compliance Evidence artifact",
+      "currentAvailability": "missing",
+      "authorityStatus": "not-authoritative-input-yet",
+      "reason": "No production source non-modification Evidence exists for this calibration fixture."
+    }
+  ],
+  "allowedScopeSource": {
+    "status": "previewed-from-test-only-scope-boundary",
+    "sourcePath": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
+    "expectedAllowedScopeCategories": [
+      "test-files",
+      "runtime-evidence-files",
+      "command-output-evidence",
+      "report-only-artifacts"
+    ],
+    "expectedAllowedScopePaths": [
+      "examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json",
+      "examples/valid/todo-app-pbe-run/.pbe/evidence/evidence-tree.json",
+      "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt",
+      "unresolved:node test/todos.test.js",
+      "unresolved:todo-app-runtime-proof-report",
+      "unresolved:production-source-non-modification-report"
+    ],
+    "scopeEnforced": false
+  },
+  "forbiddenScopeSource": {
+    "status": "previewed-from-test-only-scope-boundary",
+    "sourcePath": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
+    "expectedForbiddenScopeCategories": [
+      "production-source",
+      "profile-or-source-authority-promotion",
+      "acceptance-state-mutation"
+    ],
+    "expectedForbiddenScopePaths": [
+      "src/todos.ts",
+      "examples/read-model-aggregate/read-model-slices.json",
+      "examples/valid/todo-app-pbe-run/graph-source.json",
+      "examples/valid/todo-app-pbe-run/.pbe/control/acceptance-tree.json"
+    ],
+    "sourceEditStopCondition": "runtime-proof-appears-to-require-production-source-edit",
+    "scopeEnforced": false
+  },
+  "changedFileListSource": {
+    "status": "missing-not-implemented",
+    "expectedFutureSource": "future actual changed-file list from diff/file modification inspection",
+    "currentChangedFilesInspected": false,
+    "currentChangedFileListAuthoritative": false,
+    "reason": "The checker preview defines the future input but does not inspect actual diffs."
+  },
+  "futureScopeViolationCategories": [
+    {
+      "violationId": "allowed-scope-violation",
+      "description": "A future changed-file list contains paths outside test, Evidence, command-output, or report-only candidate scope.",
+      "wouldInspect": ["actual changed file list", "allowedScopeSource"],
+      "currentStatus": "conceptual-not-implemented"
+    },
+    {
+      "violationId": "forbidden-scope-violation",
+      "description": "A future changed-file list intersects forbidden production source, promotion/profile, or acceptance-state paths.",
+      "wouldInspect": ["actual changed file list", "forbiddenScopeSource"],
+      "currentStatus": "conceptual-not-implemented"
+    },
+    {
+      "violationId": "production-source-modified-in-test-only-fixture",
+      "description": "A future changed-file list includes production source during a test-only behavior proof fixture.",
+      "wouldInspect": ["actual changed file list", "production source forbidden scope", "source-edit stop condition"],
+      "currentStatus": "conceptual-not-implemented"
+    },
+    {
+      "violationId": "missing-changed-file-list",
+      "description": "A future result cannot be checked because no authoritative changed-file list or diff summary is available.",
+      "wouldInspect": ["future changed-file list source", "future result metadata"],
+      "currentStatus": "conceptual-not-implemented"
+    },
+    {
+      "violationId": "scope-status-overclaim",
+      "description": "A result claims scope compliance, support, approval, enforcement, or Evidence satisfaction without authoritative checker inputs.",
+      "wouldInspect": ["agent output report", "status fields", "changed-file list authority"],
+      "currentStatus": "conceptual-not-implemented"
+    }
+  ],
+  "futureScopeCheckPlan": [
+    {
+      "step": "collect-actual-changed-file-list",
+      "currentStatus": "not-implemented",
+      "nonGoalBoundary": "This task does not collect changed files."
+    },
+    {
+      "step": "normalize-contract-scope-paths",
+      "currentStatus": "not-implemented",
+      "nonGoalBoundary": "This task does not define path normalization logic."
+    },
+    {
+      "step": "compare-changed-files-to-allowed-scope",
+      "currentStatus": "not-implemented",
+      "nonGoalBoundary": "This task does not detect allowed-scope violations."
+    },
+    {
+      "step": "compare-changed-files-to-forbidden-scope",
+      "currentStatus": "not-implemented",
+      "nonGoalBoundary": "This task does not detect forbidden-scope violations."
+    },
+    {
+      "step": "emit-non-enforcing-scope-compliance-report",
+      "currentStatus": "not-implemented",
+      "nonGoalBoundary": "This task does not emit implemented violation reports."
+    }
+  ],
+  "linksToExistingPreviews": [
+    {
+      "previewId": "test-only-scope-boundary",
+      "path": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
+      "use": "Primary source for allowed and forbidden scope boundaries."
+    },
+    {
+      "previewId": "compliance-checker-bridge",
+      "path": "examples/valid/todo-app-pbe-run/generated/compliance-checker-bridge.runtime-evidence-only.preview.json",
+      "use": "Broader future compliance-checker bridge; this artifact narrows the first MVP axis to scope compliance."
+    },
+    {
+      "previewId": "runtime-evidence-authority",
+      "path": "examples/valid/todo-app-pbe-run/generated/runtime-evidence-authority.runtime-evidence-only.preview.json",
+      "use": "Out of scope for this first axis except where runtime Evidence overclaims intersect scope-status overclaims."
+    },
+    {
+      "previewId": "evidence-check-binding",
+      "path": "examples/valid/todo-app-pbe-run/generated/evidence-check-binding.runtime-evidence-only.preview.json",
+      "use": "Out of scope for this first axis; candidate checks remain non-required and unsatisfied."
+    },
+    {
+      "previewId": "output-requirement-for-test-evidence",
+      "path": "examples/valid/todo-app-pbe-run/generated/output-requirement-for-test-evidence.runtime-evidence-only.preview.json",
+      "use": "Future report fields may expose scope-status overclaims, missing changed-file list, and source modification statements."
+    }
+  ],
+  "outOfScopeForThisAxis": [
+    "runtime Evidence satisfaction",
+    "command output parsing",
+    "evidence/check binding satisfaction",
+    "output requirement completeness checking",
+    "promotion review eligibility",
+    "semantic equivalence proof",
+    "CI enforcement",
+    "required check configuration"
+  ],
+  "unresolvedInputGaps": [
+    "no implemented checker input schema",
+    "no authoritative changed-file list",
+    "no diff inspection",
+    "no file modification detection",
+    "no path normalization policy",
+    "no violation report format",
+    "no supported command consumes this preview"
+  ],
+  "allowedUse": [
+    "review the first compliance-checker MVP axis",
+    "identify future inputs for scope compliance",
+    "identify conceptual future scope violations",
+    "explain why Todo App runtime Evidence-only is a good first checker target",
+    "inform a later preview-only checker design"
+  ],
+  "forbiddenUse": [
+    "implemented compliance checker",
+    "diff inspection result",
+    "diff rejection logic",
+    "scope enforcement",
+    "supported compiler output",
+    "candidate generation eligibility",
+    "promotion approval",
+    "runtime Evidence satisfaction",
+    "required check configuration",
+    "CI enforcement",
+    "branch protection",
+    "execution authority",
+    "permission to edit production source",
+    "Todo App source-authority promotion",
+    "user acceptance"
+  ],
+  "nonExecutionBoundary": "This scope compliance checker preview defines future checker inputs and conceptual violation categories for calibration review only. It does not inspect actual diffs, collect changed files, reject changes, enforce scope, wire CI, configure required checks, generate a contract candidate, approve a fixture, satisfy runtime Evidence, set equivalenceProven true, apply graph deltas, or replace user acceptance."
+}

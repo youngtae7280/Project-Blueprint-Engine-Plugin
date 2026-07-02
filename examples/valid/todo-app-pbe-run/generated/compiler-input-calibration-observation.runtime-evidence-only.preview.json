@@ -58,6 +58,16 @@
     "previewGapSetStatus": "runtime-evidence-only-preview-gap-set-complete",
     "remainingSupportStatus": "not-supported"
   },
+  "scopeComplianceCheckerPreview": {
+    "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
+    "status": "scope-compliance-checker-previewed",
+    "checkerPreviewStatus": "preview-only-not-implemented",
+    "mvpAxis": "scope-compliance-preview",
+    "changedFileListSourceStatus": "missing-not-implemented",
+    "scopeEnforced": false,
+    "remainingSupportStatus": "not-supported"
+  },
+  "scopeCompliancePreviewStatus": "scope-compliance-checker-previewed",
   "observedGaps": [
     {
       "gapId": "test-only-allowed-scope",

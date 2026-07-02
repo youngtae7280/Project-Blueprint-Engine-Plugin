@@ -1238,6 +1238,50 @@ The next direction decision is now recorded in
 `scope-compliance-preview` as the first future compliance-checker MVP axis without implementing checker behavior,
 enforcing scope, rejecting diffs, approving fixtures, or changing equivalence status.
 
+## Scope Compliance Checker MVP Preview
+
+The first scope compliance checker preview artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+- `status: scope-compliance-checker-previewed`
+- `checkerPreviewStatus: preview-only-not-implemented`
+- `mvpAxis: scope-compliance-preview`
+- `changedFileListSource.status: missing-not-implemented`
+- `supportStatus: not-supported`
+- `expectedCandidateStatus: contract-candidate-not-run`
+- `approvalStatus: not-approved`
+- `equivalenceProven: false`
+- `currentRuntimeEvidenceStatus: missing`
+- `evidenceCheckBindingStatus: preview-only-not-satisfied`
+
+The preview binds the Todo App runtime Evidence-only fixture to the first compliance-checker MVP axis. It uses the
+test-only scope boundary preview as the source for expected allowed scope and forbidden scope, then records future
+checker inputs such as an actual changed-file list, diff summary, agent output report, and source non-modification
+Evidence.
+
+Future conceptual violation categories include:
+
+- `allowed-scope-violation`;
+- `forbidden-scope-violation`;
+- `production-source-modified-in-test-only-fixture`;
+- `missing-changed-file-list`;
+- `scope-status-overclaim`.
+
+The preview is still descriptive, not executable. No compliance checker is implemented. No actual diff is inspected, no
+changed files are collected, no scope is enforced, and no result can be rejected from this artifact. Runtime Evidence
+remains missing and evidence/check binding remains unsatisfied.
+
+The third-fixture observation now links this preview with:
+
+```text
+scopeCompliancePreviewStatus: scope-compliance-checker-previewed
+```
+
 ## Calibration Success Criteria
 
 A future calibration cycle is successful if:
@@ -1269,9 +1313,8 @@ This selection does not:
 
 ## Next Step
 
-The next task should create a preview-only `scope-compliance-checker` design artifact for one fixture, preferably the
-Todo App runtime Evidence-only calibration fixture. It should not broaden compiler support, wire additional fixtures into
-the supported command path, create promotion review packets, approve fixtures, claim runtime Evidence is satisfied,
-implement compliance checking, inspect or reject diffs, turn candidate checks into required checks, apply graph deltas,
-turn test Evidence into user acceptance, allow production source edits, enforce CI, or change the existing Todo App
-structure-only status.
+The next task should decide whether to close out the scope compliance preview or define a minimal checker input/report
+schema. It should not broaden compiler support, wire additional fixtures into the supported command path, create
+promotion review packets, approve fixtures, claim runtime Evidence is satisfied, implement compliance checking, inspect
+or reject diffs, turn candidate checks into required checks, apply graph deltas, turn test Evidence into user acceptance,
+allow production source edits, enforce CI, or change the existing Todo App structure-only status.
