@@ -12,7 +12,9 @@
   "evidenceCheckBindingPreview": "examples/valid/todo-app-pbe-run/generated/evidence-check-binding.runtime-evidence-only.preview.json",
   "outputRequirementForTestEvidencePreview": "examples/valid/todo-app-pbe-run/generated/output-requirement-for-test-evidence.runtime-evidence-only.preview.json",
   "complianceCheckerBridgePreview": "examples/valid/todo-app-pbe-run/generated/compliance-checker-bridge.runtime-evidence-only.preview.json",
+  "changedFileListAuthorityPreview": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
   "checkerPreviewStatus": "preview-only-not-implemented",
+  "changedFileListAuthorityPreviewStatus": "changed-file-list-authority-previewed",
   "supportStatus": "not-supported",
   "compileEligibility": "not-eligible-current-command-not-wired",
   "expectedCandidateStatus": "contract-candidate-not-run",
@@ -118,6 +120,9 @@
   },
   "changedFileListSource": {
     "status": "missing-not-implemented",
+    "authorityPreviewPath": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
+    "authorityPreviewStatus": "changed-file-list-authority-previewed",
+    "authorityStatus": "changed-file-list-authority-unresolved",
     "expectedFutureSource": "future actual changed-file list from diff/file modification inspection",
     "currentChangedFilesInspected": false,
     "currentChangedFileListAuthoritative": false,
@@ -183,6 +188,11 @@
     }
   ],
   "linksToExistingPreviews": [
+    {
+      "previewId": "changed-file-list-authority",
+      "path": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
+      "use": "Authority model for future changed-file inputs; agent-reported file lists are not authoritative by themselves."
+    },
     {
       "previewId": "test-only-scope-boundary",
       "path": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",

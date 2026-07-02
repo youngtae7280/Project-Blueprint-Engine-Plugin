@@ -1252,6 +1252,7 @@ Preview status:
 - `checkerPreviewStatus: preview-only-not-implemented`
 - `mvpAxis: scope-compliance-preview`
 - `changedFileListSource.status: missing-not-implemented`
+- `changedFileListAuthorityPreviewStatus: changed-file-list-authority-previewed`
 - `supportStatus: not-supported`
 - `expectedCandidateStatus: contract-candidate-not-run`
 - `approvalStatus: not-approved`
@@ -1321,6 +1322,38 @@ scopeComplianceResultPreviewStatus: scope-compliance-input-missing-previewed
 Runtime Evidence remains missing, evidence/check binding remains `preview-only-not-satisfied`, the fixture remains
 `not-supported`, and no checker has run.
 
+## Changed-File List Authority Preview
+
+The first changed-file list authority preview artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+- `status: changed-file-list-authority-previewed`
+- `changedFileListAuthorityStatus: changed-file-list-authority-unresolved`
+- `currentChangedFileListStatus: changed-file-list-missing`
+- `actualDiffInspected: false`
+- `changedFilesCollected: false`
+- `checkerRun: false`
+
+The preview compares candidate future changed-file sources without collecting changed files. It records that
+agent-reported changed files are claim-only and not authoritative by themselves. Fixture-provided changed-file lists may
+be used first for a static preview result-shape test, but they remain preview-only and non-enforcing. A git-derived
+changed-file list is a later authoritative candidate after base/head selection, working-tree state, and path
+normalization rules exist.
+
+The third-fixture observation now links this preview with:
+
+```text
+changedFileListAuthorityPreviewStatus: changed-file-list-authority-previewed
+```
+
+The scope compliance result preview still reports `scope-compliance-input-missing`, keeps `evaluatedViolations: []`, and
+does not claim a clean result or an actual violation.
+
 ## Calibration Success Criteria
 
 A future calibration cycle is successful if:
@@ -1352,9 +1385,9 @@ This selection does not:
 
 ## Next Step
 
-The next task should decide changed-file list authority for a future scope compliance checker: where the list comes from,
-whether it is authoritative or supplied-static-preview, and how missing changed-file input is represented. It should not
-broaden compiler support, wire additional fixtures into the supported command path, create promotion review packets,
-approve fixtures, claim runtime Evidence is satisfied, implement compliance checking, inspect or reject diffs, turn
-candidate checks into required checks, apply graph deltas, turn test Evidence into user acceptance, allow production
-source edits, enforce CI, or change the existing Todo App structure-only status.
+The next task should define a fixture-provided changed-file list preview for the Todo App runtime Evidence-only fixture,
+if DevView is ready to shape a static non-enforcing result around supplied input. It should not inspect actual git diffs,
+collect changed files from the worktree, broaden compiler support, wire additional fixtures into the supported command
+path, create promotion review packets, approve fixtures, claim runtime Evidence is satisfied, implement compliance
+checking, inspect or reject diffs, turn candidate checks into required checks, apply graph deltas, turn test Evidence
+into user acceptance, allow production source edits, enforce CI, or change the existing Todo App structure-only status.

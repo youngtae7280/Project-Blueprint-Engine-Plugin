@@ -64,15 +64,27 @@
     "checkerPreviewStatus": "preview-only-not-implemented",
     "mvpAxis": "scope-compliance-preview",
     "changedFileListSourceStatus": "missing-not-implemented",
+    "changedFileListAuthorityPreviewStatus": "changed-file-list-authority-previewed",
     "scopeEnforced": false,
     "remainingSupportStatus": "not-supported"
   },
   "scopeCompliancePreviewStatus": "scope-compliance-checker-previewed",
+  "changedFileListAuthorityPreview": {
+    "path": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
+    "status": "changed-file-list-authority-previewed",
+    "changedFileListAuthorityStatus": "changed-file-list-authority-unresolved",
+    "currentChangedFileListStatus": "changed-file-list-missing",
+    "actualDiffInspected": false,
+    "changedFilesCollected": false,
+    "remainingSupportStatus": "not-supported"
+  },
+  "changedFileListAuthorityPreviewStatus": "changed-file-list-authority-previewed",
   "scopeComplianceResultPreview": {
     "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
     "status": "scope-compliance-input-missing-previewed",
     "scopeComplianceResultStatus": "scope-compliance-input-missing",
     "changedFileListStatus": "missing-or-not-authoritative",
+    "changedFileListAuthorityPreviewStatus": "changed-file-list-authority-previewed",
     "evaluatedViolations": [],
     "scopeEnforced": false,
     "remainingSupportStatus": "not-supported"

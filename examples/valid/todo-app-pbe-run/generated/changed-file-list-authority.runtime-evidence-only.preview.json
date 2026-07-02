@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "changed-file-list-authority-preview",
+  "status": "changed-file-list-authority-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "checkerAxis": "scope-compliance-preview",
+  "supportStatus": "not-supported",
+  "compileEligibility": "not-eligible-current-command-not-wired",
+  "expectedCandidateStatus": "contract-candidate-not-run",
+  "approvalStatus": "not-approved",
+  "equivalenceProven": false,
+  "currentRuntimeEvidenceStatus": "missing",
+  "evidenceCheckBindingStatus": "preview-only-not-satisfied",
+  "changedFileListAuthorityStatus": "changed-file-list-authority-unresolved",
+  "currentChangedFileListStatus": "changed-file-list-missing",
+  "changedFilesCollected": false,
+  "actualDiffInspected": false,
+  "checkerRun": false,
+  "scopeEnforced": false,
+  "diffRejected": false,
+  "sourceArtifacts": {
+    "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
+    "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
+    "testOnlyScopeBoundaryPreview": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
+    "complianceCheckerBridgePreview": "examples/valid/todo-app-pbe-run/generated/compliance-checker-bridge.runtime-evidence-only.preview.json",
+    "implementationReadiness": "docs/concept/scope-compliance-checker-implementation-readiness.md"
+  },
+  "authorityLevels": [
+    {
+      "status": "changed-file-list-missing",
+      "meaning": "No changed-file list is available to the checker or preview result."
+    },
+    {
+      "status": "agent-claim-only-not-authoritative",
+      "meaning": "The agent reports changed files in prose or a result report, but no independent source confirms the list."
+    },
+    {
+      "status": "fixture-provided-preview-only",
+      "meaning": "A static fixture input supplies a changed-file list for result-shape calibration only."
+    },
+    {
+      "status": "git-diff-derived-authoritative-candidate",
+      "meaning": "A future checker may derive changed files from Git with explicit base/head and path normalization."
+    },
+    {
+      "status": "execution-metadata-authoritative-candidate",
+      "meaning": "A future execution harness or patch application system may emit changed-file metadata as a checker input."
+    },
+    {
+      "status": "changed-file-list-authority-unresolved",
+      "meaning": "The source shape is useful to discuss, but it is not yet accepted as a checker input."
+    }
+  ],
+  "candidateSources": [
+    {
+      "sourceId": "git-diff-name-only",
+      "sourceLabel": "git diff --name-only",
+      "authorityLevel": "git-diff-derived-authoritative-candidate",
+      "currentlyAuthoritative": false,
+      "futureAuthoritativeCandidate": true,
+      "reproducible": true,
+      "agentClaimOnly": false,
+      "needsPathNormalization": true,
+      "suitableForFirstImplementationSlice": false,
+      "reason": "Git-derived file lists are a strong later authority candidate, but this task must not inspect actual diffs or define base/head semantics."
+    },
+    {
+      "sourceId": "generated-patch-metadata",
+      "sourceLabel": "generated patch metadata",
+      "authorityLevel": "changed-file-list-authority-unresolved",
+      "currentlyAuthoritative": false,
+      "futureAuthoritativeCandidate": true,
+      "reproducible": false,
+      "agentClaimOnly": false,
+      "needsPathNormalization": true,
+      "suitableForFirstImplementationSlice": false,
+      "reason": "Patch metadata may become useful if emitted by a trusted patch application path, but no such checker input exists yet."
+    },
+    {
+      "sourceId": "execution-transcript-metadata",
+      "sourceLabel": "execution transcript metadata",
+      "authorityLevel": "execution-metadata-authoritative-candidate",
+      "currentlyAuthoritative": false,
+      "futureAuthoritativeCandidate": true,
+      "reproducible": false,
+      "agentClaimOnly": false,
+      "needsPathNormalization": true,
+      "suitableForFirstImplementationSlice": false,
+      "reason": "Execution metadata could identify changed files in a later harness, but no executor or compliance checker metadata source is implemented."
+    },
+    {
+      "sourceId": "review-packet-changed-file-list",
+      "sourceLabel": "review packet changed-file list",
+      "authorityLevel": "changed-file-list-authority-unresolved",
+      "currentlyAuthoritative": false,
+      "futureAuthoritativeCandidate": true,
+      "reproducible": false,
+      "agentClaimOnly": false,
+      "needsPathNormalization": true,
+      "suitableForFirstImplementationSlice": false,
+      "reason": "A review packet may summarize changed files later, but calibration preview packets are not a trusted changed-file source for this checker."
+    },
+    {
+      "sourceId": "agent-reported-changed-files",
+      "sourceLabel": "agent-reported changed files",
+      "authorityLevel": "agent-claim-only-not-authoritative",
+      "currentlyAuthoritative": false,
+      "futureAuthoritativeCandidate": false,
+      "reproducible": false,
+      "agentClaimOnly": true,
+      "needsPathNormalization": true,
+      "suitableForFirstImplementationSlice": false,
+      "reason": "Agent-reported file lists can be compared against independent inputs, but they are not authoritative by themselves."
+    },
+    {
+      "sourceId": "fixture-provided-preview-input",
+      "sourceLabel": "fixture-provided preview input",
+      "authorityLevel": "fixture-provided-preview-only",
+      "currentlyAuthoritative": false,
+      "futureAuthoritativeCandidate": false,
+      "reproducible": true,
+      "agentClaimOnly": false,
+      "needsPathNormalization": true,
+      "suitableForFirstImplementationSlice": true,
+      "reason": "A fixture-provided preview list is the safest first result-shape input because it avoids reading actual repository diffs while exercising checker output states."
+    }
+  ],
+  "recommendedFirstImplementationInput": {
+    "first": "fixture-provided-preview-input",
+    "firstStatus": "fixture-provided-preview-only",
+    "firstOutputUse": "static result-shape test for one fixture",
+    "later": "git-diff-name-only",
+    "laterStatus": "git-diff-derived-authoritative-candidate",
+    "reason": "Fixture-provided input can shape non-enforcing result logic without diff inspection. Git-derived input is more authoritative but should be introduced only after base/head and path normalization policy are defined."
+  },
+  "pathNormalizationNeeds": [
+    "repository-relative path normalization",
+    "generated artifact path normalization",
+    "conceptual production source path normalization",
+    "unresolved path handling",
+    "path separator normalization across Windows and POSIX-style examples"
+  ],
+  "unresolvedAuthorityGaps": [
+    "no implemented changed-file collector",
+    "no authoritative changed-file artifact",
+    "no base/head selection policy for git diff",
+    "no patch metadata trust boundary",
+    "no execution transcript metadata source",
+    "no path normalization policy",
+    "no checker result produced from this preview"
+  ],
+  "allowedUse": [
+    "compare candidate changed-file sources for future scope compliance work",
+    "explain why missing changed-file input prevents scope compliance evaluation",
+    "justify a fixture-provided preview list for a future static result-shape slice",
+    "reserve git-derived changed files for a later authoritative implementation slice"
+  ],
+  "forbiddenUse": [
+    "authoritative changed-file list",
+    "implemented changed-file collection",
+    "actual diff inspection",
+    "scope-compliance checker run",
+    "scope-compliance pass",
+    "scope-compliance violation finding",
+    "no-violation claim",
+    "diff rejection",
+    "scope enforcement",
+    "supported compiler output",
+    "candidate generation eligibility",
+    "promotion approval",
+    "runtime Evidence satisfaction",
+    "required check configuration",
+    "CI enforcement",
+    "branch protection",
+    "execution authority",
+    "Todo App source-authority promotion",
+    "user acceptance"
+  ],
+  "nonExecutionBoundary": "This changed-file list authority preview is static and non-enforcing. It does not collect changed files, inspect diffs, run a checker, report no-violation, detect violations, reject changes, enforce scope, configure CI or required checks, approve a fixture, satisfy runtime Evidence, set equivalenceProven true, or replace user acceptance."
+}

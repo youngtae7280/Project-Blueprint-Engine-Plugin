@@ -256,6 +256,17 @@ examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-eviden
 It reports `scope-compliance-input-missing` because no authoritative changed-file list exists, no checker has run, and
 no violation or no-violation status can be claimed.
 
+The changed-file list authority preview is now recorded:
+
+```text
+examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json
+```
+
+It records `changed-file-list-authority-previewed` while keeping changed-file collection unimplemented. The preview
+states that agent-reported changed files are not authoritative by themselves, fixture-provided changed-file lists are
+preview-only, and a git-derived changed-file list is a later implementation candidate after base/head and path
+normalization policy exist.
+
 ## Decision
 
 Decision:

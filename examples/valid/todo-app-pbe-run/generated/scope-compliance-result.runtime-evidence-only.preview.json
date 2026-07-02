@@ -9,6 +9,7 @@
   "scopeComplianceResultStatus": "scope-compliance-input-missing",
   "changedFileListStatus": "missing-or-not-authoritative",
   "changedFileListAuthorityStatus": "missing-or-not-authoritative",
+  "changedFileListAuthorityPreviewStatus": "changed-file-list-authority-previewed",
   "enforcementStatus": "non-enforcing-preview",
   "checkerImplemented": false,
   "checkerRun": false,
@@ -25,6 +26,7 @@
   "evidenceCheckBindingStatus": "preview-only-not-satisfied",
   "sourceArtifacts": {
     "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
+    "changedFileListAuthorityPreview": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
     "testOnlyScopeBoundaryPreview": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
     "complianceCheckerBridgePreview": "examples/valid/todo-app-pbe-run/generated/compliance-checker-bridge.runtime-evidence-only.preview.json",
     "implementationReadiness": "docs/concept/scope-compliance-checker-implementation-readiness.md"
@@ -60,6 +62,7 @@
       ],
       "currentStatus": "missing-or-not-authoritative",
       "currentSource": "none",
+      "authorityPreview": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
       "blockingReason": "No actual diff inspection, changed-file collection, or supplied authoritative changed-file artifact exists."
     },
     {
@@ -129,6 +132,7 @@
     {
       "inputId": "authoritative-changed-file-list",
       "impact": "scope compliance cannot be evaluated",
+      "authorityPreview": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
       "requiredBeforeNoViolationClaim": true
     },
     {

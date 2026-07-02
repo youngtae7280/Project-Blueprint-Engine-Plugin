@@ -52,7 +52,9 @@ Forbidden scope source:
 Changed file list source:
 
 - expected source: a future diff summary, file modification collector, or supplied static changed-file list artifact;
-- current status: unresolved;
+- authority preview:
+  `examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json`;
+- current status: authority previewed, still unresolved for execution;
 - reason: no authoritative changed-file list, diff inspection, or file modification detection exists.
 
 Generated artifact/report output path:
@@ -77,6 +79,40 @@ Support and eligibility status inputs:
   `compiler-input-calibration-observation.runtime-evidence-only.preview.json` and
   `scope-compliance-checker.runtime-evidence-only.preview.json`;
 - current status: preview-only.
+
+## Changed-File List Authority Preview
+
+The first changed-file list authority preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+```text
+changed-file-list-authority-previewed
+```
+
+The preview classifies candidate sources without collecting changed files:
+
+- `git diff --name-only`: a future authoritative candidate, but not used in this task because actual diff inspection,
+  base/head selection, and path normalization are not defined;
+- generated patch metadata: potentially useful later if emitted by a trusted patch application path, but unresolved;
+- execution transcript metadata: a future authoritative candidate if a harness emits it, but no executor metadata source
+  exists;
+- review packet changed-file list: useful review context later, but not currently trusted as checker input;
+- agent-reported changed files: agent-claim-only and not authoritative by itself;
+- fixture-provided preview input: suitable for the first static result-shape slice, but preview-only.
+
+Recommended implementation order:
+
+1. Use a fixture-provided preview changed-file list for a static result-shape test.
+2. Add a git-derived changed-file list only after base/head, working-tree state, and path normalization policy are
+   defined.
+
+The authority preview does not implement collection, run the checker, report no-violation, report an actual violation,
+reject changes, enforce scope, or promote any fixture.
 
 ## Readiness Criteria
 
@@ -234,7 +270,7 @@ Reason:
 - the first MVP axis is selected;
 - the first preview artifact exists;
 - future inputs and conceptual violation states are defined;
-- changed-file list authority is unresolved;
+- changed-file list authority is previewed but unresolved for execution;
 - path normalization is unresolved;
 - result artifact exists only as a static preview, not an implemented output schema;
 - no checker is implemented.
@@ -242,11 +278,12 @@ Reason:
 Recommended next task:
 
 ```text
-changed-file-list-authority-decision
+fixture-provided-changed-file-list-preview
 ```
 
-That next task should decide how a future checker receives changed-file input and how authoritative, supplied-static
-preview, and missing changed-file states are represented before any executable checker logic is added.
+That next task should define a supplied static changed-file list for a result-shape preview without inspecting actual
+diffs. It should remain preview-only, non-authoritative, and non-enforcing. A git-derived changed-file list should wait
+until a later implementation slice defines base/head and path normalization rules.
 
 ## Non-Goals
 
