@@ -10,12 +10,13 @@
   "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
   "scopeCompliancePathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
   "scopeComplianceViolationCategorySchemaStatus": "scope-compliance-violation-category-schema-previewed",
+  "scopeComplianceEvaluationResultShapeStatus": "scope-compliance-evaluation-result-shape-previewed",
   "authorityClass": "git-derived-changed-files",
   "collectionMode": "explicit-base-head",
   "baseRef": "HEAD~1",
   "headRef": "HEAD",
-  "resolvedBaseRef": "4061ae38d4c4b72ad654503b7db25a1ab84e8e88",
-  "resolvedHeadRef": "baf43ebc0587be430b09e3f0af0127abe6e62385",
+  "resolvedBaseRef": "baf43ebc0587be430b09e3f0af0127abe6e62385",
+  "resolvedHeadRef": "44d8a3b94247e6ff42cd4df23b679f32ec8bece1",
   "changedFilesCollected": true,
   "checkerRun": false,
   "scopeComplianceEvaluationStatus": "not-evaluated",
@@ -32,6 +33,7 @@
     "scopeComplianceScopeInputBinding": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
     "scopeCompliancePathPatternPolicy": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
     "scopeComplianceViolationCategorySchema": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
+    "scopeComplianceEvaluationResultShape": "examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json",
     "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
     "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
     "scopeComplianceNotRunReport": "examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json"
@@ -88,8 +90,8 @@
       "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json"
     },
     {
-      "status": "A",
-      "statusCode": "A",
+      "status": "M",
+      "statusCode": "M",
       "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json"
     },
     {
@@ -101,6 +103,11 @@
       "status": "M",
       "statusCode": "M",
       "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json"
+    },
+    {
+      "status": "A",
+      "statusCode": "A",
+      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json"
     }
   ],
   "normalizedChangedFiles": [
@@ -175,9 +182,9 @@
       "generatedPath": true
     },
     {
-      "status": "A",
-      "statusCode": "A",
-      "changeType": "added",
+      "status": "M",
+      "statusCode": "M",
+      "changeType": "modified",
       "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
       "generatedPath": true
     },
@@ -193,6 +200,13 @@
       "statusCode": "M",
       "changeType": "modified",
       "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+      "generatedPath": true
+    },
+    {
+      "status": "A",
+      "statusCode": "A",
+      "changeType": "added",
+      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
       "generatedPath": true
     }
   ],
@@ -221,7 +235,8 @@
       "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
       "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
       "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
-      "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json"
+      "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+      "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json"
     ],
     "suppressionPolicy": "not-applied-separate-policy-required"
   },

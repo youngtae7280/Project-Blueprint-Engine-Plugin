@@ -1628,7 +1628,51 @@ Required boundary:
 - no rejection, enforcement, CI wiring, fixture approval, runtime Evidence satisfaction, or equivalence proof.
 
 `evaluatedViolations: []` still means not evaluated while `checkerRun: false`; it is not a clean result. With this
-preview, the next safe step is evaluation result shape preview, not path matching implementation.
+preview, the next safe step was evaluation result shape preview, not path matching implementation.
+
+## Scope Compliance Evaluation Result Shape Preview
+
+The evaluation result shape preview artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+```text
+scopeComplianceEvaluationResultShapeStatus: scope-compliance-evaluation-result-shape-previewed
+```
+
+This artifact defines future result states for a later non-enforcing evaluator:
+
+- `not-evaluated`;
+- `evaluation-blocked`;
+- `evaluated-clean`;
+- `evaluated-with-review-required`;
+- `evaluated-with-blocking-violations`.
+
+Required current state:
+
+- `checkerRun: false`;
+- `inputConsumedForEvaluation: false`;
+- `scopeInputsConsumedForEvaluation: false`;
+- `pathPolicyConsumedForEvaluation: false`;
+- `categorySchemaConsumedForEvaluation: false`;
+- `scopeComplianceEvaluationStatus: not-evaluated`;
+- `scopeComplianceResult: no-result`;
+- `evaluatedViolations: []`;
+- `reviewRequiredFindings: []`;
+- `blockingFindings: []`;
+- no clean result;
+- no actual violation result;
+- no path matching implementation;
+- no allowedScope or forbiddenScope comparison;
+- no rejection, enforcement, CI wiring, fixture approval, runtime Evidence satisfaction, or equivalence proof.
+
+The clean result policy is intentionally strict. Empty finding arrays are clean only after a future evaluator has run,
+consumed changed-file input, scope inputs, path policy, and category schema, evaluated every changed file, and found no
+blocking, review-required, or unknown findings. In the current preview, empty finding arrays still mean not evaluated.
 
 ## Fixture-Provided Changed-File List Preview
 

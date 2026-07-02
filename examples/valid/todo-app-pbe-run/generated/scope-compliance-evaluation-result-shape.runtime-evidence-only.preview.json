@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "scope-compliance-evaluation-result-shape-preview",
+  "status": "scope-compliance-evaluation-result-shape-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "checkerAxis": "scope-compliance-preview",
+  "resultShapeStatus": "scope-compliance-evaluation-result-shape-previewed",
+  "changedFileInputArtifact": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+  "scopeInputBindingArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+  "pathPatternPolicyArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+  "violationCategorySchemaArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
+  "scopeComplianceResultPreviewArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
+  "checkerRun": false,
+  "inputConsumedForEvaluation": false,
+  "changedFileInputConsumedForEvaluation": false,
+  "scopeInputsConsumedForEvaluation": false,
+  "pathPolicyConsumedForEvaluation": false,
+  "categorySchemaConsumedForEvaluation": false,
+  "scopeComplianceEvaluationStatus": "not-evaluated",
+  "scopeComplianceResult": "no-result",
+  "evaluatedFiles": [],
+  "evaluatedViolations": [],
+  "reviewRequiredFindings": [],
+  "blockingFindings": [],
+  "unknownFindings": [],
+  "resultConfidence": "none-not-evaluated",
+  "cleanClaimed": false,
+  "actualViolationClaimed": false,
+  "scopeEnforced": false,
+  "diffRejected": false,
+  "supportStatus": "not-supported",
+  "compileEligibility": "not-eligible-current-command-not-wired",
+  "expectedCandidateStatus": "contract-candidate-not-run",
+  "approvalStatus": "not-approved",
+  "equivalenceProven": false,
+  "futureResultStates": [
+    {
+      "state": "not-evaluated",
+      "meaning": "The checker has not consumed inputs or evaluated any paths.",
+      "currentState": true,
+      "cleanAllowed": false
+    },
+    {
+      "state": "evaluation-blocked",
+      "meaning": "The future evaluator has authoritative inputs but cannot safely evaluate because a required policy, pattern, or source is missing or invalid.",
+      "currentState": false,
+      "cleanAllowed": false
+    },
+    {
+      "state": "evaluated-clean",
+      "meaning": "The future evaluator ran with all required inputs consumed and found no blocking, review-required, or unknown findings.",
+      "currentState": false,
+      "cleanAllowed": true
+    },
+    {
+      "state": "evaluated-with-review-required",
+      "meaning": "The future evaluator ran and produced one or more findings that require human review before a clean result can be claimed.",
+      "currentState": false,
+      "cleanAllowed": false
+    },
+    {
+      "state": "evaluated-with-blocking-violations",
+      "meaning": "The future evaluator ran and produced one or more blocking scope compliance violations.",
+      "currentState": false,
+      "cleanAllowed": false
+    }
+  ],
+  "cleanResultPolicy": {
+    "currentCleanResultAllowed": false,
+    "emptyEvaluatedViolationsIsCleanWhileCheckerRunFalse": false,
+    "cleanRequiresCheckerRun": true,
+    "cleanRequiresChangedFileInputConsumed": true,
+    "cleanRequiresScopeInputsConsumed": true,
+    "cleanRequiresPathPolicyConsumed": true,
+    "cleanRequiresCategorySchemaConsumed": true,
+    "cleanRequiresEveryChangedFileEvaluated": true,
+    "cleanRequiresNoBlockingFindings": true,
+    "cleanRequiresNoReviewRequiredFindings": true,
+    "cleanRequiresNoUnknownFindings": true,
+    "currentMeaningOfEmptyFindings": "not-evaluated-not-clean"
+  },
+  "findingBuckets": {
+    "evaluatedFiles": "Future normalized changed-file paths that were actually evaluated.",
+    "evaluatedViolations": "Future blocking violations produced by an implemented evaluator.",
+    "reviewRequiredFindings": "Future non-clean findings requiring review before any clean result.",
+    "blockingFindings": "Future findings that block a clean result or require stop behavior.",
+    "unknownFindings": "Future findings caused by unknown paths, patterns, or policies that prevent clean classification.",
+    "currentBucketStatus": "all-empty-because-not-evaluated"
+  },
+  "relationshipToViolationCategorySchema": {
+    "schemaArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
+    "categorySchemaAcceptedForFutureEvaluation": true,
+    "categorySchemaConsumedForEvaluation": false,
+    "currentCategoryPopulationStatus": "no-current-findings",
+    "reason": "The category schema defines vocabulary only; this result shape does not classify current changed files."
+  },
+  "sourceArtifacts": {
+    "gitDerivedChangedFileCollection": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+    "scopeComplianceCollectionInputConsumption": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
+    "scopeComplianceScopeInputBinding": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+    "scopeCompliancePathPatternPolicy": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+    "scopeComplianceViolationCategorySchema": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
+    "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
+    "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
+    "implementationReadiness": "docs/concept/scope-compliance-checker-implementation-readiness.md"
+  },
+  "allowedUse": [
+    "review the future scope compliance evaluation result shape",
+    "distinguish not-evaluated, blocked, clean, review-required, and blocking-violation result states",
+    "confirm that empty evaluatedViolations means not evaluated while checkerRun is false",
+    "prepare a later path matching helper implementation without claiming results"
+  ],
+  "forbiddenUse": [
+    "actual evaluation result",
+    "path pattern matching implementation",
+    "changed-file comparison against allowedScope",
+    "changed-file comparison against forbiddenScope",
+    "scope compliance evaluation",
+    "current clean result",
+    "no-violation claim",
+    "actual violation finding",
+    "diff rejection",
+    "scope enforcement",
+    "CI enforcement",
+    "required check configuration",
+    "fixture support",
+    "fixture approval",
+    "runtime Evidence satisfaction",
+    "equivalence proof",
+    "user acceptance"
+  ],
+  "nonEvaluationBoundary": "This artifact previews the future scope compliance evaluation result shape only. It does not implement path matching, compare changed files against allowedScope or forbiddenScope, consume inputs for evaluation, populate findings, report clean or actual violation results, reject diffs, enforce scope, approve fixtures, satisfy runtime Evidence, or prove equivalence."
+}

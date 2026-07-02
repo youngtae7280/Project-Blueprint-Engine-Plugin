@@ -56,6 +56,9 @@ describe('git-derived changed-file collection', () => {
     expect(artifact.scopeComplianceViolationCategorySchemaStatus).toBe(
       'scope-compliance-violation-category-schema-previewed',
     )
+    expect(artifact.scopeComplianceEvaluationResultShapeStatus).toBe(
+      'scope-compliance-evaluation-result-shape-previewed',
+    )
     expect(artifact.authorityClass).toBe('git-derived-changed-files')
     expect(artifact.collectionMode).toBe('explicit-base-head')
     expect(artifact.changedFilesCollected).toBe(true)
@@ -83,6 +86,9 @@ describe('git-derived changed-file collection', () => {
     )
     expect(artifact.sourceArtifacts.scopeComplianceViolationCategorySchema).toBe(
       'examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json',
+    )
+    expect(artifact.sourceArtifacts.scopeComplianceEvaluationResultShape).toBe(
+      'examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json',
     )
     expect(artifact.forbiddenUse).toContain('scope compliance evaluation')
     expect(artifact.forbiddenUse).toContain('no-violation claim')

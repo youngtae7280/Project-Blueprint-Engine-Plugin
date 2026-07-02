@@ -1639,6 +1639,20 @@ scope compliance, generate result output, report no-violation, report actual vio
 CI/required checks/branch protection, support or approve the fixture, satisfy runtime Evidence, or set
 `equivalenceProven: true`.
 
+DEC-225 does not supersede DEC-097 through DEC-224. It adds the scope compliance evaluation result shape preview
+artifact
+`examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json`.
+The preview records `resultShapeStatus: scope-compliance-evaluation-result-shape-previewed`, `checkerRun: false`,
+`inputConsumedForEvaluation: false`, `scopeInputsConsumedForEvaluation: false`,
+`pathPolicyConsumedForEvaluation: false`, `categorySchemaConsumedForEvaluation: false`,
+`scopeComplianceEvaluationStatus: not-evaluated`, `scopeComplianceResult: no-result`, and
+`evaluatedViolations: []`. It defines future result states for `not-evaluated`, `evaluation-blocked`,
+`evaluated-clean`, `evaluated-with-review-required`, and `evaluated-with-blocking-violations`. Empty finding arrays
+remain not evaluated, not clean, while `checkerRun` is false. This preview does not implement path matching, compare
+changed files against allowedScope or forbiddenScope, evaluate scope compliance, generate actual evaluation results,
+report no-violation, report actual violations, reject or enforce diffs, wire CI/required checks/branch protection,
+support or approve the fixture, satisfy runtime Evidence, or set `equivalenceProven: true`.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

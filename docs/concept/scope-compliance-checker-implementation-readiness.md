@@ -455,10 +455,56 @@ requires a future evaluator to run successfully with authoritative inputs and an
 
 Remaining prerequisites before evaluation:
 
-- evaluation result schema;
 - path matching helper implementation.
 
-The next checker step should define evaluation result shape before any matching implementation.
+## Evaluation Result Shape Preview
+
+The first scope compliance evaluation result shape preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+```text
+scope-compliance-evaluation-result-shape-previewed
+```
+
+This preview defines future result state vocabulary without running evaluation:
+
+- `not-evaluated`;
+- `evaluation-blocked`;
+- `evaluated-clean`;
+- `evaluated-with-review-required`;
+- `evaluated-with-blocking-violations`.
+
+Required current preview state:
+
+```text
+checkerRun: false
+inputConsumedForEvaluation: false
+scopeInputsConsumedForEvaluation: false
+pathPolicyConsumedForEvaluation: false
+categorySchemaConsumedForEvaluation: false
+scopeComplianceEvaluationStatus: not-evaluated
+scopeComplianceResult: no-result
+evaluatedViolations: []
+reviewRequiredFindings: []
+blockingFindings: []
+```
+
+Empty finding buckets still mean not evaluated while `checkerRun: false`; they do not mean clean. A clean result is
+only allowed after a future evaluator runs, consumes changed-file input, scope inputs, path policy, and category schema,
+evaluates every changed file, and leaves no blocking, review-required, or unknown findings.
+
+Remaining prerequisites before evaluation:
+
+- path matching helper implementation;
+- non-enforcing scope evaluation implementation.
+
+The next checker step can start path matching helper design or implementation, but it still must not claim clean or
+actual violations until an evaluator consumes the inputs.
 
 ## Fixture-Provided Changed-File List Preview
 

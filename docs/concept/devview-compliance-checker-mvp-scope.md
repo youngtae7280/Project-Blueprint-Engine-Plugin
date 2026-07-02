@@ -435,6 +435,24 @@ The schema defines future categories such as `forbidden-scope-match`, `allowed-s
 `categorySchemaConsumedForEvaluation: false`, `checkerRun: false`, `scopeComplianceEvaluationStatus: not-evaluated`, and
 `evaluatedViolations: []`. Empty evaluated violations still means not evaluated, not clean.
 
+The first evaluation result shape preview now records:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json
+```
+
+Status:
+
+```text
+scopeComplianceEvaluationResultShapeStatus: scope-compliance-evaluation-result-shape-previewed
+```
+
+The result shape preview defines future states such as `not-evaluated`, `evaluation-blocked`, `evaluated-clean`,
+`evaluated-with-review-required`, and `evaluated-with-blocking-violations`. The current state remains
+`checkerRun: false`, `inputConsumedForEvaluation: false`, `scopeComplianceEvaluationStatus: not-evaluated`,
+`scopeComplianceResult: no-result`, and `evaluatedViolations: []`. A clean result remains forbidden until a future
+evaluator runs and consumes changed-file input, scope inputs, path policy, and category schema.
+
 ## Decision
 
 Decision:
