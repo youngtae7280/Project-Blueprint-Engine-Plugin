@@ -539,6 +539,17 @@ interface GraphSourceHealthReport {
     explicitRetirementApproval: string
     retirementAction: string
   }
+  runtimeBudget: {
+    runtimeBudgetTargetMs: 5000
+    lastTimingSmokeStatus: 'not-run-by-report-health'
+    timingSmokeCommand: 'npm run devview:runtime:smoke'
+    advisoryOnly: true
+    runtimeBudgetEnforced: false
+    aiEditingTimeExcluded: true
+    fullValidationExcluded: true
+    ciRuntimeExcluded: true
+    humanReviewExcluded: true
+  }
   enforcementStatus: 'non-enforcing'
   nonEnforcementStatement: string
   requiredCheckBoundary: string
@@ -1497,6 +1508,17 @@ export async function reportGraphSourceHealth(root: string): Promise<GraphSource
       explicitRetirementApproval: String(retirementReadinessSummary.explicitRetirementApproval || 'missing'),
       retirementAction: String(retirementReadinessSummary.retirementAction || 'missing'),
     },
+    runtimeBudget: {
+      runtimeBudgetTargetMs: 5000,
+      lastTimingSmokeStatus: 'not-run-by-report-health',
+      timingSmokeCommand: 'npm run devview:runtime:smoke',
+      advisoryOnly: true,
+      runtimeBudgetEnforced: false,
+      aiEditingTimeExcluded: true,
+      fullValidationExcluded: true,
+      ciRuntimeExcluded: true,
+      humanReviewExcluded: true,
+    },
     enforcementStatus: 'non-enforcing',
     nonEnforcementStatement:
       'Graph-source health report is local/non-enforcing summary only. It does not create required checks, branch protection, merge enforcement, or user acceptance.',
@@ -1563,6 +1585,7 @@ Status: \`${report.status}\`
 | Output requirement source authority preview | \`${report.contractCompilerDryRun.outputRequirementSourceAuthorityPreview.status}\`; ${report.contractCompilerDryRun.outputRequirementSourceAuthorityPreview.sourceAuthorityEntryCount} source entries / ${report.contractCompilerDryRun.outputRequirementSourceAuthorityPreview.derivedOutputRequirementCount} derived requirements / ${report.contractCompilerDryRun.outputRequirementSourceAuthorityPreview.unresolvedObligationCount} unresolved; \`${report.contractCompilerDryRun.outputRequirementSourceAuthorityPreview.generatedPreservationStatus}\`; \`${report.contractCompilerDryRun.outputRequirementSourceAuthorityPreviewPath}\` |
 | Source authority gap preview | \`${report.contractCompilerDryRun.sourceAuthorityGapPreview.status}\`; ${report.contractCompilerDryRun.sourceAuthorityGapPreview.remainingLossCount} remaining losses (${report.contractCompilerDryRun.sourceAuthorityGapPreview.remainingSemanticLossCount} semantic / ${report.contractCompilerDryRun.sourceAuthorityGapPreview.remainingPolicyLossCount} policy); fields ${formatFieldList(report.contractCompilerDryRun.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority)}; next \`${report.contractCompilerDryRun.sourceAuthorityGapPreview.nextRecommendedResolver}\`; \`${report.contractCompilerDryRun.sourceAuthorityGapPreviewPath}\` |
 | Contract semantic diff review | \`${report.contractCompilerDryRun.compilerPromotionReadiness}\`; severity \`${report.contractCompilerDryRun.highestReviewSeverity}\`; unknown semantic diffs ${report.contractCompilerDryRun.semanticDiffRuleCoverage.unknownDiffs}; unknown fields ${unknownSemanticFields}; ${semanticDiffSummary} |
+| DevView runtime timing smoke | target ${report.runtimeBudget.runtimeBudgetTargetMs}ms; last \`${report.runtimeBudget.lastTimingSmokeStatus}\`; advisory \`${report.runtimeBudget.advisoryOnly}\`; enforced \`${report.runtimeBudget.runtimeBudgetEnforced}\`; command \`${report.runtimeBudget.timingSmokeCommand}\` |
 
 ${report.contractCompilerDryRun.diffReviewBoundary}
 
@@ -1594,11 +1617,13 @@ ${blockingReasons}
 
 - ${report.nonEnforcementStatement}
 - ${report.requiredCheckBoundary}
+- DevView runtime timing smoke is advisory only. It excludes AI editing time, full validation, CI runtime, and human review time, and it does not enforce the ${report.runtimeBudget.runtimeBudgetTargetMs}ms target.
 
 ## Reproduce
 
 \`\`\`bash
 npm run build:cli
+npm run devview:runtime:smoke
 node dist/cli/index.js graph read-model validate --all --json
 npm run test:read-model:e2e
 node dist/cli/index.js graph read-model report-compiler-boundary --json

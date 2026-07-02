@@ -1740,6 +1740,23 @@ The current Todo App runtime Evidence-only evaluation is blocked rather than cle
 `unresolved:todo-app-runtime-proof-report`. Empty `evaluatedViolations: []` in this artifact must not be read as fixture
 approval or runtime Evidence satisfaction.
 
+## DevView Runtime Budget Smoke
+
+The deterministic runtime budget is documented in
+[devview-runtime-performance-budget.md](devview-runtime-performance-budget.md).
+
+The first advisory timing smoke is:
+
+```text
+npm run devview:runtime:smoke
+```
+
+It measures selected deterministic local commands and reports the 5 second target as advisory only. Full validation,
+full test suites, CI runtime, human review, and AI editing time are outside this budget. The changed-file collection
+step writes to a `.tmp` smoke artifact rather than refreshing the tracked Todo App collection preview. The smoke does
+not enforce scope, reject diffs, configure required checks, approve fixtures, satisfy runtime Evidence, or prove
+equivalence.
+
 ## Fixture-Provided Changed-File List Preview
 
 The first fixture-provided changed-file list preview artifact is:
@@ -1911,8 +1928,8 @@ This selection does not:
 
 ## Next Step
 
-The next task may add a runtime budget or reporting smoke around the non-enforcing evaluator. It should not reject diffs,
-enforce scope, broaden compiler support, wire additional fixtures into the supported command path, create promotion
-review packets, approve fixtures, claim runtime Evidence is satisfied, inspect patch contents, turn candidate checks
-into required checks, apply graph deltas, turn test Evidence into user acceptance, allow production source edits, enforce
-CI, or change the existing Todo App structure-only status.
+The next task may decide how to expose the non-enforcing evaluator through a supported CLI command or generated report
+surface. It should not reject diffs, enforce scope, broaden compiler support, wire additional fixtures into the
+supported command path, create promotion review packets, approve fixtures, claim runtime Evidence is satisfied, inspect
+patch contents, turn candidate checks into required checks, apply graph deltas, turn test Evidence into user acceptance,
+allow production source edits, enforce CI, or change the existing Todo App structure-only status.

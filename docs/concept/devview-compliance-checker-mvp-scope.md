@@ -497,6 +497,23 @@ CI, configure required checks, approve fixtures, satisfy runtime Evidence, apply
 Todo App artifact currently reports `evaluation-blocked` because unresolved scope patterns must not silently pass as
 clean.
 
+## Runtime Budget Smoke
+
+The deterministic DevView runtime budget is documented in
+[devview-runtime-performance-budget.md](devview-runtime-performance-budget.md).
+
+The first advisory timing smoke is:
+
+```text
+npm run devview:runtime:smoke
+```
+
+It measures selected deterministic commands and reports `runtimeBudgetTargetMs: 5000`, `budgetStatus:
+advisory-not-enforced`, and `runtimeBudgetEnforced: false`. The timing smoke excludes AI editing time, full validation,
+CI runtime, and human review. The changed-file collection measurement writes to a `.tmp` smoke artifact rather than the
+tracked Todo App preview artifact. It does not turn scope compliance into a gate and does not reject diffs or configure
+required checks.
+
 ## Decision
 
 Decision:

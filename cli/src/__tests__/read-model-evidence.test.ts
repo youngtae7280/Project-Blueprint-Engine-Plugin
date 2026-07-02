@@ -2998,6 +2998,14 @@ describe('read-model Evidence builder', () => {
       treeNativeRetirement: { todoSearchApprovalStatus: string; repoWideApprovalStatus: string }
       compilerBoundary: { status: string; dryRunChangeId: string }
       compilerInputModel: { status: string; dryRunChangeId: string }
+      runtimeBudget: {
+        runtimeBudgetTargetMs: number
+        lastTimingSmokeStatus: string
+        timingSmokeCommand: string
+        advisoryOnly: boolean
+        runtimeBudgetEnforced: boolean
+        fullValidationExcluded: boolean
+      }
       contractCompilerDryRun: {
         status: string
         dryRunChangeId: string
@@ -3076,6 +3084,14 @@ describe('read-model Evidence builder', () => {
     expect(output.compilerBoundary.dryRunChangeId).toBe('change-todo-search-whitespace-normalization-dogfood')
     expect(output.compilerInputModel.status).toBe('compiler-input-model-pass')
     expect(output.compilerInputModel.dryRunChangeId).toBe('change-todo-search-whitespace-normalization-dogfood')
+    expect(output.runtimeBudget).toMatchObject({
+      runtimeBudgetTargetMs: 5000,
+      lastTimingSmokeStatus: 'not-run-by-report-health',
+      timingSmokeCommand: 'npm run devview:runtime:smoke',
+      advisoryOnly: true,
+      runtimeBudgetEnforced: false,
+      fullValidationExcluded: true,
+    })
     expect(output.contractCompilerDryRun.status).toBe('contract-compiler-dry-run-pass')
     expect(output.contractCompilerDryRun.candidateStatus).toBe('contract-candidate-pass')
     expect(output.contractCompilerDryRun.candidateDiffStatus).toBe('contract-diff-detected')
@@ -3217,6 +3233,8 @@ describe('read-model Evidence builder', () => {
     expect(markdown).toContain('`retirement-not-ready`')
     expect(markdown).toContain('`non-enforcing`')
     expect(markdown).toContain('node dist/cli/index.js graph read-model report-health --json --markdown')
+    expect(markdown).toContain('DevView runtime timing smoke')
+    expect(markdown).toContain('npm run devview:runtime:smoke')
   })
 
   it('blocks graph-source health when retirement approval package status drifts', async () => {

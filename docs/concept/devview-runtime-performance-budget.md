@@ -1,0 +1,110 @@
+# DevView Runtime Performance Budget
+
+DevView should keep its deterministic runtime path fast enough to run during ordinary local work without becoming a
+second full validation suite.
+
+## Target
+
+Target:
+
+```text
+deterministic DevView runtime path <= 5000ms
+```
+
+Scope:
+
+- graph/read-model projection;
+- contract or pack compilation;
+- git-derived changed-file collection;
+- non-enforcing compliance evaluation;
+- result/report artifact generation;
+- future graph delta proposal generation.
+
+The target excludes:
+
+- Codex or AI editing time;
+- full test suite runtime;
+- full validation suite runtime;
+- CI runtime;
+- human review time;
+- Markdown documentation authoring;
+- DEC authoring.
+
+## Process And Runtime Separation
+
+The product process can remain safe, reviewable, and staged while the runtime compiler/checker path stays fast.
+
+`safe/reviewable/staged` describes how DevView decides what is allowed, what needs review, and what must never be
+automated without approval.
+
+`fast/deterministic/runtime` describes the local control-plane pass that reads already-known artifacts, compiles
+contracts, collects changed-file names, runs advisory checks, and writes result summaries.
+
+Full validation can take longer than 5 seconds. The runtime budget is not a replacement for full validation, CI
+observation, or human review.
+
+## Advisory Timing Smoke
+
+The first timing smoke is:
+
+```text
+npm run devview:runtime:smoke
+```
+
+It runs:
+
+- `node dist/cli/index.js graph read-model report-compiler-input --json`;
+- `node dist/cli/index.js graph read-model compile-contract --dry-run --json`;
+- `node dist/cli/index.js graph read-model collect-changed-files --base HEAD~1 --head HEAD --output .tmp/devview-runtime-timing-smoke/git-derived-changed-file-collection.json --json`.
+
+The changed-file collection step writes to a `.tmp` smoke artifact so the timing smoke does not refresh the tracked
+Todo App preview collection artifact during ordinary measurement.
+
+The smoke reports JSON with:
+
+- `runtimeBudgetTargetMs`;
+- `measuredTotalMs`;
+- `targetComparison`;
+- `budgetStatus`;
+- `advisoryOnly`;
+- `runtimeBudgetEnforced`;
+- `steps`.
+
+The budget status is advisory. The smoke does not fail because the 5 second target is exceeded. It exits nonzero only
+when a measured deterministic command itself fails.
+
+The non-enforcing scope evaluator currently has a helper and advisory artifact, but no dedicated supported CLI command.
+It is therefore listed as pending in the timing smoke rather than hidden or folded into a different command.
+
+## Health Report Boundary
+
+`graph read-model report-health --json` exposes a small runtime budget summary:
+
+```text
+runtimeBudgetTargetMs: 5000
+lastTimingSmokeStatus: not-run-by-report-health
+advisoryOnly: true
+runtimeBudgetEnforced: false
+```
+
+The health report does not run the timing smoke. It only names the advisory surface and preserves the non-enforcement
+boundary.
+
+## Non-Goals
+
+This budget does not:
+
+- enforce the 5 second target;
+- fail CI based on runtime timing;
+- add required checks;
+- add branch protection;
+- reject diffs;
+- enforce scope compliance;
+- make the evaluator blocking;
+- approve fixtures;
+- mark calibration fixtures as supported;
+- set `equivalenceProven: true`;
+- inspect patch contents;
+- implement graph delta apply;
+- automate user acceptance;
+- introduce executor automation.

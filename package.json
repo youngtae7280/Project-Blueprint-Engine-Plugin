@@ -20,6 +20,7 @@
     "test": "vitest run",
     "test:examples": "npm run build:cli && node scripts/test-examples.js",
     "test:read-model:e2e": "npm run build:cli && node scripts/read-model-e2e-smoke.js",
+    "devview:runtime:smoke": "node scripts/devview-runtime-timing-smoke.mjs",
     "check:graph-source:candidate-b": "npm run build:cli && node dist/cli/index.js graph read-model report-health --json && node scripts/read-model-e2e-smoke.js",
     "lint": "eslint .",
     "format": "prettier --write .",

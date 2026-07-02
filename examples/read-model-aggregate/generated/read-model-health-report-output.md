@@ -35,6 +35,7 @@ Status: `graph-source-health-pass`
 | Output requirement source authority preview | `output-requirement-source-authority-preview-pass`; 4 source entries / 4 derived requirements / 0 unresolved; `generated-output-requirements-preserved`; `examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json`                                                                                |
 | Source authority gap preview                | `contract-source-authority-gap-preview-pass`; 0 remaining losses (0 semantic / 0 policy); fields none; next `none`; `examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json`                                                                                                                           |
 | Contract semantic diff review               | `compiler-promotion-review-required`; severity `medium`; unknown semantic diffs 0; unknown fields none; validation-superset-review-only: 1, source-mode-metadata-only: 1, boundary-wording-review-required: 1                                                                                                                      |
+| DevView runtime timing smoke                | target 5000ms; last `not-run-by-report-health`; advisory `true`; enforced `false`; command `npm run devview:runtime:smoke`                                                                                                                                                                                                         |
 
 The compiler candidate is valid, but equivalence with the hand-written contract is not proven. Review the differing
 fields before relying on the candidate.
@@ -72,11 +73,14 @@ artifacts.
   merge enforcement, or user acceptance.
 - Health pass is not a required check and does not approve tree-native retirement, source authority expansion, or
   enforcement.
+- DevView runtime timing smoke is advisory only. It excludes AI editing time, full validation, CI runtime, and human
+  review time, and it does not enforce the 5000ms target.
 
 ## Reproduce
 
 ```bash
 npm run build:cli
+npm run devview:runtime:smoke
 node dist/cli/index.js graph read-model validate --all --json
 npm run test:read-model:e2e
 node dist/cli/index.js graph read-model report-compiler-boundary --json

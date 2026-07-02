@@ -1682,6 +1682,24 @@ support, promotion approval, runtime Evidence satisfaction, equivalence proof, e
 or automated user acceptance. The evaluator is advisory only, and clean or blocking states from this slice are not
 approval or enforcement authority.
 
+## DEC-228 Add Advisory DevView Runtime Performance Budget
+
+DEC-228 does not supersede DEC-097 through DEC-227. It adds
+`docs/concept/devview-runtime-performance-budget.md`, the advisory timing smoke
+`scripts/devview-runtime-timing-smoke.mjs`, and the npm script `devview:runtime:smoke`.
+
+The runtime target is 5000ms for selected local deterministic DevView passes during normal task slices. This target
+excludes Codex or AI editing time, full test suite runtime, full validation suite runtime, CI runtime, human review
+time, Markdown documentation authoring, and DEC authoring. The timing smoke measures compiler input reporting, contract
+compiler dry-run, and git-derived changed-file collection. The collection measurement writes to a `.tmp` smoke artifact
+rather than refreshing the tracked Todo App preview collection artifact. The smoke lists evaluator CLI execution and
+graph delta proposal generation as pending deterministic steps when no supported CLI surface exists yet.
+
+The timing smoke is advisory only. Timing over the target does not fail CI, create a required check, reject diffs,
+enforce scope, approve fixtures, set `equivalenceProven: true`, satisfy runtime Evidence, apply graph deltas, introduce
+executor automation, or replace user acceptance. `graph read-model report-health --json` exposes the timing smoke as a
+non-enforcing summary with `runtimeBudgetEnforced: false` and does not run the smoke itself.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

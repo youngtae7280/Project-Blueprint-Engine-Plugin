@@ -590,6 +590,29 @@ not approve the fixture, satisfy runtime Evidence, prove equivalence, reject dif
 The evaluator must stay outside CI gates, required checks, branch protection, graph delta apply, fixture approval, and
 runtime Evidence satisfaction until a separate decision explicitly changes those boundaries.
 
+## Runtime Budget Timing Smoke
+
+The runtime performance budget is documented in
+[devview-runtime-performance-budget.md](devview-runtime-performance-budget.md).
+
+The first advisory timing smoke is:
+
+```text
+npm run devview:runtime:smoke
+```
+
+It measures selected deterministic runtime commands after `npm run build:cli` has produced `dist/cli/index.js`.
+Measured commands currently include compiler input reporting, contract compiler dry-run, and git-derived changed-file
+collection. The smoke reports `runtimeBudgetTargetMs: 5000`, `budgetStatus: advisory-not-enforced`, and
+`runtimeBudgetEnforced: false`.
+
+The git-derived changed-file collection measurement writes to `.tmp/devview-runtime-timing-smoke/` so timing checks do
+not rewrite the tracked Todo App preview collection artifact.
+
+The timing smoke is not a CI gate. It excludes AI editing time, full validation, CI runtime, and human review time. It
+does not make the evaluator blocking, reject diffs, approve fixtures, satisfy runtime Evidence, prove equivalence, or
+apply graph deltas.
+
 ## Fixture-Provided Changed-File List Preview
 
 The first fixture-provided changed-file list preview is:
@@ -865,6 +888,7 @@ Reason:
 - result shape artifact exists as a preview;
 - a first non-enforcing evaluator helper and advisory artifact exist, but no enforcement, rejection, approval,
   equivalence proof, or CI gate exists.
+- an advisory runtime timing smoke exists, but it is not enforced and is not a required check.
 
 Recommended next task:
 
