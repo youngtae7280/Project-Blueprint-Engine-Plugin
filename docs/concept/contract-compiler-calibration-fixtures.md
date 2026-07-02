@@ -799,20 +799,70 @@ Still unresolved:
 - `output-requirement-for-test-evidence`;
 - `compliance-checker-bridge`.
 
+## Third Runtime Evidence Authority Preview
+
+The third fixture runtime Evidence authority preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/runtime-evidence-authority.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+- `status: runtime-evidence-authority-previewed`
+- `runtimeEvidenceAuthorityStatus: preview-only-not-satisfied`
+- `currentRuntimeEvidenceStatus: missing`
+- `supportStatus: not-supported`
+- `expectedCandidateStatus: contract-candidate-not-run`
+- `approvalStatus: not-approved`
+- `equivalenceProven: false`
+
+The preview defines what may count as authoritative runtime Evidence for the test-only behavior proof fixture. Candidate
+authoritative Evidence can include captured command output, structured runtime test artifacts, or manual runtime
+observation records with human review. Natural-language claims such as "tests passed" are not authoritative Evidence by
+themselves.
+
+Authoritative runtime Evidence should record:
+
+- exact command or runtime check;
+- pass/fail status and exit code where applicable;
+- relevant assertion summary;
+- artifact path or structured evidence record;
+- freshness or capture statement;
+- links to `TT-1`, `AC-PT-1-1`, and the add-todo behavior;
+- source non-modification statement.
+
+The existing attached `todo-add.txt` remains structure-only context. It is present, but it is not enough by itself to
+satisfy runtime Evidence authority for this calibration fixture. Runtime command Evidence and production source
+non-modification Evidence remain unresolved.
+
+The preview preserves the test-only boundary: runtime Evidence must be produced without production source edits. If
+production source edits appear necessary, the expected behavior remains stop and report, not silent scope expansion.
+
+Updated third-fixture gap status:
+
+- `runtime-evidence-authority`: `runtime-evidence-authority-previewed`
+
+Still unresolved:
+
+- `evidence-check-binding`;
+- `output-requirement-for-test-evidence`;
+- `compliance-checker-bridge`.
+
 Recommended next step from the observation:
 
 ```text
-select-third-fixture-first-preview-scope
+preview-third-fixture-evidence-check-binding
 ```
 
-Recommended first scope:
+Recommended next scope:
 
 ```text
-runtime-evidence-authority
+evidence-check-binding
 ```
 
-Reason: before candidate generation or compliance checking, DevView needs to define what Evidence can prove the
-add-todo behavior without production source edits.
+Reason: after previewing runtime Evidence authority, DevView needs to bind evidence types to required checks without
+marking the fixture supported.
 
 ## Calibration Success Criteria
 
@@ -845,7 +895,7 @@ This selection does not:
 
 ## Next Step
 
-The next task should preview `runtime-evidence-authority` for the third fixture. It should not broaden compiler support,
-wire the third fixture into the supported command path, create a promotion review packet, approve the fixture, apply
-graph deltas, turn test Evidence into user acceptance, allow production source edits, or change the existing Todo App
-structure-only status.
+The next task should preview `evidence-check-binding` for the third fixture. It should not broaden compiler support,
+wire the third fixture into the supported command path, create a promotion review packet, approve the fixture, claim
+runtime Evidence is satisfied, apply graph deltas, turn test Evidence into user acceptance, allow production source
+edits, or change the existing Todo App structure-only status.

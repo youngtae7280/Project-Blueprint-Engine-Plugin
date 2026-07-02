@@ -29,6 +29,13 @@
     "productionSourceBoundaryStatus": "production-source-edit-forbidden-or-stop-required",
     "remainingSupportStatus": "not-supported"
   },
+  "runtimeEvidenceAuthorityPreview": {
+    "path": "examples/valid/todo-app-pbe-run/generated/runtime-evidence-authority.runtime-evidence-only.preview.json",
+    "status": "runtime-evidence-authority-previewed",
+    "runtimeEvidenceAuthorityStatus": "preview-only-not-satisfied",
+    "currentRuntimeEvidenceStatus": "missing",
+    "remainingSupportStatus": "not-supported"
+  },
   "observedGaps": [
     {
       "gapId": "test-only-allowed-scope",
@@ -50,12 +57,12 @@
     },
     {
       "gapId": "runtime-evidence-authority",
-      "status": "gap-observed",
+      "status": "runtime-evidence-authority-previewed",
       "whyItMatters": "Attached text Evidence is not enough to prove runtime behavior for a test-only calibration fixture.",
-      "currentDraftSignal": "evidence-todo-app-runtime-command-output is missing; attached test output is present but marked not authoritative runtime proof.",
+      "currentDraftSignal": "runtime evidence authority preview defines candidate authoritative evidence types, command output requirements, and non-authoritative examples; evidence-todo-app-runtime-command-output remains missing.",
       "blocksCompileEligibility": true,
       "blocksCandidateGeneration": true,
-      "futureNeed": "A policy for what runtime command output or equivalent observable proof can satisfy the add-todo behavior proof."
+      "futureNeed": "Captured runtime Evidence and a supported evidence/check binding are still required; current preview does not satisfy runtime Evidence."
     },
     {
       "gapId": "evidence-check-binding",
@@ -138,7 +145,6 @@
     "complianceCheckerUsefulness": "future-useful-for-detecting-forbidden-production-source-edits"
   },
   "remainingUnresolvedGaps": [
-    "runtime-evidence-authority",
     "evidence-check-binding",
     "output-requirement-for-test-evidence",
     "compliance-checker-bridge"
@@ -156,9 +162,9 @@
     }
   ],
   "recommendedNextStep": {
-    "id": "select-third-fixture-first-preview-scope",
-    "recommendedFirstScope": "runtime-evidence-authority",
-    "reason": "After previewing the test-only scope boundary, DevView next needs to define what Evidence can prove the add-todo behavior without production source edits."
+    "id": "preview-third-fixture-evidence-check-binding",
+    "recommendedFirstScope": "evidence-check-binding",
+    "reason": "After previewing runtime Evidence authority, DevView next needs to bind evidence types to required checks without marking the fixture supported."
   },
   "forbiddenInterpretations": [
     "not-supported",

@@ -1243,6 +1243,20 @@ production source edits, create or approve a promotion packet, satisfy runtime E
 enforcement, set `equivalenceProven: true`, execute AI, accept user work, retire tree-native artifacts, rename PBE
 compatibility surfaces, or make any generated contract authoritative.
 
+DEC-201 does not supersede DEC-097 through DEC-200. It adds the preview-only runtime Evidence authority artifact
+`examples/valid/todo-app-pbe-run/generated/runtime-evidence-authority.runtime-evidence-only.preview.json` and links it
+from the third-fixture observation. The preview defines candidate authoritative Evidence types such as captured runtime
+command output, structured runtime test artifacts, and human-reviewed manual runtime observation records, while marking
+Codex natural-language claims, uncaptured local commands, attached structure-only Evidence alone, and reports after
+production source edits as non-authoritative for this calibration fixture. The updated observation marks
+`runtime-evidence-authority` as `runtime-evidence-authority-previewed`, keeps runtime Evidence unsatisfied and missing,
+and leaves `evidence-check-binding`, `output-requirement-for-test-evidence`, and `compliance-checker-bridge` unresolved.
+The next recommended scope is `evidence-check-binding`. This does not support the third fixture, wire it into
+`compile-contract --dry-run`, compile a candidate, run or capture passing runtime Evidence, allow production source
+edits, create or approve a promotion packet, create required checks or CI enforcement, set `equivalenceProven: true`,
+execute AI, accept user work, retire tree-native artifacts, rename PBE compatibility surfaces, or make any generated
+contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
