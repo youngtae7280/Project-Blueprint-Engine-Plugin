@@ -1333,6 +1333,22 @@ candidate checks into required checks, set `equivalenceProven: true`, execute AI
 enforcement or branch protection, accept user work, retire tree-native artifacts, rename PBE compatibility surfaces, or
 make any generated contract authoritative.
 
+DEC-207 does not supersede DEC-097 through DEC-206. It adds
+`docs/concept/contract-compiler-eligibility-status-model.md` as the conceptual lifecycle model for compiler calibration
+fixture status. The model defines fixture selection, calibration recognition, preview gap, compile eligibility, candidate
+generation, semantic diff, promotion review, approval, equivalence, and execution/enforcement status categories. It
+records meanings for existing statuses such as `calibration-fixture-selected`, `policy-recognized`,
+`preview-gap-set-complete`, `not-supported`, `not-eligible-current-command-not-wired`, `contract-candidate-not-run`,
+`promotion-not-eligible`, `not-approved`, `equivalenceCandidate: true`, and `equivalenceProven: false`; it also records
+allowed and forbidden lifecycle transitions and maps the model to the current Todo Search, `escape-html`, and Todo App
+runtime Evidence-only fixtures. The next recommended decision is whether to select a fourth calibration fixture or start
+a minimal compliance-checker design preview. This does not mark calibration fixtures supported, wire them into
+`compile-contract --dry-run`, generate contract candidates, create or approve promotion review packets, claim runtime
+Evidence is satisfied, implement compliance checking, promote static preview artifacts into compiler output, turn
+candidate checks into required checks, set `equivalenceProven: true`, execute AI, apply graph deltas, create CI
+enforcement or branch protection, accept user work, retire tree-native artifacts, rename PBE compatibility surfaces, or
+make any generated contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

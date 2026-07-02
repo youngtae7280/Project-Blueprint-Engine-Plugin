@@ -55,6 +55,9 @@
 - [Contract Compiler Calibration Fixtures](concept/contract-compiler-calibration-fixtures.md) - Second/calibration
   fixture selection for observing whether source-authority reconstruction generalizes beyond the current Todo Search
   dry-run fixture without claiming support or enforcement.
+- [Contract Compiler Eligibility Status Model](concept/contract-compiler-eligibility-status-model.md) - Conceptual
+  lifecycle model for calibration fixture selection, preview completion, compile eligibility, candidate generation,
+  promotion review, approval, equivalence, and non-enforcement status.
 - [Graph operation-chain productization](concept/graph-operation-chain-productization.md) - Local native/retrofit
   dogfood package for `graph-source -> instruction pack -> local change -> graph delta -> graph update proposal`.
 - [Candidate C full read-model gate evaluation](concept/candidate-c-full-read-model-gate-evaluation.md) - Evaluation

@@ -186,6 +186,8 @@ The first Compiler Boundary MVP and hardened Contract Fixture Validator are reco
 - [contract-source-authority-gap-preview.md](contract-source-authority-gap-preview.md)
 - [contract-compiler-equivalence-policy.md](contract-compiler-equivalence-policy.md)
 - [contract-compiler-promotion-review-policy.md](contract-compiler-promotion-review-policy.md)
+- [contract-compiler-calibration-fixtures.md](contract-compiler-calibration-fixtures.md)
+- [contract-compiler-eligibility-status-model.md](contract-compiler-eligibility-status-model.md)
 
 It separates compiler-required work from AI-advisory work, adds a machine-readable task registry and Execution Contract
 MVP schema, validates a Todo Search dry-run contract with bucketed registry/schema/contract issues, requires severe risks
@@ -247,6 +249,12 @@ The packet now narrows the remaining review-only diffs to `source-mode-metadata-
 `validation-superset-review-only`, and `boundary-wording-review-required`. Boundary wording remains a human-review item
 because it must preserve non-execution, non-approval, non-enforcement, no user-acceptance, and no graph-delta-apply
 boundaries.
+
+Contract Compiler Calibration Fixtures and the Eligibility Status Model now summarize three fixture shapes:
+local `bug_fix`, external `behavior-change`, and test-only behavior proof. The status model defines lifecycle categories,
+canonical status meanings, allowed transitions, and forbidden transitions so `preview-gap-set-complete`,
+`policy-recognized`, `contract-candidate-not-run`, `promotion-not-eligible`, `equivalenceCandidate`, and
+`equivalenceProven` cannot be confused with support, approval, execution authority, or enforcement.
 
 The following readiness artifact is complete at documentation level:
 

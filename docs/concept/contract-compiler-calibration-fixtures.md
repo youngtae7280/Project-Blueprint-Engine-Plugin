@@ -1228,6 +1228,11 @@ That lifecycle should clarify the difference between:
 
 This synthesis does not implement that lifecycle model. It only records why the model is the next recommended milestone.
 
+The lifecycle model is now recorded in
+[contract-compiler-eligibility-status-model.md](contract-compiler-eligibility-status-model.md). It defines status
+categories, canonical meanings, allowed and forbidden transitions, and current fixture mapping without implementing
+support or promotion.
+
 ## Calibration Success Criteria
 
 A future calibration cycle is successful if:
@@ -1259,8 +1264,8 @@ This selection does not:
 
 ## Next Step
 
-The next task should define a formal compiler eligibility/status model across fixtures. It should not broaden compiler
-support, wire additional fixtures into the supported command path, create promotion review packets, approve fixtures,
-claim runtime Evidence is satisfied, implement compliance checking, turn candidate checks into required checks, apply
-graph deltas, turn test Evidence into user acceptance, allow production source edits, enforce CI, or change the existing
-Todo App structure-only status.
+The next task should choose whether to select a fourth calibration fixture or start a minimal compliance-checker design
+preview. It should not broaden compiler support, wire additional fixtures into the supported command path, create
+promotion review packets, approve fixtures, claim runtime Evidence is satisfied, implement compliance checking, turn
+candidate checks into required checks, apply graph deltas, turn test Evidence into user acceptance, allow production
+source edits, enforce CI, or change the existing Todo App structure-only status.
