@@ -1464,6 +1464,39 @@ The third-fixture observation now records collection-only progress while preserv
 
 Changed files collected does not mean scope compliance checked.
 
+## Scope Compliance Collection Input Consumption Preview
+
+The first collection input consumption preview artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+```text
+scopeComplianceCollectionInputConsumptionStatus: scope-compliance-collection-input-consumption-previewed
+```
+
+This artifact accepts the git-derived changed-file collection artifact as a future scope compliance checker input. It
+does not consume that input for evaluation.
+
+Required boundary:
+
+- `inputAcceptedForFutureEvaluation: true`;
+- `inputConsumedForEvaluation: false`;
+- `checkerRun: false`;
+- `scopeComplianceEvaluationStatus: not-evaluated`;
+- `evaluatedViolations: []`;
+- no allowedScope comparison;
+- no forbiddenScope comparison;
+- no path pattern matching;
+- no clean or violation result;
+- no rejection, enforcement, CI wiring, fixture approval, runtime Evidence satisfaction, or equivalence proof.
+
+Remaining future inputs include allowedScope binding, forbiddenScope binding, path pattern matching policy,
+generated-file handling policy, violation category schema, and evaluation result schema.
+
 ## Fixture-Provided Changed-File List Preview
 
 The first fixture-provided changed-file list preview artifact is:

@@ -14,6 +14,8 @@
   "complianceCheckerBridgePreview": "examples/valid/todo-app-pbe-run/generated/compliance-checker-bridge.runtime-evidence-only.preview.json",
   "changedFileListAuthorityPreview": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
   "gitDerivedChangedFileInputDesign": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json",
+  "gitDerivedChangedFileCollection": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+  "scopeComplianceCollectionInputConsumption": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
   "fixtureProvidedChangedFileListPreview": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
   "fixtureInputConsumptionPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
   "scopeComplianceDryRunSkeleton": "examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json",
@@ -23,6 +25,8 @@
   "authoritativeChangedFileInputBoundaryDecisionStatus": "authoritative-changed-file-input-boundary-decided",
   "gitDerivedChangedFileInputDesignStatus": "git-derived-input-design-previewed",
   "gitDerivedChangedFileCollectionScopeDecisionStatus": "git-derived-collection-scope-decided",
+  "gitDerivedChangedFileCollectionStatus": "git-derived-changed-files-collected",
+  "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
   "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
   "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
   "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",
@@ -68,9 +72,9 @@
     {
       "inputId": "actual-changed-file-list",
       "expectedSource": "future diff or file-modification collector",
-      "currentAvailability": "unresolved",
-      "authorityStatus": "not-authoritative-input-yet",
-      "reason": "No implemented compliance checker, diff inspection, or changed-file collector exists in this task."
+      "currentAvailability": "git-derived-collection-only-available",
+      "authorityStatus": "accepted-for-future-evaluation-not-consumed",
+      "reason": "A git-derived changed-file collection artifact exists, but no implemented compliance checker consumes it for evaluation."
     },
     {
       "inputId": "actual-diff-summary",
@@ -131,14 +135,18 @@
     "scopeEnforced": false
   },
   "changedFileListSource": {
-    "status": "missing-not-implemented",
+    "status": "git-derived-collection-input-accepted-not-consumed",
     "authorityPreviewPath": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
     "authorityPreviewStatus": "changed-file-list-authority-previewed",
-    "authorityStatus": "changed-file-list-authority-unresolved",
+    "authorityStatus": "git-derived-changed-files",
     "authoritativeBoundaryDecisionStatus": "authoritative-changed-file-input-boundary-decided",
     "selectedFutureAuthoritativeCandidate": "git-derived-changed-files",
     "gitDerivedDesignPreviewPath": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json",
     "gitDerivedDesignStatus": "git-derived-input-design-previewed",
+    "gitDerivedCollectionPath": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+    "gitDerivedCollectionStatus": "git-derived-changed-files-collected",
+    "collectionInputConsumptionPath": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
+    "collectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
     "collectionScopeDecisionPath": "docs/concept/scope-compliance-checker-implementation-readiness.md#git-derived-changed-file-collection-scope-decision",
     "collectionScopeDecisionStatus": "git-derived-collection-scope-decided",
     "fixtureProvidedPreviewPath": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
@@ -149,10 +157,13 @@
     "dryRunSkeletonStatus": "preview-only-not-executable",
     "notRunReportPreviewPath": "examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json",
     "notRunReportStatus": "scope-compliance-not-run-report-previewed",
-    "expectedFutureSource": "future actual changed-file list from diff/file modification inspection",
-    "currentChangedFilesInspected": false,
-    "currentChangedFileListAuthoritative": false,
-    "reason": "The checker preview defines the future input but does not inspect actual diffs."
+    "expectedFutureSource": "git-derived changed-file collection artifact",
+    "currentChangedFilesCollected": true,
+    "currentPatchContentsInspected": false,
+    "currentChangedFileListAuthoritative": true,
+    "inputAcceptedForFutureEvaluation": true,
+    "inputConsumedForEvaluation": false,
+    "reason": "The checker preview can accept the collection artifact as future input, but it does not compare changed files against scope."
   },
   "futureScopeViolationCategories": [
     {

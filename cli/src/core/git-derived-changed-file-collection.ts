@@ -40,6 +40,7 @@ export interface GitDerivedChangedFileCollectionArtifact {
   fixtureShape: 'test-only-behavior-proof'
   checkerAxis: 'scope-compliance-preview'
   collectionStatus: 'git-derived-changed-files-collected'
+  scopeComplianceCollectionInputConsumptionStatus: 'scope-compliance-collection-input-consumption-previewed'
   authorityClass: 'git-derived-changed-files'
   collectionMode: 'explicit-base-head'
   baseRef: string
@@ -57,6 +58,12 @@ export interface GitDerivedChangedFileCollectionArtifact {
   diffRejected: false
   cleanClaimed: false
   actualViolationClaimed: false
+  sourceArtifacts: {
+    scopeComplianceCollectionInputConsumption: string
+    scopeComplianceResultPreview: string
+    scopeComplianceCheckerPreview: string
+    scopeComplianceNotRunReport: string
+  }
   changedFiles: ParsedNameStatusEntry[]
   normalizedChangedFiles: NormalizedChangedFileEntry[]
   pathNormalization: {
@@ -198,6 +205,7 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
     fixtureShape: 'test-only-behavior-proof',
     checkerAxis: 'scope-compliance-preview',
     collectionStatus: 'git-derived-changed-files-collected',
+    scopeComplianceCollectionInputConsumptionStatus: 'scope-compliance-collection-input-consumption-previewed',
     authorityClass: 'git-derived-changed-files',
     collectionMode: 'explicit-base-head',
     baseRef: input.baseRef,
@@ -215,6 +223,16 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
     diffRejected: false,
     cleanClaimed: false,
     actualViolationClaimed: false,
+    sourceArtifacts: {
+      scopeComplianceCollectionInputConsumption:
+        'examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json',
+      scopeComplianceResultPreview:
+        'examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json',
+      scopeComplianceCheckerPreview:
+        'examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json',
+      scopeComplianceNotRunReport:
+        'examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json',
+    },
     changedFiles: parsed,
     normalizedChangedFiles,
     pathNormalization: {

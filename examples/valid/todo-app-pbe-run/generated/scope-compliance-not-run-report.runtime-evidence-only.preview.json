@@ -15,6 +15,7 @@
   "gitDerivedChangedFileInputDesignStatus": "git-derived-input-design-previewed",
   "gitDerivedChangedFileCollectionScopeDecisionStatus": "git-derived-collection-scope-decided",
   "gitDerivedChangedFileCollectionStatus": "git-derived-changed-files-collected",
+  "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
   "supportStatus": "not-supported",
   "compileEligibility": "not-eligible-current-command-not-wired",
   "expectedCandidateStatus": "contract-candidate-not-run",
@@ -38,6 +39,7 @@
     "changedFileListAuthorityPreview": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
     "gitDerivedChangedFileInputDesign": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json",
     "gitDerivedChangedFileCollection": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+    "scopeComplianceCollectionInputConsumption": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
     "collectionScopeDecision": "docs/concept/scope-compliance-checker-implementation-readiness.md#git-derived-changed-file-collection-scope-decision",
     "fixtureProvidedChangedFileListPreview": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
     "fixtureInputConsumptionPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
@@ -75,6 +77,14 @@
     }
   ],
   "availablePreviewInputs": [
+    {
+      "inputId": "scope-compliance-collection-input-consumption",
+      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
+      "status": "scope-compliance-collection-input-consumption-previewed",
+      "authorityStatus": "git-derived-changed-files",
+      "usableForNotRunExplanation": true,
+      "usableForScopeEvaluation": false
+    },
     {
       "inputId": "fixture-provided-changed-file-list",
       "path": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",

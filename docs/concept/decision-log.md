@@ -1587,6 +1587,20 @@ observation, and docs now link the collection artifact while preserving no clean
 allowedScope or forbiddenScope evaluation, no rejection, no enforcement, no CI/required-check/branch-protection wiring,
 no fixture approval, no runtime Evidence satisfaction, and `equivalenceProven: false`.
 
+DEC-221 does not supersede DEC-097 through DEC-220. It adds the scope compliance collection input consumption preview
+artifact
+`examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json`.
+The preview records `consumptionStatus: scope-compliance-collection-input-consumption-previewed`,
+`inputAuthorityClass: git-derived-changed-files`, `inputCollectionStatus: git-derived-changed-files-collected`,
+`changedFilesCollected: true`, `inputAcceptedForFutureEvaluation: true`, `inputConsumedForEvaluation: false`,
+`checkerRun: false`, `scopeComplianceEvaluationStatus: not-evaluated`, and `evaluatedViolations: []`. This means the
+collection artifact has the right authority class and shape for future evaluation input, but it is not consumed for
+evaluation yet. The collection artifact, scope compliance result preview, checker preview, not-run report, observation,
+and docs now link this boundary while preserving no allowedScope or forbiddenScope comparison, no path pattern matching,
+no violation classification, no no-violation claim, no actual violation claim, no rejection, no enforcement, no
+CI/required-check/branch-protection wiring, no fixture approval, no runtime Evidence satisfaction, and
+`equivalenceProven: false`.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

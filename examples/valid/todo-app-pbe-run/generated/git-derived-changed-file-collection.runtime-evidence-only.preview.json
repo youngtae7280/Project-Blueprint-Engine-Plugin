@@ -6,12 +6,13 @@
   "fixtureShape": "test-only-behavior-proof",
   "checkerAxis": "scope-compliance-preview",
   "collectionStatus": "git-derived-changed-files-collected",
+  "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
   "authorityClass": "git-derived-changed-files",
   "collectionMode": "explicit-base-head",
-  "baseRef": "928ad5ef9e31cc76173645fbc9f76602ea3678e1",
-  "headRef": "21de850cc05c2a3a01658d4d6cf12ec475b34127",
-  "resolvedBaseRef": "928ad5ef9e31cc76173645fbc9f76602ea3678e1",
-  "resolvedHeadRef": "21de850cc05c2a3a01658d4d6cf12ec475b34127",
+  "baseRef": "HEAD~1",
+  "headRef": "HEAD",
+  "resolvedBaseRef": "21de850cc05c2a3a01658d4d6cf12ec475b34127",
+  "resolvedHeadRef": "8387999ed61eb569bfb11abac17e2aced4262e38",
   "changedFilesCollected": true,
   "checkerRun": false,
   "scopeComplianceEvaluationStatus": "not-evaluated",
@@ -23,7 +24,48 @@
   "diffRejected": false,
   "cleanClaimed": false,
   "actualViolationClaimed": false,
+  "sourceArtifacts": {
+    "scopeComplianceCollectionInputConsumption": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
+    "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
+    "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
+    "scopeComplianceNotRunReport": "examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json"
+  },
   "changedFiles": [
+    {
+      "status": "A",
+      "statusCode": "A",
+      "path": "cli/src/__tests__/git-derived-changed-file-collection.test.ts"
+    },
+    {
+      "status": "M",
+      "statusCode": "M",
+      "path": "cli/src/app.ts"
+    },
+    {
+      "status": "M",
+      "statusCode": "M",
+      "path": "cli/src/commands/graph.ts"
+    },
+    {
+      "status": "M",
+      "statusCode": "M",
+      "path": "cli/src/commands/index.ts"
+    },
+    {
+      "status": "A",
+      "statusCode": "A",
+      "path": "cli/src/core/git-derived-changed-file-collection.ts"
+    },
+    {
+      "status": "M",
+      "statusCode": "M",
+      "path": "cli/src/core/types.ts"
+    },
+    {
+      "status": "M",
+      "statusCode": "M",
+      "path": "cli/src/reporters.ts"
+    },
     {
       "status": "M",
       "statusCode": "M",
@@ -50,14 +92,9 @@
       "path": "examples/valid/todo-app-pbe-run/generated/compiler-input-calibration-observation.runtime-evidence-only.preview.json"
     },
     {
-      "status": "M",
-      "statusCode": "M",
-      "path": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json"
-    },
-    {
-      "status": "M",
-      "statusCode": "M",
-      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json"
+      "status": "A",
+      "statusCode": "A",
+      "path": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json"
     },
     {
       "status": "M",
@@ -76,6 +113,55 @@
     }
   ],
   "normalizedChangedFiles": [
+    {
+      "status": "A",
+      "statusCode": "A",
+      "changeType": "added",
+      "path": "cli/src/__tests__/git-derived-changed-file-collection.test.ts",
+      "generatedPath": false
+    },
+    {
+      "status": "M",
+      "statusCode": "M",
+      "changeType": "modified",
+      "path": "cli/src/app.ts",
+      "generatedPath": false
+    },
+    {
+      "status": "M",
+      "statusCode": "M",
+      "changeType": "modified",
+      "path": "cli/src/commands/graph.ts",
+      "generatedPath": false
+    },
+    {
+      "status": "M",
+      "statusCode": "M",
+      "changeType": "modified",
+      "path": "cli/src/commands/index.ts",
+      "generatedPath": false
+    },
+    {
+      "status": "A",
+      "statusCode": "A",
+      "changeType": "added",
+      "path": "cli/src/core/git-derived-changed-file-collection.ts",
+      "generatedPath": false
+    },
+    {
+      "status": "M",
+      "statusCode": "M",
+      "changeType": "modified",
+      "path": "cli/src/core/types.ts",
+      "generatedPath": false
+    },
+    {
+      "status": "M",
+      "statusCode": "M",
+      "changeType": "modified",
+      "path": "cli/src/reporters.ts",
+      "generatedPath": false
+    },
     {
       "status": "M",
       "statusCode": "M",
@@ -112,17 +198,10 @@
       "generatedPath": true
     },
     {
-      "status": "M",
-      "statusCode": "M",
-      "changeType": "modified",
-      "path": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json",
-      "generatedPath": true
-    },
-    {
-      "status": "M",
-      "statusCode": "M",
-      "changeType": "modified",
-      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
+      "status": "A",
+      "statusCode": "A",
+      "changeType": "added",
+      "path": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
       "generatedPath": true
     },
     {
@@ -167,8 +246,7 @@
     "generatedFilesPresent": true,
     "generatedFiles": [
       "examples/valid/todo-app-pbe-run/generated/compiler-input-calibration-observation.runtime-evidence-only.preview.json",
-      "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json",
-      "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
+      "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
       "examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json",
       "examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json",
       "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json"

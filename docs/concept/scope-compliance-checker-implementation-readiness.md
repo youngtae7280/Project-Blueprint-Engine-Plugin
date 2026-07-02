@@ -277,6 +277,48 @@ Collection-only boundaries:
 The scope compliance result preview may link this collection artifact, but it must stay non-conclusive. Collection is an
 input layer only.
 
+## Scope Compliance Collection Input Consumption Preview
+
+The first collection input consumption preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+```text
+scope-compliance-collection-input-consumption-previewed
+```
+
+This preview records that the git-derived changed-file collection artifact has the correct authority class and
+collection-only shape for a future scope compliance checker input:
+
+```text
+inputAuthorityClass: git-derived-changed-files
+inputCollectionStatus: git-derived-changed-files-collected
+inputAcceptedForFutureEvaluation: true
+inputConsumedForEvaluation: false
+checkerRun: false
+scopeComplianceEvaluationStatus: not-evaluated
+evaluatedViolations: []
+```
+
+Input accepted means the collection artifact can be used later as checker input. It does not mean changed files have
+been compared with `allowedScope` or `forbiddenScope`, does not mean the result is clean, does not mean violations exist,
+and does not enable enforcement.
+
+Remaining prerequisites before evaluation:
+
+- allowedScope source binding;
+- forbiddenScope source binding;
+- path pattern matching policy;
+- generated-file handling policy;
+- violation category schema;
+- evaluation result schema.
+
+The next checker step should bind allowed/forbidden scope inputs before any comparison implementation.
+
 ## Fixture-Provided Changed-File List Preview
 
 The first fixture-provided changed-file list preview is:

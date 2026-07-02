@@ -360,6 +360,23 @@ collector: `checkerRun` remains `false`, `scopeComplianceEvaluationStatus` remai
 `evaluatedViolations` remains `[]`. It does not inspect patch contents, compare scope, reject diffs, enforce CI, approve
 fixtures, satisfy runtime Evidence, or prove equivalence.
 
+The first collection input consumption preview now records:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json
+```
+
+Status:
+
+```text
+scopeComplianceCollectionInputConsumptionStatus: scope-compliance-collection-input-consumption-previewed
+```
+
+This means the git-derived collection artifact is accepted as a future checker input, not consumed for evaluation. It
+keeps `inputConsumedForEvaluation: false`, `checkerRun: false`, `scopeComplianceEvaluationStatus: not-evaluated`, and
+`evaluatedViolations: []`. Allowed/forbidden comparison, path matching, violation classification, clean results, and
+actual violation results remain later work.
+
 ## Decision
 
 Decision:

@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "scope-compliance-collection-input-consumption-preview",
+  "status": "scope-compliance-collection-input-consumption-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "checkerAxis": "scope-compliance-preview",
+  "consumptionStatus": "scope-compliance-collection-input-consumption-previewed",
+  "inputArtifact": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+  "inputAuthorityClass": "git-derived-changed-files",
+  "inputCollectionStatus": "git-derived-changed-files-collected",
+  "inputCollectionMode": "explicit-base-head",
+  "changedFilesCollected": true,
+  "inputAcceptedForFutureEvaluation": true,
+  "inputConsumedForEvaluation": false,
+  "checkerRun": false,
+  "actualDiffInspected": false,
+  "patchContentsInspected": false,
+  "scopeComplianceEvaluationStatus": "not-evaluated",
+  "evaluatedViolations": [],
+  "scopeEnforced": false,
+  "diffRejected": false,
+  "cleanClaimed": false,
+  "actualViolationClaimed": false,
+  "supportStatus": "not-supported",
+  "compileEligibility": "not-eligible-current-command-not-wired",
+  "expectedCandidateStatus": "contract-candidate-not-run",
+  "approvalStatus": "not-approved",
+  "equivalenceProven": false,
+  "currentRuntimeEvidenceStatus": "missing",
+  "evidenceCheckBindingStatus": "preview-only-not-satisfied",
+  "inputShapeChecks": [
+    {
+      "checkId": "collection-status-present",
+      "expected": "git-derived-changed-files-collected",
+      "observed": "git-derived-changed-files-collected",
+      "acceptedForFutureEvaluation": true
+    },
+    {
+      "checkId": "authority-class-present",
+      "expected": "git-derived-changed-files",
+      "observed": "git-derived-changed-files",
+      "acceptedForFutureEvaluation": true
+    },
+    {
+      "checkId": "normalized-paths-present",
+      "expected": "repository-root-relative-posix-paths",
+      "observed": "repository-root-relative-posix-paths",
+      "acceptedForFutureEvaluation": true
+    },
+    {
+      "checkId": "evaluation-not-run",
+      "expected": "not-evaluated",
+      "observed": "not-evaluated",
+      "acceptedForFutureEvaluation": true
+    }
+  ],
+  "inputAcceptanceMeaning": {
+    "means": [
+      "the collection artifact has the expected authority class for a future scope compliance input",
+      "the collection artifact has the expected collection-only status",
+      "changed-file paths are available in normalized repository-root-relative POSIX form",
+      "generated files are reported honestly rather than suppressed"
+    ],
+    "doesNotMean": [
+      "scope compliance has been checked",
+      "allowedScope has been compared",
+      "forbiddenScope has been compared",
+      "the result is clean",
+      "violations exist",
+      "scope enforcement is active",
+      "the fixture is supported or approved",
+      "runtime Evidence is satisfied",
+      "equivalence is proven"
+    ]
+  },
+  "requiredNextInputs": [
+    {
+      "inputId": "allowedScope-source-binding",
+      "currentStatus": "preview-source-only",
+      "requiredBeforeEvaluation": true,
+      "reason": "The future checker needs a supported allowedScope source before comparing changed files."
+    },
+    {
+      "inputId": "forbiddenScope-source-binding",
+      "currentStatus": "preview-source-only",
+      "requiredBeforeEvaluation": true,
+      "reason": "The future checker needs a supported forbiddenScope source before comparing changed files."
+    },
+    {
+      "inputId": "path-pattern-matching-policy",
+      "currentStatus": "not-implemented",
+      "requiredBeforeEvaluation": true,
+      "reason": "Normalized changed-file paths still need a matching policy against scope path patterns."
+    },
+    {
+      "inputId": "generated-file-handling-policy",
+      "currentStatus": "reported-honestly-no-exclusion-policy",
+      "requiredBeforeEvaluation": true,
+      "reason": "Generated files are present in the collection and must not be silently excluded during evaluation."
+    },
+    {
+      "inputId": "violation-category-schema",
+      "currentStatus": "preview-only",
+      "requiredBeforeEvaluation": true,
+      "reason": "Future violations need explicit category semantics before any result is emitted."
+    },
+    {
+      "inputId": "evaluation-result-schema",
+      "currentStatus": "preview-only",
+      "requiredBeforeEvaluation": true,
+      "reason": "A later non-enforcing result shape must separate evaluated, not-evaluated, clean, and violation states."
+    }
+  ],
+  "sourceArtifacts": {
+    "gitDerivedChangedFileCollection": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+    "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
+    "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
+    "scopeComplianceNotRunReport": "examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json",
+    "testOnlyScopeBoundaryPreview": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
+    "implementationReadiness": "docs/concept/scope-compliance-checker-implementation-readiness.md"
+  },
+  "allowedUse": [
+    "review how a git-derived collection artifact becomes future checker input",
+    "confirm the collection input is accepted only for future evaluation",
+    "identify prerequisites still needed before scope comparison",
+    "preserve the boundary between input collection and scope compliance evaluation"
+  ],
+  "forbiddenUse": [
+    "implemented scope compliance evaluation",
+    "allowedScope comparison",
+    "forbiddenScope comparison",
+    "path pattern matching implementation",
+    "violation classification",
+    "no-violation claim",
+    "actual violation claim",
+    "diff rejection",
+    "scope enforcement",
+    "CI enforcement",
+    "required check configuration",
+    "fixture approval",
+    "runtime Evidence satisfaction",
+    "equivalence proof",
+    "user acceptance"
+  ],
+  "nonEvaluationBoundary": "This artifact accepts the git-derived changed-file collection artifact as a future scope compliance checker input, but it does not consume that input for evaluation. It does not compare changed files against allowedScope or forbiddenScope, implement path pattern matching, classify violations, report clean or violation results, reject diffs, enforce scope, approve fixtures, satisfy runtime Evidence, or prove equivalence."
+}
