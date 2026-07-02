@@ -1,10 +1,10 @@
 # Contract Compiler Calibration Fixtures
 
-Status: planning / non-enforcing / second-fixture selection only
+Status: planning / non-enforcing / calibration fixture selection
 
 ## Purpose
 
-This note selects the second calibration fixture for DevView Contract Compiler Dry-Run generalization.
+This note tracks calibration fixture selection for DevView Contract Compiler Dry-Run generalization.
 
 The current Todo Search whitespace-normalization `bug_fix` fixture proves that one bounded fixture can move through:
 
@@ -593,6 +593,82 @@ Closeout non-goals:
 - no risk mitigation proof;
 - no CI enforcement, required checks, branch protection, user acceptance automation, or tree-native retirement.
 
+## Third Calibration Fixture Selection
+
+Selected third calibration fixture:
+
+```text
+Todo App add-todo runtime evidence-only calibration
+```
+
+Fixture shape:
+
+```text
+test-only behavior proof
+```
+
+Primary source surfaces:
+
+- `examples/valid/todo-app-pbe-run/graph-source.json`
+- `examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json`
+- `examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json`
+- `examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json`
+- `examples/valid/todo-app-pbe-run/.pbe/evidence/evidence-tree.json`
+- `examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt`
+- `docs/concept/todo-app-source-authority-evidence-package.md`
+
+This selection does not promote the existing Todo App positive fixture beyond its current structure-only role. It
+selects a future calibration target shaped around proving behavior through test and Evidence surfaces while production
+source edits remain out of scope.
+
+Initial expected statuses:
+
+- `fixtureStatus: calibration-fixture-selected`
+- `supportStatus: not-supported`
+- `expectedCandidateStatus: contract-candidate-not-run`
+- `approvalStatus: not-approved`
+- `equivalenceProven: false`
+
+Why this fixture was selected:
+
+- The current Todo Search fixture validated source-authority reconstruction for a local `bug_fix`.
+- The `escape-html` fixture explored external `behavior-change` preview concepts.
+- The third fixture should stress a different shape where test/Evidence scope is primary and production source changes
+  are not allowed.
+- Todo App already has Product, Work, Test, Evidence, Acceptance, and structure-only graph-source surfaces, plus an
+  explicit evidence package explaining why runtime behavior proof is still missing.
+
+Compiler dimensions this should stress:
+
+- test-only allowed scope, with future edits limited to test or Evidence artifacts;
+- production-source forbidden scope, especially `src/todos.ts` and any app implementation file;
+- required Evidence and check binding as the central obligation;
+- output requirements that report test Evidence status instead of source implementation changes;
+- stop conditions when satisfying the test-only proof would require production source edits;
+- compliance-checker bridge for detecting forbidden production source changes;
+- user acceptance boundary, because test Evidence still cannot accept product results.
+
+Expected future gaps to observe:
+
+- how `allowedScope` represents test/Evidence-only work;
+- how `forbiddenScope` blocks production source changes even when behavior proof is missing;
+- how `requiredEvidence` and check mappings distinguish attached text Evidence from runnable test proof;
+- how `outputRequirements` report a proof-only result without implying implementation authority;
+- how `stopConditions` represent "source edit required" as a blocker for a test-only proof fixture;
+- how a later compliance checker could detect production source drift against the test-only contract.
+
+Expected non-support boundary:
+
+The third fixture starts as planning-only. It is not wired into `graph read-model compile-contract --dry-run`, does not
+generate a contract candidate, does not create a promotion review packet, does not approve Todo App promotion, and does
+not change the existing `todo-app-pbe-run-structure-only` registry meaning.
+
+Overfitting risk reduction:
+
+This fixture should reduce overfitting risk because it is neither the completed local code-change fixture nor the
+external behavior-change preview fixture. It asks whether DevView can reason about a proof-focused task where the safest
+contract may forbid production code edits and require only test/Evidence strengthening.
+
 ## Calibration Success Criteria
 
 A future calibration cycle is successful if:
@@ -624,8 +700,7 @@ This selection does not:
 
 ## Next Step
 
-The next task should select a third calibration fixture before promoting any v0.3 escape-html preview concept into
-general report generation or compiler behavior. It should not broaden compiler support, wire the second fixture into the
-supported command path, create a promotion review packet, approve the fixture, apply graph deltas, turn previewed
-external checks into CI enforcement, turn previewed risks into mitigation proof, or turn the calibration-local checkout
-path into execution authority.
+The next task should draft a calibration input model for the selected Todo App runtime evidence-only fixture without
+declaring support. It should not broaden compiler support, wire the third fixture into the supported command path,
+create a promotion review packet, approve the fixture, apply graph deltas, turn test Evidence into user acceptance, or
+change the existing Todo App structure-only status.

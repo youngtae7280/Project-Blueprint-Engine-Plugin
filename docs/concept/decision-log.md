@@ -1189,6 +1189,18 @@ mitigation, create CI enforcement, configure branch protection, set `equivalence
 work, retire tree-native artifacts, widen changeType support, rename PBE compatibility surfaces, or make any generated
 contract authoritative.
 
+DEC-197 does not supersede DEC-097 through DEC-196. It selects `Todo App add-todo runtime evidence-only calibration` as
+the third contract compiler calibration fixture shape. The fixture is selected as a `test-only behavior proof` target
+using the existing `examples/valid/todo-app-pbe-run` structure-only surfaces and
+`docs/concept/todo-app-source-authority-evidence-package.md` as planning context. Its initial expected statuses are
+`calibration-fixture-selected`, `not-supported`, `contract-candidate-not-run`, `not-approved`, and
+`equivalenceProven: false`. The selection is meant to test whether DevView can reason about a proof-focused task where
+test/Evidence scope is primary and production source edits are forbidden. It does not promote Todo App beyond
+`structure-only`, wire the third fixture into `compile-contract --dry-run`, compile a candidate, create or approve a
+promotion packet, generalize the Todo Search human decision, promote the `escape-html` fixture, create CI enforcement,
+configure branch protection, set `equivalenceProven: true`, execute AI, accept user work, retire tree-native artifacts,
+rename PBE compatibility surfaces, or make any generated contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
