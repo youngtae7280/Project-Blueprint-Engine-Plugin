@@ -1,23 +1,31 @@
-# Project Blueprint Engine
+# DevView
 
-Project Blueprint Engine (PBE) helps Codex keep product intent, implementation work, tests, evidence, risk, and human
-decisions connected while a project changes.
+DevView is a graph-source development control plugin for Codex.
 
-## Why PBE Exists
+It gives AI agents a developer's selective view of the codebase before they change it. DevView connects code,
+requirements, tasks, tests, evidence, decisions, and changes into one meaning graph, then extracts task-ready views and
+compiles them into bounded Instruction Packs for safer code changes.
+
+Formerly: Project Blueprint Engine.
+
+Existing `pbe` commands, `.pbe` artifact paths, `validate:pbe` scripts, generated artifact paths, and sourceMode /
+provenance values remain compatibility surfaces in this first public identity pass.
+
+## Why DevView Exists
 
 AI coding can move quickly, but maintenance often fails for a quieter reason: the "why" gets separated from the code.
 
 A useful change may still lose the original user intent, skip a boundary, forget which tests prove the behavior, or
-treat a reviewer decision as implied approval. PBE is a control layer for that problem. It is designed to make
+treat a reviewer decision as implied approval. DevView is a control layer for that problem. It is designed to make
 AI-assisted development slower when it needs to be safer, clearer, and reviewable.
 
-PBE is not a GUI, SaaS product, API provider, daemon, or general execution engine. It is a Codex plugin workflow plus
-deterministic CLI checks that read and write local project artifacts.
+DevView is not a GUI, SaaS product, API provider, daemon, or general execution engine. It is a Codex plugin workflow
+plus deterministic CLI checks that read and write local project artifacts.
 
 ## The Core Idea
 
-PBE treats the project as a meaning graph. User intent, product flow, work, code, tests, evidence, risks, and decisions
-stay linked instead of becoming disconnected notes.
+DevView treats the project as a meaning graph. User intent, product flow, work, code, tests, evidence, risks, and
+decisions stay linked instead of becoming disconnected notes.
 
 The graph is the source of meaning. Views derived from it can be small and task-specific, but they still preserve
 traceability back to the user's goal.
@@ -26,14 +34,14 @@ traceability back to the user's goal.
 
 ### 1. Meaning Graph
 
-PBE starts by keeping intent, flow, code, tests, evidence, risk, and decisions connected as one graph.
+DevView starts by keeping intent, flow, code, tests, evidence, risk, and decisions connected as one graph.
 
 ![Meaning graph](docs/assets/graph-pbe/01-meaning-graph.png)
 
 ### 2. View Selection
 
-For a current slice, PBE narrows the graph to the nodes and edges needed for that work. Hidden context remains context,
-not permission to drift.
+For a current slice, DevView narrows the graph to the nodes and edges needed for that work. Hidden context remains
+context, not permission to drift.
 
 ![View selection](docs/assets/graph-pbe/02-view-selection.png)
 
@@ -58,8 +66,8 @@ that need review.
 
 ![Graph delta](docs/assets/graph-pbe/05-graph-delta.png)
 
-Human decisions remain explicit throughout the flow. PBE can recommend and validate, but it should not silently approve
-product meaning, UI/UX, implementation scope, architecture runway, review results, acceptance, enforcement, or
+Human decisions remain explicit throughout the flow. DevView can recommend and validate, but it should not silently
+approve product meaning, UI/UX, implementation scope, architecture runway, review results, acceptance, enforcement, or
 retirement of old structures.
 
 ## Current Implementation Status
@@ -80,7 +88,7 @@ Current boundaries:
 
 ## Artifact Map
 
-When PBE is initialized in a project, it stores local control artifacts under `.pbe/`:
+When DevView is initialized in a project, it stores local control artifacts under `.pbe/`:
 
 - `.pbe/tree/`: product, project, work, and test trees.
 - `.pbe/execution/`: cycle contracts and node execution contracts.
@@ -88,9 +96,10 @@ When PBE is initialized in a project, it stores local control artifacts under `.
 - `.pbe/evidence/`: proof records linked back to work, tests, and acceptance criteria.
 - `.pbe/blueprint/`: compatibility views for older workflows.
 
-Compatibility names still appear in docs and commands: RPD grows product intent, WPD derives project/work shape, VD
-derives verification, and ACEP packages an executable cycle for Codex. These names are compatibility/control-layer
-terms; graph-source and read-model artifacts remain the forward source-authority direction where explicitly configured.
+Compatibility names still appear in docs and commands: PBE remains the compatibility namespace, RPD grows product
+intent, WPD derives project/work shape, VD derives verification, and ACEP packages an instruction-oriented cycle for
+Codex. These names are compatibility/control-layer terms; graph-source and read-model artifacts remain the forward
+source-authority direction where explicitly configured.
 
 ## Quick Commands
 
@@ -100,7 +109,7 @@ Install dependencies first:
 npm install
 ```
 
-Build the CLI and run the main PBE validator:
+Build the CLI and run the main PBE compatibility validator:
 
 ```bash
 npm run validate:pbe
@@ -167,7 +176,9 @@ node dist/cli/index.js graph operation propose-update --graph-delta outputs/retr
 ## Where To Go Next
 
 - [Documentation index](docs/index.md)
-- [Install PBE locally](docs/install.md)
+- [DevView glossary](docs/devview-glossary.md)
+- [PBE to DevView migration notes](docs/migration-pbe-to-devview.md)
+- [Install locally with the PBE compatibility CLI](docs/install.md)
 - [CLI reference](docs/cli-reference.md)
 - [Graph operation runbook](docs/graph-operation-runbook.md)
 - [Core concepts](docs/core-concepts.md)
@@ -179,7 +190,7 @@ node dist/cli/index.js graph operation propose-update --graph-delta outputs/retr
 
 ## Boundaries
 
-PBE is intentionally conservative:
+DevView is intentionally conservative:
 
 - Do not derive executable work from ambiguous product intent.
 - Do not close work without test and evidence links.
@@ -187,4 +198,4 @@ PBE is intentionally conservative:
 - Do not make graph-source observation into enforcement without approval.
 - Do not retire tree or compatibility structures without an explicit retirement decision.
 
-The short version: PBE is for keeping Codex work connected to meaning, proof, and human decisions.
+The short version: DevView is for keeping Codex work connected to meaning, proof, and human decisions.

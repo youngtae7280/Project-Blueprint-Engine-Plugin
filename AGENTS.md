@@ -1,16 +1,27 @@
 # AGENTS.md
 
-## Project Blueprint Engine
+## DevView / PBE Compatibility
 
 If `.pbe/` exists, inspect it before planning work.
 
-PBE is a Codex Plugin workflow and is evolving into a tree-based development control system. Do not revive the deprecated GUI/API-provider/SaaS direction unless the user explicitly changes the product direction.
+DevView is the public-facing name for this Codex plugin. Project Blueprint Engine (PBE), the `pbe` CLI, `.pbe`
+artifact paths, tree terms, and existing validation scripts remain supported compatibility surfaces.
 
-PBE is optimized for safe, reviewable, staged project construction, not for speed.
+DevView is a graph-source development control plugin for Codex. It gives AI agents a developer's selective view of the
+codebase before they change it by connecting code, requirements, tasks, tests, evidence, decisions, and changes into
+meaning-graph-backed views.
 
-PBE is not an execution engine that tries to do everything. PBE is a requirements-based execution control layer for AI-assisted development.
+Do not revive the deprecated GUI/API-provider/SaaS direction unless the user explicitly changes the product direction.
 
-After future PBE plugin changes, run the relevant validation, commit the finished work, and push to `origin/main` unless the user explicitly asks not to push.
+DevView is optimized for safe, reviewable, staged project construction, not for speed.
+
+DevView is not an execution engine that tries to do everything. It is a requirements-based development control layer for
+AI-assisted work. Generated compiler output is not an execution source, validation is not user acceptance, review packets
+are not approvals, and no CI enforcement, required check, branch protection, or graph delta apply is introduced without
+explicit approval.
+
+After future DevView / PBE plugin changes, run the relevant validation, commit the finished work, and push to
+`origin/main` unless the user explicitly asks not to push.
 
 ## Tree Control Direction
 
@@ -80,7 +91,7 @@ Backward-compatible v1 views may also exist:
 - `.pbe/codex-execution-pack/18-execution-strategy.md`
 - `.pbe/codex-execution-pack/execution-manifest.json`
 
-## PBE CLI
+## PBE CLI Compatibility
 
 Use the deterministic `pbe` CLI for file-judgable gates before relying on prose instructions alone.
 
@@ -125,7 +136,7 @@ Use:
 - `lite`: existing blueprint and small slice with limited risk.
 - `full`: project construction, new feature, multi-module work, UI/UX, architecture runway, parallel work, or future-module impact.
 
-Default to `full` for PBE project construction.
+Default to `full` for DevView / PBE project construction.
 
 ## Autoflow
 

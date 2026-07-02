@@ -2,7 +2,7 @@
   "name": "project-blueprint-engine",
   "private": true,
   "version": "0.2.0-alpha",
-  "description": "Codex Plugin workflow for Project Blueprint Engine.",
+  "description": "DevView Codex plugin workflow, formerly Project Blueprint Engine, with PBE CLI compatibility.",
   "type": "module",
   "bin": {
     "pbe": "./dist/cli/index.js"

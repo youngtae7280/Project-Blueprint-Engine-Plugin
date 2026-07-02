@@ -1,15 +1,15 @@
 {
   "name": "project-blueprint-engine",
   "version": "0.2.0-alpha+codex.20260612082712",
-  "description": "A Codex plugin that turns user intent into traceable Product, Project, Work, and Test trees, then controls staged execution, evidence, review, feedback, and revision through compatible PBE contracts.",
+  "description": "DevView is a graph-source development control plugin for Codex, formerly Project Blueprint Engine, with compatible PBE contracts and artifact paths.",
   "author": {
     "name": "Local developer"
   },
   "skills": "./skills/",
   "interface": {
-    "displayName": "Project Blueprint Engine",
-    "shortDescription": "Tree-based product blueprint, execution, evidence, and revision control for Codex.",
-    "longDescription": "Project Blueprint Engine runs inside Codex as a tree-based development control workflow while preserving the existing RPD, WPD, VD, and ACEP compatibility terms. It grows product intent into a Product Tree, derives Project, Work, and Test views, routes active PBE work through state-aware CLI gates before ordinary coding, confirms UI/UX before implementation, converts visual UI changes into Visual Design Contract artifacts, derives concrete theme tokens and component style contracts from screenshots, references, interviews, existing screens, default theme, or waiver decisions, audits dependency impact before implementation scope, selects staged execution slices, validates schema and cross-artifact traceability, tracks evidence, requires visual audit before UI visual review closure, maps feedback to affected nodes, and creates bounded revision work through change and impact analysis.",
+    "displayName": "DevView",
+    "shortDescription": "Graph-source development control, bounded views, evidence, and review workflow for Codex.",
+    "longDescription": "DevView runs inside Codex as a graph-source development control workflow while preserving Project Blueprint Engine (PBE), RPD, WPD, VD, and ACEP compatibility terms. It gives AI agents a developer's selective view of the codebase before they change it by linking intent, code, tasks, tests, evidence, decisions, and changes into meaning-graph-backed views. It routes active PBE-compatible work through state-aware CLI gates before ordinary coding, confirms UI/UX before implementation, converts visual UI changes into Visual Design Contract artifacts, derives concrete theme tokens and component style contracts from screenshots, references, interviews, existing screens, default theme, or waiver decisions, audits dependency impact before implementation scope, selects staged execution slices, validates schema and cross-artifact traceability, tracks evidence, requires visual audit before UI visual review closure, maps feedback to affected nodes, and creates bounded revision work through change and impact analysis. DevView is not an executor, approval system, enforcement switch, branch protection manager, or automated graph-delta applier.",
     "developerName": "Local developer",
     "category": "Developer Tools",
     "capabilities": [
