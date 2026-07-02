@@ -9,6 +9,7 @@
   "resultStatus": "scope-compliance-dry-run-not-run",
   "scopeComplianceNotRunReportStatus": "scope-compliance-not-run-report-previewed",
   "authoritativeChangedFileInputBoundaryDecisionStatus": "authoritative-changed-file-input-boundary-decided",
+  "gitDerivedChangedFileInputDesignStatus": "git-derived-input-design-previewed",
   "currentStageStatus": "stopped-before-evaluation",
   "stopReason": "authoritative-changed-file-list-missing",
   "supportStatus": "not-supported",
@@ -29,6 +30,7 @@
     "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
     "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
     "changedFileListAuthorityPreview": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
+    "gitDerivedChangedFileInputDesign": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json",
     "fixtureProvidedChangedFileListPreview": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
     "fixtureInputConsumptionPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
     "scopeComplianceNotRunReport": "examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json",
@@ -58,6 +60,7 @@
       "requiredFor": ["scope-compliance-evaluation"],
       "currentStatus": "missing-or-not-authoritative",
       "selectedFutureCandidate": "git-derived-changed-files",
+      "gitDerivedDesign": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json",
       "collectionImplementationStatus": "not-implemented",
       "blocking": true
     },

@@ -321,6 +321,17 @@ static result-shape design, and selects git-derived changed files as the first r
 implementation task. This does not run `git diff`, collect changed files, inspect actual diffs, run checker logic,
 evaluate fixture scenarios, or claim clean/violation results.
 
+The git-derived changed-file input design preview is now recorded:
+
+```text
+examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json
+```
+
+It records `git-derived-input-design-previewed` and designs the future input around explicit base/head refs or a
+committed range, with working-tree, staged, and untracked modes deferred. It also records path normalization and
+generated-churn handling requirements. No `git diff` command has run, no changed files were collected, and the checker
+result remains not-run/input-missing.
+
 ## Decision
 
 Decision:

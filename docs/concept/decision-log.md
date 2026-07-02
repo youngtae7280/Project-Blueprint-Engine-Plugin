@@ -1530,6 +1530,29 @@ candidates, approve fixtures, claim runtime Evidence is satisfied, promote stati
 output, set `equivalenceProven: true`, execute AI, apply graph deltas, automate user acceptance, retire tree-native
 artifacts, rename PBE compatibility surfaces, or make any generated contract authoritative.
 
+DEC-218 does not supersede DEC-097 through DEC-217. It adds the preview-only git-derived changed-file input design
+artifact
+`examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json` for
+the Todo App runtime Evidence-only scope compliance checker preview. The artifact records
+`inputDesignStatus: git-derived-input-design-previewed`, `authorityClass: git-diff-derived-authoritative-candidate`,
+`checkerRun: false`, `actualDiffInspected: false`, `changedFilesCollected: false`, and `evaluatedViolations: []`. It
+designs future command shapes such as `git diff --name-only <baseRef> <headRef>` and `git diff --name-status
+--find-renames <baseRef> <headRef>` without executing them or encoding actual changed-file output. It recommends
+explicit base/head refs or a committed range for the first implementation, defers working-tree, staged, and untracked
+modes, records repository-root-relative POSIX path normalization needs, and states that generated read-model churn
+should be reported honestly unless a separate explicit suppression policy is later approved. The changed-file authority
+preview, scope compliance result preview, dry-run skeleton, not-run report, checker preview, observation, and docs now
+link this design while preserving `scopeComplianceResultStatus: scope-compliance-input-missing`, `checkerRun: false`,
+`actualDiffInspected: false`, `changedFilesCollected: false`, `evaluatedViolations: []`, `not-supported`,
+`contract-candidate-not-run`, `not-approved`, `equivalenceProven: false`, missing runtime Evidence, and unsatisfied
+evidence/check binding. This does not implement changed-file collection, run `git diff`, inspect actual diffs, run the
+compliance checker, run checker dry-run logic, evaluate fixture-provided changed-file scenarios, normalize paths in
+code, compare scope, report no-violation, report actual violations, reject diffs, enforce scope, wire checker behavior
+into compiler execution, CI, required checks, or branch protection, mark calibration fixtures supported, generate
+contract candidates, approve fixtures, claim runtime Evidence is satisfied, promote static preview artifacts into
+compiler output, set `equivalenceProven: true`, execute AI, apply graph deltas, automate user acceptance, retire
+tree-native artifacts, rename PBE compatibility surfaces, or make any generated contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

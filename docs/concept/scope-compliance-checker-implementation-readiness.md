@@ -145,6 +145,46 @@ fixture-provided scenarios, report a clean result, report an actual violation, r
 checker behavior into CI or compiler execution. The current not-run report remains valid until an authoritative
 changed-file input exists.
 
+## Git-Derived Changed-File Input Design Preview
+
+The git-derived changed-file input design preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+```text
+git-derived-input-design-previewed
+```
+
+The preview keeps git-derived changed files as the first real authoritative candidate, but still does not collect them.
+The recommended first implementation shape is an explicit base/head or committed-range input, such as a future
+`HEAD~1..HEAD` style range, because it is more reproducible than an implicit working-tree diff. Working-tree diff,
+staged-only diff, and untracked-file handling are deferred separate modes.
+
+The design preview records future command shapes such as `git diff --name-only <baseRef> <headRef>` and
+`git diff --name-status --find-renames <baseRef> <headRef>` only as design candidates. They are not executed by this
+task and do not encode actual changed-file output.
+
+Path normalization requirements:
+
+- normalize to repository-root-relative POSIX-style paths;
+- normalize Windows backslashes to `/`;
+- do not emit absolute local paths in checker results;
+- keep case-sensitivity policy unresolved until a repository rule is chosen;
+- preserve unresolved paths until they are explicitly mapped.
+
+Generated churn policy:
+
+- future changed-file collection should report generated files honestly;
+- generated read-model churn suppression or exclusion must be a separate explicit policy;
+- collection must not silently hide generated files.
+
+The current checker result remains `scope-compliance-input-missing`; `checkerRun`, `actualDiffInspected`,
+`changedFilesCollected`, and `evaluatedViolations` remain false/empty.
+
 ## Fixture-Provided Changed-File List Preview
 
 The first fixture-provided changed-file list preview is:
@@ -405,6 +445,7 @@ Reason:
 - future inputs and conceptual violation states are defined;
 - changed-file list authority is previewed and its first real authoritative candidate is decided as git-derived changed
   files;
+- git-derived changed-file input design is previewed;
 - git-derived changed-file collection remains unimplemented;
 - fixture-provided changed-file list scenarios are previewed but not evaluated;
 - fixture-provided input consumption is previewed without checker execution;
@@ -417,12 +458,11 @@ Reason:
 Recommended next task:
 
 ```text
-git-derived-changed-file-input-design-preview
+git-derived-changed-file-collection-scope-decision
 ```
 
-That next task may design the future git-derived changed-file input boundary in more detail. It should still avoid
-actual git diff inspection until base/head, working-tree state, and path normalization rules are explicit, and it should
-not produce clean or violation conclusions without authoritative inputs.
+That next task may decide the first collection-only implementation scope. It should still avoid scope compliance
+evaluation, rejection, enforcement, CI wiring, and clean or violation conclusions.
 
 ## Non-Goals
 
