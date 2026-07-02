@@ -113,6 +113,12 @@ The first external checkout path authority preview is:
 examples/retrofit/open-source/escape-html/generated/external-checkout-path-authority.preview.json
 ```
 
+The first anchor-level context preview is:
+
+```text
+examples/retrofit/open-source/escape-html/generated/anchor-level-context.preview.json
+```
+
 This draft is `calibration-draft`, `not-supported`, `not-approved`, and `equivalenceProven: false`. It is not wired into
 `graph read-model compile-contract --dry-run`, does not create a promotion review packet for the second fixture, and is
 not an execution source.
@@ -139,6 +145,7 @@ Known draft gaps:
   not in the current required-check registry.
 - `work/external/escape-html` paths are previewed as calibration-local source context, not portable compiler support
   authority.
+- Anchor-level code/test context is previewed from static record anchors, not supported compiler context.
 - The source dogfood is behavior-change shaped and is now recognized as calibration-only policy while still using the
   current `bug_fix` vocabulary; this does not add arbitrary `changeType` support.
 - Graph delta and graph update proposal artifacts are review Evidence, not graph apply authority.
@@ -180,7 +187,7 @@ The observation reports likely extensions for:
 - external required-check registry binding, now previewed but awaiting authoritative checkout modeling;
 - external checkout path authority, now previewed as calibration-local and non-portable;
 - escaping/stringification and maintainer-approval risk vocabulary;
-- README/source/test anchor-level context;
+- README/source/test anchor-level context, now previewed approximately but not supported;
 - graph delta and graph update proposal review-output binding.
 
 Recommended v0.3 direction:
@@ -190,9 +197,9 @@ risk-vocabulary-scope-decision
 ```
 
 External required-check binding and external checkout path authority are now previewed as non-enforcing calibration
-Evidence. The next step should decide whether bounded risk vocabulary is the next v0.3 calibration scope. That should
-happen before candidate generation, promotion review, behavior-change support, broad pack schema expansion, or any
-execution/enforcement work.
+Evidence, and anchor-level context is now previewed from static record anchors. The next step should decide whether
+bounded risk vocabulary is the next v0.3 calibration scope. That should happen before candidate generation, promotion
+review, behavior-change support, broad pack schema expansion, or any execution/enforcement work.
 
 ## External Required-Check Binding Preview
 
@@ -256,6 +263,36 @@ checkout modeling. It must not be used as:
 - promotion approval;
 - graph delta apply authority.
 
+## Anchor-Level Context Preview
+
+The anchor-level context preview describes the specific source and test behavior anchors behind the Symbol
+stringification calibration fixture. File-level context is too broad here because the behavior change depends on a
+narrow input-coercion point and nearby verification surfaces:
+
+- source coercion before the dogfood: `var str = '' + string`;
+- source coercion observed after the dogfood: `var str = String(string)`;
+- existing non-string stringification tests such as `when string is undefined`;
+- new Symbol assertion Evidence: `escapeHtml(Symbol('escape')) === 'Symbol(escape)'`;
+- existing escape-vocabulary guard tests such as `when string contains "&"`.
+
+The preview status is:
+
+```text
+anchor-level-context-previewed-approximate
+```
+
+This means the available static records identify behavior anchors, but exact line ranges are not verified and the local
+external checkout remains non-portable. The anchors are review metadata only.
+
+The anchor-level context preview is not:
+
+- edit permission;
+- supported compiler context;
+- source checkout authority;
+- candidate generation;
+- promotion approval;
+- execution authority.
+
 ## v0.3 Scope Decision
 
 The first v0.3 scope is:
@@ -302,24 +339,26 @@ Implemented output for this first v0.3 scope:
   graph-delta review binding remain future scopes;
 - no promotion review packet is created for the second fixture.
 
-Follow-up output after external required-check binding preview:
+Follow-up output after v0.3 calibration previews:
 
 - `external-required-check-binding.preview.json` records candidate mappings for `npm test`, dogfood validation, and
   graph-delta review Evidence;
 - `external-checkout-path-authority.preview.json` records the calibration-local checkout context for
   `work/external/escape-html`;
+- `anchor-level-context.preview.json` records approximate source/test behavior anchors for Symbol stringification;
 - the observation reports `external-required-check-binding-awaiting-authoritative-checkout` and
   `external-checkout-path-authority-previewed-calibration-local`;
+- the observation reports `anchor-level-context-previewed-approximate`;
 - the fixture remains `not-supported`, `not-eligible-current-command-not-wired`, `contract-candidate-not-run`,
   `not-approved`, and `equivalenceProven: false`;
-- risk vocabulary, anchor-level context, and graph-delta review binding remain future scopes.
+- risk vocabulary and graph-delta review binding remain future scopes.
 
 Non-goals for the first v0.3 scope:
 
 - no arbitrary behavior-change support;
 - no supported external required-check binding or CI/branch-protection enforcement;
 - no supported external checkout path authority or execution permission;
-- no anchor-level context resolver;
+- no supported anchor-level context resolver or edit permission;
 - no risk vocabulary expansion;
 - no graph-delta review binding;
 - no second fixture support or approval;
@@ -354,7 +393,8 @@ This task does not implement the second fixture. The first calibration run shoul
   path authority before support can be considered;
 - checkout path authority now has a calibration-local preview, but still needs a separate portable authority policy
   before support can be considered;
-- required context may need graph-node-to-source/test/README anchor mapping;
+- required context now has approximate graph-node-to-source/test/README anchor mapping, but still needs exact line and
+  portable source authority before support can be considered;
 - forbidden scope and stop condition sources may need external-retrofit boundary vocabulary;
 - known risk sources may need an escaping/stringification-specific risk vocabulary;
 - graph delta and graph update proposal artifacts may need output/reporting bindings distinct from Todo Search.

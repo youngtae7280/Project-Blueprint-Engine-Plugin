@@ -12,6 +12,8 @@
   "equivalenceProven": false,
   "externalCheckoutPathAuthorityPreviewPath": "examples/retrofit/open-source/escape-html/generated/external-checkout-path-authority.preview.json",
   "externalCheckoutPathAuthorityStatus": "external-checkout-path-authority-previewed-calibration-local",
+  "anchorLevelContextPreviewPath": "examples/retrofit/open-source/escape-html/generated/anchor-level-context.preview.json",
+  "anchorLevelContextStatus": "anchor-level-context-previewed-approximate",
   "externalFixtureContext": {
     "projectName": "component/escape-html",
     "upstream": "https://github.com/component/escape-html",
@@ -104,7 +106,7 @@
       "reason": "These bindings are not CI gates, GitHub required checks, branch protection rules, or promotion approval."
     }
   ],
-  "remainingCalibrationGaps": ["risk vocabulary", "anchor-level context", "graph-delta review binding"],
+  "remainingCalibrationGaps": ["risk vocabulary", "graph-delta review binding"],
   "recommendedNextStep": {
     "id": "risk-vocabulary-scope-decision",
     "summary": "Decide whether bounded risk vocabulary should be the next v0.3 calibration scope.",

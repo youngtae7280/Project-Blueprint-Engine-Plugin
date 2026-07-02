@@ -112,7 +112,9 @@
     "currentStatus": "external-required-check-binding-awaiting-authoritative-checkout",
     "reason": "The checkout path is now described as calibration-local source context, but it is still non-portable and not authoritative enough for supported required-check binding."
   },
-  "remainingCalibrationGaps": ["risk vocabulary", "anchor-level context", "graph-delta review binding"],
+  "anchorLevelContextPreviewPath": "examples/retrofit/open-source/escape-html/generated/anchor-level-context.preview.json",
+  "anchorLevelContextStatus": "anchor-level-context-previewed-approximate",
+  "remainingCalibrationGaps": ["risk vocabulary", "graph-delta review binding"],
   "recommendedNextStep": {
     "id": "risk-vocabulary-scope-decision",
     "summary": "Decide whether bounded risk vocabulary should be the next v0.3 calibration scope.",

@@ -16,6 +16,8 @@
   "externalRequiredCheckBindingStatus": "external-required-check-binding-awaiting-authoritative-checkout",
   "externalCheckoutPathAuthorityPreviewPath": "examples/retrofit/open-source/escape-html/generated/external-checkout-path-authority.preview.json",
   "externalCheckoutPathAuthorityStatus": "external-checkout-path-authority-previewed-calibration-local",
+  "anchorLevelContextPreviewPath": "examples/retrofit/open-source/escape-html/generated/anchor-level-context.preview.json",
+  "anchorLevelContextStatus": "anchor-level-context-previewed-approximate",
   "currentSupportedBoundary": {
     "supportedFixture": "Todo Search whitespace-normalization bug_fix dry-run fixture",
     "supportedInputPath": "examples/read-model-aggregate/generated/compiler-input-model-dry-run.json",
@@ -43,8 +45,8 @@
       "reason": "The draft scope includes external checkout paths under work/external/escape-html. Static metadata identifies the path as component/escape-html calibration context, but it remains non-portable and not compiler support authority."
     },
     "contextShape": {
-      "status": "partially-reusable",
-      "reason": "The graph snapshot can point to graph source, change record, instruction pack, graph delta, proposal, and report artifacts, but source/test/README anchor mapping is not yet a supported compiler input surface."
+      "status": "anchor-level-context-previewed-approximate",
+      "reason": "The graph snapshot and change record now expose approximate source/test anchors for Symbol stringification, but exact line ranges are not verified and anchors are not supported compiler context."
     },
     "validationCheckMapping": {
       "status": "external-required-check-binding-previewed-awaiting-authoritative-checkout",
@@ -126,9 +128,9 @@
     },
     {
       "field": "requiredContext",
-      "reuseStatus": "partially-reusable",
-      "expectedCurrentBehavior": "artifact-context-usable-anchor-context-missing",
-      "reason": "Graph artifacts are available, but README/source/test anchor-level context is not yet a supported compiler context surface."
+      "reuseStatus": "previewed-needs-authority",
+      "expectedCurrentBehavior": "anchor-level-context-previewed-approximate-not-supported",
+      "reason": "Graph artifacts and change records now identify source/test behavior anchors, but line ranges and portable source authority remain unresolved."
     },
     {
       "field": "knownRisks",
@@ -172,7 +174,8 @@
       "field": "requiredContext",
       "gapType": "context-anchor-binding",
       "severity": "medium",
-      "recommendedFollowUp": "Model README/source/test anchors as context bindings without requiring direct source checkout mutation."
+      "status": "previewed-approximate-not-supported",
+      "recommendedFollowUp": "Use anchor-level context as calibration review metadata only; do not treat anchors as edit permission or supported compiler context."
     },
     {
       "id": "gap-graph-delta-review-binding",
@@ -185,7 +188,7 @@
   "recommendedNextStep": {
     "id": "risk-vocabulary-scope-decision",
     "summary": "Decide whether bounded risk vocabulary should be the next v0.3 calibration scope.",
-    "rationale": "Behavior-change policy, external required-check binding, and checkout path authority now have preview boundaries, while the fixture remains not supported and non-enforcing."
+    "rationale": "Behavior-change policy, external required-check binding, checkout path authority, and anchor-level context now have preview boundaries, while the fixture remains not supported and non-enforcing."
   },
   "promotionEligibility": {
     "status": "promotion-not-eligible",

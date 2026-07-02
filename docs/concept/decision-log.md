@@ -1136,6 +1136,19 @@ fixture into `compile-contract --dry-run`, compile a candidate, create a promoti
 protection, retire tree-native artifacts, widen changeType support, rename PBE compatibility surfaces, or make any
 generated contract authoritative.
 
+DEC-193 does not supersede DEC-097 through DEC-192. It adds a preview-only anchor-level context artifact for the
+selected `component/escape-html` behavior-change calibration draft at
+`examples/retrofit/open-source/escape-html/generated/anchor-level-context.preview.json`. The preview records approximate
+source and test anchors for Symbol stringification, including the input coercion point, existing non-string
+stringification tests, the Symbol assertion, and escape-vocabulary guard tests, while reporting
+`anchor-level-context-previewed-approximate`. Exact line ranges remain unresolved, the external checkout remains
+calibration-local and non-portable, and the anchors are review metadata only. The second fixture remains
+`not-supported`, `not-eligible-current-command-not-wired`, `contract-candidate-not-run`, `not-approved`, and
+`equivalenceProven: false`; the next recommended scope remains bounded risk vocabulary. This does not make anchors edit
+permission, supported compiler context, source checkout authority, candidate generation authority, promotion approval,
+CI enforcement, required checks, branch protection, graph delta apply authority, user acceptance, tree retirement,
+arbitrary changeType support, or any generated contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
