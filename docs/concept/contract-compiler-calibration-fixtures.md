@@ -172,6 +172,66 @@ The next step should be a narrow observation path that can load calibration draf
 without compiling a supported candidate. That should happen before behavior-change support, broad pack schema expansion,
 promotion review, or any execution/enforcement work.
 
+## v0.3 Scope Decision
+
+The first v0.3 scope is:
+
+```text
+behavior-change pack schema policy
+```
+
+This is a scope decision, not implementation. The second fixture remains `not-supported`,
+`not-eligible-current-command-not-wired`, `contract-candidate-not-run`, `not-approved`, and `equivalenceProven: false`.
+
+Why this scope comes first:
+
+- the selected `escape-html` fixture is behavior-change shaped;
+- the completed current fixture is `bug_fix` shaped;
+- the calibration draft currently keeps `changeType: bug_fix` only as a compatibility assumption;
+- before external checks, external paths, risk detail, or graph-delta review bindings can be promoted, DevView needs a
+  policy boundary for behavior-change calibration inputs;
+- without that policy boundary, later resolver work could accidentally look like arbitrary behavior-change support.
+
+Observed gap comparison:
+
+| Gap                                | Why it matters                                                                                      | Blocks compile eligibility | Blocks source-authority reconstruction | Blocks promotion review | Expected implementation risk | Ordering decision                                     |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------- | -------------------------- | -------------------------------------- | ----------------------- | ---------------------------- | ----------------------------------------------------- |
+| Behavior-change pack schema policy | Defines whether a behavior-change-shaped calibration draft can be recognized without broad support. | yes                        | yes                                    | yes                     | medium                       | first, because it sets the eligibility boundary       |
+| External required-check binding    | Maps `npm test` and dogfood validation into required check/evidence semantics.                      | yes                        | yes                                    | yes                     | high                         | after behavior-change policy                          |
+| External checkout path authority   | Distinguishes local external checkout files from committed repository fixture paths.                | yes                        | yes                                    | yes                     | high                         | after behavior-change policy                          |
+| Anchor-level context               | Preserves README/source/test anchors beyond artifact-level graph context.                           | no                         | partial                                | maybe                   | medium                       | after eligibility and path/check boundaries           |
+| Risk vocabulary                    | Keeps escaping/stringification and maintainer-approval risks visible without ad hoc prose.          | no                         | partial                                | maybe                   | medium                       | after eligibility; before candidate promotion         |
+| Graph-delta review binding         | Keeps graph delta/proposal outputs review-only and distinct from graph apply authority.             | no                         | partial                                | maybe                   | medium                       | after eligibility; before any graph-delta integration |
+
+The selected scope is deliberately narrow. It should define how a behavior-change calibration draft is identified,
+reported, and held outside support. It should not make `compile-contract --dry-run` compile the second fixture as a
+supported candidate.
+
+Expected next implementation output for this first v0.3 scope:
+
+- the calibration observation can distinguish `behavior-change-calibration-policy-recognized` from arbitrary
+  `unsupported-change-type-shape`;
+- the fixture remains `not-supported`;
+- expected candidate status remains `contract-candidate-not-run` unless a later decision explicitly adds candidate
+  generation;
+- unsupported/blocked reasons become clearer;
+- external required-check binding, external checkout path authority, anchor-level context, risk vocabulary, and
+  graph-delta review binding remain future scopes;
+- no promotion review packet is created for the second fixture.
+
+Non-goals for the first v0.3 scope:
+
+- no arbitrary behavior-change support;
+- no external required-check binding;
+- no external checkout path authority;
+- no anchor-level context resolver;
+- no risk vocabulary expansion;
+- no graph-delta review binding;
+- no second fixture support or approval;
+- no `equivalenceProven: true`;
+- no executor automation, graph delta apply, CI enforcement, required checks, branch protection, user acceptance
+  automation, or tree-native retirement.
+
 ## What It Should Exercise
 
 The selected fixture should exercise these source-authority surfaces in a later calibration cycle:

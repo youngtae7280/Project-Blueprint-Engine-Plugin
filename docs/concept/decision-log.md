@@ -1085,6 +1085,17 @@ promotion packet, approve the fixture, set `equivalenceProven: true`, execute AI
 enable required checks, configure branch protection, introduce CI enforcement, retire tree-native artifacts, widen
 changeType support, rename PBE compatibility surfaces, or make any generated contract authoritative.
 
+DEC-189 does not supersede DEC-097 through DEC-188. It selects `behavior-change pack schema policy` as the first v0.3
+calibration scope for the `component/escape-html` Symbol stringification draft. The decision narrows the next
+calibration work to recognizing and reporting behavior-change-shaped calibration inputs without broad behavior-change
+support. The second fixture remains `not-supported`, `not-eligible-current-command-not-wired`,
+`contract-candidate-not-run`, `not-approved`, and `equivalenceProven: false`. External required-check binding, external
+checkout path authority, anchor-level context, risk vocabulary expansion, and graph-delta review binding are explicitly
+deferred. This does not wire the fixture into `compile-contract --dry-run`, compile a candidate, create a promotion
+packet, approve the fixture, set `equivalenceProven: true`, execute AI, apply graph deltas, accept user work, enable
+required checks, configure branch protection, introduce CI enforcement, retire tree-native artifacts, widen changeType
+support, rename PBE compatibility surfaces, or make any generated contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
