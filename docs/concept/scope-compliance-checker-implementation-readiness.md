@@ -157,6 +157,36 @@ shape design. It does not run the checker, inspect actual diffs, collect changed
 report no-violation, or report an actual violation. The two fixture scenarios remain preview-only inputs, and the result
 preview still keeps `checkerRun: false` and `evaluatedViolations: []`.
 
+## Scope Compliance Dry-Run Skeleton Preview
+
+The first dry-run skeleton preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+```text
+preview-only-not-executable
+```
+
+The skeleton fixes the future dry-run boundary without implementing it. It lists planned stages for loading contract
+scope, loading an authoritative changed-file list, normalizing paths, comparing allowed scope, comparing forbidden
+scope, and emitting a non-enforcing result. Current execution stops before evaluation:
+
+```text
+stopReason: authoritative-changed-file-list-missing
+resultStatus: scope-compliance-dry-run-not-run
+checkerRun: false
+evaluatedViolations: []
+```
+
+Fixture-provided changed-file input is present, but it remains preview-only and does not satisfy the authoritative
+changed-file input requirement. The skeleton does not run checker dry-run logic, inspect actual diffs, collect changed
+files, evaluate scenarios, report no-violation, report actual violations, reject changes, enforce scope, or promote any
+fixture.
+
 ## Readiness Criteria
 
 The first implementation slice should not start until DevView can answer:
@@ -316,6 +346,7 @@ Reason:
 - changed-file list authority is previewed but unresolved for execution;
 - fixture-provided changed-file list scenarios are previewed but not evaluated;
 - fixture-provided input consumption is previewed without checker execution;
+- dry-run skeleton is previewed but not executable;
 - path normalization is unresolved;
 - result artifact exists only as a static preview, not an implemented output schema;
 - no checker is implemented.

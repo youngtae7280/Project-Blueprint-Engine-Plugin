@@ -288,6 +288,16 @@ run, no actual diff was inspected, no changed files were collected, and no scope
 This prepares the future checker dry-run boundary without adding enforcement, rejection, CI approval, or equivalence
 status.
 
+The preview-only dry-run skeleton is now recorded:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json
+```
+
+It records `dryRunSkeletonStatus: preview-only-not-executable`, `resultStatus: scope-compliance-dry-run-not-run`, and
+`stopReason: authoritative-changed-file-list-missing`. This means a future dry-run sequence is described, but no checker
+dry-run logic has executed and no clean or violation result can be claimed.
+
 ## Decision
 
 Decision:

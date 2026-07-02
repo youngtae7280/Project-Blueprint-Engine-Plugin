@@ -26,6 +26,7 @@
   "sourceArtifacts": {
     "changedFileListAuthorityPreview": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
     "fixtureInputConsumptionPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
+    "scopeComplianceDryRunSkeleton": "examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json",
     "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
     "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
     "testOnlyScopeBoundaryPreview": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",

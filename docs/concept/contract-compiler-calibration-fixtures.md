@@ -1422,6 +1422,39 @@ fixtureInputConsumptionPreviewStatus: scope-compliance-fixture-input-present-pre
 The result preview remains non-conclusive: `scopeComplianceResultStatus` is still `scope-compliance-input-missing`,
 `checkerRun` is still `false`, and `evaluatedViolations` is still empty.
 
+## Scope Compliance Dry-Run Skeleton Preview
+
+The first scope compliance dry-run skeleton preview artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+- `status: scope-compliance-dry-run-skeleton-previewed`
+- `dryRunSkeletonStatus: preview-only-not-executable`
+- `resultStatus: scope-compliance-dry-run-not-run`
+- `stopReason: authoritative-changed-file-list-missing`
+- `checkerRun: false`
+- `actualDiffInspected: false`
+- `changedFilesCollected: false`
+- `evaluatedViolations: []`
+
+The skeleton describes the future dry-run stages: load contract scope, load an authoritative changed-file list, normalize
+paths, compare allowed scope, compare forbidden scope, and emit a non-enforcing result. Each stage is currently not run.
+The fixture-provided changed-file list is present only as preview input, so it does not unblock evaluation.
+
+The third-fixture observation now links this preview with:
+
+```text
+scopeComplianceDryRunSkeletonStatus: preview-only-not-executable
+```
+
+The result preview remains conservative: `scopeComplianceResultStatus` is still `scope-compliance-input-missing`,
+`checkerRun` is still `false`, and `evaluatedViolations` is still empty. No clean result, actual violation, rejection,
+enforcement, approval, runtime Evidence satisfaction, or equivalence proof is claimed.
+
 ## Calibration Success Criteria
 
 A future calibration cycle is successful if:
@@ -1453,9 +1486,9 @@ This selection does not:
 
 ## Next Step
 
-The next task may define a preview-only checker dry-run skeleton, if DevView is ready to describe execution boundaries
-without producing compliance conclusions. It should not inspect actual git diffs, collect changed files from the
+The next task may define a static not-run result shape for one dry-run stage, if DevView is ready to describe how the
+skeleton reports missing authoritative input. It should not inspect actual git diffs, collect changed files from the
 worktree, broaden compiler support, wire additional fixtures into the supported command path, create promotion review
 packets, approve fixtures, claim runtime Evidence is satisfied, implement compliance checking, inspect or reject diffs,
-turn candidate checks into required checks, apply graph deltas, turn test Evidence into user acceptance, allow
-production source edits, enforce CI, or change the existing Todo App structure-only status.
+turn candidate checks into required checks, apply graph deltas, turn test Evidence into user acceptance, allow production
+source edits, enforce CI, or change the existing Todo App structure-only status.

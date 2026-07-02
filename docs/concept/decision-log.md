@@ -1472,6 +1472,26 @@ supported, generate contract candidates, approve fixtures, claim runtime Evidenc
 artifacts into compiler output, set `equivalenceProven: true`, execute AI, apply graph deltas, automate user acceptance,
 retire tree-native artifacts, rename PBE compatibility surfaces, or make any generated contract authoritative.
 
+DEC-215 does not supersede DEC-097 through DEC-214. It adds the preview-only scope compliance dry-run skeleton artifact
+`examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json` for the
+Todo App runtime Evidence-only scope compliance checker preview. The artifact records
+`dryRunSkeletonStatus: preview-only-not-executable`, `resultStatus: scope-compliance-dry-run-not-run`,
+`currentStageStatus: stopped-before-evaluation`, `stopReason: authoritative-changed-file-list-missing`,
+`checkerRun: false`, `actualDiffInspected: false`, `changedFilesCollected: false`, and `evaluatedViolations: []`. It
+describes planned future stages for loading contract scope, loading an authoritative changed-file list, normalizing
+paths, comparing allowed scope, comparing forbidden scope, and emitting a non-enforcing result, while marking each stage
+not run or blocked. The result preview, checker preview, observation, changed-file authority preview, fixture-provided
+changed-file preview, fixture input consumption preview, and docs now link this skeleton while preserving
+`scopeComplianceResultStatus: scope-compliance-input-missing`, `not-supported`,
+`not-eligible-current-command-not-wired`, `contract-candidate-not-run`, `not-approved`, `equivalenceProven: false`,
+missing runtime Evidence, and unsatisfied evidence/check binding. This does not implement the compliance checker,
+implement changed-file collection, inspect actual diffs, run checker dry-run logic, evaluate fixture-provided scenarios,
+normalize paths, compare scope, report no-violation, report actual violations, reject diffs, enforce scope, wire checker
+behavior into compiler execution, CI, required checks, or branch protection, mark calibration fixtures supported,
+generate contract candidates, approve fixtures, claim runtime Evidence is satisfied, promote static preview artifacts
+into compiler output, set `equivalenceProven: true`, execute AI, apply graph deltas, automate user acceptance, retire
+tree-native artifacts, rename PBE compatibility surfaces, or make any generated contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
