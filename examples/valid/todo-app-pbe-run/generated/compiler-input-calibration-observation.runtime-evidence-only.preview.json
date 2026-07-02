@@ -71,6 +71,7 @@
     "gitDerivedChangedFileCollectionStatus": "git-derived-changed-files-collected",
     "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
     "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
+    "scopeCompliancePathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
     "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
     "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
     "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",
@@ -152,6 +153,17 @@
     "remainingSupportStatus": "not-supported"
   },
   "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
+  "scopeCompliancePathPatternPolicyPreview": {
+    "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+    "status": "scope-compliance-path-pattern-policy-previewed",
+    "policyAcceptedForFutureEvaluation": true,
+    "policyConsumedForEvaluation": false,
+    "checkerRun": false,
+    "scopeComplianceEvaluationStatus": "not-evaluated",
+    "evaluatedViolations": [],
+    "remainingSupportStatus": "not-supported"
+  },
+  "scopeCompliancePathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
   "fixtureProvidedChangedFileListPreview": {
     "path": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
     "status": "fixture-provided-changed-file-list-previewed",
@@ -214,6 +226,7 @@
     "gitDerivedChangedFileCollectionScopeDecisionStatus": "git-derived-collection-scope-decided",
     "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
     "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
+    "scopeCompliancePathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
     "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
     "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
     "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",

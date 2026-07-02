@@ -399,6 +399,24 @@ This is only input binding. It keeps `scopeInputsConsumedForEvaluation: false`, 
 source remains a supported execution contract `allowedScope[]` / `forbiddenScope[]` if this fixture ever becomes
 eligible and wired. Path matching and clean/violation results remain later work.
 
+The first path pattern matching policy preview now records:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json
+```
+
+Status:
+
+```text
+scopeCompliancePathPatternPolicyStatus: scope-compliance-path-pattern-policy-previewed
+```
+
+The policy previews repository-root-relative POSIX paths, Windows separator normalization, no absolute local paths,
+glob-like patterns without regex for the first slice, forbidden-over-allowed precedence, generated-file reporting,
+rename/delete handling, unresolved case sensitivity, unknown-pattern blocking, and future unmatched-path behavior. It
+keeps `policyConsumedForEvaluation: false`, `checkerRun: false`, `scopeComplianceEvaluationStatus: not-evaluated`, and
+`evaluatedViolations: []`. The checker still does not compare paths or report clean/violation results.
+
 ## Decision
 
 Decision:

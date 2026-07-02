@@ -1613,6 +1613,18 @@ does not compare changed files against allowedScope or forbiddenScope, does not 
 clean or actual violation results, does not reject or enforce diffs, does not wire CI/required checks/branch protection,
 does not support or approve the fixture, does not satisfy runtime Evidence, and does not set `equivalenceProven: true`.
 
+DEC-223 does not supersede DEC-097 through DEC-222. It adds the path pattern matching policy preview artifact
+`examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json`.
+The preview records `policyStatus: scope-compliance-path-pattern-policy-previewed`,
+`policyAcceptedForFutureEvaluation: true`, `policyConsumedForEvaluation: false`, `checkerRun: false`,
+`scopeComplianceEvaluationStatus: not-evaluated`, and `evaluatedViolations: []`. It previews repository-root-relative
+POSIX paths, Windows separator normalization, no absolute local paths, glob-like patterns without regex for the first
+slice, forbidden-over-allowed precedence, unknown-pattern blocking, unmatched-path future categorization, generated-file
+honesty, rename/delete handling, and unresolved case-sensitivity policy. This policy is not a matcher: it does not
+compare changed files against allowedScope or forbiddenScope, does not classify violations, does not report clean or
+actual violation results, does not reject or enforce diffs, does not wire CI/required checks/branch protection, does
+not support or approve the fixture, does not satisfy runtime Evidence, and does not set `equivalenceProven: true`.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

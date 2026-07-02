@@ -1537,6 +1537,52 @@ Required boundary:
 With this preview, the changed-file input and the scope-rule input are both identifiable for future evaluation. The next
 safe step is path pattern matching policy, not scope compliance evaluation.
 
+## Scope Compliance Path Pattern Policy Preview
+
+The path pattern matching policy preview artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+```text
+scopeCompliancePathPatternPolicyStatus: scope-compliance-path-pattern-policy-previewed
+```
+
+This artifact previews how a future checker should compare normalized changed-file paths with allowed/forbidden scope
+patterns:
+
+- repository-root-relative POSIX paths;
+- Windows `\` separator normalization;
+- no absolute local paths as input or output authority;
+- leading `./` normalization;
+- exact paths plus glob-like patterns for the first slice;
+- no regex in the first slice;
+- forbidden match wins over allowed match;
+- unknown or unparsable patterns block evaluation rather than silently passing;
+- unmatched changed paths become a future `scope-unmatched-path` category, not a clean result;
+- generated files are reported honestly rather than silently excluded;
+- renamed files should preserve old and new paths when Git reports them;
+- deleted files remain changed paths;
+- case sensitivity remains repository-policy unresolved.
+
+Required boundary:
+
+- `policyAcceptedForFutureEvaluation: true`;
+- `policyConsumedForEvaluation: false`;
+- `checkerRun: false`;
+- `scopeComplianceEvaluationStatus: not-evaluated`;
+- `evaluatedViolations: []`;
+- no path matching implementation;
+- no allowedScope comparison;
+- no forbiddenScope comparison;
+- no clean or violation result;
+- no rejection, enforcement, CI wiring, fixture approval, runtime Evidence satisfaction, or equivalence proof.
+
+With this preview, the next safe step is violation category schema preview, not path matching implementation.
+
 ## Fixture-Provided Changed-File List Preview
 
 The first fixture-provided changed-file list preview artifact is:

@@ -348,7 +348,7 @@ files have been compared with `allowedScope` or `forbiddenScope`, does not mean 
 mean the result is clean, and does not mean violations exist. The calibration draft is used only as the current
 preview binding source because the third fixture has no supported generated contract candidate.
 
-Remaining prerequisites before evaluation:
+At the scope-input binding stage, remaining prerequisites before evaluation were:
 
 - path pattern matching policy;
 - path normalization compatibility between collection paths and scope patterns;
@@ -357,7 +357,57 @@ Remaining prerequisites before evaluation:
 - evaluation result schema;
 - unknown/unmatched path behavior.
 
-The next checker step should define path matching policy before any comparison implementation.
+## Path Pattern Matching Policy Preview
+
+The first path pattern matching policy preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+```text
+scope-compliance-path-pattern-policy-previewed
+```
+
+This preview records future path comparison policy without implementing a matcher:
+
+- compare repository-root-relative POSIX-style paths;
+- normalize Windows `\` separators to `/`;
+- forbid absolute local paths in checker inputs/results;
+- normalize leading `./` away;
+- treat trailing slash as a directory pattern only when the pattern is explicitly directory-shaped;
+- prefer glob-like patterns and exact paths for the first slice;
+- do not allow regex in the first slice;
+- let forbidden matches win over allowed matches;
+- treat unknown or unparsable patterns as blocked evaluation rather than a pass;
+- treat unmatched changed files as a future `scope-unmatched-path` category, not a clean result;
+- report generated files honestly rather than silently excluding them;
+- preserve old and new paths for renames when Git reports them;
+- treat deleted files as changed paths;
+- keep case sensitivity as repository-policy unresolved.
+
+Required boundary:
+
+```text
+policyAcceptedForFutureEvaluation: true
+policyConsumedForEvaluation: false
+checkerRun: false
+scopeComplianceEvaluationStatus: not-evaluated
+evaluatedViolations: []
+```
+
+Path policy preview does not mean matching is implemented. It does not compare changed files with `allowedScope` or
+`forbiddenScope`, does not produce a clean or violation result, and does not enable enforcement.
+
+Remaining prerequisites before evaluation:
+
+- violation category schema;
+- evaluation result schema;
+- path matching helper implementation.
+
+The next checker step should define violation category schema before any comparison implementation.
 
 ## Fixture-Provided Changed-File List Preview
 

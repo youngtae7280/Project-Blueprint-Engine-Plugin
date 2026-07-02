@@ -6,6 +6,7 @@
   "fixtureShape": "test-only-behavior-proof",
   "checkerAxis": "scope-compliance-preview",
   "bindingStatus": "scope-compliance-scope-input-binding-previewed",
+  "pathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
   "changedFileInputArtifact": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
   "collectionInputConsumptionArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
   "scopeSourceArtifact": "examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
@@ -43,6 +44,8 @@
   "forbiddenScopeBindingStatus": "forbidden-scope-source-binding-previewed",
   "scopeInputsAcceptedForFutureEvaluation": true,
   "scopeInputsConsumedForEvaluation": false,
+  "pathPatternPolicyAcceptedForFutureEvaluation": true,
+  "pathPatternPolicyConsumedForEvaluation": false,
   "changedFileInputConsumedForEvaluation": false,
   "checkerRun": false,
   "actualDiffInspected": false,
@@ -92,9 +95,10 @@
   "requiredNextPolicies": [
     {
       "policyId": "path-pattern-matching-policy",
-      "currentStatus": "not-implemented",
+      "currentStatus": "scope-compliance-path-pattern-policy-previewed-not-consumed",
       "requiredBeforeEvaluation": true,
-      "reason": "The checker still needs explicit rules for comparing normalized changed-file paths with scope path patterns."
+      "policyPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+      "reason": "The checker now has a preview policy for comparing normalized changed-file paths with scope path patterns, but no matcher consumes it."
     },
     {
       "policyId": "path-normalization-compatibility-policy",
@@ -131,6 +135,7 @@
     "compilerInputCalibrationDraft": "examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
     "gitDerivedChangedFileCollection": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
     "scopeComplianceCollectionInputConsumption": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
+    "scopeCompliancePathPatternPolicy": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
     "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
     "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
     "testOnlyScopeBoundaryPreview": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",

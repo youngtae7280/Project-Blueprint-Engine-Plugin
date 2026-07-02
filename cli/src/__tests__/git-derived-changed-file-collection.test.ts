@@ -52,6 +52,7 @@ describe('git-derived changed-file collection', () => {
       'scope-compliance-collection-input-consumption-previewed',
     )
     expect(artifact.scopeComplianceScopeInputBindingStatus).toBe('scope-compliance-scope-input-binding-previewed')
+    expect(artifact.scopeCompliancePathPatternPolicyStatus).toBe('scope-compliance-path-pattern-policy-previewed')
     expect(artifact.authorityClass).toBe('git-derived-changed-files')
     expect(artifact.collectionMode).toBe('explicit-base-head')
     expect(artifact.changedFilesCollected).toBe(true)
@@ -73,6 +74,9 @@ describe('git-derived changed-file collection', () => {
     )
     expect(artifact.sourceArtifacts.scopeComplianceScopeInputBinding).toBe(
       'examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json',
+    )
+    expect(artifact.sourceArtifacts.scopeCompliancePathPatternPolicy).toBe(
+      'examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json',
     )
     expect(artifact.forbiddenUse).toContain('scope compliance evaluation')
     expect(artifact.forbiddenUse).toContain('no-violation claim')

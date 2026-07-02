@@ -7,6 +7,7 @@
   "checkerAxis": "scope-compliance-preview",
   "consumptionStatus": "scope-compliance-collection-input-consumption-previewed",
   "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
+  "scopeCompliancePathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
   "inputArtifact": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
   "inputAuthorityClass": "git-derived-changed-files",
   "inputCollectionStatus": "git-derived-changed-files-collected",
@@ -14,6 +15,7 @@
   "changedFilesCollected": true,
   "inputAcceptedForFutureEvaluation": true,
   "inputConsumedForEvaluation": false,
+  "policyConsumedForEvaluation": false,
   "checkerRun": false,
   "actualDiffInspected": false,
   "patchContentsInspected": false,
@@ -90,9 +92,10 @@
     },
     {
       "inputId": "path-pattern-matching-policy",
-      "currentStatus": "not-implemented",
+      "currentStatus": "scope-compliance-path-pattern-policy-previewed-not-consumed",
       "requiredBeforeEvaluation": true,
-      "reason": "Normalized changed-file paths still need a matching policy against scope path patterns."
+      "policyPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+      "reason": "Normalized changed-file paths now have preview semantics, but no matcher consumes those semantics."
     },
     {
       "inputId": "generated-file-handling-policy",
@@ -116,6 +119,7 @@
   "sourceArtifacts": {
     "gitDerivedChangedFileCollection": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
     "scopeComplianceScopeInputBinding": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+    "scopeCompliancePathPatternPolicy": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
     "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
     "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
     "scopeComplianceNotRunReport": "examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json",
