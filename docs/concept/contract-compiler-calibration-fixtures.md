@@ -931,25 +931,83 @@ Updated third-fixture gap status:
 
 - `output-requirement-for-test-evidence`: `output-requirement-for-test-evidence-previewed`
 
-Still unresolved:
+Still unresolved before the compliance-checker bridge preview:
 
 - `compliance-checker-bridge`.
+
+## Third Compliance-Checker Bridge Preview
+
+The third fixture compliance-checker bridge preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/compliance-checker-bridge.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+- `status: compliance-checker-bridge-previewed`
+- `complianceBridgeStatus: preview-only-not-implemented`
+- `previewGapSetStatus: runtime-evidence-only-preview-gap-set-complete`
+- `currentRuntimeEvidenceStatus: missing`
+- `evidenceCheckBindingStatus: preview-only-not-satisfied`
+- `supportStatus: not-supported`
+- `expectedCandidateStatus: contract-candidate-not-run`
+- `approvalStatus: not-approved`
+- `equivalenceProven: false`
+
+The bridge explains what a future checker would inspect for the test-only behavior proof fixture. It links the test-only
+scope boundary, runtime Evidence authority, evidence/check binding, and output requirement previews into future
+violation-check inputs.
+
+Future violation checks may include:
+
+- production source modified during a test-only fixture;
+- required runtime Evidence missing;
+- candidate check reported without captured command output;
+- missing source modification statement;
+- missing stop condition statement;
+- Evidence claimed satisfied while `currentRuntimeEvidenceStatus` remains `missing`;
+- candidate check treated as an enforced required check;
+- output report missing required Evidence references.
+
+This is still descriptive, not executable. No compliance checker is implemented. The preview does not inspect diffs,
+detect file modifications, parse command output, reject violations, enforce scope, run checks, or approve runtime
+Evidence.
+
+Updated third-fixture gap status:
+
+- `compliance-checker-bridge`: `compliance-checker-bridge-previewed`
+
+Preview gap set status:
+
+```text
+runtime-evidence-only-preview-gap-set-complete
+```
+
+Remaining preview gaps:
+
+```text
+none
+```
+
+Remaining support blockers still include unsupported command wiring, missing authoritative runtime Evidence,
+unsatisfied evidence/check binding, no implemented compliance checker, no approval, and `equivalenceProven: false`.
 
 Recommended next step from the observation:
 
 ```text
-preview-third-fixture-compliance-checker-bridge
+close-third-fixture-runtime-evidence-preview-cycle
 ```
 
 Recommended next scope:
 
 ```text
-compliance-checker-bridge
+runtime-evidence-only-preview-closeout
 ```
 
-Reason: after previewing output requirements, DevView needs a non-enforcing bridge for comparing actual changed files
-and reported Evidence against the test-only contract. That future bridge should not enforce CI, apply graph deltas,
-approve the fixture, or turn runtime Evidence reports into user acceptance.
+Reason: the third fixture preview gap set is complete. The next step should close out what was learned without
+implementing compliance checking, broadening compiler support, generating a contract candidate, approving the fixture,
+or turning reports into user acceptance.
 
 ## Calibration Success Criteria
 
@@ -982,7 +1040,8 @@ This selection does not:
 
 ## Next Step
 
-The next task should preview `compliance-checker-bridge` for the third fixture. It should not broaden compiler support,
-wire the third fixture into the supported command path, create a promotion review packet, approve the fixture, claim
-runtime Evidence is satisfied, turn candidate checks into required checks, apply graph deltas, turn test Evidence into
-user acceptance, allow production source edits, enforce CI, or change the existing Todo App structure-only status.
+The next task should close out the third fixture runtime Evidence-only preview cycle. It should not broaden compiler
+support, wire the third fixture into the supported command path, create a promotion review packet, approve the fixture,
+claim runtime Evidence is satisfied, implement compliance checking, turn candidate checks into required checks, apply
+graph deltas, turn test Evidence into user acceptance, allow production source edits, enforce CI, or change the existing
+Todo App structure-only status.

@@ -11,9 +11,10 @@
   "expectedCandidateStatus": "contract-candidate-not-run",
   "approvalStatus": "not-approved",
   "equivalenceProven": false,
+  "previewGapSetStatus": "runtime-evidence-only-preview-gap-set-complete",
   "promotionEligibility": {
     "status": "promotion-not-eligible",
-    "reason": "The third fixture is calibration-only and lacks supported test-only behavior-proof policy, authoritative runtime Evidence, and compliance-checker binding."
+    "reason": "The third fixture is calibration-only. Its preview gap set is complete, but it still lacks supported test-only behavior-proof policy, authoritative runtime Evidence, implemented compliance checking, command wiring, and promotion approval."
   },
   "structureOnlyBoundary": {
     "sourceProfile": "todo-app-pbe-run-structure-only",
@@ -48,6 +49,13 @@
     "status": "output-requirement-for-test-evidence-previewed",
     "outputRequirementStatus": "preview-only-not-satisfied",
     "currentRuntimeEvidenceStatus": "missing",
+    "remainingSupportStatus": "not-supported"
+  },
+  "complianceCheckerBridgePreview": {
+    "path": "examples/valid/todo-app-pbe-run/generated/compliance-checker-bridge.runtime-evidence-only.preview.json",
+    "status": "compliance-checker-bridge-previewed",
+    "complianceBridgeStatus": "preview-only-not-implemented",
+    "previewGapSetStatus": "runtime-evidence-only-preview-gap-set-complete",
     "remainingSupportStatus": "not-supported"
   },
   "observedGaps": [
@@ -107,12 +115,12 @@
     },
     {
       "gapId": "compliance-checker-bridge",
-      "status": "gap-observed",
+      "status": "compliance-checker-bridge-previewed",
       "whyItMatters": "This fixture should later help detect when a contract that allows only tests/Evidence is violated by production source edits.",
-      "currentDraftSignal": "riskSources and outputRequirementSources reference production source non-modification, but no compliance checker or diff authority exists.",
+      "currentDraftSignal": "compliance-checker bridge preview links test-only scope, runtime Evidence authority, evidence/check binding, and output requirements into future violation-check inputs without implementing a checker.",
       "blocksCompileEligibility": true,
       "blocksCandidateGeneration": true,
-      "futureNeed": "A future non-enforcing compliance-checker bridge that can compare actual changed files with allowed and forbidden scope."
+      "futureNeed": "A future non-enforcing compliance checker would still need diff inspection, file modification detection, command output parsing, and violation reporting logic."
     }
   ],
   "sourceAuthorityReuse": [
@@ -158,7 +166,17 @@
     "sourceEditNeededBehavior": "stop-rather-than-silently-expand-scope",
     "complianceCheckerUsefulness": "future-useful-for-detecting-forbidden-production-source-edits"
   },
-  "remainingUnresolvedGaps": ["compliance-checker-bridge"],
+  "remainingUnresolvedGaps": [],
+  "remainingSupportBlockers": [
+    "not-supported",
+    "not-eligible-current-command-not-wired",
+    "contract-candidate-not-run",
+    "runtime-evidence-missing",
+    "evidence-check-binding-not-satisfied",
+    "compliance-checker-not-implemented",
+    "approvalStatus-not-approved",
+    "equivalenceProven-false"
+  ],
   "unresolvedEvidence": [
     {
       "evidenceId": "evidence-todo-app-runtime-command-output",
@@ -172,9 +190,9 @@
     }
   ],
   "recommendedNextStep": {
-    "id": "preview-third-fixture-compliance-checker-bridge",
-    "recommendedFirstScope": "compliance-checker-bridge",
-    "reason": "After previewing output requirements, DevView next needs a non-enforcing bridge for comparing actual changed files and reported Evidence against the test-only contract."
+    "id": "close-third-fixture-runtime-evidence-preview-cycle",
+    "recommendedFirstScope": "runtime-evidence-only-preview-closeout",
+    "reason": "The third fixture preview gap set is complete. The next step should close out what was learned without implementing compliance checking or promoting the fixture."
   },
   "forbiddenInterpretations": [
     "not-supported",
@@ -188,5 +206,5 @@
     "not-production-source-edit-permission",
     "not-todo-app-source-authority-promotion"
   ],
-  "nonExecutionBoundary": "This observation is preview-only. It does not compile a contract candidate, execute AI, apply graph deltas, mutate graph source, approve promotion, satisfy runtime Evidence, create required checks, configure branch protection, or replace user acceptance."
+  "nonExecutionBoundary": "This observation is preview-only. It does not compile a contract candidate, execute AI, apply graph deltas, mutate graph source, implement compliance checking, approve promotion, satisfy runtime Evidence, create required checks, configure branch protection, or replace user acceptance."
 }

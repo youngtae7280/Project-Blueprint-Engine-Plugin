@@ -1285,6 +1285,23 @@ checker behavior, create CI enforcement or branch protection, allow production s
 promotion packet, set `equivalenceProven: true`, execute AI, accept user work, retire tree-native artifacts, rename PBE
 compatibility surfaces, or make any generated contract authoritative.
 
+DEC-204 does not supersede DEC-097 through DEC-203. It adds the preview-only compliance-checker bridge artifact
+`examples/valid/todo-app-pbe-run/generated/compliance-checker-bridge.runtime-evidence-only.preview.json` and links it
+from the third-fixture observation. The bridge previews future checks for production source edits during a test-only
+fixture, missing runtime Evidence, candidate checks reported without captured output, missing source modification and
+stop condition statements, Evidence claimed satisfied while runtime Evidence remains missing, candidate checks treated
+as enforced required checks, and output reports missing required Evidence references. The updated observation marks
+`compliance-checker-bridge` as `compliance-checker-bridge-previewed`, records
+`previewGapSetStatus: runtime-evidence-only-preview-gap-set-complete`, and recommends
+`runtime-evidence-only-preview-closeout` as the next scope. The fixture remains `not-supported`,
+`not-eligible-current-command-not-wired`, `contract-candidate-not-run`, `not-approved`, and `equivalenceProven: false`;
+runtime Evidence remains missing and evidence/check binding remains unsatisfied. This does not implement the compliance
+checker, inspect diffs, detect file modifications, parse command output, report or enforce violations, support the third
+fixture, wire it into `compile-contract --dry-run`, compile a candidate, run checks, capture passing Evidence, turn
+candidate checks into required checks, create CI enforcement or branch protection, allow production source edits, create
+or approve a promotion packet, set `equivalenceProven: true`, execute AI, accept user work, retire tree-native
+artifacts, rename PBE compatibility surfaces, or make any generated contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
