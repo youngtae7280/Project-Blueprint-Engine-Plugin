@@ -1317,6 +1317,22 @@ promote `escape-html`, set `equivalenceProven: true`, execute AI, apply graph de
 protection, accept user work, retire tree-native artifacts, rename PBE compatibility surfaces, or make any generated
 contract authoritative.
 
+DEC-206 does not supersede DEC-097 through DEC-205. It records the cross-fixture calibration synthesis across the current
+Todo Search `bug_fix` success fixture, the `escape-html` external `behavior-change` preview fixture, and the Todo App
+runtime Evidence-only `test-only-behavior-proof` preview fixture. The synthesis identifies reusable review/modeling
+concepts such as source-authority preservation, scope boundary, forbidden scope, Evidence authority, evidence/check
+binding, output requirement binding, stop conditions, risk vocabulary, graph-delta review binding, and
+compliance-checker bridge, while keeping external checkout authority, external required-check binding, approximate
+anchor context, test-only production-source forbidden scope, runtime Evidence authority, proof-only output requirements,
+and compliance-checker bridge details fixture-specific until broader policy exists. It records overfitting risks and
+recommends a formal `compiler-eligibility-status-model` as the next milestone before adding fixture support or promoting
+preview concepts into compiler/report/checker logic. This does not mark calibration fixtures supported, wire them into
+`compile-contract --dry-run`, generate contract candidates, create or approve promotion review packets, claim runtime
+Evidence is satisfied, implement compliance checking, promote static preview artifacts into compiler output, turn
+candidate checks into required checks, set `equivalenceProven: true`, execute AI, apply graph deltas, create CI
+enforcement or branch protection, accept user work, retire tree-native artifacts, rename PBE compatibility surfaces, or
+make any generated contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

@@ -1095,6 +1095,139 @@ Reason: three fixtures now cover distinct shapes: local `bug_fix`, external `beh
 proof. A cross-fixture synthesis should summarize what these calibration cycles taught before any preview concept is
 promoted into general compiler logic, report generation, or compliance-checker implementation.
 
+## Cross-Fixture Calibration Synthesis
+
+Synthesis decision:
+
+```text
+cross-fixture-calibration-synthesis
+```
+
+The compiler calibration set now covers three distinct fixture shapes:
+
+```text
+local bug_fix
+external behavior-change
+test-only behavior proof
+```
+
+This synthesis is documentation-only. It does not implement support, wire calibration fixtures into the supported
+compiler command path, generate new contract candidates, approve promotion, or prove equivalence.
+
+### Fixture Shape Summary
+
+Todo Search whitespace-normalization `bug_fix`:
+
+- proved: the current dry-run fixture can be reconstructed from source authority for major contract fields;
+- did not prove: arbitrary `changeType` support, broad fixture support, execution readiness, or universal equivalence;
+- stressed: source-authority preservation, semantic diff classification, review-only diff policy, promotion review
+  packet, and current-fixture human decision scope;
+- current status: completed current fixture, `equivalenceCandidate: true`, `equivalenceProven: false`, scoped human
+  decision recorded, generated approval status not promoted.
+
+`component/escape-html` Symbol stringification `behavior-change`:
+
+- proved: DevView can observe a behavior-change calibration input and identify support-before-implementation preview
+  axes;
+- did not prove: behavior-change support, authoritative external checkout, candidate generation, promotion readiness, or
+  graph-delta application;
+- stressed: external required-check binding, external checkout path authority, anchor-level context, behavior-change
+  risk vocabulary, and graph-delta review binding;
+- current status: v0.3 preview gap set complete, still `not-supported`, `contract-candidate-not-run`, `not-approved`,
+  and `equivalenceProven: false`.
+
+Todo App add-todo runtime Evidence-only calibration:
+
+- proved: DevView can model a test-only behavior proof where production source edits are forbidden or stop-required;
+- did not prove: runtime Evidence satisfaction, supported evidence/check binding, implemented compliance checking,
+  candidate generation, or Todo App promotion beyond `structure-only`;
+- stressed: test-only allowed scope, production-source forbidden scope, runtime Evidence authority, proof-only output
+  requirements, and compliance-checker bridge;
+- current status: runtime Evidence-only preview gap set complete, still `not-supported`,
+  `contract-candidate-not-run`, `not-approved`, and `equivalenceProven: false`; runtime Evidence remains missing and
+  evidence/check binding remains `preview-only-not-satisfied`.
+
+### Reusable Compiler Concepts
+
+The following concepts appear reusable across more than one fixture:
+
+- source-authority preservation: generated contract fields should be derived from input model authority, not copied from
+  hand-written comparison fixtures;
+- scope boundary: allowed, forbidden, and stop-required surfaces must stay explicit before candidate generation;
+- forbidden scope: production source, promotion, acceptance, and enforcement boundaries need first-class representation;
+- Evidence authority: observable Evidence must be distinguished from natural-language claims and context-only artifacts;
+- evidence/check binding: checks must map to Evidence without becoming required checks unless separately approved;
+- output requirement binding: output obligations should report Evidence status, boundary status, and missing proof
+  honestly;
+- stop conditions: unsupported or out-of-scope work should stop/report instead of silently widening scope;
+- risk vocabulary: risk terms are useful review metadata but not mitigation proof;
+- graph-delta review binding: behavior deltas can be described for review without applying graph deltas;
+- compliance-checker bridge: future checking should compare actual work and reported Evidence against contract
+  boundaries, but the bridge itself is not an implemented checker.
+
+Stable concepts are the concepts above as review vocabulary and source-authority modeling targets. They are not yet
+stable as generalized compiler logic, report generation, command wiring, enforcement, or execution behavior.
+
+### Fixture-Specific Concepts
+
+`escape-html` behavior-change concepts should remain fixture-specific until another fixture exercises them:
+
+- external checkout path authority;
+- external required-check binding;
+- approximate anchor-level context;
+- graph-delta review-only binding;
+- behavior-change risk vocabulary around runtime compatibility, input coercion, Symbol handling, escaping correctness,
+  and source-authority boundary.
+
+Todo App runtime Evidence-only concepts should also remain fixture-specific until broader policy exists:
+
+- production source forbidden scope for a test-only proof;
+- runtime Evidence authority;
+- evidence/check binding that remains unsatisfied when Evidence is missing;
+- output requirement for test Evidence and source non-modification reporting;
+- compliance-checker bridge for detecting contract-following violations.
+
+Do not generalize fixture-specific concepts by copying their preview artifact shapes directly into compiler output.
+
+### Overfitting Risks
+
+Known overfitting risks:
+
+- treating one fixture's preview artifact shape as universal;
+- promoting static preview artifacts directly into compiler execution output;
+- treating candidate checks as required checks;
+- treating local checkout paths as portable source authority;
+- treating risk vocabulary as mitigation proof;
+- treating compliance-checker bridge metadata as implemented checker behavior;
+- treating review-only closeouts as support, approval, equivalence proof, execution authority, or user acceptance.
+
+### Recommended Next Milestone
+
+Recommended next milestone:
+
+```text
+compiler-eligibility-status-model
+```
+
+Reason: the calibration cycles now use recurring statuses such as `not-supported`,
+`behavior-change-calibration-policy-recognized`, `not-eligible-current-command-not-wired`,
+`contract-candidate-not-run`, `preview-gap-set-complete`, and `promotion-not-eligible`. Before adding another fixture or
+promoting preview concepts into code, DevView should define a formal eligibility/status lifecycle across fixtures.
+
+That lifecycle should clarify the difference between:
+
+- selected fixture;
+- calibration draft;
+- policy recognized;
+- preview gap set complete;
+- compile eligible;
+- candidate generated;
+- promotion review eligible;
+- human decision recorded;
+- equivalence proven.
+
+This synthesis does not implement that lifecycle model. It only records why the model is the next recommended milestone.
+
 ## Calibration Success Criteria
 
 A future calibration cycle is successful if:
@@ -1126,8 +1259,7 @@ This selection does not:
 
 ## Next Step
 
-The next task should summarize cross-fixture calibration lessons across the current success fixture, the escape-html
-behavior-change preview fixture, and the Todo App runtime Evidence-only preview fixture. It should not broaden compiler
+The next task should define a formal compiler eligibility/status model across fixtures. It should not broaden compiler
 support, wire additional fixtures into the supported command path, create promotion review packets, approve fixtures,
 claim runtime Evidence is satisfied, implement compliance checking, turn candidate checks into required checks, apply
 graph deltas, turn test Evidence into user acceptance, allow production source edits, enforce CI, or change the existing
