@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "compiler-input-calibration-observation-preview",
+  "status": "source-authority-gap-detected",
+  "fixtureId": "calibration-fixture-escape-html-symbol-stringification",
+  "fixtureStatus": "calibration-draft",
+  "supportStatus": "not-supported",
+  "approvalStatus": "not-approved",
+  "equivalenceProven": false,
+  "compileEligibility": "not-eligible-current-command-not-wired",
+  "expectedCandidateStatus": "contract-candidate-not-run",
+  "draftInputPath": "examples/retrofit/open-source/escape-html/generated/compiler-input-model-calibration-draft.json",
+  "currentSupportedBoundary": {
+    "supportedFixture": "Todo Search whitespace-normalization bug_fix dry-run fixture",
+    "supportedInputPath": "examples/read-model-aggregate/generated/compiler-input-model-dry-run.json",
+    "supportedChangeType": "bug_fix",
+    "supportScope": "current-fixture-only",
+    "humanDecisionScope": "current Todo Search fixture, current generated candidate, and current promotion review packet only"
+  },
+  "draftComparison": {
+    "changeType": {
+      "draftValue": "bug_fix",
+      "calibrationShape": "external-behavior-change",
+      "status": "change-type-calibration-assumption",
+      "reason": "The draft keeps the current bug_fix vocabulary to avoid adding arbitrary changeType support, but the source dogfood is behavior-change shaped."
+    },
+    "evidenceShape": {
+      "status": "requires-extension",
+      "reason": "The draft uses external project test, dogfood report, graph delta, and graph update proposal evidence rather than the Todo Search runtime/read-model evidence chain."
+    },
+    "riskShape": {
+      "status": "requires-extension",
+      "reason": "The draft needs escaping/stringification and observed-intent-not-maintainer-approval risk detail beyond the current generic risk vocabulary."
+    },
+    "scopeShape": {
+      "status": "requires-extension",
+      "reason": "The draft scope includes external checkout paths under work/external/escape-html, which are not committed repository paths."
+    },
+    "contextShape": {
+      "status": "partially-reusable",
+      "reason": "The graph snapshot can point to graph source, change record, instruction pack, graph delta, proposal, and report artifacts, but source/test/README anchor mapping is not yet a supported compiler input surface."
+    },
+    "validationCheckMapping": {
+      "status": "requires-extension",
+      "reason": "External checks such as check-escape-html-npm-test and check-escape-html-dogfood-validator are not in the current compiler required-check registry."
+    },
+    "outputRequirementSourceShape": {
+      "status": "partially-reusable",
+      "reason": "The existing output requirement source model can describe changed-file, command-output, validation-summary, and boundary obligations, but graph delta changed-file bindings are review artifacts rather than actual git diff authority."
+    }
+  },
+  "unsupportedReasons": [
+    {
+      "id": "compiler-input-not-wired",
+      "status": "compiler-input-not-wired",
+      "reason": "The supported compiler command still reads only the Todo Search dry-run input path."
+    },
+    {
+      "id": "current-fixture-approval-not-generalized",
+      "status": "not-approved",
+      "reason": "The current human decision is scoped to the Todo Search fixture and does not approve this calibration fixture."
+    },
+    {
+      "id": "behavior-change-pack-schema-not-approved",
+      "status": "unsupported-change-type-shape",
+      "reason": "The source dogfood is behavior-change shaped; the draft uses bug_fix only as a calibration assumption."
+    },
+    {
+      "id": "external-checks-not-registered",
+      "status": "source-authority-gap-detected",
+      "reason": "The draft check IDs for npm test, dogfood validation, and graph-delta review are not current compiler required-check IDs."
+    },
+    {
+      "id": "external-paths-not-committed",
+      "status": "source-authority-gap-detected",
+      "reason": "Allowed scope points at a local external checkout under work/external/escape-html rather than committed repository paths."
+    }
+  ],
+  "blockedReasonsIfWired": [
+    {
+      "id": "blocked-external-check-binding",
+      "status": "blocked",
+      "reason": "Current required-check generation would not know how to bind check-escape-html-npm-test or check-escape-html-dogfood-validator."
+    },
+    {
+      "id": "blocked-external-path-validation",
+      "status": "blocked",
+      "reason": "Current source-authority validation expects committed fixture paths for compiler input cross references."
+    },
+    {
+      "id": "blocked-risk-vocabulary-detail",
+      "status": "blocked",
+      "reason": "The draft preserves detailed calibration risk types in auxiliary fields because the current risk vocabulary is intentionally narrow."
+    }
+  ],
+  "sourceAuthorityReuse": [
+    {
+      "field": "outputRequirements",
+      "reuseStatus": "partially-reusable",
+      "expectedCurrentBehavior": "model-shape-usable-but-graph-delta-binding-needs-review-policy",
+      "reason": "Changed files, command Evidence, validation summary, and boundary statements fit the existing source model, but graph delta changed files are review artifacts and not execution authority."
+    },
+    {
+      "field": "forbiddenScope",
+      "reuseStatus": "partially-reusable",
+      "expectedCurrentBehavior": "policy-shape-usable-but-external-paths-need-extension",
+      "reason": "Policy-derived forbidden scope maps well to no metadata, no upstream approval, and no graph apply boundaries, but external checkout paths need explicit calibration handling."
+    },
+    {
+      "field": "stopConditions",
+      "reuseStatus": "partially-reusable",
+      "expectedCurrentBehavior": "stop-source-shape-usable-but-external-checks-block",
+      "reason": "Missing checkout, missing test command, and scope expansion map to existing stop source concepts, but the external check IDs are unsupported."
+    },
+    {
+      "field": "requiredEvidence",
+      "reuseStatus": "needs-extension",
+      "expectedCurrentBehavior": "external-evidence-types-block",
+      "reason": "The fixture needs external_project_test_result, dogfood_report, graph_delta_report, and graph_update_proposal evidence bindings."
+    },
+    {
+      "field": "requiredContext",
+      "reuseStatus": "partially-reusable",
+      "expectedCurrentBehavior": "artifact-context-usable-anchor-context-missing",
+      "reason": "Graph artifacts are available, but README/source/test anchor-level context is not yet a supported compiler context surface."
+    },
+    {
+      "field": "knownRisks",
+      "reuseStatus": "needs-extension",
+      "expectedCurrentBehavior": "generic-risk-types-preserve-boundary-but-lose-specificity",
+      "reason": "Generic source-authority-loss and scope-drift types can carry the draft, but stringification, escaping, and maintainer-approval risk detail needs a bounded vocabulary extension."
+    },
+    {
+      "field": "allowedScope",
+      "reuseStatus": "needs-extension",
+      "expectedCurrentBehavior": "external-local-paths-block",
+      "reason": "Allowed code/test paths are external local checkout paths, not committed repo fixture files."
+    }
+  ],
+  "sourceAuthorityGaps": [
+    {
+      "id": "gap-external-required-check-registry",
+      "field": "requiredEvidence",
+      "gapType": "validation-check-mapping",
+      "severity": "high",
+      "recommendedFollowUp": "Define a calibration-only external required-check binding model before attempting candidate generation."
+    },
+    {
+      "id": "gap-external-path-authority",
+      "field": "allowedScope",
+      "gapType": "external-path-source-authority",
+      "severity": "high",
+      "recommendedFollowUp": "Represent external checkout paths as observed external targets without treating them as committed repo paths or execution authority."
+    },
+    {
+      "id": "gap-behavior-change-pack-schema",
+      "field": "packSchema",
+      "gapType": "change-shape-policy",
+      "severity": "medium",
+      "recommendedFollowUp": "Decide whether v0.3 introduces a bounded behavior-change calibration pack schema or keeps bug_fix with explicit calibration caveats."
+    },
+    {
+      "id": "gap-risk-vocabulary",
+      "field": "knownRisks",
+      "gapType": "risk-taxonomy",
+      "severity": "medium",
+      "recommendedFollowUp": "Add bounded calibration risk vocabulary for escaping/stringification compatibility and maintainer-approval boundaries only if needed."
+    },
+    {
+      "id": "gap-anchor-level-context",
+      "field": "requiredContext",
+      "gapType": "context-anchor-binding",
+      "severity": "medium",
+      "recommendedFollowUp": "Model README/source/test anchors as context bindings without requiring direct source checkout mutation."
+    },
+    {
+      "id": "gap-graph-delta-review-binding",
+      "field": "outputRequirements",
+      "gapType": "review-artifact-output-binding",
+      "severity": "medium",
+      "recommendedFollowUp": "Keep graph delta and graph update proposal bindings review-only and distinct from graph apply authority."
+    }
+  ],
+  "recommendedNextStep": {
+    "id": "v0.3-calibration-unsupported-blocked-reporting",
+    "summary": "Add a narrow v0.3 observation path that can load calibration drafts and report unsupported/blocked reasons without compiling a supported candidate.",
+    "rationale": "The draft is mostly representable, but unsupported external checks and external path authority should be surfaced before adding behavior-change support."
+  },
+  "promotionEligibility": {
+    "status": "promotion-not-eligible",
+    "equivalenceCandidate": false,
+    "equivalenceProven": false,
+    "approvalStatus": "not-approved",
+    "reason": "The second fixture is calibration-only and has source-authority gaps. It has no promotion review packet or human decision."
+  },
+  "nonExecutionBoundary": "This observation is non-enforcing preview Evidence only. It does not mark the second fixture as supported, compile a candidate, execute AI, apply graph deltas, approve promotion, accept work, enable required checks, configure branch protection, or retire tree-native artifacts."
+}

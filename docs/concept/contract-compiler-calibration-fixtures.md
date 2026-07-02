@@ -89,6 +89,12 @@ The first input-model draft is:
 examples/retrofit/open-source/escape-html/generated/compiler-input-model-calibration-draft.json
 ```
 
+The first static observation report is:
+
+```text
+examples/retrofit/open-source/escape-html/generated/compiler-input-calibration-observation.preview.json
+```
+
 This draft is `calibration-draft`, `not-supported`, `not-approved`, and `equivalenceProven: false`. It is not wired into
 `graph read-model compile-contract --dry-run`, does not create a promotion review packet for the second fixture, and is
 not an execution source.
@@ -125,6 +131,46 @@ Expected resolver behavior:
   extension.
 - If this draft is wired in a future v0.3 task, the correct first result may be `not-supported` or `blocked` with
   precise source-authority gaps, not a successful candidate.
+
+## Calibration Observation
+
+The observation preview classifies the second fixture as:
+
+- `fixtureStatus: calibration-draft`
+- `supportStatus: not-supported`
+- `compileEligibility: not-eligible-current-command-not-wired`
+- `expectedCandidateStatus: contract-candidate-not-run`
+- `promotionEligibility.status: promotion-not-eligible`
+- `equivalenceProven: false`
+
+This is the intended current result. The observation does not compile a candidate and does not ask the current
+compiler-supported Todo Search path to accept the second fixture.
+
+The current source-authority model appears reusable in concept for:
+
+- `outputRequirements`, with graph delta bindings kept review-only;
+- `forbiddenScope`, with external-retrofit policy boundaries;
+- `stopConditions`, with missing external checkout/check handling;
+- `requiredContext`, at artifact level.
+
+The observation reports likely extensions for:
+
+- external required-check registry binding;
+- external checkout path authority;
+- behavior-change pack schema policy;
+- escaping/stringification and maintainer-approval risk vocabulary;
+- README/source/test anchor-level context;
+- graph delta and graph update proposal review-output binding.
+
+Recommended v0.3 direction:
+
+```text
+v0.3-calibration-unsupported-blocked-reporting
+```
+
+The next step should be a narrow observation path that can load calibration drafts and report unsupported/blocked reasons
+without compiling a supported candidate. That should happen before behavior-change support, broad pack schema expansion,
+promotion review, or any execution/enforcement work.
 
 ## What It Should Exercise
 

@@ -1073,6 +1073,18 @@ apply graph deltas, accept user work, enable required checks, configure branch p
 retire tree-native artifacts, widen changeType support, rename PBE compatibility surfaces, or make any generated
 contract authoritative.
 
+DEC-188 does not supersede DEC-097 through DEC-187. It adds a static calibration observation preview for the selected
+`component/escape-html` draft at
+`examples/retrofit/open-source/escape-html/generated/compiler-input-calibration-observation.preview.json`. The
+observation classifies the draft as `not-supported`, `not-eligible-current-command-not-wired`, and
+`contract-candidate-not-run`, while identifying reusable source-authority concepts and gaps around external required
+checks, external checkout path authority, behavior-change pack schema policy, risk vocabulary, anchor-level context, and
+graph-delta review bindings. The recommended next step is `v0.3-calibration-unsupported-blocked-reporting`, not second
+fixture support. This does not wire the fixture into `compile-contract --dry-run`, compile a candidate, create a
+promotion packet, approve the fixture, set `equivalenceProven: true`, execute AI, apply graph deltas, accept user work,
+enable required checks, configure branch protection, introduce CI enforcement, retire tree-native artifacts, widen
+changeType support, rename PBE compatibility surfaces, or make any generated contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
