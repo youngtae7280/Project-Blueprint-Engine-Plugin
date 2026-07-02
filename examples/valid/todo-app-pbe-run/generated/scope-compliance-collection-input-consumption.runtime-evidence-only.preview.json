@@ -8,6 +8,7 @@
   "consumptionStatus": "scope-compliance-collection-input-consumption-previewed",
   "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
   "scopeCompliancePathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
+  "scopeComplianceViolationCategorySchemaStatus": "scope-compliance-violation-category-schema-previewed",
   "inputArtifact": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
   "inputAuthorityClass": "git-derived-changed-files",
   "inputCollectionStatus": "git-derived-changed-files-collected",
@@ -16,6 +17,7 @@
   "inputAcceptedForFutureEvaluation": true,
   "inputConsumedForEvaluation": false,
   "policyConsumedForEvaluation": false,
+  "categorySchemaConsumedForEvaluation": false,
   "checkerRun": false,
   "actualDiffInspected": false,
   "patchContentsInspected": false,
@@ -105,8 +107,9 @@
     },
     {
       "inputId": "violation-category-schema",
-      "currentStatus": "preview-only",
+      "currentStatus": "scope-compliance-violation-category-schema-previewed-not-consumed",
       "requiredBeforeEvaluation": true,
+      "schemaPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
       "reason": "Future violations need explicit category semantics before any result is emitted."
     },
     {
@@ -120,6 +123,7 @@
     "gitDerivedChangedFileCollection": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
     "scopeComplianceScopeInputBinding": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
     "scopeCompliancePathPatternPolicy": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+    "scopeComplianceViolationCategorySchema": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
     "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
     "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
     "scopeComplianceNotRunReport": "examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json",

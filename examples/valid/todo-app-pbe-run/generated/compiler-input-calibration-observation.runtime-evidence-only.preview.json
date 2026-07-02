@@ -72,6 +72,7 @@
     "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
     "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
     "scopeCompliancePathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
+    "scopeComplianceViolationCategorySchemaStatus": "scope-compliance-violation-category-schema-previewed",
     "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
     "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
     "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",
@@ -164,6 +165,17 @@
     "remainingSupportStatus": "not-supported"
   },
   "scopeCompliancePathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
+  "scopeComplianceViolationCategorySchemaPreview": {
+    "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
+    "status": "scope-compliance-violation-category-schema-previewed",
+    "categorySchemaAcceptedForFutureEvaluation": true,
+    "categorySchemaConsumedForEvaluation": false,
+    "checkerRun": false,
+    "scopeComplianceEvaluationStatus": "not-evaluated",
+    "evaluatedViolations": [],
+    "remainingSupportStatus": "not-supported"
+  },
+  "scopeComplianceViolationCategorySchemaStatus": "scope-compliance-violation-category-schema-previewed",
   "fixtureProvidedChangedFileListPreview": {
     "path": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
     "status": "fixture-provided-changed-file-list-previewed",
@@ -227,6 +239,7 @@
     "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
     "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
     "scopeCompliancePathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
+    "scopeComplianceViolationCategorySchemaStatus": "scope-compliance-violation-category-schema-previewed",
     "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
     "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
     "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",

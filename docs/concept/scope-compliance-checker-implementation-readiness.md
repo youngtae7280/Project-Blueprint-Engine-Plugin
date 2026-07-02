@@ -407,7 +407,58 @@ Remaining prerequisites before evaluation:
 - evaluation result schema;
 - path matching helper implementation.
 
-The next checker step should define violation category schema before any comparison implementation.
+## Violation Category Schema Preview
+
+The first scope compliance violation category schema preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+```text
+scope-compliance-violation-category-schema-previewed
+```
+
+This preview defines future finding vocabulary without producing findings:
+
+- `forbidden-scope-match`;
+- `allowed-scope-match`;
+- `scope-unmatched-path`;
+- `unknown-pattern`;
+- `unparsable-pattern`;
+- `generated-file-review-required`;
+- `rename-review-required`;
+- `deleted-file-review-required`;
+- `case-sensitivity-review-required`.
+
+Conservative future policy:
+
+- `forbidden-scope-match` is blocking in a future evaluator;
+- `scope-unmatched-path` is review-required and must not be treated as clean;
+- `unknown-pattern` and `unparsable-pattern` block or stop evaluation rather than silently passing;
+- generated, rename, deleted, and case-sensitivity categories are review-required unless later policy decides otherwise.
+
+Required boundary:
+
+```text
+categorySchemaAcceptedForFutureEvaluation: true
+categorySchemaConsumedForEvaluation: false
+checkerRun: false
+scopeComplianceEvaluationStatus: not-evaluated
+evaluatedViolations: []
+```
+
+`evaluatedViolations: []` still means not evaluated while `checkerRun: false`; it is not a clean result. A clean result
+requires a future evaluator to run successfully with authoritative inputs and an implemented result schema.
+
+Remaining prerequisites before evaluation:
+
+- evaluation result schema;
+- path matching helper implementation.
+
+The next checker step should define evaluation result shape before any matching implementation.
 
 ## Fixture-Provided Changed-File List Preview
 

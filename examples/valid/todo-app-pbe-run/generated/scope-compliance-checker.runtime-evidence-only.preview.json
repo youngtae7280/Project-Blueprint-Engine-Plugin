@@ -18,6 +18,7 @@
   "scopeComplianceCollectionInputConsumption": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
   "scopeComplianceScopeInputBinding": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
   "scopeCompliancePathPatternPolicy": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+  "scopeComplianceViolationCategorySchema": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
   "fixtureProvidedChangedFileListPreview": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
   "fixtureInputConsumptionPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
   "scopeComplianceDryRunSkeleton": "examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json",
@@ -31,6 +32,7 @@
   "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
   "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
   "scopeCompliancePathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
+  "scopeComplianceViolationCategorySchemaStatus": "scope-compliance-violation-category-schema-previewed",
   "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
   "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
   "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",
@@ -181,6 +183,24 @@
   },
   "futureScopeViolationCategories": [
     {
+      "violationId": "scope-unmatched-path",
+      "description": "A future changed-file list includes paths that do not match allowed or forbidden scope.",
+      "wouldInspect": ["actual changed file list", "allowedScopeSource", "forbiddenScopeSource"],
+      "currentStatus": "conceptual-not-implemented"
+    },
+    {
+      "violationId": "unknown-pattern",
+      "description": "A future scope pattern cannot be interpreted by the configured path policy.",
+      "wouldInspect": ["scope pattern syntax", "path pattern policy"],
+      "currentStatus": "conceptual-not-implemented"
+    },
+    {
+      "violationId": "unparsable-pattern",
+      "description": "A future scope pattern is malformed and blocks evaluation.",
+      "wouldInspect": ["scope pattern syntax", "path pattern policy"],
+      "currentStatus": "conceptual-not-implemented"
+    },
+    {
       "violationId": "allowed-scope-violation",
       "description": "A future changed-file list contains paths outside test, Evidence, command-output, or report-only candidate scope.",
       "wouldInspect": ["actual changed file list", "allowedScopeSource"],
@@ -240,6 +260,11 @@
     }
   ],
   "linksToExistingPreviews": [
+    {
+      "previewId": "violation-category-schema",
+      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
+      "use": "Preview-only finding vocabulary and severity/blocking policy; no actual findings or result generation."
+    },
     {
       "previewId": "path-pattern-policy",
       "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",

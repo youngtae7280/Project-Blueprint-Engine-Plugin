@@ -417,6 +417,24 @@ rename/delete handling, unresolved case sensitivity, unknown-pattern blocking, a
 keeps `policyConsumedForEvaluation: false`, `checkerRun: false`, `scopeComplianceEvaluationStatus: not-evaluated`, and
 `evaluatedViolations: []`. The checker still does not compare paths or report clean/violation results.
 
+The first violation category schema preview now records:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json
+```
+
+Status:
+
+```text
+scopeComplianceViolationCategorySchemaStatus: scope-compliance-violation-category-schema-previewed
+```
+
+The schema defines future categories such as `forbidden-scope-match`, `allowed-scope-match`, `scope-unmatched-path`,
+`unknown-pattern`, `unparsable-pattern`, `generated-file-review-required`, `rename-review-required`,
+`deleted-file-review-required`, and `case-sensitivity-review-required`. It keeps
+`categorySchemaConsumedForEvaluation: false`, `checkerRun: false`, `scopeComplianceEvaluationStatus: not-evaluated`, and
+`evaluatedViolations: []`. Empty evaluated violations still means not evaluated, not clean.
+
 ## Decision
 
 Decision:

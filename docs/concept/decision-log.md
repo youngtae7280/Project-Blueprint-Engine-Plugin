@@ -1625,6 +1625,20 @@ compare changed files against allowedScope or forbiddenScope, does not classify 
 actual violation results, does not reject or enforce diffs, does not wire CI/required checks/branch protection, does
 not support or approve the fixture, does not satisfy runtime Evidence, and does not set `equivalenceProven: true`.
 
+DEC-224 does not supersede DEC-097 through DEC-223. It adds the scope compliance violation category schema preview
+artifact
+`examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json`.
+The preview records `schemaStatus: scope-compliance-violation-category-schema-previewed`,
+`categorySchemaAcceptedForFutureEvaluation: true`, `categorySchemaConsumedForEvaluation: false`, `checkerRun: false`,
+`scopeComplianceEvaluationStatus: not-evaluated`, and `evaluatedViolations: []`. It defines future category vocabulary
+for `forbidden-scope-match`, `allowed-scope-match`, `scope-unmatched-path`, `unknown-pattern`, `unparsable-pattern`,
+`generated-file-review-required`, `rename-review-required`, `deleted-file-review-required`, and
+`case-sensitivity-review-required`, along with conservative severity/blocking policy. This schema is not an actual
+finding set: it does not implement path matching, compare changed files against allowedScope or forbiddenScope, evaluate
+scope compliance, generate result output, report no-violation, report actual violations, reject or enforce diffs, wire
+CI/required checks/branch protection, support or approve the fixture, satisfy runtime Evidence, or set
+`equivalenceProven: true`.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

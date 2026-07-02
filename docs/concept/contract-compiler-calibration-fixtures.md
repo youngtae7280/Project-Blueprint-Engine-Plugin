@@ -1581,7 +1581,54 @@ Required boundary:
 - no clean or violation result;
 - no rejection, enforcement, CI wiring, fixture approval, runtime Evidence satisfaction, or equivalence proof.
 
-With this preview, the next safe step is violation category schema preview, not path matching implementation.
+With this preview, the next safe step was violation category schema preview, not path matching implementation.
+
+## Scope Compliance Violation Category Schema Preview
+
+The violation category schema preview artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+```text
+scopeComplianceViolationCategorySchemaStatus: scope-compliance-violation-category-schema-previewed
+```
+
+This artifact defines future finding vocabulary for scope compliance:
+
+- `forbidden-scope-match`;
+- `allowed-scope-match`;
+- `scope-unmatched-path`;
+- `unknown-pattern`;
+- `unparsable-pattern`;
+- `generated-file-review-required`;
+- `rename-review-required`;
+- `deleted-file-review-required`;
+- `case-sensitivity-review-required`.
+
+The preview records conservative future severity/blocking policy: forbidden scope matches are blocking; unmatched paths
+are review-required and not clean; unknown or unparsable patterns block or stop evaluation; generated, rename, deleted,
+and case-sensitivity categories require review unless later policy decides otherwise.
+
+Required boundary:
+
+- `categorySchemaAcceptedForFutureEvaluation: true`;
+- `categorySchemaConsumedForEvaluation: false`;
+- `checkerRun: false`;
+- `scopeComplianceEvaluationStatus: not-evaluated`;
+- `evaluatedViolations: []`;
+- no actual evaluated findings;
+- no path matching implementation;
+- no allowedScope comparison;
+- no forbiddenScope comparison;
+- no clean or actual violation result;
+- no rejection, enforcement, CI wiring, fixture approval, runtime Evidence satisfaction, or equivalence proof.
+
+`evaluatedViolations: []` still means not evaluated while `checkerRun: false`; it is not a clean result. With this
+preview, the next safe step is evaluation result shape preview, not path matching implementation.
 
 ## Fixture-Provided Changed-File List Preview
 

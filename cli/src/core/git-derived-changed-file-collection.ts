@@ -43,6 +43,7 @@ export interface GitDerivedChangedFileCollectionArtifact {
   scopeComplianceCollectionInputConsumptionStatus: 'scope-compliance-collection-input-consumption-previewed'
   scopeComplianceScopeInputBindingStatus: 'scope-compliance-scope-input-binding-previewed'
   scopeCompliancePathPatternPolicyStatus: 'scope-compliance-path-pattern-policy-previewed'
+  scopeComplianceViolationCategorySchemaStatus: 'scope-compliance-violation-category-schema-previewed'
   authorityClass: 'git-derived-changed-files'
   collectionMode: 'explicit-base-head'
   baseRef: string
@@ -64,6 +65,7 @@ export interface GitDerivedChangedFileCollectionArtifact {
     scopeComplianceCollectionInputConsumption: string
     scopeComplianceScopeInputBinding: string
     scopeCompliancePathPatternPolicy: string
+    scopeComplianceViolationCategorySchema: string
     scopeComplianceResultPreview: string
     scopeComplianceCheckerPreview: string
     scopeComplianceNotRunReport: string
@@ -212,6 +214,7 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
     scopeComplianceCollectionInputConsumptionStatus: 'scope-compliance-collection-input-consumption-previewed',
     scopeComplianceScopeInputBindingStatus: 'scope-compliance-scope-input-binding-previewed',
     scopeCompliancePathPatternPolicyStatus: 'scope-compliance-path-pattern-policy-previewed',
+    scopeComplianceViolationCategorySchemaStatus: 'scope-compliance-violation-category-schema-previewed',
     authorityClass: 'git-derived-changed-files',
     collectionMode: 'explicit-base-head',
     baseRef: input.baseRef,
@@ -236,6 +239,8 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
         'examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json',
       scopeCompliancePathPatternPolicy:
         'examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json',
+      scopeComplianceViolationCategorySchema:
+        'examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json',
       scopeComplianceResultPreview:
         'examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json',
       scopeComplianceCheckerPreview:

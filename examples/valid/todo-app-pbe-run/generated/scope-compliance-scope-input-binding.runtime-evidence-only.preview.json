@@ -7,6 +7,7 @@
   "checkerAxis": "scope-compliance-preview",
   "bindingStatus": "scope-compliance-scope-input-binding-previewed",
   "pathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
+  "violationCategorySchemaStatus": "scope-compliance-violation-category-schema-previewed",
   "changedFileInputArtifact": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
   "collectionInputConsumptionArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
   "scopeSourceArtifact": "examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
@@ -46,6 +47,8 @@
   "scopeInputsConsumedForEvaluation": false,
   "pathPatternPolicyAcceptedForFutureEvaluation": true,
   "pathPatternPolicyConsumedForEvaluation": false,
+  "categorySchemaAcceptedForFutureEvaluation": true,
+  "categorySchemaConsumedForEvaluation": false,
   "changedFileInputConsumedForEvaluation": false,
   "checkerRun": false,
   "actualDiffInspected": false,
@@ -114,8 +117,9 @@
     },
     {
       "policyId": "violation-category-schema",
-      "currentStatus": "preview-only",
+      "currentStatus": "scope-compliance-violation-category-schema-previewed-not-consumed",
       "requiredBeforeEvaluation": true,
+      "schemaPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
       "reason": "Future violations need explicit category semantics before any evaluated result is emitted."
     },
     {
@@ -136,6 +140,7 @@
     "gitDerivedChangedFileCollection": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
     "scopeComplianceCollectionInputConsumption": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
     "scopeCompliancePathPatternPolicy": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+    "scopeComplianceViolationCategorySchema": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
     "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
     "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
     "testOnlyScopeBoundaryPreview": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
