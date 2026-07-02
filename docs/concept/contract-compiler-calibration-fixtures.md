@@ -706,6 +706,62 @@ This draft should help a later calibration cycle observe compliance-checker-adja
 test-only contract can detect forbidden production source edits. It is not a supported Compiler Input Model, does not
 generate a contract candidate, does not create a promotion review packet, and does not approve Todo App promotion.
 
+## Third Calibration Observation Preview
+
+The third fixture calibration observation preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/compiler-input-calibration-observation.runtime-evidence-only.preview.json
+```
+
+Observation status:
+
+- `status: runtime-evidence-only-calibration-observation-previewed`
+- `supportStatus: not-supported`
+- `compileEligibility: not-eligible-current-command-not-wired`
+- `expectedCandidateStatus: contract-candidate-not-run`
+- `approvalStatus: not-approved`
+- `equivalenceProven: false`
+
+The observation keeps the runtime Evidence-only fixture distinct from the existing Todo App structure-only positive
+fixture. It is preview-only and non-enforcing, and it is not supported compiler output.
+
+Observed gaps:
+
+- `test-only-allowed-scope`;
+- `production-source-forbidden-scope`;
+- `runtime-evidence-authority`;
+- `evidence-check-binding`;
+- `output-requirement-for-test-evidence`;
+- `stop-condition-when-source-edits-needed`;
+- `compliance-checker-bridge`.
+
+Core test-only boundary:
+
+- production source changes are forbidden or out of scope;
+- runtime behavior must be proven through test or Evidence output;
+- if production source edits appear necessary, the correct behavior is to stop rather than silently expand scope;
+- the fixture is useful for future compliance checking because forbidden source edits should be detectable.
+
+The observation marks attached structure-only Evidence as present but not authoritative runtime proof. It also marks
+runtime command Evidence and production source non-modification Evidence as unresolved. It does not invent passing
+Evidence, does not create a contract candidate, and does not approve Todo App promotion.
+
+Recommended next step from the observation:
+
+```text
+select-third-fixture-first-preview-scope
+```
+
+Recommended first scope:
+
+```text
+runtime-evidence-authority
+```
+
+Reason: before candidate generation or compliance checking, DevView needs to define what Evidence can prove the
+add-todo behavior without production source edits.
+
 ## Calibration Success Criteria
 
 A future calibration cycle is successful if:
@@ -737,7 +793,7 @@ This selection does not:
 
 ## Next Step
 
-The next task should add a calibration observation report for the selected Todo App runtime evidence-only draft. It
-should not broaden compiler support, wire the third fixture into the supported command path, create a promotion review
-packet, approve the fixture, apply graph deltas, turn test Evidence into user acceptance, or change the existing Todo App
-structure-only status.
+The next task should select the first third-fixture preview scope. The recommended first scope is
+`runtime-evidence-authority`. It should not broaden compiler support, wire the third fixture into the supported command
+path, create a promotion review packet, approve the fixture, apply graph deltas, turn test Evidence into user acceptance,
+or change the existing Todo App structure-only status.

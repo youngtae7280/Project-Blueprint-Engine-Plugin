@@ -1214,6 +1214,20 @@ the draft into `compile-contract --dry-run`, compile a candidate, create or appr
 checks or CI enforcement, set `equivalenceProven: true`, execute AI, accept user work, retire tree-native artifacts,
 rename PBE compatibility surfaces, or make any generated contract authoritative.
 
+DEC-199 does not supersede DEC-097 through DEC-198. It adds the preview-only third-fixture observation artifact
+`examples/valid/todo-app-pbe-run/generated/compiler-input-calibration-observation.runtime-evidence-only.preview.json`.
+The observation records the `Todo App add-todo runtime evidence-only calibration` gaps:
+`test-only-allowed-scope`, `production-source-forbidden-scope`, `runtime-evidence-authority`,
+`evidence-check-binding`, `output-requirement-for-test-evidence`, `stop-condition-when-source-edits-needed`, and
+`compliance-checker-bridge`. The fixture remains `not-supported`, `not-eligible-current-command-not-wired`,
+`contract-candidate-not-run`, `not-approved`, and `equivalenceProven: false`; runtime command Evidence and production
+source non-modification Evidence remain unresolved. The recommended next step is
+`select-third-fixture-first-preview-scope`, with `runtime-evidence-authority` as the first recommended scope. This does
+not reinterpret Todo App beyond `structure-only`, wire the fixture into `compile-contract --dry-run`, compile a
+candidate, create or approve a promotion packet, create required checks or CI enforcement, allow production source
+edits, set `equivalenceProven: true`, execute AI, accept user work, retire tree-native artifacts, rename PBE
+compatibility surfaces, or make any generated contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "compiler-input-calibration-observation-preview",
+  "status": "runtime-evidence-only-calibration-observation-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "draftInputPath": "examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
+  "fixtureStatus": "calibration-draft",
+  "supportStatus": "not-supported",
+  "compileEligibility": "not-eligible-current-command-not-wired",
+  "expectedCandidateStatus": "contract-candidate-not-run",
+  "approvalStatus": "not-approved",
+  "equivalenceProven": false,
+  "promotionEligibility": {
+    "status": "promotion-not-eligible",
+    "reason": "The third fixture is calibration-only and lacks supported test-only behavior-proof policy, authoritative runtime Evidence, and compliance-checker binding."
+  },
+  "structureOnlyBoundary": {
+    "sourceProfile": "todo-app-pbe-run-structure-only",
+    "existingPositiveFixtureRole": "structure-only-positive-read-model-fixture",
+    "runtimeEvidenceOnlyDraftRole": "separate-calibration-artifact",
+    "structureOnlyFixturePromoted": false,
+    "boundary": "The observation does not reinterpret the existing Todo App positive fixture beyond structure-only."
+  },
+  "observedGaps": [
+    {
+      "gapId": "test-only-allowed-scope",
+      "status": "gap-observed",
+      "whyItMatters": "A proof-only contract must allow test/Evidence strengthening without opening production implementation scope.",
+      "currentDraftSignal": "targetScopeCandidates include test-tree, evidence-tree, attached evidence, and an unresolved runtime proof report.",
+      "blocksCompileEligibility": true,
+      "blocksCandidateGeneration": true,
+      "futureNeed": "A supported policy for test-only allowed scope and evidence-only outputs."
+    },
+    {
+      "gapId": "production-source-forbidden-scope",
+      "status": "gap-observed",
+      "whyItMatters": "If production source must change to make the runtime proof pass, the correct action is to stop instead of widening scope.",
+      "currentDraftSignal": "forbiddenScopeRules include conceptual production path src/todos.ts and promotion/acceptance mutation boundaries.",
+      "blocksCompileEligibility": true,
+      "blocksCandidateGeneration": true,
+      "futureNeed": "A compliance-checker-style diff binding that can detect forbidden production source edits."
+    },
+    {
+      "gapId": "runtime-evidence-authority",
+      "status": "gap-observed",
+      "whyItMatters": "Attached text Evidence is not enough to prove runtime behavior for a test-only calibration fixture.",
+      "currentDraftSignal": "evidence-todo-app-runtime-command-output is missing; attached test output is present but marked not authoritative runtime proof.",
+      "blocksCompileEligibility": true,
+      "blocksCandidateGeneration": true,
+      "futureNeed": "A policy for what runtime command output or equivalent observable proof can satisfy the add-todo behavior proof."
+    },
+    {
+      "gapId": "evidence-check-binding",
+      "status": "gap-observed",
+      "whyItMatters": "The draft names checks, but current supported compiler check binding is still the Todo Search dry-run path.",
+      "currentDraftSignal": "policySnapshot.evidenceCheckMappings includes attached Evidence review, missing runtime command output, and future source non-modification report mappings.",
+      "blocksCompileEligibility": true,
+      "blocksCandidateGeneration": true,
+      "futureNeed": "A calibration-only check binding policy for test-only behavior proof fixtures."
+    },
+    {
+      "gapId": "output-requirement-for-test-evidence",
+      "status": "gap-observed",
+      "whyItMatters": "The output should report test Evidence status and source non-modification rather than claiming implementation work.",
+      "currentDraftSignal": "outputRequirementSources include runtime Evidence status, attached Evidence boundary, production source unchanged, and non-promotion boundary obligations.",
+      "blocksCompileEligibility": false,
+      "blocksCandidateGeneration": true,
+      "futureNeed": "A source-authority resolver or preview that derives proof-only output requirements without treating them as execution output."
+    },
+    {
+      "gapId": "stop-condition-when-source-edits-needed",
+      "status": "gap-observed",
+      "whyItMatters": "A test-only fixture must stop if proof requires implementation changes.",
+      "currentDraftSignal": "stopConditionSources include stop-if-runtime-proof-needs-production-source-edit and stop-if-runtime-command-evidence-missing.",
+      "blocksCompileEligibility": false,
+      "blocksCandidateGeneration": true,
+      "futureNeed": "A supported stop-condition policy for proof-only contracts."
+    },
+    {
+      "gapId": "compliance-checker-bridge",
+      "status": "gap-observed",
+      "whyItMatters": "This fixture should later help detect when a contract that allows only tests/Evidence is violated by production source edits.",
+      "currentDraftSignal": "riskSources and outputRequirementSources reference production source non-modification, but no compliance checker or diff authority exists.",
+      "blocksCompileEligibility": true,
+      "blocksCandidateGeneration": true,
+      "futureNeed": "A future non-enforcing compliance-checker bridge that can compare actual changed files with allowed and forbidden scope."
+    }
+  ],
+  "sourceAuthorityReuse": [
+    {
+      "field": "outputRequirements",
+      "reuseStatus": "concept-reusable-needs-proof-only-policy",
+      "notes": "The output requirement source-authority pattern is reusable, but the obligation target is Evidence status and source non-modification rather than implementation change reporting."
+    },
+    {
+      "field": "forbiddenScope",
+      "reuseStatus": "concept-reusable-needs-compliance-binding",
+      "notes": "Forbidden production source and promotion/acceptance scope can be modeled, but detection needs a later diff/compliance binding."
+    },
+    {
+      "field": "stopConditions",
+      "reuseStatus": "concept-reusable-needs-test-only-trigger-policy",
+      "notes": "Stop conditions are clear in the draft but not supported for proof-only fixture candidate generation."
+    },
+    {
+      "field": "requiredEvidence",
+      "reuseStatus": "needs-runtime-evidence-authority",
+      "notes": "Attached structure-only Evidence is visible, but authoritative runtime command Evidence is unresolved."
+    },
+    {
+      "field": "requiredContext",
+      "reuseStatus": "concept-reusable-structure-only-context",
+      "notes": "Product/Work/Test/Evidence references are present, but they remain structure-only context."
+    },
+    {
+      "field": "knownRisks",
+      "reuseStatus": "concept-reusable-needs-proof-only-risk-vocabulary",
+      "notes": "Scope drift, Evidence authority confusion, and acceptance-boundary confusion are visible as draft risks."
+    },
+    {
+      "field": "allowedScope",
+      "reuseStatus": "needs-test-only-scope-policy",
+      "notes": "The draft names test/Evidence scope candidates, but there is no supported test-only allowed-scope policy yet."
+    }
+  ],
+  "coreBoundary": {
+    "productionSourceChanges": "forbidden-or-out-of-scope",
+    "runtimeBehaviorProof": "must-use-test-or-evidence-output",
+    "sourceEditNeededBehavior": "stop-rather-than-silently-expand-scope",
+    "complianceCheckerUsefulness": "future-useful-for-detecting-forbidden-production-source-edits"
+  },
+  "unresolvedEvidence": [
+    {
+      "evidenceId": "evidence-todo-app-runtime-command-output",
+      "status": "missing",
+      "reason": "No authoritative runtime command output has been added for this calibration fixture."
+    },
+    {
+      "evidenceId": "evidence-todo-app-production-source-non-modification",
+      "status": "missing",
+      "reason": "No compliance-checker or diff report exists for production source non-modification."
+    }
+  ],
+  "recommendedNextStep": {
+    "id": "select-third-fixture-first-preview-scope",
+    "recommendedFirstScope": "runtime-evidence-authority",
+    "reason": "Before candidate generation or compliance checking, DevView needs to define what Evidence can prove the add-todo behavior without production source edits."
+  },
+  "forbiddenInterpretations": [
+    "not-supported",
+    "not-a-supported-compiler-input",
+    "not-candidate-generation-eligible",
+    "not-promotion-eligible",
+    "not-runtime-evidence-satisfied",
+    "not-user-acceptance",
+    "not-ci-enforcement",
+    "not-branch-protection",
+    "not-production-source-edit-permission",
+    "not-todo-app-source-authority-promotion"
+  ],
+  "nonExecutionBoundary": "This observation is preview-only. It does not compile a contract candidate, execute AI, apply graph deltas, mutate graph source, approve promotion, satisfy runtime Evidence, create required checks, configure branch protection, or replace user acceptance."
+}
