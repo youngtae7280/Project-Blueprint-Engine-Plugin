@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "scope-compliance-fixture-input-consumption-preview",
+  "status": "scope-compliance-fixture-input-present-preview-only",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "checkerAxis": "scope-compliance-preview",
+  "consumptionMode": "static-preview-reference-only",
+  "fixtureProvidedInputStatus": "fixture-provided-preview-input-available",
+  "fixtureProvidedInputAuthorityStatus": "fixture-provided-preview-only",
+  "resultStatus": "scope-compliance-fixture-input-present-preview-only",
+  "supportStatus": "not-supported",
+  "compileEligibility": "not-eligible-current-command-not-wired",
+  "expectedCandidateStatus": "contract-candidate-not-run",
+  "approvalStatus": "not-approved",
+  "equivalenceProven": false,
+  "currentRuntimeEvidenceStatus": "missing",
+  "evidenceCheckBindingStatus": "preview-only-not-satisfied",
+  "checkerRun": false,
+  "actualDiffInspected": false,
+  "changedFilesCollected": false,
+  "scopeEnforced": false,
+  "diffRejected": false,
+  "evaluatedViolations": [],
+  "sourceArtifacts": {
+    "fixtureProvidedChangedFileListPreview": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
+    "changedFileListAuthorityPreview": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
+    "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
+    "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
+    "testOnlyScopeBoundaryPreview": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json"
+  },
+  "inputPresence": {
+    "fixtureProvidedChangedFileListPresent": true,
+    "inputSourceType": "fixture-provided-preview-input",
+    "inputAuthorityLevel": "fixture-provided-preview-only",
+    "notActualDiff": true,
+    "notCollectedFromGit": true,
+    "notAgentClaim": true,
+    "notExecutionTranscriptDerived": true,
+    "notAuthoritativeForCompliance": true
+  },
+  "scenarioConsumptionPreviews": [
+    {
+      "scenarioId": "test-evidence-only-changed-files",
+      "inputStatus": "fixture-provided-preview-only",
+      "consumptionStatus": "input-present-not-evaluated",
+      "futureResultShape": "future-allowed-scope-shape-candidate",
+      "checkerRun": false,
+      "evaluatedViolations": [],
+      "cleanClaimed": false,
+      "violationClaimed": false,
+      "notes": "This scenario can later shape no-violation result fields, but this artifact does not evaluate it or claim scope compliance."
+    },
+    {
+      "scenarioId": "production-source-modified",
+      "inputStatus": "fixture-provided-preview-only",
+      "consumptionStatus": "input-present-not-evaluated",
+      "futureResultShape": "future-forbidden-scope-shape-candidate",
+      "checkerRun": false,
+      "evaluatedViolations": [],
+      "cleanClaimed": false,
+      "violationClaimed": false,
+      "notes": "This scenario can later shape potential violation result fields, but this artifact does not evaluate it or claim an actual production-source violation."
+    }
+  ],
+  "notRunBoundary": {
+    "checkerImplemented": false,
+    "checkerRun": false,
+    "actualDiffInspected": false,
+    "changedFilesCollected": false,
+    "pathNormalizationApplied": false,
+    "scopeComparisonPerformed": false,
+    "evaluatedViolations": [],
+    "noViolationClaimed": false,
+    "actualViolationClaimed": false
+  },
+  "purpose": [
+    "show that fixture-provided changed-file list input can be present",
+    "record how a future checker could consume static preview scenarios",
+    "preserve not-run and non-authoritative boundaries before checker dry-run work"
+  ],
+  "allowedUse": [
+    "review fixture-provided input consumption shape",
+    "prepare a future preview-only checker dry-run boundary",
+    "document input-present without clean or violation conclusions",
+    "link fixture-provided changed-file scenarios to result-shape planning"
+  ],
+  "forbiddenUse": [
+    "implemented compliance checker",
+    "actual diff inspection",
+    "changed-file collection",
+    "git-derived changed-file list",
+    "agent-reported changed-file validation",
+    "scope-compliance pass",
+    "scope-compliance violation finding",
+    "no-violation claim",
+    "actual violation claim",
+    "diff rejection",
+    "scope enforcement",
+    "supported compiler output",
+    "candidate generation eligibility",
+    "promotion approval",
+    "runtime Evidence satisfaction",
+    "required check configuration",
+    "CI enforcement",
+    "branch protection",
+    "execution authority",
+    "Todo App source-authority promotion",
+    "user acceptance"
+  ],
+  "nonExecutionBoundary": "This scope compliance fixture input consumption preview only records that a fixture-provided changed-file list is present as preview input. It does not inspect actual diffs, collect changed files, run the checker, normalize paths, compare scope, report no-violation, detect actual violations, reject changes, enforce scope, approve a fixture, satisfy runtime Evidence, set equivalenceProven true, or replace user acceptance."
+}

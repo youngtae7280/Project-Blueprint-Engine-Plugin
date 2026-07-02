@@ -14,9 +14,11 @@
   "complianceCheckerBridgePreview": "examples/valid/todo-app-pbe-run/generated/compliance-checker-bridge.runtime-evidence-only.preview.json",
   "changedFileListAuthorityPreview": "examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
   "fixtureProvidedChangedFileListPreview": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
+  "fixtureInputConsumptionPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
   "checkerPreviewStatus": "preview-only-not-implemented",
   "changedFileListAuthorityPreviewStatus": "changed-file-list-authority-previewed",
   "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
+  "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
   "supportStatus": "not-supported",
   "compileEligibility": "not-eligible-current-command-not-wired",
   "expectedCandidateStatus": "contract-candidate-not-run",
@@ -127,6 +129,8 @@
     "authorityStatus": "changed-file-list-authority-unresolved",
     "fixtureProvidedPreviewPath": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
     "fixtureProvidedPreviewStatus": "fixture-provided-preview-input-available",
+    "fixtureInputConsumptionPreviewPath": "examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
+    "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
     "expectedFutureSource": "future actual changed-file list from diff/file modification inspection",
     "currentChangedFilesInspected": false,
     "currentChangedFileListAuthoritative": false,
@@ -201,6 +205,11 @@
       "previewId": "fixture-provided-changed-file-list",
       "path": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
       "use": "Static preview-only changed-file scenarios for shaping future result states; not actual diff output."
+    },
+    {
+      "previewId": "fixture-input-consumption",
+      "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
+      "use": "Preview-only input-present consumption boundary; no checker run, scope comparison, clean result, or violation result."
     },
     {
       "previewId": "test-only-scope-boundary",

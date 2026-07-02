@@ -138,6 +138,25 @@ agent-reported changed files, not execution transcript metadata, and not authori
 for shaping future scope compliance result states, but they do not prove actual compliance and do not replace a later
 git-derived changed-file authority path.
 
+## Fixture Input Consumption Preview
+
+The first fixture input consumption preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json
+```
+
+Preview status:
+
+```text
+scope-compliance-fixture-input-present-preview-only
+```
+
+This preview references the fixture-provided changed-file list and records that input is present for future checker
+shape design. It does not run the checker, inspect actual diffs, collect changed files, normalize paths, compare scope,
+report no-violation, or report an actual violation. The two fixture scenarios remain preview-only inputs, and the result
+preview still keeps `checkerRun: false` and `evaluatedViolations: []`.
+
 ## Readiness Criteria
 
 The first implementation slice should not start until DevView can answer:
@@ -296,6 +315,7 @@ Reason:
 - future inputs and conceptual violation states are defined;
 - changed-file list authority is previewed but unresolved for execution;
 - fixture-provided changed-file list scenarios are previewed but not evaluated;
+- fixture-provided input consumption is previewed without checker execution;
 - path normalization is unresolved;
 - result artifact exists only as a static preview, not an implemented output schema;
 - no checker is implemented.
@@ -303,12 +323,13 @@ Reason:
 Recommended next task:
 
 ```text
-scope-compliance-result-preview-with-fixture-input
+preview-only-checker-dry-run-skeleton
 ```
 
-That next task may define a static result-shape preview that references one fixture-provided scenario without inspecting
-actual diffs or running a checker. It should remain preview-only, non-authoritative, and non-enforcing. A git-derived
-changed-file list should wait until a later implementation slice defines base/head and path normalization rules.
+That next task may define a dry-run skeleton boundary that still avoids actual git diff inspection and still does not
+produce clean or violation conclusions. It should remain preview-only, non-authoritative, and non-enforcing. A
+git-derived changed-file list should wait until a later implementation slice defines base/head and path normalization
+rules.
 
 ## Non-Goals
 

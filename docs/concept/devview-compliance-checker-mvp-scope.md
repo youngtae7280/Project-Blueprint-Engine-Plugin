@@ -277,6 +277,17 @@ It adds static test/Evidence-only and production-source-modified scenarios for f
 scenarios are not actual observed diffs, are not collected from Git, are not agent-reported changed files, and do not
 prove compliance or violations. The scope compliance result preview still keeps evaluation not run.
 
+The fixture input consumption preview is now recorded:
+
+```text
+examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json
+```
+
+It records `scope-compliance-fixture-input-present-preview-only`: fixture-provided input is present, but no checker has
+run, no actual diff was inspected, no changed files were collected, and no scope compliance conclusion was produced.
+This prepares the future checker dry-run boundary without adding enforcement, rejection, CI approval, or equivalence
+status.
+
 ## Decision
 
 Decision:

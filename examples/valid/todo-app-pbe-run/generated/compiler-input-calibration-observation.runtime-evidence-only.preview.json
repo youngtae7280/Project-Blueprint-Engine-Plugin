@@ -66,6 +66,7 @@
     "changedFileListSourceStatus": "missing-not-implemented",
     "changedFileListAuthorityPreviewStatus": "changed-file-list-authority-previewed",
     "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
+    "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
     "scopeEnforced": false,
     "remainingSupportStatus": "not-supported"
   },
@@ -91,6 +92,19 @@
     "remainingSupportStatus": "not-supported"
   },
   "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
+  "fixtureInputConsumptionPreview": {
+    "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
+    "status": "scope-compliance-fixture-input-present-preview-only",
+    "fixtureProvidedInputStatus": "fixture-provided-preview-input-available",
+    "inputAuthorityStatus": "fixture-provided-preview-only",
+    "actualDiffInspected": false,
+    "changedFilesCollected": false,
+    "checkerRun": false,
+    "evaluatedViolations": [],
+    "scopeComplianceConclusionProduced": false,
+    "remainingSupportStatus": "not-supported"
+  },
+  "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
   "scopeComplianceResultPreview": {
     "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
     "status": "scope-compliance-input-missing-previewed",
@@ -98,6 +112,7 @@
     "changedFileListStatus": "missing-or-not-authoritative",
     "changedFileListAuthorityPreviewStatus": "changed-file-list-authority-previewed",
     "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
+    "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
     "evaluatedViolations": [],
     "scopeEnforced": false,
     "remainingSupportStatus": "not-supported"

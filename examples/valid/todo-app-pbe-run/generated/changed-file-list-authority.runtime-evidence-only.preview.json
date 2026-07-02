@@ -15,6 +15,7 @@
   "changedFileListAuthorityStatus": "changed-file-list-authority-unresolved",
   "currentChangedFileListStatus": "changed-file-list-missing",
   "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
+  "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
   "changedFilesCollected": false,
   "actualDiffInspected": false,
   "checkerRun": false,
@@ -24,6 +25,7 @@
     "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
     "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
     "fixtureProvidedChangedFileListPreview": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
+    "fixtureInputConsumptionPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
     "testOnlyScopeBoundaryPreview": "examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
     "complianceCheckerBridgePreview": "examples/valid/todo-app-pbe-run/generated/compliance-checker-bridge.runtime-evidence-only.preview.json",
     "implementationReadiness": "docs/concept/scope-compliance-checker-implementation-readiness.md"
