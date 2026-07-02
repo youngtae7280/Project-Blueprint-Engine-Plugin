@@ -1653,6 +1653,17 @@ changed files against allowedScope or forbiddenScope, evaluate scope compliance,
 report no-violation, report actual violations, reject or enforce diffs, wire CI/required checks/branch protection,
 support or approve the fixture, satisfy runtime Evidence, or set `equivalenceProven: true`.
 
+DEC-226 does not supersede DEC-097 through DEC-225. It implements the helper-only path pattern matcher
+`cli/src/core/scope-compliance-path-pattern.ts` for the future scope compliance checker. The helper normalizes one
+repository-root-relative path, rejects absolute local paths, supports exact path matching, trailing-slash directory
+prefix patterns, and simple first-slice glob-like patterns, and returns helper-level fields such as `matched`,
+`matchKind`, `patternValid`, `pathValid`, and `reason`. The helper does not consume the git-derived collection artifact
+as a checker, does not compare changed files against allowedScope or forbiddenScope, does not produce
+`forbidden-scope-match`, `allowed-scope-match`, or `scope-unmatched-path` findings, does not run scope compliance
+evaluation, does not generate clean or actual violation results, does not reject or enforce diffs, does not wire
+CI/required checks/branch protection, does not support or approve the fixture, does not satisfy runtime Evidence, and
+does not set `equivalenceProven: true`.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

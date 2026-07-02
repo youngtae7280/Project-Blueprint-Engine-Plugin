@@ -43,6 +43,7 @@ export interface GitDerivedChangedFileCollectionArtifact {
   scopeComplianceCollectionInputConsumptionStatus: 'scope-compliance-collection-input-consumption-previewed'
   scopeComplianceScopeInputBindingStatus: 'scope-compliance-scope-input-binding-previewed'
   scopeCompliancePathPatternPolicyStatus: 'scope-compliance-path-pattern-policy-previewed'
+  scopeCompliancePathMatchingHelperStatus: 'helper-implemented-not-consumed-for-evaluation'
   scopeComplianceViolationCategorySchemaStatus: 'scope-compliance-violation-category-schema-previewed'
   scopeComplianceEvaluationResultShapeStatus: 'scope-compliance-evaluation-result-shape-previewed'
   authorityClass: 'git-derived-changed-files'
@@ -66,6 +67,7 @@ export interface GitDerivedChangedFileCollectionArtifact {
     scopeComplianceCollectionInputConsumption: string
     scopeComplianceScopeInputBinding: string
     scopeCompliancePathPatternPolicy: string
+    scopeCompliancePathMatchingHelper: string
     scopeComplianceViolationCategorySchema: string
     scopeComplianceEvaluationResultShape: string
     scopeComplianceResultPreview: string
@@ -216,6 +218,7 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
     scopeComplianceCollectionInputConsumptionStatus: 'scope-compliance-collection-input-consumption-previewed',
     scopeComplianceScopeInputBindingStatus: 'scope-compliance-scope-input-binding-previewed',
     scopeCompliancePathPatternPolicyStatus: 'scope-compliance-path-pattern-policy-previewed',
+    scopeCompliancePathMatchingHelperStatus: 'helper-implemented-not-consumed-for-evaluation',
     scopeComplianceViolationCategorySchemaStatus: 'scope-compliance-violation-category-schema-previewed',
     scopeComplianceEvaluationResultShapeStatus: 'scope-compliance-evaluation-result-shape-previewed',
     authorityClass: 'git-derived-changed-files',
@@ -242,6 +245,7 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
         'examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json',
       scopeCompliancePathPatternPolicy:
         'examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json',
+      scopeCompliancePathMatchingHelper: 'cli/src/core/scope-compliance-path-pattern.ts',
       scopeComplianceViolationCategorySchema:
         'examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json',
       scopeComplianceEvaluationResultShape:

@@ -1575,7 +1575,7 @@ Required boundary:
 - `checkerRun: false`;
 - `scopeComplianceEvaluationStatus: not-evaluated`;
 - `evaluatedViolations: []`;
-- no path matching implementation;
+- no checker-consumed path matching;
 - no allowedScope comparison;
 - no forbiddenScope comparison;
 - no clean or violation result;
@@ -1621,7 +1621,7 @@ Required boundary:
 - `scopeComplianceEvaluationStatus: not-evaluated`;
 - `evaluatedViolations: []`;
 - no actual evaluated findings;
-- no path matching implementation;
+- no checker-consumed path matching;
 - no allowedScope comparison;
 - no forbiddenScope comparison;
 - no clean or actual violation result;
@@ -1666,13 +1666,45 @@ Required current state:
 - `blockingFindings: []`;
 - no clean result;
 - no actual violation result;
-- no path matching implementation;
+- no checker-consumed path matching;
 - no allowedScope or forbiddenScope comparison;
 - no rejection, enforcement, CI wiring, fixture approval, runtime Evidence satisfaction, or equivalence proof.
 
 The clean result policy is intentionally strict. Empty finding arrays are clean only after a future evaluator has run,
 consumed changed-file input, scope inputs, path policy, and category schema, evaluated every changed file, and found no
 blocking, review-required, or unknown findings. In the current preview, empty finding arrays still mean not evaluated.
+
+## Scope Compliance Path Matching Helper
+
+The helper-only path matcher is:
+
+```text
+cli/src/core/scope-compliance-path-pattern.ts
+```
+
+Status:
+
+```text
+pathMatchingHelperStatus: helper-implemented-not-consumed-for-evaluation
+```
+
+The helper supports a single normalized repository-root-relative path against a single future scope pattern. It handles
+POSIX-style normalization, Windows separator normalization, leading `./`, absolute path rejection, exact path matches,
+directory-prefix patterns, and simple first-slice glob-like patterns. It returns helper-level fields such as `matched`,
+`matchKind`, `patternValid`, `pathValid`, and `reason`.
+
+Required boundary:
+
+- no allowedScope or forbiddenScope list evaluation;
+- no `forbidden-scope-match` or `allowed-scope-match` category output;
+- no `scope-unmatched-path` category output;
+- no checker run;
+- no `scopeComplianceResult`;
+- no clean result;
+- no actual violation result;
+- no rejection, enforcement, CI wiring, fixture approval, runtime Evidence satisfaction, or equivalence proof.
+
+The helper is implementation plumbing for a later non-enforcing evaluator. It is not itself scope compliance evaluation.
 
 ## Fixture-Provided Changed-File List Preview
 

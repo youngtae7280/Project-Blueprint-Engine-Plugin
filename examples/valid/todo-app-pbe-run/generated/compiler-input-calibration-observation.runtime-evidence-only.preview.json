@@ -72,6 +72,7 @@
     "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
     "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
     "scopeCompliancePathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
+    "scopeCompliancePathMatchingHelperStatus": "helper-implemented-not-consumed-for-evaluation",
     "scopeComplianceViolationCategorySchemaStatus": "scope-compliance-violation-category-schema-previewed",
     "scopeComplianceEvaluationResultShapeStatus": "scope-compliance-evaluation-result-shape-previewed",
     "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
@@ -166,6 +167,17 @@
     "remainingSupportStatus": "not-supported"
   },
   "scopeCompliancePathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
+  "scopeCompliancePathMatchingHelperPreview": {
+    "path": "cli/src/core/scope-compliance-path-pattern.ts",
+    "status": "helper-implemented-not-consumed-for-evaluation",
+    "helperScope": "single-normalized-path-against-single-pattern",
+    "checkerRun": false,
+    "scopeComplianceEvaluationStatus": "not-evaluated",
+    "scopeComplianceResult": "no-result",
+    "evaluatedViolations": [],
+    "remainingSupportStatus": "not-supported"
+  },
+  "scopeCompliancePathMatchingHelperStatus": "helper-implemented-not-consumed-for-evaluation",
   "scopeComplianceViolationCategorySchemaPreview": {
     "path": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
     "status": "scope-compliance-violation-category-schema-previewed",
@@ -257,6 +269,7 @@
     "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
     "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
     "scopeCompliancePathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
+    "scopeCompliancePathMatchingHelperStatus": "helper-implemented-not-consumed-for-evaluation",
     "scopeComplianceViolationCategorySchemaStatus": "scope-compliance-violation-category-schema-previewed",
     "scopeComplianceEvaluationResultShapeStatus": "scope-compliance-evaluation-result-shape-previewed",
     "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",

@@ -344,9 +344,9 @@ evaluatedViolations: []
 ```
 
 Scope input accepted means the checker can identify the source fields for future evaluation. It does not mean changed
-files have been compared with `allowedScope` or `forbiddenScope`, does not mean path matching is implemented, does not
-mean the result is clean, and does not mean violations exist. The calibration draft is used only as the current
-preview binding source because the third fixture has no supported generated contract candidate.
+files have been compared with `allowedScope` or `forbiddenScope`, does not mean path matching is consumed by a checker,
+does not mean the result is clean, and does not mean violations exist. The calibration draft is used only as the
+current preview binding source because the third fixture has no supported generated contract candidate.
 
 At the scope-input binding stage, remaining prerequisites before evaluation were:
 
@@ -371,7 +371,8 @@ Preview status:
 scope-compliance-path-pattern-policy-previewed
 ```
 
-This preview records future path comparison policy without implementing a matcher:
+This preview records future path comparison policy. The later helper implementation follows this policy for one
+normalized path and one pattern, but the checker still does not consume it for evaluation:
 
 - compare repository-root-relative POSIX-style paths;
 - normalize Windows `\` separators to `/`;
@@ -398,14 +399,14 @@ scopeComplianceEvaluationStatus: not-evaluated
 evaluatedViolations: []
 ```
 
-Path policy preview does not mean matching is implemented. It does not compare changed files with `allowedScope` or
-`forbiddenScope`, does not produce a clean or violation result, and does not enable enforcement.
+Path policy preview does not mean checker evaluation is implemented. It does not compare changed files with
+`allowedScope` or `forbiddenScope`, does not produce a clean or violation result, and does not enable enforcement.
 
 Remaining prerequisites before evaluation:
 
 - violation category schema;
 - evaluation result schema;
-- path matching helper implementation.
+- path matching helper consumption by a non-enforcing evaluator.
 
 ## Violation Category Schema Preview
 
@@ -455,7 +456,7 @@ requires a future evaluator to run successfully with authoritative inputs and an
 
 Remaining prerequisites before evaluation:
 
-- path matching helper implementation.
+- path matching helper consumption by a non-enforcing evaluator.
 
 ## Evaluation Result Shape Preview
 
@@ -500,11 +501,57 @@ evaluates every changed file, and leaves no blocking, review-required, or unknow
 
 Remaining prerequisites before evaluation:
 
-- path matching helper implementation;
 - non-enforcing scope evaluation implementation.
 
-The next checker step can start path matching helper design or implementation, but it still must not claim clean or
-actual violations until an evaluator consumes the inputs.
+## Path Matching Helper Implementation
+
+The first helper-only path pattern matcher is:
+
+```text
+cli/src/core/scope-compliance-path-pattern.ts
+```
+
+Helper status:
+
+```text
+pathMatchingHelperStatus: helper-implemented-not-consumed-for-evaluation
+```
+
+The helper compares one normalized repository-root-relative path with one future scope pattern. It supports the first
+slice only:
+
+- repository-root-relative POSIX-style path normalization;
+- Windows `\` separator normalization;
+- leading `./` normalization;
+- absolute local path rejection;
+- exact path matching;
+- directory-prefix matching for trailing-slash directory patterns;
+- simple glob-like matching with `*` within one segment and `**` as a whole path segment;
+- unsupported regex-like or unresolved patterns returned as helper-level invalid/unsupported results.
+
+The helper returns helper-level fields such as `matched`, `matchKind`, `patternValid`, `pathValid`, and `reason`.
+It does not return `forbidden-scope-match`, `allowed-scope-match`, `scope-unmatched-path`, `checkerRun`,
+`scopeComplianceResult`, or `evaluatedViolations`.
+
+Required boundary:
+
+```text
+pathMatchingHelperStatus: helper-implemented-not-consumed-for-evaluation
+checkerRun: false
+scopeComplianceEvaluationStatus: not-evaluated
+scopeComplianceResult: no-result
+evaluatedViolations: []
+```
+
+The helper is not an evaluator. It does not consume the git-derived collection artifact, does not consume
+`allowedScope` or `forbiddenScope`, does not classify categories, and does not produce clean or violation results.
+
+Remaining prerequisite before evaluation:
+
+- non-enforcing scope evaluation implementation.
+
+The next checker step should define or implement a non-enforcing evaluator that consumes helper output carefully, but
+it still must not enforce, reject, approve, or claim runtime Evidence satisfaction.
 
 ## Fixture-Provided Changed-File List Preview
 

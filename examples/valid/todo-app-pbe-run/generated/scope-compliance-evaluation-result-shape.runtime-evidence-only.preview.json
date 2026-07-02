@@ -9,6 +9,8 @@
   "changedFileInputArtifact": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
   "scopeInputBindingArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
   "pathPatternPolicyArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+  "pathMatchingHelperArtifact": "cli/src/core/scope-compliance-path-pattern.ts",
+  "pathMatchingHelperStatus": "helper-implemented-not-consumed-for-evaluation",
   "violationCategorySchemaArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
   "scopeComplianceResultPreviewArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
   "checkerRun": false,
@@ -16,6 +18,7 @@
   "changedFileInputConsumedForEvaluation": false,
   "scopeInputsConsumedForEvaluation": false,
   "pathPolicyConsumedForEvaluation": false,
+  "pathMatchingHelperConsumedForEvaluation": false,
   "categorySchemaConsumedForEvaluation": false,
   "scopeComplianceEvaluationStatus": "not-evaluated",
   "scopeComplianceResult": "no-result",
@@ -73,6 +76,7 @@
     "cleanRequiresChangedFileInputConsumed": true,
     "cleanRequiresScopeInputsConsumed": true,
     "cleanRequiresPathPolicyConsumed": true,
+    "cleanRequiresPathMatchingHelperConsumedByEvaluator": true,
     "cleanRequiresCategorySchemaConsumed": true,
     "cleanRequiresEveryChangedFileEvaluated": true,
     "cleanRequiresNoBlockingFindings": true,
@@ -100,6 +104,7 @@
     "scopeComplianceCollectionInputConsumption": "examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
     "scopeComplianceScopeInputBinding": "examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
     "scopeCompliancePathPatternPolicy": "examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+    "scopeCompliancePathMatchingHelper": "cli/src/core/scope-compliance-path-pattern.ts",
     "scopeComplianceViolationCategorySchema": "examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
     "scopeComplianceResultPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
     "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
@@ -109,11 +114,11 @@
     "review the future scope compliance evaluation result shape",
     "distinguish not-evaluated, blocked, clean, review-required, and blocking-violation result states",
     "confirm that empty evaluatedViolations means not evaluated while checkerRun is false",
-    "prepare a later path matching helper implementation without claiming results"
+    "prepare later non-enforcing evaluator consumption without claiming results"
   ],
   "forbiddenUse": [
     "actual evaluation result",
-    "path pattern matching implementation",
+    "checker-consumed path pattern matching",
     "changed-file comparison against allowedScope",
     "changed-file comparison against forbiddenScope",
     "scope compliance evaluation",
@@ -130,5 +135,5 @@
     "equivalence proof",
     "user acceptance"
   ],
-  "nonEvaluationBoundary": "This artifact previews the future scope compliance evaluation result shape only. It does not implement path matching, compare changed files against allowedScope or forbiddenScope, consume inputs for evaluation, populate findings, report clean or actual violation results, reject diffs, enforce scope, approve fixtures, satisfy runtime Evidence, or prove equivalence."
+  "nonEvaluationBoundary": "This artifact previews the future scope compliance evaluation result shape only. A helper exists for one normalized path and one pattern, but this artifact does not consume it for evaluation, compare changed files against allowedScope or forbiddenScope, populate findings, report clean or actual violation results, reject diffs, enforce scope, approve fixtures, satisfy runtime Evidence, or prove equivalence."
 }

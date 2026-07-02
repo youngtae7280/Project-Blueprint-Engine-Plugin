@@ -53,6 +53,7 @@ describe('git-derived changed-file collection', () => {
     )
     expect(artifact.scopeComplianceScopeInputBindingStatus).toBe('scope-compliance-scope-input-binding-previewed')
     expect(artifact.scopeCompliancePathPatternPolicyStatus).toBe('scope-compliance-path-pattern-policy-previewed')
+    expect(artifact.scopeCompliancePathMatchingHelperStatus).toBe('helper-implemented-not-consumed-for-evaluation')
     expect(artifact.scopeComplianceViolationCategorySchemaStatus).toBe(
       'scope-compliance-violation-category-schema-previewed',
     )
@@ -83,6 +84,9 @@ describe('git-derived changed-file collection', () => {
     )
     expect(artifact.sourceArtifacts.scopeCompliancePathPatternPolicy).toBe(
       'examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json',
+    )
+    expect(artifact.sourceArtifacts.scopeCompliancePathMatchingHelper).toBe(
+      'cli/src/core/scope-compliance-path-pattern.ts',
     )
     expect(artifact.sourceArtifacts.scopeComplianceViolationCategorySchema).toBe(
       'examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json',

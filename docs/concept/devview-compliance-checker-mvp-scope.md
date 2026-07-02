@@ -453,6 +453,23 @@ The result shape preview defines future states such as `not-evaluated`, `evaluat
 `scopeComplianceResult: no-result`, and `evaluatedViolations: []`. A clean result remains forbidden until a future
 evaluator runs and consumes changed-file input, scope inputs, path policy, and category schema.
 
+The first helper-only path matcher now exists at:
+
+```text
+cli/src/core/scope-compliance-path-pattern.ts
+```
+
+Status:
+
+```text
+pathMatchingHelperStatus: helper-implemented-not-consumed-for-evaluation
+```
+
+The helper can compare one normalized repository-root-relative path against one future scope pattern. It returns
+helper-level match fields only; it does not consume the collection artifact as a checker, does not compare a changed-file
+set with allowedScope or forbiddenScope, does not classify violation categories, and does not produce clean or violation
+results.
+
 ## Decision
 
 Decision:
