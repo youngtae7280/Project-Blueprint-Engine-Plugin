@@ -16,6 +16,8 @@
   "externalCheckoutPathAuthorityStatus": "external-checkout-path-authority-previewed-calibration-local",
   "anchorLevelContextPreviewPath": "examples/retrofit/open-source/escape-html/generated/anchor-level-context.preview.json",
   "anchorLevelContextStatus": "anchor-level-context-previewed-approximate",
+  "riskVocabularyPreviewPath": "examples/retrofit/open-source/escape-html/generated/risk-vocabulary.preview.json",
+  "riskVocabularyStatus": "risk-vocabulary-previewed",
   "recognizedInputShape": {
     "packSchemaChangeType": "bug_fix",
     "calibrationChangeShape": "external-behavior-change",
@@ -71,7 +73,7 @@
     {
       "id": "gap-risk-vocabulary",
       "field": "knownRisks",
-      "status": "unresolved"
+      "status": "previewed-not-mitigated"
     },
     {
       "id": "gap-anchor-level-context",
@@ -85,9 +87,9 @@
     }
   ],
   "recommendedNextStep": {
-    "id": "risk-vocabulary-scope-decision",
-    "summary": "Decide whether bounded risk vocabulary should be the next v0.3 calibration scope.",
-    "rationale": "Behavior-change policy, external required-check binding, external checkout path authority, and anchor-level context now have preview boundaries while remaining non-support signals."
+    "id": "graph-delta-review-binding-scope-decision",
+    "summary": "Decide whether graph-delta review binding should be the next v0.3 calibration scope.",
+    "rationale": "Behavior-change policy, external required-check binding, external checkout path authority, anchor-level context, and risk vocabulary now have preview boundaries while remaining non-support signals."
   },
   "nonExecutionBoundary": "This policy preview recognizes a behavior-change-shaped calibration draft only. It does not mark the second fixture as supported, compile a candidate, execute AI, apply graph deltas, approve promotion, accept work, enable required checks, configure branch protection, or retire tree-native artifacts."
 }

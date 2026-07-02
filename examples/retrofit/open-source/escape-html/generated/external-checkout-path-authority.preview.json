@@ -114,11 +114,13 @@
   },
   "anchorLevelContextPreviewPath": "examples/retrofit/open-source/escape-html/generated/anchor-level-context.preview.json",
   "anchorLevelContextStatus": "anchor-level-context-previewed-approximate",
-  "remainingCalibrationGaps": ["risk vocabulary", "graph-delta review binding"],
+  "riskVocabularyPreviewPath": "examples/retrofit/open-source/escape-html/generated/risk-vocabulary.preview.json",
+  "riskVocabularyStatus": "risk-vocabulary-previewed",
+  "remainingCalibrationGaps": ["graph-delta review binding"],
   "recommendedNextStep": {
-    "id": "risk-vocabulary-scope-decision",
-    "summary": "Decide whether bounded risk vocabulary should be the next v0.3 calibration scope.",
-    "rationale": "Behavior-change policy, external required-check binding, and checkout path authority now have preview boundaries; remaining calibration gaps are risk vocabulary, anchor-level context, and graph-delta review binding."
+    "id": "graph-delta-review-binding-scope-decision",
+    "summary": "Decide whether graph-delta review binding should be the next v0.3 calibration scope.",
+    "rationale": "Behavior-change policy, external required-check binding, checkout path authority, anchor-level context, and risk vocabulary now have preview boundaries; the remaining calibration gap is graph-delta review binding."
   },
   "nonExecutionBoundary": "This checkout authority preview describes static metadata for a calibration-local external checkout only. It does not mark the second fixture as supported, wire it into compile-contract --dry-run, execute checks, modify files, compile a candidate, create or approve a promotion packet, create CI enforcement, create GitHub required checks, configure branch protection, apply graph deltas, grant execution authority, automate user acceptance, or retire tree-native artifacts."
 }

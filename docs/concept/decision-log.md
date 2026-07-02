@@ -1149,6 +1149,20 @@ permission, supported compiler context, source checkout authority, candidate gen
 CI enforcement, required checks, branch protection, graph delta apply authority, user acceptance, tree retirement,
 arbitrary changeType support, or any generated contract authoritative.
 
+DEC-194 does not supersede DEC-097 through DEC-193. It adds a preview-only risk vocabulary artifact for the selected
+`component/escape-html` behavior-change calibration draft at
+`examples/retrofit/open-source/escape-html/generated/risk-vocabulary.preview.json`. The preview names bounded
+behavior-change risks such as runtime compatibility, input coercion behavior, Symbol handling regression, escaping
+correctness, non-string input drift, test coverage insufficiency, and source-authority boundary risk, while reporting
+`risk-vocabulary-previewed`. These terms are linked to approximate anchors and observed Evidence, but they do not prove
+mitigation, final compiler risk policy, or support. The second fixture remains `not-supported`,
+`not-eligible-current-command-not-wired`, `contract-candidate-not-run`, `not-approved`, and `equivalenceProven: false`;
+the next recommended scope is graph-delta review binding. This does not wire the fixture into `compile-contract
+--dry-run`, compile a candidate, create or approve a promotion packet, run external checks as required checks, create CI
+enforcement, configure branch protection, set `equivalenceProven: true`, execute AI, apply graph deltas, accept user
+work, retire tree-native artifacts, widen changeType support, rename PBE compatibility surfaces, or make any generated
+contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

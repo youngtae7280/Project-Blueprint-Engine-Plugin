@@ -12,6 +12,8 @@
   "equivalenceProven": false,
   "anchorContextStatus": "anchor-level-context-previewed-approximate",
   "anchorAuthorityStatus": "static-record-anchor-context-not-supported-compiler-context",
+  "riskVocabularyPreviewPath": "examples/retrofit/open-source/escape-html/generated/risk-vocabulary.preview.json",
+  "riskVocabularyStatus": "risk-vocabulary-previewed",
   "sourceFileAnchors": [
     {
       "id": "anchor-index-input-coercion-before",
@@ -157,11 +159,11 @@
     "Do not run external checks or modify external files from this preview.",
     "Do not treat this preview as promotion approval, user acceptance, CI enforcement, branch protection, or graph delta apply authority."
   ],
-  "remainingCalibrationGaps": ["risk vocabulary", "graph-delta review binding"],
+  "remainingCalibrationGaps": ["graph-delta review binding"],
   "recommendedNextStep": {
-    "id": "risk-vocabulary-scope-decision",
-    "summary": "Decide whether bounded risk vocabulary should be the next v0.3 calibration scope.",
-    "rationale": "Anchor-level context is now previewed, giving risk vocabulary a more precise behavior surface to reference."
+    "id": "graph-delta-review-binding-scope-decision",
+    "summary": "Decide whether graph-delta review binding should be the next v0.3 calibration scope.",
+    "rationale": "Anchor-level context and risk vocabulary are now previewed, leaving graph delta and graph update proposal artifacts as the remaining review-binding gap."
   },
   "nonExecutionBoundary": "This anchor-level context preview describes static behavior anchors only. It does not mark the second fixture as supported, wire it into compile-contract --dry-run, execute checks, modify files, compile a candidate, create or approve a promotion packet, create CI enforcement, create GitHub required checks, configure branch protection, apply graph deltas, grant execution authority, automate user acceptance, or retire tree-native artifacts."
 }

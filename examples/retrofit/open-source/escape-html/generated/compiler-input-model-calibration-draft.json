@@ -66,6 +66,8 @@
     "externalCheckoutPathAuthorityStatus": "external-checkout-path-authority-previewed-calibration-local",
     "anchorLevelContextPreview": "examples/retrofit/open-source/escape-html/generated/anchor-level-context.preview.json",
     "anchorLevelContextStatus": "anchor-level-context-previewed-approximate",
+    "riskVocabularyPreview": "examples/retrofit/open-source/escape-html/generated/risk-vocabulary.preview.json",
+    "riskVocabularyStatus": "risk-vocabulary-previewed",
     "changeTypeGap": "The source dogfood is behavior-change shaped, but this draft keeps the current bug_fix compiler vocabulary and is recognized only as calibration policy, not arbitrary changeType support.",
     "requiredInputGroups": [
       "humanRequest",
@@ -347,6 +349,7 @@
       "external project check IDs are previewed as calibration bindings but are not in the current compiler required-check registry",
       "external checkout paths are previewed as calibration-local source context but are not portable compiler support authority",
       "anchor-level code/test context is previewed from static record anchors but is not supported compiler context",
+      "behavior-change risk vocabulary is previewed but does not prove mitigation or compiler support",
       "behavior-change shape is recognized as calibration-only policy under current bug_fix vocabulary",
       "graph delta and graph update proposal bindings are review artifacts, not graph apply authority"
     ],

@@ -18,6 +18,8 @@
   "externalCheckoutPathAuthorityStatus": "external-checkout-path-authority-previewed-calibration-local",
   "anchorLevelContextPreviewPath": "examples/retrofit/open-source/escape-html/generated/anchor-level-context.preview.json",
   "anchorLevelContextStatus": "anchor-level-context-previewed-approximate",
+  "riskVocabularyPreviewPath": "examples/retrofit/open-source/escape-html/generated/risk-vocabulary.preview.json",
+  "riskVocabularyStatus": "risk-vocabulary-previewed",
   "currentSupportedBoundary": {
     "supportedFixture": "Todo Search whitespace-normalization bug_fix dry-run fixture",
     "supportedInputPath": "examples/read-model-aggregate/generated/compiler-input-model-dry-run.json",
@@ -37,8 +39,8 @@
       "reason": "The draft uses external project test, dogfood report, graph delta, and graph update proposal evidence rather than the Todo Search runtime/read-model evidence chain."
     },
     "riskShape": {
-      "status": "requires-extension",
-      "reason": "The draft needs escaping/stringification and observed-intent-not-maintainer-approval risk detail beyond the current generic risk vocabulary."
+      "status": "risk-vocabulary-previewed",
+      "reason": "The draft now has behavior-change risk vocabulary for runtime compatibility, input coercion, Symbol handling, escaping correctness, non-string input drift, test coverage, and source-authority boundary risks, but no mitigation is proven."
     },
     "scopeShape": {
       "status": "external-checkout-path-authority-previewed-calibration-local",
@@ -97,8 +99,8 @@
     },
     {
       "id": "blocked-risk-vocabulary-detail",
-      "status": "blocked",
-      "reason": "The draft preserves detailed calibration risk types in auxiliary fields because the current risk vocabulary is intentionally narrow."
+      "status": "previewed-not-supported",
+      "reason": "The draft now has preview risk vocabulary, but those terms are not final compiler risk policy and do not prove mitigation."
     }
   ],
   "sourceAuthorityReuse": [
@@ -134,9 +136,9 @@
     },
     {
       "field": "knownRisks",
-      "reuseStatus": "needs-extension",
-      "expectedCurrentBehavior": "generic-risk-types-preserve-boundary-but-lose-specificity",
-      "reason": "Generic source-authority-loss and scope-drift types can carry the draft, but stringification, escaping, and maintainer-approval risk detail needs a bounded vocabulary extension."
+      "reuseStatus": "previewed-not-mitigated",
+      "expectedCurrentBehavior": "risk-vocabulary-previewed-not-supported-risk-policy",
+      "reason": "Behavior-change risk terms now preserve stringification, escaping, test coverage, and source-authority boundary detail, but the preview does not prove mitigation or support."
     },
     {
       "field": "allowedScope",
@@ -167,7 +169,8 @@
       "field": "knownRisks",
       "gapType": "risk-taxonomy",
       "severity": "medium",
-      "recommendedFollowUp": "Add bounded calibration risk vocabulary for escaping/stringification compatibility and maintainer-approval boundaries only if needed."
+      "status": "previewed-not-mitigated",
+      "recommendedFollowUp": "Use preview risk vocabulary as calibration review metadata only; do not treat it as mitigation proof or final compiler risk policy."
     },
     {
       "id": "gap-anchor-level-context",
@@ -186,9 +189,9 @@
     }
   ],
   "recommendedNextStep": {
-    "id": "risk-vocabulary-scope-decision",
-    "summary": "Decide whether bounded risk vocabulary should be the next v0.3 calibration scope.",
-    "rationale": "Behavior-change policy, external required-check binding, checkout path authority, and anchor-level context now have preview boundaries, while the fixture remains not supported and non-enforcing."
+    "id": "graph-delta-review-binding-scope-decision",
+    "summary": "Decide whether graph-delta review binding should be the next v0.3 calibration scope.",
+    "rationale": "Behavior-change policy, external required-check binding, checkout path authority, anchor-level context, and risk vocabulary now have preview boundaries, while the fixture remains not supported and non-enforcing."
   },
   "promotionEligibility": {
     "status": "promotion-not-eligible",
