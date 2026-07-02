@@ -1233,6 +1233,11 @@ The lifecycle model is now recorded in
 categories, canonical meanings, allowed and forbidden transitions, and current fixture mapping without implementing
 support or promotion.
 
+The next direction decision is now recorded in
+[devview-compliance-checker-mvp-scope.md](devview-compliance-checker-mvp-scope.md). It selects
+`scope-compliance-preview` as the first future compliance-checker MVP axis without implementing checker behavior,
+enforcing scope, rejecting diffs, approving fixtures, or changing equivalence status.
+
 ## Calibration Success Criteria
 
 A future calibration cycle is successful if:
@@ -1264,8 +1269,9 @@ This selection does not:
 
 ## Next Step
 
-The next task should choose whether to select a fourth calibration fixture or start a minimal compliance-checker design
-preview. It should not broaden compiler support, wire additional fixtures into the supported command path, create
-promotion review packets, approve fixtures, claim runtime Evidence is satisfied, implement compliance checking, turn
-candidate checks into required checks, apply graph deltas, turn test Evidence into user acceptance, allow production
-source edits, enforce CI, or change the existing Todo App structure-only status.
+The next task should create a preview-only `scope-compliance-checker` design artifact for one fixture, preferably the
+Todo App runtime Evidence-only calibration fixture. It should not broaden compiler support, wire additional fixtures into
+the supported command path, create promotion review packets, approve fixtures, claim runtime Evidence is satisfied,
+implement compliance checking, inspect or reject diffs, turn candidate checks into required checks, apply graph deltas,
+turn test Evidence into user acceptance, allow production source edits, enforce CI, or change the existing Todo App
+structure-only status.

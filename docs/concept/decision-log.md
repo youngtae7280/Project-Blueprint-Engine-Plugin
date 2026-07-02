@@ -1349,6 +1349,21 @@ candidate checks into required checks, set `equivalenceProven: true`, execute AI
 enforcement or branch protection, accept user work, retire tree-native artifacts, rename PBE compatibility surfaces, or
 make any generated contract authoritative.
 
+DEC-208 does not supersede DEC-097 through DEC-207. It adds
+`docs/concept/devview-compliance-checker-mvp-scope.md` as the planning-only scope decision for the first future DevView
+compliance-checker MVP axis. The selected axis is `scope-compliance-preview`, chosen because it is the smallest
+mechanical checker surface for comparing actual changed files against allowed and forbidden contract scope, and because
+it connects directly to the Todo App runtime Evidence-only calibration fixture where production source edits are
+forbidden or stop-required. The document defines future checker purpose, expected future inputs, conceptual violation
+categories, fixture relevance, status-model dependencies, the non-enforcement boundary, and a recommended future
+preview artifact path:
+`examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json`. This does not
+implement the compliance checker, inspect or reject diffs, enforce scope, wire checker behavior into compiler execution,
+CI, required checks, or branch protection, mark calibration fixtures supported, generate contract candidates, approve
+fixtures, claim runtime Evidence is satisfied, promote static preview artifacts into compiler output, turn candidate
+checks into required checks, set `equivalenceProven: true`, execute AI, apply graph deltas, automate user acceptance,
+retire tree-native artifacts, rename PBE compatibility surfaces, or make any generated contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

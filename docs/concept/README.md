@@ -188,6 +188,7 @@ The first Compiler Boundary MVP and hardened Contract Fixture Validator are reco
 - [contract-compiler-promotion-review-policy.md](contract-compiler-promotion-review-policy.md)
 - [contract-compiler-calibration-fixtures.md](contract-compiler-calibration-fixtures.md)
 - [contract-compiler-eligibility-status-model.md](contract-compiler-eligibility-status-model.md)
+- [devview-compliance-checker-mvp-scope.md](devview-compliance-checker-mvp-scope.md)
 
 It separates compiler-required work from AI-advisory work, adds a machine-readable task registry and Execution Contract
 MVP schema, validates a Todo Search dry-run contract with bucketed registry/schema/contract issues, requires severe risks
@@ -255,6 +256,11 @@ local `bug_fix`, external `behavior-change`, and test-only behavior proof. The s
 canonical status meanings, allowed transitions, and forbidden transitions so `preview-gap-set-complete`,
 `policy-recognized`, `contract-candidate-not-run`, `promotion-not-eligible`, `equivalenceCandidate`, and
 `equivalenceProven` cannot be confused with support, approval, execution authority, or enforcement.
+
+DevView Compliance Checker MVP Scope selects `scope-compliance-preview` as the first future checker axis. It defines the
+purpose, expected future inputs, conceptual violation categories, fixture relevance, and non-enforcement boundary for a
+future checker without implementing diff inspection, scope enforcement, CI required checks, branch protection, fixture
+approval, user acceptance automation, or equivalence proof.
 
 The following readiness artifact is complete at documentation level:
 

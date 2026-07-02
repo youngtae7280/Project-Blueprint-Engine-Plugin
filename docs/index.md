@@ -58,6 +58,9 @@
 - [Contract Compiler Eligibility Status Model](concept/contract-compiler-eligibility-status-model.md) - Conceptual
   lifecycle model for calibration fixture selection, preview completion, compile eligibility, candidate generation,
   promotion review, approval, equivalence, and non-enforcement status.
+- [DevView Compliance Checker MVP Scope](concept/devview-compliance-checker-mvp-scope.md) - Planning-only scope decision
+  selecting `scope-compliance-preview` as the first future checker axis without implementing enforcement, required
+  checks, diff rejection, fixture approval, or equivalence proof.
 - [Graph operation-chain productization](concept/graph-operation-chain-productization.md) - Local native/retrofit
   dogfood package for `graph-source -> instruction pack -> local change -> graph delta -> graph update proposal`.
 - [Candidate C full read-model gate evaluation](concept/candidate-c-full-read-model-gate-evaluation.md) - Evaluation

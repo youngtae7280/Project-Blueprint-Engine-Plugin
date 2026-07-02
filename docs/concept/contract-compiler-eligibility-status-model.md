@@ -284,13 +284,15 @@ Recommended next milestone:
 next-calibration-direction-decision
 ```
 
-The next decision should choose one path:
+The next direction decision is now recorded in
+[devview-compliance-checker-mvp-scope.md](devview-compliance-checker-mvp-scope.md). It selects:
 
-- select a fourth calibration fixture; or
-- start a minimal compliance-checker design preview.
+```text
+scope-compliance-preview
+```
 
-This document does not choose either path. The choice should remain non-binding until a separate decision records the
-scope, boundaries, and non-goals.
+as the first future compliance-checker MVP axis. That scope decision is planning-only and does not implement checker
+behavior, inspect or reject diffs, enforce scope, wire CI, approve fixtures, or prove equivalence.
 
 ## Non-Goals
 
