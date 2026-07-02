@@ -1163,6 +1163,19 @@ enforcement, configure branch protection, set `equivalenceProven: true`, execute
 work, retire tree-native artifacts, widen changeType support, rename PBE compatibility surfaces, or make any generated
 contract authoritative.
 
+DEC-195 does not supersede DEC-097 through DEC-194. It adds a preview-only graph-delta review binding artifact for the
+selected `component/escape-html` behavior-change calibration draft at
+`examples/retrofit/open-source/escape-html/generated/graph-delta-review-binding.preview.json`. The preview binds the
+existing graph delta, graph update proposal, anchors, risk terms, and Evidence into review questions for input coercion,
+Symbol handling, escaping preservation, non-string input preservation, and source-authority boundaries, while reporting
+`graph-delta-review-binding-previewed` and `v0.3-calibration-preview-gap-set-complete`. The second fixture remains
+`not-supported`, `not-eligible-current-command-not-wired`, `contract-candidate-not-run`, `not-approved`, and
+`equivalenceProven: false`; the next recommended step is v0.3 calibration closeout. This does not apply graph deltas,
+mutate graph source, prove semantic equivalence, wire the fixture into `compile-contract --dry-run`, compile a
+candidate, create or approve a promotion packet, run external checks as required checks, create CI enforcement,
+configure branch protection, set `equivalenceProven: true`, execute AI, accept user work, retire tree-native artifacts,
+widen changeType support, rename PBE compatibility surfaces, or make any generated contract authoritative.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

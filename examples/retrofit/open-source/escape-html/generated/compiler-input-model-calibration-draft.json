@@ -68,6 +68,9 @@
     "anchorLevelContextStatus": "anchor-level-context-previewed-approximate",
     "riskVocabularyPreview": "examples/retrofit/open-source/escape-html/generated/risk-vocabulary.preview.json",
     "riskVocabularyStatus": "risk-vocabulary-previewed",
+    "graphDeltaReviewBindingPreview": "examples/retrofit/open-source/escape-html/generated/graph-delta-review-binding.preview.json",
+    "graphDeltaReviewBindingStatus": "graph-delta-review-binding-previewed",
+    "previewGapSetStatus": "v0.3-calibration-preview-gap-set-complete",
     "changeTypeGap": "The source dogfood is behavior-change shaped, but this draft keeps the current bug_fix compiler vocabulary and is recognized only as calibration policy, not arbitrary changeType support.",
     "requiredInputGroups": [
       "humanRequest",
@@ -350,6 +353,7 @@
       "external checkout paths are previewed as calibration-local source context but are not portable compiler support authority",
       "anchor-level code/test context is previewed from static record anchors but is not supported compiler context",
       "behavior-change risk vocabulary is previewed but does not prove mitigation or compiler support",
+      "graph delta review binding is previewed but does not apply graph deltas or prove equivalence",
       "behavior-change shape is recognized as calibration-only policy under current bug_fix vocabulary",
       "graph delta and graph update proposal bindings are review artifacts, not graph apply authority"
     ],

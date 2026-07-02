@@ -125,6 +125,12 @@ The first risk vocabulary preview is:
 examples/retrofit/open-source/escape-html/generated/risk-vocabulary.preview.json
 ```
 
+The first graph-delta review binding preview is:
+
+```text
+examples/retrofit/open-source/escape-html/generated/graph-delta-review-binding.preview.json
+```
+
 This draft is `calibration-draft`, `not-supported`, `not-approved`, and `equivalenceProven: false`. It is not wired into
 `graph read-model compile-contract --dry-run`, does not create a promotion review packet for the second fixture, and is
 not an execution source.
@@ -153,6 +159,7 @@ Known draft gaps:
   authority.
 - Anchor-level code/test context is previewed from static record anchors, not supported compiler context.
 - Behavior-change risk vocabulary is previewed, but it does not prove mitigation or support.
+- Graph-delta review binding is previewed, but it does not apply graph deltas or prove equivalence.
 - The source dogfood is behavior-change shaped and is now recognized as calibration-only policy while still using the
   current `bug_fix` vocabulary; this does not add arbitrary `changeType` support.
 - Graph delta and graph update proposal artifacts are review Evidence, not graph apply authority.
@@ -195,19 +202,19 @@ The observation reports likely extensions for:
 - external checkout path authority, now previewed as calibration-local and non-portable;
 - escaping/stringification and maintainer-approval risk vocabulary, now previewed but not mitigation proof;
 - README/source/test anchor-level context, now previewed approximately but not supported;
-- graph delta and graph update proposal review-output binding.
+- graph delta and graph update proposal review-output binding, now previewed as review-only.
 
 Recommended v0.3 direction:
 
 ```text
-graph-delta-review-binding-scope-decision
+v0.3-calibration-closeout-decision
 ```
 
 External required-check binding and external checkout path authority are now previewed as non-enforcing calibration
 Evidence, anchor-level context is previewed from static record anchors, and risk vocabulary is previewed as review
-metadata. The next step should decide whether graph-delta review binding is the next v0.3 calibration scope. That should
-happen before candidate generation, promotion review, behavior-change support, broad pack schema expansion, or any
-execution/enforcement work.
+metadata. Graph-delta review binding is also previewed as review-only output/reporting metadata. The next step should
+close out the v0.3 escape-html calibration preview gap set before candidate generation, promotion review,
+behavior-change support, broad pack schema expansion, or any execution/enforcement work.
 
 ## External Required-Check Binding Preview
 
@@ -335,6 +342,40 @@ The risk vocabulary preview is not:
 - CI enforcement;
 - behavior-change support.
 
+## Graph-Delta Review Binding Preview
+
+The graph-delta review binding preview describes how the Symbol stringification behavior-change should be reviewed as a
+graph delta. It binds the existing graph delta and graph update proposal artifacts to review questions without applying
+them.
+
+The expected review shape focuses on:
+
+- input coercion behavior change;
+- Symbol input handling;
+- escaping correctness preservation;
+- existing non-string input behavior relationship;
+- test evidence relationship;
+- source-authority boundary.
+
+The preview status is:
+
+```text
+graph-delta-review-binding-previewed
+```
+
+This means the fixture now has review metadata connecting changed files, graph nodes, graph edges, behavior anchors,
+risk terms, and Evidence. It does not apply graph deltas, mutate graph source, prove semantic equivalence, or make the
+fixture supported.
+
+The graph-delta review binding preview is not:
+
+- graph delta apply;
+- graph source mutation;
+- semantic equivalence proof;
+- candidate generation;
+- promotion approval;
+- execution authority.
+
 ## v0.3 Scope Decision
 
 The first v0.3 scope is:
@@ -390,13 +431,17 @@ Follow-up output after v0.3 calibration previews:
 - `anchor-level-context.preview.json` records approximate source/test behavior anchors for Symbol stringification;
 - `risk-vocabulary.preview.json` records behavior-change risk terms and maps them to anchors and Evidence without
   proving mitigation;
+- `graph-delta-review-binding.preview.json` records review-only graph delta questions and keeps graph apply out of
+  scope;
 - the observation reports `external-required-check-binding-awaiting-authoritative-checkout` and
   `external-checkout-path-authority-previewed-calibration-local`;
 - the observation reports `anchor-level-context-previewed-approximate`;
 - the observation reports `risk-vocabulary-previewed`;
+- the observation reports `graph-delta-review-binding-previewed`;
+- the observation reports `v0.3-calibration-preview-gap-set-complete`;
 - the fixture remains `not-supported`, `not-eligible-current-command-not-wired`, `contract-candidate-not-run`,
   `not-approved`, and `equivalenceProven: false`;
-- graph-delta review binding remains the next future scope.
+- no observed v0.3 calibration preview gap remains hidden as support.
 
 Non-goals for the first v0.3 scope:
 
@@ -405,7 +450,7 @@ Non-goals for the first v0.3 scope:
 - no supported external checkout path authority or execution permission;
 - no supported anchor-level context resolver or edit permission;
 - no final compiler risk policy or mitigation proof;
-- no graph-delta review binding;
+- no graph delta apply or semantic equivalence proof;
 - no second fixture support or approval;
 - no `equivalenceProven: true`;
 - no executor automation, graph delta apply, CI enforcement, required checks, branch protection, user acceptance
@@ -443,7 +488,8 @@ This task does not implement the second fixture. The first calibration run shoul
 - known risks now have preview vocabulary, but still need evidence-backed mitigation review before support can be
   considered;
 - forbidden scope and stop condition sources may need external-retrofit boundary vocabulary;
-- graph delta and graph update proposal artifacts may need output/reporting bindings distinct from Todo Search.
+- graph delta and graph update proposal artifacts now have review-only bindings, but still need a human closeout
+  decision before any support work can be considered.
 
 These gaps should be reported as calibration findings, not hidden as support.
 
@@ -492,7 +538,7 @@ This selection does not:
 
 ## Next Step
 
-The next implementation task should decide whether graph-delta review binding is the next narrow v0.3 calibration scope.
-It should not broaden compiler support, wire the second fixture into the supported command path, create a promotion
-review packet, approve the fixture, turn previewed external checks into CI enforcement, turn previewed risks into
-mitigation proof, or turn the calibration-local checkout path into execution authority.
+The next implementation task should close out the v0.3 escape-html calibration preview gap set. It should not broaden
+compiler support, wire the second fixture into the supported command path, create a promotion review packet, approve the
+fixture, apply graph deltas, turn previewed external checks into CI enforcement, turn previewed risks into mitigation
+proof, or turn the calibration-local checkout path into execution authority.

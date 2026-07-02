@@ -16,6 +16,9 @@
   "anchorLevelContextStatus": "anchor-level-context-previewed-approximate",
   "riskVocabularyPreviewPath": "examples/retrofit/open-source/escape-html/generated/risk-vocabulary.preview.json",
   "riskVocabularyStatus": "risk-vocabulary-previewed",
+  "graphDeltaReviewBindingPreviewPath": "examples/retrofit/open-source/escape-html/generated/graph-delta-review-binding.preview.json",
+  "graphDeltaReviewBindingStatus": "graph-delta-review-binding-previewed",
+  "previewGapSetStatus": "v0.3-calibration-preview-gap-set-complete",
   "externalFixtureContext": {
     "projectName": "component/escape-html",
     "upstream": "https://github.com/component/escape-html",
@@ -108,11 +111,11 @@
       "reason": "These bindings are not CI gates, GitHub required checks, branch protection rules, or promotion approval."
     }
   ],
-  "remainingCalibrationGaps": ["graph-delta review binding"],
+  "remainingCalibrationGaps": [],
   "recommendedNextStep": {
-    "id": "graph-delta-review-binding-scope-decision",
-    "summary": "Decide whether graph-delta review binding should be the next v0.3 calibration scope.",
-    "rationale": "External required-check binding, checkout path authority, anchor-level context, and risk vocabulary now have preview boundaries, while support remains blocked and non-enforcing."
+    "id": "v0.3-calibration-closeout-decision",
+    "summary": "Close out the v0.3 escape-html calibration preview gap set before any support implementation.",
+    "rationale": "External required-check binding, checkout path authority, anchor-level context, risk vocabulary, and graph-delta review binding now have preview boundaries, while support remains blocked and non-enforcing."
   },
   "nonEnforcementBoundary": "This preview maps observed external check evidence to calibration draft placeholders only. It does not mark the second fixture as supported, wire it into compile-contract --dry-run, compile a candidate, create or approve a promotion packet, create CI enforcement, create GitHub required checks, configure branch protection, apply graph deltas, grant execution authority, automate user acceptance, or retire tree-native artifacts."
 }
