@@ -329,6 +329,12 @@ summarizes readiness without implementing hook scripts, changing trust/config, b
 guided/strict behavior, mutating graph-source, applying graph deltas, approving work, satisfying runtime Evidence,
 proving equivalence, or enforcing scope/CI.
 
+The advisory `UserPromptSubmit` additionalContext preview command is exposed as
+`graph read-model prepare-user-prompt-context --frontend-chain <frontendChainReport> --hook-health <healthReportOrBoundary> --instruction-pack <instructionPackJson> --instruction-markdown <instructionPackMarkdown> --json`.
+It wraps the current frontend chain, Hook Gateway health state, and Instruction Pack into compact context for future
+hook injection while still not installing hooks, blocking Codex, approving work, satisfying Evidence, proving
+equivalence, or enforcing scope/CI.
+
 The runtime smoke lane boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-runtime-smoke-lane-boundary.runtime-evidence-only.preview.json`. It
 keeps the all-steps smoke as an advisory snapshot while reporting lane totals for analyzer preflight, core critical

@@ -13,6 +13,7 @@ import { reportFrontendChainFile } from '../core/frontend-chain-report.js'
 import { generateProposalOnlyGraphDeltaPreview } from '../core/graph-delta-proposal-generator.js'
 import { reviseRequestIrCandidateFile } from '../core/request-ir-candidate-reviser.js'
 import { generateSelectedGraphSliceFile } from '../core/selected-graph-slice.js'
+import { prepareUserPromptContextFile } from '../core/user-prompt-context.js'
 import { validateRequestIrGraphAwareFile } from '../core/request-ir-graph-aware-validator.js'
 import { validateRequestIrCandidateFile } from '../core/request-ir-candidate-validator.js'
 import { buildGraphExecutionContractReport } from '../core/graph-execution-contract.js'
@@ -1584,6 +1585,83 @@ export async function graphReadModelReportFrontendChainCommand(context: CommandC
           message,
           suggestedFix:
             'Provide a readable natural-language intake boundary and dedicated manifest/report output paths.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelPrepareUserPromptContextCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.frontendChain) {
+    return invalidCommand('graph read-model prepare-user-prompt-context requires --frontend-chain <file>.')
+  }
+  if (!context.options.hookHealth) {
+    return invalidCommand('graph read-model prepare-user-prompt-context requires --hook-health <file>.')
+  }
+  if (!context.options.instructionPack) {
+    return invalidCommand('graph read-model prepare-user-prompt-context requires --instruction-pack <file>.')
+  }
+  if (!context.options.instructionMarkdown) {
+    return invalidCommand('graph read-model prepare-user-prompt-context requires --instruction-markdown <file>.')
+  }
+
+  try {
+    const result = await prepareUserPromptContextFile(context.options.root, {
+      frontendChain: context.options.frontendChain,
+      hookHealth: context.options.hookHealth,
+      instructionPack: context.options.instructionPack,
+      instructionMarkdown: context.options.instructionMarkdown,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    const blocked = result.context.status !== 'user-prompt-submit-context-preview-generated'
+    const errorFindings = result.context.validationFindings.filter((finding) => finding.severity === 'error')
+
+    return {
+      ok: !blocked,
+      command: 'graph read-model prepare-user-prompt-context',
+      exitCode: blocked ? ExitCode.ValidationFailed : ExitCode.Success,
+      message: blocked
+        ? 'UserPromptSubmit additionalContext preview blocked by unsafe or mismatched inputs.'
+        : 'UserPromptSubmit additionalContext preview generated without hook installation or Codex execution.',
+      issues: blocked
+        ? (errorFindings.length > 0 ? errorFindings : result.context.validationFindings).map((finding) =>
+            issue({
+              validator: 'UserPromptSubmitContextPreviewGenerator',
+              code: finding.code,
+              severity: finding.severity,
+              message: finding.message,
+              reason: finding.field ? `Field: ${finding.field}` : undefined,
+              suggestedFix:
+                finding.suggestedFix ??
+                'Regenerate frontend chain, Hook Gateway health, and Instruction Pack artifacts before preparing context.',
+            }),
+          )
+        : [],
+      data: {
+        ...result.context,
+        ...(result.outputPath ? { outputPath: result.outputPath } : {}),
+        ...(result.markdownReport ? { markdownReport: result.markdownReport } : {}),
+        next: blocked
+          ? 'Repair context inputs. This command did not install hooks, trigger Codex execution, mutate graph-source, approve work, satisfy Evidence, prove equivalence, or enforce scope.'
+          : 'Use this Markdown as advisory additionalContext only. This command did not install hooks, trigger Codex execution, mutate graph-source, approve work, satisfy Evidence, prove equivalence, or enforce scope.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model prepare-user-prompt-context',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'UserPromptSubmit additionalContext preview could not run.',
+      issues: [
+        issue({
+          validator: 'UserPromptSubmitContextPreviewGenerator',
+          code: 'USER_PROMPT_CONTEXT_PREVIEW_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide readable frontend chain, Hook Gateway health, Instruction Pack JSON/Markdown, and dedicated preview output paths.',
         }),
       ],
     }

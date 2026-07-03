@@ -137,6 +137,9 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     answers: undefined as string | undefined,
     boundary: undefined as string | undefined,
     intake: undefined as string | undefined,
+    frontendChain: undefined as string | undefined,
+    hookHealth: undefined as string | undefined,
+    instructionMarkdown: undefined as string | undefined,
     schema: undefined as string | undefined,
     chainCommand: undefined as string | undefined,
     base: undefined as string | undefined,
@@ -453,6 +456,27 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--intake requires a file path.' }
       }
       options.intake = value
+      index += 1
+    } else if (arg === '--frontend-chain') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--frontend-chain requires a file path.' }
+      }
+      options.frontendChain = value
+      index += 1
+    } else if (arg === '--hook-health') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--hook-health requires a file path.' }
+      }
+      options.hookHealth = value
+      index += 1
+    } else if (arg === '--instruction-markdown') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--instruction-markdown requires a file path.' }
+      }
+      options.instructionMarkdown = value
       index += 1
     } else if (arg === '--schema') {
       const value = argv[index + 1]

@@ -893,6 +893,36 @@ node dist/cli/index.js graph read-model report-frontend-chain `
   --json
 ```
 
+### `pbe graph read-model prepare-user-prompt-context`
+
+- Purpose: Read a generated frontend chain report, Hook Gateway health report or boundary, Instruction Pack JSON, and
+  Instruction Pack Markdown, then emit an advisory `UserPromptSubmit` additionalContext preview.
+- Typical state before running: After the frontend chain has reached
+  `instruction-pack-preview-generated-no-codex-execution` and the Hook Gateway health boundary/report remains
+  non-enforcing with strict/guided blocking disabled.
+- Options: `--frontend-chain <file>`, `--hook-health <file>`, `--instruction-pack <file>`, and
+  `--instruction-markdown <file>` are required. `--output <file>` may write JSON and `--markdown <file>` may write
+  compact Markdown for future hook injection.
+- What it checks: source artifact roles/statuses, terminal frontend stage, generated instruction pack status,
+  strict/guided/enforcement/approval/Evidence/equivalence safety flags, and output authority before any writes.
+- Success result: JSON with `artifactRole: devview-user-prompt-submit-context-preview`,
+  `additionalContextInjectionReady: true`, `devviewMode: advisory`, `strictModeEnabled: false`,
+  `actualHookScriptsImplemented: false`, and all execution/apply/approval/Evidence/equivalence/enforcement flags false.
+- Non-goals: This command does not install hook scripts, mutate trust state, trigger Codex execution, call an LLM,
+  mutate graph-source, apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove
+  equivalence, enforce scope, or configure CI.
+
+```powershell
+node dist/cli/index.js graph read-model prepare-user-prompt-context `
+  --frontend-chain examples/valid/todo-app-pbe-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json `
+  --hook-health examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json `
+  --instruction-pack examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json `
+  --instruction-markdown examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md `
+  --output .tmp/review-user-prompt-context.json `
+  --markdown .tmp/review-user-prompt-context.md `
+  --json
+```
+
 ### `pbe graph operation apply-proposal`
 
 - Purpose: Preview or apply a generated graph update proposal to its graph-source.

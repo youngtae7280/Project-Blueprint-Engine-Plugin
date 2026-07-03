@@ -44,11 +44,14 @@
     },
     {
       "runtimeLane": "activation-readiness-lane",
-      "laneRole": "report-only hook gateway readiness checks",
+      "laneRole": "report-only hook gateway readiness and advisory context preparation",
       "perRequestCriticalPath": false,
       "budgetTargetMs": null,
       "budgetEnforced": false,
-      "commands": ["graph read-model report-hook-gateway-health --boundary <healthBoundaryPath> --json"],
+      "commands": [
+        "graph read-model report-hook-gateway-health --boundary <healthBoundaryPath> --json",
+        "graph read-model prepare-user-prompt-context --frontend-chain <frontendChainReport> --hook-health <healthReportOrBoundary> --instruction-pack <instructionPackJson> --instruction-markdown <instructionPackMarkdown> --json"
+      ],
       "classification": "activation readiness reporting only; not hook script implementation or blocking behavior"
     },
     {

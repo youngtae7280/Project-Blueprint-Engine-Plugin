@@ -196,6 +196,8 @@ Commands:
                        Report Hook Gateway health boundary readiness without installing hooks or enforcement
   graph read-model report-frontend-chain
                        Report the DevView frontend artifact chain from intake through Instruction Pack preview
+  graph read-model prepare-user-prompt-context
+                       Prepare advisory UserPromptSubmit additionalContext preview without installing hooks or execution
   graph read-model report-health
                        Summarize local non-enforcing Graph-source transition health
   graph read-model observe-candidates
@@ -240,12 +242,12 @@ Options:
                        Graph source artifact for graph read-model projection, retrofit plan, project-intent, or report-intent.
   --record <id>        Graph source record id for graph operation generate-pack.
   --instruction-pack <file>
-                       Graph instruction pack file for graph operation capture-delta.
+                       Graph instruction pack file for graph operation capture-delta or UserPromptSubmit context preview.
   --graph-delta <file> Graph delta file for graph operation propose-update.
   --target-repo <path> Target git repository path for graph operation capture-delta.
   --manual <file>      Manual parity artifact for graph read-model comparison.
-  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, generate-ai-request-analyzer-pack, analyze-request, generate-clarification-interview-pack, revise-request-ir-candidate, validate-request-ir, validate-request-ir-graph, plan-traversal, select-slice, generate-contract-input, generate-instruction-pack, report-hook-gateway-health, or report-frontend-chain.
-  --markdown <file>    Optional Markdown summary output for graph read-model report-health, check-scope, review-graph-delta, generate-ai-request-analyzer-pack, generate-clarification-interview-pack, generate-instruction-pack, or report-frontend-chain.
+  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, generate-ai-request-analyzer-pack, analyze-request, generate-clarification-interview-pack, revise-request-ir-candidate, validate-request-ir, validate-request-ir-graph, plan-traversal, select-slice, generate-contract-input, generate-instruction-pack, report-hook-gateway-health, report-frontend-chain, or prepare-user-prompt-context.
+  --markdown <file>    Optional Markdown summary output for graph read-model report-health, check-scope, review-graph-delta, generate-ai-request-analyzer-pack, generate-clarification-interview-pack, generate-instruction-pack, report-frontend-chain, or prepare-user-prompt-context.
   --proposal <file>    Graph update proposal file for graph operation apply-proposal or graph read-model review-graph-delta.
   --candidate <file>   Request IR Candidate file for graph read-model validate-request-ir or generate-clarification-interview-pack.
   --schema-validation <file>
@@ -267,6 +269,11 @@ Options:
   --answers <file>     Clarification answers file for graph read-model revise-request-ir-candidate.
   --boundary <file>    Boundary file for graph read-model report-hook-gateway-health, generate-ai-request-analyzer-pack, or generate-clarification-interview-pack.
   --intake <file>      Natural-language request intake boundary file for graph read-model report-frontend-chain.
+  --frontend-chain <file>
+                       Frontend chain report file for graph read-model prepare-user-prompt-context.
+  --hook-health <file> Hook Gateway health report or boundary file for graph read-model prepare-user-prompt-context.
+  --instruction-markdown <file>
+                       Instruction Pack Markdown file for graph read-model prepare-user-prompt-context.
   --schema <file>      Request IR Candidate schema file for graph read-model generate-ai-request-analyzer-pack.
   --chain-command <name>
                        Wrapped graph operation script command. Defaults to operation-chain.

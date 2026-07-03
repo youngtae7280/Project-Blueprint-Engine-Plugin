@@ -20,6 +20,8 @@ const smokeContractCompilerInputPath = '.tmp/devview-runtime-timing-smoke/contra
 const smokeInstructionPackPath = '.tmp/devview-runtime-timing-smoke/instruction-pack.json'
 const smokeInstructionPackMarkdownPath = '.tmp/devview-runtime-timing-smoke/instruction-pack.md'
 const smokeHookGatewayHealthReportPath = '.tmp/devview-runtime-timing-smoke/hook-gateway-health-report.json'
+const smokeUserPromptContextPath = '.tmp/devview-runtime-timing-smoke/user-prompt-context.json'
+const smokeUserPromptContextMarkdownPath = '.tmp/devview-runtime-timing-smoke/user-prompt-context.md'
 const graphDeltaCompatibleSourcePath =
   'examples/valid/todo-app-pbe-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json'
 const requestIrCandidatePath =
@@ -30,6 +32,8 @@ const requestIrCandidateSchemaPath =
   'examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json'
 const hookGatewayHealthBoundaryPath =
   'examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json'
+const frontendChainReportPath =
+  'examples/valid/todo-app-pbe-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json'
 const runtimeSmokeLaneBoundaryPath =
   'examples/valid/todo-app-pbe-run/generated/devview-runtime-smoke-lane-boundary.runtime-evidence-only.preview.json'
 const runtimeBudgetTargetMs = 5000
@@ -53,7 +57,7 @@ const runtimeLaneDefinitions = [
   },
   {
     runtimeLane: 'activation-readiness-lane',
-    laneRole: 'report-only hook gateway readiness checks',
+    laneRole: 'report-only hook gateway readiness and advisory context preparation',
     perRequestCriticalPath: false,
     budgetTargetMs: null,
     budgetEnforced: false,
@@ -199,6 +203,30 @@ const measuredSteps = [
       hookGatewayHealthBoundaryPath,
       '--output',
       smokeHookGatewayHealthReportPath,
+      '--json',
+    ],
+    includedInRuntimeBudget: true,
+    runtimeLane: 'activation-readiness-lane',
+  },
+  {
+    stepName: 'user-prompt-submit-context-preview',
+    command: `node dist/cli/index.js graph read-model prepare-user-prompt-context --frontend-chain ${frontendChainReportPath} --hook-health ${smokeHookGatewayHealthReportPath} --instruction-pack ${smokeInstructionPackPath} --instruction-markdown ${smokeInstructionPackMarkdownPath} --output ${smokeUserPromptContextPath} --markdown ${smokeUserPromptContextMarkdownPath} --json`,
+    args: [
+      'graph',
+      'read-model',
+      'prepare-user-prompt-context',
+      '--frontend-chain',
+      frontendChainReportPath,
+      '--hook-health',
+      smokeHookGatewayHealthReportPath,
+      '--instruction-pack',
+      smokeInstructionPackPath,
+      '--instruction-markdown',
+      smokeInstructionPackMarkdownPath,
+      '--output',
+      smokeUserPromptContextPath,
+      '--markdown',
+      smokeUserPromptContextMarkdownPath,
       '--json',
     ],
     includedInRuntimeBudget: true,

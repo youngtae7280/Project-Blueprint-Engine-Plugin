@@ -60,6 +60,7 @@ It runs:
 - frontend deterministic generation through traversal plan, selected graph slice, Contract Compiler Input, and
   Instruction Pack preview;
 - `node dist/cli/index.js graph read-model report-hook-gateway-health --boundary examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --output .tmp/devview-runtime-timing-smoke/hook-gateway-health-report.json --json`;
+- `node dist/cli/index.js graph read-model prepare-user-prompt-context --frontend-chain examples/valid/todo-app-pbe-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json --hook-health .tmp/devview-runtime-timing-smoke/hook-gateway-health-report.json --instruction-pack .tmp/devview-runtime-timing-smoke/instruction-pack.json --instruction-markdown .tmp/devview-runtime-timing-smoke/instruction-pack.md --output .tmp/devview-runtime-timing-smoke/user-prompt-context.json --markdown .tmp/devview-runtime-timing-smoke/user-prompt-context.md --json`;
 - `node dist/cli/index.js graph read-model report-compiler-input --json`;
 - `node dist/cli/index.js graph read-model compile-contract --dry-run --json`;
 - `node dist/cli/index.js graph read-model collect-changed-files --base HEAD~1 --head HEAD --output .tmp/devview-runtime-timing-smoke/git-derived-changed-file-collection.json --json`.
@@ -124,7 +125,8 @@ Current lanes:
 - `core-critical-lane`: the deterministic request-to-instruction-pack frontend path after a Request IR Candidate exists:
   `validate-request-ir`, `validate-request-ir-graph`, `plan-traversal`, `select-slice`, `generate-contract-input`, and
   `generate-instruction-pack`.
-- `activation-readiness-lane`: report-only hook gateway readiness checks, currently `report-hook-gateway-health`.
+- `activation-readiness-lane`: report-only hook gateway readiness checks and advisory context preparation, currently
+  `report-hook-gateway-health` and `prepare-user-prompt-context`.
 - `advisory-backend-lane`: advisory backend, post-check, graph delta proposal, and review reporting commands.
 
 New report-only commands must not automatically enter the `core-critical-lane`. They may be included in the all-steps

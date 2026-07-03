@@ -2271,3 +2271,20 @@ reports artifact roles, statuses, paths, terminal stage, and authority boundarie
 Instruction Pack, not runtime Evidence, and not approval. It does not call an LLM, generate Request IR, implement hook
 sessions, trigger Codex execution, mutate graph-source, apply graph deltas, prove equivalence, enforce scope, or
 configure CI.
+
+The Hook Gateway `UserPromptSubmit` additionalContext preview for the same calibration is recorded in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.md
+```
+
+It is generated with:
+
+```text
+graph read-model prepare-user-prompt-context --frontend-chain examples/valid/todo-app-pbe-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json --hook-health examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --instruction-pack examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json --instruction-markdown examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md --json
+```
+
+The preview is advisory additionalContext only. It does not install hooks, trigger Codex execution, mutate graph-source,
+apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or
+configure CI.

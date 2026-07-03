@@ -169,6 +169,13 @@
       "command": "graph read-model generate-instruction-pack --contract-input <contractInputPath> --json",
       "path": "examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json",
       "markdownPath": "examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md"
+    },
+    {
+      "name": "user-prompt-submit-context-preview",
+      "status": "implemented-preview-command",
+      "command": "graph read-model prepare-user-prompt-context --frontend-chain <frontendChainReport> --hook-health <healthReportOrBoundary> --instruction-pack <instructionPackJson> --instruction-markdown <instructionPackMarkdown> --json",
+      "path": "examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json",
+      "markdownPath": "examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.md"
     }
   ],
   "healthResultPreviewShape": {
@@ -206,5 +213,8 @@
     "enforce scope or CI",
     "change branch protection"
   ],
-  "nonExecutionBoundary": "This artifact previews the DevView Hook Gateway health/readiness boundary only. It does not implement hook scripts, install hooks, trust commands, block Codex execution, enable strict or guided enforcement, call an LLM, make network calls, mutate graph-source, apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI."
+  "nonExecutionBoundary": "This artifact previews the DevView Hook Gateway health/readiness boundary only. It does not implement hook scripts, install hooks, trust commands, block Codex execution, enable strict or guided enforcement, call an LLM, make network calls, mutate graph-source, apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.",
+  "userPromptSubmitContextPreviewCommandImplemented": true,
+  "userPromptSubmitContextPreviewArtifact": "examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json",
+  "userPromptSubmitContextPreviewMarkdownArtifact": "examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.md"
 }

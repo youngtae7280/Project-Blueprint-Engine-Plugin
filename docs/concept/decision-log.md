@@ -2558,3 +2558,44 @@ run graph traversal, generate selected graph slices, generate Contract Compiler 
 trigger Codex execution, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy
 runtime Evidence, prove equivalence, enforce scope, introduce CI required checks, change branch protection, or automate
 user acceptance.
+
+## DEC-259 Generate UserPromptSubmit Context Preview
+
+DEC-259 does not supersede DEC-097 through DEC-258. It implements a deterministic advisory context preview for the future
+DevView Hook Gateway `UserPromptSubmit` event without implementing actual hook scripts or blocking behavior.
+
+The command is exposed through:
+
+```text
+graph read-model prepare-user-prompt-context --frontend-chain <frontendChainReport> --hook-health <healthReportOrBoundary> --instruction-pack <instructionPackJson> --instruction-markdown <instructionPackMarkdown> --json
+```
+
+The implementation is recorded in:
+
+```text
+cli/src/core/user-prompt-context.ts
+```
+
+The Todo App calibration outputs are:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.md
+```
+
+The preview reads the generated frontend chain report, Hook Gateway health report or boundary, Instruction Pack JSON,
+and Instruction Pack Markdown. It emits `artifactRole: devview-user-prompt-submit-context-preview`,
+`additionalContextInjectionReady: true`, `devviewMode: advisory`, `strictModeEnabled: false`,
+`guidedEnforcementEnabled: false`, and `actualHookScriptsImplemented: false`. Its Markdown is compact additionalContext
+for Codex: DevView status, terminal frontend stage, allowed/forbidden scope, required evidence, output requirements,
+stop conditions, known risks, and the validation chain that produced the Instruction Pack preview.
+
+The command blocks wrong roles/statuses, unsafe strict/guided/enforcement/approval/Evidence/equivalence signals, and
+unsafe output paths before writing. `--output` and `--markdown` cannot overwrite the frontend chain, Hook Gateway health
+artifact, Instruction Pack JSON/Markdown, linked source artifacts, graph/read-model authority, evidence paths, or
+source-authority-shaped JSON.
+
+This decision does not install hook scripts, mutate install/trust state, block Codex execution, call an LLM/API, make
+network calls, run graph traversal, mutate graph-source, apply graph deltas, approve graph updates, record human
+decisions, satisfy runtime Evidence, prove equivalence, enforce scope, introduce CI required checks, change branch
+protection, or automate user acceptance.

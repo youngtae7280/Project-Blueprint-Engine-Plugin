@@ -98,6 +98,9 @@ export interface CliOptions {
   answers?: string
   boundary?: string
   intake?: string
+  frontendChain?: string
+  hookHealth?: string
+  instructionMarkdown?: string
   schema?: string
   chainCommand?: string
   base?: string

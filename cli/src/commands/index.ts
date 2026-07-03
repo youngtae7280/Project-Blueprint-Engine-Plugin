@@ -27,6 +27,7 @@ import {
   graphReadModelGenerateInstructionPackCommand,
   graphReadModelObserveCandidatesCommand,
   graphReadModelPlanTraversalCommand,
+  graphReadModelPrepareUserPromptContextCommand,
   graphReadModelProposeGraphDeltaCommand,
   graphReadModelProjectCommand,
   graphReadModelProjectIntentCommand,
@@ -278,6 +279,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'report-frontend-chain') {
     return graphReadModelReportFrontendChainCommand(context)
+  }
+  if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'prepare-user-prompt-context') {
+    return graphReadModelPrepareUserPromptContextCommand(context)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'report-health') {
     return graphReadModelReportHealthCommand(context)
