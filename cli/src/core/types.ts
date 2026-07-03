@@ -95,6 +95,8 @@ export interface CliOptions {
   selectedSlice?: string
   contractInput?: string
   scaffold?: string
+  scriptScaffold?: string
+  scriptTemplates?: string
   clarificationPack?: string
   answers?: string
   boundary?: string

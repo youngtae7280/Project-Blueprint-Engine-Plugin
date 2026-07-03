@@ -8,6 +8,7 @@ import { generateGraphDeltaHumanReviewPacket } from '../core/graph-delta-human-r
 import { generateGraphTraversalPlanFile } from '../core/graph-traversal-plan.js'
 import { generateContractCompilerInputFile } from '../core/contract-input-generator.js'
 import { reportHookGatewayHealthFile } from '../core/hook-gateway-health-report.js'
+import { generateHookSessionManifestFile } from '../core/hook-session-manifest.js'
 import { generateHookScriptScaffoldFile } from '../core/hook-script-scaffold.js'
 import { generateHookScriptTemplatePreviewFile } from '../core/hook-script-template-preview.js'
 import { generateInstructionPackFile } from '../core/instruction-pack-generator.js'
@@ -1805,6 +1806,83 @@ export async function graphReadModelGenerateHookScriptTemplatesCommand(
           severity: 'error',
           message,
           suggestedFix: 'Provide a readable Hook script scaffold and dedicated preview output paths.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelGenerateHookSessionManifestCommand(
+  context: CommandContext,
+): Promise<CommandResult> {
+  if (!context.options.hookHealth) {
+    return invalidCommand('graph read-model generate-hook-session-manifest requires --hook-health <file>.')
+  }
+  if (!context.options.userPromptContext) {
+    return invalidCommand('graph read-model generate-hook-session-manifest requires --user-prompt-context <file>.')
+  }
+  if (!context.options.scriptScaffold) {
+    return invalidCommand('graph read-model generate-hook-session-manifest requires --script-scaffold <file>.')
+  }
+  if (!context.options.scriptTemplates) {
+    return invalidCommand('graph read-model generate-hook-session-manifest requires --script-templates <file>.')
+  }
+
+  try {
+    const result = await generateHookSessionManifestFile(context.options.root, {
+      hookHealth: context.options.hookHealth,
+      userPromptContext: context.options.userPromptContext,
+      scriptScaffold: context.options.scriptScaffold,
+      scriptTemplates: context.options.scriptTemplates,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    const blocked = result.manifest.status !== 'devview-hook-session-manifest-preview-generated'
+    const errorFindings = result.manifest.validationFindings.filter((finding) => finding.severity === 'error')
+
+    return {
+      ok: !blocked,
+      command: 'graph read-model generate-hook-session-manifest',
+      exitCode: blocked ? ExitCode.ValidationFailed : ExitCode.Success,
+      message: blocked
+        ? 'Hook session manifest preview blocked by unsafe or mismatched inputs.'
+        : 'Hook session manifest preview generated without starting or activating hooks.',
+      issues: blocked
+        ? (errorFindings.length > 0 ? errorFindings : result.manifest.validationFindings).map((finding) =>
+            issue({
+              validator: 'HookSessionManifestPreviewGenerator',
+              code: finding.code,
+              severity: finding.severity,
+              message: finding.message,
+              reason: finding.field ? `Field: ${finding.field}` : undefined,
+              suggestedFix: finding.suggestedFix ?? 'Regenerate Hook Gateway health/context/script preview artifacts.',
+            }),
+          )
+        : [],
+      data: {
+        ...result.manifest,
+        ...(result.outputPath ? { outputPath: result.outputPath } : {}),
+        ...(result.markdownReport ? { markdownReport: result.markdownReport } : {}),
+        next: blocked
+          ? 'Repair manifest inputs. This command did not start hooks, install hooks, configure trust, trigger Codex execution, mutate graph-source, approve work, satisfy Evidence, prove equivalence, or enforce scope.'
+          : 'Review this manifest as preview-only session context. This command did not start hooks, install hooks, configure trust, trigger Codex execution, mutate graph-source, approve work, satisfy Evidence, prove equivalence, or enforce scope.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model generate-hook-session-manifest',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Hook session manifest preview could not run.',
+      issues: [
+        issue({
+          validator: 'HookSessionManifestPreviewGenerator',
+          code: 'HOOK_SESSION_MANIFEST_PREVIEW_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide readable Hook Gateway health/context/script preview artifacts and dedicated preview output paths.',
         }),
       ],
     }

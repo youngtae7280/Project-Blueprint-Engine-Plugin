@@ -134,6 +134,8 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     selectedSlice: undefined as string | undefined,
     contractInput: undefined as string | undefined,
     scaffold: undefined as string | undefined,
+    scriptScaffold: undefined as string | undefined,
+    scriptTemplates: undefined as string | undefined,
     clarificationPack: undefined as string | undefined,
     answers: undefined as string | undefined,
     boundary: undefined as string | undefined,
@@ -438,6 +440,20 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--scaffold requires a file path.' }
       }
       options.scaffold = value
+      index += 1
+    } else if (arg === '--script-scaffold') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--script-scaffold requires a file path.' }
+      }
+      options.scriptScaffold = value
+      index += 1
+    } else if (arg === '--script-templates') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--script-templates requires a file path.' }
+      }
+      options.scriptTemplates = value
       index += 1
     } else if (arg === '--clarification-pack') {
       const value = argv[index + 1]

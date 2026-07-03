@@ -287,5 +287,8 @@
   "hookScriptScaffoldPreviewGenerated": true,
   "hookScriptsInstalled": false,
   "firstCalibrationHookScriptTemplatePreviewArtifact": "examples/valid/todo-app-pbe-run/generated/devview-hook-script-template.add-todo-runtime-evidence-only.preview.json",
-  "hookScriptTemplatePreviewGenerated": true
+  "hookScriptTemplatePreviewGenerated": true,
+  "firstCalibrationHookSessionManifestPreviewArtifact": "examples/valid/todo-app-pbe-run/generated/devview-hook-session-manifest.add-todo-runtime-evidence-only.preview.json",
+  "hookSessionManifestPreviewGenerated": true,
+  "hookGatewayActive": "not-checked-preview-only"
 }

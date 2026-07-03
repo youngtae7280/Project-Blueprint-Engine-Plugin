@@ -54,7 +54,10 @@
         "graph read-model generate-hook-script-scaffold --boundary <gatewayBoundary> --hook-health <healthBoundary> --install-trust <installTrustBoundary> --user-prompt-context <contextPreview> --json",
         "graph read-model generate-hook-script-templates --scaffold <hookScriptScaffold> --json"
       ],
-      "classification": "activation readiness reporting only; not hook script implementation or blocking behavior"
+      "classification": "activation readiness reporting only; not hook script implementation or blocking behavior",
+      "notMeasuredYet": [
+        "graph read-model generate-hook-session-manifest --hook-health <healthReportOrBoundary> --user-prompt-context <contextPreview> --script-scaffold <scaffoldPreview> --script-templates <templatePreview> --json"
+      ]
     },
     {
       "runtimeLane": "advisory-backend-lane",

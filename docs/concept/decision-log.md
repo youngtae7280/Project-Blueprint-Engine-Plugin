@@ -2691,3 +2691,35 @@ This decision does not write active hook files, install hooks, trust repositorie
 hooks, block Codex execution, call an LLM/API, make network calls, run validation or traversal, mutate graph-source,
 apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce
 scope, introduce CI required checks, change branch protection, or automate user acceptance.
+
+## DEC-263 Generate Hook Session Manifest Preview
+
+DEC-263 does not supersede DEC-097 through DEC-262. It adds a deterministic preview-only session manifest for the Hook
+Gateway activation path without starting or activating hooks.
+
+The command is:
+
+```text
+graph read-model generate-hook-session-manifest --hook-health <healthReportOrBoundary> --user-prompt-context <contextPreview> --script-scaffold <scaffoldPreview> --script-templates <templatePreview> --json
+```
+
+The Todo App calibration artifacts are:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-hook-session-manifest.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-hook-session-manifest.add-todo-runtime-evidence-only.preview.md
+```
+
+The output has `artifactRole: devview-hook-session-manifest-preview`, `sessionStatus: not-started-preview-only`,
+`hooksActive: false`, `hookScriptsInstalled: false`, `hookGatewayActive: not-checked-preview-only`, and
+`bypassDetectionStatus: preview-only-non-enforcing`. It records transient `.tmp/devview/sessions/<sessionId>/...`
+candidate paths and readiness for `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, and `Stop`.
+
+The command is not included in the current all-steps runtime smoke because adding it produced an advisory over-target
+snapshot while the `core-critical-lane` remained well under 5 seconds. It should be added to a future lane-specific smoke
+or reintroduced after timing optimization.
+
+This decision does not start a hook session, install hooks, activate hooks, write active hook files, trust repositories,
+mutate Codex or repo config, block Codex execution, call an LLM/API, make network calls, run validation or traversal,
+mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove
+equivalence, enforce scope, introduce CI required checks, change branch protection, or automate user acceptance.

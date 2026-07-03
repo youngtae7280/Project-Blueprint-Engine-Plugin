@@ -351,6 +351,12 @@ The Hook Gateway script template preview command is exposed as
 PowerShell body previews from the scaffold without writing `.codex/hooks` files, installing hooks, activating hooks,
 blocking Codex, approving work, satisfying Evidence, proving equivalence, or enforcing scope/CI.
 
+The Hook Gateway session manifest preview command is exposed as
+`graph read-model generate-hook-session-manifest --hook-health <healthReportOrBoundary> --user-prompt-context <contextPreview> --script-scaffold <scaffoldPreview> --script-templates <templatePreview> --json`.
+It bundles the health/context/script previews into a not-started session manifest without starting a session, installing
+or activating hooks, mutating trust/config, blocking Codex, approving work, satisfying Evidence, proving equivalence, or
+enforcing scope/CI.
+
 The runtime smoke lane boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-runtime-smoke-lane-boundary.runtime-evidence-only.preview.json`. It
 keeps the all-steps smoke as an advisory snapshot while reporting lane totals for analyzer preflight, core critical

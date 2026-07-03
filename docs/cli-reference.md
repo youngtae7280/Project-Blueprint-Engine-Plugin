@@ -977,6 +977,37 @@ node dist/cli/index.js graph read-model generate-hook-script-templates `
   --json
 ```
 
+### `pbe graph read-model generate-hook-session-manifest`
+
+- Purpose: Bundle Hook Gateway health, `UserPromptSubmit` context, script scaffold, and script template previews into a
+  session manifest preview for future hook runtime review.
+- Typical state before running: After context, scaffold, and template previews exist. No hook session has started and no
+  hooks are active.
+- Options: `--hook-health <file>`, `--user-prompt-context <file>`, `--script-scaffold <file>`, and
+  `--script-templates <file>` are required. `--output <file>` may write JSON and `--markdown <file>` may write a compact
+  manifest summary.
+- What it checks: input roles/statuses, five hook event readiness, strict/guided/enforcement/approval/Evidence/
+  equivalence safety flags, active hook path targets, source artifact overwrite attempts, and output authority before
+  any writes.
+- Success result: JSON with `artifactRole: devview-hook-session-manifest-preview`,
+  `sessionStatus: not-started-preview-only`, `hooksActive: false`, `hookScriptsInstalled: false`, and
+  `bypassDetectionStatus: preview-only-non-enforcing`.
+- Non-goals: This command does not start hook sessions, install or activate hooks, write `.codex/hooks` files, trust
+  repositories, configure Codex, block Codex execution, call an LLM, run validation/traversal, mutate graph-source,
+  apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope,
+  or configure CI.
+
+```powershell
+node dist/cli/index.js graph read-model generate-hook-session-manifest `
+  --hook-health examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json `
+  --user-prompt-context examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json `
+  --script-scaffold examples/valid/todo-app-pbe-run/generated/devview-hook-script-scaffold.add-todo-runtime-evidence-only.preview.json `
+  --script-templates examples/valid/todo-app-pbe-run/generated/devview-hook-script-template.add-todo-runtime-evidence-only.preview.json `
+  --output .tmp/review-hook-session-manifest.json `
+  --markdown .tmp/review-hook-session-manifest.md `
+  --json
+```
+
 ### `pbe graph operation apply-proposal`
 
 - Purpose: Preview or apply a generated graph update proposal to its graph-source.
