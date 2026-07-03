@@ -1728,6 +1728,20 @@ CI required checks, change branch protection, approve fixtures, set `equivalence
 apply graph deltas, introduce executor automation, or replace user acceptance. Runtime timing smoke may write the compact
 report under `.tmp` while keeping the runtime budget advisory and avoiding tracked preview artifact churn.
 
+## DEC-231 Preview Graph Delta Proposal Boundary From Advisory Scope Results
+
+DEC-231 does not supersede DEC-097 through DEC-230. It adds the preview artifact
+`examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-boundary.runtime-evidence-only.preview.json` to define
+how advisory `check-scope` JSON, compact runtime reports, git-derived changed-file collection, and non-enforcing scope
+evaluation may later inform graph delta proposal candidates.
+
+The boundary is proposal-only. It previews candidate types such as scope-finding review notes, risk updates, Evidence
+links, decision notes, changed-file observations, and runtime report links, but it does not create approved graph
+updates. It records `proposalOnly: true`, `graphSourceMutated: false`, `graphDeltaApplied: false`,
+`requiresHumanReview: true`, and `approvalStatus: not-approved`. No graph-source mutation, graph delta apply, approval,
+equivalence proof, runtime Evidence satisfaction, enforcement, CI required check, branch protection, executor
+automation, or user acceptance automation is introduced.
+
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.

@@ -88,8 +88,16 @@ The smoke reports JSON with:
 The budget status is advisory. The smoke does not fail because the 5 second target is exceeded. It exits nonzero only
 when a measured deterministic command itself fails.
 
-The timing smoke still lists graph delta proposal generation as pending because no supported runtime proposal command is
-part of this budget slice yet.
+The graph delta proposal boundary preview is now recorded at:
+
+```text
+examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-boundary.runtime-evidence-only.preview.json
+```
+
+This preview explains how advisory `check-scope` JSON, compact runtime reports, changed-file collection, and
+non-enforcing evaluation artifacts may later feed proposal candidates. It is design-only and adds no measured runtime
+work. The timing smoke still lists graph delta proposal generation as pending because no supported runtime proposal
+command is part of this budget slice yet.
 
 ## Health Report Boundary
 

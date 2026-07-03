@@ -622,6 +622,30 @@ status, and finding counts. It is a readability layer over the same advisory eva
 contents, read full file contents, reject diffs, enforce scope, approve fixtures, satisfy runtime Evidence, prove
 equivalence, apply graph deltas, or replace user acceptance.
 
+## Graph Delta Proposal Boundary Preview
+
+The first proposal-boundary preview for advisory scope results is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-boundary.runtime-evidence-only.preview.json
+```
+
+This artifact defines how advisory `check-scope` JSON, the compact advisory runtime report, git-derived changed-file
+collection, and non-enforcing scope evaluation may later feed graph delta proposal candidates. It previews candidate
+types only:
+
+- `scope-finding-review-note-candidate`;
+- `risk-update-candidate`;
+- `evidence-link-candidate`;
+- `decision-note-candidate`;
+- `changed-file-observation-candidate`;
+- `runtime-report-link-candidate`.
+
+The boundary is proposal-only. It keeps `proposalOnly: true`, `graphSourceMutated: false`, `graphDeltaApplied: false`,
+`requiresHumanReview: true`, `approvalStatus: not-approved`, and `equivalenceProven: false`. It does not implement graph
+delta proposal generation, mutate graph-source, apply graph deltas, enforce scope, reject diffs, satisfy runtime
+Evidence, or replace user acceptance.
+
 ## Runtime Budget Timing Smoke
 
 The runtime performance budget is documented in

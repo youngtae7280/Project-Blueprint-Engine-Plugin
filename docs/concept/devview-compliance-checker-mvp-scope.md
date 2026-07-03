@@ -522,6 +522,21 @@ The compact report summarizes base/head refs, changed/evaluated file counts, adv
 state, non-enforcement status, and finding counts. It is a readability surface over the same advisory result. It is not
 enforcement, approval, runtime Evidence satisfaction, equivalence proof, graph delta apply, or user acceptance.
 
+## Graph Delta Proposal Boundary
+
+The first Graph Delta Proposal boundary preview is now recorded:
+
+```text
+examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-boundary.runtime-evidence-only.preview.json
+```
+
+This preview defines how advisory `check-scope` output may later contribute to proposal candidates such as
+scope-finding review notes, risk updates, Evidence links, decision notes, changed-file observations, and runtime report
+links. These are proposal candidates only. Advisory findings can inform reviewer context, but they do not approve graph
+updates, mutate graph-source, apply graph deltas, enforce scope, reject diffs, satisfy runtime Evidence, prove
+equivalence, or replace user acceptance. The preview keeps `proposalOnly: true`, `graphSourceMutated: false`,
+`graphDeltaApplied: false`, `requiresHumanReview: true`, and `approvalStatus: not-approved`.
+
 ## Runtime Budget Smoke
 
 The deterministic DevView runtime budget is documented in

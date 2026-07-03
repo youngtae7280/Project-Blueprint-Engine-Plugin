@@ -275,6 +275,11 @@ The first advisory scope evaluator is now exposed through `graph read-model chec
 for the same non-enforcing result; it does not reject diffs, create required checks, approve fixtures, satisfy runtime
 Evidence, prove equivalence, apply graph deltas, or replace user acceptance.
 
+The Graph Delta Proposal boundary for advisory scope results is previewed in
+`examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-boundary.runtime-evidence-only.preview.json`. It allows
+future proposal candidates to be shaped from advisory results while keeping graph-source mutation, graph delta apply,
+approval, enforcement, equivalence proof, runtime Evidence satisfaction, and user acceptance out of scope.
+
 The following readiness artifact is complete at documentation level:
 
 - [representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md)
