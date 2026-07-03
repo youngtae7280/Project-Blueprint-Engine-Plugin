@@ -7,6 +7,7 @@
   "selectedGraphSliceId": "selected-graph-slice-boundary-add-todo-runtime-evidence-only-preview",
   "selectedGraphSliceStatus": "not-generated",
   "sourceTraversalPlan": "examples/valid/todo-app-pbe-run/generated/graph-traversal-plan-boundary.add-todo-runtime-evidence-only.preview.json",
+  "sourceGeneratedTraversalPlan": "examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json",
   "sourceGraphAwareValidation": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json",
   "graphTraversalExecuted": false,
   "selectedGraphSliceGenerated": false,

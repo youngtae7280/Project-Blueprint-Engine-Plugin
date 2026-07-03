@@ -21,6 +21,7 @@ import {
   graphReadModelCompileContractCommand,
   graphReadModelGenerateCommand,
   graphReadModelObserveCandidatesCommand,
+  graphReadModelPlanTraversalCommand,
   graphReadModelProposeGraphDeltaCommand,
   graphReadModelProjectCommand,
   graphReadModelProjectIntentCommand,
@@ -234,6 +235,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'validate-request-ir-graph') {
     return graphReadModelValidateRequestIrGraphCommand(context)
+  }
+  if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'plan-traversal') {
+    return graphReadModelPlanTraversalCommand(context)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'report-health') {
     return graphReadModelReportHealthCommand(context)

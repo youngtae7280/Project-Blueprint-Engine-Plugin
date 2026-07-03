@@ -18,8 +18,11 @@
   "requestIrGraphAwareValidationBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json",
   "requestIrGraphAwareValidationResultArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json",
   "graphTraversalImplementedFromRequestIr": false,
+  "graphTraversalPlanGeneratorImplemented": true,
+  "graphTraversalPlanGenerated": true,
   "graphTraversalPlanBoundaryStatus": "boundary-preview-only",
   "graphTraversalPlanBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/graph-traversal-plan-boundary.add-todo-runtime-evidence-only.preview.json",
+  "firstCalibrationGraphTraversalPlanArtifact": "examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json",
   "selectedGraphSliceBoundaryStatus": "not-generated-boundary-preview-only",
   "selectedGraphSliceBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/selected-graph-slice-boundary.add-todo-runtime-evidence-only.preview.json",
   "selectedGraphSliceGenerated": false,
@@ -259,8 +262,10 @@
     "selectedGraphSliceGenerated": false
   },
   "graphTraversalPlanPreviewShape": {
-    "planStatus": "previewed-not-generated",
+    "planStatus": "generator-implemented-plan-generated-no-selected-slice",
     "boundaryArtifact": "examples/valid/todo-app-pbe-run/generated/graph-traversal-plan-boundary.add-todo-runtime-evidence-only.preview.json",
+    "generatedPlanArtifact": "examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json",
+    "generatorCommand": "graph read-model plan-traversal --graph-validation <graphAwareValidationPath> --json",
     "validatedRequestIrRequired": true,
     "graphAwareValidationRequired": true,
     "graphTraversalAllowedRequired": true,
@@ -355,6 +360,7 @@
     "link the graph-aware validation boundary as the next prerequisite before traversal",
     "link the graph-aware validation result as a non-traversing future-pass permission",
     "link the graph traversal plan boundary as the next non-executing compiler frontend pass",
+    "link the generated graph traversal plan as deterministic plan output without selected slice generation",
     "link the selected graph slice boundary as the required contract input prerequisite",
     "preview Request IR to contract input mapping",
     "separate Hook Gateway activation from compiler frontend semantics"

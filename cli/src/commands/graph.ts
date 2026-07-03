@@ -2,6 +2,7 @@ import { relativePath } from '../core/fs.js'
 import { compileExecutionContractDryRun } from '../core/contract-compiler-dry-run.js'
 import { collectGitDerivedChangedFiles } from '../core/git-derived-changed-file-collection.js'
 import { generateGraphDeltaHumanReviewPacket } from '../core/graph-delta-human-review-packet.js'
+import { generateGraphTraversalPlanFile } from '../core/graph-traversal-plan.js'
 import { generateProposalOnlyGraphDeltaPreview } from '../core/graph-delta-proposal-generator.js'
 import { validateRequestIrGraphAwareFile } from '../core/request-ir-graph-aware-validator.js'
 import { validateRequestIrCandidateFile } from '../core/request-ir-candidate-validator.js'
@@ -900,6 +901,68 @@ export async function graphReadModelValidateRequestIrGraphCommand(context: Comma
           message,
           suggestedFix:
             'Provide readable Request IR Candidate and schema-only validation artifacts. Graph-aware validation does not run traversal or generate contract input.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelPlanTraversalCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.graphValidation) {
+    return invalidCommand('graph read-model plan-traversal requires --graph-validation <graphAwareValidationPath>.')
+  }
+
+  try {
+    const plan = await generateGraphTraversalPlanFile(context.options.root, context.options.graphValidation, {
+      output: context.options.output,
+    })
+    const blocked = plan.result.graphTraversalPlanStatus === 'blocked'
+    const errorFindings = plan.result.validationFindings.filter((finding) => finding.severity === 'error')
+
+    return {
+      ok: !blocked,
+      command: 'graph read-model plan-traversal',
+      exitCode: blocked ? ExitCode.ValidationFailed : ExitCode.Success,
+      message: blocked
+        ? 'Graph traversal plan generation blocked before selected slice generation.'
+        : 'Graph traversal plan generated without selecting graph nodes or edges.',
+      issues: blocked
+        ? errorFindings.map((finding) =>
+            issue({
+              validator: 'GraphTraversalPlanGenerator',
+              code: finding.code,
+              severity: finding.severity,
+              message: finding.message,
+              reason: finding.field ? `Field: ${finding.field}` : undefined,
+              suggestedFix:
+                finding.suggestedFix ??
+                'Fix graph-aware Request IR validation or graph/read-model authority before planning traversal.',
+            }),
+          )
+        : [],
+      data: {
+        ...plan.result,
+        ...(plan.outputPath ? { outputPath: plan.outputPath } : {}),
+        next: blocked
+          ? 'Fix graph traversal planning prerequisites. No traversal, selected slice, contract input, or instruction pack was generated.'
+          : 'A later selected graph slice pass may consume this plan. This command did not execute traversal, select graph nodes or edges, generate contract input, generate instruction packs, mutate graph-source, or approve work.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model plan-traversal',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Graph traversal plan generation could not run.',
+      issues: [
+        issue({
+          validator: 'GraphTraversalPlanGenerator',
+          code: 'GRAPH_TRAVERSAL_PLAN_GENERATION_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide a readable graph-aware Request IR validation artifact. Planning does not execute traversal or generate selected graph slices.',
         }),
       ],
     }

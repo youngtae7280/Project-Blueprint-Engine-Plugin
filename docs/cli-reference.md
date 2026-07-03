@@ -551,6 +551,36 @@ node dist/cli/index.js graph read-model validate-request-ir-graph `
   --json
 ```
 
+### `pbe graph read-model plan-traversal`
+
+- Purpose: Generate a deterministic Graph Traversal Plan from graph-aware Request IR validation.
+- Typical state before running: After `graph read-model validate-request-ir-graph` has produced a
+  `request-ir-graph-aware-validation` artifact with `graphValidationStatus: graph-aware-valid` and
+  `graphTraversalAllowed: true`.
+- Options: `--graph-validation <graphAwareValidationPath>` is required. `--output <file>` may write the generated plan.
+  Without `--output`, JSON stdout is the only output.
+- What it checks: graph-aware validation role/status, traversal permission, resolved target record, resolved target
+  component, compatible change type, resolvable required Evidence policy, readable graph source, readable generated read
+  model, start node existence, and start node ambiguity.
+- What it writes: Nothing by default. It writes only to the explicit `--output` path.
+- Success result: JSON with `artifactRole: graph-traversal-plan`, `graphTraversalPlanGenerated: true`,
+  `startNodeResolutionStatus: resolved`, taxonomy-backed node/edge type fields, role/intent fields for planner
+  semantics, and `selectedGraphSlicePlanningAllowed: true`.
+- Common failures: unreadable graph-aware validation artifact, blocked graph-aware validation, missing graph source,
+  missing generated read model, unresolved start node, ambiguous start node, or missing taxonomy vocabulary.
+- Next command: A later selected graph slice pass may consume the plan. Do not treat it as graph traversal execution,
+  final selected nodes/edges, contract compiler input, instruction-pack generation, approval, runtime Evidence
+  satisfaction, equivalence proof, graph-source mutation, or enforcement.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model plan-traversal `
+  --graph-validation examples/valid/todo-app-pbe-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json `
+  --output examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json `
+  --json
+```
+
 ### `pbe graph operation apply-proposal`
 
 - Purpose: Preview or apply a generated graph update proposal to its graph-source.

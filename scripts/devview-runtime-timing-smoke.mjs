@@ -12,6 +12,7 @@ const smokeGraphDeltaProposalPath = '.tmp/devview-runtime-timing-smoke/graph-del
 const smokeGraphDeltaReviewPacketPath = '.tmp/devview-runtime-timing-smoke/graph-delta-human-review-packet.md'
 const smokeRequestIrValidationPath = '.tmp/devview-runtime-timing-smoke/request-ir-validation.json'
 const smokeRequestIrGraphValidationPath = '.tmp/devview-runtime-timing-smoke/request-ir-graph-validation.json'
+const smokeGraphTraversalPlanPath = '.tmp/devview-runtime-timing-smoke/graph-traversal-plan.json'
 const graphDeltaCompatibleSourcePath =
   'examples/valid/todo-app-pbe-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json'
 const requestIrCandidatePath =
@@ -49,6 +50,21 @@ const measuredSteps = [
       smokeRequestIrValidationPath,
       '--output',
       smokeRequestIrGraphValidationPath,
+      '--json',
+    ],
+    includedInRuntimeBudget: true,
+  },
+  {
+    stepName: 'graph-traversal-plan-generation',
+    command: `node dist/cli/index.js graph read-model plan-traversal --graph-validation ${smokeRequestIrGraphValidationPath} --output ${smokeGraphTraversalPlanPath} --json`,
+    args: [
+      'graph',
+      'read-model',
+      'plan-traversal',
+      '--graph-validation',
+      smokeRequestIrGraphValidationPath,
+      '--output',
+      smokeGraphTraversalPlanPath,
       '--json',
     ],
     includedInRuntimeBudget: true,

@@ -2051,3 +2051,37 @@ generate selected graph slice artifacts as actual traversal output, generate con
 instruction packs, call an LLM, implement an AI classifier, mutate graph-source, apply graph deltas, approve graph
 updates, record human decisions, change equivalence behavior, satisfy runtime Evidence, enforce scope, introduce CI
 required checks, change branch protection, or automate user acceptance.
+
+## DEC-245 Implement Deterministic Graph Traversal Plan Generator
+
+DEC-245 does not supersede DEC-097 through DEC-244. It implements the first deterministic Graph Traversal Plan generator
+after graph-aware Request IR validation.
+
+The generator is exposed through:
+
+```text
+graph read-model plan-traversal --graph-validation <graphAwareValidationPath> --json
+```
+
+The implementation is recorded in:
+
+```text
+cli/src/core/graph-traversal-plan.ts
+```
+
+The Todo App calibration plan is generated at:
+
+```text
+examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json
+```
+
+The generator consumes a `request-ir-graph-aware-validation` artifact, reads the referenced graph source and generated
+read model, validates traversal prerequisites, resolves the start node `CH-001`, and emits graph taxonomy-backed node
+and edge type fields plus separate planner role/intent/source-role fields. It may report
+`selectedGraphSlicePlanningAllowed: true`, but that is permission for a later selected-slice pass only.
+
+Selected graph slice generation is still not implemented. Graph traversal execution and final node/edge selection are
+not claimed. Contract input generation remains blocked until a selected graph slice exists. This decision does not
+generate instruction packs, call an LLM, implement an AI analyzer, implement hook scripts, mutate graph-source, apply
+graph deltas, approve graph updates, record human decisions, change equivalence behavior, satisfy runtime Evidence,
+enforce scope, introduce CI required checks, change branch protection, or automate user acceptance.

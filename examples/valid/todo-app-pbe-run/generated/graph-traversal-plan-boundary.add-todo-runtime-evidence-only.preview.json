@@ -10,6 +10,8 @@
   "sourceSchemaValidation": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json",
   "sourceGraphAwareValidation": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json",
   "selectedGraphSliceBoundary": "examples/valid/todo-app-pbe-run/generated/selected-graph-slice-boundary.add-todo-runtime-evidence-only.preview.json",
+  "firstGeneratedTraversalPlanArtifact": "examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json",
+  "traversalPlanGeneratorImplemented": true,
   "graphTraversalExecuted": false,
   "selectedGraphSliceGenerated": false,
   "contractInputGenerated": false,
@@ -210,7 +212,7 @@
     "define start node, node selection, edge selection, and trace policy",
     "separate graph vocabulary type fields from planner semantic role fields",
     "define selected graph slice readiness expectations",
-    "link graph-aware validation permission to a future traversal planner"
+    "link graph-aware validation permission to the deterministic traversal plan generator"
   ],
   "forbiddenUse": [
     "graph traversal execution",

@@ -1924,10 +1924,17 @@ examples/valid/todo-app-pbe-run/generated/graph-traversal-plan-boundary.add-todo
 examples/valid/todo-app-pbe-run/generated/selected-graph-slice-boundary.add-todo-runtime-evidence-only.preview.json
 ```
 
-The traversal plan boundary defines future start-node, node-selection, edge-selection, trace, ambiguity, and contract
-input readiness policy for `CH-001`. The selected graph slice boundary defines the future selected node/edge slice
-shape and keeps `selectedGraphSliceStatus: not-generated`. Neither artifact executes traversal, selects graph nodes or
-edges, generates contract compiler input, or generates instruction packs.
+The generated traversal plan for this calibration fixture is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json
+```
+
+The traversal plan generator resolves start-node planning for `CH-001` and records graph vocabulary-backed node/edge
+type fields plus planner role/intent fields. The selected graph slice boundary still defines a future selected node/edge
+slice shape and keeps `selectedGraphSliceStatus: not-generated`. Neither the boundary nor the generated plan executes
+traversal, selects graph nodes or edges as final scope, generates contract compiler input, or generates instruction
+packs.
 
 Traversal boundary type fields are limited to actual graph taxonomy vocabulary from the Todo App projection. Abstract
 planner meanings such as target component, scope policy, required evidence, stop condition, output requirement, and risk

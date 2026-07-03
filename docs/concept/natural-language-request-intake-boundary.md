@@ -224,11 +224,12 @@ Previewed validation statuses are:
 - `clarification-required`
 - `human-review-required`
 
-The schema-only runtime validator and the graph-aware runtime validator are implemented. Graph traversal remains future
-work.
+The schema-only runtime validator, graph-aware runtime validator, and deterministic graph traversal plan generator are
+implemented. Selected graph slice generation remains future work.
 
-Schema-valid does not mean validated-for-traversal. Graph-aware-valid means future traversal permission only. Edge
-traversal, selected graph slice generation, contract input generation, and instruction pack generation remain blocked.
+Schema-valid does not mean validated-for-traversal. Graph-aware-valid means future traversal permission only. The
+deterministic traversal plan generator can now produce a plan from that permission, but edge traversal execution,
+selected graph slice generation, contract input generation, and instruction pack generation remain blocked.
 
 ## Graph Traversal Plan Boundary
 
@@ -237,6 +238,22 @@ The traversal plan boundary preview for the Todo App calibration request is:
 ```text
 examples/valid/todo-app-pbe-run/generated/graph-traversal-plan-boundary.add-todo-runtime-evidence-only.preview.json
 ```
+
+The first deterministic traversal plan generator is now available as:
+
+```text
+graph read-model plan-traversal --graph-validation <graphAwareValidationPath> --json
+```
+
+The generated Todo App calibration traversal plan is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json
+```
+
+This generated plan resolves the start node `CH-001`, records graph taxonomy vocabulary, and records planner roles and
+intents. It does not execute traversal, produce final selected nodes or edges, generate a selected graph slice, generate
+contract compiler input, or generate instruction packs.
 
 The previewed traversal plan shape includes:
 
