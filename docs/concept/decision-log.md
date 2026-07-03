@@ -1875,3 +1875,32 @@ This is an activation/routing boundary only. It does not implement hook scripts,
 behavior, call an LLM from hooks, mutate graph-source, apply graph deltas, approve graph updates, record human
 decisions, change equivalence behavior, satisfy runtime Evidence, enforce scope as CI, introduce required checks, change
 branch protection, introduce executor automation, or automate user acceptance. Strict mode remains disabled.
+
+## DEC-239 Define Natural Language Request Intake Compiler Frontend Boundary
+
+DEC-239 does not supersede DEC-097 through DEC-238. It previews DevView's natural-language compiler frontend boundary:
+
+```text
+natural language request
+-> AI Request IR candidate
+-> deterministic Request IR validation
+-> graph traversal plan
+-> selected node/edge slice
+-> contract compiler input
+```
+
+The boundary preview is recorded in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
+```
+
+Natural language is accepted as the human request surface. A future AI analyzer may classify and propose a Request IR
+candidate, but AI-produced fields are candidate-only. Unvalidated AI output cannot drive graph traversal, selected graph
+slice generation, contract compiler input generation, or instruction pack generation. Deterministic compiler behavior
+begins after Request IR validation.
+
+This decision does not implement an AI classifier, call an LLM from runtime code, implement hook scripts, implement hook
+health/install/trust checks, mutate graph-source, apply graph deltas, approve graph updates, record human decisions,
+change equivalence behavior, satisfy runtime Evidence, enforce scope, introduce CI required checks, change branch
+protection, or automate user acceptance.

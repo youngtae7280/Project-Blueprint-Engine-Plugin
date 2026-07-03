@@ -173,6 +173,19 @@ implemented. Future hook scripts must remain lightweight, local, deterministic, 
 5 second budget. They must not call an LLM, make network calls, run full validation, mutate graph-source, apply graph
 deltas, approve work, satisfy runtime Evidence, or turn the budget into CI enforcement.
 
+## Natural Language Request Intake Boundary
+
+The natural-language compiler frontend boundary is previewed in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
+```
+
+Natural language is the human request surface. A future AI analyzer may produce a Request IR candidate, but that output
+is candidate-only and outside the deterministic runtime compiler path until validated. After Request IR validation,
+graph traversal and contract compiler input generation must remain local and deterministic. This task adds no AI runtime
+call, graph traversal, contract input generation, instruction pack generation, or measured runtime step.
+
 ## Health Report Boundary
 
 `graph read-model report-health --json` exposes a small runtime budget summary:

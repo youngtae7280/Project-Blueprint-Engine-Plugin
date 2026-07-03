@@ -1869,6 +1869,19 @@ proposal-only previews, and Human Review Packets. Current status remains preview
 actual blocking hook behavior is not implemented, strict mode is disabled, CI enforcement is disabled, graph apply is
 disabled, approval automation is disabled, and graph-source remains unmutated.
 
+## Natural Language Request Intake Boundary
+
+The Natural Language Request Intake compiler frontend boundary for this calibration fixture is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
+```
+
+It previews how a human natural-language request could become a Request IR candidate and then require deterministic
+validation before graph traversal, selected node/edge slice generation, contract compiler input generation, or
+instruction pack generation. AI-produced fields are candidate-only and do not become fixture support, approval, runtime
+Evidence, graph-source authority, or equivalence proof.
+
 ## Fixture-Provided Changed-File List Preview
 
 The first fixture-provided changed-file list preview artifact is:

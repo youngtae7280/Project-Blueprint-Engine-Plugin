@@ -768,6 +768,19 @@ This readiness step is boundary-only. It does not implement hook scripts, add bl
 hooks, mutate graph-source, apply graph deltas, approve proposals, record human decisions, satisfy runtime Evidence,
 prove equivalence, enforce CI, or enable strict mode.
 
+## Natural Language Request Intake Boundary
+
+The Natural Language Request Intake compiler frontend boundary preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
+```
+
+It defines how a human request can become an AI-produced Request IR candidate, then pass through deterministic Request
+IR validation before any graph traversal, selected node/edge slice, contract compiler input, or instruction pack may be
+generated. The AI analyzer remains candidate-only. Unvalidated AI output is not graph-source authority and cannot drive
+scope compliance evaluation, graph traversal, or contract generation.
+
 ## Fixture-Provided Changed-File List Preview
 
 The first fixture-provided changed-file list preview is:

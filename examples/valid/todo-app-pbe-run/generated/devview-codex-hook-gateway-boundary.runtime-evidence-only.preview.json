@@ -21,6 +21,8 @@
   "graphApplyEnabled": false,
   "approvalAutomationEnabled": false,
   "strictModeEnabled": false,
+  "naturalLanguageRequestIntakeBoundaryStatus": "natural-language-request-intake-boundary-previewed",
+  "naturalLanguageRequestIntakeBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json",
   "devviewActivationModes": [
     {
       "mode": "off",
@@ -175,6 +177,7 @@
   "userPromptSubmitAdditionalContextPolicy": {
     "status": "previewed-not-implemented",
     "whenApplied": "DevView ON",
+    "compilerFrontendBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json",
     "contextTextPreview": [
       "DevView is ON for this Codex session.",
       "Analyze the natural language request into a Request IR candidate before editing.",
@@ -214,6 +217,17 @@
     "fileContentSemanticAnalysisAllowed": false,
     "fullValidationInsideHooksAllowed": false
   },
+  "compilerFrontendConnection": {
+    "connectionStatus": "linked-as-natural-language-request-intake-boundary",
+    "naturalLanguageRequestIntakeBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json",
+    "hookGatewayRole": "activation-and-routing-boundary",
+    "requestIntakeRole": "compiler-frontend-semantics-boundary",
+    "graphTraversalAllowedFromUnvalidatedAiOutput": false,
+    "contractGenerationAllowedFromUnvalidatedAiOutput": false,
+    "instructionPackGenerationAllowedFromUnvalidatedAiOutput": false,
+    "aiClassifierImplemented": false,
+    "requestIrValidatorImplemented": false
+  },
   "relatedRuntimeSurfaces": {
     "checkScope": "graph read-model check-scope --base <baseRef> --head <headRef> --json",
     "compactScopeReport": "graph read-model check-scope --base <baseRef> --head <headRef> --markdown <file> --json",
@@ -226,7 +240,8 @@
     "define future Codex hook lifecycle responsibilities",
     "preview transient DevView session artifact shape",
     "define bypass detection statuses for missing preflight, contract, post-check, and review packet",
-    "document hook trust and health prerequisites"
+    "document hook trust and health prerequisites",
+    "link future UserPromptSubmit routing to the Natural Language Request Intake compiler frontend boundary"
   ],
   "forbiddenUse": [
     "full Codex hook script implementation",
@@ -243,5 +258,5 @@
     "scope compliance enforcement as CI",
     "user acceptance automation"
   ],
-  "nonExecutionBoundary": "This artifact previews the DevView Codex Hook Gateway boundary only. It does not implement hook scripts, call an LLM, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope as CI, create required checks, change branch protection, or automate user acceptance."
+  "nonExecutionBoundary": "This artifact previews the DevView Codex Hook Gateway boundary only. It links to the Natural Language Request Intake compiler frontend boundary as semantics for future UserPromptSubmit routing, but it does not implement hook scripts, call an LLM, run Request IR validation, run graph traversal, generate contract compiler input, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope as CI, create required checks, change branch protection, or automate user acceptance."
 }

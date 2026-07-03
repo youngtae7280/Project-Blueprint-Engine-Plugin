@@ -316,6 +316,13 @@ Codex lifecycle hooks may route DevView ON sessions through preflight, contract,
 Human Review Packet expectations. It does not implement hook scripts, add blocking behavior, call an LLM from hooks,
 mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, enforce CI, or enable strict mode.
 
+The Natural Language Request Intake compiler frontend boundary is previewed in
+`examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json`
+and documented in [natural-language-request-intake-boundary.md](natural-language-request-intake-boundary.md). It defines
+how a human request may become an AI Request IR candidate and then require deterministic validation before graph
+traversal, selected node/edge slice generation, contract compiler input generation, or instruction pack generation. AI
+output remains candidate-only and cannot become source authority without validation.
+
 The following readiness artifact is complete at documentation level:
 
 - [representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md)

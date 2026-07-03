@@ -100,6 +100,20 @@ When DevView is ON, future `UserPromptSubmit` behavior should append context say
 
 This context does not generate instruction packs from unvalidated AI output.
 
+## Natural Language Request Intake
+
+The compiler frontend semantics for natural-language request intake are previewed separately in
+[natural-language-request-intake-boundary.md](natural-language-request-intake-boundary.md) and:
+
+```text
+examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
+```
+
+The Hook Gateway is the activation and routing boundary. Natural Language Request Intake is the compiler frontend
+semantics boundary. Future `UserPromptSubmit` hooks may route a request toward Request IR candidate creation, but they
+must not let unvalidated AI output drive graph traversal, contract compiler input generation, or instruction pack
+generation.
+
 ## Trust Boundary
 
 Project-local hooks require explicit trust and enablement. DevView must not assume a hook gateway is active until a future health check confirms:

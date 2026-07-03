@@ -1,0 +1,282 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "natural-language-request-intake-boundary-preview",
+  "status": "natural-language-request-intake-boundary-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "frontendScope": "natural-language-request-to-validated-request-ir-boundary",
+  "implementationStatus": "boundary-preview-only",
+  "aiClassifierImplemented": false,
+  "llmCallsIntroduced": false,
+  "runtimeAiCallsAllowed": false,
+  "requestIrValidatorImplemented": false,
+  "graphTraversalImplementedFromRequestIr": false,
+  "selectedGraphSliceGenerated": false,
+  "contractCompilerInputGenerated": false,
+  "instructionPackGenerated": false,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "approvalStatus": "not-approved",
+  "humanDecisionRecorded": false,
+  "equivalenceProven": false,
+  "runtimeEvidenceSatisfied": false,
+  "ciEnforcementEnabled": false,
+  "activationBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json",
+  "frontendFlow": {
+    "flowStatus": "previewed-not-implemented",
+    "steps": [
+      {
+        "stepId": "natural-language-request",
+        "role": "human-facing-request-surface",
+        "authorityBoundary": "Human text starts request intake but does not by itself become graph traversal authority or contract compiler input."
+      },
+      {
+        "stepId": "ai-request-analyzer",
+        "role": "candidate-producer",
+        "authorityBoundary": "AI may classify and propose Request IR fields, but output is candidate-only and not source authority."
+      },
+      {
+        "stepId": "request-ir-candidate",
+        "role": "structured-candidate",
+        "authorityBoundary": "Candidate fields require deterministic validation before traversal or contract generation."
+      },
+      {
+        "stepId": "request-ir-validation",
+        "role": "deterministic-gate",
+        "authorityBoundary": "Graph traversal starts only after Request IR validation succeeds or a human-review-required state explicitly selects a safe path."
+      },
+      {
+        "stepId": "graph-traversal-plan",
+        "role": "deterministic-selection-plan",
+        "authorityBoundary": "AI may suggest candidate nodes, but deterministic traversal selects the graph slice after validation."
+      },
+      {
+        "stepId": "selected-graph-slice",
+        "role": "validated-node-edge-selection",
+        "authorityBoundary": "Selected node and edge slices are deterministic compiler inputs, not direct AI output."
+      },
+      {
+        "stepId": "contract-compiler-input",
+        "role": "compiler-input-candidate-after-validation",
+        "authorityBoundary": "Contract compiler input must not be generated from unvalidated AI output."
+      }
+    ]
+  },
+  "requestIrCandidateShape": {
+    "candidateStatus": "ai-produced-fields-candidate-only",
+    "fields": {
+      "requestText": {
+        "source": "human-natural-language",
+        "authorityStatus": "raw-request-text-not-compiler-authority"
+      },
+      "requestLanguage": {
+        "source": "ai-or-locale-detection-candidate",
+        "authorityStatus": "candidate-only"
+      },
+      "requestTypeCandidate": {
+        "source": "ai-request-analyzer-candidate",
+        "allowedValues": [
+          "runtime-evidence-only",
+          "behavior-change",
+          "bug-fix",
+          "refactor",
+          "documentation-only",
+          "investigation-only",
+          "unknown"
+        ],
+        "authorityStatus": "candidate-only"
+      },
+      "changeTypeCandidate": {
+        "source": "ai-request-analyzer-candidate",
+        "authorityStatus": "candidate-only"
+      },
+      "targetRecordIdCandidate": {
+        "source": "ai-request-analyzer-candidate",
+        "authorityStatus": "candidate-only-requires-graph-existence-validation"
+      },
+      "targetComponentCandidate": {
+        "source": "ai-request-analyzer-candidate",
+        "authorityStatus": "candidate-only-requires-component-existence-validation"
+      },
+      "intentSummaryCandidate": {
+        "source": "ai-request-analyzer-candidate",
+        "authorityStatus": "candidate-only"
+      },
+      "allowedScopeIntentCandidate": {
+        "source": "ai-request-analyzer-candidate",
+        "authorityStatus": "candidate-only"
+      },
+      "forbiddenScopeIntentCandidate": {
+        "source": "ai-request-analyzer-candidate",
+        "authorityStatus": "candidate-only"
+      },
+      "requiredEvidenceIntentCandidate": {
+        "source": "ai-request-analyzer-candidate",
+        "authorityStatus": "candidate-only"
+      },
+      "riskIntentCandidate": {
+        "source": "ai-request-analyzer-candidate",
+        "authorityStatus": "candidate-only"
+      },
+      "confidence": {
+        "source": "ai-request-analyzer-candidate",
+        "authorityStatus": "candidate-only"
+      },
+      "ambiguities": {
+        "source": "ai-request-analyzer-candidate",
+        "authorityStatus": "candidate-only-human-review-input"
+      },
+      "requiresClarification": {
+        "source": "ai-request-analyzer-candidate-or-deterministic-validation",
+        "authorityStatus": "validation-controlled"
+      },
+      "humanReviewRequired": {
+        "source": "ai-request-analyzer-candidate-or-deterministic-validation",
+        "authorityStatus": "validation-controlled"
+      }
+    }
+  },
+  "requestTypeTaxonomy": {
+    "taxonomyStatus": "narrow-initial-enum-previewed",
+    "allowedValues": [
+      "runtime-evidence-only",
+      "behavior-change",
+      "bug-fix",
+      "refactor",
+      "documentation-only",
+      "investigation-only",
+      "unknown"
+    ],
+    "arbitraryRequestTypesAllowed": false,
+    "unknownHandling": "unknown or low-confidence classification requires clarification or human review before deterministic traversal",
+    "lowConfidenceHandling": "clarification-required-or-human-review-required"
+  },
+  "aiAnalyzerTrustBoundary": {
+    "aiAnalyzerOutputStatus": "candidate-only",
+    "requestIrAuthorityStatus": "not-authoritative-until-validated",
+    "graphTraversalAllowedFromUnvalidatedAiOutput": false,
+    "contractGenerationAllowedFromUnvalidatedAiOutput": false,
+    "instructionPackGenerationAllowedFromUnvalidatedAiOutput": false,
+    "aiMayClassifyAndPropose": true,
+    "devviewMustValidateBeforeTraversal": true,
+    "deterministicCompilerPathBeginsAfterValidation": true,
+    "sourceAuthorityBoundary": "AI output is not graph-source, not product intent authority, not approval, and not compiler execution authority."
+  },
+  "requestIrValidationBoundary": {
+    "validationStatus": "previewed-not-implemented",
+    "validationChecks": [
+      "enum values",
+      "required fields",
+      "graph record existence",
+      "target component existence",
+      "changeType compatibility",
+      "policy compatibility",
+      "required evidence availability",
+      "unresolved ambiguity"
+    ],
+    "validationOutputStatuses": ["validated", "validation-blocked", "clarification-required", "human-review-required"],
+    "runtimeValidatorImplemented": false,
+    "contractGenerationAllowedWhenValidationBlocked": false,
+    "graphTraversalAllowedWhenValidationBlocked": false
+  },
+  "graphTraversalPlanPreviewShape": {
+    "planStatus": "previewed-not-generated",
+    "fields": [
+      "traversalPlanId",
+      "sourceRequestIr",
+      "startNodes",
+      "nodeSelectionRules",
+      "edgeSelectionRules",
+      "selectedNodeCandidates",
+      "selectedEdgeCandidates",
+      "excludedNodes",
+      "excludedEdges",
+      "selectionTrace",
+      "confidence",
+      "requiresHumanReview"
+    ],
+    "aiDirectFinalSliceSelectionAllowed": false,
+    "aiCandidateSuggestionAllowed": true,
+    "deterministicTraversalSelectsFinalSliceAfterValidation": true,
+    "selectedGraphSliceGenerated": false
+  },
+  "requestIrToContractInputMappingPreview": {
+    "mappingStatus": "previewed-not-generated",
+    "validatedRequestIrRequired": true,
+    "targetScopeCandidates": {
+      "source": "validated request type, target record/component, and deterministic graph traversal",
+      "mappingStatus": "future-mapping-required"
+    },
+    "allowedScope": {
+      "source": "validated request intent plus selected graph slice policy",
+      "mappingStatus": "future-mapping-required"
+    },
+    "forbiddenScope": {
+      "source": "policy snapshot plus validated request type",
+      "mappingStatus": "future-mapping-required"
+    },
+    "requiredEvidence": {
+      "source": "validated request type and evidence policy",
+      "mappingStatus": "future-mapping-required"
+    },
+    "stopConditions": {
+      "source": "policy snapshot, ambiguity status, and validation blockers",
+      "mappingStatus": "future-mapping-required"
+    },
+    "knownRisks": {
+      "source": "validated risk intent candidates plus graph risk policy",
+      "mappingStatus": "future-mapping-required"
+    },
+    "outputRequirements": {
+      "source": "validated request intent plus contract output policy",
+      "mappingStatus": "future-mapping-required"
+    },
+    "contractCompilerInputGenerated": false
+  },
+  "hookGatewayConnection": {
+    "connectionStatus": "linked-as-activation-context-only",
+    "hookGatewayArtifact": "examples/valid/todo-app-pbe-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json",
+    "hookGatewayRole": "activation-and-routing-boundary",
+    "naturalLanguageRequestIntakeRole": "compiler-frontend-semantics-boundary",
+    "hookHealthOrInstallTrustImplemented": false,
+    "hookScriptsImplemented": false
+  },
+  "runtimeAndSafetyBoundaries": {
+    "aiIntakeMayBeAssistivePath": true,
+    "deterministicCompilerPathLocalAfterRequestIr": true,
+    "runtimeAiCallsAllowed": false,
+    "networkCallsAllowed": false,
+    "fullRepoScanAllowed": false,
+    "compatibleWithAdvisoryRuntimeBudgetAfterValidatedRequestIrExists": true,
+    "graphSourceMutationAllowed": false,
+    "graphDeltaApplyAllowed": false,
+    "approvalAutomationAllowed": false,
+    "ciEnforcementAllowed": false
+  },
+  "allowedUse": [
+    "define natural language as the human request intake surface",
+    "define AI Request IR candidate fields as candidate-only",
+    "define deterministic Request IR validation boundary before traversal",
+    "preview graph traversal plan shape",
+    "preview Request IR to contract input mapping",
+    "separate Hook Gateway activation from compiler frontend semantics"
+  ],
+  "forbiddenUse": [
+    "AI classifier implementation",
+    "runtime LLM calls",
+    "graph traversal from unvalidated AI output",
+    "contract input generation from unvalidated AI output",
+    "instruction pack generation from unvalidated AI output",
+    "graph-source mutation",
+    "graph delta apply",
+    "approval recording",
+    "human decision recording",
+    "runtime Evidence satisfaction",
+    "equivalence proof",
+    "scope compliance enforcement",
+    "CI required check",
+    "branch protection",
+    "user acceptance automation"
+  ],
+  "nonExecutionBoundary": "This artifact defines the Natural Language Request Intake compiler frontend boundary only. It does not implement an AI classifier, call an LLM from runtime code, implement hook scripts, run graph traversal, generate selected graph slices, generate contract compiler input, generate instruction packs, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, create required checks, change branch protection, or automate user acceptance."
+}

@@ -620,6 +620,19 @@ post-check, proposal-only preview, and Human Review Packet requirements. This is
 not implement hook scripts, block tool calls, call an LLM from hooks, mutate graph-source, apply graph deltas, approve
 work, satisfy runtime Evidence, enforce CI, or enable strict mode.
 
+## Natural Language Request Intake Boundary
+
+The missing DevView compiler frontend is now previewed separately:
+
+```text
+examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
+```
+
+It defines the front-end flow from natural language request to AI Request IR candidate, deterministic Request IR
+validation, graph traversal plan, selected node/edge slice, and contract compiler input. AI analyzer output remains
+candidate-only: unvalidated AI output must not drive graph traversal, contract compiler input generation, or instruction
+pack generation. Hook Gateway remains activation/routing; Request Intake defines compiler frontend semantics.
+
 ## Runtime Budget Smoke
 
 The deterministic DevView runtime budget is documented in
