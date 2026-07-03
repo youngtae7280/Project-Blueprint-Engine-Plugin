@@ -178,6 +178,8 @@ Commands:
                        Validate Request IR candidate graph/read-model authority without traversal
   graph read-model plan-traversal
                        Generate a deterministic Graph Traversal Plan without selected slice output
+  graph read-model select-slice
+                       Generate a deterministic Selected Graph Slice without contract input output
   graph read-model report-health
                        Summarize local non-enforcing Graph-source transition health
   graph read-model observe-candidates
@@ -226,7 +228,7 @@ Options:
   --graph-delta <file> Graph delta file for graph operation propose-update.
   --target-repo <path> Target git repository path for graph operation capture-delta.
   --manual <file>      Manual parity artifact for graph read-model comparison.
-  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, validate-request-ir, validate-request-ir-graph, or plan-traversal.
+  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, validate-request-ir, validate-request-ir-graph, plan-traversal, or select-slice.
   --markdown <file>    Optional Markdown summary output for graph read-model report-health, check-scope, or review-graph-delta.
   --proposal <file>    Graph update proposal file for graph operation apply-proposal or graph read-model review-graph-delta.
   --candidate <file>   Request IR Candidate file for graph read-model validate-request-ir.
@@ -234,6 +236,8 @@ Options:
                        Schema-only Request IR validation file for graph read-model validate-request-ir-graph.
   --graph-validation <file>
                        Graph-aware Request IR validation file for graph read-model plan-traversal.
+  --traversal-plan <file>
+                       Graph Traversal Plan file for graph read-model select-slice.
   --chain-command <name>
                        Wrapped graph operation script command. Defaults to operation-chain.
   --base <ref>         Base git ref for graph read-model collect-changed-files or check-scope.

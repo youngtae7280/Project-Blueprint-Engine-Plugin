@@ -581,6 +581,34 @@ node dist/cli/index.js graph read-model plan-traversal `
   --json
 ```
 
+### `pbe graph read-model select-slice`
+
+- Purpose: Generate a deterministic Selected Graph Slice from a ready Graph Traversal Plan.
+- Typical state before running: After `graph read-model plan-traversal` has produced a `graph-traversal-plan` artifact
+  with `graphTraversalPlanStatus: ready` and `selectedGraphSlicePlanningAllowed: true`.
+- Options: `--traversal-plan <planPath>` is required. `--output <file>` may write the selected slice. Without
+  `--output`, JSON stdout is the only output.
+- What it checks: traversal plan role/status, selected-slice planning permission, exactly one resolved start node,
+  readable graph source, readable generated read model, start node existence, and node/edge vocabulary consistency with
+  the generated read-model taxonomy.
+- What it writes: Nothing by default. It writes only to the explicit `--output` path.
+- Success result: JSON with `artifactRole: selected-graph-slice`, `selectedGraphSliceGenerated: true`,
+  `graphTraversalExecuted: true`, selected node/edge arrays, category arrays, and a selection trace.
+- Common failures: unreadable traversal plan, blocked traversal plan, missing graph source, missing generated read
+  model, missing or ambiguous start node, or traversal-plan vocabulary drift.
+- Next command: A later contract compiler input pass may consume this selected slice. Do not treat it as contract
+  compiler input, instruction-pack generation, approval, runtime Evidence satisfaction, equivalence proof, graph-source
+  mutation, graph delta apply, or enforcement.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model select-slice `
+  --traversal-plan examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json `
+  --output examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json `
+  --json
+```
+
 ### `pbe graph operation apply-proposal`
 
 - Purpose: Preview or apply a generated graph update proposal to its graph-source.

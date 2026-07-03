@@ -88,6 +88,7 @@ export interface CliOptions {
   candidate?: string
   schemaValidation?: string
   graphValidation?: string
+  traversalPlan?: string
   chainCommand?: string
   base?: string
   head?: string

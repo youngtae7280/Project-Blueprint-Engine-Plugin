@@ -13,6 +13,7 @@ const smokeGraphDeltaReviewPacketPath = '.tmp/devview-runtime-timing-smoke/graph
 const smokeRequestIrValidationPath = '.tmp/devview-runtime-timing-smoke/request-ir-validation.json'
 const smokeRequestIrGraphValidationPath = '.tmp/devview-runtime-timing-smoke/request-ir-graph-validation.json'
 const smokeGraphTraversalPlanPath = '.tmp/devview-runtime-timing-smoke/graph-traversal-plan.json'
+const smokeSelectedGraphSlicePath = '.tmp/devview-runtime-timing-smoke/selected-graph-slice.json'
 const graphDeltaCompatibleSourcePath =
   'examples/valid/todo-app-pbe-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json'
 const requestIrCandidatePath =
@@ -65,6 +66,21 @@ const measuredSteps = [
       smokeRequestIrGraphValidationPath,
       '--output',
       smokeGraphTraversalPlanPath,
+      '--json',
+    ],
+    includedInRuntimeBudget: true,
+  },
+  {
+    stepName: 'selected-graph-slice-generation',
+    command: `node dist/cli/index.js graph read-model select-slice --traversal-plan ${smokeGraphTraversalPlanPath} --output ${smokeSelectedGraphSlicePath} --json`,
+    args: [
+      'graph',
+      'read-model',
+      'select-slice',
+      '--traversal-plan',
+      smokeGraphTraversalPlanPath,
+      '--output',
+      smokeSelectedGraphSlicePath,
       '--json',
     ],
     includedInRuntimeBudget: true,

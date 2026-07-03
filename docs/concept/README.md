@@ -353,9 +353,14 @@ and
 The first deterministic traversal plan generator is exposed through
 `graph read-model plan-traversal --graph-validation <graphAwareValidationPath> --json`. Its Todo App calibration output
 is `examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json`.
-It generates a plan only; it does not execute traversal, select nodes or edges as final scope, generate a selected graph
-slice, generate contract input, generate instruction packs, mutate graph-source, apply graph deltas, approve work, or
-enforce scope.
+It generates a plan only; it does not select nodes or edges as final scope, generate contract input, generate
+instruction packs, mutate graph-source, apply graph deltas, approve work, or enforce scope.
+
+The first deterministic selected graph slice generator is exposed through
+`graph read-model select-slice --traversal-plan <planPath> --json`. Its Todo App calibration output is
+`examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json`. It selects
+the bounded direct graph-source/read-model slice for `CH-001` and records a trace, but it is still not contract compiler
+input and not an instruction pack.
 
 The traversal boundary separates graph vocabulary from planner semantics: `*NodeTypes` and `*EdgeTypes` contain only
 actual graph taxonomy values, while target/scope/evidence/output meanings are represented as roles and selection

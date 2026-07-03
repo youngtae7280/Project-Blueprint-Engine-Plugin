@@ -4,6 +4,7 @@ import { collectGitDerivedChangedFiles } from '../core/git-derived-changed-file-
 import { generateGraphDeltaHumanReviewPacket } from '../core/graph-delta-human-review-packet.js'
 import { generateGraphTraversalPlanFile } from '../core/graph-traversal-plan.js'
 import { generateProposalOnlyGraphDeltaPreview } from '../core/graph-delta-proposal-generator.js'
+import { generateSelectedGraphSliceFile } from '../core/selected-graph-slice.js'
 import { validateRequestIrGraphAwareFile } from '../core/request-ir-graph-aware-validator.js'
 import { validateRequestIrCandidateFile } from '../core/request-ir-candidate-validator.js'
 import { buildGraphExecutionContractReport } from '../core/graph-execution-contract.js'
@@ -963,6 +964,68 @@ export async function graphReadModelPlanTraversalCommand(context: CommandContext
           message,
           suggestedFix:
             'Provide a readable graph-aware Request IR validation artifact. Planning does not execute traversal or generate selected graph slices.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelSelectSliceCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.traversalPlan) {
+    return invalidCommand('graph read-model select-slice requires --traversal-plan <traversalPlanPath>.')
+  }
+
+  try {
+    const slice = await generateSelectedGraphSliceFile(context.options.root, context.options.traversalPlan, {
+      output: context.options.output,
+    })
+    const blocked = slice.result.selectedGraphSliceStatus !== 'generated'
+    const errorFindings = slice.result.validationFindings.filter((finding) => finding.severity === 'error')
+
+    return {
+      ok: !blocked,
+      command: 'graph read-model select-slice',
+      exitCode: blocked ? ExitCode.ValidationFailed : ExitCode.Success,
+      message: blocked
+        ? 'Selected graph slice generation did not produce a generated selected slice.'
+        : 'Selected graph slice generated without contract input or instruction pack output.',
+      issues: blocked
+        ? (errorFindings.length > 0 ? errorFindings : slice.result.validationFindings).map((finding) =>
+            issue({
+              validator: 'SelectedGraphSliceGenerator',
+              code: finding.code,
+              severity: finding.severity,
+              message: finding.message,
+              reason: finding.field ? `Field: ${finding.field}` : undefined,
+              suggestedFix:
+                finding.suggestedFix ??
+                'Fix the traversal plan or graph/read-model authority before selecting a graph slice.',
+            }),
+          )
+        : [],
+      data: {
+        ...slice.result,
+        ...(slice.outputPath ? { outputPath: slice.outputPath } : {}),
+        next: blocked
+          ? 'Fix selected graph slice prerequisites. No contract input or instruction pack was generated.'
+          : 'A later contract compiler input pass may consume this selected slice. This command did not generate contract input, generate instruction packs, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model select-slice',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Selected graph slice generation could not run.',
+      issues: [
+        issue({
+          validator: 'SelectedGraphSliceGenerator',
+          code: 'SELECTED_GRAPH_SLICE_GENERATION_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide a readable ready Graph Traversal Plan artifact. Slice selection does not generate contract input or instruction packs.',
         }),
       ],
     }

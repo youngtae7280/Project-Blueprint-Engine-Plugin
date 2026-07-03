@@ -73,8 +73,8 @@
 - [Natural Language Request Intake Boundary](concept/natural-language-request-intake-boundary.md) - DevView compiler
   frontend boundary for natural language request intake, Request IR Candidate schema/calibration fixtures, schema-only
   validation, non-traversing graph-aware validation, deterministic Graph Traversal Plan generation, Selected Graph Slice
-  boundary, and contract compiler input without implementing an AI classifier, runtime LLM calls, selected slice
-  generation, instruction-pack generation, graph-source mutation, apply, or approval.
+  generation, and future contract compiler input without implementing an AI classifier, runtime LLM calls, contract
+  input generation, instruction-pack generation, graph-source mutation, apply, or approval.
 - [Scope Compliance Checker Implementation Readiness](concept/scope-compliance-checker-implementation-readiness.md) -
   Readiness criteria for future scope-compliance checker inputs, missing-input states, result preview status, and
   authoritative changed-file input boundaries before executable checker logic exists.

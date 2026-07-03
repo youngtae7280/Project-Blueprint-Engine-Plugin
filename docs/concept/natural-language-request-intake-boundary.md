@@ -224,12 +224,13 @@ Previewed validation statuses are:
 - `clarification-required`
 - `human-review-required`
 
-The schema-only runtime validator, graph-aware runtime validator, and deterministic graph traversal plan generator are
-implemented. Selected graph slice generation remains future work.
+The schema-only runtime validator, graph-aware runtime validator, deterministic graph traversal plan generator, and
+deterministic selected graph slice generator are implemented. Contract compiler input generation remains future work.
 
 Schema-valid does not mean validated-for-traversal. Graph-aware-valid means future traversal permission only. The
-deterministic traversal plan generator can now produce a plan from that permission, but edge traversal execution,
-selected graph slice generation, contract input generation, and instruction pack generation remain blocked.
+deterministic traversal plan generator can now produce a plan from that permission. The selected slice generator can
+consume the plan and produce a bounded selected node/edge slice, but contract input generation and instruction pack
+generation remain blocked.
 
 ## Graph Traversal Plan Boundary
 
@@ -293,7 +294,7 @@ boundary artifact.
 AI does not directly select the final graph slice. AI may suggest candidates; deterministic traversal selects the final
 node/edge slice only after schema-only validation and graph-aware validation have succeeded.
 
-## Selected Graph Slice Boundary
+## Selected Graph Slice Generation
 
 The selected graph slice boundary preview for the Todo App calibration request is:
 
@@ -301,7 +302,24 @@ The selected graph slice boundary preview for the Todo App calibration request i
 examples/valid/todo-app-pbe-run/generated/selected-graph-slice-boundary.add-todo-runtime-evidence-only.preview.json
 ```
 
-It defines the future selected slice shape:
+The first deterministic selected graph slice generator is now available as:
+
+```text
+graph read-model select-slice --traversal-plan <planPath> --json
+```
+
+The generated Todo App calibration selected graph slice is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json
+```
+
+It starts from `CH-001` and selects directly connected graph-source/read-model nodes and edges allowed by the traversal
+plan vocabulary. For the current calibration, the selected nodes are `CH-001`, `WT-1`, `TT-1`, `EV-1`, and `IM-001`.
+The selected edges are `E-CH-001-TOUCHES-WT-1`, `E-CH-001-PRESERVES-TT-1`, `E-CH-001-PRESERVES-EV-1`, and
+`E-IM-001-REPORTS-ON-CH-001`.
+
+The boundary artifact still defines the slice shape and handoff policy:
 
 - `selectedGraphSliceId`
 - `sourceTraversalPlan`
@@ -318,17 +336,18 @@ It defines the future selected slice shape:
 - `sliceCompletenessStatus`
 - `contractInputReadinessStatus`
 
-Current required values remain:
+The generated selected slice sets:
 
 ```text
-selectedGraphSliceStatus: not-generated
-selectedGraphSliceGenerated: false
+selectedGraphSliceStatus: generated
+selectedGraphSliceGenerated: true
+graphTraversalExecuted: true
 contractInputGenerated: false
 instructionPackGenerated: false
 ```
 
 If multiple target records/components match, if required policy/evidence nodes are missing, or if source authority
-cannot be proven, the future slice must be marked ambiguous or incomplete and contract input generation must remain
+cannot be proven, the slice must be marked ambiguous, incomplete, or blocked and contract input generation must remain
 blocked.
 
 ## Contract Input Mapping
@@ -346,7 +365,8 @@ A validated Request IR may later feed:
 The mapping is previewed only. No contract compiler input is generated here.
 
 Contract compiler input cannot be generated directly from a Request IR Candidate, schema-only validation, graph-aware
-validation, or traversal boundary preview. A future complete selected graph slice is the required handoff artifact.
+validation, or traversal plan alone. A generated selected graph slice is the required future handoff artifact, but the
+selected slice itself is still not contract compiler input.
 
 ## Hook Gateway Relationship
 

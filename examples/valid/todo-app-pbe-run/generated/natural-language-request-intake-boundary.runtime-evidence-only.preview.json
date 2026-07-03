@@ -17,15 +17,17 @@
   "requestIrGraphAwareValidationBoundaryStatus": "request-ir-graph-aware-validation-boundary-previewed",
   "requestIrGraphAwareValidationBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json",
   "requestIrGraphAwareValidationResultArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json",
-  "graphTraversalImplementedFromRequestIr": false,
+  "graphTraversalImplementedFromRequestIr": true,
   "graphTraversalPlanGeneratorImplemented": true,
   "graphTraversalPlanGenerated": true,
   "graphTraversalPlanBoundaryStatus": "boundary-preview-only",
   "graphTraversalPlanBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/graph-traversal-plan-boundary.add-todo-runtime-evidence-only.preview.json",
   "firstCalibrationGraphTraversalPlanArtifact": "examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json",
-  "selectedGraphSliceBoundaryStatus": "not-generated-boundary-preview-only",
+  "selectedGraphSliceBoundaryStatus": "boundary-previewed-generated-slice-available",
   "selectedGraphSliceBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/selected-graph-slice-boundary.add-todo-runtime-evidence-only.preview.json",
-  "selectedGraphSliceGenerated": false,
+  "selectedGraphSliceGeneratorImplemented": true,
+  "selectedGraphSliceGenerated": true,
+  "firstCalibrationSelectedGraphSliceArtifact": "examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json",
   "contractCompilerInputGenerated": false,
   "instructionPackGenerated": false,
   "graphSourceMutated": false,
@@ -286,13 +288,16 @@
     "aiDirectFinalSliceSelectionAllowed": false,
     "aiCandidateSuggestionAllowed": true,
     "deterministicTraversalSelectsFinalSliceAfterValidation": true,
-    "selectedGraphSliceGenerated": false
+    "selectedGraphSliceGenerated": false,
+    "selectedGraphSliceGenerationNowImplementedAsSeparatePass": true
   },
   "selectedGraphSliceBoundary": {
-    "selectedGraphSliceStatus": "not-generated",
+    "selectedGraphSliceStatus": "generated-as-separate-artifact",
     "boundaryArtifact": "examples/valid/todo-app-pbe-run/generated/selected-graph-slice-boundary.add-todo-runtime-evidence-only.preview.json",
     "sourceTraversalPlanBoundary": "examples/valid/todo-app-pbe-run/generated/graph-traversal-plan-boundary.add-todo-runtime-evidence-only.preview.json",
-    "selectedGraphSliceGenerated": false,
+    "sourceGeneratedTraversalPlan": "examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json",
+    "generatedSelectedGraphSliceArtifact": "examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json",
+    "selectedGraphSliceGenerated": true,
     "contractInputGenerated": false,
     "instructionPackGenerated": false,
     "contractInputRequiresSelectedGraphSlice": true
@@ -362,6 +367,7 @@
     "link the graph traversal plan boundary as the next non-executing compiler frontend pass",
     "link the generated graph traversal plan as deterministic plan output without selected slice generation",
     "link the selected graph slice boundary as the required contract input prerequisite",
+    "link the generated selected graph slice as deterministic node/edge slice output without contract input generation",
     "preview Request IR to contract input mapping",
     "separate Hook Gateway activation from compiler frontend semantics"
   ],
@@ -369,7 +375,7 @@
     "AI classifier implementation",
     "runtime LLM calls",
     "graph traversal from unvalidated AI output",
-    "graph traversal execution",
+    "graph traversal from unvalidated AI output",
     "contract input generation from unvalidated AI output",
     "instruction pack generation from unvalidated AI output",
     "graph-source mutation",
@@ -383,5 +389,5 @@
     "branch protection",
     "user acceptance automation"
   ],
-  "nonExecutionBoundary": "This artifact defines the Natural Language Request Intake compiler frontend boundary only. It links the Request IR Candidate schema preview, first calibration candidate fixture, schema-only validation result, graph-aware validation boundary, and graph-aware validation result as candidate-only/non-traversing frontend inputs. It does not implement an AI classifier, call an LLM from runtime code, implement hook scripts, run graph traversal, generate selected graph slices, generate contract compiler input, generate instruction packs, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, create required checks, change branch protection, or automate user acceptance."
+  "nonExecutionBoundary": "This artifact defines the Natural Language Request Intake compiler frontend boundary only. It links the Request IR Candidate schema preview, first calibration candidate fixture, schema-only validation result, graph-aware validation boundary, graph-aware validation result, generated traversal plan, and generated selected graph slice. This boundary artifact itself does not implement an AI classifier, call an LLM from runtime code, implement hook scripts, generate contract compiler input, generate instruction packs, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, create required checks, change branch protection, or automate user acceptance."
 }

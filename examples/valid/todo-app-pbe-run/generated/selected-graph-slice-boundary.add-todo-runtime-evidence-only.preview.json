@@ -8,6 +8,8 @@
   "selectedGraphSliceStatus": "not-generated",
   "sourceTraversalPlan": "examples/valid/todo-app-pbe-run/generated/graph-traversal-plan-boundary.add-todo-runtime-evidence-only.preview.json",
   "sourceGeneratedTraversalPlan": "examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json",
+  "selectedGraphSliceGeneratorImplemented": true,
+  "firstGeneratedSelectedGraphSliceArtifact": "examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json",
   "sourceGraphAwareValidation": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json",
   "graphTraversalExecuted": false,
   "selectedGraphSliceGenerated": false,
@@ -93,12 +95,12 @@
     "define future selected graph slice artifact shape",
     "define contract input readiness boundary",
     "define ambiguity and missing policy handling",
-    "document that selected graph slice generation remains future work"
+    "document that this boundary artifact is not the generated selected graph slice",
+    "link the first generated selected graph slice artifact"
   ],
   "forbiddenUse": [
-    "claiming selected nodes or edges exist",
-    "graph traversal execution",
-    "selected graph slice generation",
+    "claiming this boundary artifact is the generated selected graph slice",
+    "claiming this boundary artifact selected nodes or edges",
     "contract compiler input generation",
     "instruction pack generation",
     "AI classifier implementation",
@@ -114,5 +116,5 @@
     "branch protection",
     "user acceptance automation"
   ],
-  "nonExecutionBoundary": "This artifact previews the Selected Graph Slice boundary only. It defines the future selected node/edge slice shape and contract input readiness policy, but it does not claim that a slice has been generated, does not execute traversal, does not select nodes or edges, does not generate contract compiler input, does not generate instruction packs, does not call an LLM, does not mutate graph-source, does not apply graph deltas, does not approve graph updates, does not record human decisions, does not satisfy runtime Evidence, does not prove equivalence, does not enforce scope, does not reject diffs, does not configure required checks, does not change branch protection, and does not automate user acceptance."
+  "nonExecutionBoundary": "This artifact previews the Selected Graph Slice boundary only. It defines the selected node/edge slice shape and contract input readiness policy, and links the separate generated selected graph slice artifact. This boundary artifact itself does not claim to be the generated slice, does not generate contract compiler input, does not generate instruction packs, does not call an LLM, does not mutate graph-source, does not apply graph deltas, does not approve graph updates, does not record human decisions, does not satisfy runtime Evidence, does not prove equivalence, does not enforce scope, does not reject diffs, does not configure required checks, does not change branch protection, and does not automate user acceptance."
 }

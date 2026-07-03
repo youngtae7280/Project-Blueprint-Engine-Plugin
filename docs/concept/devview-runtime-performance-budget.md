@@ -236,7 +236,7 @@ The validator resolves schema-valid candidate fields such as `CH-001`, `Todo App
 permission. The validator does not run graph traversal, select nodes or edges, generate contract input, generate
 instruction packs, call an LLM, or mutate graph-source.
 
-The traversal boundary and selected slice boundary remain preview artifacts:
+The traversal boundary and selected slice boundary remain boundary preview artifacts:
 
 ```text
 examples/valid/todo-app-pbe-run/generated/graph-traversal-plan-boundary.add-todo-runtime-evidence-only.preview.json
@@ -255,9 +255,24 @@ The tracked Todo App generated traversal plan is:
 examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json
 ```
 
-It generates a plan only. It does not execute graph traversal, produce final selected nodes/edges, generate a selected
-graph slice, generate contract input, or generate instruction packs. Contract input still requires a future generated
-selected graph slice.
+It generates a plan only. It does not produce final selected nodes/edges, generate contract input, or generate
+instruction packs.
+
+The deterministic selected graph slice generator is also part of the measured advisory runtime path:
+
+```text
+graph read-model select-slice --traversal-plan <planPath> --json
+```
+
+The tracked Todo App generated selected slice is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json
+```
+
+It selects a bounded graph-source/read-model slice from a ready traversal plan and records selection trace. It does not
+generate contract compiler input, generate instruction packs, mutate graph-source, apply graph deltas, approve work,
+satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.
 
 The traversal boundary keeps graph vocabulary separate from planner semantics: `requiredNodeTypes` and
 `requiredEdgeTypes` use only the current graph-source taxonomy, while target/scope/evidence/output meanings are recorded

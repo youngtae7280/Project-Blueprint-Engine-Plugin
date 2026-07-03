@@ -30,6 +30,7 @@ import {
   graphReadModelReportCompilerInputCommand,
   graphReadModelReportHealthCommand,
   graphReadModelReportIntentCommand,
+  graphReadModelSelectSliceCommand,
   graphReadModelSummarizeCommand,
   graphReadModelValidateRequestIrGraphCommand,
   graphReadModelValidateRequestIrCommand,
@@ -238,6 +239,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'plan-traversal') {
     return graphReadModelPlanTraversalCommand(context)
+  }
+  if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'select-slice') {
+    return graphReadModelSelectSliceCommand(context)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'report-health') {
     return graphReadModelReportHealthCommand(context)

@@ -2085,3 +2085,42 @@ not claimed. Contract input generation remains blocked until a selected graph sl
 generate instruction packs, call an LLM, implement an AI analyzer, implement hook scripts, mutate graph-source, apply
 graph deltas, approve graph updates, record human decisions, change equivalence behavior, satisfy runtime Evidence,
 enforce scope, introduce CI required checks, change branch protection, or automate user acceptance.
+
+## DEC-246 Implement Deterministic Selected Graph Slice Generator
+
+DEC-246 does not supersede DEC-097 through DEC-245. It implements the first deterministic Selected Graph Slice generator
+after Graph Traversal Plan generation.
+
+The generator is exposed through:
+
+```text
+graph read-model select-slice --traversal-plan <planPath> --json
+```
+
+The implementation is recorded in:
+
+```text
+cli/src/core/selected-graph-slice.ts
+```
+
+The Todo App calibration slice is generated at:
+
+```text
+examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json
+```
+
+The generator consumes a ready `graph-traversal-plan` artifact, reads the referenced graph source and generated read
+model, validates slice prerequisites, resolves the single start node `CH-001`, and selects a bounded direct
+graph-source/read-model slice. Selection is deterministic and traceable: selected nodes, selected edges, category
+groups, excluded items, and selection trace entries are written into the selected slice artifact.
+
+For the Todo App runtime-Evidence-only calibration, the selected nodes are `CH-001`, `WT-1`, `TT-1`, `EV-1`, and
+`IM-001`. The selected edges are `E-CH-001-TOUCHES-WT-1`, `E-CH-001-PRESERVES-TT-1`,
+`E-CH-001-PRESERVES-EV-1`, and `E-IM-001-REPORTS-ON-CH-001`. Approval edges remain excluded unless a future explicit
+policy says otherwise.
+
+The selected slice is not contract compiler input yet. Contract input generation remains blocked until a future
+selected-slice-to-contract-input mapper exists. This decision does not generate instruction packs, call an LLM,
+implement an AI analyzer, implement hook scripts, mutate graph-source, apply graph deltas, approve graph updates,
+record human decisions, change equivalence behavior, satisfy runtime Evidence, enforce scope, introduce CI required
+checks, change branch protection, or automate user acceptance.

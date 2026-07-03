@@ -127,6 +127,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     candidate: undefined as string | undefined,
     schemaValidation: undefined as string | undefined,
     graphValidation: undefined as string | undefined,
+    traversalPlan: undefined as string | undefined,
     chainCommand: undefined as string | undefined,
     base: undefined as string | undefined,
     head: undefined as string | undefined,
@@ -372,6 +373,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--graph-validation requires a file path.' }
       }
       options.graphValidation = value
+      index += 1
+    } else if (arg === '--traversal-plan') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--traversal-plan requires a file path.' }
+      }
+      options.traversalPlan = value
       index += 1
     } else if (arg === '--chain-command') {
       const value = argv[index + 1]
