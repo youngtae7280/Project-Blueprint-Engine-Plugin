@@ -654,6 +654,10 @@ node dist/cli/index.js graph read-model generate-contract-input `
   safety flags, not-approved approval status, no equivalence or runtime Evidence satisfaction, required compiler input
   groups, and absence of error findings.
 - What it writes: Nothing by default. It writes only to explicit `--output` and `--markdown` paths.
+- Output authority guard: explicit preview output paths are rejected before writing if they would overwrite the source
+  Contract Compiler Input, graph/source authority artifacts, selected frontend input artifacts, concrete forbidden-scope
+  paths, graph snapshot artifacts, context-only target scope paths, or an existing graph-source/source-authority-shaped
+  JSON file.
 - Success result: JSON with `artifactRole: instruction-pack`, `instructionPackGenerated: true`,
   `codexExecutionTriggered: false`, narrowed `allowedScope`, preserved `forbiddenScope`, required Evidence, stop
   conditions, known risks, output requirements, execution instructions, non-goals, and non-execution boundaries.

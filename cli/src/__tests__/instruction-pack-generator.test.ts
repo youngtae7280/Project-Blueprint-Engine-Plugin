@@ -136,6 +136,96 @@ describe('Instruction Pack generator CLI', () => {
     expect(readFileSync(join(workspace, 'contract-input.json'), 'utf8')).toBe(contractInputBefore)
     expect(readFileSync(join(workspace, 'graph-source.json'), 'utf8')).toBe(graphSourceBefore)
   })
+
+  it('blocks JSON output that would overwrite graph source authority', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'contract-input.json'), validContractInput())
+    writeJson(join(workspace, 'graph-source.json'), {
+      artifactRole: 'structure-only-graph-source',
+      sourceRecords: { nodes: [], edges: [] },
+    })
+    const graphSourceBefore = readFileSync(join(workspace, 'graph-source.json'), 'utf8')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'generate-instruction-pack',
+        '--contract-input',
+        'contract-input.json',
+        '--output',
+        'graph-source.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.ok).toBe(false)
+    expect(payload.issues[0].code).toBe('INSTRUCTION_PACK_GENERATION_FAILED')
+    expect(payload.issues[0].message).toContain('already contains graph-source')
+    expect(readFileSync(join(workspace, 'graph-source.json'), 'utf8')).toBe(graphSourceBefore)
+  })
+
+  it('blocks Markdown output that would overwrite graph source authority before writing JSON output', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'contract-input.json'), validContractInput())
+    writeJson(join(workspace, 'graph-source.json'), {
+      artifactRole: 'structure-only-graph-source',
+      sourceRecords: { nodes: [], edges: [] },
+    })
+    const graphSourceBefore = readFileSync(join(workspace, 'graph-source.json'), 'utf8')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'generate-instruction-pack',
+        '--contract-input',
+        'contract-input.json',
+        '--output',
+        join('.tmp', 'instruction-pack.json'),
+        '--markdown',
+        'graph-source.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.ok).toBe(false)
+    expect(payload.issues[0].message).toContain('already contains graph-source')
+    expect(existsSync(join(workspace, '.tmp', 'instruction-pack.json'))).toBe(false)
+    expect(readFileSync(join(workspace, 'graph-source.json'), 'utf8')).toBe(graphSourceBefore)
+  })
+
+  it('blocks output that would overwrite the source Contract Compiler Input', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'contract-input.json'), validContractInput())
+    const contractInputBefore = readFileSync(join(workspace, 'contract-input.json'), 'utf8')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'generate-instruction-pack',
+        '--contract-input',
+        'contract-input.json',
+        '--output',
+        'contract-input.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.ok).toBe(false)
+    expect(payload.issues[0].message).toContain('would overwrite the source Contract Compiler Input')
+    expect(readFileSync(join(workspace, 'contract-input.json'), 'utf8')).toBe(contractInputBefore)
+  })
 })
 
 function validContractInput(): Record<string, unknown> {

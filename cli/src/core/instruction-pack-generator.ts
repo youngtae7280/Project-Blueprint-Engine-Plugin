@@ -263,6 +263,7 @@ export async function generateInstructionPackFile(
   }
 
   const pack = generateInstructionPack(parsed.value, relativePath(root, resolvedContractInputPath))
+  await assertPreviewOutputAuthority(root, resolvedContractInputPath, parsed.value, options)
   let outputPath: string | undefined
   let markdownReport: string | undefined
 
@@ -287,6 +288,129 @@ export async function generateInstructionPackFile(
   }
 
   return { pack, ...(outputPath ? { outputPath } : {}), ...(markdownReport ? { markdownReport } : {}) }
+}
+
+async function assertPreviewOutputAuthority(
+  root: string,
+  resolvedContractInputPath: string,
+  contractInput: JsonRecord,
+  options: { output?: string; markdown?: string },
+): Promise<void> {
+  const requestedTargets = [
+    ...(options.output
+      ? [{ kind: 'output', requestedPath: options.output, resolvedPath: resolveRepoPath(root, options.output) }]
+      : []),
+    ...(options.markdown
+      ? [{ kind: 'markdown', requestedPath: options.markdown, resolvedPath: resolveRepoPath(root, options.markdown) }]
+      : []),
+  ]
+  if (requestedTargets.length === 0) {
+    return
+  }
+
+  if (
+    requestedTargets.length === 2 &&
+    pathKey(requestedTargets[0].resolvedPath) === pathKey(requestedTargets[1].resolvedPath)
+  ) {
+    throw new Error(
+      `Instruction Pack preview output is unsafe: --output and --markdown resolve to the same path (${requestedTargets[0].requestedPath}).`,
+    )
+  }
+
+  const protectedPaths = buildProtectedOutputPathMap(root, resolvedContractInputPath, contractInput)
+  for (const target of requestedTargets) {
+    const protectedReason = protectedPaths.get(pathKey(target.resolvedPath))
+    if (protectedReason) {
+      throw new Error(
+        `Instruction Pack preview ${target.kind} path is unsafe: ${target.requestedPath} would overwrite ${protectedReason}.`,
+      )
+    }
+
+    const existingAuthority = await classifyExistingSourceAuthority(target.resolvedPath)
+    if (existingAuthority) {
+      throw new Error(
+        `Instruction Pack preview ${target.kind} path is unsafe: ${target.requestedPath} already contains ${existingAuthority}. Choose a dedicated preview output path.`,
+      )
+    }
+  }
+}
+
+function buildProtectedOutputPathMap(
+  root: string,
+  resolvedContractInputPath: string,
+  contractInput: JsonRecord,
+): Map<string, string> {
+  const protectedPaths = new Map<string, string>()
+  const add = (candidate: unknown, reason: string): void => {
+    const candidatePath = stringValue(candidate)
+    if (!isConcreteOutputProtectedPath(candidatePath)) {
+      return
+    }
+    protectedPaths.set(pathKey(resolveRepoPath(root, candidatePath)), reason)
+  }
+
+  protectedPaths.set(pathKey(resolvedContractInputPath), 'the source Contract Compiler Input')
+  add(contractInput.graphSourcePath, 'graphSourcePath source authority')
+  add(contractInput.generatedReadModelPath, 'generatedReadModelPath source authority')
+  add(contractInput.sourceSelectedGraphSlice, 'sourceSelectedGraphSlice selected input')
+  add(contractInput.sourceTraversalPlan, 'sourceTraversalPlan selected input')
+  add(contractInput.sourceGraphAwareValidation, 'sourceGraphAwareValidation selected input')
+  add(contractInput.sourceRequestIrCandidate, 'sourceRequestIrCandidate selected input')
+
+  for (const entry of arrayRecords(contractInput.forbiddenScope)) {
+    for (const scopePath of stringArray(entry.paths)) {
+      add(scopePath, `forbiddenScope concrete path ${stringValue(entry.id) || scopePath}`)
+    }
+  }
+
+  for (const artifact of arrayRecords(asRecord(contractInput.graphSnapshot)?.artifacts)) {
+    add(artifact.path, `graphSnapshot artifact ${stringValue(artifact.id) || stringValue(artifact.path)}`)
+  }
+
+  for (const candidate of arrayRecords(contractInput.targetScopeCandidates)) {
+    if (candidate.contextOnly !== true) {
+      continue
+    }
+    for (const scopePath of stringArray(candidate.paths)) {
+      add(scopePath, `context-only targetScopeCandidate path ${stringValue(candidate.id) || scopePath}`)
+    }
+  }
+
+  return protectedPaths
+}
+
+async function classifyExistingSourceAuthority(filePath: string): Promise<string | null> {
+  const parsed = await readJsonSafe<JsonRecord>(filePath)
+  if (!parsed.ok) {
+    return null
+  }
+  const record = asRecord(parsed.value)
+  if (!record) {
+    return null
+  }
+  const artifactRole = stringValue(record.artifactRole)
+  if (artifactRole.includes('graph-source')) {
+    return `graph-source artifactRole "${artifactRole}"`
+  }
+  if (
+    artifactRole === 'contract-compiler-input' ||
+    artifactRole === 'selected-graph-slice' ||
+    artifactRole === 'graph-traversal-plan' ||
+    artifactRole === 'request-ir-graph-aware-validation'
+  ) {
+    return `selected input artifactRole "${artifactRole}"`
+  }
+  if (asRecord(record.sourceRecords)) {
+    return 'graph-source-shaped sourceRecords'
+  }
+  if (asRecord(record.taxonomy) && (Array.isArray(record.nodes) || Array.isArray(record.edges))) {
+    return 'generated read-model source-authority projection'
+  }
+  return null
+}
+
+function isConcreteOutputProtectedPath(candidatePath: string): boolean {
+  return Boolean(candidatePath) && !candidatePath.startsWith('unresolved:') && candidatePath !== '<in-memory>'
 }
 
 function validateContractInputPrerequisites(input: JsonRecord | null, findings: InstructionPackFinding[]): void {
@@ -537,4 +661,8 @@ function uniqueStrings(values: string[]): string[] {
 
 function resolveRepoPath(root: string, inputPath: string): string {
   return path.isAbsolute(inputPath) ? inputPath : path.resolve(root, inputPath)
+}
+
+function pathKey(filePath: string): string {
+  return path.resolve(filePath).replaceAll('\\', '/').toLowerCase()
 }
