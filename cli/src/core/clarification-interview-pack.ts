@@ -5,6 +5,15 @@ import type { IssueSeverity } from './types.js'
 const GENERATOR_NAME = 'ClarificationInterviewPackGenerator'
 const EXPECTED_BOUNDARY_ROLE = 'clarification-interview-boundary-preview'
 const EXPECTED_BOUNDARY_STATUS = 'clarification-interview-boundary-previewed'
+const DEFAULT_ALLOWED_QUESTION_FIELDS = new Set([
+  'requestTypeCandidate',
+  'targetRecordIdCandidate',
+  'targetComponentCandidate',
+  'allowedScopeIntentCandidate',
+  'forbiddenScopeIntentCandidate',
+  'requiredEvidenceIntentCandidate',
+  'riskIntentCandidate',
+])
 const REQUEST_IR_CANDIDATE_ROLES = new Set(['request-ir-candidate', 'request-ir-candidate-calibration-fixture-preview'])
 
 type JsonRecord = Record<string, unknown>
@@ -99,9 +108,11 @@ export function generateClarificationInterviewPack(
   validateClarificationBoundary(boundary, findings)
   validateRequestIrCandidate(candidate, findings)
 
+  const prerequisiteBlocked = findings.some((finding) => finding.severity === 'error')
+  const triggerFindings = prerequisiteBlocked ? [] : detectClarificationTriggers(candidate)
+  const plannedQuestions = prerequisiteBlocked ? [] : buildPlannedQuestions(boundary, triggerFindings)
+  validatePlannedQuestionVocabulary(boundary, plannedQuestions, findings)
   const blocked = findings.some((finding) => finding.severity === 'error')
-  const triggerFindings = blocked ? [] : detectClarificationTriggers(candidate)
-  const plannedQuestions = blocked ? [] : buildPlannedQuestions(boundary, triggerFindings)
   const revisedBoundary = asRecord(boundary?.revisedRequestIrCandidateBoundary) ?? {}
   const validationChainRequiredAgain = arrayRecords(revisedBoundary.validationChainRequiredAgain)
 
@@ -469,7 +480,7 @@ function detectClarificationTriggers(candidate: JsonRecord | null): JsonRecord[]
   if (candidate.requiresClarification === true) {
     triggers.push({
       triggerId: 'candidate-requires-clarification',
-      mapsToRequestIrField: 'ambiguities',
+      mapsToRequestIrField: 'riskIntentCandidate',
       reason: 'Request IR Candidate explicitly requires clarification.',
       result: 'clarification-required',
     })
@@ -477,7 +488,7 @@ function detectClarificationTriggers(candidate: JsonRecord | null): JsonRecord[]
   if (confidenceBand === 'low' || (confidenceScore !== null && confidenceScore < 0.5)) {
     triggers.push({
       triggerId: 'low-confidence',
-      mapsToRequestIrField: 'confidence',
+      mapsToRequestIrField: 'requestTypeCandidate',
       reason: 'Request IR Candidate confidence is below the clarification threshold.',
       result: 'clarification-required',
     })
@@ -511,7 +522,7 @@ function detectClarificationTriggers(candidate: JsonRecord | null): JsonRecord[]
   if (impliesApprovalApplyOrEnforcement(candidate)) {
     triggers.push({
       triggerId: 'implicit-approval-apply-or-enforcement',
-      mapsToRequestIrField: 'intentSummaryCandidate',
+      mapsToRequestIrField: 'forbiddenScopeIntentCandidate',
       reason: 'Request text or intent appears to ask for approval, apply, acceptance, enforcement, or CI authority.',
       result: 'human-review-required',
     })
@@ -528,6 +539,7 @@ function buildPlannedQuestions(
     return []
   }
   const examples = arrayRecords(asRecord(boundary?.interviewQuestionModel)?.exampleQuestions)
+  const allowedFields = getAllowedQuestionFields(boundary)
   const maxQuestions = Math.max(
     1,
     Math.min(3, numberValue(asRecord(asRecord(boundary?.interviewQuestionModel)?.questionCountPerTurn)?.maximum) || 3),
@@ -538,9 +550,9 @@ function buildPlannedQuestions(
     if (questions.length >= maxQuestions) {
       break
     }
-    const mappedField = stringValue(trigger.mapsToRequestIrField)
+    const mappedField = normalizeQuestionField(stringValue(trigger.mapsToRequestIrField), allowedFields)
     const example = examples.find((entry) => stringValue(entry.mapsToRequestIrField) === mappedField)
-    const question = normalizeQuestion(example, trigger) ?? questionFromTrigger(trigger)
+    const question = normalizeQuestion(example, trigger, allowedFields) ?? questionFromTrigger(trigger, allowedFields)
     if (!questions.some((entry) => entry.mapsToRequestIrField === question.mapsToRequestIrField)) {
       questions.push(question)
     }
@@ -548,7 +560,7 @@ function buildPlannedQuestions(
 
   while (questions.length === 0 && examples.length > 0) {
     const example = examples[0]
-    const question = normalizeQuestion(example, { triggerId: 'boundary-example-question' })
+    const question = normalizeQuestion(example, { triggerId: 'boundary-example-question' }, allowedFields)
     if (question) {
       questions.push(question)
     }
@@ -561,6 +573,7 @@ function buildPlannedQuestions(
 function normalizeQuestion(
   question: JsonRecord | undefined,
   trigger: JsonRecord,
+  allowedFields: Set<string>,
 ): ClarificationInterviewQuestion | null {
   if (!question) {
     return null
@@ -568,7 +581,7 @@ function normalizeQuestion(
   const questionId = stringValue(question.questionId)
   const mapsToRequestIrField = stringValue(question.mapsToRequestIrField)
   const prompt = stringValue(question.prompt)
-  if (!questionId || !mapsToRequestIrField || !prompt) {
+  if (!questionId || !mapsToRequestIrField || !prompt || !allowedFields.has(mapsToRequestIrField)) {
     return null
   }
   return {
@@ -582,9 +595,9 @@ function normalizeQuestion(
   }
 }
 
-function questionFromTrigger(trigger: JsonRecord): ClarificationInterviewQuestion {
+function questionFromTrigger(trigger: JsonRecord, allowedFields: Set<string>): ClarificationInterviewQuestion {
   const triggerId = stringValue(trigger.triggerId) || 'clarification-required'
-  const field = normalizeQuestionField(stringValue(trigger.mapsToRequestIrField))
+  const field = normalizeQuestionField(stringValue(trigger.mapsToRequestIrField), allowedFields)
   return {
     questionId: `clarify-${field.replaceAll(/[^a-zA-Z0-9]+/g, '-').toLowerCase()}`,
     mapsToRequestIrField: field,
@@ -623,17 +636,53 @@ function promptForField(field: string): string {
   }
 }
 
-function normalizeQuestionField(field: string): string {
-  const allowed = new Set([
-    'requestTypeCandidate',
-    'targetRecordIdCandidate',
-    'targetComponentCandidate',
-    'allowedScopeIntentCandidate',
-    'forbiddenScopeIntentCandidate',
-    'requiredEvidenceIntentCandidate',
-    'riskIntentCandidate',
-  ])
-  return allowed.has(field) ? field : 'intentSummaryCandidate'
+function normalizeQuestionField(field: string, allowedFields: Set<string>): string {
+  if (allowedFields.has(field)) {
+    return field
+  }
+  if (field === 'ambiguities' && allowedFields.has('riskIntentCandidate')) {
+    return 'riskIntentCandidate'
+  }
+  if (field === 'confidence' && allowedFields.has('requestTypeCandidate')) {
+    return 'requestTypeCandidate'
+  }
+  if (allowedFields.has('riskIntentCandidate')) {
+    return 'riskIntentCandidate'
+  }
+  return [...allowedFields][0] ?? 'riskIntentCandidate'
+}
+
+function validatePlannedQuestionVocabulary(
+  boundary: JsonRecord | null,
+  questions: ClarificationInterviewQuestion[],
+  findings: ClarificationInterviewPackFinding[],
+): void {
+  const allowedFields = getAllowedQuestionFields(boundary)
+  for (const question of questions) {
+    if (!allowedFields.has(question.mapsToRequestIrField)) {
+      findings.push({
+        code: 'CLARIFICATION_QUESTION_FIELD_OUTSIDE_BOUNDARY_VOCABULARY',
+        severity: 'error',
+        field: 'plannedQuestions[].mapsToRequestIrField',
+        message:
+          'Clarification Interview Pack generated a question mapped to a field outside the boundary question vocabulary.',
+        expected: [...allowedFields],
+        actual: question.mapsToRequestIrField,
+        suggestedFix:
+          'Map clarification triggers to requestTypeCandidate, targetRecordIdCandidate, targetComponentCandidate, allowedScopeIntentCandidate, forbiddenScopeIntentCandidate, requiredEvidenceIntentCandidate, or riskIntentCandidate only.',
+      })
+    }
+  }
+}
+
+function getAllowedQuestionFields(boundary: JsonRecord | null): Set<string> {
+  const questionShape = asRecord(asRecord(boundary?.interviewQuestionModel)?.questionShape)
+  const fieldVocabulary = stringValue(questionShape?.mapsToRequestIrField)
+  const parsedFields = fieldVocabulary
+    .split('|')
+    .map((entry) => entry.trim())
+    .filter((entry) => DEFAULT_ALLOWED_QUESTION_FIELDS.has(entry))
+  return parsedFields.length > 0 ? new Set(parsedFields) : new Set(DEFAULT_ALLOWED_QUESTION_FIELDS)
 }
 
 function hasUsefulValue(value: unknown): boolean {

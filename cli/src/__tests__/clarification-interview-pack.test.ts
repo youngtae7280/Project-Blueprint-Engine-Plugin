@@ -10,6 +10,15 @@ import { ExitCode } from '../core/types'
 import { cleanupWorkspaces, createWorkspace, writeJson } from './fixtures/workspace'
 
 const pluginRoot = resolve(process.cwd())
+const allowedQuestionFields = new Set([
+  'requestTypeCandidate',
+  'targetRecordIdCandidate',
+  'targetComponentCandidate',
+  'allowedScopeIntentCandidate',
+  'forbiddenScopeIntentCandidate',
+  'requiredEvidenceIntentCandidate',
+  'riskIntentCandidate',
+])
 
 afterEach(() => {
   cleanupWorkspaces()
@@ -63,6 +72,29 @@ describe('Clarification Interview pack core', () => {
     expect(pack.questionCount).toBeLessThanOrEqual(3)
     expect(pack.plannedQuestions[0].answerAuthorityStatus).toBe('clarification-answer-not-approval')
     expect(pack.plannedQuestions.every((question) => question.freeformAllowed)).toBe(true)
+    expect(pack.plannedQuestions.every((question) => allowedQuestionFields.has(question.mapsToRequestIrField))).toBe(
+      true,
+    )
+    expect(pack.plannedQuestions.map((question) => question.mapsToRequestIrField)).not.toContain(
+      'intentSummaryCandidate',
+    )
+    expect(pack.graphTraversalAllowed).toBe(false)
+  })
+
+  it('keeps low-confidence fallback questions inside the boundary field vocabulary', () => {
+    const pack = generateClarificationInterviewPack(validClarificationBoundary(), {
+      ...validRequestIrCandidate(),
+      requiresClarification: false,
+      confidence: { score: 0.2, band: 'low' },
+    })
+
+    expect(pack.status).toBe('clarification-interview-pack-generated')
+    expect(pack.questionPlanStatus).toBe('questions-planned-for-ambiguous-candidate')
+    expect(pack.questionCount).toBe(1)
+    expect(pack.plannedQuestions[0].mapsToRequestIrField).toBe('requestTypeCandidate')
+    expect(pack.plannedQuestions.every((question) => allowedQuestionFields.has(question.mapsToRequestIrField))).toBe(
+      true,
+    )
     expect(pack.graphTraversalAllowed).toBe(false)
   })
 
