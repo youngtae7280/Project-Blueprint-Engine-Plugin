@@ -279,6 +279,20 @@ does not run analysis, validation, traversal, contract generation, execution ins
 execution, graph mutation, graph delta apply, approval, runtime Evidence satisfaction, equivalence proof, enforcement,
 or CI configuration. Future LLM inference time remains outside this deterministic runtime budget.
 
+The clarification interview boundary preview is outside the measured runtime path:
+
+```text
+examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json
+```
+
+Clarification interview time is human interaction time and is outside the 5 second deterministic DevView runtime budget.
+If a future clarification flow produces a revised Request IR Candidate, that revised candidate must re-enter the
+deterministic validation path with `validate-request-ir` and `validate-request-ir-graph`; those validation commands stay
+inside the advisory deterministic runtime lanes. The boundary preview itself implements no interview UI, no LLM/API
+call, no Request IR revision generator, no traversal, no contract input, no instruction pack, no Codex execution, no
+graph-source mutation, no graph delta apply, no approval, no runtime Evidence satisfaction, no equivalence proof, and no
+scope/CI enforcement.
+
 The Request IR Candidate schema and first calibration fixture are:
 
 ```text

@@ -7,6 +7,8 @@
   "fixtureShape": "test-only-behavior-proof",
   "naturalLanguageRequestIntakeBoundary": "examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json",
   "aiRequestAnalyzerBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json",
+  "clarificationInterviewBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json",
+  "clarificationInterviewBoundaryStatus": "clarification-interview-boundary-previewed",
   "schemaScope": "future-ai-request-analyzer-output-shape",
   "schemaImplementationStatus": "preview-only",
   "requestIrCandidateStatus": "candidate-only",
@@ -151,12 +153,14 @@
     "requiresClarification": {
       "type": "boolean",
       "required": true,
-      "authorityStatus": "candidate-or-validation-controlled"
+      "authorityStatus": "candidate-or-validation-controlled",
+      "meaning": "When true, graph traversal, selected slice generation, contract input generation, and instruction pack generation are disallowed until clarification answers produce a revised Request IR Candidate that passes schema-only and graph-aware validation again."
     },
     "humanReviewRequired": {
       "type": "boolean",
       "required": true,
-      "authorityStatus": "candidate-or-validation-controlled"
+      "authorityStatus": "candidate-or-validation-controlled",
+      "meaning": "Human review is review input only. It is not approval, acceptance, runtime Evidence satisfaction, graph-source mutation authority, graph delta apply authority, or enforcement authority."
     },
     "candidateOnly": {
       "type": "boolean",
@@ -206,6 +210,9 @@
     },
     "lowConfidenceHandling": "requires clarification or human review",
     "unresolvedTargetMappingHandling": "human-review-required",
+    "clarificationBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json",
+    "clarificationRequiredHandling": "stop-before-traversal-and-ask-structured-questions",
+    "revisedCandidateValidationRequiredAgain": true,
     "mediumConfidenceBoundary": "medium confidence does not permit graph traversal or contract generation",
     "highConfidenceBoundary": "high confidence still does not permit graph traversal until deterministic validation succeeds"
   },
@@ -237,7 +244,12 @@
       "policy compatibility",
       "required evidence availability"
     ],
-    "outputStatuses": ["schema-valid-graph-validation-not-run", "validation-blocked"],
+    "outputStatuses": [
+      "schema-valid-graph-validation-not-run",
+      "validation-blocked",
+      "clarification-required",
+      "human-review-required"
+    ],
     "futureGraphAwareOutputStatuses": [
       "graph-aware-valid",
       "validation-blocked",
@@ -248,7 +260,10 @@
   "futureGraphTraversalBoundary": {
     "validatedRequestIrRequired": true,
     "graphTraversalAllowedFromUnvalidatedAiOutput": false,
+    "graphTraversalAllowedFromClarificationAnswers": false,
     "contractGenerationAllowedFromUnvalidatedAiOutput": false,
+    "contractGenerationAllowedFromClarificationAnswers": false,
+    "clarificationBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json",
     "futureInputsAfterValidation": [
       "graphTraversalPlan",
       "selectedNodeCandidates",
@@ -258,6 +273,7 @@
   },
   "allowedUse": [
     "define future AI request analyzer output shape",
+    "route low-confidence or ambiguous request candidates to clarification before traversal",
     "validate candidate fixture shape in the schema-only validator",
     "preserve candidate-only Request IR boundary",
     "link the graph-aware validation boundary and result as the next non-traversing deterministic pass",
@@ -268,6 +284,8 @@
     "graph traversal input",
     "contract compiler input",
     "instruction pack input",
+    "clarification answer as validation bypass",
+    "clarification answer as approval",
     "AI classifier implementation",
     "runtime LLM call",
     "graph-source mutation",

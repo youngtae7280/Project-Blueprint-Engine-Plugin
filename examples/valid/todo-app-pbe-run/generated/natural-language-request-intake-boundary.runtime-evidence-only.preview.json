@@ -9,6 +9,8 @@
   "aiClassifierImplemented": false,
   "aiRequestAnalyzerBoundaryStatus": "ai-request-analyzer-boundary-previewed",
   "aiRequestAnalyzerBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json",
+  "clarificationInterviewBoundaryStatus": "clarification-interview-boundary-previewed",
+  "clarificationInterviewBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json",
   "aiRequestAnalyzerImplemented": false,
   "aiRequestAnalyzerOutputAuthorityStatus": "ai-generated-candidate-not-validated",
   "llmCallsIntroduced": false,
@@ -70,6 +72,12 @@
         "boundaryArtifact": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json",
         "expectedOutputSchema": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json",
         "authorityBoundary": "AI may classify and propose Request IR fields, but output is candidate-only and not source authority."
+      },
+      {
+        "stepId": "clarification-interview-branch",
+        "role": "ambiguous-request-stop-and-question-boundary",
+        "boundaryArtifact": "examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json",
+        "authorityBoundary": "Low-confidence, unknown, missing-target, ambiguous-scope, missing-evidence, source-authority-conflict, production-source-edit ambiguity, or implicit approval/apply/enforcement requests must stop before traversal and ask structured questions."
       },
       {
         "stepId": "request-ir-candidate",
@@ -194,6 +202,18 @@
     "arbitraryRequestTypesAllowed": false,
     "unknownHandling": "unknown or low-confidence classification requires clarification or human review before deterministic traversal",
     "lowConfidenceHandling": "clarification-required-or-human-review-required"
+  },
+  "clarificationInterviewBoundary": {
+    "boundaryStatus": "clarification-interview-boundary-previewed",
+    "boundaryArtifact": "examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json",
+    "branchType": "alternate-branch-before-graph-traversal",
+    "interviewImplemented": false,
+    "requestIrCandidateRevised": false,
+    "graphTraversalAllowedFromAmbiguousRequest": false,
+    "contractGenerationAllowedFromAmbiguousRequest": false,
+    "instructionPackGenerationAllowedFromAmbiguousRequest": false,
+    "revisedCandidateValidationRequiredAgain": true,
+    "authorityBoundary": "Clarification answers may revise Request IR Candidate fields only. They are not approval, source authority, traversal authority, contract authority, or execution authority."
   },
   "aiAnalyzerTrustBoundary": {
     "boundaryArtifact": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json",

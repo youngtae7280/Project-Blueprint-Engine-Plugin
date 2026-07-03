@@ -101,6 +101,35 @@ The prompt pack cannot drive graph traversal, selected slice generation, Contrac
 Instruction Pack generation, Codex execution, graph-source mutation, graph delta apply, approval, runtime Evidence
 satisfaction, equivalence proof, or enforcement.
 
+## Clarification Interview Boundary
+
+The clarification interview boundary preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json
+```
+
+This is an alternate branch before graph traversal. If the analyzer or deterministic validators see low confidence,
+`unknown` request type, missing target record/component, ambiguous allowed or forbidden scope, missing evidence
+requirements, source-authority conflicts, production-source edit ambiguity, or an implicit request for approval, graph
+apply, acceptance, runtime Evidence satisfaction, equivalence proof, enforcement, or CI, DevView must stop before
+traversal and ask short structured questions.
+
+Clarification questions are constrained:
+
+- ask 1 to 3 questions at a time;
+- map each question to a Request IR field;
+- allow choices plus freeform clarification when needed;
+- never record approval, acceptance, or a human decision;
+- never satisfy runtime Evidence or grant graph-source authority.
+
+Clarification answers may produce only a revised Request IR Candidate with
+`revisionAuthorityStatus: clarification-derived-candidate-not-validated`. A revised candidate must run through
+`validate-request-ir` and `validate-request-ir-graph` again before traversal planning. Answers do not directly allow
+graph traversal, selected slice generation, Contract Compiler Input generation, Instruction Pack generation, Codex
+execution, graph-source mutation, graph delta apply, approval, Evidence satisfaction, equivalence proof, or
+enforcement.
+
 ## Frontend Flow
 
 The intended frontend flow is:
@@ -146,6 +175,10 @@ examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-ev
 It defines the future AI analyzer output shape, required fields, narrow request type taxonomy, confidence policy, and
 future validator expectations. The schema is not a validated Request IR schema implementation; it is candidate-only and
 does not permit graph traversal, contract generation, or instruction pack generation.
+
+`requiresClarification` means the request must stop before traversal until clarification answers produce a revised
+candidate and that revised candidate passes the deterministic validation chain again. `humanReviewRequired` is review
+input only; it is not approval, user acceptance, runtime Evidence satisfaction, graph apply authority, or enforcement.
 
 The first calibration Request IR candidate fixture is:
 

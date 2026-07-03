@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "clarification-interview-boundary-preview",
+  "status": "clarification-interview-boundary-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "boundaryScope": "ambiguous-request-to-clarified-request-ir-candidate-revision",
+  "naturalLanguageRequestIntakeBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json",
+  "aiRequestAnalyzerBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json",
+  "requestIrCandidateSchemaArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json",
+  "interviewImplemented": false,
+  "interactiveUiImplemented": false,
+  "hookIntegrationImplemented": false,
+  "llmInvoked": false,
+  "networkCallsAllowed": false,
+  "requestIrCandidateRevised": false,
+  "clarificationQuestionsGenerated": false,
+  "candidateOnly": true,
+  "graphTraversalAllowed": false,
+  "graphTraversalExecuted": false,
+  "selectedGraphSliceGenerated": false,
+  "contractInputGenerated": false,
+  "instructionPackGenerated": false,
+  "codexExecutionTriggered": false,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "approvalStatus": "not-approved",
+  "humanDecisionRecorded": false,
+  "runtimeEvidenceSatisfied": false,
+  "equivalenceProven": false,
+  "scopeEnforced": false,
+  "ciEnforcementEnabled": false,
+  "clarificationTriggerPolicy": {
+    "policyStatus": "boundary-preview-only",
+    "triggerHandling": "stop-before-traversal-and-ask-structured-questions",
+    "triggers": [
+      {
+        "triggerId": "low-confidence",
+        "sourceFields": ["confidence.score", "confidence.band"],
+        "condition": "confidence band is low or confidence is below validation threshold",
+        "result": "clarification-required"
+      },
+      {
+        "triggerId": "unknown-request-type",
+        "sourceFields": ["requestTypeCandidate"],
+        "condition": "requestTypeCandidate is unknown",
+        "result": "clarification-required"
+      },
+      {
+        "triggerId": "missing-target-record-or-component",
+        "sourceFields": ["targetRecordIdCandidate", "targetComponentCandidate"],
+        "condition": "target record or component candidate is missing or unresolved",
+        "result": "clarification-required"
+      },
+      {
+        "triggerId": "ambiguous-allowed-scope",
+        "sourceFields": ["allowedScopeIntentCandidate"],
+        "condition": "allowed scope intent cannot be mapped to bounded source or evidence/report scope",
+        "result": "clarification-required"
+      },
+      {
+        "triggerId": "ambiguous-forbidden-scope",
+        "sourceFields": ["forbiddenScopeIntentCandidate"],
+        "condition": "forbidden scope is absent, broad, or conflicts with runtime-evidence-only safety boundaries",
+        "result": "clarification-required"
+      },
+      {
+        "triggerId": "missing-evidence-requirement",
+        "sourceFields": ["requiredEvidenceIntentCandidate"],
+        "condition": "required evidence intent is missing or cannot be expressed as reviewable evidence/report context",
+        "result": "clarification-required"
+      },
+      {
+        "triggerId": "intent-source-authority-conflict",
+        "sourceFields": ["intentSummaryCandidate", "targetRecordIdCandidate", "targetComponentCandidate"],
+        "condition": "user intent conflicts with graph/read-model source authority or cannot be resolved against it",
+        "result": "human-review-required"
+      },
+      {
+        "triggerId": "production-source-edit-ambiguity",
+        "sourceFields": ["allowedScopeIntentCandidate", "forbiddenScopeIntentCandidate"],
+        "condition": "request may allow production source edits or does not clearly forbid them for runtime-evidence-only flow",
+        "result": "clarification-required"
+      },
+      {
+        "triggerId": "implicit-approval-apply-or-enforcement",
+        "sourceFields": ["requestText", "intentSummaryCandidate"],
+        "condition": "request asks or implies approval, graph apply, acceptance, runtime Evidence satisfaction, equivalence proof, scope enforcement, or CI enforcement",
+        "result": "human-review-required"
+      }
+    ]
+  },
+  "interviewQuestionModel": {
+    "modelStatus": "boundary-preview-only",
+    "questionCountPerTurn": {
+      "minimum": 1,
+      "maximum": 3
+    },
+    "questionRequirements": [
+      "Question must be short and mapped to one Request IR field.",
+      "Question may offer mutually exclusive choices plus freeform clarification.",
+      "Question must not record approval, acceptance, or a human decision.",
+      "Question must not claim runtime Evidence satisfaction or graph-source authority.",
+      "Question answers must create only a revised Request IR Candidate."
+    ],
+    "questionShape": {
+      "questionId": "string",
+      "mapsToRequestIrField": "requestTypeCandidate | targetRecordIdCandidate | targetComponentCandidate | allowedScopeIntentCandidate | forbiddenScopeIntentCandidate | requiredEvidenceIntentCandidate | riskIntentCandidate",
+      "prompt": "short human-facing question",
+      "choices": [
+        {
+          "label": "short option label",
+          "candidateValue": "candidate value only",
+          "authorityStatus": "answer-candidate-not-validated"
+        }
+      ],
+      "freeformAllowed": true,
+      "answerAuthorityStatus": "clarification-answer-not-approval"
+    },
+    "exampleQuestions": [
+      {
+        "questionId": "clarify-target-component",
+        "mapsToRequestIrField": "targetComponentCandidate",
+        "prompt": "Which component should this request target?",
+        "choices": [
+          {
+            "label": "Todo App",
+            "candidateValue": "Todo App",
+            "authorityStatus": "answer-candidate-not-validated"
+          },
+          {
+            "label": "Not sure",
+            "candidateValue": "unknown",
+            "authorityStatus": "answer-candidate-not-validated"
+          }
+        ],
+        "freeformAllowed": true,
+        "answerAuthorityStatus": "clarification-answer-not-approval"
+      },
+      {
+        "questionId": "clarify-source-edit-boundary",
+        "mapsToRequestIrField": "forbiddenScopeIntentCandidate",
+        "prompt": "Should production source changes stay forbidden for this request?",
+        "choices": [
+          {
+            "label": "Keep forbidden",
+            "candidateValue": "production source changes forbidden",
+            "authorityStatus": "answer-candidate-not-validated"
+          },
+          {
+            "label": "Need source edits",
+            "candidateValue": "production source edit requested",
+            "authorityStatus": "answer-candidate-not-validated"
+          }
+        ],
+        "freeformAllowed": true,
+        "answerAuthorityStatus": "clarification-answer-not-approval"
+      }
+    ]
+  },
+  "revisedRequestIrCandidateBoundary": {
+    "boundaryStatus": "candidate-revision-boundary-preview-only",
+    "originalCandidatePathField": "sourceRequestIrCandidate",
+    "clarificationAnswersField": "clarificationAnswers",
+    "futureOutputArtifactRole": "request-ir-candidate",
+    "futureOutputStatus": "candidate-only",
+    "revisionAuthorityStatus": "clarification-derived-candidate-not-validated",
+    "requestIrCandidateRevised": false,
+    "candidateOnly": true,
+    "validatedRequestIr": false,
+    "graphTraversalAllowed": false,
+    "contractGenerationAllowed": false,
+    "instructionPackGenerationAllowed": false,
+    "validationChainRequiredAgain": [
+      {
+        "step": "schema-only-request-ir-validation",
+        "command": "graph read-model validate-request-ir --candidate <revisedCandidatePath> --json"
+      },
+      {
+        "step": "graph-aware-request-ir-validation",
+        "command": "graph read-model validate-request-ir-graph --candidate <revisedCandidatePath> --schema-validation <schemaValidationPath> --json"
+      }
+    ],
+    "traversalAllowedDirectlyFromClarificationAnswers": false,
+    "contractGenerationAllowedDirectlyFromClarificationAnswers": false
+  },
+  "allowedUse": [
+    "define how ambiguous natural-language requests stop before traversal",
+    "define future structured clarification question shape",
+    "define revised Request IR Candidate boundary after clarification answers",
+    "document that revised candidates must be revalidated before graph traversal"
+  ],
+  "forbiddenUse": [
+    "actual interactive interview UI",
+    "LLM or API call",
+    "Request IR Candidate revision generator",
+    "graph traversal from ambiguous request",
+    "selected graph slice generation from ambiguous request",
+    "contract compiler input generation from ambiguous or unvalidated revised candidate",
+    "instruction pack generation from ambiguous or unvalidated revised candidate",
+    "Codex execution",
+    "graph-source mutation",
+    "graph delta apply",
+    "approval or human decision recording",
+    "runtime Evidence satisfaction",
+    "equivalence proof",
+    "scope or CI enforcement"
+  ],
+  "runtimeBudgetBoundary": {
+    "deterministicRuntimeMeasured": false,
+    "humanInterviewTimeInsideFiveSecondBudget": false,
+    "futureRevisedCandidateValidationInsideFiveSecondBudget": true,
+    "runtimeBudgetEnforced": false
+  },
+  "nonExecutionBoundary": "This artifact previews the clarification interview and Request IR revision boundary only. It does not implement an interview UI, call an LLM, revise a Request IR Candidate, run validation, run graph traversal, generate selected graph slices, generate Contract Compiler Input, generate Instruction Packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI."
+}

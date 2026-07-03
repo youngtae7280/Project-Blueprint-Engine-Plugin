@@ -1903,6 +1903,19 @@ examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runt
 It is generated from the analyzer boundary and Request IR Candidate schema previews. It is not an analyzer
 implementation, does not call an LLM/API, and does not generate a Request IR Candidate.
 
+The clarification interview boundary preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json
+```
+
+It defines the alternate branch for ambiguous natural-language requests. Low confidence, unknown request type, missing
+target record/component, ambiguous allowed or forbidden scope, missing evidence requirement, graph/source authority
+conflict, production-source edit ambiguity, or implicit approval/apply/enforcement requests must stop before traversal
+and ask short mapped questions. Clarification answers may produce only a revised Request IR Candidate; the revised
+candidate must re-run schema-only and graph-aware validation before traversal. This is not an interview UI, not an LLM
+call, not approval, not runtime Evidence satisfaction, and not compiler/execution authority.
+
 The Request IR Candidate schema and first calibration candidate fixture are:
 
 ```text

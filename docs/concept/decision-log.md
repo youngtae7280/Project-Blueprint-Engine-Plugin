@@ -2396,3 +2396,34 @@ This decision does not add the manifest to the core-critical runtime lane by def
 Candidate, implement hook sessions, trigger Codex execution, mutate graph-source, apply graph deltas, approve graph
 updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, introduce CI required
 checks, change branch protection, or automate user acceptance.
+
+## DEC-255 Define Clarification Interview Boundary
+
+DEC-255 does not supersede DEC-097 through DEC-254. It defines the boundary for stopping ambiguous natural-language
+requests before graph traversal and routing them to short structured clarification questions.
+
+The boundary preview is recorded in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json
+```
+
+Clarification is required when analyzer output or deterministic validation sees low confidence, `unknown` request type,
+missing target record/component, ambiguous allowed or forbidden scope, missing evidence requirement, conflict between
+user intent and graph/source authority, production-source edit ambiguity, or an implicit request for approval, graph
+apply, acceptance, runtime Evidence satisfaction, equivalence proof, scope enforcement, or CI enforcement.
+
+Clarification questions are constrained to one to three short questions at a time, each mapped to a Request IR field.
+Questions may offer choices plus freeform clarification, but neither the question nor the answer records approval,
+acceptance, runtime Evidence satisfaction, graph-source authority, or enforcement.
+
+Clarification answers may create only a future revised Request IR Candidate with
+`revisionAuthorityStatus: clarification-derived-candidate-not-validated`. A revised candidate must run through
+`validate-request-ir` and `validate-request-ir-graph` again before graph traversal may be attempted. Clarification
+answers cannot directly generate selected slices, Contract Compiler Input, Instruction Packs, or Codex execution.
+
+This decision does not implement an interview UI, implement a Request IR revision generator, call an LLM/API, make
+network calls, implement hook sessions, run graph traversal, generate selected graph slices, generate Contract Compiler
+Input, generate Instruction Packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve graph
+updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, introduce CI required
+checks, change branch protection, or automate user acceptance.

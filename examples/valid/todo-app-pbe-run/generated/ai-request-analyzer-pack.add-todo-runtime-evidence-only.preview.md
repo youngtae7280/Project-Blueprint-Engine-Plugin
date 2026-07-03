@@ -53,7 +53,7 @@ Produce Request IR Candidate JSON only. Do not validate it, execute it, or turn 
 
 ## Confidence And Ambiguity
 
-- {"confidenceThresholdForValidation":{"low":"clarification-required-or-human-review-required","medium":"may-proceed-only-to-deterministic-validation","high":"still-requires-deterministic-validation-before-traversal"},"lowConfidenceHandling":"requires clarification or human review","unresolvedTargetMappingHandling":"human-review-required","mediumConfidenceBoundary":"medium confidence does not permit graph traversal or contract generation","highConfidenceBoundary":"high confidence still does not permit graph traversal until deterministic validation succeeds"}
+- {"confidenceThresholdForValidation":{"low":"clarification-required-or-human-review-required","medium":"may-proceed-only-to-deterministic-validation","high":"still-requires-deterministic-validation-before-traversal"},"lowConfidenceHandling":"requires clarification or human review","unresolvedTargetMappingHandling":"human-review-required","clarificationBoundaryArtifact":"examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json","clarificationRequiredHandling":"stop-before-traversal-and-ask-structured-questions","revisedCandidateValidationRequiredAgain":true,"mediumConfidenceBoundary":"medium confidence does not permit graph traversal or contract generation","highConfidenceBoundary":"high confidence still does not permit graph traversal until deterministic validation succeeds"}
 
 ## Safety Instructions
 
@@ -73,6 +73,8 @@ Produce Request IR Candidate JSON only. Do not validate it, execute it, or turn 
 - generate selected graph slices directly from analyzer output
 - generate contract compiler input directly from analyzer output
 - generate instruction packs directly from analyzer output
+- skip clarification when confidence is low, request type is unknown, target/scope/evidence is ambiguous, source authority conflicts, or approval/apply/enforcement is implied
+- treat clarification answers as approval or validated Request IR
 - trigger Codex execution
 - mutate graph-source
 - apply graph deltas
