@@ -2427,3 +2427,46 @@ network calls, implement hook sessions, run graph traversal, generate selected g
 Input, generate Instruction Packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve graph
 updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, introduce CI required
 checks, change branch protection, or automate user acceptance.
+
+## DEC-256 Generate Clarification Interview Pack
+
+DEC-256 does not supersede DEC-097 through DEC-255. It implements a deterministic report-only Clarification Interview
+Pack generator that consumes a Clarification Interview boundary preview and a candidate-only Request IR artifact, then
+emits a question-plan preview JSON and optional Markdown.
+
+The command is exposed through:
+
+```text
+graph read-model generate-clarification-interview-pack --boundary <clarificationBoundaryPath> --candidate <requestIrCandidatePath> --json
+```
+
+The implementation is recorded in:
+
+```text
+cli/src/core/clarification-interview-pack.ts
+```
+
+The Todo App calibration outputs are:
+
+```text
+examples/valid/todo-app-pbe-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.md
+```
+
+For the current calibration candidate, the generator records
+`questionPlanStatus: no-questions-required-for-current-calibration-candidate` with `questionCount: 0`. If a future
+candidate is ambiguous, the generator may produce one to three short structured questions mapped to Request IR fields,
+with choices plus freeform clarification and `answerAuthorityStatus: clarification-answer-not-approval`.
+
+The generator validates boundary role/status and candidate-only authority before planning questions. It rejects unsafe
+candidate escalation such as `graphTraversalAllowed: true`, `contractGenerationAllowed: true`, or
+`instructionPackGenerationAllowed: true`. Explicit JSON/Markdown output paths are guarded before writing and may not
+overwrite the source boundary, source candidate, linked schema/intake/analyzer artifacts, graph-source/read-model source
+authority, evidence artifacts, or selected frontend/source artifacts. Unsafe Markdown output prevents safe JSON output
+from being written first.
+
+This decision does not implement an interview UI, implement a Request IR Candidate revision generator, call an LLM/API,
+make network calls, run Request IR validation, run graph traversal, generate selected graph slices, generate Contract
+Compiler Input, generate Instruction Packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve
+graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, introduce CI
+required checks, change branch protection, or automate user acceptance.

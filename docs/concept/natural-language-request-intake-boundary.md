@@ -109,6 +109,24 @@ The clarification interview boundary preview is:
 examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json
 ```
 
+The deterministic clarification question-plan pack generator is:
+
+```text
+graph read-model generate-clarification-interview-pack --boundary <clarificationBoundaryPath> --candidate <requestIrCandidatePath> --json
+```
+
+The current Todo App calibration outputs are:
+
+```text
+examples/valid/todo-app-pbe-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.md
+```
+
+For the current calibration candidate, the pack records
+`questionPlanStatus: no-questions-required-for-current-calibration-candidate` and `questionCount: 0`. It still carries
+the clarification trigger policy, question model, revised Request IR Candidate boundary, and the rule that clarification
+answers are not approval or graph/source authority.
+
 This is an alternate branch before graph traversal. If the analyzer or deterministic validators see low confidence,
 `unknown` request type, missing target record/component, ambiguous allowed or forbidden scope, missing evidence
 requirements, source-authority conflicts, production-source edit ambiguity, or an implicit request for approval, graph
@@ -129,6 +147,13 @@ Clarification answers may produce only a revised Request IR Candidate with
 graph traversal, selected slice generation, Contract Compiler Input generation, Instruction Pack generation, Codex
 execution, graph-source mutation, graph delta apply, approval, Evidence satisfaction, equivalence proof, or
 enforcement.
+
+The generated clarification pack is not an interview UI and not a Request IR Candidate revision generator. It does not
+call an LLM/API, perform deterministic validation, run graph traversal, generate selected slices, generate Contract
+Compiler Input, generate Instruction Packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve
+work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI. Its explicit
+JSON/Markdown output paths are guarded so they cannot overwrite the boundary, candidate, linked schema/intake/analyzer
+artifacts, source authority, evidence artifacts, or selected frontend/source artifacts.
 
 ## Frontend Flow
 

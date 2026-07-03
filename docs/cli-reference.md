@@ -531,6 +531,44 @@ node dist/cli/index.js graph read-model generate-ai-request-analyzer-pack `
   --json
 ```
 
+### `pbe graph read-model generate-clarification-interview-pack`
+
+- Purpose: Generate deterministic Clarification Interview question-plan JSON, and optionally Markdown, from the
+  clarification boundary and a Request IR Candidate. The pack is report-only; it does not ask the user questions or
+  revise the candidate.
+- Typical state before running: After the Clarification Interview boundary exists and a candidate-only Request IR
+  artifact is available. The candidate may be a calibration fixture or future analyzer output.
+- Options: `--boundary <clarificationBoundaryPath>` and `--candidate <requestIrCandidatePath>` are required.
+  `--output <file>` may write the generated question-plan JSON. `--markdown <file>` may write concise Markdown. Without
+  explicit output paths, JSON stdout is the only output.
+- What it checks: boundary role/status, no interview UI, no LLM/network calls, no candidate revision, candidate-only
+  Request IR authority fields, and no direct graph traversal, contract generation, instruction-pack generation, or
+  execution authority.
+- What it writes: Nothing by default. It writes only to explicit `--output` and `--markdown` paths.
+- Output authority guard: explicit preview output paths are rejected before writing if they would overwrite the
+  clarification boundary, Request IR Candidate, linked schema/intake/analyzer artifacts, graph-source/read-model source
+  authority, evidence/source artifacts, or selected frontend/source artifacts. If either output path is unsafe, no
+  output is written.
+- Success result: JSON with `artifactRole: clarification-interview-pack`, `questionPlanStatus`, `questionCount`, bounded
+  `plannedQuestions` when clarification is required, `requestIrCandidateRevised: false`, `llmInvoked: false`, and
+  downstream traversal/slice/contract/input/execution/approval/enforcement flags false.
+- Next command: If questions are answered in a future flow, answers may produce only a revised Request IR Candidate,
+  which must rerun `validate-request-ir` and `validate-request-ir-graph` before traversal. This command does not call an
+  LLM, revise Request IR, run validation, run traversal, generate selected slices, generate contract input, generate
+  instruction packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve work, satisfy runtime
+  Evidence, prove equivalence, enforce scope, or configure CI.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model generate-clarification-interview-pack `
+  --boundary examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json `
+  --candidate examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json `
+  --output .tmp/review-clarification-interview-pack.json `
+  --markdown .tmp/review-clarification-interview-pack.md `
+  --json
+```
+
 ### `pbe graph read-model validate-request-ir`
 
 - Purpose: Validate a Request IR Candidate artifact's schema and candidate-only safety boundaries.

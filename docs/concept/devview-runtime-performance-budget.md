@@ -285,13 +285,25 @@ The clarification interview boundary preview is outside the measured runtime pat
 examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json
 ```
 
+The clarification interview pack generator is also outside the core-critical lane by default:
+
+```text
+graph read-model generate-clarification-interview-pack --boundary <clarificationBoundaryPath> --candidate <requestIrCandidatePath> --json
+```
+
+It produces only a deterministic question-plan preview from an existing boundary and candidate. It may be measured later
+in `analyzer-preflight-lane` or another non-critical advisory lane, but it is not automatically part of the validated
+candidate-to-instruction-pack critical path. For the current calibration candidate it generates no questions and records
+`questionPlanStatus: no-questions-required-for-current-calibration-candidate`.
+
 Clarification interview time is human interaction time and is outside the 5 second deterministic DevView runtime budget.
 If a future clarification flow produces a revised Request IR Candidate, that revised candidate must re-enter the
 deterministic validation path with `validate-request-ir` and `validate-request-ir-graph`; those validation commands stay
 inside the advisory deterministic runtime lanes. The boundary preview itself implements no interview UI, no LLM/API
 call, no Request IR revision generator, no traversal, no contract input, no instruction pack, no Codex execution, no
 graph-source mutation, no graph delta apply, no approval, no runtime Evidence satisfaction, no equivalence proof, and no
-scope/CI enforcement.
+scope/CI enforcement. The generated pack preserves the same non-execution boundary and guards explicit output paths
+before writing.
 
 The Request IR Candidate schema and first calibration fixture are:
 

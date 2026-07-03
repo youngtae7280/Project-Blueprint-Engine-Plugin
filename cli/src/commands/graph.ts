@@ -1,5 +1,6 @@
 import { relativePath } from '../core/fs.js'
 import { generateAiRequestAnalyzerPackFile } from '../core/ai-request-analyzer-pack.js'
+import { generateClarificationInterviewPackFile } from '../core/clarification-interview-pack.js'
 import { compileExecutionContractDryRun } from '../core/contract-compiler-dry-run.js'
 import { collectGitDerivedChangedFiles } from '../core/git-derived-changed-file-collection.js'
 import { generateGraphDeltaHumanReviewPacket } from '../core/graph-delta-human-review-packet.js'
@@ -847,6 +848,83 @@ export async function graphReadModelGenerateAiRequestAnalyzerPackCommand(
           message,
           suggestedFix:
             'Provide readable analyzer boundary and Request IR Candidate schema preview artifacts, plus dedicated preview output paths.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelGenerateClarificationInterviewPackCommand(
+  context: CommandContext,
+): Promise<CommandResult> {
+  if (!context.options.boundary) {
+    return invalidCommand('graph read-model generate-clarification-interview-pack requires --boundary <boundaryPath>.')
+  }
+  if (!context.options.candidate) {
+    return invalidCommand(
+      'graph read-model generate-clarification-interview-pack requires --candidate <candidatePath>.',
+    )
+  }
+
+  try {
+    const pack = await generateClarificationInterviewPackFile(
+      context.options.root,
+      context.options.boundary,
+      context.options.candidate,
+      {
+        output: context.options.output,
+        markdown: context.options.markdown,
+      },
+    )
+    const blocked =
+      pack.pack.status !== 'clarification-interview-pack-generated' || !pack.pack.clarificationInterviewPackGenerated
+    const errorFindings = pack.pack.validationFindings.filter((finding) => finding.severity === 'error')
+
+    return {
+      ok: !blocked,
+      command: 'graph read-model generate-clarification-interview-pack',
+      exitCode: blocked ? ExitCode.ValidationFailed : ExitCode.Success,
+      message: blocked
+        ? 'Clarification Interview Pack generation blocked before questions could be planned.'
+        : 'Clarification Interview Pack generated without UI, LLM, candidate revision, validation, traversal, or execution.',
+      issues: blocked
+        ? (errorFindings.length > 0 ? errorFindings : pack.pack.validationFindings).map((finding) =>
+            issue({
+              validator: 'ClarificationInterviewPackGenerator',
+              code: finding.code,
+              severity: finding.severity,
+              message: finding.message,
+              reason: finding.field ? `Field: ${finding.field}` : undefined,
+              suggestedFix:
+                finding.suggestedFix ??
+                'Fix the clarification boundary or Request IR Candidate before generating a clarification question plan.',
+            }),
+          )
+        : [],
+      data: {
+        ...pack.pack,
+        ...(pack.outputPath ? { outputPath: pack.outputPath } : {}),
+        ...(pack.markdownReport ? { markdownReport: pack.markdownReport } : {}),
+        next: blocked
+          ? 'Repair the clarification boundary or candidate-only Request IR artifact. This command did not call an LLM, revise Request IR, run validation, run traversal, generate selected slices, generate contract input, generate instruction packs, execute Codex, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.'
+          : 'Use this pack as clarification question-plan preview only. Clarification answers must produce a revised Request IR Candidate and rerun validate-request-ir plus validate-request-ir-graph before traversal. This command did not call an LLM, revise Request IR, run validation, run traversal, generate selected slices, generate contract input, generate instruction packs, execute Codex, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model generate-clarification-interview-pack',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Clarification Interview Pack generation could not run.',
+      issues: [
+        issue({
+          validator: 'ClarificationInterviewPackGenerator',
+          code: 'CLARIFICATION_INTERVIEW_PACK_GENERATION_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide readable clarification boundary and candidate-only Request IR artifacts, plus dedicated preview output paths.',
         }),
       ],
     }
