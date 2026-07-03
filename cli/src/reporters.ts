@@ -180,6 +180,8 @@ Commands:
                        Check Graph Delta apply readiness without apply, mutation, or enforcement
   graph read-model report-graph-source-mutation-readiness
                        Report graph-source mutation readiness without writing graph-source
+  graph read-model report-evidence-acceptance-readiness
+                       Report Evidence acceptance readiness without accepting Evidence
   graph read-model generate-ai-request-analyzer-pack
                        Generate deterministic AI Request Analyzer prompt/input pack without LLM calls
   graph read-model analyze-request
@@ -262,8 +264,8 @@ Options:
   --graph-delta <file> Graph delta file for graph operation propose-update.
   --target-repo <path> Target git repository path for graph operation capture-delta.
   --manual <file>      Manual parity artifact for graph read-model comparison.
-  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-graph-source-mutation-readiness, generate-ai-request-analyzer-pack, analyze-request, generate-clarification-interview-pack, revise-request-ir-candidate, validate-request-ir, validate-request-ir-graph, plan-traversal, select-slice, generate-contract-input, generate-instruction-pack, report-hook-gateway-health, report-frontend-chain, prepare-user-prompt-context, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, or report-hook-activation-chain.
-  --markdown <file>    Optional Markdown summary output for graph read-model report-health, check-scope, review-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-graph-source-mutation-readiness, generate-ai-request-analyzer-pack, generate-clarification-interview-pack, generate-instruction-pack, report-frontend-chain, prepare-user-prompt-context, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, or report-hook-activation-chain.
+  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, generate-ai-request-analyzer-pack, analyze-request, generate-clarification-interview-pack, revise-request-ir-candidate, validate-request-ir, validate-request-ir-graph, plan-traversal, select-slice, generate-contract-input, generate-instruction-pack, report-hook-gateway-health, report-frontend-chain, prepare-user-prompt-context, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, or report-hook-activation-chain.
+  --markdown <file>    Optional Markdown summary output for graph read-model report-health, check-scope, review-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, generate-ai-request-analyzer-pack, generate-clarification-interview-pack, generate-instruction-pack, report-frontend-chain, prepare-user-prompt-context, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, or report-hook-activation-chain.
   --proposal <file>    Graph update proposal file for graph operation apply-proposal, graph read-model review-graph-delta, or graph read-model record-human-decision.
   --review-packet <file>
                        Human Review Packet file for graph read-model record-human-decision.
@@ -273,7 +275,9 @@ Options:
                        Approved Proposal State preview file for graph read-model check-graph-delta-apply.
   --apply-readiness <file>
                        Graph Delta Apply readiness file for graph read-model report-graph-source-mutation-readiness.
-  --policy <file>      Policy boundary file for graph read-model report-graph-source-mutation-readiness.
+  --mutation-readiness <file>
+                       Graph-source Mutation readiness file for graph read-model report-evidence-acceptance-readiness.
+  --policy <file>      Policy boundary file for graph read-model report-graph-source-mutation-readiness or report-evidence-acceptance-readiness.
   --decision <value>   Explicit human decision value for graph read-model record-human-decision.
   --reviewer <value>   Human reviewer identity for graph read-model record-human-decision.
   --rationale <value>  Human-authored rationale for graph read-model record-human-decision.

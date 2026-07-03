@@ -2,6 +2,7 @@ import { relativePath } from '../core/fs.js'
 import { createApprovedProposalStateFile } from '../core/approved-proposal-state.js'
 import { generateAiRequestAnalyzerPackFile } from '../core/ai-request-analyzer-pack.js'
 import { checkGraphDeltaApplyReadinessFile } from '../core/graph-delta-apply-readiness.js'
+import { reportEvidenceAcceptanceReadinessFile } from '../core/evidence-acceptance-readiness.js'
 import { reportGraphSourceMutationReadinessFile } from '../core/graph-source-mutation-readiness.js'
 import { analyzeRequestFile } from '../core/ai-request-analyzer-run.js'
 import { generateClarificationInterviewPackFile } from '../core/clarification-interview-pack.js'
@@ -1017,6 +1018,60 @@ export async function graphReadModelReportGraphSourceMutationReadinessCommand(
           message,
           suggestedFix:
             'Provide a readable mutation policy boundary, Graph Delta apply readiness preview, and dedicated mutation-readiness output paths. This command is read-only and never mutates graph-source.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelReportEvidenceAcceptanceReadinessCommand(
+  context: CommandContext,
+): Promise<CommandResult> {
+  if (!context.options.policy) {
+    return invalidCommand('graph read-model report-evidence-acceptance-readiness requires --policy <file>.')
+  }
+  if (!context.options.mutationReadiness) {
+    return invalidCommand('graph read-model report-evidence-acceptance-readiness requires --mutation-readiness <file>.')
+  }
+
+  try {
+    const result = await reportEvidenceAcceptanceReadinessFile(context.options.root, {
+      policy: context.options.policy,
+      mutationReadiness: context.options.mutationReadiness,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph read-model report-evidence-acceptance-readiness',
+      exitCode: ExitCode.Success,
+      message:
+        result.readiness.status === 'devview-evidence-acceptance-readiness-ready'
+          ? 'Evidence acceptance readiness preview created without accepting Evidence, satisfying runtime Evidence, applying, mutating, or enforcing.'
+          : 'Evidence acceptance readiness preview blocked without accepting Evidence, satisfying runtime Evidence, applying, mutating, or enforcing.',
+      issues: [],
+      data: {
+        ...result.readiness,
+        ...(result.outputPath ? { outputPath: result.outputPath } : {}),
+        ...(result.markdownReport ? { markdownReport: result.markdownReport } : {}),
+        next: 'Use this as readiness context only. This command did not accept Evidence, satisfy runtime Evidence, prove equivalence, apply graph deltas, mutate graph-source, enforce scope, or configure CI.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model report-evidence-acceptance-readiness',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Evidence acceptance readiness report blocked.',
+      issues: [
+        issue({
+          validator: 'EvidenceAcceptanceReadiness',
+          code: 'EVIDENCE_ACCEPTANCE_READINESS_BLOCKED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide a readable Evidence Acceptance Policy boundary, Graph-source Mutation readiness preview, and dedicated evidence-acceptance-readiness output paths. This command is read-only and never accepts Evidence.',
         }),
       ],
     }

@@ -3,13 +3,16 @@
   "artifactRole": "devview-evidence-acceptance-policy-boundary-preview",
   "status": "devview-evidence-acceptance-policy-boundary-previewed",
   "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
-  "boundaryScope": "future-evidence-acceptance-policy-preview-only",
+  "boundaryScope": "evidence-acceptance-readiness-policy-preview",
   "phase": "phase-13-human-decision-approved-apply-boundary",
   "sourceGraphDeltaApplyBoundary": "examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply-boundary.runtime-evidence-only.preview.json",
   "sourceApprovedProposalStateBoundary": "examples/valid/todo-app-pbe-run/generated/devview-approved-proposal-state-boundary.runtime-evidence-only.preview.json",
   "sourceHumanDecisionRecordBoundary": "examples/valid/todo-app-pbe-run/generated/devview-human-decision-record-boundary.runtime-evidence-only.preview.json",
-  "evidenceAcceptancePolicyImplemented": false,
+  "evidenceAcceptancePolicyImplemented": true,
+  "evidenceAcceptanceReadinessCommandImplemented": true,
   "evidenceAcceptanceCommandImplemented": false,
+  "firstCalibrationEvidenceAcceptanceReadinessArtifact": "examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
+  "firstCalibrationEvidenceAcceptanceReadinessMarkdownArtifact": "examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-readiness.blocked-defer-decision.runtime-evidence-only.preview.md",
   "evidenceLinked": "future-review-link-only-not-acceptance",
   "evidenceAccepted": false,
   "runtimeEvidenceSatisfied": false,
@@ -160,6 +163,10 @@
       "status": "future-not-implemented"
     },
     {
+      "step": "evidence-acceptance-readiness-command",
+      "status": "implemented-readiness-only"
+    },
+    {
       "step": "evidence-acceptance-command-boundary",
       "status": "future-not-implemented"
     },
@@ -168,5 +175,5 @@
       "status": "future-not-implemented"
     }
   ],
-  "nonExecutionBoundary": "This artifact previews the future Evidence acceptance policy boundary only. It does not accept Evidence, set runtimeEvidenceSatisfied true, prove equivalence, enforce scope, configure CI or required checks, apply graph deltas, mutate graph-source, record human decisions, approve proposals, or replace user acceptance."
+  "nonExecutionBoundary": "This artifact defines the Evidence acceptance policy boundary for readiness reporting only. The readiness command may report blocked or ready context, but it does not accept Evidence, set runtimeEvidenceSatisfied true, prove equivalence, enforce scope, configure CI or required checks, apply graph deltas, mutate graph-source, record human decisions, approve proposals, or replace user acceptance."
 }

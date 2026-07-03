@@ -624,6 +624,35 @@ node dist/cli/index.js graph read-model report-graph-source-mutation-readiness `
   --json
 ```
 
+### `pbe graph read-model report-evidence-acceptance-readiness`
+
+- Purpose: Report Evidence acceptance readiness from a Graph-source Mutation readiness preview without accepting
+  Evidence.
+- Typical state before running: After `graph read-model report-graph-source-mutation-readiness` has produced
+  mutation-readiness output.
+- Options: `--policy <policyBoundaryPath>` and `--mutation-readiness <mutationReadinessPath>` are required.
+  `--output <file>` and `--markdown <file>` may write explicit readiness outputs.
+- What it checks: Evidence Acceptance Policy boundary role/status, mutation-readiness role/status/safety fields, and
+  output authority.
+- What it writes: Nothing by default. It writes only to explicit `--output` and `--markdown` paths.
+- Success result: JSON with `artifactRole: devview-evidence-acceptance-readiness-preview`. If mutation readiness is
+  ready, acceptance readiness is `dry-run-ready-mutation-readiness-present`; otherwise it is blocked. In all cases
+  `acceptanceAllowed`, `evidenceAccepted`, `runtimeEvidenceSatisfied`, `equivalenceProven`, `graphDeltaApplied`,
+  `graphSourceMutated`, `scopeEnforced`, and `ciEnforcementEnabled` remain false.
+- Next command: A separate future Evidence acceptance command would still need accepted-evidence policy execution,
+  runtime Evidence binding, and human/configured acceptance rules. This command itself never accepts Evidence or sets
+  `runtimeEvidenceSatisfied: true`.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model report-evidence-acceptance-readiness `
+  --policy examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-policy-boundary.runtime-evidence-only.preview.json `
+  --mutation-readiness examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-readiness.blocked-defer-decision.runtime-evidence-only.preview.json `
+  --output .tmp/devview-evidence-acceptance-readiness.json `
+  --json
+```
+
 ### `pbe graph read-model generate-ai-request-analyzer-pack`
 
 - Purpose: Generate deterministic AI Request Analyzer prompt/input contract JSON, and optionally Markdown, from the

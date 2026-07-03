@@ -533,6 +533,23 @@ contractGenerationAllowed: false
 The health report does not run the timing smoke, evaluator, generator, review packet command, or Request IR graph-aware
 validator. It only names the advisory surfaces and preserves the non-enforcement/non-apply/non-approval boundary.
 
+## Evidence Acceptance Readiness
+
+The Evidence acceptance readiness command is intentionally outside the current core-critical timing lane. It belongs to
+the Phase 13 review/readiness branch after human decision record, approved proposal state preview, Graph Delta apply
+readiness, and graph-source mutation readiness.
+
+The command:
+
+```text
+graph read-model report-evidence-acceptance-readiness --policy <policyBoundaryPath> --mutation-readiness <mutationReadinessPath> --json
+```
+
+reports whether a future Evidence acceptance step has readiness context. It is report-only and does not accept Evidence,
+set `runtimeEvidenceSatisfied: true`, prove equivalence, apply graph deltas, mutate graph-source, enforce scope, or
+configure CI. It may be added to a future advisory backend/review lane, but it is not part of the user request to
+instruction-pack core-critical path.
+
 ## Non-Goals
 
 This budget does not:

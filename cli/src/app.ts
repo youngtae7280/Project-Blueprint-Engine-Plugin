@@ -141,6 +141,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     contractInput: undefined as string | undefined,
     approvedState: undefined as string | undefined,
     applyReadiness: undefined as string | undefined,
+    mutationReadiness: undefined as string | undefined,
     policy: undefined as string | undefined,
     scaffold: undefined as string | undefined,
     scriptScaffold: undefined as string | undefined,
@@ -499,6 +500,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--apply-readiness requires a file path.' }
       }
       options.applyReadiness = value
+      index += 1
+    } else if (arg === '--mutation-readiness') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--mutation-readiness requires a file path.' }
+      }
+      options.mutationReadiness = value
       index += 1
     } else if (arg === '--policy') {
       const value = argv[index + 1]

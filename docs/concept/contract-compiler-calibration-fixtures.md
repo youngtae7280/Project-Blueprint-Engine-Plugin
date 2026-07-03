@@ -1914,6 +1914,19 @@ CI passes, runtime smoke, and Codex claims cannot self-accept Evidence. The boun
 `runtimeEvidenceSatisfied: true`, prove equivalence, enforce scope, mutate graph-source, apply graph deltas, configure
 required checks, or automate user acceptance.
 
+It now anchors the `graph read-model report-evidence-acceptance-readiness` command. The first calibration readiness
+artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-readiness.blocked-defer-decision.runtime-evidence-only.preview.json
+```
+
+It is blocked because graph-source mutation readiness is blocked. The command reports readiness only and keeps
+`acceptanceAllowed`, `evidenceAccepted`, `runtimeEvidenceSatisfied`, `equivalenceProven`, `graphDeltaApplied`,
+`graphSourceMutated`, `scopeEnforced`, and `ciEnforcementEnabled` false. It performs no Evidence acceptance and does
+not satisfy runtime Evidence, apply graph deltas, mutate graph-source, configure required checks, or automate user
+acceptance.
+
 The Graph-source Mutation Policy boundary preview is:
 
 ```text

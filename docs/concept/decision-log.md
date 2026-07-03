@@ -3013,3 +3013,23 @@ calibration readiness is blocked because apply readiness is blocked.
 This decision does not write graph-source, apply graph deltas, accept Evidence, satisfy runtime Evidence, prove
 equivalence, enforce scope, introduce CI required checks, change branch protection, mutate production source, mutate
 Codex hook/config files, automate approval, or automate user acceptance.
+
+## DEC-276 Report Evidence Acceptance Readiness
+
+DEC-276 does not supersede DEC-097 through DEC-275. It implements
+`graph read-model report-evidence-acceptance-readiness` as a readiness-only surface after Graph-source Mutation
+readiness.
+
+The Todo App calibration artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-readiness.blocked-defer-decision.runtime-evidence-only.preview.json
+```
+
+The command consumes an Evidence Acceptance Policy boundary and a Graph-source Mutation readiness preview. It validates
+policy/readiness safety fields and output authority, then reports whether Evidence acceptance readiness is blocked or
+ready. The calibration readiness is blocked because graph-source mutation readiness is blocked.
+
+This decision does not implement an Evidence acceptance command, accept Evidence, satisfy runtime Evidence, prove
+equivalence, apply graph deltas, mutate graph-source, enforce scope, introduce CI required checks, change branch
+protection, mutate production source, mutate Codex hook/config files, automate approval, or automate user acceptance.

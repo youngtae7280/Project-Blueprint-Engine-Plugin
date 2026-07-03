@@ -102,6 +102,7 @@ export interface CliOptions {
   contractInput?: string
   approvedState?: string
   applyReadiness?: string
+  mutationReadiness?: string
   policy?: string
   scaffold?: string
   scriptScaffold?: string

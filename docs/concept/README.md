@@ -341,9 +341,13 @@ apply, mutate graph-source, satisfy runtime Evidence, prove equivalence, enforce
 
 The Evidence Acceptance Policy boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-policy-boundary.runtime-evidence-only.preview.json`.
+It now anchors the `graph read-model report-evidence-acceptance-readiness ...` command. The first calibration Evidence
+acceptance readiness artifact is blocked because graph-source mutation readiness is blocked:
+`examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-readiness.blocked-defer-decision.runtime-evidence-only.preview.json`.
 It separates linked Evidence, accepted Evidence, and `runtimeEvidenceSatisfied` so future tooling cannot treat CI,
-validators, Codex output, or review packets as self-acceptance. It does not accept Evidence, satisfy runtime Evidence,
-prove equivalence, enforce scope, apply graph deltas, mutate graph-source, or configure CI.
+validators, Codex output, or review packets as self-acceptance. The command reports readiness only; it does not accept
+Evidence, satisfy runtime Evidence, prove equivalence, enforce scope, apply graph deltas, mutate graph-source, or
+configure CI.
 
 The Graph-source Mutation Policy boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-policy-boundary.runtime-evidence-only.preview.json`.

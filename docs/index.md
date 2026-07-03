@@ -62,8 +62,9 @@
   selecting `scope-compliance-preview` as the first checker axis and recording the Graph Delta Proposal boundary plus
   candidate schema/mapping/source/generator-scope alignment plus the proposal-only preview CLI without implementing
   enforcement, required checks, diff rejection, fixture approval, graph-source mutation, apply, equivalence proof, or
-  evidence acceptance policy beyond its preview boundary, plus explicit human decision record, approved proposal state,
-  graph delta apply readiness, and graph-source mutation readiness preview generation without any writes.
+  evidence acceptance policy beyond readiness reporting, plus explicit human decision record, approved proposal state,
+  graph delta apply readiness, graph-source mutation readiness, and Evidence acceptance readiness preview generation
+  without any writes or acceptance.
 - [DevView Runtime Performance Budget](concept/devview-runtime-performance-budget.md) - Advisory 5 second target for
   deterministic local runtime passes plus compact advisory `check-scope` reporting, proposal-only `propose-graph-delta`
   preview generation, `review-graph-delta` Human Review Packet generation, and frontend instruction-pack generation from

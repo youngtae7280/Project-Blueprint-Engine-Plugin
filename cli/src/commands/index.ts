@@ -43,6 +43,7 @@ import {
   graphReadModelReportHookGatewayHealthCommand,
   graphReadModelReportCompilerBoundaryCommand,
   graphReadModelReportCompilerInputCommand,
+  graphReadModelReportEvidenceAcceptanceReadinessCommand,
   graphReadModelReportFrontendChainCommand,
   graphReadModelReportHealthCommand,
   graphReadModelReportIntentCommand,
@@ -263,6 +264,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
     positionals[2] === 'report-graph-source-mutation-readiness'
   ) {
     return graphReadModelReportGraphSourceMutationReadinessCommand(context)
+  }
+  if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'report-evidence-acceptance-readiness') {
+    return graphReadModelReportEvidenceAcceptanceReadinessCommand(context)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'generate-ai-request-analyzer-pack') {
     return graphReadModelGenerateAiRequestAnalyzerPackCommand(context)
