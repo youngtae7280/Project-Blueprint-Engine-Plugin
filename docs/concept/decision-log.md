@@ -1923,8 +1923,36 @@ intent candidates, confidence, ambiguities, clarification state, and human-revie
 models a Korean request to add Todo App add-button behavior evidence without touching production source, classifying it
 as `runtime-evidence-only` and `test-only-behavior-proof` with `CH-001` and `Todo App` as candidate targets.
 
-No AI classifier is implemented. No runtime LLM call is introduced. No Request IR validator is implemented. Unvalidated
-AI output cannot drive graph traversal, selected graph slice generation, contract compiler input generation, or
+At this DEC-240 step, no AI classifier is implemented, no runtime LLM call is introduced, and no Request IR validator is
+implemented. Unvalidated AI output cannot drive graph traversal, selected graph slice generation, contract compiler input generation, or
 instruction pack generation. The schema and fixture do not mutate graph-source, apply graph deltas, approve graph
 updates, record human decisions, change equivalence behavior, satisfy runtime Evidence, enforce scope, introduce CI
 required checks, change branch protection, or automate user acceptance.
+
+## DEC-241 Implement Schema-Only Request IR Candidate Validator
+
+DEC-241 does not supersede DEC-097 through DEC-240. It implements the first deterministic Request IR Candidate
+validation pass:
+
+```text
+graph read-model validate-request-ir --candidate <candidatePath> --json
+graph read-model validate-request-ir --candidate <candidatePath> --output <validationPath> --json
+```
+
+The validator is schema-and-boundary-only. It checks required fields, narrow request type enum values, candidate-only
+boundary fields, authority status, confidence policy, ambiguity policy, and the rule that unvalidated Request IR
+Candidates cannot drive graph traversal, contract generation, or instruction-pack generation. The Todo App calibration
+result is recorded in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json
+```
+
+A schema-valid result remains `schema-valid-graph-validation-not-run`, with `graphAuthorityValidationStatus: not-run`,
+`graphTraversalAllowed: false`, `contractGenerationAllowed: false`, and `instructionPackGenerationAllowed: false`.
+
+This decision does not implement an AI classifier, call an LLM from runtime code, perform graph-aware validation,
+validate graph node or edge existence, run graph traversal, select graph slices, generate contract compiler input,
+generate instruction packs, mutate graph-source, apply graph deltas, approve graph updates, record human decisions,
+change equivalence behavior, satisfy runtime Evidence, enforce scope, introduce CI required checks, change branch
+protection, or automate user acceptance.

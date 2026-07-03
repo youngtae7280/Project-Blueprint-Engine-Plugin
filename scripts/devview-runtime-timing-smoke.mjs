@@ -10,13 +10,31 @@ const smokeArtifactPath = '.tmp/devview-runtime-timing-smoke/git-derived-changed
 const smokeScopeReportPath = '.tmp/devview-runtime-timing-smoke/scope-compliance-runtime-report.md'
 const smokeGraphDeltaProposalPath = '.tmp/devview-runtime-timing-smoke/graph-delta-proposal.preview.json'
 const smokeGraphDeltaReviewPacketPath = '.tmp/devview-runtime-timing-smoke/graph-delta-human-review-packet.md'
+const smokeRequestIrValidationPath = '.tmp/devview-runtime-timing-smoke/request-ir-validation.json'
 const graphDeltaCompatibleSourcePath =
   'examples/valid/todo-app-pbe-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json'
+const requestIrCandidatePath =
+  'examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json'
 const runtimeBudgetTargetMs = 5000
 const outputArgIndex = process.argv.indexOf('--output')
 const outputPath = outputArgIndex >= 0 ? process.argv[outputArgIndex + 1] : null
 
 const measuredSteps = [
+  {
+    stepName: 'request-ir-candidate-schema-validation',
+    command: `node dist/cli/index.js graph read-model validate-request-ir --candidate ${requestIrCandidatePath} --output ${smokeRequestIrValidationPath} --json`,
+    args: [
+      'graph',
+      'read-model',
+      'validate-request-ir',
+      '--candidate',
+      requestIrCandidatePath,
+      '--output',
+      smokeRequestIrValidationPath,
+      '--json',
+    ],
+    includedInRuntimeBudget: true,
+  },
   {
     stepName: 'compiler-input-report',
     command: 'node dist/cli/index.js graph read-model report-compiler-input --json',

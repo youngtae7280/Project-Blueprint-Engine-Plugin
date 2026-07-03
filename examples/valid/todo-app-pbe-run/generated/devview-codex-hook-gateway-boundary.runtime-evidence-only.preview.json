@@ -23,6 +23,9 @@
   "strictModeEnabled": false,
   "naturalLanguageRequestIntakeBoundaryStatus": "natural-language-request-intake-boundary-previewed",
   "naturalLanguageRequestIntakeBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json",
+  "requestIrSchemaOnlyValidatorStatus": "schema-only-validator-implemented",
+  "requestIrSchemaOnlyValidationArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json",
+  "requestIrGraphAwareValidationStatus": "not-implemented",
   "devviewActivationModes": [
     {
       "mode": "off",

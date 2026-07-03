@@ -26,7 +26,9 @@ Required safety values include:
 ```text
 aiClassifierImplemented: false
 llmCallsIntroduced: false
-requestIrValidatorImplemented: false
+requestIrValidatorImplemented: true
+requestIrValidatorScope: schema-and-boundary-only
+graphAwareRequestIrValidatorImplemented: false
 graphTraversalImplementedFromRequestIr: false
 selectedGraphSliceGenerated: false
 contractCompilerInputGenerated: false
@@ -98,6 +100,35 @@ The candidate is conservatively classified as `requestTypeCandidate: runtime-evi
 `changeTypeCandidate: test-only-behavior-proof`, `targetRecordIdCandidate: CH-001`, and
 `targetComponentCandidate: Todo App`. It remains candidate-only and not validated.
 
+## Schema-Only Validation
+
+The first deterministic validator is now available as a schema-and-boundary-only pass:
+
+```text
+graph read-model validate-request-ir --candidate <candidatePath> --json
+```
+
+The Todo App calibration result is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json
+```
+
+For the first calibration candidate it reports:
+
+```text
+schemaValidationStatus: schema-valid
+requestIrValidationStatus: schema-valid-graph-validation-not-run
+graphAuthorityValidationStatus: not-run
+graphTraversalAllowed: false
+contractGenerationAllowed: false
+instructionPackGenerationAllowed: false
+```
+
+This is not graph-aware validation. It checks required fields, enum values, candidate-only boundaries, authority status,
+confidence policy, ambiguity policy, and the safety rule that unvalidated candidates cannot drive traversal or contract
+generation.
+
 ## Request Type Taxonomy
 
 The first taxonomy is deliberately narrow:
@@ -146,7 +177,10 @@ Previewed validation statuses are:
 - `clarification-required`
 - `human-review-required`
 
-The runtime validator is not implemented in this task.
+The schema-only runtime validator is implemented. Graph-aware validation remains future work.
+
+Schema-valid does not mean validated-for-traversal. Graph record existence, target component existence, edge traversal,
+selected graph slice generation, contract input generation, and instruction pack generation remain blocked.
 
 ## Graph Traversal Plan Boundary
 

@@ -30,6 +30,7 @@ import {
   graphReadModelReportHealthCommand,
   graphReadModelReportIntentCommand,
   graphReadModelSummarizeCommand,
+  graphReadModelValidateRequestIrCommand,
   graphReadModelValidateCommand,
 } from './graph.js'
 import { impactAnalyzeCommand } from './impact.js'
@@ -226,6 +227,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'review-graph-delta') {
     return graphReadModelReviewGraphDeltaCommand(context)
+  }
+  if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'validate-request-ir') {
+    return graphReadModelValidateRequestIrCommand(context)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'report-health') {
     return graphReadModelReportHealthCommand(context)

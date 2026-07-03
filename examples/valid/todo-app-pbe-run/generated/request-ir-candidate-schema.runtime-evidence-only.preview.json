@@ -17,7 +17,10 @@
   "instructionPackGenerationAllowed": false,
   "aiClassifierImplemented": false,
   "llmCallsIntroduced": false,
-  "requestIrValidatorImplemented": false,
+  "requestIrValidatorImplemented": true,
+  "requestIrValidatorScope": "schema-and-boundary-only",
+  "requestIrSchemaOnlyValidationResultArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json",
+  "graphAwareRequestIrValidatorImplemented": false,
   "graphSourceMutated": false,
   "graphDeltaApplied": false,
   "approvalStatus": "not-approved",
@@ -43,7 +46,10 @@
     "requiresClarification",
     "humanReviewRequired",
     "candidateOnly",
-    "authorityStatus"
+    "authorityStatus",
+    "graphTraversalAllowed",
+    "contractGenerationAllowed",
+    "instructionPackGenerationAllowed"
   ],
   "fieldDefinitions": {
     "schemaId": {
@@ -156,6 +162,21 @@
       "type": "string",
       "requiredValue": "not-authoritative-until-validated",
       "authorityStatus": "safety-boundary"
+    },
+    "graphTraversalAllowed": {
+      "type": "boolean",
+      "requiredValue": false,
+      "authorityStatus": "safety-boundary"
+    },
+    "contractGenerationAllowed": {
+      "type": "boolean",
+      "requiredValue": false,
+      "authorityStatus": "safety-boundary"
+    },
+    "instructionPackGenerationAllowed": {
+      "type": "boolean",
+      "requiredValue": false,
+      "authorityStatus": "safety-boundary"
     }
   },
   "requestTypeTaxonomy": {
@@ -184,7 +205,8 @@
     "highConfidenceBoundary": "high confidence still does not permit graph traversal until deterministic validation succeeds"
   },
   "futureValidatorExpectations": {
-    "validatorStatus": "future-schema-only-validator-not-implemented",
+    "validatorStatus": "schema-only-validator-implemented-graph-aware-validation-future",
+    "schemaOnlyValidationResult": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json",
     "inputs": [
       "request-ir-candidate-schema.runtime-evidence-only.preview.json",
       "request-ir-candidate.add-todo-runtime-evidence-only.preview.json",
@@ -197,13 +219,24 @@
       "enum values",
       "confidence band",
       "ambiguity state",
+      "graph traversal disallowed from unvalidated candidate",
+      "contract generation disallowed from unvalidated candidate",
+      "instruction pack generation disallowed from unvalidated candidate"
+    ],
+    "futureGraphAwareChecks": [
       "target record existence",
       "target component existence",
       "changeType compatibility",
       "policy compatibility",
       "required evidence availability"
     ],
-    "outputStatuses": ["validated", "validation-blocked", "clarification-required", "human-review-required"]
+    "outputStatuses": ["schema-valid-graph-validation-not-run", "validation-blocked"],
+    "futureGraphAwareOutputStatuses": [
+      "validated",
+      "validation-blocked",
+      "clarification-required",
+      "human-review-required"
+    ]
   },
   "futureGraphTraversalBoundary": {
     "validatedRequestIrRequired": true,
@@ -218,7 +251,7 @@
   },
   "allowedUse": [
     "define future AI request analyzer output shape",
-    "validate candidate fixture shape in a later schema-only validator",
+    "validate candidate fixture shape in the schema-only validator",
     "preserve candidate-only Request IR boundary",
     "document narrow request type taxonomy and confidence policy"
   ],
@@ -237,5 +270,5 @@
     "scope enforcement",
     "CI required check"
   ],
-  "nonExecutionBoundary": "This artifact previews the Request IR Candidate schema only. It does not implement an AI classifier, call an LLM, validate Request IR candidates, run graph traversal, select nodes or edges, generate contract compiler input, generate instruction packs, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, configure required checks, or automate user acceptance."
+  "nonExecutionBoundary": "This artifact previews the Request IR Candidate schema only. It does not implement an AI classifier, call an LLM, run graph-aware Request IR validation, run graph traversal, select nodes or edges, generate contract compiler input, generate instruction packs, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, configure required checks, or automate user acceptance."
 }

@@ -9,7 +9,11 @@
   "aiClassifierImplemented": false,
   "llmCallsIntroduced": false,
   "runtimeAiCallsAllowed": false,
-  "requestIrValidatorImplemented": false,
+  "requestIrValidatorImplemented": true,
+  "requestIrValidatorScope": "schema-and-boundary-only",
+  "requestIrSchemaOnlyValidatorStatus": "implemented",
+  "requestIrSchemaOnlyValidationResultArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json",
+  "graphAwareRequestIrValidatorImplemented": false,
   "graphTraversalImplementedFromRequestIr": false,
   "selectedGraphSliceGenerated": false,
   "contractCompilerInputGenerated": false,
@@ -26,6 +30,8 @@
   "requestIrCandidateSchemaArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json",
   "firstCalibrationRequestIrCandidateStatus": "request-ir-candidate-calibration-fixture-previewed",
   "firstCalibrationRequestIrCandidateArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json",
+  "firstCalibrationRequestIrValidationStatus": "schema-valid-graph-validation-not-run",
+  "firstCalibrationRequestIrValidationArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json",
   "frontendFlow": {
     "flowStatus": "previewed-not-implemented",
     "steps": [
@@ -170,12 +176,21 @@
     "sourceAuthorityBoundary": "AI output is not graph-source, not product intent authority, not approval, and not compiler execution authority."
   },
   "requestIrValidationBoundary": {
-    "validationStatus": "previewed-not-implemented",
+    "validationStatus": "schema-only-validator-implemented-graph-aware-validation-not-run",
     "futureValidatorInputSchema": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json",
     "firstCalibrationCandidateInput": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json",
+    "firstSchemaOnlyValidationResult": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json",
     "validationChecks": [
       "enum values",
       "required fields",
+      "candidate-only boundary fields",
+      "authority status",
+      "confidence and ambiguity policy",
+      "graph traversal disallowed from unvalidated candidate",
+      "contract generation disallowed from unvalidated candidate",
+      "instruction pack generation disallowed from unvalidated candidate"
+    ],
+    "futureGraphAwareValidationChecks": [
       "graph record existence",
       "target component existence",
       "changeType compatibility",
@@ -183,8 +198,21 @@
       "required evidence availability",
       "unresolved ambiguity"
     ],
-    "validationOutputStatuses": ["validated", "validation-blocked", "clarification-required", "human-review-required"],
-    "runtimeValidatorImplemented": false,
+    "validationOutputStatuses": [
+      "schema-valid-graph-validation-not-run",
+      "validation-blocked",
+      "clarification-required",
+      "human-review-required"
+    ],
+    "futureGraphAwareValidationOutputStatuses": [
+      "validated",
+      "validation-blocked",
+      "clarification-required",
+      "human-review-required"
+    ],
+    "runtimeValidatorImplemented": true,
+    "runtimeValidatorScope": "schema-and-boundary-only",
+    "graphAuthorityValidationStatus": "not-run",
     "contractGenerationAllowedWhenValidationBlocked": false,
     "graphTraversalAllowedWhenValidationBlocked": false
   },
@@ -269,6 +297,7 @@
     "define AI Request IR candidate fields as candidate-only",
     "link the Request IR Candidate schema preview and first calibration fixture",
     "define deterministic Request IR validation boundary before traversal",
+    "link the schema-only Request IR Candidate validator result",
     "preview graph traversal plan shape",
     "preview Request IR to contract input mapping",
     "separate Hook Gateway activation from compiler frontend semantics"
@@ -276,6 +305,7 @@
   "forbiddenUse": [
     "AI classifier implementation",
     "runtime LLM calls",
+    "graph-aware Request IR validation",
     "graph traversal from unvalidated AI output",
     "contract input generation from unvalidated AI output",
     "instruction pack generation from unvalidated AI output",
@@ -290,5 +320,5 @@
     "branch protection",
     "user acceptance automation"
   ],
-  "nonExecutionBoundary": "This artifact defines the Natural Language Request Intake compiler frontend boundary only. It links the Request IR Candidate schema preview and first calibration candidate fixture as candidate-only inputs for future validation. It does not implement an AI classifier, call an LLM from runtime code, implement hook scripts, run Request IR validation, run graph traversal, generate selected graph slices, generate contract compiler input, generate instruction packs, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, create required checks, change branch protection, or automate user acceptance."
+  "nonExecutionBoundary": "This artifact defines the Natural Language Request Intake compiler frontend boundary only. It links the Request IR Candidate schema preview, first calibration candidate fixture, and schema-only validation result as candidate-only inputs for future graph-aware validation. It does not implement an AI classifier, call an LLM from runtime code, implement hook scripts, run graph-aware Request IR validation, run graph traversal, generate selected graph slices, generate contract compiler input, generate instruction packs, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, create required checks, change branch protection, or automate user acceptance."
 }

@@ -53,6 +53,7 @@ npm run devview:runtime:smoke
 
 It runs:
 
+- `node dist/cli/index.js graph read-model validate-request-ir --candidate examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json --output .tmp/devview-runtime-timing-smoke/request-ir-validation.json --json`;
 - `node dist/cli/index.js graph read-model report-compiler-input --json`;
 - `node dist/cli/index.js graph read-model compile-contract --dry-run --json`;
 - `node dist/cli/index.js graph read-model collect-changed-files --base HEAD~1 --head HEAD --output .tmp/devview-runtime-timing-smoke/git-derived-changed-file-collection.json --json`.
@@ -186,15 +187,29 @@ is candidate-only and outside the deterministic runtime compiler path until vali
 graph traversal and contract compiler input generation must remain local and deterministic. This task adds no AI runtime
 call, graph traversal, contract input generation, instruction pack generation, or measured runtime step.
 
-The Request IR Candidate schema and first calibration fixture are preview artifacts only:
+The Request IR Candidate schema and first calibration fixture are:
 
 ```text
 examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json
 examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json
 ```
 
-They do not add a measured runtime command. A future schema-only validator may consume them, but graph traversal and
-contract generation remain blocked until validation exists and passes.
+The schema-only Request IR Candidate validator is now part of the measured advisory runtime path:
+
+```text
+graph read-model validate-request-ir --candidate <candidatePath> --json
+graph read-model validate-request-ir --candidate <candidatePath> --output <validationPath> --json
+```
+
+The timing smoke writes the validation result only to `.tmp`. The tracked Todo App calibration validation artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json
+```
+
+This validator checks candidate schema and safety boundaries only. A schema-valid result still reports
+`graphAuthorityValidationStatus: not-run`, `graphTraversalAllowed: false`, `contractGenerationAllowed: false`, and
+`instructionPackGenerationAllowed: false`.
 
 ## Health Report Boundary
 

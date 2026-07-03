@@ -121,8 +121,15 @@ examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-ev
 examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json
 ```
 
-These files do not implement hook behavior or AI classification. They only define the candidate shape that a future
-intake path may validate before any traversal or contract generation.
+The schema-only validation result for that fixture is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json
+```
+
+These files do not implement hook behavior or AI classification. The validator checks schema and candidate-only safety
+boundaries, but graph-aware validation remains future work. A schema-valid Request IR Candidate still cannot drive graph
+traversal, contract generation, or instruction pack generation.
 
 ## Trust Boundary
 

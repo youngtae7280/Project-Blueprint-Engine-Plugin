@@ -3,6 +3,7 @@ import { compileExecutionContractDryRun } from '../core/contract-compiler-dry-ru
 import { collectGitDerivedChangedFiles } from '../core/git-derived-changed-file-collection.js'
 import { generateGraphDeltaHumanReviewPacket } from '../core/graph-delta-human-review-packet.js'
 import { generateProposalOnlyGraphDeltaPreview } from '../core/graph-delta-proposal-generator.js'
+import { validateRequestIrCandidateFile } from '../core/request-ir-candidate-validator.js'
 import { buildGraphExecutionContractReport } from '../core/graph-execution-contract.js'
 import { reportCompilerBoundary } from '../core/compiler-boundary.js'
 import { reportCompilerInputModel } from '../core/compiler-input-model.js'
@@ -764,6 +765,68 @@ export async function graphReadModelReviewGraphDeltaCommand(context: CommandCont
           message,
           suggestedFix:
             'Provide a readable proposal-only Graph Delta preview with proposalOnly=true, graphSourceMutated=false, graphDeltaApplied=false, requiresHumanReview=true, approvalStatus=not-approved, nonEnforcing=true, and enforcementStatus=not-enforced.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelValidateRequestIrCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.candidate) {
+    return invalidCommand('graph read-model validate-request-ir requires --candidate <candidatePath>.')
+  }
+
+  try {
+    const validation = await validateRequestIrCandidateFile(context.options.root, context.options.candidate, {
+      output: context.options.output,
+    })
+    const blocked = validation.result.requestIrValidationStatus === 'validation-blocked'
+    const errorFindings = validation.result.validationFindings.filter((finding) => finding.severity === 'error')
+
+    return {
+      ok: !blocked,
+      command: 'graph read-model validate-request-ir',
+      exitCode: blocked ? ExitCode.ValidationFailed : ExitCode.Success,
+      message: blocked
+        ? 'Request IR Candidate schema-only validation blocked.'
+        : 'Request IR Candidate schema-only validation completed without graph traversal.',
+      issues: blocked
+        ? errorFindings.map((finding) =>
+            issue({
+              validator: 'RequestIrCandidateSchemaOnlyValidator',
+              code: finding.code,
+              severity: finding.severity,
+              message: finding.message,
+              reason: finding.field ? `Field: ${finding.field}` : undefined,
+              suggestedFix:
+                finding.suggestedFix ??
+                'Regenerate the candidate as candidate-only before attempting graph-aware validation.',
+            }),
+          )
+        : [],
+      data: {
+        ...validation.result,
+        ...(validation.outputPath ? { outputPath: validation.outputPath } : {}),
+        next: blocked
+          ? 'Fix the malformed or unsafe Request IR Candidate boundary fields. This validator never enables traversal from unsafe AI output.'
+          : 'Proceed only to future graph-aware validation. Schema-valid candidate output still cannot drive graph traversal, contract generation, or instruction-pack generation.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model validate-request-ir',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Request IR Candidate schema-only validation could not run.',
+      issues: [
+        issue({
+          validator: 'RequestIrCandidateSchemaOnlyValidator',
+          code: 'REQUEST_IR_CANDIDATE_SCHEMA_ONLY_VALIDATION_BLOCKED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide a readable Request IR Candidate artifact with candidate-only boundaries and no graph traversal or contract-generation claims.',
         }),
       ],
     }

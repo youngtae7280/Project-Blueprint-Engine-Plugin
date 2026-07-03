@@ -329,6 +329,13 @@ The Request IR Candidate schema and first calibration fixture are recorded in
 define the future AI analyzer output shape and the first Todo App runtime-Evidence-only candidate, but they are not
 validated Request IR, graph traversal input, contract compiler input, or instruction packs.
 
+The first schema-only Request IR Candidate validator is now exposed through
+`graph read-model validate-request-ir --candidate <candidatePath> --json`. Its Todo App calibration result is
+`examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json`. The
+validator checks required fields, enum values, candidate-only boundaries, confidence, and ambiguity policy only. It does
+not inspect graph-source, validate node/edge existence, run graph traversal, generate contract input, generate
+instruction packs, or call an LLM.
+
 The following readiness artifact is complete at documentation level:
 
 - [representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md)

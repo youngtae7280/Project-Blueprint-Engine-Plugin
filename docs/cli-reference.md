@@ -100,6 +100,7 @@ Most commands follow this pattern:
 - `--patch <id>`: Product Patch node id for `pbe product patch apply`.
 - `--operation <value>`: Product Patch operation, such as `update_acceptance_criteria`.
 - `--files <list>`: comma-separated candidate changed/expected files for `pbe profile recommend`.
+- `--candidate <file>`: Request IR Candidate JSON file for `pbe graph read-model validate-request-ir`.
 
 ## Status And Validation Commands
 
@@ -486,6 +487,34 @@ Example:
 node dist/cli/index.js graph read-model review-graph-delta `
   --proposal .tmp/devview-graph-delta-proposal.preview.json `
   --markdown .tmp/devview-graph-delta-review-packet.md `
+  --json
+```
+
+### `pbe graph read-model validate-request-ir`
+
+- Purpose: Validate a Request IR Candidate artifact's schema and candidate-only safety boundaries.
+- Typical state before running: After a future natural-language intake path or calibration fixture has produced a
+  Request IR Candidate JSON artifact.
+- Options: `--candidate <candidatePath>` is required. `--output <file>` may write the schema-only validation result.
+  Without `--output`, JSON stdout is the only output.
+- What it checks: Required fields, narrow request type enum values, candidate-only boundary fields, authority status,
+  confidence policy, ambiguity policy, and the rule that unvalidated candidates cannot drive graph traversal, contract
+  generation, or instruction-pack generation.
+- What it writes: Nothing by default. It writes only to the explicit `--output` path.
+- Success result: JSON with `validationScope: schema-and-boundary-only`,
+  `requestIrValidationStatus: schema-valid-graph-validation-not-run`, `graphAuthorityValidationStatus: not-run`,
+  `graphTraversalAllowed: false`, `contractGenerationAllowed: false`, and `instructionPackGenerationAllowed: false`.
+- Common failures: unreadable candidate artifact, malformed JSON, missing required fields, unsupported schema id, or
+  unsafe boundary fields such as `candidateOnly: false` or `graphTraversalAllowed: true`.
+- Next command: Proceed only to a future graph-aware validator. Do not treat a schema-valid candidate as graph traversal
+  authority, contract compiler input, instruction-pack input, approval, runtime Evidence satisfaction, equivalence
+  proof, or enforcement.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model validate-request-ir `
+  --candidate examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json `
   --json
 ```
 

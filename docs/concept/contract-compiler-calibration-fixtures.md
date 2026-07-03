@@ -1889,10 +1889,18 @@ examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-ev
 examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json
 ```
 
+The schema-only Request IR validation result is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json
+```
+
 The calibration candidate models a Korean natural-language request to add evidence for the Todo App add button without
 touching production source. It classifies the request as `runtime-evidence-only` and `test-only-behavior-proof`, with
-`CH-001` and `Todo App` as candidate targets. The candidate is not validated, not an instruction pack, not contract
-compiler input, and not graph traversal authority.
+`CH-001` and `Todo App` as candidate targets. The schema-only validator confirms required fields, enum shape,
+candidate-only boundaries, confidence policy, and ambiguity policy, but it does not run graph-aware validation. The
+candidate is not validated-for-traversal, not an instruction pack, not contract compiler input, and not graph traversal
+authority.
 
 ## Fixture-Provided Changed-File List Preview
 

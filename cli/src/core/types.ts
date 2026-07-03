@@ -85,6 +85,7 @@ export interface CliOptions {
   output?: string
   markdown?: string
   proposal?: string
+  candidate?: string
   chainCommand?: string
   base?: string
   head?: string
