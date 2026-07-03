@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-hook-install-trust-boundary-preview",
+  "status": "devview-hook-install-trust-boundary-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "boundaryScope": "hook-install-trust-scope-decision-preview",
+  "installTrustDecisionImplemented": false,
+  "actualInstallOrTrustMutationImplemented": false,
+  "hookScriptsImplemented": false,
+  "hookScriptsInstalled": false,
+  "hookGatewayConfigured": "not-checked-preview-only",
+  "hookGatewayTrusted": "not-checked-preview-only",
+  "hookGatewayActive": "not-checked-preview-only",
+  "lastObservedHookEvent": null,
+  "strictModeEnabled": false,
+  "guidedEnforcementEnabled": false,
+  "actualBlockingHookBehaviorImplemented": false,
+  "codexExecutionTriggered": false,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "approvalStatus": "not-approved",
+  "humanDecisionRecorded": false,
+  "runtimeEvidenceSatisfied": false,
+  "equivalenceProven": false,
+  "scopeEnforced": false,
+  "ciEnforcementEnabled": false,
+  "humanReviewRequired": true,
+  "sourceHookGatewayBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json",
+  "sourceHookGatewayHealthBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json",
+  "sourceUserPromptSubmitContextPreviewArtifact": "examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json",
+  "sourceUserPromptSubmitContextPreviewMarkdownArtifact": "examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.md",
+  "installScopeCandidates": [
+    {
+      "id": "repo-local-hook-config-candidate",
+      "pathPattern": ".codex/hooks/devview/*.json",
+      "scopeStatus": "future-candidate-not-created",
+      "authorityRequirement": "explicit-user-decision-required",
+      "allowedFutureUse": "repo-local-advisory-hook-configuration-only"
+    },
+    {
+      "id": "repo-local-hook-script-candidate",
+      "pathPattern": ".codex/hooks/devview/*.ps1|*.js",
+      "scopeStatus": "future-candidate-not-created",
+      "authorityRequirement": "explicit-user-decision-required",
+      "allowedFutureUse": "repo-local-hook-script-only-after-user-approved-advisory-install"
+    },
+    {
+      "id": "session-local-context-artifact-candidate",
+      "pathPattern": ".tmp/devview/sessions/<sessionId>/*.json|*.md",
+      "scopeStatus": "future-transient-runtime-candidate",
+      "authorityRequirement": "session-explicitness-required",
+      "allowedFutureUse": "transient-session-context-no-source-authority"
+    },
+    {
+      "id": "generated-preview-artifact-candidate",
+      "pathPattern": "examples/valid/todo-app-pbe-run/generated/devview-*.preview.json|*.preview.md",
+      "scopeStatus": "calibration-preview-existing",
+      "authorityRequirement": "tracked-preview-review-only",
+      "allowedFutureUse": "documentation-and-calibration-only"
+    }
+  ],
+  "trustPrerequisites": [
+    {
+      "id": "explicit-user-decision-required",
+      "required": true,
+      "currentStatus": "missing-future-decision",
+      "meaning": "A user must explicitly request or approve advisory hook install/trust before any hook config is written."
+    },
+    {
+      "id": "explicit-repo-path-required",
+      "required": true,
+      "currentStatus": "not-checked-preview-only",
+      "meaning": "The target repository path must be explicit and cannot be inferred from global state."
+    },
+    {
+      "id": "advisory-mode-first",
+      "required": true,
+      "currentStatus": "boundary-previewed",
+      "meaning": "First install/trust decision can only target advisory mode; guided behavior remains future work."
+    },
+    {
+      "id": "strict-mode-disabled",
+      "required": true,
+      "currentStatus": "satisfied-by-preview-boundary",
+      "expectedValue": false
+    },
+    {
+      "id": "health-and-context-preview-available",
+      "required": true,
+      "currentStatus": "preview-artifacts-linked",
+      "dependsOn": [
+        "examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json"
+      ]
+    }
+  ],
+  "futureDecisionStates": [
+    {
+      "state": "not-requested",
+      "current": true,
+      "meaning": "No install/trust decision has been requested or recorded."
+    },
+    {
+      "state": "preview-only",
+      "current": true,
+      "meaning": "This artifact defines criteria only and does not install or trust hooks."
+    },
+    {
+      "state": "user-approved-advisory-install",
+      "current": false,
+      "futureOnly": true,
+      "requiredEvidence": [
+        "explicit user decision",
+        "target repo path",
+        "advisory mode",
+        "reviewed hook script/config paths"
+      ]
+    },
+    {
+      "state": "revoked",
+      "current": false,
+      "futureOnly": true,
+      "requiredEvidence": ["explicit user revoke decision", "recorded hook config removal/disable preview"]
+    }
+  ],
+  "disallowedMutations": [
+    "global Codex config mutation",
+    "hidden hook install",
+    "automatic trust acceptance",
+    "branch protection mutation",
+    "CI required check mutation",
+    "strict mode activation",
+    "guided blocking activation",
+    "graph-source mutation",
+    "graph delta apply",
+    "approval or human decision recording",
+    "runtime Evidence satisfaction",
+    "equivalence proof",
+    "scope enforcement"
+  ],
+  "readinessRelationships": {
+    "dependsOnHookGatewayHealthBoundary": "examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json",
+    "dependsOnUserPromptSubmitContextPreview": "examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json",
+    "actualHookScriptsStillAbsent": true,
+    "actualHookInstallStillAbsent": true,
+    "trustDecisionRecordStillAbsent": true,
+    "nextRecommendedBoundary": "actual hook script scaffold preview or install decision record boundary, still non-enforcing"
+  },
+  "allowedUse": [
+    "define future install/trust decision prerequisites",
+    "document repo-local and session-local candidate paths",
+    "prevent hidden/global hook activation assumptions",
+    "link health and UserPromptSubmit context readiness before actual hook scripts"
+  ],
+  "forbiddenUse": [
+    "install hooks",
+    "trust hook commands",
+    "mutate Codex config",
+    "enable guided or strict blocking",
+    "trigger Codex execution",
+    "approve work",
+    "apply graph deltas",
+    "satisfy runtime Evidence",
+    "prove equivalence",
+    "enforce scope or CI"
+  ],
+  "nonExecutionBoundary": "This artifact previews Hook Gateway install/trust scope decision criteria only. It does not install hook scripts, trust commands, mutate Codex or repo config, activate hooks, block Codex execution, call an LLM, mutate graph-source, apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, configure CI, or automate user acceptance."
+}

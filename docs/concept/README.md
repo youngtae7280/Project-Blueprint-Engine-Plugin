@@ -335,6 +335,11 @@ It wraps the current frontend chain, Hook Gateway health state, and Instruction 
 hook injection while still not installing hooks, blocking Codex, approving work, satisfying Evidence, proving
 equivalence, or enforcing scope/CI.
 
+The Hook Gateway install/trust decision boundary is previewed in
+`examples/valid/todo-app-pbe-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json`. It
+defines future repo-local hook config/script scope candidates, explicit user/repo trust prerequisites, and forbidden
+global config/hidden install/auto-trust/CI mutations. It is preview-only and does not install hooks or mutate trust.
+
 The runtime smoke lane boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-runtime-smoke-lane-boundary.runtime-evidence-only.preview.json`. It
 keeps the all-steps smoke as an advisory snapshot while reporting lane totals for analyzer preflight, core critical

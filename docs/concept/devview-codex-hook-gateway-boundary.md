@@ -160,6 +160,22 @@ hookGatewayActive: not-checked
 lastObservedHookEvent: null
 ```
 
+The install/trust scope decision boundary is previewed separately in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json
+```
+
+This boundary defines future install scope candidates, trust prerequisites, disallowed mutations, and decision states
+before any hook script/config is treated as active. The current state is still `not-requested` and `preview-only`:
+`installTrustDecisionImplemented: false`, `actualInstallOrTrustMutationImplemented: false`,
+`hookScriptsInstalled: false`, `hookGatewayTrusted: not-checked-preview-only`, and `hookGatewayActive:
+not-checked-preview-only`. A future advisory install must require an explicit user decision, explicit repo path, advisory
+mode first, strict mode disabled, and existing health/context preview artifacts. The boundary forbids global Codex config
+mutation, hidden hook install, automatic trust acceptance, branch protection or CI mutation, guided/strict blocking,
+graph-source mutation, graph delta apply, approval, runtime Evidence satisfaction, equivalence proof, and scope
+enforcement.
+
 ## Health Check Boundary
 
 The Hook Gateway health/readiness boundary is previewed separately in:

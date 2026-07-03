@@ -120,6 +120,12 @@
       "currentStatus": "preview-only-non-enforcing",
       "futureCheck": "Report missing preflight, contract, post-check, and review packet in advisory mode.",
       "mustNotDo": "treat bypass detection as CI enforcement"
+    },
+    {
+      "item": "install-trust-boundary",
+      "currentStatus": "boundary-preview-only",
+      "futureCheck": "Confirm explicit install/trust decision before treating hook scripts/config as active.",
+      "mustNotDo": "install hooks or auto-trust commands from a boundary preview"
     }
   ],
   "frontendArtifactAvailability": [
@@ -216,5 +222,7 @@
   "nonExecutionBoundary": "This artifact previews the DevView Hook Gateway health/readiness boundary only. It does not implement hook scripts, install hooks, trust commands, block Codex execution, enable strict or guided enforcement, call an LLM, make network calls, mutate graph-source, apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.",
   "userPromptSubmitContextPreviewCommandImplemented": true,
   "userPromptSubmitContextPreviewArtifact": "examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json",
-  "userPromptSubmitContextPreviewMarkdownArtifact": "examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.md"
+  "userPromptSubmitContextPreviewMarkdownArtifact": "examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.md",
+  "hookInstallTrustBoundaryStatus": "devview-hook-install-trust-boundary-previewed",
+  "hookInstallTrustBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json"
 }

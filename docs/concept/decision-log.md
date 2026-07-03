@@ -2599,3 +2599,31 @@ This decision does not install hook scripts, mutate install/trust state, block C
 network calls, run graph traversal, mutate graph-source, apply graph deltas, approve graph updates, record human
 decisions, satisfy runtime Evidence, prove equivalence, enforce scope, introduce CI required checks, change branch
 protection, or automate user acceptance.
+
+## DEC-260 Define Hook Install Trust Boundary
+
+DEC-260 does not supersede DEC-097 through DEC-259. It defines the preview boundary for deciding whether future DevView
+hook scripts/config may be installed or trusted.
+
+The boundary preview is recorded in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json
+```
+
+The preview links to the Hook Gateway boundary, Hook Gateway health boundary, and UserPromptSubmit context preview. It
+defines repo-local hook config/script candidates, session-local context artifact candidates, generated preview artifact
+candidates, trust prerequisites, future decision states, and disallowed mutations.
+
+The current state remains conservative: `installTrustDecisionImplemented: false`,
+`actualInstallOrTrustMutationImplemented: false`, `hookScriptsInstalled: false`, `hookGatewayTrusted:
+not-checked-preview-only`, `hookGatewayActive: not-checked-preview-only`, `strictModeEnabled: false`,
+`guidedEnforcementEnabled: false`, and `actualBlockingHookBehaviorImplemented: false`. Future advisory install requires
+an explicit user decision, explicit repo path, advisory mode first, strict mode disabled, and health/context preview
+availability. Future decision states such as `user-approved-advisory-install` and `revoked` are documented as future
+only.
+
+This decision does not install hooks, trust commands, mutate Codex or repo config, activate hooks, block Codex
+execution, call an LLM/API, make network calls, mutate graph-source, apply graph deltas, approve graph updates, record
+human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, introduce CI required checks, change branch
+protection, or automate user acceptance.

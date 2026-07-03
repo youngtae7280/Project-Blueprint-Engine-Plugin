@@ -129,6 +129,16 @@ Current lanes:
   `report-hook-gateway-health` and `prepare-user-prompt-context`.
 - `advisory-backend-lane`: advisory backend, post-check, graph delta proposal, and review reporting commands.
 
+The Hook Gateway install/trust scope decision boundary is a preview artifact only:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json
+```
+
+It is not currently measured as a command because no install/trust decision CLI exists. A future command must remain
+lightweight and advisory unless a later explicit decision changes the boundary. The boundary itself does not install
+hooks, trust commands, mutate config, block Codex execution, enforce scope, or configure CI.
+
 New report-only commands must not automatically enter the `core-critical-lane`. They may be included in the all-steps
 smoke as advisory coverage, but the lane assignment preserves the meaning of the 5 second core runtime target. This
 lane policy does not remove existing smoke coverage and does not introduce hard failure, required checks, branch
