@@ -104,6 +104,9 @@ Most commands follow this pattern:
   `pbe graph read-model validate-request-ir-graph`.
 - `--schema-validation <file>`: schema-only Request IR validation JSON file for
   `pbe graph read-model validate-request-ir-graph`.
+- `--boundary <file>`: boundary preview JSON for report-only or prompt-pack commands.
+- `--schema <file>`: Request IR Candidate schema preview JSON for
+  `pbe graph read-model generate-ai-request-analyzer-pack`.
 
 ## Status And Validation Commands
 
@@ -490,6 +493,41 @@ Example:
 node dist/cli/index.js graph read-model review-graph-delta `
   --proposal .tmp/devview-graph-delta-proposal.preview.json `
   --markdown .tmp/devview-graph-delta-review-packet.md `
+  --json
+```
+
+### `pbe graph read-model generate-ai-request-analyzer-pack`
+
+- Purpose: Generate deterministic AI Request Analyzer prompt/input contract JSON, and optionally Markdown, from the
+  analyzer boundary and Request IR Candidate schema previews.
+- Typical state before running: After the AI Request Analyzer boundary and Request IR Candidate schema preview artifacts
+  exist. No analyzer implementation or LLM/API integration is required.
+- Options: `--boundary <analyzerBoundaryPath>` and `--schema <requestIrCandidateSchemaPath>` are required.
+  `--output <file>` may write the generated prompt pack JSON. `--markdown <file>` may write concise Markdown guidance.
+  Without explicit output paths, JSON stdout is the only output.
+- What it checks: analyzer boundary role/status, no analyzer implementation, no LLM/network calls, no Request IR
+  Candidate generation, candidate-only authority, expected output role, Request IR schema role/status, required fields,
+  candidate-only schema flags, and schema id alignment.
+- What it writes: Nothing by default. It writes only to explicit `--output` and `--markdown` paths.
+- Output authority guard: explicit preview output paths are rejected before writing if they would overwrite the analyzer
+  boundary, Request IR Candidate schema, calibration candidate, linked preview/source artifacts, graph-source/read-model
+  source authority, or selected frontend/source artifacts. If either output path is unsafe, no output is written.
+- Success result: JSON with `artifactRole: ai-request-analyzer-pack`, `llmInvoked: false`,
+  `requestIrCandidateGenerated: false`, `candidateOnly: true`, required output fields, request type taxonomy, safety
+  instructions, forbidden use, and downstream execution/generation/approval/enforcement flags false.
+- Next command: A future analyzer may use this prompt pack as input contract context. This command does not call an LLM,
+  generate a Request IR Candidate, run traversal, generate selected slices, generate contract input, generate execution
+  instruction packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve work, satisfy runtime
+  Evidence, prove equivalence, enforce scope, or configure CI.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model generate-ai-request-analyzer-pack `
+  --boundary examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json `
+  --schema examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json `
+  --output .tmp/review-ai-request-analyzer-pack.json `
+  --markdown .tmp/review-ai-request-analyzer-pack.md `
   --json
 ```
 

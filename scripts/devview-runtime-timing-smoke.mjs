@@ -8,6 +8,8 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const cliPath = join(repoRoot, 'dist/cli/index.js')
 const smokeArtifactPath = '.tmp/devview-runtime-timing-smoke/git-derived-changed-file-collection.json'
 const smokeScopeReportPath = '.tmp/devview-runtime-timing-smoke/scope-compliance-runtime-report.md'
+const smokeAiRequestAnalyzerPackPath = '.tmp/devview-runtime-timing-smoke/ai-request-analyzer-pack.json'
+const smokeAiRequestAnalyzerPackMarkdownPath = '.tmp/devview-runtime-timing-smoke/ai-request-analyzer-pack.md'
 const smokeGraphDeltaProposalPath = '.tmp/devview-runtime-timing-smoke/graph-delta-proposal.preview.json'
 const smokeGraphDeltaReviewPacketPath = '.tmp/devview-runtime-timing-smoke/graph-delta-human-review-packet.md'
 const smokeRequestIrValidationPath = '.tmp/devview-runtime-timing-smoke/request-ir-validation.json'
@@ -22,6 +24,10 @@ const graphDeltaCompatibleSourcePath =
   'examples/valid/todo-app-pbe-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json'
 const requestIrCandidatePath =
   'examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json'
+const aiRequestAnalyzerBoundaryPath =
+  'examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json'
+const requestIrCandidateSchemaPath =
+  'examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json'
 const hookGatewayHealthBoundaryPath =
   'examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json'
 const runtimeBudgetTargetMs = 5000
@@ -29,6 +35,25 @@ const outputArgIndex = process.argv.indexOf('--output')
 const outputPath = outputArgIndex >= 0 ? process.argv[outputArgIndex + 1] : null
 
 const measuredSteps = [
+  {
+    stepName: 'ai-request-analyzer-pack-generation',
+    command: `node dist/cli/index.js graph read-model generate-ai-request-analyzer-pack --boundary ${aiRequestAnalyzerBoundaryPath} --schema ${requestIrCandidateSchemaPath} --output ${smokeAiRequestAnalyzerPackPath} --markdown ${smokeAiRequestAnalyzerPackMarkdownPath} --json`,
+    args: [
+      'graph',
+      'read-model',
+      'generate-ai-request-analyzer-pack',
+      '--boundary',
+      aiRequestAnalyzerBoundaryPath,
+      '--schema',
+      requestIrCandidateSchemaPath,
+      '--output',
+      smokeAiRequestAnalyzerPackPath,
+      '--markdown',
+      smokeAiRequestAnalyzerPackMarkdownPath,
+      '--json',
+    ],
+    includedInRuntimeBudget: true,
+  },
   {
     stepName: 'request-ir-candidate-schema-validation',
     command: `node dist/cli/index.js graph read-model validate-request-ir --candidate ${requestIrCandidatePath} --output ${smokeRequestIrValidationPath} --json`,

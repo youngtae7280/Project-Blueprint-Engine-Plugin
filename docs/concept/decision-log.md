@@ -2287,3 +2287,44 @@ This decision does not implement hook scripts, install hooks, trust commands, bl
 guided enforcement, call an LLM, make network calls, mutate graph-source, apply graph deltas, approve graph updates,
 record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, introduce CI required checks, change
 branch protection, or automate user acceptance.
+
+## DEC-252 Generate AI Request Analyzer Prompt Pack
+
+DEC-252 does not supersede DEC-097 through DEC-251. It implements a deterministic prompt/input contract pack generator
+for future AI Request Analyzer use, without implementing the analyzer or calling an LLM/API.
+
+The command is exposed through:
+
+```text
+graph read-model generate-ai-request-analyzer-pack --boundary <analyzerBoundaryPath> --schema <requestIrCandidateSchemaPath> --json
+```
+
+The implementation is recorded in:
+
+```text
+cli/src/core/ai-request-analyzer-pack.ts
+```
+
+The Todo App calibration outputs are:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.md
+```
+
+The generated pack contains future analyzer role guidance, required Request IR Candidate fields, narrow request type
+taxonomy, confidence and ambiguity policy, required candidate boundary fields, safety instructions, forbidden use, and
+the deterministic validation chain required before traversal. It preserves `llmInvoked: false`,
+`networkCallsAllowed: false`, `requestIrCandidateGenerated: false`, `candidateOnly: true`, and downstream
+traversal/slice/contract/input/execution/apply/approval/evidence/equivalence/enforcement flags false.
+
+Explicit JSON/Markdown preview output is allowed only when the target path is not the analyzer boundary, Request IR
+Candidate schema, calibration candidate, linked source/preview artifact, graph-source/read-model source authority, or
+selected frontend/source artifact. The generator checks output authority before writing, so unsafe Markdown paths also
+prevent safe JSON output from being written first.
+
+This decision does not implement an AI analyzer, call an LLM/API, make network calls, generate a Request IR Candidate,
+run Request IR validation, run graph traversal, generate selected graph slices, generate Contract Compiler Input,
+generate execution Instruction Packs, trigger Codex execution, implement hook scripts, mutate graph-source, apply graph
+deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope,
+introduce CI required checks, change branch protection, or automate user acceptance.

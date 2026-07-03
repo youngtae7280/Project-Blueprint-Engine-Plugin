@@ -1,0 +1,425 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "ai-request-analyzer-pack",
+  "status": "ai-request-analyzer-pack-generated",
+  "generatorName": "AiRequestAnalyzerPackGenerator",
+  "packScope": "natural-language-to-request-ir-candidate-prompt-preview-no-llm",
+  "sourceAnalyzerBoundary": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json",
+  "sourceRequestIrCandidateSchema": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json",
+  "analyzerPackGenerated": true,
+  "analyzerImplemented": false,
+  "llmInvoked": false,
+  "networkCallsAllowed": false,
+  "runtimeAiCallsAllowed": false,
+  "requestIrCandidateGenerated": false,
+  "candidateOnly": true,
+  "candidateAuthorityStatus": "ai-generated-candidate-not-validated",
+  "requestIrAuthorityStatus": "not-authoritative-until-validated",
+  "expectedOutputArtifactRole": "request-ir-candidate",
+  "expectedOutputSchemaId": "devview-request-ir-candidate-v0-preview",
+  "expectedOutputSchemaArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json",
+  "requiredOutputFields": [
+    "schemaId",
+    "requestIrCandidateStatus",
+    "sourceNaturalLanguageRequest",
+    "requestText",
+    "requestLanguage",
+    "requestTypeCandidate",
+    "changeTypeCandidate",
+    "targetRecordIdCandidate",
+    "targetComponentCandidate",
+    "intentSummaryCandidate",
+    "allowedScopeIntentCandidate",
+    "forbiddenScopeIntentCandidate",
+    "requiredEvidenceIntentCandidate",
+    "riskIntentCandidate",
+    "confidence",
+    "ambiguities",
+    "requiresClarification",
+    "humanReviewRequired",
+    "candidateOnly",
+    "authorityStatus",
+    "graphTraversalAllowed",
+    "contractGenerationAllowed",
+    "instructionPackGenerationAllowed"
+  ],
+  "requiredCandidateBoundaryFields": {
+    "requestIrCandidateStatus": "candidate-only",
+    "candidateOnly": true,
+    "authorityStatus": "not-authoritative-until-validated",
+    "graphTraversalAllowed": false,
+    "contractGenerationAllowed": false,
+    "instructionPackGenerationAllowed": false
+  },
+  "requestTypeTaxonomy": {
+    "taxonomyStatus": "narrow-initial-enum-previewed",
+    "allowedValues": [
+      "runtime-evidence-only",
+      "behavior-change",
+      "bug-fix",
+      "refactor",
+      "documentation-only",
+      "investigation-only",
+      "unknown"
+    ],
+    "arbitraryRequestTypesAllowed": false,
+    "unknownHandling": "unknown or low-confidence classification remains clarification-required or human-review-required"
+  },
+  "confidenceAndAmbiguityPolicy": {
+    "confidenceThresholdForValidation": {
+      "low": "clarification-required-or-human-review-required",
+      "medium": "may-proceed-only-to-deterministic-validation",
+      "high": "still-requires-deterministic-validation-before-traversal"
+    },
+    "lowConfidenceHandling": "requires clarification or human review",
+    "unresolvedTargetMappingHandling": "human-review-required",
+    "mediumConfidenceBoundary": "medium confidence does not permit graph traversal or contract generation",
+    "highConfidenceBoundary": "high confidence still does not permit graph traversal until deterministic validation succeeds"
+  },
+  "inputContract": {
+    "rawNaturalLanguageRequest": {
+      "required": true,
+      "authorityStatus": "human-request-text-not-compiler-authority",
+      "example": "Add Todo App runtime evidence for the add button behavior without touching production source."
+    },
+    "optionalRepoContext": {
+      "allowed": true,
+      "authorityStatus": "context-only-not-source-authority",
+      "examples": [
+        "project name",
+        "current DevView mode",
+        "known fixture or session context",
+        "candidate graph/read-model metadata summaries"
+      ]
+    },
+    "optionalSessionContext": {
+      "allowed": true,
+      "authorityStatus": "context-only-not-source-authority",
+      "examples": ["request session id", "previous clarification answers", "hook gateway mode"]
+    }
+  },
+  "outputContract": {
+    "outputKind": "Request IR Candidate JSON only",
+    "outputAuthorityStatus": "ai-generated-candidate-not-validated",
+    "requiredBoundaryFields": {
+      "requestIrCandidateStatus": "candidate-only",
+      "candidateOnly": true,
+      "authorityStatus": "not-authoritative-until-validated",
+      "graphTraversalAllowed": false,
+      "contractGenerationAllowed": false,
+      "instructionPackGenerationAllowed": false
+    },
+    "allowedRequestTypes": [
+      "runtime-evidence-only",
+      "behavior-change",
+      "bug-fix",
+      "refactor",
+      "documentation-only",
+      "investigation-only",
+      "unknown"
+    ],
+    "unknownOrLowConfidencePolicy": "clarification-required-or-human-review-required-before-deterministic-validation"
+  },
+  "validationChainRequiredBeforeTraversal": [
+    {
+      "step": "schema-only-request-ir-validation",
+      "command": "graph read-model validate-request-ir --candidate <candidatePath> --json",
+      "requiredBeforeGraphAwareValidation": true,
+      "outputArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json"
+    },
+    {
+      "step": "graph-aware-request-ir-validation",
+      "command": "graph read-model validate-request-ir-graph --candidate <candidatePath> --schema-validation <schemaValidationPath> --json",
+      "requiredBeforeTraversalPlan": true,
+      "outputArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json"
+    },
+    {
+      "step": "graph-traversal-plan-generation",
+      "command": "graph read-model plan-traversal --graph-validation <graphAwareValidationPath> --json",
+      "requiresGraphTraversalAllowed": true
+    }
+  ],
+  "promptSections": [
+    {
+      "id": "role",
+      "title": "Role",
+      "content": "Convert one raw natural-language request into Request IR Candidate JSON only. Do not validate, traverse, generate contracts, generate instruction packs, execute Codex, or approve work."
+    },
+    {
+      "id": "inputs",
+      "title": "Inputs",
+      "content": {
+        "rawNaturalLanguageRequest": {
+          "required": true,
+          "authorityStatus": "human-request-text-not-compiler-authority",
+          "example": "Add Todo App runtime evidence for the add button behavior without touching production source."
+        },
+        "optionalRepoContext": {
+          "allowed": true,
+          "authorityStatus": "context-only-not-source-authority",
+          "examples": [
+            "project name",
+            "current DevView mode",
+            "known fixture or session context",
+            "candidate graph/read-model metadata summaries"
+          ]
+        },
+        "optionalSessionContext": {
+          "allowed": true,
+          "authorityStatus": "context-only-not-source-authority",
+          "examples": ["request session id", "previous clarification answers", "hook gateway mode"]
+        }
+      }
+    },
+    {
+      "id": "required-output-fields",
+      "title": "Required output fields",
+      "content": [
+        "schemaId",
+        "requestIrCandidateStatus",
+        "sourceNaturalLanguageRequest",
+        "requestText",
+        "requestLanguage",
+        "requestTypeCandidate",
+        "changeTypeCandidate",
+        "targetRecordIdCandidate",
+        "targetComponentCandidate",
+        "intentSummaryCandidate",
+        "allowedScopeIntentCandidate",
+        "forbiddenScopeIntentCandidate",
+        "requiredEvidenceIntentCandidate",
+        "riskIntentCandidate",
+        "confidence",
+        "ambiguities",
+        "requiresClarification",
+        "humanReviewRequired",
+        "candidateOnly",
+        "authorityStatus",
+        "graphTraversalAllowed",
+        "contractGenerationAllowed",
+        "instructionPackGenerationAllowed"
+      ]
+    },
+    {
+      "id": "field-definitions",
+      "title": "Field definitions",
+      "content": {
+        "schemaId": {
+          "type": "string",
+          "requiredValue": "devview-request-ir-candidate-v0-preview",
+          "authorityStatus": "schema-shape-marker"
+        },
+        "requestIrCandidateStatus": {
+          "type": "string",
+          "requiredValue": "candidate-only",
+          "authorityStatus": "must-not-be-treated-as-validated"
+        },
+        "sourceNaturalLanguageRequest": {
+          "type": "object",
+          "required": true,
+          "fields": ["sourceKind", "text", "language"],
+          "authorityStatus": "raw-human-request-context-not-compiler-authority"
+        },
+        "requestText": {
+          "type": "string",
+          "required": true,
+          "authorityStatus": "raw-request-text-not-compiler-authority"
+        },
+        "requestLanguage": {
+          "type": "string",
+          "required": true,
+          "authorityStatus": "candidate-only"
+        },
+        "requestTypeCandidate": {
+          "type": "enum",
+          "required": true,
+          "allowedValues": [
+            "runtime-evidence-only",
+            "behavior-change",
+            "bug-fix",
+            "refactor",
+            "documentation-only",
+            "investigation-only",
+            "unknown"
+          ],
+          "authorityStatus": "candidate-only"
+        },
+        "changeTypeCandidate": {
+          "type": "string",
+          "required": true,
+          "authorityStatus": "candidate-only-requires-policy-compatibility-validation"
+        },
+        "targetRecordIdCandidate": {
+          "type": "string-or-null",
+          "required": true,
+          "authorityStatus": "candidate-only-requires-graph-record-existence-validation"
+        },
+        "targetComponentCandidate": {
+          "type": "string-or-null",
+          "required": true,
+          "authorityStatus": "candidate-only-requires-component-existence-validation"
+        },
+        "intentSummaryCandidate": {
+          "type": "string",
+          "required": true,
+          "authorityStatus": "candidate-only"
+        },
+        "allowedScopeIntentCandidate": {
+          "type": "array-of-strings",
+          "required": true,
+          "authorityStatus": "candidate-only-requires-policy-validation"
+        },
+        "forbiddenScopeIntentCandidate": {
+          "type": "array-of-strings",
+          "required": true,
+          "authorityStatus": "candidate-only-requires-policy-validation"
+        },
+        "requiredEvidenceIntentCandidate": {
+          "type": "array-of-strings",
+          "required": true,
+          "authorityStatus": "candidate-only-requires-evidence-policy-validation"
+        },
+        "riskIntentCandidate": {
+          "type": "array-of-strings",
+          "required": true,
+          "authorityStatus": "candidate-only"
+        },
+        "confidence": {
+          "type": "object",
+          "required": true,
+          "fields": ["score", "band", "reason"],
+          "authorityStatus": "candidate-only-validation-input"
+        },
+        "ambiguities": {
+          "type": "array-of-objects",
+          "required": true,
+          "authorityStatus": "candidate-only-human-review-input"
+        },
+        "requiresClarification": {
+          "type": "boolean",
+          "required": true,
+          "authorityStatus": "candidate-or-validation-controlled"
+        },
+        "humanReviewRequired": {
+          "type": "boolean",
+          "required": true,
+          "authorityStatus": "candidate-or-validation-controlled"
+        },
+        "candidateOnly": {
+          "type": "boolean",
+          "requiredValue": true,
+          "authorityStatus": "safety-boundary"
+        },
+        "authorityStatus": {
+          "type": "string",
+          "requiredValue": "not-authoritative-until-validated",
+          "authorityStatus": "safety-boundary"
+        },
+        "graphTraversalAllowed": {
+          "type": "boolean",
+          "requiredValue": false,
+          "authorityStatus": "safety-boundary"
+        },
+        "contractGenerationAllowed": {
+          "type": "boolean",
+          "requiredValue": false,
+          "authorityStatus": "safety-boundary"
+        },
+        "instructionPackGenerationAllowed": {
+          "type": "boolean",
+          "requiredValue": false,
+          "authorityStatus": "safety-boundary"
+        }
+      }
+    },
+    {
+      "id": "request-type-taxonomy",
+      "title": "Allowed request types",
+      "content": {
+        "taxonomyStatus": "narrow-initial-enum-previewed",
+        "allowedValues": [
+          "runtime-evidence-only",
+          "behavior-change",
+          "bug-fix",
+          "refactor",
+          "documentation-only",
+          "investigation-only",
+          "unknown"
+        ],
+        "arbitraryRequestTypesAllowed": false,
+        "unknownHandling": "unknown or low-confidence classification remains clarification-required or human-review-required"
+      }
+    },
+    {
+      "id": "validation-chain",
+      "title": "Required deterministic validation chain",
+      "content": [
+        {
+          "step": "schema-only-request-ir-validation",
+          "command": "graph read-model validate-request-ir --candidate <candidatePath> --json",
+          "requiredBeforeGraphAwareValidation": true,
+          "outputArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json"
+        },
+        {
+          "step": "graph-aware-request-ir-validation",
+          "command": "graph read-model validate-request-ir-graph --candidate <candidatePath> --schema-validation <schemaValidationPath> --json",
+          "requiredBeforeTraversalPlan": true,
+          "outputArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json"
+        },
+        {
+          "step": "graph-traversal-plan-generation",
+          "command": "graph read-model plan-traversal --graph-validation <graphAwareValidationPath> --json",
+          "requiresGraphTraversalAllowed": true
+        }
+      ]
+    }
+  ],
+  "safetyInstructions": [
+    "Return Request IR Candidate JSON only; no prose and no execution instructions.",
+    "Mark all analyzer-produced fields as candidate-only.",
+    "Set requestIrCandidateStatus to \"candidate-only\".",
+    "Set candidateOnly to true.",
+    "Set authorityStatus to \"not-authoritative-until-validated\".",
+    "Set graphTraversalAllowed, contractGenerationAllowed, and instructionPackGenerationAllowed to false.",
+    "Use only the allowed request type taxonomy; use unknown plus clarification/human-review state for uncertainty.",
+    "Never claim validation, graph authority, approval, runtime Evidence satisfaction, equivalence proof, scope enforcement, or CI enforcement."
+  ],
+  "forbiddenUse": [
+    "treat AI analyzer output as validated Request IR",
+    "drive graph traversal directly from analyzer output",
+    "generate selected graph slices directly from analyzer output",
+    "generate contract compiler input directly from analyzer output",
+    "generate instruction packs directly from analyzer output",
+    "trigger Codex execution",
+    "mutate graph-source",
+    "apply graph deltas",
+    "record approval or human decisions",
+    "claim runtime Evidence satisfaction",
+    "prove equivalence",
+    "enforce scope or CI",
+    "call an LLM or API from this deterministic pack generator",
+    "treat prompt-pack output as a Request IR Candidate",
+    "claim validation, graph traversal authority, contract authority, execution authority, approval, or Evidence satisfaction"
+  ],
+  "graphTraversalAllowed": false,
+  "graphTraversalExecuted": false,
+  "selectedGraphSliceGenerated": false,
+  "contractInputGenerated": false,
+  "instructionPackGenerated": false,
+  "codexExecutionTriggered": false,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "approvalStatus": "not-approved",
+  "humanDecisionRecorded": false,
+  "equivalenceProven": false,
+  "runtimeEvidenceSatisfied": false,
+  "scopeEnforced": false,
+  "ciEnforcementEnabled": false,
+  "validationFindings": [],
+  "outputWritePolicy": "explicit-output-only",
+  "writtenOutputPath": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.json",
+  "markdownReportPath": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.md",
+  "writtenOutputPathAuthorityStatus": "explicit-preview-output-not-source-authority",
+  "markdownReportAuthorityStatus": "explicit-preview-output-not-source-authority",
+  "nonExecutionBoundary": "This AI Request Analyzer Prompt Pack is deterministic prompt/input contract preview only. It does not call an LLM, make network calls, generate a Request IR Candidate, validate Request IR, run graph traversal, generate selected graph slices, generate Contract Compiler Input, generate execution Instruction Packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI."
+}

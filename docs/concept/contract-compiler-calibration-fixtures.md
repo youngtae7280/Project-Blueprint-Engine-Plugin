@@ -1893,6 +1893,16 @@ to Request IR Candidate JSON. The analyzer is not implemented, no LLM/API call i
 drive traversal, selected slice generation, contract input, instruction pack generation, Codex execution, approval,
 runtime Evidence satisfaction, equivalence proof, graph-source mutation, graph delta apply, or enforcement.
 
+The deterministic prompt/input contract pack for future analyzer use is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.md
+```
+
+It is generated from the analyzer boundary and Request IR Candidate schema previews. It is not an analyzer
+implementation, does not call an LLM/API, and does not generate a Request IR Candidate.
+
 The Request IR Candidate schema and first calibration candidate fixture are:
 
 ```text

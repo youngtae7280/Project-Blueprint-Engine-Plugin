@@ -172,6 +172,8 @@ Commands:
                        Generate proposal-only Graph Delta preview JSON from an advisory source artifact
   graph read-model review-graph-delta
                        Generate a human review packet from a proposal-only Graph Delta preview
+  graph read-model generate-ai-request-analyzer-pack
+                       Generate deterministic AI Request Analyzer prompt/input pack without LLM calls
   graph read-model validate-request-ir
                        Validate Request IR candidate schema and safety boundaries only
   graph read-model validate-request-ir-graph
@@ -234,8 +236,8 @@ Options:
   --graph-delta <file> Graph delta file for graph operation propose-update.
   --target-repo <path> Target git repository path for graph operation capture-delta.
   --manual <file>      Manual parity artifact for graph read-model comparison.
-  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, validate-request-ir, validate-request-ir-graph, plan-traversal, select-slice, generate-contract-input, generate-instruction-pack, or report-hook-gateway-health.
-  --markdown <file>    Optional Markdown summary output for graph read-model report-health, check-scope, review-graph-delta, or generate-instruction-pack.
+  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, generate-ai-request-analyzer-pack, validate-request-ir, validate-request-ir-graph, plan-traversal, select-slice, generate-contract-input, generate-instruction-pack, or report-hook-gateway-health.
+  --markdown <file>    Optional Markdown summary output for graph read-model report-health, check-scope, review-graph-delta, generate-ai-request-analyzer-pack, or generate-instruction-pack.
   --proposal <file>    Graph update proposal file for graph operation apply-proposal or graph read-model review-graph-delta.
   --candidate <file>   Request IR Candidate file for graph read-model validate-request-ir.
   --schema-validation <file>
@@ -249,6 +251,7 @@ Options:
   --contract-input <file>
                        Contract Compiler Input file for graph read-model generate-instruction-pack.
   --boundary <file>    Hook Gateway health boundary file for graph read-model report-hook-gateway-health.
+  --schema <file>      Request IR Candidate schema file for graph read-model generate-ai-request-analyzer-pack.
   --chain-command <name>
                        Wrapped graph operation script command. Defaults to operation-chain.
   --base <ref>         Base git ref for graph read-model collect-changed-files or check-scope.

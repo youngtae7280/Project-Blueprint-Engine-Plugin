@@ -54,6 +54,7 @@ npm run devview:runtime:smoke
 
 It runs:
 
+- `node dist/cli/index.js graph read-model generate-ai-request-analyzer-pack --boundary examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json --schema examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json --output .tmp/devview-runtime-timing-smoke/ai-request-analyzer-pack.json --markdown .tmp/devview-runtime-timing-smoke/ai-request-analyzer-pack.md --json`;
 - `node dist/cli/index.js graph read-model validate-request-ir --candidate examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json --output .tmp/devview-runtime-timing-smoke/request-ir-validation.json --json`;
 - `node dist/cli/index.js graph read-model validate-request-ir-graph --candidate examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json --schema-validation .tmp/devview-runtime-timing-smoke/request-ir-validation.json --output .tmp/devview-runtime-timing-smoke/request-ir-graph-validation.json --json`;
 - frontend deterministic generation through traversal plan, selected graph slice, Contract Compiler Input, and
@@ -216,9 +217,21 @@ The AI Request Analyzer boundary preview is:
 examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json
 ```
 
-It is outside the measured runtime path because no analyzer command exists and no LLM/API call is introduced. Future LLM
-inference time remains outside the 5 second deterministic DevView runtime budget. Only the post-candidate deterministic
-validation chain, starting with `validate-request-ir`, belongs in the advisory timing smoke.
+The boundary preview itself is outside the measured runtime path because no analyzer implementation exists and no
+LLM/API call is introduced. Future LLM inference time remains outside the 5 second deterministic DevView runtime
+budget.
+
+The AI Request Analyzer prompt/input contract pack generator is now measured because it is deterministic and does not
+call an LLM/API:
+
+```text
+graph read-model generate-ai-request-analyzer-pack --boundary <analyzerBoundaryPath> --schema <requestIrCandidateSchemaPath> --json
+```
+
+It writes only `.tmp` prompt-pack preview output during the timing smoke. The pack is not a Request IR Candidate and
+does not run analysis, validation, traversal, contract generation, execution instruction pack generation, Codex
+execution, graph mutation, graph delta apply, approval, runtime Evidence satisfaction, equivalence proof, enforcement,
+or CI configuration. Future LLM inference time remains outside this deterministic runtime budget.
 
 The Request IR Candidate schema and first calibration fixture are:
 

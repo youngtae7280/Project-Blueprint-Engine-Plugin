@@ -1,4 +1,5 @@
 import { relativePath } from '../core/fs.js'
+import { generateAiRequestAnalyzerPackFile } from '../core/ai-request-analyzer-pack.js'
 import { compileExecutionContractDryRun } from '../core/contract-compiler-dry-run.js'
 import { collectGitDerivedChangedFiles } from '../core/git-derived-changed-file-collection.js'
 import { generateGraphDeltaHumanReviewPacket } from '../core/graph-delta-human-review-packet.js'
@@ -771,6 +772,80 @@ export async function graphReadModelReviewGraphDeltaCommand(context: CommandCont
           message,
           suggestedFix:
             'Provide a readable proposal-only Graph Delta preview with proposalOnly=true, graphSourceMutated=false, graphDeltaApplied=false, requiresHumanReview=true, approvalStatus=not-approved, nonEnforcing=true, and enforcementStatus=not-enforced.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelGenerateAiRequestAnalyzerPackCommand(
+  context: CommandContext,
+): Promise<CommandResult> {
+  if (!context.options.boundary) {
+    return invalidCommand('graph read-model generate-ai-request-analyzer-pack requires --boundary <boundaryPath>.')
+  }
+  if (!context.options.schema) {
+    return invalidCommand('graph read-model generate-ai-request-analyzer-pack requires --schema <schemaPath>.')
+  }
+
+  try {
+    const pack = await generateAiRequestAnalyzerPackFile(
+      context.options.root,
+      context.options.boundary,
+      context.options.schema,
+      {
+        output: context.options.output,
+        markdown: context.options.markdown,
+      },
+    )
+    const blocked = pack.pack.status !== 'ai-request-analyzer-pack-generated' || !pack.pack.analyzerPackGenerated
+    const errorFindings = pack.pack.validationFindings.filter((finding) => finding.severity === 'error')
+
+    return {
+      ok: !blocked,
+      command: 'graph read-model generate-ai-request-analyzer-pack',
+      exitCode: blocked ? ExitCode.ValidationFailed : ExitCode.Success,
+      message: blocked
+        ? 'AI Request Analyzer prompt pack generation blocked before any LLM call.'
+        : 'AI Request Analyzer prompt pack generated without LLM or Request IR Candidate generation.',
+      issues: blocked
+        ? (errorFindings.length > 0 ? errorFindings : pack.pack.validationFindings).map((finding) =>
+            issue({
+              validator: 'AiRequestAnalyzerPackGenerator',
+              code: finding.code,
+              severity: finding.severity,
+              message: finding.message,
+              reason: finding.field ? `Field: ${finding.field}` : undefined,
+              suggestedFix:
+                finding.suggestedFix ??
+                'Fix the AI Request Analyzer boundary or Request IR Candidate schema before generating a prompt pack.',
+            }),
+          )
+        : [],
+      data: {
+        ...pack.pack,
+        ...(pack.outputPath ? { outputPath: pack.outputPath } : {}),
+        ...(pack.markdownReport ? { markdownReport: pack.markdownReport } : {}),
+        next: blocked
+          ? 'Repair the analyzer boundary/schema preview. This command did not call an LLM, generate Request IR, run traversal, generate contract input, generate execution instruction packs, execute Codex, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.'
+          : 'Use this pack only as future analyzer prompt/input contract context. It did not call an LLM, generate Request IR, run traversal, generate contract input, generate execution instruction packs, execute Codex, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model generate-ai-request-analyzer-pack',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'AI Request Analyzer prompt pack generation could not run.',
+      issues: [
+        issue({
+          validator: 'AiRequestAnalyzerPackGenerator',
+          code: 'AI_REQUEST_ANALYZER_PACK_GENERATION_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide readable analyzer boundary and Request IR Candidate schema preview artifacts, plus dedicated preview output paths.',
         }),
       ],
     }
