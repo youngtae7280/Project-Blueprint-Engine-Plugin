@@ -1831,6 +1831,18 @@ candidate-only items, and human review questions. It does not approve the fixtur
 graph-source, apply graph deltas, satisfy runtime Evidence, prove equivalence, reject diffs, enforce scope, or configure
 required checks.
 
+The Human Decision Record boundary preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-human-decision-record-boundary.runtime-evidence-only.preview.json
+```
+
+It defines the future human-authored decision record shape after a Human Review Packet and before any approved proposal
+state. The allowed future decision vocabulary is `approve-proposal`, `reject-proposal`, `request-revision`, and
+`defer-decision`, but the boundary itself records no decision and creates no approval. It does not implement a decision
+recording command, create approved proposal state, mutate graph-source, apply graph deltas, satisfy runtime Evidence,
+prove equivalence, reject diffs, enforce scope, configure required checks, or automate user acceptance.
+
 The current Todo App runtime Evidence-only evaluation is blocked rather than clean because the draft still contains
 `unresolved:todo-app-runtime-proof-report`. Empty `evaluatedViolations: []` in this artifact must not be read as fixture
 approval or runtime Evidence satisfaction.

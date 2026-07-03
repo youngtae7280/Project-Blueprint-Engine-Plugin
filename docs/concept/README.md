@@ -309,6 +309,13 @@ The Human Review Packet surface is now implemented by
 with explicit `--markdown <file>`. The packet is review input only: it does not record approval, record human decisions,
 mutate graph-source, apply graph deltas, satisfy runtime Evidence, enforce scope, prove equivalence, or reject diffs.
 
+The Human Decision Record boundary is previewed in
+`examples/valid/todo-app-pbe-run/generated/devview-human-decision-record-boundary.runtime-evidence-only.preview.json`.
+It defines the future human-authored decision record shape after a Human Review Packet, including decision values such
+as `approve-proposal`, `reject-proposal`, `request-revision`, and `defer-decision`. It does not implement a decision
+recording command, create approved proposal state, mutate graph-source, apply graph deltas, satisfy runtime Evidence,
+prove equivalence, enforce scope, or configure CI.
+
 The DevView Codex Hook Gateway boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json` and
 documented in [devview-codex-hook-gateway-boundary.md](devview-codex-hook-gateway-boundary.md). It defines how future

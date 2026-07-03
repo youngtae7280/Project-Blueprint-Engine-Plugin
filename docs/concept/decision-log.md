@@ -2755,3 +2755,34 @@ This decision does not install hooks, activate hooks, trust repositories, mutate
 execution, call an LLM/API, make network calls, run validation or traversal, mutate graph-source, apply graph deltas,
 approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, introduce CI
 required checks, change branch protection, or automate user acceptance.
+
+## DEC-265 Define Human Decision Record Boundary
+
+DEC-265 does not supersede DEC-097 through DEC-264. It opens Phase 13 with a boundary preview only: Human Review Packet
+generation remains separate from any future human-authored decision record, approved proposal state, or graph delta
+apply.
+
+The Todo App calibration artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-human-decision-record-boundary.runtime-evidence-only.preview.json
+```
+
+The output has `artifactRole: devview-human-decision-record-boundary-preview` and
+`status: devview-human-decision-record-boundary-previewed`. It defines future inputs such as
+`sourceHumanReviewPacket`, `sourceGraphDeltaProposal`, and `sourceRuntimeReport`, plus the allowed future decision
+values:
+
+```text
+approve-proposal
+reject-proposal
+request-revision
+defer-decision
+```
+
+The boundary requires future decisions to be human-authored and explicit. Codex output, validator success, runtime smoke,
+CI success, review packet generation, or proposal generation cannot self-approve a proposal.
+
+This decision does not implement a decision recording CLI, record a human decision, approve a proposal, create approved
+proposal state, apply a graph delta, mutate graph-source, accept runtime Evidence, prove equivalence, enforce scope,
+introduce CI required checks, change branch protection, or automate user acceptance.
