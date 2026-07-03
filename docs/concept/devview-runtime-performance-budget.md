@@ -176,6 +176,19 @@ implemented. Future hook scripts must remain lightweight, local, deterministic, 
 5 second budget. They must not call an LLM, make network calls, run full validation, mutate graph-source, apply graph
 deltas, approve work, satisfy runtime Evidence, or turn the budget into CI enforcement.
 
+The Hook Gateway health/readiness boundary is previewed in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json
+```
+
+It is not part of the measured runtime path yet because no health-check CLI or hook script exists. It defines what a
+future deterministic preflight should check before treating hooks as active: mode, strict-disabled status, hook
+installation/config detection, trust state, observed hook events, bypass-detection readiness, and frontend artifact
+availability. A future actual health check should remain lightweight and fit within the advisory 5 second DevView
+runtime budget. It must not call an LLM, install hooks, mutate trust/config, block Codex execution, mutate graph-source,
+apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, or enforce scope/CI.
+
 ## Natural Language Request Intake Boundary
 
 The natural-language compiler frontend boundary is previewed in:

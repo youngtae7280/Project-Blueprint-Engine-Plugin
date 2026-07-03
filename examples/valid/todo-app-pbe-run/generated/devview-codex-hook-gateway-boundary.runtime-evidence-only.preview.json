@@ -8,6 +8,9 @@
   "devviewRuntimePipelineStatus": "later-deterministic-runtime-path-available",
   "implementationStatus": "boundary-preview-only",
   "hookScriptsImplemented": false,
+  "hookGatewayHealthBoundaryStatus": "devview-hook-gateway-health-boundary-previewed",
+  "hookGatewayHealthBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json",
+  "hookGatewayHealthCheckImplemented": false,
   "actualBlockingHookBehaviorImplemented": false,
   "llmCallsIntroduced": false,
   "networkCallsIntroduced": false,
@@ -23,9 +26,11 @@
   "strictModeEnabled": false,
   "naturalLanguageRequestIntakeBoundaryStatus": "natural-language-request-intake-boundary-previewed",
   "naturalLanguageRequestIntakeBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json",
+  "aiRequestAnalyzerBoundaryStatus": "ai-request-analyzer-boundary-previewed",
+  "aiRequestAnalyzerBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json",
   "requestIrSchemaOnlyValidatorStatus": "schema-only-validator-implemented",
   "requestIrSchemaOnlyValidationArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json",
-  "requestIrGraphAwareValidationStatus": "not-implemented",
+  "requestIrGraphAwareValidationStatus": "implemented-non-traversing-validator",
   "requestIrGraphAwareValidationBoundaryStatus": "request-ir-graph-aware-validation-boundary-previewed",
   "requestIrGraphAwareValidationBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json",
   "requestIrGraphAwareValidationResultArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json",
@@ -200,6 +205,7 @@
   },
   "hookTrustAndInstallBoundary": {
     "projectLocalHooksRequireTrust": true,
+    "healthBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json",
     "hookGatewayConfigured": "not-checked",
     "hookGatewayTrusted": "not-checked",
     "hookGatewayActive": "not-checked",
@@ -225,6 +231,7 @@
   },
   "compilerFrontendConnection": {
     "connectionStatus": "linked-as-natural-language-request-intake-boundary",
+    "aiRequestAnalyzerBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json",
     "naturalLanguageRequestIntakeBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json",
     "hookGatewayRole": "activation-and-routing-boundary",
     "requestIntakeRole": "compiler-frontend-semantics-boundary",
@@ -232,7 +239,13 @@
     "contractGenerationAllowedFromUnvalidatedAiOutput": false,
     "instructionPackGenerationAllowedFromUnvalidatedAiOutput": false,
     "aiClassifierImplemented": false,
-    "requestIrValidatorImplemented": false
+    "aiRequestAnalyzerImplemented": false,
+    "requestIrValidatorImplemented": true,
+    "requestIrGraphAwareValidatorImplemented": true,
+    "graphTraversalPlanGeneratorImplemented": true,
+    "selectedGraphSliceGeneratorImplemented": true,
+    "contractInputGeneratorImplemented": true,
+    "instructionPackGeneratorImplemented": true
   },
   "relatedRuntimeSurfaces": {
     "checkScope": "graph read-model check-scope --base <baseRef> --head <headRef> --json",
@@ -247,6 +260,7 @@
     "preview transient DevView session artifact shape",
     "define bypass detection statuses for missing preflight, contract, post-check, and review packet",
     "document hook trust and health prerequisites",
+    "link the Hook Gateway health boundary preview",
     "link future UserPromptSubmit routing to the Natural Language Request Intake compiler frontend boundary"
   ],
   "forbiddenUse": [

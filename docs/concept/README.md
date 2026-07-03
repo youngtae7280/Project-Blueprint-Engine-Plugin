@@ -316,6 +316,13 @@ Codex lifecycle hooks may route DevView ON sessions through preflight, contract,
 Human Review Packet expectations. It does not implement hook scripts, add blocking behavior, call an LLM from hooks,
 mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, enforce CI, or enable strict mode.
 
+The Hook Gateway health/readiness boundary is previewed in
+`examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json`. It
+defines what a future deterministic health check should inspect before treating hooks as active: mode, strict-disabled
+status, hook config/script detection, trust state, observed events, bypass readiness, and frontend artifact
+availability. It does not install hooks, trust commands, block Codex execution, enable guided/strict enforcement, mutate
+graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, or enforce scope/CI.
+
 The Natural Language Request Intake compiler frontend boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json`
 and documented in [natural-language-request-intake-boundary.md](natural-language-request-intake-boundary.md). It defines

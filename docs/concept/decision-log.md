@@ -2233,3 +2233,26 @@ generation, instruction pack generation, Codex execution, graph-source mutation,
 decision recording, runtime Evidence satisfaction, equivalence proof, scope enforcement, or CI enforcement. Future LLM
 inference time is outside the 5 second deterministic DevView runtime budget; the deterministic budget begins after a
 candidate exists and validation commands run.
+
+## DEC-250 Define DevView Hook Gateway Health Boundary
+
+DEC-250 does not supersede DEC-097 through DEC-249. It previews the DevView Hook Gateway health/readiness boundary
+before any hook scripts, installation, trust mutation, or blocking behavior are implemented.
+
+The boundary preview is recorded in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json
+```
+
+The health boundary defines what a future deterministic preflight should check before DevView treats hooks as active:
+DevView mode (`off`, future `advisory`, future `guided`, or reserved `strict-disabled`), strict mode disabled state,
+hook config/script presence, explicit repo/session trust state, observed hook events, UserPromptSubmit context readiness,
+PreToolUse/PostToolUse/Stop readiness, bypass-detection readiness, and frontend artifact availability from AI Request
+Analyzer boundary through Instruction Pack preview.
+
+This is a boundary preview only. It does not implement a health-check CLI, implement hook scripts, install hooks, trust
+commands, block Codex execution, enable strict or guided enforcement, call an LLM, mutate graph-source, apply graph
+deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope,
+introduce CI required checks, change branch protection, or automate user acceptance. A future actual health check should
+remain lightweight and fit within the advisory 5 second deterministic DevView runtime budget.

@@ -160,8 +160,34 @@ hookGatewayActive: not-checked
 lastObservedHookEvent: null
 ```
 
+## Health Check Boundary
+
+The Hook Gateway health/readiness boundary is previewed separately in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json
+```
+
+The health boundary defines what a future deterministic preflight should check before DevView treats hooks as active:
+
+- DevView mode is one of `off`, `advisory`, `guided`, or `strict-disabled`.
+- Strict mode remains disabled.
+- Hook scripts/config are detected but not installed by the health check.
+- Repo/session trust is explicitly present before hook commands are treated as active.
+- `UserPromptSubmit` additionalContext readiness is present.
+- `PreToolUse`, `PostToolUse`, and `Stop` responsibilities are known before guided behavior is considered.
+- Bypass detection remains preview-only and non-enforcing until hook behavior is explicitly implemented.
+- Frontend artifacts are available: AI Request Analyzer boundary, Request IR Candidate schema, Request IR validators,
+  traversal plan, selected slice, contract input, and instruction pack preview.
+
+This health boundary does not implement hook scripts, install hooks, trust commands, block Codex execution, enable
+strict mode, enable guided enforcement, mutate graph-source, apply graph deltas, approve work, record human decisions,
+satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.
+
 ## Runtime Boundary
 
 Future hook scripts must remain lightweight and compatible with the advisory 5 second deterministic runtime budget. They must avoid AI calls, network calls, full repo scans, patch/hunk inspection, file-content semantic analysis, and full validation inside the hook path unless a later explicit decision changes the boundary.
 
-The current task adds no measured hook runtime. It only records the activation and routing boundary.
+The current health boundary adds no measured hook runtime. It only records the activation, routing, and future
+health/readiness boundary. A future actual health check command should remain lightweight and fit inside the advisory
+5 second deterministic DevView runtime budget.
