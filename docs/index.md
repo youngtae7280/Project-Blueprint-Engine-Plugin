@@ -80,6 +80,10 @@
   Graph Traversal Plan generation, Selected Graph Slice generation, selected-slice-to-contract-input generation, and
   Contract-Input-to-Instruction-Pack generation without implementing an AI classifier, runtime LLM calls, Codex
   execution, graph-source mutation, apply, or approval.
+- DevView roadmap completion audit preview -
+  `examples/valid/todo-app-pbe-run/generated/devview-roadmap-completion-audit.runtime-evidence-only.preview.json`
+  summarizes Phase 1 through Phase 13 evidence without adding execution, approval, apply, Evidence acceptance,
+  graph-source mutation, equivalence, scope enforcement, or CI authority.
 - [Scope Compliance Checker Implementation Readiness](concept/scope-compliance-checker-implementation-readiness.md) -
   Readiness criteria for future scope-compliance checker inputs, missing-input states, result preview status, and
   authoritative changed-file input boundaries before executable checker logic exists.

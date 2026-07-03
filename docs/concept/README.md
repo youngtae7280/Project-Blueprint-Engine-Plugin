@@ -349,6 +349,12 @@ read-model regeneration/consistency/report requirements. It does not allow graph
 accept Evidence, satisfy runtime Evidence, prove equivalence, enforce scope, mutate production source, mutate hook/config
 files, or configure CI.
 
+The roadmap completion audit preview is recorded in
+`examples/valid/todo-app-pbe-run/generated/devview-roadmap-completion-audit.runtime-evidence-only.preview.json`. It
+summarizes Phase 1 through Phase 13 evidence, implemented command surfaces, and explicitly future/non-implemented safety
+boundaries. It is an audit summary only and does not add execution, approval, apply, Evidence acceptance, graph-source
+mutation, equivalence, scope enforcement, or CI authority.
+
 The DevView Codex Hook Gateway boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json` and
 documented in [devview-codex-hook-gateway-boundary.md](devview-codex-hook-gateway-boundary.md). It defines how future

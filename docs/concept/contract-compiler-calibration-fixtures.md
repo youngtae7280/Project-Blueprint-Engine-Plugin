@@ -1909,6 +1909,18 @@ regeneration, consistency check, and mutation report requirements. The boundary 
 graph deltas, accept Evidence, satisfy runtime Evidence, prove equivalence, enforce scope, configure required checks, or
 automate user acceptance.
 
+The DevView roadmap completion audit preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-roadmap-completion-audit.runtime-evidence-only.preview.json
+```
+
+It summarizes the current end-to-end roadmap state for this calibration: frontend request intake through instruction
+pack is implemented as deterministic preview output, advisory backend/proposal/review surfaces are connected, activation
+is preview-only, analyzer execution is disabled, and Phase 13 controlled-apply policies are boundary-only. The audit is
+not graph-source, not approval, not apply, not Evidence acceptance, not runtime Evidence satisfaction, not equivalence
+proof, and not enforcement.
+
 The current Todo App runtime Evidence-only evaluation is blocked rather than clean because the draft still contains
 `unresolved:todo-app-runtime-proof-report`. Empty `evaluatedViolations: []` in this artifact must not be read as fixture
 approval or runtime Evidence satisfaction.

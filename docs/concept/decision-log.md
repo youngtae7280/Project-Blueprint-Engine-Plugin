@@ -2907,3 +2907,27 @@ This decision does not implement mutation policy execution, allow graph-source m
 deltas, create approved proposal state, record human decisions, accept Evidence, satisfy runtime Evidence, prove
 equivalence, enforce scope, introduce CI required checks, change branch protection, mutate production source, mutate
 Codex hook/config files, or automate user acceptance.
+
+## DEC-271 Record DevView Roadmap Completion Audit Preview
+
+DEC-271 does not supersede DEC-097 through DEC-270. It records a calibration audit artifact summarizing the roadmap
+state across Phase 1 through Phase 13.
+
+The Todo App calibration artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-roadmap-completion-audit.runtime-evidence-only.preview.json
+```
+
+The audit lists implemented command surfaces for deterministic request validation, graph traversal, selected slice,
+contract input generation, instruction pack generation, analyzer pack/import surfaces, clarification pack/revision
+surfaces, hook preview chain surfaces, advisory scope/proposal/review surfaces, and controlled-apply boundary previews.
+
+It also lists explicit non-goals still preserved as future or disabled: Codex execution, active hooks, guided/strict
+blocking, LLM provider execution, human decision recording, approved state creation, graph delta apply, graph-source
+mutation, Evidence acceptance, runtime Evidence satisfaction, equivalence proof, scope enforcement, CI required checks,
+branch protection changes, approval automation, and user acceptance automation.
+
+This decision does not implement missing future actions, execute Codex, call an LLM/API, activate hooks, record human
+decisions, approve proposals, apply graph deltas, mutate graph-source, accept Evidence, satisfy runtime Evidence, prove
+equivalence, enforce scope, introduce CI required checks, change branch protection, or automate user acceptance.
