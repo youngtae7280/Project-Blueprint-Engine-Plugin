@@ -375,11 +375,13 @@ It consumes the generated selected graph slice and maps the existing compiler in
 - `knownRisks`
 - `outputRequirements`
 
-For the Todo App calibration, the mapper derives target/scope entries from `CH-001`, `WT-1`, `TT-1`, and `EV-1`;
-required Evidence entries from `TT-1` and `EV-1`; known risk context from `IM-001`; and output requirements from the
-selected evidence/check nodes plus a non-execution boundary report requirement. It also preserves forbidden scope from
-the graph-aware validation context, including production source changes, graph-source mutation, and approval or
-acceptance changes.
+For the Todo App calibration, the mapper keeps broad `targetScopeCandidates` from `CH-001`, `WT-1`, `TT-1`, and
+`EV-1` as selected-slice context, but narrows `allowedScope` to selected check/evidence/report-oriented artifacts only.
+`CH-001` change-tree context and `WT-1` work-tree context are not promoted to editable allowed scope for the
+runtime-Evidence-only flow. Required Evidence entries are derived from `TT-1` and `EV-1`, including fixture-root
+normalized evidence artifact paths; known risk context comes from `IM-001`; and output requirements remain
+preview/advisory report obligations. Forbidden production source changes remain unresolved when the selected slice does
+not prove a concrete production source path.
 
 The generated Contract Compiler Input remains a frontend artifact only. It does not invoke the backend dry-run
 compiler, generate instruction packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve work,

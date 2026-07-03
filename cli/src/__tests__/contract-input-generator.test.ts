@@ -35,10 +35,21 @@ describe('Contract compiler input generator core', () => {
       'scope-tt-1',
       'scope-ev-1',
     ])
+    expect(result.allowedScope.map((entry) => entry.id)).toEqual(['allowed-scope-tt-1', 'allowed-scope-ev-1'])
+    const allowedScopePaths = result.allowedScope.flatMap((entry) => entry.paths as string[])
+    expect(allowedScopePaths).not.toContain('examples/valid/todo-app-pbe-run/.pbe/control/change-tree.json')
+    expect(allowedScopePaths).not.toContain('examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json')
     expect(result.requiredEvidence.map((entry) => entry.sourceEvidenceId).sort()).toEqual([
       'evidence-ev-1',
       'evidence-tt-1',
     ])
+    expect(result.requiredEvidence.map((entry) => entry.artifact)).toContain(
+      'examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt',
+    )
+    for (const artifact of result.requiredEvidence.map((entry) => String(entry.artifact))) {
+      expect(artifact.startsWith('.pbe/')).toBe(false)
+      expect(artifact.startsWith('unresolved:') || existsSync(join(pluginRoot, artifact))).toBe(true)
+    }
     expect(result.knownRisks).toEqual([
       expect.objectContaining({
         sourceId: 'risk-im-001',
@@ -50,6 +61,19 @@ describe('Contract compiler input generator core', () => {
       'forbidden-graph-source-mutation',
       'forbidden-production-source-changes',
     ])
+    expect(result.forbiddenScope).toContainEqual(
+      expect.objectContaining({
+        id: 'forbidden-production-source-changes',
+        paths: ['unresolved:production-source-changes'],
+        sourceStatus: 'unresolved-from-request-intent-not-derived-from-selected-slice',
+      }),
+    )
+    expect(result.validationFindings).toContainEqual(
+      expect.objectContaining({
+        code: 'CONTRACT_INPUT_FORBIDDEN_SCOPE_PATH_UNRESOLVED',
+        severity: 'warning',
+      }),
+    )
     expect(result.outputRequirements.length).toBeGreaterThanOrEqual(3)
     expect(result.mappingTrace.length).toBeGreaterThan(0)
   })
@@ -93,8 +117,9 @@ describe('Contract compiler input generator core', () => {
     })
 
     expect(result.compilerInputModelCompatibility.compatibilityStatus).toBe(
-      'field-compatible-with-compiler-input-model-groups',
+      'frontend-field-compatible-with-compiler-input-model-groups',
     )
+    expect(result.compilerInputModelCompatibility.backendDryRunValidationStatus).toBe('not-run-not-same-artifact-role')
     expect(result.compilerInputModelCompatibility.missingRequiredInputGroups).toEqual([])
     expect(result.compilerInputModelCompatibility.requiredInputGroupsPresent.sort()).toEqual(
       [...result.compilerInputModelCompatibility.requiredInputGroups].sort(),
@@ -180,7 +205,7 @@ function validSelectedSlice(): Record<string, unknown> {
     status: 'selected-graph-slice-generated',
     sourceTraversalPlan: 'graph-traversal-plan.json',
     sourceGraphAwareValidation: 'request-ir-graph-validation.json',
-    graphSourcePath: 'graph-source.json',
+    graphSourcePath: 'examples/valid/todo-app-pbe-run/graph-source.json',
     generatedReadModelPath: 'generated-read-model.json',
     selectedGraphSliceStatus: 'generated',
     graphTraversalExecuted: true,

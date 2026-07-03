@@ -1953,13 +1953,18 @@ examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runti
 
 The selected-slice-to-contract-input generator maps the selected slice into existing compiler input model groups:
 `humanRequest`, `graphSnapshot`, `packSchema`, `policySnapshot`, `evidenceIndex`, `targetScopeCandidates`,
-`outputRequirementSources`, `stopConditionSources`, and `riskSources`. For this calibration fixture, target/scope
-entries come from `CH-001`, `WT-1`, `TT-1`, and `EV-1`; Evidence entries come from `TT-1` and `EV-1`; risk context
-comes from `IM-001`; and output requirements remain preview/advisory report obligations.
+`outputRequirementSources`, `stopConditionSources`, and `riskSources`. For this calibration fixture,
+`targetScopeCandidates` keep selected context from `CH-001`, `WT-1`, `TT-1`, and `EV-1`, while `allowedScope` is narrowed
+to check/evidence/report-oriented artifacts derived from `TT-1` and `EV-1`. The change-tree and work-tree paths stay
+context-only and are not authorized as editable allowed scope for runtime-Evidence-only work. Evidence paths are
+fixture-root normalized when a selected node points at `.pbe/...`; risk context comes from `IM-001`; output requirements
+remain preview/advisory report obligations; and unresolved production-source forbidden scope stays explicitly unresolved
+until selected graph/source authority proves a concrete path.
 
-This generated Contract Compiler Input does not invoke the backend dry-run compiler, generate instruction packs, trigger
-Codex execution, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence,
-enforce scope, or configure CI.
+This generated Contract Compiler Input reports frontend field-group compatibility with the compiler input model, but it
+is not the legacy `compiler-input-model-dry-run` artifact and does not claim backend dry-run validation passed. It does
+not invoke the backend dry-run compiler, generate instruction packs, trigger Codex execution, mutate graph-source, apply
+graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.
 
 Traversal boundary type fields are limited to actual graph taxonomy vocabulary from the Todo App projection. Abstract
 planner meanings such as target component, scope policy, required evidence, stop condition, output requirement, and risk

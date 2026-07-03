@@ -365,9 +365,12 @@ not contract compiler input and not an instruction pack.
 The first selected-slice-to-contract-input generator is exposed through
 `graph read-model generate-contract-input --selected-slice <selectedSlicePath> --json`. Its Todo App calibration output
 is `examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json`. It
-maps selected nodes and edges into existing compiler input model groups, but it does not invoke the backend dry-run
-compiler, generate instruction packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve work,
-satisfy runtime Evidence, prove equivalence, or enforce scope.
+maps selected nodes and edges into existing compiler input model groups. For the runtime-Evidence-only calibration,
+`targetScopeCandidates` may include broad selected context, while `allowedScope` is narrowed to selected
+check/evidence/report artifacts and does not authorize change-tree or work-tree edits. The artifact reports frontend
+field-group compatibility only; backend dry-run validation is not run. It does not generate instruction packs, trigger
+Codex execution, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, or
+enforce scope.
 
 The traversal boundary separates graph vocabulary from planner semantics: `*NodeTypes` and `*EdgeTypes` contain only
 actual graph taxonomy values, while target/scope/evidence/output meanings are represented as roles and selection

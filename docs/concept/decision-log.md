@@ -2154,10 +2154,16 @@ source authority links, and maps the slice into existing compiler input model gr
 `stopConditionSources`, and `riskSources`. The generated input is deterministic and traceable to selected nodes, edges,
 and the graph-aware validation context.
 
-For the Todo App runtime-Evidence-only calibration, target/scope entries come from `CH-001`, `WT-1`, `TT-1`, and
-`EV-1`; Evidence entries come from `TT-1` and `EV-1`; risk context comes from `IM-001`; output requirements remain
-preview/advisory reporting obligations; and forbidden scope preserves production source changes, graph-source mutation,
-and approval/acceptance changes.
+For the Todo App runtime-Evidence-only calibration, `targetScopeCandidates` keep selected context from `CH-001`, `WT-1`,
+`TT-1`, and `EV-1`, while `allowedScope` is narrowed to selected check/evidence/report-oriented artifacts derived from
+`TT-1` and `EV-1`. Change-tree and work-tree context paths are not authorized as editable allowed scope. Evidence paths
+are fixture-root normalized when a selected node points at `.pbe/...`; risk context comes from `IM-001`; output
+requirements remain preview/advisory reporting obligations; and forbidden production source changes remain unresolved
+unless selected graph/source authority proves a concrete path.
+
+This frontend artifact reports `frontend-field-compatible-with-compiler-input-model-groups` and
+`backendDryRunValidationStatus: not-run-not-same-artifact-role`. It is intentionally not a
+`compiler-input-model-dry-run` artifact and does not claim backend dry-run validation passed.
 
 Instruction pack generation is still not implemented in the frontend path. This decision does not invoke the backend
 contract compiler dry-run, trigger Codex execution, generate instruction packs, call an LLM, implement an AI analyzer,

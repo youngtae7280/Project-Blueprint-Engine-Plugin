@@ -142,9 +142,9 @@
       {
         "id": "forbidden-production-source-changes",
         "scopeKind": "code",
-        "paths": ["src/todos.ts"],
+        "paths": ["unresolved:production-source-changes"],
         "derivedFrom": ["request-ir-graph-aware-validation:scopeIntentResolution"],
-        "sourceStatus": "derived-from-graph-aware-validation-context"
+        "sourceStatus": "unresolved-from-request-intent-not-derived-from-selected-slice"
       },
       {
         "id": "forbidden-graph-source-mutation",
@@ -176,7 +176,7 @@
       },
       {
         "id": "evidence-ev-1",
-        "artifact": ".pbe/evidence/test-results/todo-add.txt",
+        "artifact": "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt",
         "evidenceType": "selected_evidence_artifact",
         "freshness": "required-after-graph-or-artifact-change",
         "sourceNodeId": "EV-1",
@@ -193,7 +193,8 @@
       "derivedFrom": ["graph-source:node:CH-001"],
       "contractDerivedFrom": ["selected-slice:node:CH-001"],
       "confidence": "graph-backed-candidate",
-      "sourceStatus": "derived-from-selected-graph-slice"
+      "sourceStatus": "derived-from-selected-graph-slice",
+      "contextOnly": true
     },
     {
       "id": "scope-wt-1",
@@ -202,7 +203,8 @@
       "derivedFrom": ["graph-source:node:WT-1"],
       "contractDerivedFrom": ["selected-slice:node:WT-1"],
       "confidence": "graph-backed-candidate",
-      "sourceStatus": "derived-from-selected-graph-slice"
+      "sourceStatus": "derived-from-selected-graph-slice",
+      "contextOnly": true
     },
     {
       "id": "scope-tt-1",
@@ -211,61 +213,53 @@
       "derivedFrom": ["graph-source:node:TT-1"],
       "contractDerivedFrom": ["selected-slice:node:TT-1"],
       "confidence": "graph-backed-candidate",
-      "sourceStatus": "derived-from-selected-graph-slice"
+      "sourceStatus": "derived-from-selected-graph-slice",
+      "contextOnly": false
     },
     {
       "id": "scope-ev-1",
       "scopeKind": "evidence",
       "paths": [
         "examples/valid/todo-app-pbe-run/.pbe/evidence/evidence-tree.json",
-        ".pbe/evidence/test-results/todo-add.txt"
+        "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt"
       ],
       "derivedFrom": ["graph-source:node:EV-1"],
       "contractDerivedFrom": ["selected-slice:node:EV-1"],
       "confidence": "graph-backed-candidate",
-      "sourceStatus": "derived-from-selected-graph-slice"
+      "sourceStatus": "derived-from-selected-graph-slice",
+      "contextOnly": false
     }
   ],
   "allowedScope": [
-    {
-      "id": "allowed-scope-ch-001",
-      "scopeKind": "product",
-      "paths": ["examples/valid/todo-app-pbe-run/.pbe/control/change-tree.json"],
-      "sourceTargetScopeCandidate": "scope-ch-001",
-      "sourceStatus": "derived-from-selected-graph-slice"
-    },
-    {
-      "id": "allowed-scope-wt-1",
-      "scopeKind": "workflow",
-      "paths": ["examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json"],
-      "sourceTargetScopeCandidate": "scope-wt-1",
-      "sourceStatus": "derived-from-selected-graph-slice"
-    },
     {
       "id": "allowed-scope-tt-1",
       "scopeKind": "test",
       "paths": ["examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json"],
       "sourceTargetScopeCandidate": "scope-tt-1",
-      "sourceStatus": "derived-from-selected-graph-slice"
+      "sourceStatus": "derived-from-selected-graph-slice-check-or-evidence-context",
+      "allowedUse": ["review-selected-check-or-evidence", "report-selected-evidence-status"],
+      "modificationAuthority": "context-only-no-modification"
     },
     {
       "id": "allowed-scope-ev-1",
       "scopeKind": "evidence",
       "paths": [
         "examples/valid/todo-app-pbe-run/.pbe/evidence/evidence-tree.json",
-        ".pbe/evidence/test-results/todo-add.txt"
+        "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt"
       ],
       "sourceTargetScopeCandidate": "scope-ev-1",
-      "sourceStatus": "derived-from-selected-graph-slice"
+      "sourceStatus": "derived-from-selected-graph-slice-check-or-evidence-context",
+      "allowedUse": ["review-selected-check-or-evidence", "report-selected-evidence-status"],
+      "modificationAuthority": "evidence-artifact-or-report-only"
     }
   ],
   "forbiddenScope": [
     {
       "id": "forbidden-production-source-changes",
       "scopeKind": "code",
-      "paths": ["src/todos.ts"],
+      "paths": ["unresolved:production-source-changes"],
       "derivedFrom": ["request-ir-graph-aware-validation:scopeIntentResolution"],
-      "sourceStatus": "derived-from-graph-aware-validation-context",
+      "sourceStatus": "unresolved-from-request-intent-not-derived-from-selected-slice",
       "boundary": "forbidden scope is advisory contract-input context and not enforcement"
     },
     {
@@ -299,7 +293,7 @@
       "id": "required-evidence-ev-1",
       "sourceEvidenceId": "evidence-ev-1",
       "evidenceType": "selected_evidence_artifact",
-      "artifact": ".pbe/evidence/test-results/todo-add.txt",
+      "artifact": "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt",
       "sourceStatus": "derived-from-selected-graph-slice",
       "runtimeEvidenceSatisfied": false,
       "acceptedEvidence": false
@@ -468,7 +462,8 @@
       "riskSources"
     ],
     "missingRequiredInputGroups": [],
-    "compatibilityStatus": "field-compatible-with-compiler-input-model-groups",
+    "compatibilityStatus": "frontend-field-compatible-with-compiler-input-model-groups",
+    "backendDryRunValidationStatus": "not-run-not-same-artifact-role",
     "backendDryRunInvoked": false,
     "backendInstructionPackGenerated": false
   },
@@ -500,6 +495,18 @@
       "sourceNodeKind": "evidence",
       "mappedId": "scope-ev-1",
       "reason": "selected node mapped to target scope candidate"
+    },
+    {
+      "targetField": "allowedScope",
+      "sourceTargetScopeCandidate": "scope-tt-1",
+      "mappedId": "allowed-scope-tt-1",
+      "reason": "runtime-evidence-only allowed scope narrowed to selected check/evidence/report context"
+    },
+    {
+      "targetField": "allowedScope",
+      "sourceTargetScopeCandidate": "scope-ev-1",
+      "mappedId": "allowed-scope-ev-1",
+      "reason": "runtime-evidence-only allowed scope narrowed to selected check/evidence/report context"
     },
     {
       "targetField": "forbiddenScope",
@@ -552,12 +559,22 @@
       "reason": "selected finding node mapped to known risk source"
     }
   ],
-  "validationFindings": [],
+  "validationFindings": [
+    {
+      "code": "CONTRACT_INPUT_FORBIDDEN_SCOPE_PATH_UNRESOLVED",
+      "severity": "warning",
+      "field": "forbiddenScope.production-source-changes.paths",
+      "message": "Production source changes are forbidden by request intent, but no production source file path was derived from the selected graph slice.",
+      "actual": ["unresolved:production-source-changes"],
+      "suggestedFix": "Keep the unresolved marker until graph/source authority provides a concrete production source path."
+    }
+  ],
   "contractCompilerReadinessStatus": "ready",
   "requiresClarification": false,
   "humanReviewRequired": true,
   "outputWritePolicy": "explicit-output-only",
   "writtenOutputPath": "examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json",
   "writtenOutputPathAuthorityStatus": "explicit-preview-output-not-graph-source",
+  "nonExecutionStatement": "This frontend Contract Compiler Input does not compile contracts, invoke backend dry-run validation, generate instruction packs, or execute Codex.",
   "nonExecutionBoundary": "This selected-slice contract input generator creates deterministic Contract Compiler Input only. It does not generate instruction packs, does not invoke Codex execution, does not call an LLM, does not mutate graph-source, does not apply graph deltas, does not approve work, does not record human decisions, does not satisfy runtime Evidence, does not prove equivalence, does not enforce scope, and does not configure CI required checks."
 }

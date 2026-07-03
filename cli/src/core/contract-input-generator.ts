@@ -78,7 +78,8 @@ export interface ContractCompilerInputResult {
     requiredInputGroups: string[]
     requiredInputGroupsPresent: string[]
     missingRequiredInputGroups: string[]
-    compatibilityStatus: 'field-compatible-with-compiler-input-model-groups' | 'blocked'
+    compatibilityStatus: 'frontend-field-compatible-with-compiler-input-model-groups' | 'blocked'
+    backendDryRunValidationStatus: 'not-run-not-same-artifact-role'
     backendDryRunInvoked: false
     backendInstructionPackGenerated: false
   }
@@ -90,6 +91,7 @@ export interface ContractCompilerInputResult {
   outputWritePolicy: 'explicit-output-only'
   writtenOutputPath: string | null
   writtenOutputPathAuthorityStatus: 'not-written-stdout-only' | 'explicit-preview-output-not-graph-source'
+  nonExecutionStatement: string
   nonExecutionBoundary: string
 }
 
@@ -165,6 +167,7 @@ export function generateContractCompilerInput(
   const graphSourcePath = stringValue(slice?.graphSourcePath)
   const generatedReadModelPath = stringValue(slice?.generatedReadModelPath)
   const sourceRequestIrCandidate = stringValue(graphAwareValidation?.candidatePath) || null
+  const fixtureRoot = inferFixtureRoot(sourceSelectedGraphSlice, graphSourcePath)
   for (const [field, value] of [
     ['sourceTraversalPlan', sourceTraversalPlan],
     ['sourceGraphAwareValidation', sourceGraphAwareValidation],
@@ -199,17 +202,18 @@ export function generateContractCompilerInput(
     includedScopeNodes,
     includedEvidenceNodes,
     selectedNodes,
+    fixtureRoot,
     mappingTrace,
   })
-  const allowedScope = targetScopeCandidates.map((entry) => ({
-    id: `allowed-${entry.id}`,
-    scopeKind: entry.scopeKind,
-    paths: entry.paths,
-    sourceTargetScopeCandidate: entry.id,
-    sourceStatus: 'derived-from-selected-graph-slice',
-  }))
-  const forbiddenScope = buildForbiddenScope(graphAwareValidation, requestIrCandidate, mappingTrace)
-  const evidenceIndex = buildEvidenceIndex(includedEvidenceNodes, mappingTrace)
+  const allowedScope = buildAllowedScope(targetScopeCandidates, mappingTrace)
+  const forbiddenScope = buildForbiddenScope(
+    graphAwareValidation,
+    requestIrCandidate,
+    graphSourcePath,
+    findings,
+    mappingTrace,
+  )
+  const evidenceIndex = buildEvidenceIndex(includedEvidenceNodes, fixtureRoot, mappingTrace)
   const requiredEvidence = arrayRecords(evidenceIndex.entries).map((entry) => ({
     id: `required-${stringValue(entry.id)}`,
     sourceEvidenceId: entry.id,
@@ -292,7 +296,7 @@ export function generateContractCompilerInput(
   })
   const compatibilityStatus =
     !blocked && missingRequiredInputGroups.length === 0
-      ? 'field-compatible-with-compiler-input-model-groups'
+      ? 'frontend-field-compatible-with-compiler-input-model-groups'
       : 'blocked'
 
   return {
@@ -340,6 +344,7 @@ export function generateContractCompilerInput(
       requiredInputGroupsPresent: REQUIRED_INPUT_GROUPS.filter((group) => !missingRequiredInputGroups.includes(group)),
       missingRequiredInputGroups,
       compatibilityStatus,
+      backendDryRunValidationStatus: 'not-run-not-same-artifact-role',
       backendDryRunInvoked: false,
       backendInstructionPackGenerated: false,
     },
@@ -351,6 +356,8 @@ export function generateContractCompilerInput(
     outputWritePolicy: 'explicit-output-only',
     writtenOutputPath: null,
     writtenOutputPathAuthorityStatus: 'not-written-stdout-only',
+    nonExecutionStatement:
+      'This frontend Contract Compiler Input does not compile contracts, invoke backend dry-run validation, generate instruction packs, or execute Codex.',
     nonExecutionBoundary:
       'This selected-slice contract input generator creates deterministic Contract Compiler Input only. It does not generate instruction packs, does not invoke Codex execution, does not call an LLM, does not mutate graph-source, does not apply graph deltas, does not approve work, does not record human decisions, does not satisfy runtime Evidence, does not prove equivalence, does not enforce scope, and does not configure CI required checks.',
   }
@@ -433,6 +440,7 @@ function buildTargetScopeCandidates(input: {
   includedScopeNodes: JsonRecord[]
   includedEvidenceNodes: JsonRecord[]
   selectedNodes: JsonRecord[]
+  fixtureRoot: string | null
   mappingTrace: JsonRecord[]
 }): JsonRecord[] {
   const scopeNodes = [...input.includedScopeNodes, ...input.includedEvidenceNodes]
@@ -440,7 +448,7 @@ function buildTargetScopeCandidates(input: {
     const nodeId = stringValue(node.nodeId)
     const nodeKind = stringValue(node.nodeKind)
     const scopeKind = scopeKindForNodeKind(nodeKind)
-    const paths = pathsForNode(node)
+    const paths = pathsForNode(node, input.fixtureRoot)
     const id = `scope-${slug(nodeId)}`
     input.mappingTrace.push({
       targetField: 'targetScopeCandidates',
@@ -457,16 +465,48 @@ function buildTargetScopeCandidates(input: {
       contractDerivedFrom: [`selected-slice:node:${nodeId}`],
       confidence: 'graph-backed-candidate',
       sourceStatus: 'derived-from-selected-graph-slice',
+      contextOnly: nodeKind === 'change' || nodeKind === 'task',
     }
   })
   return uniqueById(candidates)
 }
 
-function buildEvidenceIndex(includedEvidenceNodes: JsonRecord[], mappingTrace: JsonRecord[]): JsonRecord {
+function buildAllowedScope(targetScopeCandidates: JsonRecord[], mappingTrace: JsonRecord[]): JsonRecord[] {
+  const allowed = targetScopeCandidates
+    .filter((entry) => ['test', 'evidence'].includes(stringValue(entry.scopeKind)))
+    .map((entry) => {
+      const id = `allowed-${stringValue(entry.id)}`
+      const paths = stringArray(entry.paths)
+      mappingTrace.push({
+        targetField: 'allowedScope',
+        sourceTargetScopeCandidate: entry.id,
+        mappedId: id,
+        reason: 'runtime-evidence-only allowed scope narrowed to selected check/evidence/report context',
+      })
+      return {
+        id,
+        scopeKind: entry.scopeKind,
+        paths,
+        sourceTargetScopeCandidate: entry.id,
+        sourceStatus: 'derived-from-selected-graph-slice-check-or-evidence-context',
+        allowedUse: ['review-selected-check-or-evidence', 'report-selected-evidence-status'],
+        modificationAuthority: paths.some((entryPath) => entryPath.includes('/.pbe/evidence/test-results/'))
+          ? 'evidence-artifact-or-report-only'
+          : 'context-only-no-modification',
+      }
+    })
+  return uniqueById(allowed)
+}
+
+function buildEvidenceIndex(
+  includedEvidenceNodes: JsonRecord[],
+  fixtureRoot: string | null,
+  mappingTrace: JsonRecord[],
+): JsonRecord {
   const entries = includedEvidenceNodes.map((node) => {
     const nodeId = stringValue(node.nodeId)
     const nodeKind = stringValue(node.nodeKind)
-    const artifact = evidenceArtifactForNode(node)
+    const artifact = evidenceArtifactForNode(node, fixtureRoot)
     const id = `evidence-${slug(nodeId)}`
     mappingTrace.push({
       targetField: 'evidenceIndex.entries',
@@ -536,6 +576,8 @@ function buildPolicySnapshot(forbiddenScope: JsonRecord[]): JsonRecord {
 function buildForbiddenScope(
   graphAwareValidation: JsonRecord | null,
   requestIrCandidate: JsonRecord | null,
+  graphSourcePath: string,
+  findings: ContractInputGeneratorFinding[],
   mappingTrace: JsonRecord[],
 ): JsonRecord[] {
   const intentCandidates = stringArray(
@@ -547,12 +589,25 @@ function buildForbiddenScope(
   const entries = defaults.map((intent) => {
     const normalized = intent.toLowerCase()
     const id = `forbidden-${slug(intent)}`
-    const paths = normalized.includes('production')
-      ? ['src/todos.ts']
+    const productionSourceUnresolved = normalized.includes('production')
+    const paths = productionSourceUnresolved
+      ? ['unresolved:production-source-changes']
       : normalized.includes('graph')
-        ? ['examples/valid/todo-app-pbe-run/graph-source.json']
+        ? [graphSourcePath || 'unresolved:graph-source-mutation']
         : ['examples/valid/todo-app-pbe-run/.pbe/control/acceptance-tree.json']
     const scopeKind = normalized.includes('production') ? 'code' : normalized.includes('graph') ? 'graph' : 'product'
+    if (productionSourceUnresolved) {
+      findings.push({
+        code: 'CONTRACT_INPUT_FORBIDDEN_SCOPE_PATH_UNRESOLVED',
+        severity: 'warning',
+        field: 'forbiddenScope.production-source-changes.paths',
+        message:
+          'Production source changes are forbidden by request intent, but no production source file path was derived from the selected graph slice.',
+        actual: paths,
+        suggestedFix:
+          'Keep the unresolved marker until graph/source authority provides a concrete production source path.',
+      })
+    }
     mappingTrace.push({
       targetField: 'forbiddenScope',
       sourceIntent: intent,
@@ -564,7 +619,9 @@ function buildForbiddenScope(
       scopeKind,
       paths,
       derivedFrom: ['request-ir-graph-aware-validation:scopeIntentResolution'],
-      sourceStatus: 'derived-from-graph-aware-validation-context',
+      sourceStatus: productionSourceUnresolved
+        ? 'unresolved-from-request-intent-not-derived-from-selected-slice'
+        : 'derived-from-graph-aware-validation-context',
       boundary: 'forbidden scope is advisory contract-input context and not enforcement',
     }
   })
@@ -735,16 +792,21 @@ function buildGraphSnapshot(input: {
   }
 }
 
-function pathsForNode(node: JsonRecord): string[] {
+function pathsForNode(node: JsonRecord, fixtureRoot: string | null): string[] {
   const sourceArtifact = stringValue(node.sourceArtifact)
   const title = stringValue(node.title)
-  return uniqueStrings([sourceArtifact, title].filter((entry) => entry.includes('/') || entry.includes('\\')))
+  return uniqueStrings(
+    [sourceArtifact, normalizePathCandidate(title, fixtureRoot)].filter(
+      (entry) => entry.includes('/') || entry.includes('\\'),
+    ),
+  )
 }
 
-function evidenceArtifactForNode(node: JsonRecord): string {
+function evidenceArtifactForNode(node: JsonRecord, fixtureRoot: string | null): string {
   const title = stringValue(node.title)
-  if (title.includes('/') || title.includes('\\')) {
-    return title
+  const normalizedTitle = normalizePathCandidate(title, fixtureRoot)
+  if (isResolvablePath(normalizedTitle)) {
+    return normalizedTitle
   }
   return stringValue(node.sourceArtifact)
 }
@@ -780,6 +842,38 @@ function stringArray(value: unknown): string[] {
 
 function stringValue(value: unknown): string {
   return typeof value === 'string' ? value : ''
+}
+
+function inferFixtureRoot(sourceSelectedGraphSlice: string, graphSourcePath: string): string | null {
+  const normalizedGraphSource = normalizeSlashes(graphSourcePath)
+  if (normalizedGraphSource.endsWith('/graph-source.json')) {
+    return normalizedGraphSource.slice(0, -'/graph-source.json'.length)
+  }
+  const normalizedSlice = normalizeSlashes(sourceSelectedGraphSlice)
+  const generatedIndex = normalizedSlice.lastIndexOf('/generated/')
+  if (generatedIndex > 0) {
+    return normalizedSlice.slice(0, generatedIndex)
+  }
+  return null
+}
+
+function normalizePathCandidate(candidate: string, fixtureRoot: string | null): string {
+  const normalized = normalizeSlashes(candidate)
+  if (!normalized) {
+    return ''
+  }
+  if (normalized.startsWith('.pbe/')) {
+    return fixtureRoot ? `${fixtureRoot}/${normalized}` : ''
+  }
+  return normalized
+}
+
+function isResolvablePath(candidate: string): boolean {
+  return candidate.includes('/') || candidate.includes('\\')
+}
+
+function normalizeSlashes(value: string): string {
+  return value.replaceAll('\\', '/')
 }
 
 function uniqueStrings(values: string[]): string[] {

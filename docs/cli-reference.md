@@ -622,6 +622,10 @@ node dist/cli/index.js graph read-model select-slice `
 - What it writes: Nothing by default. It writes only to the explicit `--output` path.
 - Success result: JSON with `artifactRole: contract-compiler-input`, `contractInputGenerated: true`,
   `instructionPackGenerated: false`, compiler-input group fields, mapping trace, and non-execution boundary fields.
+  Broad selected-slice context remains in `targetScopeCandidates`; `allowedScope` is narrowed to selected
+  check/evidence/report-oriented artifacts and does not authorize runtime-Evidence-only edits to change-tree or
+  work-tree context paths. The output reports frontend field-group compatibility only and does not claim backend dry-run
+  validation passed.
 - Common failures: unreadable selected slice, blocked/incomplete slice, missing evidence nodes, missing selected edges,
   selected slice already claiming contract input or instruction pack generation, or selected slice error findings.
 - Next command: A future frontend pass may consume this Contract Compiler Input. Do not treat it as instruction-pack

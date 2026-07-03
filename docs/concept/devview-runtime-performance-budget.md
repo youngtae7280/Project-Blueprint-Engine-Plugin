@@ -286,9 +286,13 @@ The tracked Todo App generated Contract Compiler Input is:
 examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json
 ```
 
-It maps the selected graph slice into existing Contract Compiler Input groups and trace fields. It does not invoke the
-backend contract compiler dry-run, generate instruction packs, trigger Codex execution, mutate graph-source, apply graph
-deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.
+It maps the selected graph slice into existing Contract Compiler Input groups and trace fields. For the
+runtime-Evidence-only calibration, broad selected-slice context can remain in `targetScopeCandidates`, but `allowedScope`
+is narrowed to check/evidence/report-oriented artifacts and does not authorize change-tree or work-tree edits. The
+frontend artifact reports field-group compatibility only; backend dry-run validation is not run because this is not the
+legacy dry-run artifact role. The command does not generate instruction packs, trigger Codex execution, mutate
+graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure
+CI.
 
 The traversal boundary keeps graph vocabulary separate from planner semantics: `requiredNodeTypes` and
 `requiredEdgeTypes` use only the current graph-source taxonomy, while target/scope/evidence/output meanings are recorded
