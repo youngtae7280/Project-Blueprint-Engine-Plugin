@@ -357,6 +357,15 @@ readiness artifact is blocked because Evidence acceptance readiness is blocked:
 The command reports readiness only. It does not prove equivalence, set `equivalenceProven: true`, accept Evidence,
 satisfy runtime Evidence, apply graph deltas, mutate graph-source, enforce scope, or configure CI.
 
+The Scope/CI Enforcement Policy boundary is previewed in
+`examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-policy-boundary.runtime-evidence-only.preview.json`.
+It anchors the `graph read-model report-scope-ci-enforcement-readiness ...` command. The first calibration enforcement
+readiness artifact is blocked because Equivalence Proof readiness is blocked:
+`examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-defer-decision.runtime-evidence-only.preview.json`.
+The command reports disabled readiness only. It does not enforce scope, enable CI enforcement, configure required
+checks, change branch protection, reject diffs, activate strict/guided blocking, prove equivalence, accept Evidence,
+satisfy runtime Evidence, apply graph deltas, or mutate graph-source.
+
 The Graph-source Mutation Policy boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-policy-boundary.runtime-evidence-only.preview.json`.
 It now anchors the `graph read-model report-graph-source-mutation-readiness ...` command. The first calibration mutation

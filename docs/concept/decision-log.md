@@ -3053,3 +3053,24 @@ This decision does not implement an equivalence proof command, prove equivalence
 Evidence, satisfy runtime Evidence, apply graph deltas, mutate graph-source, enforce scope, introduce CI required
 checks, change branch protection, mutate production source, mutate Codex hook/config files, automate approval, or
 automate user acceptance.
+
+## DEC-278 Report Scope/CI Enforcement Readiness Disabled
+
+DEC-278 does not supersede DEC-097 through DEC-277. It implements
+`graph read-model report-scope-ci-enforcement-readiness` as a disabled readiness-only surface after Equivalence Proof
+readiness.
+
+The Todo App calibration artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-defer-decision.runtime-evidence-only.preview.json
+```
+
+The command consumes a Scope/CI Enforcement Policy boundary and an Equivalence Proof readiness preview. It validates
+policy/readiness safety fields and output authority, then reports whether future enforcement prerequisites are blocked
+or ready while keeping enforcement disabled. The calibration readiness is blocked because Equivalence Proof readiness is
+blocked.
+
+This decision does not implement scope enforcement, CI required checks, branch protection mutation, diff rejection,
+strict/guided blocking activation, equivalence proof, Evidence acceptance, runtime Evidence satisfaction, graph delta
+apply, graph-source mutation, approval automation, or user acceptance automation.

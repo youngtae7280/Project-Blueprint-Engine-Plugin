@@ -680,6 +680,36 @@ node dist/cli/index.js graph read-model report-equivalence-proof-readiness `
   --json
 ```
 
+### `pbe graph read-model report-scope-ci-enforcement-readiness`
+
+- Purpose: Report disabled scope/CI enforcement readiness from an Equivalence Proof readiness preview without enabling
+  enforcement.
+- Typical state before running: After `graph read-model report-equivalence-proof-readiness` has produced
+  equivalence-proof-readiness output.
+- Options: `--policy <policyBoundaryPath>` and `--equivalence-proof-readiness <readinessPath>` are required.
+  `--output <file>` and `--markdown <file>` may write explicit readiness outputs.
+- What it checks: Scope/CI Enforcement Policy boundary role/status, equivalence-proof-readiness role/status/safety
+  fields, and output authority.
+- What it writes: Nothing by default. It writes only to explicit `--output` and `--markdown` paths.
+- Success result: JSON with `artifactRole: devview-scope-ci-enforcement-readiness-preview`. If equivalence proof
+  readiness is ready, disabled enforcement readiness is `dry-run-ready-equivalence-proof-readiness-present`; otherwise
+  it is blocked. In all cases `scopeEnforcementAllowed`, `ciEnforcementAllowed`, `scopeEnforced`,
+  `ciEnforcementEnabled`, `requiredChecksConfigured`, `branchProtectionChanged`, `diffRejectionEnabled`,
+  `strictModeEnabled`, and `guidedEnforcementEnabled` remain false.
+- Next command: Separate future commands and explicit human/trust policy would be required before any enforcement. This
+  command itself never rejects diffs, configures required checks, changes branch protection, or activates strict/guided
+  blocking.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model report-scope-ci-enforcement-readiness `
+  --policy examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-policy-boundary.runtime-evidence-only.preview.json `
+  --equivalence-proof-readiness examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-defer-decision.runtime-evidence-only.preview.json `
+  --output .tmp/devview-scope-ci-enforcement-readiness.json `
+  --json
+```
+
 ### `pbe graph read-model generate-ai-request-analyzer-pack`
 
 - Purpose: Generate deterministic AI Request Analyzer prompt/input contract JSON, and optionally Markdown, from the

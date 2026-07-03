@@ -1946,6 +1946,27 @@ It is blocked because Evidence acceptance readiness is blocked. The command repo
 accept Evidence, satisfy runtime Evidence, apply graph deltas, mutate graph-source, configure required checks, or
 automate user acceptance.
 
+The Scope/CI Enforcement Policy boundary preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-policy-boundary.runtime-evidence-only.preview.json
+```
+
+It anchors the `graph read-model report-scope-ci-enforcement-readiness` command. The first calibration readiness
+artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-defer-decision.runtime-evidence-only.preview.json
+```
+
+It is blocked because Equivalence Proof readiness is blocked. The command reports disabled readiness only and keeps
+`scopeEnforcementAllowed`, `ciEnforcementAllowed`, `scopeEnforced`, `ciEnforcementEnabled`,
+`requiredChecksConfigured`, `branchProtectionChanged`, `diffRejectionEnabled`, `strictModeEnabled`,
+`guidedEnforcementEnabled`, `equivalenceProven`, `evidenceAccepted`, `runtimeEvidenceSatisfied`,
+`graphDeltaApplied`, and `graphSourceMutated` false. It performs no scope enforcement, CI required check setup,
+branch protection mutation, diff rejection, strict/guided blocking, equivalence proof, Evidence acceptance, graph apply,
+or graph-source mutation.
+
 The Graph-source Mutation Policy boundary preview is:
 
 ```text

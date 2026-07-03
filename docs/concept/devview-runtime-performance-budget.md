@@ -566,6 +566,23 @@ equivalence, set `equivalenceProven: true`, accept Evidence, set `runtimeEvidenc
 mutate graph-source, enforce scope, or configure CI. It may be added to a future advisory backend/review lane, but it is
 not part of the user request to instruction-pack core-critical path.
 
+## Scope/CI Enforcement Readiness
+
+The Scope/CI enforcement readiness command is outside the current core-critical timing lane and remains disabled
+readiness only. It belongs to the Phase 13 review/readiness branch after Equivalence proof readiness.
+
+The command:
+
+```text
+graph read-model report-scope-ci-enforcement-readiness --policy <policyBoundaryPath> --equivalence-proof-readiness <readinessPath> --json
+```
+
+reports whether future enforcement prerequisites have readiness context. It is report-only and does not enforce scope,
+enable CI enforcement, configure required checks, change branch protection, reject diffs, activate strict/guided
+blocking, prove equivalence, accept Evidence, set `runtimeEvidenceSatisfied: true`, apply graph deltas, or mutate
+graph-source. It may be added to a future advisory backend/review lane, but it is not part of the user request to
+instruction-pack core-critical path.
+
 ## Non-Goals
 
 This budget does not:

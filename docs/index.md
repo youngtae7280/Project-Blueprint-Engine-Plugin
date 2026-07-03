@@ -63,8 +63,9 @@
   candidate schema/mapping/source/generator-scope alignment plus the proposal-only preview CLI without implementing
   enforcement, required checks, diff rejection, fixture approval, graph-source mutation, apply, equivalence proof, or
   evidence acceptance policy beyond readiness reporting, plus explicit human decision record, approved proposal state,
-  graph delta apply readiness, graph-source mutation readiness, Evidence acceptance readiness, and Equivalence proof
-  readiness preview generation without any writes, acceptance, or proof.
+  graph delta apply readiness, graph-source mutation readiness, Evidence acceptance readiness, Equivalence proof
+  readiness, and disabled Scope/CI enforcement readiness preview generation without any writes, acceptance, proof, or
+  enforcement.
 - [DevView Runtime Performance Budget](concept/devview-runtime-performance-budget.md) - Advisory 5 second target for
   deterministic local runtime passes plus compact advisory `check-scope` reporting, proposal-only `propose-graph-delta`
   preview generation, `review-graph-delta` Human Review Packet generation, and frontend instruction-pack generation from

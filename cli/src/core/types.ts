@@ -104,6 +104,7 @@ export interface CliOptions {
   applyReadiness?: string
   mutationReadiness?: string
   evidenceAcceptanceReadiness?: string
+  equivalenceProofReadiness?: string
   policy?: string
   scaffold?: string
   scriptScaffold?: string

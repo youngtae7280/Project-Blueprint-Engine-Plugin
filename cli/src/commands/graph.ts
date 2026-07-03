@@ -5,6 +5,7 @@ import { checkGraphDeltaApplyReadinessFile } from '../core/graph-delta-apply-rea
 import { reportEvidenceAcceptanceReadinessFile } from '../core/evidence-acceptance-readiness.js'
 import { reportEquivalenceProofReadinessFile } from '../core/equivalence-proof-readiness.js'
 import { reportGraphSourceMutationReadinessFile } from '../core/graph-source-mutation-readiness.js'
+import { reportScopeCiEnforcementReadinessFile } from '../core/scope-ci-enforcement-readiness.js'
 import { analyzeRequestFile } from '../core/ai-request-analyzer-run.js'
 import { generateClarificationInterviewPackFile } from '../core/clarification-interview-pack.js'
 import { compileExecutionContractDryRun } from '../core/contract-compiler-dry-run.js'
@@ -1129,6 +1130,62 @@ export async function graphReadModelReportEquivalenceProofReadinessCommand(
           message,
           suggestedFix:
             'Provide a readable Equivalence Proof Policy boundary, Evidence Acceptance readiness preview, and dedicated equivalence-proof-readiness output paths. This command is read-only and never proves equivalence.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelReportScopeCiEnforcementReadinessCommand(
+  context: CommandContext,
+): Promise<CommandResult> {
+  if (!context.options.policy) {
+    return invalidCommand('graph read-model report-scope-ci-enforcement-readiness requires --policy <file>.')
+  }
+  if (!context.options.equivalenceProofReadiness) {
+    return invalidCommand(
+      'graph read-model report-scope-ci-enforcement-readiness requires --equivalence-proof-readiness <file>.',
+    )
+  }
+
+  try {
+    const result = await reportScopeCiEnforcementReadinessFile(context.options.root, {
+      policy: context.options.policy,
+      equivalenceProofReadiness: context.options.equivalenceProofReadiness,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph read-model report-scope-ci-enforcement-readiness',
+      exitCode: ExitCode.Success,
+      message:
+        result.readiness.status === 'devview-scope-ci-enforcement-readiness-ready'
+          ? 'Scope/CI enforcement readiness preview created without enforcing scope, configuring CI, rejecting diffs, or blocking tools.'
+          : 'Scope/CI enforcement readiness preview blocked without enforcing scope, configuring CI, rejecting diffs, or blocking tools.',
+      issues: [],
+      data: {
+        ...result.readiness,
+        ...(result.outputPath ? { outputPath: result.outputPath } : {}),
+        ...(result.markdownReport ? { markdownReport: result.markdownReport } : {}),
+        next: 'Use this as disabled readiness context only. This command did not enforce scope, enable CI, configure required checks, change branch protection, reject diffs, activate strict/guided blocking, prove equivalence, accept Evidence, apply graph deltas, or mutate graph-source.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model report-scope-ci-enforcement-readiness',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Scope/CI enforcement readiness report blocked.',
+      issues: [
+        issue({
+          validator: 'ScopeCiEnforcementReadiness',
+          code: 'SCOPE_CI_ENFORCEMENT_READINESS_BLOCKED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide a readable Scope/CI Enforcement Policy boundary, Equivalence Proof readiness preview, and dedicated scope-ci-enforcement-readiness output paths. This command is read-only and never enables enforcement.',
         }),
       ],
     }
