@@ -10,6 +10,8 @@
   "sourceGeneratedTraversalPlan": "examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json",
   "selectedGraphSliceGeneratorImplemented": true,
   "firstGeneratedSelectedGraphSliceArtifact": "examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json",
+  "contractInputGeneratorImplemented": true,
+  "firstGeneratedContractCompilerInputArtifact": "examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json",
   "sourceGraphAwareValidation": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json",
   "graphTraversalExecuted": false,
   "selectedGraphSliceGenerated": false,
@@ -88,20 +90,24 @@
     "contractInputAllowedDirectlyFromSchemaValidation": false,
     "contractInputAllowedDirectlyFromGraphAwareValidation": false,
     "contractInputAllowedDirectlyFromTraversalBoundary": false,
-    "contractInputGenerated": false,
-    "contractInputGenerationStatus": "future-work"
+    "contractInputGeneratedByThisBoundaryArtifact": false,
+    "contractInputGeneratedAsSeparateArtifact": true,
+    "contractInputGenerationStatus": "implemented-as-selected-slice-to-contract-input-pass",
+    "generatedContractCompilerInputArtifact": "examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json",
+    "instructionPackGenerated": false
   },
   "allowedUse": [
     "define future selected graph slice artifact shape",
     "define contract input readiness boundary",
     "define ambiguity and missing policy handling",
     "document that this boundary artifact is not the generated selected graph slice",
-    "link the first generated selected graph slice artifact"
+    "link the first generated selected graph slice artifact",
+    "link the first generated contract compiler input artifact as a separate downstream pass"
   ],
   "forbiddenUse": [
     "claiming this boundary artifact is the generated selected graph slice",
     "claiming this boundary artifact selected nodes or edges",
-    "contract compiler input generation",
+    "claiming this boundary artifact generated contract compiler input",
     "instruction pack generation",
     "AI classifier implementation",
     "runtime LLM call",

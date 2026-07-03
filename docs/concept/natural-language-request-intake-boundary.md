@@ -224,13 +224,14 @@ Previewed validation statuses are:
 - `clarification-required`
 - `human-review-required`
 
-The schema-only runtime validator, graph-aware runtime validator, deterministic graph traversal plan generator, and
-deterministic selected graph slice generator are implemented. Contract compiler input generation remains future work.
+The schema-only runtime validator, graph-aware runtime validator, deterministic graph traversal plan generator,
+deterministic selected graph slice generator, and selected-slice-to-contract-input generator are implemented.
+Instruction pack generation remains future work for this frontend path.
 
 Schema-valid does not mean validated-for-traversal. Graph-aware-valid means future traversal permission only. The
 deterministic traversal plan generator can now produce a plan from that permission. The selected slice generator can
-consume the plan and produce a bounded selected node/edge slice, but contract input generation and instruction pack
-generation remain blocked.
+consume the plan and produce a bounded selected node/edge slice. The contract input generator can consume that selected
+slice and produce Contract Compiler Input, but instruction pack generation remains blocked.
 
 ## Graph Traversal Plan Boundary
 
@@ -350,9 +351,21 @@ If multiple target records/components match, if required policy/evidence nodes a
 cannot be proven, the slice must be marked ambiguous, incomplete, or blocked and contract input generation must remain
 blocked.
 
-## Contract Input Mapping
+## Contract Compiler Input Generation
 
-A validated Request IR may later feed:
+The first selected-slice-to-contract-input mapper is now available as:
+
+```text
+graph read-model generate-contract-input --selected-slice <selectedSlicePath> --json
+```
+
+The generated Todo App calibration Contract Compiler Input is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json
+```
+
+It consumes the generated selected graph slice and maps the existing compiler input concepts:
 
 - `targetScopeCandidates`
 - `allowedScope`
@@ -362,11 +375,19 @@ A validated Request IR may later feed:
 - `knownRisks`
 - `outputRequirements`
 
-The mapping is previewed only. No contract compiler input is generated here.
+For the Todo App calibration, the mapper derives target/scope entries from `CH-001`, `WT-1`, `TT-1`, and `EV-1`;
+required Evidence entries from `TT-1` and `EV-1`; known risk context from `IM-001`; and output requirements from the
+selected evidence/check nodes plus a non-execution boundary report requirement. It also preserves forbidden scope from
+the graph-aware validation context, including production source changes, graph-source mutation, and approval or
+acceptance changes.
+
+The generated Contract Compiler Input remains a frontend artifact only. It does not invoke the backend dry-run
+compiler, generate instruction packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve work,
+satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.
 
 Contract compiler input cannot be generated directly from a Request IR Candidate, schema-only validation, graph-aware
-validation, or traversal plan alone. A generated selected graph slice is the required future handoff artifact, but the
-selected slice itself is still not contract compiler input.
+validation, or traversal plan alone. A generated selected graph slice is the required handoff artifact, and the selected
+slice itself remains distinct from the generated Contract Compiler Input.
 
 ## Hook Gateway Relationship
 

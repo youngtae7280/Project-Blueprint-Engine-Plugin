@@ -1942,7 +1942,24 @@ examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-
 The selected graph slice generator starts from `CH-001`, selects the bounded direct graph-source/read-model slice, and
 records trace entries for the selected nodes and edges. For this calibration fixture it selects `CH-001`, `WT-1`,
 `TT-1`, `EV-1`, and `IM-001`, plus the directly connected `touches`, `preserves`, and `reports-on` edges allowed by
-the traversal plan. The selected slice is still not contract compiler input and does not generate instruction packs.
+the traversal plan. The selected slice itself is still not contract compiler input and does not generate instruction
+packs.
+
+The generated Contract Compiler Input for this calibration fixture is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json
+```
+
+The selected-slice-to-contract-input generator maps the selected slice into existing compiler input model groups:
+`humanRequest`, `graphSnapshot`, `packSchema`, `policySnapshot`, `evidenceIndex`, `targetScopeCandidates`,
+`outputRequirementSources`, `stopConditionSources`, and `riskSources`. For this calibration fixture, target/scope
+entries come from `CH-001`, `WT-1`, `TT-1`, and `EV-1`; Evidence entries come from `TT-1` and `EV-1`; risk context
+comes from `IM-001`; and output requirements remain preview/advisory report obligations.
+
+This generated Contract Compiler Input does not invoke the backend dry-run compiler, generate instruction packs, trigger
+Codex execution, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence,
+enforce scope, or configure CI.
 
 Traversal boundary type fields are limited to actual graph taxonomy vocabulary from the Todo App projection. Abstract
 planner meanings such as target component, scope policy, required evidence, stop condition, output requirement, and risk

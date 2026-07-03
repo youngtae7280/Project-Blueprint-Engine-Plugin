@@ -299,42 +299,47 @@
     "generatedSelectedGraphSliceArtifact": "examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json",
     "selectedGraphSliceGenerated": true,
     "contractInputGenerated": false,
+    "contractInputGenerationNowImplementedAsSeparatePass": true,
+    "generatedContractCompilerInputArtifact": "examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json",
     "instructionPackGenerated": false,
     "contractInputRequiresSelectedGraphSlice": true
   },
   "requestIrToContractInputMappingPreview": {
-    "mappingStatus": "previewed-not-generated",
+    "mappingStatus": "generated-from-selected-graph-slice",
     "validatedRequestIrRequired": true,
     "requestIrCandidateSchema": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json",
+    "sourceSelectedGraphSlice": "examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json",
+    "generatedContractCompilerInputArtifact": "examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json",
     "targetScopeCandidates": {
       "source": "validated request type, target record/component, and deterministic graph traversal",
-      "mappingStatus": "future-mapping-required"
+      "mappingStatus": "derived-from-selected-graph-slice"
     },
     "allowedScope": {
       "source": "validated request intent plus selected graph slice policy",
-      "mappingStatus": "future-mapping-required"
+      "mappingStatus": "derived-from-selected-graph-slice"
     },
     "forbiddenScope": {
       "source": "policy snapshot plus validated request type",
-      "mappingStatus": "future-mapping-required"
+      "mappingStatus": "derived-from-graph-aware-validation-context"
     },
     "requiredEvidence": {
       "source": "validated request type and evidence policy",
-      "mappingStatus": "future-mapping-required"
+      "mappingStatus": "derived-from-selected-graph-slice"
     },
     "stopConditions": {
       "source": "policy snapshot, ambiguity status, and validation blockers",
-      "mappingStatus": "future-mapping-required"
+      "mappingStatus": "derived-by-contract-input-generator"
     },
     "knownRisks": {
       "source": "validated risk intent candidates plus graph risk policy",
-      "mappingStatus": "future-mapping-required"
+      "mappingStatus": "derived-from-selected-risk-nodes"
     },
     "outputRequirements": {
       "source": "validated request intent plus contract output policy",
-      "mappingStatus": "future-mapping-required"
+      "mappingStatus": "derived-by-contract-input-generator"
     },
-    "contractCompilerInputGenerated": false
+    "contractCompilerInputGenerated": true,
+    "instructionPackGenerated": false
   },
   "hookGatewayConnection": {
     "connectionStatus": "linked-as-activation-context-only",
@@ -368,7 +373,7 @@
     "link the generated graph traversal plan as deterministic plan output without selected slice generation",
     "link the selected graph slice boundary as the required contract input prerequisite",
     "link the generated selected graph slice as deterministic node/edge slice output without contract input generation",
-    "preview Request IR to contract input mapping",
+    "link the generated contract compiler input as deterministic selected-slice mapping output without instruction pack generation",
     "separate Hook Gateway activation from compiler frontend semantics"
   ],
   "forbiddenUse": [
@@ -377,6 +382,7 @@
     "graph traversal from unvalidated AI output",
     "graph traversal from unvalidated AI output",
     "contract input generation from unvalidated AI output",
+    "instruction pack generation from generated contract compiler input",
     "instruction pack generation from unvalidated AI output",
     "graph-source mutation",
     "graph delta apply",
@@ -389,5 +395,5 @@
     "branch protection",
     "user acceptance automation"
   ],
-  "nonExecutionBoundary": "This artifact defines the Natural Language Request Intake compiler frontend boundary only. It links the Request IR Candidate schema preview, first calibration candidate fixture, schema-only validation result, graph-aware validation boundary, graph-aware validation result, generated traversal plan, and generated selected graph slice. This boundary artifact itself does not implement an AI classifier, call an LLM from runtime code, implement hook scripts, generate contract compiler input, generate instruction packs, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, create required checks, change branch protection, or automate user acceptance."
+  "nonExecutionBoundary": "This artifact defines the Natural Language Request Intake compiler frontend boundary only. It links the Request IR Candidate schema preview, first calibration candidate fixture, schema-only validation result, graph-aware validation boundary, graph-aware validation result, generated traversal plan, generated selected graph slice, and generated contract compiler input. This boundary artifact itself does not implement an AI classifier, call an LLM from runtime code, implement hook scripts, generate instruction packs, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, create required checks, change branch protection, or automate user acceptance."
 }

@@ -359,8 +359,15 @@ instruction packs, mutate graph-source, apply graph deltas, approve work, or enf
 The first deterministic selected graph slice generator is exposed through
 `graph read-model select-slice --traversal-plan <planPath> --json`. Its Todo App calibration output is
 `examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json`. It selects
-the bounded direct graph-source/read-model slice for `CH-001` and records a trace, but it is still not contract compiler
-input and not an instruction pack.
+the bounded direct graph-source/read-model slice for `CH-001` and records a trace. The selected slice itself is still
+not contract compiler input and not an instruction pack.
+
+The first selected-slice-to-contract-input generator is exposed through
+`graph read-model generate-contract-input --selected-slice <selectedSlicePath> --json`. Its Todo App calibration output
+is `examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json`. It
+maps selected nodes and edges into existing compiler input model groups, but it does not invoke the backend dry-run
+compiler, generate instruction packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve work,
+satisfy runtime Evidence, prove equivalence, or enforce scope.
 
 The traversal boundary separates graph vocabulary from planner semantics: `*NodeTypes` and `*EdgeTypes` contain only
 actual graph taxonomy values, while target/scope/evidence/output meanings are represented as roles and selection

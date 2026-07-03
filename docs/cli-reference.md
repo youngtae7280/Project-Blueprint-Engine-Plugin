@@ -609,6 +609,34 @@ node dist/cli/index.js graph read-model select-slice `
   --json
 ```
 
+### `pbe graph read-model generate-contract-input`
+
+- Purpose: Generate deterministic Contract Compiler Input from a generated Selected Graph Slice.
+- Typical state before running: After `graph read-model select-slice` has produced a `selected-graph-slice` artifact
+  with `selectedGraphSliceStatus: generated`, `selectedGraphSliceGenerated: true`, and `graphTraversalExecuted: true`.
+- Options: `--selected-slice <selectedSlicePath>` is required. `--output <file>` may write the generated Contract
+  Compiler Input. Without `--output`, JSON stdout is the only output.
+- What it checks: selected slice role/status, selected slice generation state, traversal execution state, non-generated
+  contract/input-pack flags on the source slice, non-empty selected nodes/edges, target/scope nodes, evidence/check
+  nodes, no error findings, and source authority trace fields.
+- What it writes: Nothing by default. It writes only to the explicit `--output` path.
+- Success result: JSON with `artifactRole: contract-compiler-input`, `contractInputGenerated: true`,
+  `instructionPackGenerated: false`, compiler-input group fields, mapping trace, and non-execution boundary fields.
+- Common failures: unreadable selected slice, blocked/incomplete slice, missing evidence nodes, missing selected edges,
+  selected slice already claiming contract input or instruction pack generation, or selected slice error findings.
+- Next command: A future frontend pass may consume this Contract Compiler Input. Do not treat it as instruction-pack
+  generation, Codex execution, approval, runtime Evidence satisfaction, equivalence proof, graph-source mutation, graph
+  delta apply, or enforcement.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model generate-contract-input `
+  --selected-slice examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json `
+  --output examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json `
+  --json
+```
+
 ### `pbe graph operation apply-proposal`
 
 - Purpose: Preview or apply a generated graph update proposal to its graph-source.

@@ -2124,3 +2124,43 @@ selected-slice-to-contract-input mapper exists. This decision does not generate 
 implement an AI analyzer, implement hook scripts, mutate graph-source, apply graph deltas, approve graph updates,
 record human decisions, change equivalence behavior, satisfy runtime Evidence, enforce scope, introduce CI required
 checks, change branch protection, or automate user acceptance.
+
+## DEC-247 Implement Selected Graph Slice to Contract Compiler Input Generator
+
+DEC-247 does not supersede DEC-097 through DEC-246. It implements the first deterministic mapper from a generated
+Selected Graph Slice to Contract Compiler Input.
+
+The generator is exposed through:
+
+```text
+graph read-model generate-contract-input --selected-slice <selectedSlicePath> --json
+```
+
+The implementation is recorded in:
+
+```text
+cli/src/core/contract-input-generator.ts
+```
+
+The Todo App calibration Contract Compiler Input is generated at:
+
+```text
+examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json
+```
+
+The generator consumes a generated `selected-graph-slice` artifact, validates selected-slice prerequisites, preserves
+source authority links, and maps the slice into existing compiler input model groups: `humanRequest`, `graphSnapshot`,
+`packSchema`, `policySnapshot`, `evidenceIndex`, `targetScopeCandidates`, `outputRequirementSources`,
+`stopConditionSources`, and `riskSources`. The generated input is deterministic and traceable to selected nodes, edges,
+and the graph-aware validation context.
+
+For the Todo App runtime-Evidence-only calibration, target/scope entries come from `CH-001`, `WT-1`, `TT-1`, and
+`EV-1`; Evidence entries come from `TT-1` and `EV-1`; risk context comes from `IM-001`; output requirements remain
+preview/advisory reporting obligations; and forbidden scope preserves production source changes, graph-source mutation,
+and approval/acceptance changes.
+
+Instruction pack generation is still not implemented in the frontend path. This decision does not invoke the backend
+contract compiler dry-run, trigger Codex execution, generate instruction packs, call an LLM, implement an AI analyzer,
+implement hook scripts, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, change
+equivalence behavior, satisfy runtime Evidence, enforce scope, introduce CI required checks, change branch protection,
+or automate user acceptance.

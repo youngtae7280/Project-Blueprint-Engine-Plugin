@@ -274,6 +274,22 @@ It selects a bounded graph-source/read-model slice from a ready traversal plan a
 generate contract compiler input, generate instruction packs, mutate graph-source, apply graph deltas, approve work,
 satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.
 
+The deterministic selected-slice-to-contract-input generator is now part of the measured advisory runtime path:
+
+```text
+graph read-model generate-contract-input --selected-slice <selectedSlicePath> --json
+```
+
+The tracked Todo App generated Contract Compiler Input is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json
+```
+
+It maps the selected graph slice into existing Contract Compiler Input groups and trace fields. It does not invoke the
+backend contract compiler dry-run, generate instruction packs, trigger Codex execution, mutate graph-source, apply graph
+deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.
+
 The traversal boundary keeps graph vocabulary separate from planner semantics: `requiredNodeTypes` and
 `requiredEdgeTypes` use only the current graph-source taxonomy, while target/scope/evidence/output meanings are recorded
 as roles and selection intents.

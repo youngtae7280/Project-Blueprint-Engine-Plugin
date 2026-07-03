@@ -3,6 +3,7 @@ import { compileExecutionContractDryRun } from '../core/contract-compiler-dry-ru
 import { collectGitDerivedChangedFiles } from '../core/git-derived-changed-file-collection.js'
 import { generateGraphDeltaHumanReviewPacket } from '../core/graph-delta-human-review-packet.js'
 import { generateGraphTraversalPlanFile } from '../core/graph-traversal-plan.js'
+import { generateContractCompilerInputFile } from '../core/contract-input-generator.js'
 import { generateProposalOnlyGraphDeltaPreview } from '../core/graph-delta-proposal-generator.js'
 import { generateSelectedGraphSliceFile } from '../core/selected-graph-slice.js'
 import { validateRequestIrGraphAwareFile } from '../core/request-ir-graph-aware-validator.js'
@@ -1026,6 +1027,68 @@ export async function graphReadModelSelectSliceCommand(context: CommandContext):
           message,
           suggestedFix:
             'Provide a readable ready Graph Traversal Plan artifact. Slice selection does not generate contract input or instruction packs.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelGenerateContractInputCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.selectedSlice) {
+    return invalidCommand('graph read-model generate-contract-input requires --selected-slice <selectedSlicePath>.')
+  }
+
+  try {
+    const input = await generateContractCompilerInputFile(context.options.root, context.options.selectedSlice, {
+      output: context.options.output,
+    })
+    const blocked = input.result.status !== 'contract-compiler-input-generated' || !input.result.contractInputGenerated
+    const errorFindings = input.result.validationFindings.filter((finding) => finding.severity === 'error')
+
+    return {
+      ok: !blocked,
+      command: 'graph read-model generate-contract-input',
+      exitCode: blocked ? ExitCode.ValidationFailed : ExitCode.Success,
+      message: blocked
+        ? 'Contract compiler input generation blocked before instruction pack generation.'
+        : 'Contract compiler input generated without instruction pack output.',
+      issues: blocked
+        ? (errorFindings.length > 0 ? errorFindings : input.result.validationFindings).map((finding) =>
+            issue({
+              validator: 'ContractCompilerInputGenerator',
+              code: finding.code,
+              severity: finding.severity,
+              message: finding.message,
+              reason: finding.field ? `Field: ${finding.field}` : undefined,
+              suggestedFix:
+                finding.suggestedFix ??
+                'Fix the selected graph slice prerequisites before mapping Contract Compiler Input.',
+            }),
+          )
+        : [],
+      data: {
+        ...input.result,
+        ...(input.outputPath ? { outputPath: input.outputPath } : {}),
+        next: blocked
+          ? 'Fix selected slice prerequisites. No instruction pack, Codex execution, graph apply, approval, runtime Evidence satisfaction, or enforcement was generated.'
+          : 'A later frontend pass may consume this Contract Compiler Input. This command did not generate instruction packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model generate-contract-input',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Contract compiler input generation could not run.',
+      issues: [
+        issue({
+          validator: 'ContractCompilerInputGenerator',
+          code: 'CONTRACT_INPUT_GENERATION_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide a readable generated Selected Graph Slice artifact. Contract input generation does not create instruction packs or execute Codex.',
         }),
       ],
     }
