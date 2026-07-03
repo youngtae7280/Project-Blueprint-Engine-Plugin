@@ -349,6 +349,14 @@ validators, Codex output, or review packets as self-acceptance. The command repo
 Evidence, satisfy runtime Evidence, prove equivalence, enforce scope, apply graph deltas, mutate graph-source, or
 configure CI.
 
+The Equivalence Proof Policy boundary is previewed in
+`examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-policy-boundary.runtime-evidence-only.preview.json`.
+It anchors the `graph read-model report-equivalence-proof-readiness ...` command. The first calibration equivalence
+readiness artifact is blocked because Evidence acceptance readiness is blocked:
+`examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-defer-decision.runtime-evidence-only.preview.json`.
+The command reports readiness only. It does not prove equivalence, set `equivalenceProven: true`, accept Evidence,
+satisfy runtime Evidence, apply graph deltas, mutate graph-source, enforce scope, or configure CI.
+
 The Graph-source Mutation Policy boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-policy-boundary.runtime-evidence-only.preview.json`.
 It now anchors the `graph read-model report-graph-source-mutation-readiness ...` command. The first calibration mutation

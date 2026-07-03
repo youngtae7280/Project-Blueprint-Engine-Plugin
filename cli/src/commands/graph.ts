@@ -3,6 +3,7 @@ import { createApprovedProposalStateFile } from '../core/approved-proposal-state
 import { generateAiRequestAnalyzerPackFile } from '../core/ai-request-analyzer-pack.js'
 import { checkGraphDeltaApplyReadinessFile } from '../core/graph-delta-apply-readiness.js'
 import { reportEvidenceAcceptanceReadinessFile } from '../core/evidence-acceptance-readiness.js'
+import { reportEquivalenceProofReadinessFile } from '../core/equivalence-proof-readiness.js'
 import { reportGraphSourceMutationReadinessFile } from '../core/graph-source-mutation-readiness.js'
 import { analyzeRequestFile } from '../core/ai-request-analyzer-run.js'
 import { generateClarificationInterviewPackFile } from '../core/clarification-interview-pack.js'
@@ -1072,6 +1073,62 @@ export async function graphReadModelReportEvidenceAcceptanceReadinessCommand(
           message,
           suggestedFix:
             'Provide a readable Evidence Acceptance Policy boundary, Graph-source Mutation readiness preview, and dedicated evidence-acceptance-readiness output paths. This command is read-only and never accepts Evidence.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelReportEquivalenceProofReadinessCommand(
+  context: CommandContext,
+): Promise<CommandResult> {
+  if (!context.options.policy) {
+    return invalidCommand('graph read-model report-equivalence-proof-readiness requires --policy <file>.')
+  }
+  if (!context.options.evidenceAcceptanceReadiness) {
+    return invalidCommand(
+      'graph read-model report-equivalence-proof-readiness requires --evidence-acceptance-readiness <file>.',
+    )
+  }
+
+  try {
+    const result = await reportEquivalenceProofReadinessFile(context.options.root, {
+      policy: context.options.policy,
+      evidenceAcceptanceReadiness: context.options.evidenceAcceptanceReadiness,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph read-model report-equivalence-proof-readiness',
+      exitCode: ExitCode.Success,
+      message:
+        result.readiness.status === 'devview-equivalence-proof-readiness-ready'
+          ? 'Equivalence proof readiness preview created without proving equivalence, accepting Evidence, applying, mutating, or enforcing.'
+          : 'Equivalence proof readiness preview blocked without proving equivalence, accepting Evidence, applying, mutating, or enforcing.',
+      issues: [],
+      data: {
+        ...result.readiness,
+        ...(result.outputPath ? { outputPath: result.outputPath } : {}),
+        ...(result.markdownReport ? { markdownReport: result.markdownReport } : {}),
+        next: 'Use this as readiness context only. This command did not prove equivalence, accept Evidence, satisfy runtime Evidence, apply graph deltas, mutate graph-source, enforce scope, or configure CI.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model report-equivalence-proof-readiness',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Equivalence proof readiness report blocked.',
+      issues: [
+        issue({
+          validator: 'EquivalenceProofReadiness',
+          code: 'EQUIVALENCE_PROOF_READINESS_BLOCKED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide a readable Equivalence Proof Policy boundary, Evidence Acceptance readiness preview, and dedicated equivalence-proof-readiness output paths. This command is read-only and never proves equivalence.',
         }),
       ],
     }

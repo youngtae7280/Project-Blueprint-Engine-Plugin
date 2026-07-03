@@ -103,6 +103,7 @@ export interface CliOptions {
   approvedState?: string
   applyReadiness?: string
   mutationReadiness?: string
+  evidenceAcceptanceReadiness?: string
   policy?: string
   scaffold?: string
   scriptScaffold?: string

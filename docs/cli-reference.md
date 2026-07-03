@@ -653,6 +653,33 @@ node dist/cli/index.js graph read-model report-evidence-acceptance-readiness `
   --json
 ```
 
+### `pbe graph read-model report-equivalence-proof-readiness`
+
+- Purpose: Report equivalence proof readiness from an Evidence Acceptance readiness preview without proving equivalence.
+- Typical state before running: After `graph read-model report-evidence-acceptance-readiness` has produced
+  Evidence-acceptance-readiness output.
+- Options: `--policy <policyBoundaryPath>` and `--evidence-acceptance-readiness <readinessPath>` are required.
+  `--output <file>` and `--markdown <file>` may write explicit readiness outputs.
+- What it checks: Equivalence Proof Policy boundary role/status, Evidence-acceptance-readiness role/status/safety
+  fields, and output authority.
+- What it writes: Nothing by default. It writes only to explicit `--output` and `--markdown` paths.
+- Success result: JSON with `artifactRole: devview-equivalence-proof-readiness-preview`. If Evidence acceptance
+  readiness is ready, equivalence proof readiness is `dry-run-ready-evidence-acceptance-readiness-present`; otherwise it
+  is blocked. In all cases `equivalenceAllowed`, `equivalenceProven`, `evidenceAccepted`, `runtimeEvidenceSatisfied`,
+  `graphDeltaApplied`, `graphSourceMutated`, `scopeEnforced`, and `ciEnforcementEnabled` remain false.
+- Next command: A separate future equivalence proof command would still need policy execution and explicit promotion.
+  This command itself never proves equivalence or sets `equivalenceProven: true`.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model report-equivalence-proof-readiness `
+  --policy examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-policy-boundary.runtime-evidence-only.preview.json `
+  --evidence-acceptance-readiness examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-readiness.blocked-defer-decision.runtime-evidence-only.preview.json `
+  --output .tmp/devview-equivalence-proof-readiness.json `
+  --json
+```
+
 ### `pbe graph read-model generate-ai-request-analyzer-pack`
 
 - Purpose: Generate deterministic AI Request Analyzer prompt/input contract JSON, and optionally Markdown, from the

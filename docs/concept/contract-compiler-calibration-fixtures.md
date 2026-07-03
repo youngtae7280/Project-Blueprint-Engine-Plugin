@@ -1927,6 +1927,25 @@ It is blocked because graph-source mutation readiness is blocked. The command re
 not satisfy runtime Evidence, apply graph deltas, mutate graph-source, configure required checks, or automate user
 acceptance.
 
+The Equivalence Proof Policy boundary preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-policy-boundary.runtime-evidence-only.preview.json
+```
+
+It anchors the `graph read-model report-equivalence-proof-readiness` command. The first calibration readiness artifact
+is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-defer-decision.runtime-evidence-only.preview.json
+```
+
+It is blocked because Evidence acceptance readiness is blocked. The command reports readiness only and keeps
+`equivalenceAllowed`, `equivalenceProven`, `evidenceAccepted`, `runtimeEvidenceSatisfied`, `graphDeltaApplied`,
+`graphSourceMutated`, `scopeEnforced`, and `ciEnforcementEnabled` false. It performs no equivalence proof and does not
+accept Evidence, satisfy runtime Evidence, apply graph deltas, mutate graph-source, configure required checks, or
+automate user acceptance.
+
 The Graph-source Mutation Policy boundary preview is:
 
 ```text

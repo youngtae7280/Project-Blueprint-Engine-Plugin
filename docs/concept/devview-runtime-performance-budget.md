@@ -550,6 +550,22 @@ set `runtimeEvidenceSatisfied: true`, prove equivalence, apply graph deltas, mut
 configure CI. It may be added to a future advisory backend/review lane, but it is not part of the user request to
 instruction-pack core-critical path.
 
+## Equivalence Proof Readiness
+
+The Equivalence proof readiness command is also outside the current core-critical timing lane. It belongs to the Phase
+13 review/readiness branch after Evidence acceptance readiness.
+
+The command:
+
+```text
+graph read-model report-equivalence-proof-readiness --policy <policyBoundaryPath> --evidence-acceptance-readiness <readinessPath> --json
+```
+
+reports whether a future equivalence proof step has readiness context. It is report-only and does not prove
+equivalence, set `equivalenceProven: true`, accept Evidence, set `runtimeEvidenceSatisfied: true`, apply graph deltas,
+mutate graph-source, enforce scope, or configure CI. It may be added to a future advisory backend/review lane, but it is
+not part of the user request to instruction-pack core-critical path.
+
 ## Non-Goals
 
 This budget does not:
