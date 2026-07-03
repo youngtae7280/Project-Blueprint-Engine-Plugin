@@ -19,6 +19,7 @@
   "ciRequiredCheckIntroduced": false,
   "branchProtectionChanged": false,
   "candidateGenerationStatus": "proposal-candidate-shape-preview-only",
+  "candidateSchemaAlignmentStatus": "graph-delta-proposal-candidate-schema-alignment-previewed",
   "sourceArtifacts": {
     "advisoryCheckScopeJsonCommand": "graph read-model check-scope --base <baseRef> --head <headRef> --json",
     "compactAdvisoryRuntimeReportCommand": "graph read-model check-scope --base <baseRef> --head <headRef> --markdown <file> --json",
@@ -26,6 +27,7 @@
     "gitDerivedChangedFileCollection": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
     "scopeComplianceCheckerPreview": "examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
     "compilerInputCalibrationObservation": "examples/valid/todo-app-pbe-run/generated/compiler-input-calibration-observation.runtime-evidence-only.preview.json",
+    "proposalCandidateSchemaAlignment": "examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json",
     "existingGraphSource": "examples/valid/todo-app-pbe-run/graph-source.json"
   },
   "inputSources": [
@@ -94,6 +96,7 @@
   ],
   "futureGraphDeltaProposalShape": {
     "proposalId": "future-generated-id",
+    "candidateSchemaAlignment": "examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json",
     "sourceEvaluationArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json",
     "sourceRuntimeReport": ".tmp/devview-scope-runtime-report.md",
     "candidateNodes": [],

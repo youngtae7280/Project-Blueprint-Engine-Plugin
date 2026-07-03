@@ -1745,3 +1745,20 @@ automation, or user acceptance automation is introduced.
 Potential older language in public docs should be read through the compatibility terms in [glossary.md](glossary.md). If
 future review finds a public doc still presenting superseded terminology as active architecture, record it in
 [open-questions.md](open-questions.md) or [superseded-items.md](superseded-items.md) before changing product meaning.
+
+## DEC-232 Align Advisory Scope Results With Graph Delta Proposal Candidate Schema
+
+DEC-232 does not supersede DEC-097 through DEC-231. It adds the preview artifact
+`examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json` to
+align advisory `check-scope` result concepts with the existing graph operation proposal shape.
+
+The alignment references `schemas/pbe/graph-update-proposal-v0.json`, `schemas/pbe/graph-delta-v0.json`, and existing
+`graph operation capture-delta`, `propose-update`, and `apply-proposal` boundaries. Changed-file observations partially
+align with `changedFiles`, risk and decision-note candidates partially align with `proposedRecordState`, and boundary
+requirements align with `boundaries`. Evidence links, runtime report links, source record binding, graph delta source
+selection, and edge intent mapping remain review-required unresolved mappings.
+
+This is proposal-candidate schema alignment only. It does not generate a `pbe-graph-update-proposal-v0` artifact, mutate
+graph-source, apply graph deltas, approve proposals, change equivalence behavior, satisfy runtime Evidence, enforce
+scope, reject diffs, introduce CI required checks, change branch protection, introduce executor automation, or automate
+user acceptance.

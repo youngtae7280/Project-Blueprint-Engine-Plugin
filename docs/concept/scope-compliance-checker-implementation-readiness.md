@@ -646,6 +646,18 @@ The boundary is proposal-only. It keeps `proposalOnly: true`, `graphSourceMutate
 delta proposal generation, mutate graph-source, apply graph deltas, enforce scope, reject diffs, satisfy runtime
 Evidence, or replace user acceptance.
 
+The next schema-alignment preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json
+```
+
+This preview compares advisory `check-scope` candidate categories with the existing graph operation proposal shape in
+`schemas/pbe/graph-update-proposal-v0.json`. Changed-file observations partially align with `changedFiles`, risk and
+decision-note candidates partially align with `proposedRecordState`, and boundary requirements align with the existing
+`boundaries` object. Evidence links, runtime report links, graph-delta source selection, and record binding remain
+explicitly unresolved until a future proposal-only generator is designed.
+
 ## Runtime Budget Timing Smoke
 
 The runtime performance budget is documented in

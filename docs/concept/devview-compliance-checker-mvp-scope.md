@@ -537,6 +537,18 @@ updates, mutate graph-source, apply graph deltas, enforce scope, reject diffs, s
 equivalence, or replace user acceptance. The preview keeps `proposalOnly: true`, `graphSourceMutated: false`,
 `graphDeltaApplied: false`, `requiresHumanReview: true`, and `approvalStatus: not-approved`.
 
+The candidate schema alignment preview is recorded at:
+
+```text
+examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json
+```
+
+It aligns advisory scope outputs with the existing `pbe-graph-update-proposal-v0` fields such as
+`proposedRecordState`, `proposedNodeUpdates`, `changedFiles`, `edgeIntentSummary`, and `boundaries`. The alignment is
+still proposal-only. Unknown mappings, including Evidence links and runtime report links, remain
+`mappingStatus: unresolved-existing-schema-review-required` rather than becoming a parallel authoritative graph update
+format.
+
 ## Runtime Budget Smoke
 
 The deterministic DevView runtime budget is documented in

@@ -1,0 +1,285 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "graph-delta-proposal-candidate-schema-alignment-preview",
+  "status": "graph-delta-proposal-candidate-schema-alignment-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "schemaAlignmentStatus": "existing-graph-update-proposal-v0-alignment-previewed",
+  "proposalBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-boundary.runtime-evidence-only.preview.json",
+  "existingGraphUpdateProposalSchema": "schemas/pbe/graph-update-proposal-v0.json",
+  "existingGraphDeltaSchema": "schemas/pbe/graph-delta-v0.json",
+  "existingGraphOperationDocs": [
+    "docs/concept/graph-operation-chain-productization.md",
+    "docs/graph-operation-runbook.md"
+  ],
+  "existingGraphOperationCommands": [
+    {
+      "command": "graph operation capture-delta",
+      "existingRole": "captures a graph delta from bounded target repo diff",
+      "alignmentUse": "Future advisory scope proposal candidates may need a graph-delta-compatible source before they can become pbe-graph-update-proposal-v0 artifacts.",
+      "currentUse": "not-run-for-this-preview"
+    },
+    {
+      "command": "graph operation propose-update",
+      "existingRole": "generates pbe-graph-update-proposal-v0 from graph delta",
+      "alignmentUse": "Candidate schema should reuse or map to graph-update-proposal-v0 fields instead of inventing an unrelated proposal format.",
+      "currentUse": "not-run-for-this-preview"
+    },
+    {
+      "command": "graph operation apply-proposal",
+      "existingRole": "previews graph-source changes by default and applies only with explicit --apply",
+      "alignmentUse": "Future proposal candidates must remain before apply-proposal and must not be treated as approved graph updates.",
+      "currentUse": "not-run-for-this-preview"
+    }
+  ],
+  "boundaryState": {
+    "proposalOnly": true,
+    "candidateOnly": true,
+    "proposalGenerated": false,
+    "pbeGraphUpdateProposalV0Generated": false,
+    "graphDeltaCaptured": false,
+    "graphSourceMutated": false,
+    "graphDeltaApplied": false,
+    "requiresHumanReview": true,
+    "approvalStatus": "not-approved",
+    "equivalenceProven": false,
+    "runtimeEvidenceSatisfied": false,
+    "enforcementStatus": "not-enforced",
+    "scopeEnforced": false,
+    "diffRejected": false,
+    "ciRequiredCheckIntroduced": false,
+    "branchProtectionChanged": false
+  },
+  "candidateSourceInputs": [
+    {
+      "inputId": "advisory-check-scope-json-result",
+      "sourceStatus": "runtime-command-available",
+      "sourceCommand": "graph read-model check-scope --base <baseRef> --head <headRef> --json",
+      "candidateContribution": "May supply advisory findings, finding counts, changed-file observations, and non-enforcement status.",
+      "authorityBoundary": "Advisory findings do not approve graph changes, enforce graph changes, or apply graph deltas."
+    },
+    {
+      "inputId": "compact-advisory-runtime-report",
+      "sourceStatus": "optional-markdown-report-available",
+      "sourceCommand": "graph read-model check-scope --base <baseRef> --head <headRef> --markdown <file> --json",
+      "candidateContribution": "May be linked as reviewer-facing context.",
+      "authorityBoundary": "The markdown report is not an approval record or graph-source mutation."
+    },
+    {
+      "inputId": "git-derived-changed-file-collection",
+      "sourceStatus": "collection-only-artifact-available",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+      "candidateContribution": "May supply changed-file-observation candidates.",
+      "authorityBoundary": "Collection is not scope compliance, graph delta capture, or graph update proposal generation."
+    },
+    {
+      "inputId": "scope-compliance-evaluation-artifact",
+      "sourceStatus": "non-enforcing-evaluation-preview-available",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json",
+      "candidateContribution": "May supply advisory review-required or blocking finding context.",
+      "authorityBoundary": "Evaluation remains non-enforcing and advisory."
+    },
+    {
+      "inputId": "graph-delta-proposal-boundary-preview",
+      "sourceStatus": "proposal-boundary-preview-available",
+      "sourceArtifact": "examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-boundary.runtime-evidence-only.preview.json",
+      "candidateContribution": "Defines non-apply boundary fields that future candidate generation must preserve.",
+      "authorityBoundary": "Boundary preview is not a graph update proposal artifact."
+    }
+  ],
+  "existingProposalV0FieldAlignment": [
+    {
+      "existingField": "schemaVersion",
+      "candidateAlignment": "future proposal candidates should preserve schemaVersion 1 only if promoted into pbe-graph-update-proposal-v0",
+      "mappingStatus": "existing-field-known-not-populated-here"
+    },
+    {
+      "existingField": "artifactRole",
+      "candidateAlignment": "future approved proposal artifacts use pbe-graph-update-proposal-v0; this preview uses a separate preview artifactRole",
+      "mappingStatus": "existing-field-known-not-promoted"
+    },
+    {
+      "existingField": "status",
+      "candidateAlignment": "existing proposals use generated-from-graph-delta; advisory scope candidates do not have a generated proposal status yet",
+      "mappingStatus": "unresolved-existing-schema-review-required"
+    },
+    {
+      "existingField": "graphDeltaPath",
+      "candidateAlignment": "check-scope output is advisory and is not currently a graph delta path",
+      "mappingStatus": "unresolved-graph-delta-source-required"
+    },
+    {
+      "existingField": "sourceRecordId",
+      "candidateAlignment": "future proposal candidates must identify the target graph record before proposal generation",
+      "mappingStatus": "unresolved-record-binding-required"
+    },
+    {
+      "existingField": "proposedRecordState",
+      "candidateAlignment": "risk and decision-note candidates may partially map to remainingRisks or nextAllowedActions if a future graph record is selected",
+      "mappingStatus": "partial-existing-field-compatible-review-required"
+    },
+    {
+      "existingField": "proposedNodeUpdates",
+      "candidateAlignment": "candidate nodes may map to proposedNodeUpdates only after a selected graph-source node exists and a proposedState is review-approved",
+      "mappingStatus": "partial-existing-field-compatible-review-required"
+    },
+    {
+      "existingField": "changedFiles",
+      "candidateAlignment": "changed-file-observation candidates may map to changedFiles paths, but additions/deletions and graph-delta origin remain unresolved for check-scope collection output",
+      "mappingStatus": "partial-existing-field-compatible-review-required"
+    },
+    {
+      "existingField": "edgeIntentSummary",
+      "candidateAlignment": "candidate edges or reviewer intent links may map to edgeIntentSummary only after graph context is selected",
+      "mappingStatus": "unresolved-existing-schema-review-required"
+    },
+    {
+      "existingField": "boundaries",
+      "candidateAlignment": "future proposal candidates must preserve mutatesGraphSource false, appliesPatch false, requiresReviewBeforeApply true, and maintainerIntentClaimed false",
+      "mappingStatus": "existing-field-compatible-required"
+    }
+  ],
+  "candidateCategories": [
+    {
+      "candidateType": "changed-file-observation-candidate",
+      "candidateOnly": true,
+      "notApproved": true,
+      "notApplied": true,
+      "requiresHumanReview": true,
+      "sourceInputs": ["git-derived-changed-file-collection", "advisory-check-scope-json-result"],
+      "existingProposalFieldCandidates": ["changedFiles"],
+      "mappingStatus": "partial-existing-field-compatible-review-required",
+      "unresolvedRequirements": [
+        "decide whether name-status collection is sufficient or whether graph-delta additions/deletions are required",
+        "bind observation to sourceRecordId before pbe-graph-update-proposal-v0 generation"
+      ]
+    },
+    {
+      "candidateType": "scope-finding-review-note-candidate",
+      "candidateOnly": true,
+      "notApproved": true,
+      "notApplied": true,
+      "requiresHumanReview": true,
+      "sourceInputs": ["scope-compliance-evaluation-artifact", "compact-advisory-runtime-report"],
+      "existingProposalFieldCandidates": [
+        "proposedRecordState.remainingRisks",
+        "proposedRecordState.nextAllowedActions"
+      ],
+      "mappingStatus": "partial-existing-field-compatible-review-required",
+      "unresolvedRequirements": [
+        "decide whether review notes belong in proposedRecordState or require a future dedicated field",
+        "avoid treating advisory findings as approved risk updates"
+      ]
+    },
+    {
+      "candidateType": "risk-update-candidate",
+      "candidateOnly": true,
+      "notApproved": true,
+      "notApplied": true,
+      "requiresHumanReview": true,
+      "sourceInputs": ["scope-compliance-evaluation-artifact"],
+      "existingProposalFieldCandidates": ["proposedRecordState.remainingRisks"],
+      "mappingStatus": "partial-existing-field-compatible-review-required",
+      "unresolvedRequirements": [
+        "bind risk update to a selected graph record",
+        "require human review before risk metadata becomes graph-source state"
+      ]
+    },
+    {
+      "candidateType": "evidence-link-candidate",
+      "candidateOnly": true,
+      "notApproved": true,
+      "notApplied": true,
+      "requiresHumanReview": true,
+      "sourceInputs": ["compact-advisory-runtime-report", "scope-compliance-evaluation-artifact"],
+      "existingProposalFieldCandidates": [],
+      "mappingStatus": "unresolved-existing-schema-review-required",
+      "unresolvedRequirements": [
+        "graph-update-proposal-v0 has no dedicated candidateEvidenceLinks field",
+        "decide whether evidence links require a future proposal schema extension"
+      ]
+    },
+    {
+      "candidateType": "runtime-report-link-candidate",
+      "candidateOnly": true,
+      "notApproved": true,
+      "notApplied": true,
+      "requiresHumanReview": true,
+      "sourceInputs": ["compact-advisory-runtime-report"],
+      "existingProposalFieldCandidates": [],
+      "mappingStatus": "unresolved-existing-schema-review-required",
+      "unresolvedRequirements": [
+        "graph-update-proposal-v0 has no dedicated runtime report link field",
+        "decide whether report links remain reviewer context or become proposal metadata"
+      ]
+    },
+    {
+      "candidateType": "human-decision-note-candidate",
+      "candidateOnly": true,
+      "notApproved": true,
+      "notApplied": true,
+      "requiresHumanReview": true,
+      "sourceInputs": ["graph-delta-proposal-boundary-preview", "scope-compliance-evaluation-artifact"],
+      "existingProposalFieldCandidates": ["proposedRecordState.nextAllowedActions"],
+      "mappingStatus": "partial-existing-field-compatible-review-required",
+      "unresolvedRequirements": [
+        "decide whether human decision questions should map to nextAllowedActions or stay outside graph-update-proposal-v0",
+        "do not automate user acceptance"
+      ]
+    }
+  ],
+  "futureProposalCandidateShape": {
+    "proposalCandidateId": "future-generated-id",
+    "sourceEvaluationArtifact": "examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json",
+    "sourceRuntimeReport": ".tmp/devview-scope-runtime-report.md",
+    "sourceGraphUpdateProposalSchema": "schemas/pbe/graph-update-proposal-v0.json",
+    "candidateRecordStateUpdates": [],
+    "candidateNodeUpdates": [],
+    "candidateChangedFileObservations": [],
+    "candidateEdgeIntentNotes": [],
+    "candidateEvidenceLinks": [],
+    "candidateRiskUpdates": [],
+    "candidateDecisionNotes": [],
+    "humanReviewQuestions": [
+      "Which selected graph record would own advisory scope findings?",
+      "Should changed-file observations become graph-update-proposal-v0 changedFiles entries or remain review context?",
+      "Does graph-update-proposal-v0 need a dedicated Evidence link field before advisory runtime reports can be linked?",
+      "Should any advisory finding update remainingRisks, or should it stay a non-applied review note?"
+    ],
+    "candidateApprovalStatus": "not-approved",
+    "graphDeltaApplyStatus": "not-applied"
+  },
+  "performanceBoundary": {
+    "designOnly": true,
+    "addsRuntimeWork": false,
+    "aiCalls": false,
+    "networkCalls": false,
+    "fullRepoScan": false,
+    "patchHunkInspection": false,
+    "fileContentSemanticAnalysis": false,
+    "futureExpensiveCandidateGenerationDeferred": true,
+    "runtimeBudgetStatus": "advisory-not-enforced"
+  },
+  "allowedUse": [
+    "align advisory check-scope result concepts with existing graph-update-proposal-v0 fields",
+    "identify unresolved mappings before any proposal generation command is added",
+    "keep future proposal candidates separate from graph delta apply",
+    "preserve human review before graph-source mutation"
+  ],
+  "forbiddenUse": [
+    "pbe-graph-update-proposal-v0 artifact generation",
+    "graph-source mutation",
+    "graph delta apply",
+    "approved graph update",
+    "scope compliance enforcement",
+    "diff rejection",
+    "CI required check",
+    "branch protection",
+    "fixture approval",
+    "runtime Evidence satisfaction",
+    "equivalence proof",
+    "user acceptance automation",
+    "executor automation"
+  ],
+  "nonExecutionBoundary": "This artifact aligns advisory check-scope outputs with existing graph update proposal concepts only. It does not generate a pbe-graph-update-proposal-v0 artifact, capture a graph delta, mutate graph-source, apply graph deltas, approve proposal candidates, enforce scope, reject diffs, satisfy runtime Evidence, prove equivalence, configure CI or required checks, change branch protection, or replace user acceptance."
+}

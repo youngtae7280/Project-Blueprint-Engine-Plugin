@@ -79,6 +79,13 @@ node dist/cli/index.js graph operation apply-proposal --proposal <proposal.json>
 Preview mode is the default. Applying requires explicit `--apply` and updates only graph-source node/record status fields
 after stale-state and boundary checks pass.
 
+Advisory DevView `check-scope` output is not a graph update proposal by itself. The Todo App runtime Evidence-only
+calibration now records a proposal candidate schema alignment preview at
+`examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json`.
+That preview maps advisory scope candidate categories to the existing `pbe-graph-update-proposal-v0` fields where
+possible, and marks Evidence/report link mappings as unresolved. It does not run `propose-update`, create approved graph
+updates, mutate graph-source, or apply graph deltas.
+
 Retrofit graph sources can be inspected before implementation:
 
 ```powershell

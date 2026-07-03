@@ -1766,6 +1766,17 @@ risk updates, Evidence links, decision notes, changed-file observations, and run
 proposal-only: `graphSourceMutated: false`, `graphDeltaApplied: false`, `requiresHumanReview: true`, and
 `approvalStatus: not-approved`.
 
+The candidate schema alignment preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json
+```
+
+It maps advisory scope candidate categories against the existing `pbe-graph-update-proposal-v0` shape instead of
+creating a competing proposal format. The preview records partial mappings for `changedFiles`, `proposedRecordState`,
+and `boundaries`, while leaving Evidence links, runtime report links, source record binding, and graph-delta source
+selection unresolved for future review.
+
 The current Todo App runtime Evidence-only evaluation is blocked rather than clean because the draft still contains
 `unresolved:todo-app-runtime-proof-report`. Empty `evaluatedViolations: []` in this artifact must not be read as fixture
 approval or runtime Evidence satisfaction.
@@ -1959,9 +1970,10 @@ This selection does not:
 
 ## Next Step
 
-The compact advisory scope runtime report is now the readability surface for `check-scope`, and the Graph Delta Proposal
-boundary records how those advisory results may feed future proposal candidates. A later task may decide whether to add a
-proposal-only shape or command, but it should not reject diffs, enforce scope, broaden compiler support, wire additional
-fixtures into the supported command path, create promotion review packets, approve fixtures, claim runtime Evidence is
-satisfied, inspect patch contents, turn candidate checks into required checks, apply graph deltas, turn test Evidence
-into user acceptance, allow production source edits, enforce CI, or change the existing Todo App structure-only status.
+The compact advisory scope runtime report is now the readability surface for `check-scope`, the Graph Delta Proposal
+boundary records how those advisory results may feed future proposal candidates, and the candidate schema alignment maps
+those candidates against the existing graph update proposal shape. A later task may decide whether to add a proposal-only
+command, but it should not reject diffs, enforce scope, broaden compiler support, wire additional fixtures into the
+supported command path, create promotion review packets, approve fixtures, claim runtime Evidence is satisfied, inspect
+patch contents, turn candidate checks into required checks, apply graph deltas, turn test Evidence into user acceptance,
+allow production source edits, enforce CI, or change the existing Todo App structure-only status.

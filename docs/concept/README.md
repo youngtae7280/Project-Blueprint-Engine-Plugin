@@ -280,6 +280,11 @@ The Graph Delta Proposal boundary for advisory scope results is previewed in
 future proposal candidates to be shaped from advisory results while keeping graph-source mutation, graph delta apply,
 approval, enforcement, equivalence proof, runtime Evidence satisfaction, and user acceptance out of scope.
 
+The follow-on candidate schema alignment preview is recorded in
+`examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json`.
+It maps advisory `check-scope` categories to existing `pbe-graph-update-proposal-v0` fields where possible and marks
+unresolved mappings for review instead of creating approved graph updates.
+
 The following readiness artifact is complete at documentation level:
 
 - [representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md)

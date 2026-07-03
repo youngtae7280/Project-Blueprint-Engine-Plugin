@@ -77,6 +77,7 @@
     "scopeComplianceEvaluationResultShapeStatus": "scope-compliance-evaluation-result-shape-previewed",
     "scopeComplianceEvaluatorStatus": "non-enforcing-evaluator-implemented",
     "graphDeltaProposalBoundaryStatus": "graph-delta-proposal-boundary-previewed",
+    "graphDeltaProposalCandidateSchemaStatus": "graph-delta-proposal-candidate-schema-alignment-previewed",
     "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
     "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
     "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",
@@ -240,6 +241,23 @@
     "remainingSupportStatus": "not-supported"
   },
   "graphDeltaProposalBoundaryStatus": "graph-delta-proposal-boundary-previewed",
+  "graphDeltaProposalCandidateSchemaPreview": {
+    "path": "examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json",
+    "status": "graph-delta-proposal-candidate-schema-alignment-previewed",
+    "proposalOnly": true,
+    "candidateOnly": true,
+    "proposalGenerated": false,
+    "graphSourceMutated": false,
+    "graphDeltaApplied": false,
+    "requiresHumanReview": true,
+    "approvalStatus": "not-approved",
+    "equivalenceProven": false,
+    "enforcementStatus": "not-enforced",
+    "scopeEnforced": false,
+    "diffRejected": false,
+    "remainingSupportStatus": "not-supported"
+  },
+  "graphDeltaProposalCandidateSchemaStatus": "graph-delta-proposal-candidate-schema-alignment-previewed",
   "fixtureProvidedChangedFileListPreview": {
     "path": "examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
     "status": "fixture-provided-changed-file-list-previewed",

@@ -99,6 +99,15 @@ non-enforcing evaluation artifacts may later feed proposal candidates. It is des
 work. The timing smoke still lists graph delta proposal generation as pending because no supported runtime proposal
 command is part of this budget slice yet.
 
+The candidate schema alignment preview is also design-only:
+
+```text
+examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json
+```
+
+It records how future proposal candidates may map to the existing graph update proposal fields. It adds no runtime
+command, does not scan files, does not inspect patches, and does not change the timing smoke boundary.
+
 ## Health Report Boundary
 
 `graph read-model report-health --json` exposes a small runtime budget summary:
