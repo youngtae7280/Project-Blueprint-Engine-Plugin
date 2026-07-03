@@ -6,6 +6,7 @@
   "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
   "fixtureShape": "test-only-behavior-proof",
   "naturalLanguageRequestIntakeBoundary": "examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json",
+  "aiRequestAnalyzerBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json",
   "schemaScope": "future-ai-request-analyzer-output-shape",
   "schemaImplementationStatus": "preview-only",
   "requestIrCandidateStatus": "candidate-only",

@@ -7,6 +7,10 @@
   "frontendScope": "natural-language-request-to-validated-request-ir-boundary",
   "implementationStatus": "boundary-preview-only",
   "aiClassifierImplemented": false,
+  "aiRequestAnalyzerBoundaryStatus": "ai-request-analyzer-boundary-previewed",
+  "aiRequestAnalyzerBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json",
+  "aiRequestAnalyzerImplemented": false,
+  "aiRequestAnalyzerOutputAuthorityStatus": "ai-generated-candidate-not-validated",
   "llmCallsIntroduced": false,
   "runtimeAiCallsAllowed": false,
   "requestIrValidatorImplemented": true,
@@ -58,6 +62,8 @@
       {
         "stepId": "ai-request-analyzer",
         "role": "candidate-producer",
+        "boundaryArtifact": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json",
+        "expectedOutputSchema": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json",
         "authorityBoundary": "AI may classify and propose Request IR fields, but output is candidate-only and not source authority."
       },
       {
@@ -180,7 +186,11 @@
     "lowConfidenceHandling": "clarification-required-or-human-review-required"
   },
   "aiAnalyzerTrustBoundary": {
+    "boundaryArtifact": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json",
+    "analyzerImplemented": false,
+    "llmInvoked": false,
     "aiAnalyzerOutputStatus": "candidate-only",
+    "aiAnalyzerOutputAuthorityStatus": "ai-generated-candidate-not-validated",
     "requestIrAuthorityStatus": "not-authoritative-until-validated",
     "graphTraversalAllowedFromUnvalidatedAiOutput": false,
     "contractGenerationAllowedFromUnvalidatedAiOutput": false,
@@ -351,7 +361,9 @@
   },
   "runtimeAndSafetyBoundaries": {
     "aiIntakeMayBeAssistivePath": true,
+    "aiRequestAnalyzerBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json",
     "deterministicCompilerPathLocalAfterRequestIr": true,
+    "futureLlmTimeOutsideDeterministicRuntimeBudget": true,
     "runtimeAiCallsAllowed": false,
     "networkCallsAllowed": false,
     "fullRepoScanAllowed": false,
@@ -363,6 +375,7 @@
   },
   "allowedUse": [
     "define natural language as the human request intake surface",
+    "link the AI Request Analyzer boundary preview",
     "define AI Request IR candidate fields as candidate-only",
     "link the Request IR Candidate schema preview and first calibration fixture",
     "define deterministic Request IR validation boundary before traversal",
@@ -380,9 +393,7 @@
     "AI classifier implementation",
     "runtime LLM calls",
     "graph traversal from unvalidated AI output",
-    "graph traversal from unvalidated AI output",
     "contract input generation from unvalidated AI output",
-    "instruction pack generation from generated contract compiler input",
     "instruction pack generation from unvalidated AI output",
     "graph-source mutation",
     "graph delta apply",
@@ -395,5 +406,5 @@
     "branch protection",
     "user acceptance automation"
   ],
-  "nonExecutionBoundary": "This artifact defines the Natural Language Request Intake compiler frontend boundary only. It links the Request IR Candidate schema preview, first calibration candidate fixture, schema-only validation result, graph-aware validation boundary, graph-aware validation result, generated traversal plan, generated selected graph slice, and generated contract compiler input. This boundary artifact itself does not implement an AI classifier, call an LLM from runtime code, implement hook scripts, generate instruction packs, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, create required checks, change branch protection, or automate user acceptance."
+  "nonExecutionBoundary": "This artifact defines the Natural Language Request Intake compiler frontend boundary only. It links the AI Request Analyzer boundary preview, Request IR Candidate schema preview, first calibration candidate fixture, schema-only validation result, graph-aware validation boundary, graph-aware validation result, generated traversal plan, generated selected graph slice, generated contract compiler input, and generated instruction pack preview. This boundary artifact itself does not implement an AI classifier, call an LLM from runtime code, implement hook scripts, generate instruction packs, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, create required checks, change branch protection, or automate user acceptance."
 }

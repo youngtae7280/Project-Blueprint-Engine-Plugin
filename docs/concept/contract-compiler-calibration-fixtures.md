@@ -1882,6 +1882,17 @@ validation before graph traversal, selected node/edge slice generation, contract
 instruction pack generation. AI-produced fields are candidate-only and do not become fixture support, approval, runtime
 Evidence, graph-source authority, or equivalence proof.
 
+The AI Request Analyzer boundary preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json
+```
+
+It defines the future analyzer as a candidate-only producer from raw natural language plus optional repo/session context
+to Request IR Candidate JSON. The analyzer is not implemented, no LLM/API call is introduced, and analyzer output cannot
+drive traversal, selected slice generation, contract input, instruction pack generation, Codex execution, approval,
+runtime Evidence satisfaction, equivalence proof, graph-source mutation, graph delta apply, or enforcement.
+
 The Request IR Candidate schema and first calibration candidate fixture are:
 
 ```text

@@ -25,18 +25,56 @@ Required safety values include:
 
 ```text
 aiClassifierImplemented: false
+aiRequestAnalyzerBoundaryStatus: ai-request-analyzer-boundary-previewed
+aiRequestAnalyzerImplemented: false
+aiRequestAnalyzerOutputAuthorityStatus: ai-generated-candidate-not-validated
 llmCallsIntroduced: false
-requestIrValidatorImplemented: true
-requestIrValidatorScope: schema-and-boundary-only
-graphAwareRequestIrValidatorImplemented: true
-graphTraversalImplementedFromRequestIr: false
-selectedGraphSliceGenerated: false
-contractCompilerInputGenerated: false
-instructionPackGenerated: false
+requestIrCandidateGenerated: false in the analyzer boundary preview
+graphTraversalAllowedFromUnvalidatedAiOutput: false
+contractGenerationAllowedFromUnvalidatedAiOutput: false
+instructionPackGenerationAllowedFromUnvalidatedAiOutput: false
 graphSourceMutated: false
 graphDeltaApplied: false
 approvalStatus: not-approved
 ```
+
+## AI Request Analyzer Boundary
+
+The AI Request Analyzer boundary preview for the Todo App calibration request is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json
+```
+
+The analyzer role is intentionally narrow: it may take a raw natural-language request plus optional repo/session context
+and produce Request IR Candidate JSON only. The expected candidate schema is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json
+```
+
+The boundary records:
+
+- `analyzerImplemented: false`
+- `llmInvoked: false`
+- `requestIrCandidateGenerated: false`
+- `candidateOnly: true`
+- `candidateAuthorityStatus: ai-generated-candidate-not-validated`
+
+Analyzer output is not graph traversal authority, selected-slice authority, contract compiler input, instruction pack
+authority, Codex execution authority, graph-source mutation authority, approval, runtime Evidence satisfaction,
+equivalence proof, or enforcement. The deterministic validation chain remains mandatory:
+
+```text
+validate-request-ir
+-> validate-request-ir-graph
+-> plan-traversal
+-> select-slice
+-> generate-contract-input
+-> generate-instruction-pack
+```
+
+No CLI or LLM/API call is introduced for the analyzer in this boundary step.
 
 ## Frontend Flow
 

@@ -2210,3 +2210,26 @@ The generated pack is not approval and does not trigger Codex execution. This de
 an AI analyzer, implement hook scripts, mutate graph-source, apply graph deltas, approve graph updates, record human
 decisions, change equivalence behavior, satisfy runtime Evidence, enforce scope, introduce CI required checks, change
 branch protection, or automate user acceptance.
+
+## DEC-249 Define AI Request Analyzer Boundary
+
+DEC-249 does not supersede DEC-097 through DEC-248. It previews the AI Request Analyzer boundary before any analyzer
+implementation or LLM/API integration.
+
+The boundary preview is recorded in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json
+```
+
+The analyzer role is restricted to producing Request IR Candidate JSON from raw natural-language request text plus
+optional repo/session context. Analyzer output has `candidateAuthorityStatus: ai-generated-candidate-not-validated` and
+must pass deterministic `validate-request-ir` and `validate-request-ir-graph` before any traversal plan may be
+attempted.
+
+The preview records `analyzerImplemented: false`, `llmInvoked: false`, and `requestIrCandidateGenerated: false`.
+Analyzer output cannot directly drive graph traversal, selected graph slice generation, contract compiler input
+generation, instruction pack generation, Codex execution, graph-source mutation, graph delta apply, approval or human
+decision recording, runtime Evidence satisfaction, equivalence proof, scope enforcement, or CI enforcement. Future LLM
+inference time is outside the 5 second deterministic DevView runtime budget; the deterministic budget begins after a
+candidate exists and validation commands run.

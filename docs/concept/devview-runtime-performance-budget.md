@@ -23,6 +23,7 @@ Scope:
 The target excludes:
 
 - Codex or AI editing time;
+- future AI Request Analyzer / LLM inference time;
 - full test suite runtime;
 - full validation suite runtime;
 - CI runtime;
@@ -187,6 +188,16 @@ Natural language is the human request surface. A future AI analyzer may produce 
 is candidate-only and outside the deterministic runtime compiler path until validated. After Request IR validation,
 graph traversal and contract compiler input generation must remain local and deterministic. This task adds no AI runtime
 call, graph traversal, contract input generation, instruction pack generation, or measured runtime step.
+
+The AI Request Analyzer boundary preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json
+```
+
+It is outside the measured runtime path because no analyzer command exists and no LLM/API call is introduced. Future LLM
+inference time remains outside the 5 second deterministic DevView runtime budget. Only the post-candidate deterministic
+validation chain, starting with `validate-request-ir`, belongs in the advisory timing smoke.
 
 The Request IR Candidate schema and first calibration fixture are:
 

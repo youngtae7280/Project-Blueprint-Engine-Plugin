@@ -323,6 +323,13 @@ how a human request may become an AI Request IR candidate and then require deter
 traversal, selected node/edge slice generation, contract compiler input generation, or instruction pack generation. AI
 output remains candidate-only and cannot become source authority without validation.
 
+The AI Request Analyzer boundary preview is recorded in
+`examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json`. It
+defines the future analyzer as a candidate-only producer of Request IR Candidate JSON from raw natural language plus
+optional repo/session context. It does not implement an analyzer, call an LLM/API, generate a candidate, drive traversal,
+generate contract input or instruction packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve
+work, satisfy runtime Evidence, prove equivalence, or enforce scope.
+
 The Request IR Candidate schema and first calibration fixture are recorded in
 `examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json` and
 `examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json`. They
