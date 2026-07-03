@@ -336,6 +336,12 @@ validator checks required fields, enum values, candidate-only boundaries, confid
 not inspect graph-source, validate node/edge existence, run graph traversal, generate contract input, generate
 instruction packs, or call an LLM.
 
+The graph-aware validation boundary is previewed in
+`examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json`.
+It defines how a future deterministic pass may resolve candidate fields against graph/read-model authority after
+schema-only validation. It is not implemented graph-aware validation, not graph traversal, not selected graph slice
+generation, and not contract compiler input generation.
+
 The following readiness artifact is complete at documentation level:
 
 - [representative-runtime-feasibility-demo.md](representative-runtime-feasibility-demo.md)

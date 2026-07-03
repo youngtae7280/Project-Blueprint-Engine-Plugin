@@ -1956,3 +1956,26 @@ validate graph node or edge existence, run graph traversal, select graph slices,
 generate instruction packs, mutate graph-source, apply graph deltas, approve graph updates, record human decisions,
 change equivalence behavior, satisfy runtime Evidence, enforce scope, introduce CI required checks, change branch
 protection, or automate user acceptance.
+
+## DEC-242 Define Request IR Graph-Aware Validation Boundary
+
+DEC-242 does not supersede DEC-097 through DEC-241. It previews the Request IR graph-aware validation boundary that must
+exist between schema-only Request IR Candidate validation and graph traversal.
+
+The boundary preview is recorded in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json
+```
+
+The preview defines schema-only validation as a prerequisite, identifies graph/read-model authority inputs, and records
+future checks for `targetRecordIdCandidate`, `targetComponentCandidate`, `requestTypeCandidate`, `changeTypeCandidate`,
+scope intent candidates, required Evidence intent candidates, and risk intent candidates. For the Todo App calibration
+fixture it keeps `CH-001`, `Todo App`, `runtime-evidence-only`, and `test-only-behavior-proof` as candidate values that
+require future graph-aware validation.
+
+The boundary is preview-only. It does not implement graph-aware validation, run graph traversal, select nodes or edges,
+generate selected graph slice artifacts, generate contract compiler input, generate instruction packs, call an LLM,
+implement an AI classifier, mutate graph-source, apply graph deltas, approve graph updates, record human decisions,
+change equivalence behavior, satisfy runtime Evidence, enforce scope, introduce CI required checks, change branch
+protection, or automate user acceptance.

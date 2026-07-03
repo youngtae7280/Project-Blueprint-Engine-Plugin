@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "request-ir-graph-aware-validation-boundary-preview",
+  "status": "request-ir-graph-aware-validation-boundary-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "validatorName": "RequestIrGraphAwareValidator",
+  "validationScope": "graph-aware-boundary-preview",
+  "implementationStatus": "boundary-preview-only",
+  "graphAwareValidatorImplemented": false,
+  "graphTraversalExecuted": false,
+  "selectedGraphSliceGenerated": false,
+  "contractInputGenerated": false,
+  "instructionPackGenerated": false,
+  "aiClassifierImplemented": false,
+  "llmCallsIntroduced": false,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "approvalStatus": "not-approved",
+  "equivalenceProven": false,
+  "runtimeEvidenceSatisfied": false,
+  "scopeEnforced": false,
+  "ciEnforcementEnabled": false,
+  "schemaOnlyValidationPrerequisite": {
+    "required": true,
+    "sourceSchemaValidation": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json",
+    "requiredStatus": "schema-valid-graph-validation-not-run",
+    "schemaOnlyValidationIsTraversalAuthority": false,
+    "schemaOnlyValidationIsContractAuthority": false
+  },
+  "graphAwareValidationInputs": {
+    "requestIrCandidateFixture": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json",
+    "schemaOnlyRequestIrValidationResult": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json",
+    "readModelAggregateSummary": "examples/read-model-aggregate/generated/read-model-aggregate-summary.json",
+    "todoAppGraphSourceMetadata": "examples/valid/todo-app-pbe-run/graph-source.json",
+    "todoAppGraphSourceProjection": "examples/valid/todo-app-pbe-run/generated/graph-source-read-model-projection.json",
+    "compilerInputCalibrationDraft": "examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
+    "compilerInputCalibrationObservation": "examples/valid/todo-app-pbe-run/generated/compiler-input-calibration-observation.runtime-evidence-only.preview.json",
+    "naturalLanguageRequestIntakeBoundary": "examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json"
+  },
+  "inputBoundary": {
+    "schemaOnlyValidationIsPrerequisite": true,
+    "graphAwareValidationIsSeparatePass": true,
+    "graphAwareValidationImpliesTraversal": false,
+    "graphAwareValidationImpliesContractGeneration": false,
+    "graphAwareValidationImpliesInstructionPackGeneration": false,
+    "candidateOutputIsSourceAuthority": false
+  },
+  "candidateFieldsToValidate": {
+    "targetRecordIdCandidate": {
+      "candidateValue": "CH-001",
+      "authorityRequired": "graph-record-existence-or-structure-only-record-authority",
+      "currentBoundaryStatus": "requires-future-graph-aware-validation",
+      "validationStatusValues": ["not-run", "resolved", "unresolved", "ambiguous", "review-required"]
+    },
+    "targetComponentCandidate": {
+      "candidateValue": "Todo App",
+      "authorityRequired": "graph/read-model component identity",
+      "currentBoundaryStatus": "requires-future-graph-aware-validation",
+      "validationStatusValues": ["not-run", "resolved", "unresolved", "ambiguous", "review-required"]
+    },
+    "requestTypeCandidate": {
+      "candidateValue": "runtime-evidence-only",
+      "authorityRequired": "request-type taxonomy and calibration fixture policy",
+      "currentBoundaryStatus": "schema-valid-but-policy-compatibility-not-run",
+      "validationStatusValues": ["not-run", "resolved", "incompatible", "review-required"]
+    },
+    "changeTypeCandidate": {
+      "candidateValue": "test-only-behavior-proof",
+      "authorityRequired": "change type compatibility with Todo App runtime Evidence-only calibration fixture",
+      "currentBoundaryStatus": "requires-future-change-type-compatibility-validation",
+      "validationStatusValues": ["not-run", "resolved", "incompatible", "review-required"]
+    },
+    "allowedScopeIntentCandidate": {
+      "authorityRequired": "graph/read-model selected target plus policy-derived allowed scope",
+      "currentBoundaryStatus": "requires-future-scope-intent-validation",
+      "validationStatusValues": ["not-run", "resolved", "unresolved", "ambiguous", "review-required"]
+    },
+    "forbiddenScopeIntentCandidate": {
+      "authorityRequired": "policy snapshot and forbidden scope source authority",
+      "currentBoundaryStatus": "requires-future-scope-intent-validation",
+      "validationStatusValues": ["not-run", "resolved", "unresolved", "ambiguous", "review-required"]
+    },
+    "requiredEvidenceIntentCandidate": {
+      "authorityRequired": "Evidence policy and availability for runtime Evidence-only proof",
+      "currentBoundaryStatus": "requires-future-required-evidence-availability-validation",
+      "validationStatusValues": ["not-run", "resolved", "unresolved", "ambiguous", "review-required"]
+    },
+    "riskIntentCandidate": {
+      "authorityRequired": "risk vocabulary and graph/read-model risk policy",
+      "currentBoundaryStatus": "requires-future-risk-intent-validation",
+      "validationStatusValues": ["not-run", "resolved", "unresolved", "ambiguous", "review-required"]
+    }
+  },
+  "validationStatuses": {
+    "graphValidationStatus": "not-run",
+    "targetRecordValidationStatus": "not-run",
+    "targetComponentValidationStatus": "not-run",
+    "changeTypeCompatibilityStatus": "not-run",
+    "scopeIntentValidationStatus": "not-run",
+    "requiredEvidenceAvailabilityStatus": "not-run",
+    "riskIntentValidationStatus": "not-run",
+    "allowedValues": [
+      "not-run",
+      "resolved",
+      "unresolved",
+      "ambiguous",
+      "incompatible",
+      "review-required",
+      "validation-blocked"
+    ]
+  },
+  "futureTraversalAllowancePolicy": {
+    "graphTraversalAllowedOnlyWhen": [
+      "schema-only validation passed",
+      "target record is resolved",
+      "target component is resolved",
+      "changeType is compatible",
+      "required evidence policy is resolvable",
+      "no unresolved ambiguity remains"
+    ],
+    "graphTraversalAllowedWhenAnyConditionFails": false,
+    "contractGenerationAllowedDirectlyFromGraphAwareValidation": false,
+    "contractGenerationRequiresSelectedGraphSlice": true,
+    "instructionPackGenerationRequiresContractInput": true
+  },
+  "futureGraphAwareValidationResultShape": {
+    "validatorName": "RequestIrGraphAwareValidator",
+    "validationScope": "graph-aware-boundary-preview",
+    "sourceSchemaValidation": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json",
+    "candidatePath": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json",
+    "graphAuthorityInputs": [
+      "read-model aggregate summary",
+      "Todo App graph source metadata",
+      "Todo App graph source projection",
+      "compiler input calibration sources",
+      "calibration fixture metadata"
+    ],
+    "targetRecordResolution": {
+      "candidateValue": "CH-001",
+      "status": "not-run"
+    },
+    "targetComponentResolution": {
+      "candidateValue": "Todo App",
+      "status": "not-run"
+    },
+    "changeTypeCompatibility": {
+      "candidateValue": "test-only-behavior-proof",
+      "status": "not-run"
+    },
+    "scopeIntentResolution": {
+      "status": "not-run"
+    },
+    "requiredEvidenceResolution": {
+      "status": "not-run"
+    },
+    "riskIntentResolution": {
+      "status": "not-run"
+    },
+    "graphTraversalAllowed": false,
+    "contractGenerationAllowed": false,
+    "instructionPackGenerationAllowed": false,
+    "requiresClarification": false,
+    "humanReviewRequired": true,
+    "validationFindings": []
+  },
+  "currentPreviewOutputState": {
+    "graphValidationStatus": "not-run",
+    "graphTraversalAllowed": false,
+    "contractGenerationAllowed": false,
+    "instructionPackGenerationAllowed": false,
+    "graphTraversalExecuted": false,
+    "selectedGraphSliceGenerated": false,
+    "contractInputGenerated": false,
+    "instructionPackGenerated": false,
+    "requiresClarification": false,
+    "humanReviewRequired": true,
+    "validationFindings": []
+  },
+  "allowedUse": [
+    "define the future graph-aware Request IR validation boundary",
+    "identify graph/read-model authority inputs for candidate field validation",
+    "document that schema-only validation is prerequisite but not traversal authority",
+    "prepare a later graph-aware validator implementation slice"
+  ],
+  "forbiddenUse": [
+    "graph-aware validator implementation",
+    "graph traversal execution",
+    "selected node or edge slice generation",
+    "contract compiler input generation",
+    "instruction pack generation",
+    "AI classifier implementation",
+    "runtime LLM call",
+    "graph-source mutation",
+    "graph delta apply",
+    "approval recording",
+    "runtime Evidence satisfaction",
+    "equivalence proof",
+    "scope enforcement",
+    "diff rejection",
+    "CI required check",
+    "branch protection",
+    "user acceptance automation"
+  ],
+  "nonExecutionBoundary": "This artifact previews the Request IR graph-aware validation boundary only. It defines how a future deterministic pass may resolve schema-valid Request IR Candidate fields against graph/read-model authority before traversal. It does not implement graph-aware validation, run graph traversal, select nodes or edges, generate contract compiler input, generate instruction packs, call an LLM, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, reject diffs, configure required checks, change branch protection, or automate user acceptance."
+}

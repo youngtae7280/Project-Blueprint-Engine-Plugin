@@ -211,6 +211,17 @@ This validator checks candidate schema and safety boundaries only. A schema-vali
 `graphAuthorityValidationStatus: not-run`, `graphTraversalAllowed: false`, `contractGenerationAllowed: false`, and
 `instructionPackGenerationAllowed: false`.
 
+The graph-aware validation boundary is previewed separately:
+
+```text
+examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json
+```
+
+It is not a measured runtime command yet. It defines how a future deterministic pass may validate schema-valid candidate
+fields such as `CH-001`, `Todo App`, `runtime-evidence-only`, and `test-only-behavior-proof` against graph/read-model
+authority. The boundary does not run graph traversal, select nodes or edges, generate contract input, generate
+instruction packs, call an LLM, or mutate graph-source.
+
 ## Health Report Boundary
 
 `graph read-model report-health --json` exposes a small runtime budget summary:

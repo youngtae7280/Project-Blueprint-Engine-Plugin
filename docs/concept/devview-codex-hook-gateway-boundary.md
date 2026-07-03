@@ -131,6 +131,15 @@ These files do not implement hook behavior or AI classification. The validator c
 boundaries, but graph-aware validation remains future work. A schema-valid Request IR Candidate still cannot drive graph
 traversal, contract generation, or instruction pack generation.
 
+The graph-aware validation boundary is previewed as the next compiler-frontend prerequisite:
+
+```text
+examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json
+```
+
+It is still not hook behavior, not graph traversal, not selected graph slice generation, and not contract compiler input
+generation.
+
 ## Trust Boundary
 
 Project-local hooks require explicit trust and enablement. DevView must not assume a hook gateway is active until a future health check confirms:

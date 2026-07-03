@@ -633,6 +633,15 @@ validation, graph traversal plan, selected node/edge slice, and contract compile
 candidate-only: unvalidated AI output must not drive graph traversal, contract compiler input generation, or instruction
 pack generation. Hook Gateway remains activation/routing; Request Intake defines compiler frontend semantics.
 
+The graph-aware validation boundary is also previewed:
+
+```text
+examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json
+```
+
+It is the future bridge from schema-valid Request IR candidates to graph/read-model authority checks. It is not graph
+traversal and does not generate selected graph slices or contract input.
+
 ## Runtime Budget Smoke
 
 The deterministic DevView runtime budget is documented in

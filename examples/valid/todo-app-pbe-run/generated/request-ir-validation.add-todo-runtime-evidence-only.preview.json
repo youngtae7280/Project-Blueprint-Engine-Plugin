@@ -12,6 +12,9 @@
   "confidenceValidationStatus": "valid",
   "ambiguityValidationStatus": "human-review-required",
   "graphAuthorityValidationStatus": "not-run",
+  "graphAwareValidationBoundaryStatus": "request-ir-graph-aware-validation-boundary-previewed",
+  "graphAwareValidationBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json",
+  "graphAwareValidationRequiredBeforeTraversal": true,
   "graphTraversalAllowed": false,
   "contractGenerationAllowed": false,
   "instructionPackGenerationAllowed": false,
@@ -44,5 +47,7 @@
       "suggestedFix": "Resolve ambiguity through deterministic validation or human clarification before traversal."
     }
   ],
-  "nonExecutionBoundary": "This schema-only Request IR Candidate validator checks candidate structure and safety boundaries only. It does not call an LLM, inspect graph-source, validate graph node or edge existence, run graph traversal, select graph slices, generate contract compiler input, generate instruction packs, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, reject diffs, or configure required checks."
+  "nextValidationPass": "request-ir-graph-aware-validation-boundary",
+  "nextValidationPassArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json",
+  "nonExecutionBoundary": "This schema-only Request IR Candidate validator checks candidate structure and safety boundaries only. It links the graph-aware validation boundary as a future pass, but it does not call an LLM, inspect graph-source, validate graph node or edge existence, run graph traversal, select graph slices, generate contract compiler input, generate instruction packs, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, reject diffs, or configure required checks."
 }

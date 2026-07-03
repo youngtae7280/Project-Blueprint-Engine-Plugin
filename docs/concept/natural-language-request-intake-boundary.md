@@ -129,6 +129,28 @@ This is not graph-aware validation. It checks required fields, enum values, cand
 confidence policy, ambiguity policy, and the safety rule that unvalidated candidates cannot drive traversal or contract
 generation.
 
+## Graph-Aware Validation Boundary
+
+The future graph-aware validation boundary is previewed in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json
+```
+
+This boundary defines how a future deterministic pass may resolve schema-valid candidate fields against graph/read-model
+authority before traversal. The first calibration values remain candidates:
+
+```text
+targetRecordIdCandidate: CH-001
+targetComponentCandidate: Todo App
+requestTypeCandidate: runtime-evidence-only
+changeTypeCandidate: test-only-behavior-proof
+```
+
+The graph-aware boundary may later check target record resolution, target component resolution, change type
+compatibility, scope intent resolution, required Evidence availability, and risk intent resolution. It is still not
+graph traversal, selected graph slice generation, contract compiler input generation, or instruction pack generation.
+
 ## Request Type Taxonomy
 
 The first taxonomy is deliberately narrow:
@@ -159,10 +181,18 @@ AI may classify and propose. DevView validates. Deterministic graph traversal an
 
 ## Validation Boundary
 
-Future deterministic Request IR validation should check:
+The current schema-only Request IR validator checks:
 
 - enum values
 - required fields
+- candidate-only boundary fields
+- authority status
+- confidence and ambiguity policy
+- graph traversal remains disallowed from unvalidated candidates
+- contract generation remains disallowed from unvalidated candidates
+
+Future graph-aware Request IR validation should check:
+
 - graph record existence
 - target component existence
 - changeType compatibility
@@ -172,6 +202,7 @@ Future deterministic Request IR validation should check:
 
 Previewed validation statuses are:
 
+- `schema-valid-graph-validation-not-run`
 - `validated`
 - `validation-blocked`
 - `clarification-required`

@@ -76,6 +76,8 @@
   "validatorScope": "schema-and-boundary-only",
   "schemaOnlyValidationResult": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json",
   "graphAwareValidatorImplemented": false,
+  "graphAwareValidationBoundaryStatus": "request-ir-graph-aware-validation-boundary-previewed",
+  "graphAwareValidationBoundaryArtifact": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json",
   "graphTraversalAllowed": false,
   "contractGenerationAllowed": false,
   "instructionPackGenerationAllowed": false,
@@ -97,6 +99,7 @@
     "inputSchema": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json",
     "graphSourceMetadata": "examples/valid/todo-app-pbe-run/graph-source.json",
     "schemaOnlyValidationResult": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json",
+    "graphAwareValidationBoundary": "examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json",
     "expectedChecks": [
       "schema id and required fields",
       "requestTypeCandidate enum value",
@@ -130,6 +133,7 @@
   "allowedUse": [
     "serve as the first Request IR candidate calibration fixture",
     "exercise schema-only Request IR validation",
+    "exercise a future graph-aware validation boundary review",
     "document candidate-only classification for a runtime-evidence-only Todo App request",
     "preserve the boundary that medium confidence may only proceed to deterministic validation"
   ],
@@ -148,5 +152,5 @@
     "diff rejection",
     "CI required check"
   ],
-  "nonExecutionBoundary": "This artifact is the first Request IR candidate calibration fixture. It is candidate-only and not validated Request IR. It does not implement an AI classifier, call an LLM, run graph-aware Request IR validation, run graph traversal, select nodes or edges, generate contract compiler input, generate instruction packs, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, reject diffs, configure required checks, or automate user acceptance."
+  "nonExecutionBoundary": "This artifact is the first Request IR candidate calibration fixture. It is candidate-only and not validated Request IR. It links the graph-aware validation boundary as future review context, but it does not implement an AI classifier, call an LLM, run graph-aware Request IR validation, run graph traversal, select nodes or edges, generate contract compiler input, generate instruction packs, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, reject diffs, configure required checks, or automate user acceptance."
 }
