@@ -1,5 +1,6 @@
 import { relativePath } from '../core/fs.js'
 import { generateAiRequestAnalyzerPackFile } from '../core/ai-request-analyzer-pack.js'
+import { analyzeRequestFile } from '../core/ai-request-analyzer-run.js'
 import { generateClarificationInterviewPackFile } from '../core/clarification-interview-pack.js'
 import { compileExecutionContractDryRun } from '../core/contract-compiler-dry-run.js'
 import { collectGitDerivedChangedFiles } from '../core/git-derived-changed-file-collection.js'
@@ -849,6 +850,78 @@ export async function graphReadModelGenerateAiRequestAnalyzerPackCommand(
           message,
           suggestedFix:
             'Provide readable analyzer boundary and Request IR Candidate schema preview artifacts, plus dedicated preview output paths.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelAnalyzeRequestCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.request) {
+    return invalidCommand('graph read-model analyze-request requires --request <text>.')
+  }
+  if (!context.options.pack) {
+    return invalidCommand('graph read-model analyze-request requires --pack <aiRequestAnalyzerPackPath>.')
+  }
+
+  try {
+    const run = await analyzeRequestFile(context.options.root, context.options.request, context.options.pack, {
+      externalCandidate: context.options.externalCandidate,
+      output: context.options.output,
+    })
+    const blocked =
+      run.result.analyzerProviderStatus === 'provider-disabled' ||
+      run.result.validationFindings.some((finding) => finding.severity === 'error') ||
+      (Boolean(context.options.externalCandidate) && !run.result.requestIrCandidateGenerated)
+    const errorFindings = run.result.validationFindings.filter((finding) => finding.severity === 'error')
+
+    return {
+      ok: !blocked,
+      command: 'graph read-model analyze-request',
+      exitCode: blocked ? ExitCode.ValidationFailed : ExitCode.Success,
+      message: blocked
+        ? 'AI Request Analyzer provider is disabled or external candidate import was blocked before validation/traversal.'
+        : 'External Request IR Candidate imported as candidate-only without invoking an analyzer provider.',
+      issues: blocked
+        ? (errorFindings.length > 0 ? errorFindings : run.result.validationFindings).map((finding) =>
+            issue({
+              validator: 'AiRequestAnalyzerCommandSurface',
+              code:
+                finding.code === undefined && run.result.analyzerProviderStatus === 'provider-disabled'
+                  ? 'AI_REQUEST_ANALYZER_PROVIDER_DISABLED'
+                  : finding.code,
+              severity: finding.severity,
+              message: finding.message,
+              reason: finding.field ? `Field: ${finding.field}` : undefined,
+              suggestedFix:
+                finding.suggestedFix ??
+                'Provide an explicit --external-candidate generated from the same request, or configure a future trusted analyzer provider in a separate task.',
+            }),
+          )
+        : [],
+      data: {
+        ...run.result,
+        ...(run.outputPath ? { outputPath: run.outputPath } : {}),
+        next: blocked
+          ? 'Provider mode is disabled in this implementation. Import an explicit external Request IR Candidate, or configure a future trusted provider in a separate task. This command did not call an LLM, run validation, run traversal, generate selected slices, generate contract input, generate instruction packs, execute Codex, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.'
+          : 'Run graph read-model validate-request-ir on the imported candidate before graph-aware validation or traversal. This command did not call an LLM, run validation, run traversal, generate selected slices, generate contract input, generate instruction packs, execute Codex, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model analyze-request',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'AI Request Analyzer command surface could not run.',
+      issues: [
+        issue({
+          validator: 'AiRequestAnalyzerCommandSurface',
+          code: 'AI_REQUEST_ANALYZER_COMMAND_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide a readable analyzer pack, a matching explicit external candidate when provider mode is disabled, and a dedicated preview output path.',
         }),
       ],
     }

@@ -174,6 +174,8 @@ Commands:
                        Generate a human review packet from a proposal-only Graph Delta preview
   graph read-model generate-ai-request-analyzer-pack
                        Generate deterministic AI Request Analyzer prompt/input pack without LLM calls
+  graph read-model analyze-request
+                       Report provider-disabled analyzer status or import an explicit external Request IR Candidate
   graph read-model generate-clarification-interview-pack
                        Generate deterministic clarification question-plan pack without UI or LLM calls
   graph read-model revise-request-ir-candidate
@@ -242,7 +244,7 @@ Options:
   --graph-delta <file> Graph delta file for graph operation propose-update.
   --target-repo <path> Target git repository path for graph operation capture-delta.
   --manual <file>      Manual parity artifact for graph read-model comparison.
-  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, generate-ai-request-analyzer-pack, generate-clarification-interview-pack, revise-request-ir-candidate, validate-request-ir, validate-request-ir-graph, plan-traversal, select-slice, generate-contract-input, generate-instruction-pack, report-hook-gateway-health, or report-frontend-chain.
+  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, generate-ai-request-analyzer-pack, analyze-request, generate-clarification-interview-pack, revise-request-ir-candidate, validate-request-ir, validate-request-ir-graph, plan-traversal, select-slice, generate-contract-input, generate-instruction-pack, report-hook-gateway-health, or report-frontend-chain.
   --markdown <file>    Optional Markdown summary output for graph read-model report-health, check-scope, review-graph-delta, generate-ai-request-analyzer-pack, generate-clarification-interview-pack, generate-instruction-pack, or report-frontend-chain.
   --proposal <file>    Graph update proposal file for graph operation apply-proposal or graph read-model review-graph-delta.
   --candidate <file>   Request IR Candidate file for graph read-model validate-request-ir or generate-clarification-interview-pack.
@@ -256,6 +258,10 @@ Options:
                        Selected Graph Slice file for graph read-model generate-contract-input.
   --contract-input <file>
                        Contract Compiler Input file for graph read-model generate-instruction-pack.
+  --request <text>     Natural-language request text for graph read-model analyze-request.
+  --pack <file>        AI Request Analyzer Pack file for graph read-model analyze-request.
+  --external-candidate <file>
+                       Explicit precomputed Request IR Candidate import for graph read-model analyze-request.
   --clarification-pack <file>
                        Clarification Interview Pack file for graph read-model revise-request-ir-candidate.
   --answers <file>     Clarification answers file for graph read-model revise-request-ir-candidate.

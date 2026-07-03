@@ -1903,6 +1903,25 @@ examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runt
 It is generated from the analyzer boundary and Request IR Candidate schema previews. It is not an analyzer
 implementation, does not call an LLM/API, and does not generate a Request IR Candidate.
 
+The analyzer command surface is implemented with provider execution disabled. The Todo App provider-disabled run-result
+preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-run.provider-disabled.add-todo-runtime-evidence-only.preview.json
+```
+
+The command is:
+
+```text
+graph read-model analyze-request --request <naturalLanguageText> --pack <aiRequestAnalyzerPackPath> --json
+```
+
+Without `--external-candidate`, the command records `analyzerProviderStatus: provider-disabled`,
+`llmInvoked: false`, `networkCallsAllowed: false`, `requestIrCandidateGenerated: false`, and
+`candidateImportRequired: true`. With `--external-candidate`, it can import a precomputed Request IR Candidate only as
+candidate-only output after checking request text, schema id, and unsafe authority escalation. Imported candidates still
+require `validate-request-ir` and `validate-request-ir-graph` before traversal.
+
 The clarification interview boundary preview is:
 
 ```text

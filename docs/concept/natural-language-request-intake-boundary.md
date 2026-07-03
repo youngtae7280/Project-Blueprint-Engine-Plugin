@@ -101,6 +101,39 @@ The prompt pack cannot drive graph traversal, selected slice generation, Contrac
 Instruction Pack generation, Codex execution, graph-source mutation, graph delta apply, approval, runtime Evidence
 satisfaction, equivalence proof, or enforcement.
 
+## AI Request Analyzer Command Surface
+
+The analyzer command surface is now available without enabling a provider:
+
+```text
+graph read-model analyze-request --request <naturalLanguageText> --pack <aiRequestAnalyzerPackPath> --json
+```
+
+The current provider mode is disabled by design. Without `--external-candidate`, the command reports
+`analyzerProviderStatus: provider-disabled`, `llmInvoked: false`, `networkCallsAllowed: false`,
+`requestIrCandidateGenerated: false`, and `candidateImportRequired: true`. The Todo App calibration provider-disabled
+run-result preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-run.provider-disabled.add-todo-runtime-evidence-only.preview.json
+```
+
+The only current candidate-producing mode is explicit external import:
+
+```text
+graph read-model analyze-request --request <naturalLanguageText> --pack <aiRequestAnalyzerPackPath> --external-candidate <candidatePath> --output <candidateOutputPath> --json
+```
+
+External import does not invoke a provider and does not validate the candidate. The command checks that candidate
+request text matches the CLI request, the candidate schema matches the analyzer pack, and the candidate does not claim
+traversal, contract, instruction, approval, graph mutation, graph apply, runtime Evidence, equivalence, scope, or CI
+authority. Imported candidates are normalized to candidate-only output and must still run through `validate-request-ir`
+and `validate-request-ir-graph` before traversal.
+
+This command surface is intended for future Hook Gateway/session integration, but it still does not implement an
+LLM/API provider, hook script, Codex execution, graph-source mutation, graph delta apply, approval, runtime Evidence
+satisfaction, equivalence proof, or enforcement.
+
 ## Clarification Interview Boundary
 
 The clarification interview boundary preview is:

@@ -15,6 +15,7 @@ import {
   graphOperationProposeUpdateCommand,
   graphOperationRunChainCommand,
   graphReadModelCheckScopeCommand,
+  graphReadModelAnalyzeRequestCommand,
   graphRetrofitPlanCommand,
   graphReadModelCollectChangedFilesCommand,
   graphReadModelCompareCommand,
@@ -240,6 +241,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'generate-ai-request-analyzer-pack') {
     return graphReadModelGenerateAiRequestAnalyzerPackCommand(context)
+  }
+  if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'analyze-request') {
+    return graphReadModelAnalyzeRequestCommand(context)
   }
   if (
     command === 'graph' &&

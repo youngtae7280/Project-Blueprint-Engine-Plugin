@@ -279,6 +279,18 @@ does not run analysis, validation, traversal, contract generation, execution ins
 execution, graph mutation, graph delta apply, approval, runtime Evidence satisfaction, equivalence proof, enforcement,
 or CI configuration. Future LLM inference time remains outside this deterministic runtime budget.
 
+The `analyze-request` command surface is not part of the core-critical lane by default. In the current implementation,
+provider execution is disabled and no LLM/API/network call is made:
+
+```text
+graph read-model analyze-request --request <naturalLanguageText> --pack <aiRequestAnalyzerPackPath> --json
+```
+
+Without `--external-candidate`, it returns a provider-disabled blocked result. With `--external-candidate`, it imports a
+precomputed Request IR Candidate as candidate-only output and still requires the deterministic validation path before
+traversal. Future provider inference time remains outside the 5 second deterministic budget until a separate provider
+trust/runtime policy decides otherwise.
+
 The clarification interview boundary preview is outside the measured runtime path:
 
 ```text

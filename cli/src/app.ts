@@ -123,6 +123,9 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     manual: undefined as string | undefined,
     output: undefined as string | undefined,
     markdown: undefined as string | undefined,
+    request: undefined as string | undefined,
+    pack: undefined as string | undefined,
+    externalCandidate: undefined as string | undefined,
     proposal: undefined as string | undefined,
     candidate: undefined as string | undefined,
     schemaValidation: undefined as string | undefined,
@@ -352,6 +355,27 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--markdown requires a file path.' }
       }
       options.markdown = value
+      index += 1
+    } else if (arg === '--request') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--request requires text.' }
+      }
+      options.request = value
+      index += 1
+    } else if (arg === '--pack') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--pack requires a file path.' }
+      }
+      options.pack = value
+      index += 1
+    } else if (arg === '--external-candidate') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--external-candidate requires a file path.' }
+      }
+      options.externalCandidate = value
       index += 1
     } else if (arg === '--proposal') {
       const value = argv[index + 1]

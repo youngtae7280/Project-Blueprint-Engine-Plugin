@@ -2516,3 +2516,45 @@ This decision does not call an LLM/API, implement an interview UI, run Request I
 generate selected graph slices, generate Contract Compiler Input, generate Instruction Packs, trigger Codex execution,
 mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy runtime Evidence, prove
 equivalence, enforce scope, introduce CI required checks, change branch protection, or automate user acceptance.
+
+## DEC-258 Add AI Request Analyzer Command Surface
+
+DEC-258 does not supersede DEC-097 through DEC-257. It implements the first `analyze-request` CLI surface for the future
+AI Request Analyzer while keeping provider execution disabled.
+
+The command is exposed through:
+
+```text
+graph read-model analyze-request --request <naturalLanguageText> --pack <aiRequestAnalyzerPackPath> --json
+```
+
+The implementation is recorded in:
+
+```text
+cli/src/core/ai-request-analyzer-run.ts
+```
+
+The Todo App provider-disabled run-result preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-run.provider-disabled.add-todo-runtime-evidence-only.preview.json
+```
+
+Without `--external-candidate`, the command is blocked with `analyzerProviderStatus: provider-disabled`,
+`llmInvoked: false`, `networkCallsAllowed: false`, `requestIrCandidateGenerated: false`, and
+`candidateImportRequired: true`. With `--external-candidate`, the command may import a precomputed Request IR Candidate
+only after checking request text consistency, analyzer pack schema consistency, candidate-only safety fields, and unsafe
+authority escalation. Imported candidates are normalized to `artifactRole: request-ir-candidate`,
+`requestIrCandidateStatus: candidate-only`, `authorityStatus: not-authoritative-until-validated`,
+`graphTraversalAllowed: false`, `contractGenerationAllowed: false`, and `instructionPackGenerationAllowed: false`.
+
+Explicit output paths are guarded before writing so they cannot overwrite the analyzer pack, external candidate, linked
+boundary/schema/intake/clarification artifacts, graph-source/read-model authority, evidence paths, or
+source-authority-shaped JSON. Provider-disabled mode may write only an analyzer run-result preview. Blocked external
+candidate imports do not write partial candidate output.
+
+This decision does not implement an analyzer provider, call an LLM/API, make network calls, run Request IR validation,
+run graph traversal, generate selected graph slices, generate Contract Compiler Input, generate Instruction Packs,
+trigger Codex execution, mutate graph-source, apply graph deltas, approve graph updates, record human decisions, satisfy
+runtime Evidence, prove equivalence, enforce scope, introduce CI required checks, change branch protection, or automate
+user acceptance.
