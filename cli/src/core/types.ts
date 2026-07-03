@@ -88,6 +88,11 @@ export interface CliOptions {
   pack?: string
   externalCandidate?: string
   proposal?: string
+  reviewPacket?: string
+  decision?: string
+  reviewer?: string
+  rationale?: string
+  runtimeReport?: string
   candidate?: string
   schemaValidation?: string
   graphValidation?: string

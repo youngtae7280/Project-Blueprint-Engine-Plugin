@@ -127,6 +127,11 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     pack: undefined as string | undefined,
     externalCandidate: undefined as string | undefined,
     proposal: undefined as string | undefined,
+    reviewPacket: undefined as string | undefined,
+    decision: undefined as string | undefined,
+    reviewer: undefined as string | undefined,
+    rationale: undefined as string | undefined,
+    runtimeReport: undefined as string | undefined,
     candidate: undefined as string | undefined,
     schemaValidation: undefined as string | undefined,
     graphValidation: undefined as string | undefined,
@@ -392,6 +397,41 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--proposal requires a file path.' }
       }
       options.proposal = value
+      index += 1
+    } else if (arg === '--review-packet') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--review-packet requires a file path.' }
+      }
+      options.reviewPacket = value
+      index += 1
+    } else if (arg === '--decision') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--decision requires a value.' }
+      }
+      options.decision = value
+      index += 1
+    } else if (arg === '--reviewer') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--reviewer requires a value.' }
+      }
+      options.reviewer = value
+      index += 1
+    } else if (arg === '--rationale') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--rationale requires a value.' }
+      }
+      options.rationale = value
+      index += 1
+    } else if (arg === '--runtime-report') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--runtime-report requires a file path.' }
+      }
+      options.runtimeReport = value
       index += 1
     } else if (arg === '--candidate') {
       const value = argv[index + 1]

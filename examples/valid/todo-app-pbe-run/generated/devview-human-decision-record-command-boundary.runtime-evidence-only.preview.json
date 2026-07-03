@@ -6,11 +6,11 @@
   "boundaryScope": "future-human-decision-record-command-preview-only",
   "phase": "phase-13-human-decision-approved-apply-boundary",
   "sourceBoundary": "examples/valid/todo-app-pbe-run/generated/devview-human-decision-record-boundary.runtime-evidence-only.preview.json",
-  "futureCommand": "graph read-model record-human-decision --review-packet <packet> --proposal <proposal> --decision <value> --output <decisionRecord> --json",
-  "futureMarkdownCommand": "graph read-model record-human-decision --review-packet <packet> --proposal <proposal> --decision <value> --output <decisionRecord> --markdown <decisionRecordSummary> --json",
-  "commandImplemented": false,
-  "cliSurfaceAdded": false,
-  "humanDecisionRecordImplemented": false,
+  "command": "graph read-model record-human-decision --review-packet <packet> --proposal <proposal> --decision <value> --reviewer <identity> --rationale <text> --output <decisionRecord> --json",
+  "markdownCommand": "graph read-model record-human-decision --review-packet <packet> --proposal <proposal> --decision <value> --reviewer <identity> --rationale <text> --output <decisionRecord> --markdown <decisionRecordSummary> --json",
+  "commandImplemented": true,
+  "cliSurfaceAdded": true,
+  "humanDecisionRecordImplemented": true,
   "humanDecisionRecorded": false,
   "approvalStatus": "not-approved",
   "approvedProposalStateCreated": false,
@@ -50,13 +50,13 @@
     {
       "option": "--reviewer",
       "inputRole": "human-reviewer-identity",
-      "required": "future-policy-required-before-implementation",
+      "required": true,
       "authorityBoundary": "Reviewer identity must be human-provided or explicitly configured."
     },
     {
       "option": "--rationale",
       "inputRole": "human-authored-rationale",
-      "required": "future-policy-required-before-implementation",
+      "required": true,
       "authorityBoundary": "Rationale must be authored by the human reviewer."
     },
     {
@@ -69,33 +69,33 @@
   "futureValidationPreview": [
     {
       "checkId": "boundary-source-match",
-      "description": "Future command must read the Human Decision Record boundary and verify command vocabulary is current.",
-      "implementedNow": false
+      "description": "Command must read the Human Decision Record boundary and verify command vocabulary is current.",
+      "implementedNow": true
     },
     {
       "checkId": "review-packet-provenance",
-      "description": "Future command must verify the review packet matches the proposal being decided.",
-      "implementedNow": false
+      "description": "Command must verify the review packet matches the proposal being decided.",
+      "implementedNow": true
     },
     {
       "checkId": "proposal-status",
-      "description": "Future command must reject stale, already-approved, already-applied, or source-mutating proposal inputs.",
-      "implementedNow": false
+      "description": "Command must reject stale, already-approved, already-applied, or source-mutating proposal inputs.",
+      "implementedNow": true
     },
     {
       "checkId": "decision-vocabulary",
-      "description": "Future command must accept only allowed decision values from the boundary vocabulary.",
-      "implementedNow": false
+      "description": "Command must accept only allowed decision values from the boundary vocabulary.",
+      "implementedNow": true
     },
     {
       "checkId": "human-provenance",
-      "description": "Future command must require explicit human provenance and must reject Codex/AI self-approval claims.",
-      "implementedNow": false
+      "description": "Command must require explicit human provenance and must reject Codex/AI self-approval claims.",
+      "implementedNow": true
     },
     {
       "checkId": "no-implicit-apply",
-      "description": "Future command must not apply graph deltas or mutate graph-source while recording a decision.",
-      "implementedNow": false
+      "description": "Command must not apply graph deltas or mutate graph-source while recording a decision.",
+      "implementedNow": true
     }
   ],
   "futureOutputAuthorityPolicyPreview": {
@@ -119,7 +119,7 @@
   },
   "futureDecisionRecordOutputPreview": {
     "artifactRole": "devview-human-decision-record",
-    "status": "future-human-decision-record-created-by-human-authored-command",
+    "status": "devview-human-decision-record-created",
     "decisionValue": "<one-of-allowed-values>",
     "approvalStatus": "depends-on-decision-value-in-future-command",
     "approvedProposalStateCreated": false,
@@ -131,7 +131,7 @@
     "ciEnforcementEnabled": false
   },
   "allowedUse": [
-    "document future record-human-decision command inputs",
+    "document record-human-decision command inputs",
     "define future validation requirements before implementation",
     "define output authority guard expectations before implementation",
     "preserve separation between decision record, approved proposal state, and graph delta apply"
@@ -163,7 +163,7 @@
   "nextFutureStepsPreview": [
     {
       "step": "record-human-decision-command-implementation",
-      "status": "future-not-implemented"
+      "status": "implemented-explicit-record-only"
     },
     {
       "step": "approved-proposal-state-boundary",
@@ -174,5 +174,5 @@
       "status": "future-not-implemented"
     }
   ],
-  "nonExecutionBoundary": "This artifact previews the future Human Decision Record command boundary only. It does not add a CLI command, record a human decision, approve a proposal, create approved proposal state, apply a graph delta, mutate graph-source, satisfy runtime Evidence, prove equivalence, enforce scope, configure CI or required checks, change branch protection, or replace user acceptance."
+  "nonExecutionBoundary": "This artifact previews the Human Decision Record command boundary. The command records explicit human decision metadata only. It does not approve a proposal, create approved proposal state, apply a graph delta, mutate graph-source, satisfy runtime Evidence, prove equivalence, enforce scope, configure CI or required checks, change branch protection, or replace user acceptance."
 }

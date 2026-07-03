@@ -311,17 +311,16 @@ mutate graph-source, apply graph deltas, satisfy runtime Evidence, enforce scope
 
 The Human Decision Record boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-human-decision-record-boundary.runtime-evidence-only.preview.json`.
-It defines the future human-authored decision record shape after a Human Review Packet, including decision values such
-as `approve-proposal`, `reject-proposal`, `request-revision`, and `defer-decision`. It does not implement a decision
-recording command, create approved proposal state, mutate graph-source, apply graph deltas, satisfy runtime Evidence,
-prove equivalence, enforce scope, or configure CI.
+It defines the human-authored decision record shape after a Human Review Packet, including decision values such as
+`approve-proposal`, `reject-proposal`, `request-revision`, and `defer-decision`.
 
 The Human Decision Record command boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-human-decision-record-command-boundary.runtime-evidence-only.preview.json`.
-It defines the future `graph read-model record-human-decision ...` command contract, input validation, and output
-authority policy before implementation. No CLI surface is added yet, and it still does not record decisions, approve
-proposals, create approved proposal state, apply graph deltas, mutate graph-source, satisfy Evidence, prove equivalence,
-or enforce scope/CI.
+The `graph read-model record-human-decision ...` command now records an explicit human decision preview artifact such as
+`examples/valid/todo-app-pbe-run/generated/devview-human-decision-record.defer-decision.runtime-evidence-only.preview.json`.
+It requires proposal/review provenance, explicit human reviewer identity, and a rationale. It still does not create
+approved proposal state, apply graph deltas, mutate graph-source, satisfy Evidence, prove equivalence, or enforce
+scope/CI.
 
 The Approved Proposal State boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-approved-proposal-state-boundary.runtime-evidence-only.preview.json`.

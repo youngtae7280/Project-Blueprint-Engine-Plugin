@@ -2931,3 +2931,26 @@ branch protection changes, approval automation, and user acceptance automation.
 This decision does not implement missing future actions, execute Codex, call an LLM/API, activate hooks, record human
 decisions, approve proposals, apply graph deltas, mutate graph-source, accept Evidence, satisfy runtime Evidence, prove
 equivalence, enforce scope, introduce CI required checks, change branch protection, or automate user acceptance.
+
+## DEC-272 Record Explicit Human Decision Preview
+
+DEC-272 does not supersede DEC-097 through DEC-271. It implements the `graph read-model record-human-decision` command
+as an explicit human decision record surface without approved proposal state creation or apply.
+
+The Todo App calibration artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-human-decision-record.defer-decision.runtime-evidence-only.preview.json
+```
+
+The command consumes a proposal-only Graph Delta preview, a Human Review Packet, an explicit decision value from the
+Human Decision Record boundary vocabulary, a human reviewer identity, and a human-authored rationale. The calibration
+decision uses `defer-decision`, leaving the proposal unapproved.
+
+Output authority guards reject attempts to overwrite the boundary, review packet, proposal, runtime report,
+graph-source-shaped artifacts, Evidence/source artifacts, or selected frontend/source artifacts. Unsafe Markdown output
+prevents JSON output from being written first.
+
+This decision records decision metadata only. It does not create approved proposal state, apply graph deltas, mutate
+graph-source, accept Evidence, satisfy runtime Evidence, prove equivalence, enforce scope, introduce CI required checks,
+change branch protection, automate approval, or automate user acceptance.

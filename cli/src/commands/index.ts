@@ -36,6 +36,7 @@ import {
   graphReadModelProjectCommand,
   graphReadModelProjectIntentCommand,
   graphReadModelReviewGraphDeltaCommand,
+  graphReadModelRecordHumanDecisionCommand,
   graphReadModelReviseRequestIrCandidateCommand,
   graphReadModelReportHookGatewayHealthCommand,
   graphReadModelReportCompilerBoundaryCommand,
@@ -243,6 +244,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'review-graph-delta') {
     return graphReadModelReviewGraphDeltaCommand(context)
+  }
+  if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'record-human-decision') {
+    return graphReadModelRecordHumanDecisionCommand(context)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'generate-ai-request-analyzer-pack') {
     return graphReadModelGenerateAiRequestAnalyzerPackCommand(context)

@@ -1837,11 +1837,9 @@ The Human Decision Record boundary preview is:
 examples/valid/todo-app-pbe-run/generated/devview-human-decision-record-boundary.runtime-evidence-only.preview.json
 ```
 
-It defines the future human-authored decision record shape after a Human Review Packet and before any approved proposal
+It defines the human-authored decision record shape after a Human Review Packet and before any approved proposal
 state. The allowed future decision vocabulary is `approve-proposal`, `reject-proposal`, `request-revision`, and
-`defer-decision`, but the boundary itself records no decision and creates no approval. It does not implement a decision
-recording command, create approved proposal state, mutate graph-source, apply graph deltas, satisfy runtime Evidence,
-prove equivalence, reject diffs, enforce scope, configure required checks, or automate user acceptance.
+`defer-decision`, but the boundary itself records no decision and creates no approval.
 
 The Human Decision Record command boundary preview is:
 
@@ -1849,17 +1847,23 @@ The Human Decision Record command boundary preview is:
 examples/valid/todo-app-pbe-run/generated/devview-human-decision-record-command-boundary.runtime-evidence-only.preview.json
 ```
 
-It previews the future command:
+It previews the command:
 
 ```text
 graph read-model record-human-decision --review-packet <packet> --proposal <proposal> --decision <value> --output <decisionRecord> --json
 ```
 
-The command is not implemented. The preview defines expected inputs, future validation checks, and output authority
-guards so the eventual command cannot overwrite source review/proposal/graph artifacts or silently apply a graph delta.
-It still does not record a decision, approve a proposal, create approved proposal state, mutate graph-source, apply graph
-deltas, satisfy runtime Evidence, prove equivalence, reject diffs, enforce scope, configure required checks, or automate
-user acceptance.
+The command is now implemented as explicit human decision metadata recording. The first calibration decision record is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-human-decision-record.defer-decision.runtime-evidence-only.preview.json
+```
+
+It records `decisionValue: defer-decision` and `humanDecisionRecorded: true`, while keeping
+`approvedProposalStateCreated`, `graphDeltaApplied`, `graphSourceMutated`, `runtimeEvidenceSatisfied`,
+`equivalenceProven`, `scopeEnforced`, and `ciEnforcementEnabled` false. It still does not approve a proposal, create
+approved proposal state, mutate graph-source, apply graph deltas, satisfy runtime Evidence, prove equivalence, reject
+diffs, enforce scope, configure required checks, or automate user acceptance.
 
 The Approved Proposal State boundary preview is:
 

@@ -496,6 +496,42 @@ node dist/cli/index.js graph read-model review-graph-delta `
   --json
 ```
 
+### `pbe graph read-model record-human-decision`
+
+- Purpose: Record an explicit human-authored decision for a proposal under review without creating approved proposal
+  state or applying anything.
+- Typical state before running: After `graph read-model propose-graph-delta` and `graph read-model review-graph-delta`
+  have produced proposal and review-packet inputs.
+- Options: `--review-packet <packetPath>`, `--proposal <proposalPath>`, `--decision <value>`, `--reviewer <identity>`,
+  and `--rationale <text>` are required. `--boundary <file>` is optional but recommended. `--output <file>` and
+  `--markdown <file>` may write explicit decision-record outputs.
+- What it checks: proposal-only boundaries, review-packet provenance, decision vocabulary, explicit human reviewer and
+  rationale, no Codex/AI reviewer identity, and output authority.
+- What it writes: Nothing by default. It writes only to explicit `--output` and `--markdown` paths.
+- Success result: JSON with `artifactRole: devview-human-decision-record`, `humanDecisionRecorded: true`, and
+  `approvedProposalStateCreated: false`, `graphDeltaApplied: false`, `graphSourceMutated: false`,
+  `runtimeEvidenceSatisfied: false`, `equivalenceProven: false`, `scopeEnforced: false`, and
+  `ciEnforcementEnabled: false`.
+- Common failures: invalid decision value, missing human provenance, proposal/review mismatch, unsafe proposal or review
+  packet boundary fields, or output paths that would overwrite source/proposal/review/evidence/graph artifacts.
+- Next command: For `approve-proposal`, a separate future approved-proposal-state command may consume the record. This
+  command itself never creates approved state, applies graph deltas, mutates graph-source, accepts Evidence, proves
+  equivalence, enforces scope, or configures CI.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model record-human-decision `
+  --boundary examples/valid/todo-app-pbe-run/generated/devview-human-decision-record-boundary.runtime-evidence-only.preview.json `
+  --review-packet .tmp/devview-graph-delta-review-packet.json `
+  --proposal .tmp/devview-graph-delta-proposal.preview.json `
+  --decision defer-decision `
+  --reviewer human-reviewer `
+  --rationale "Calibration defers approval; no graph-source mutation is authorized." `
+  --output .tmp/devview-human-decision-record.json `
+  --json
+```
+
 ### `pbe graph read-model generate-ai-request-analyzer-pack`
 
 - Purpose: Generate deterministic AI Request Analyzer prompt/input contract JSON, and optionally Markdown, from the

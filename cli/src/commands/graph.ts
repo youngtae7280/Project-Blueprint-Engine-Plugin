@@ -7,6 +7,7 @@ import { collectGitDerivedChangedFiles } from '../core/git-derived-changed-file-
 import { generateGraphDeltaHumanReviewPacket } from '../core/graph-delta-human-review-packet.js'
 import { generateGraphTraversalPlanFile } from '../core/graph-traversal-plan.js'
 import { generateContractCompilerInputFile } from '../core/contract-input-generator.js'
+import { recordHumanDecisionFile } from '../core/human-decision-record.js'
 import { reportHookGatewayHealthFile } from '../core/hook-gateway-health-report.js'
 import { reportHookActivationChainFile } from '../core/hook-activation-chain-report.js'
 import { generateHookSessionManifestFile } from '../core/hook-session-manifest.js'
@@ -781,6 +782,72 @@ export async function graphReadModelReviewGraphDeltaCommand(context: CommandCont
           message,
           suggestedFix:
             'Provide a readable proposal-only Graph Delta preview with proposalOnly=true, graphSourceMutated=false, graphDeltaApplied=false, requiresHumanReview=true, approvalStatus=not-approved, nonEnforcing=true, and enforcementStatus=not-enforced.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelRecordHumanDecisionCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.reviewPacket) {
+    return invalidCommand('graph read-model record-human-decision requires --review-packet <packetPath>.')
+  }
+  if (!context.options.proposal) {
+    return invalidCommand('graph read-model record-human-decision requires --proposal <proposalPath>.')
+  }
+  if (!context.options.decision) {
+    return invalidCommand('graph read-model record-human-decision requires --decision <value>.')
+  }
+  if (!context.options.reviewer) {
+    return invalidCommand('graph read-model record-human-decision requires --reviewer <humanReviewerIdentity>.')
+  }
+  if (!context.options.rationale) {
+    return invalidCommand('graph read-model record-human-decision requires --rationale <humanAuthoredRationale>.')
+  }
+
+  try {
+    const result = await recordHumanDecisionFile(context.options.root, {
+      boundary: context.options.boundary,
+      reviewPacket: context.options.reviewPacket,
+      proposal: context.options.proposal,
+      decision: context.options.decision,
+      reviewer: context.options.reviewer,
+      rationale: context.options.rationale,
+      runtimeReport: context.options.runtimeReport,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph read-model record-human-decision',
+      exitCode: ExitCode.Success,
+      message: 'Human decision record created without approved state, apply, mutation, or enforcement.',
+      issues: [],
+      data: {
+        ...result.record,
+        ...(result.outputPath ? { outputPath: result.outputPath } : {}),
+        ...(result.markdownReport ? { markdownReport: result.markdownReport } : {}),
+        next:
+          result.record.decisionValue === 'approve-proposal'
+            ? 'A separate future approved-proposal-state command may consume this record. This command did not create that state, apply graph deltas, mutate graph-source, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.'
+            : 'Proposal remains unapproved. This command did not create approved proposal state, apply graph deltas, mutate graph-source, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model record-human-decision',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Human decision record creation blocked.',
+      issues: [
+        issue({
+          validator: 'HumanDecisionRecord',
+          code: 'HUMAN_DECISION_RECORD_BLOCKED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide readable boundary, review packet, proposal-only preview, explicit human reviewer, rationale, and dedicated decision-record output paths. Do not use Codex/AI identities or overwrite source authority artifacts.',
         }),
       ],
     }

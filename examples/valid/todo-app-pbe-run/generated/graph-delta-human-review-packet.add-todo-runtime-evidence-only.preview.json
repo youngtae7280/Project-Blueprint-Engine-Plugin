@@ -1,0 +1,65 @@
+{
+  "ok": true,
+  "command": "graph read-model review-graph-delta",
+  "exitCode": 0,
+  "message": "Graph Delta human review packet created without approval or apply.",
+  "issues": [],
+  "schemaVersion": 1,
+  "artifactRole": "graph-delta-human-review-packet",
+  "reviewPacketStatus": "review-required",
+  "sourceProposal": "examples/valid/todo-app-pbe-run/generated/graph-delta-proposal.add-todo-runtime-evidence-only.preview.json",
+  "proposalId": "proposal-only-preview-ch-001",
+  "schemaId": "pbe-graph-update-proposal-v0",
+  "sourceRecordIdCandidate": "CH-001",
+  "sourceRecordIdAuthorityStatus": "structure-only-review-candidate",
+  "proposalGenerationStatus": "generated-proposal-only-preview",
+  "changedFileCount": 0,
+  "proposedNodeUpdateCount": 0,
+  "candidateEvidenceLinkCount": 3,
+  "candidateRuntimeReportLinkCount": 1,
+  "humanReviewQuestions": [
+    "Source record identity remains candidate-only and requires human review.",
+    "Confirm whether sourceRecordIdCandidate CH-001 is the correct graph-source record before any proposal apply path is considered.",
+    "Decide whether candidate Evidence/runtime report links should be accepted as Evidence under a future explicit policy.",
+    "Decide a default graphDeltaPath/output policy before any tracked proposal output convention is introduced."
+  ],
+  "blockingReviewItems": [],
+  "reviewRequiredItems": [
+    "Human decision must remain separate from packet generation.",
+    "Source record identity is candidate-only and requires human review.",
+    "Human review questions remain unanswered."
+  ],
+  "candidateOnlyItems": [
+    "Proposal preview is candidate-only and unapproved.",
+    "Candidate Evidence links are not accepted Evidence.",
+    "Candidate runtime report links are review context only.",
+    "Source record identity remains review-required unless separately confirmed by graph-source authority."
+  ],
+  "approvalStatus": "not-approved",
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "humanDecisionRecorded": false,
+  "candidateEvidenceAccepted": false,
+  "runtimeEvidenceSatisfied": false,
+  "equivalenceProven": false,
+  "nonEnforcing": true,
+  "enforcementStatus": "not-enforced",
+  "allowedUse": [
+    "review proposal-only Graph Delta preview boundaries",
+    "summarize candidate-only graph updates and Evidence/report links for a human developer",
+    "prepare questions for a future explicit human decision record"
+  ],
+  "forbiddenUse": [
+    "approval recording",
+    "graph-source mutation",
+    "graph delta apply",
+    "runtime Evidence satisfaction",
+    "equivalence proof",
+    "scope enforcement",
+    "diff rejection",
+    "CI required check",
+    "user acceptance automation"
+  ],
+  "markdownReport": "examples/valid/todo-app-pbe-run/generated/graph-delta-human-review-packet.add-todo-runtime-evidence-only.preview.md",
+  "next": "Use this packet as review input only. This command does not record approval, mutate graph-source, apply graph deltas, satisfy runtime Evidence, prove equivalence, enforce scope, reject diffs, or create required checks."
+}
