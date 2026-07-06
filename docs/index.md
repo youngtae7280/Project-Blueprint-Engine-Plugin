@@ -104,19 +104,23 @@
   affect traversal or contracts.
 - DevView roadmap completion audit preview -
   `examples/valid/todo-app-pbe-run/generated/devview-roadmap-completion-audit.runtime-evidence-only.preview.json`
-  summarizes Phase 1 through Phase 13 evidence without adding execution, approval automation, apply, Evidence
-  acceptance, graph-source mutation, equivalence proof, scope enforcement, CI authority, required checks, branch
-  protection, or diff rejection.
+  summarizes Phase 1 through Phase 13 evidence, including the refreshed approved apply dry-run, guarded apply report,
+  Evidence decision, accepted Evidence, Runtime Evidence Satisfaction readiness, runtime-gated Equivalence readiness,
+  and disabled Scope/CI readiness chain, without adding execution, approval automation, runtime Evidence satisfaction,
+  graph-source mutation, equivalence proof, scope enforcement, CI authority, required checks, branch protection, or diff
+  rejection.
 - DevView roadmap final handoff preview -
   `examples/valid/todo-app-pbe-run/generated/devview-roadmap-final-handoff.runtime-evidence-only.preview.json` and
   `examples/valid/todo-app-pbe-run/generated/devview-roadmap-final-handoff.runtime-evidence-only.preview.md` summarize
-  the safe MVP handoff lanes and recommended future productization work without adding execution, approval, apply,
-  mutation, Evidence, equivalence, hook activation, or enforcement authority.
+  the safe MVP handoff lanes and recommended future productization work, with Phase 13 connected but blocked by runtime
+  Evidence obligation mismatch, without adding execution, approval, runtime Evidence satisfaction, mutation,
+  equivalence, hook activation, or enforcement authority.
 - DevView core baseline freeze report -
   `examples/valid/todo-app-pbe-run/generated/devview-core-baseline-freeze.runtime-evidence-only.preview.json` and
   `examples/valid/todo-app-pbe-run/generated/devview-core-baseline-freeze.runtime-evidence-only.preview.md` classify the
-  current deterministic spine as completed, advisory, blocked, or future-only without adding Project Memory extension,
-  execution, apply, mutation, approval, Evidence, equivalence, hook activation, or enforcement authority.
+  current deterministic spine and runtime-gated completion chain as completed, advisory, blocked, or future-only without
+  adding Project Memory extension, execution, apply, mutation, approval, runtime Evidence satisfaction, equivalence,
+  hook activation, or enforcement authority.
 - [Scope Compliance Checker Implementation Readiness](concept/scope-compliance-checker-implementation-readiness.md) -
   Readiness criteria for future scope-compliance checker inputs, missing-input states, result preview status, and
   authoritative changed-file input boundaries before executable checker logic exists.

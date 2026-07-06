@@ -6,7 +6,7 @@
   "handoffDate": "2026-07-03",
   "handoffScope": "roadmap-end-state-handoff-no-new-authority",
   "sourceRoadmapCompletionAudit": "examples/valid/todo-app-pbe-run/generated/devview-roadmap-completion-audit.runtime-evidence-only.preview.json",
-  "handoffConclusion": "DevView's roadmap is complete to the intended safe MVP boundary for this calibration: natural-language frontend candidate handling reaches instruction pack preview through deterministic graph/slice/contract stages; advisory backend report/proposal/review surfaces exist; analyzer and clarification are candidate-only; Hook Gateway activation is represented through non-active previews and repo-local advisory script bundle materialization; Phase 13 human decision/readiness chain is represented while apply/mutation/evidence/equivalence/enforcement remain disabled.",
+  "handoffConclusion": "DevView's roadmap is complete to the intended safe MVP boundary for this calibration: natural-language frontend candidate handling reaches instruction pack preview through deterministic graph/slice/contract stages; advisory backend report/proposal/review surfaces exist; analyzer and clarification are candidate-only; Hook Gateway activation is represented through non-active previews and repo-local advisory script bundle materialization; Phase 13 approved apply dry-run, guarded apply reporting, Evidence decision/accepted Evidence, Runtime Evidence Satisfaction readiness, Equivalence readiness, and Scope/CI readiness are represented while runtime satisfaction, equivalence proof, enforcement, hook activation, approval automation, and user acceptance automation remain disabled.",
   "safeEndStateReached": true,
   "safeEndStateMeaning": "Reached means the control/compiler path is represented and reviewable without granting execution, approval, graph mutation, Evidence acceptance, equivalence proof, scope enforcement, CI enforcement, or hook activation authority.",
   "notProductGeneralAvailability": true,
@@ -54,14 +54,18 @@
     },
     {
       "laneId": "phase-13-controlled-apply-readiness",
-      "laneStatus": "readiness-chain-connected-currently-blocked-by-defer-decision",
+      "laneStatus": "readiness-chain-connected-currently-blocked-by-runtime-evidence-obligation-mismatch",
       "terminalArtifacts": [
-        "examples/valid/todo-app-pbe-run/generated/devview-human-decision-record.defer-decision.runtime-evidence-only.preview.json",
-        "examples/valid/todo-app-pbe-run/generated/devview-approved-proposal-state.blocked-defer-decision.runtime-evidence-only.preview.json",
-        "examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-defer-decision.runtime-evidence-only.preview.json"
+        "examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.json"
       ],
-      "requiredNextHumanAction": "A future explicit approval decision and separate policy work would be required before any apply/mutation/enforcement path.",
-      "authorityBoundary": "Current calibration uses defer-decision, so approved state, graph apply, mutation, Evidence acceptance, equivalence proof, and enforcement stay blocked."
+      "requiredNextHumanAction": "Resolve the runtime Evidence obligation mismatch and design future runtime satisfaction/equivalence/enforcement lifecycles before any enforcement path.",
+      "authorityBoundary": "Approved apply dry-run and accepted Evidence are represented, but the current Todo graph apply report is blocked-no-concrete-operations, runtime Evidence satisfaction readiness is blocked by obligation mismatch, Equivalence readiness is blocked by runtime satisfaction readiness, and Scope/CI readiness is blocked and non-enforcing."
     }
   ],
   "doNextIfContinuingRoadmap": [
@@ -85,9 +89,9 @@
     },
     {
       "priority": 4,
-      "workItem": "Design approved apply/mutation/evidence/equivalence/enforcement policies",
-      "reason": "Phase 13 readiness chain is connected but blocked by defer-decision and disabled policies.",
-      "forbiddenShortcut": "Do not apply graph deltas, mutate graph-source, accept Evidence, prove equivalence, enforce scope, configure CI, require checks, change branch protection, or reject diffs from current readiness previews."
+      "workItem": "Design runtime satisfaction, equivalence, and enforcement lifecycles after the accepted Evidence boundary",
+      "reason": "Phase 13 is connected through approved apply dry-run and accepted Evidence, but runtime satisfaction readiness is blocked by obligation mismatch and downstream proof/enforcement remain disabled.",
+      "forbiddenShortcut": "Do not apply graph deltas, mutate graph-source, satisfy runtime Evidence, prove equivalence, enforce scope, configure CI, require checks, change branch protection, or reject diffs from current readiness previews."
     }
   ],
   "explicitlyStillDisabled": [
@@ -98,12 +102,11 @@
     "LLM/API provider execution",
     "automatic Request IR generation",
     "approval automation",
-    "approved proposal state creation in the current defer-decision calibration",
-    "graph delta apply",
-    "graph-source mutation",
-    "Evidence acceptance",
+    "graph-source mutation from the current Todo calibration",
     "runtime Evidence satisfaction",
+    "runtime Evidence satisfaction record creation",
     "equivalence proof",
+    "equivalence proof record creation",
     "scope enforcement",
     "CI required checks",
     "branch protection changes",
@@ -111,7 +114,7 @@
     "user acceptance automation"
   ],
   "verificationSnapshot": {
-    "lastKnownCommit": "4737a9f Materialize advisory hook script bundle",
+    "lastKnownCommit": "cd8082e Repoint Scope CI enforcement readiness to runtime-gated equivalence",
     "verificationCommands": [
       "npm run build:cli",
       "npx vitest run cli/src/__tests__/hook-gateway-health-report.test.ts cli/src/__tests__/user-prompt-context.test.ts cli/src/__tests__/hook-script-scaffold.test.ts cli/src/__tests__/hook-script-template-preview.test.ts cli/src/__tests__/hook-session-manifest.test.ts cli/src/__tests__/hook-script-bundle.test.ts cli/src/__tests__/hook-activation-chain-report.test.ts",
@@ -121,8 +124,8 @@
       "git -c core.longpaths=true diff --check",
       "git -c core.longpaths=true diff --cached --check"
     ],
-    "runtimeSmokeLastMeasuredMs": 4934.24,
-    "coreCriticalLaneLastMeasuredMs": 1550.27,
+    "runtimeSmokeLastMeasuredMs": 6132.65,
+    "coreCriticalLaneLastMeasuredMs": 2063.59,
     "runtimeBudgetTargetMs": 5000,
     "runtimeBudgetEnforced": false
   },
@@ -130,6 +133,7 @@
     "graphSourceMutated": false,
     "graphDeltaApplied": false,
     "approvalStatus": "not-approved",
+    "acceptedEvidenceRecordExists": true,
     "runtimeEvidenceSatisfied": false,
     "evidenceAccepted": false,
     "equivalenceProven": false,

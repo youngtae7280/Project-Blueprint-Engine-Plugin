@@ -5,7 +5,7 @@
   "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
   "auditScope": "roadmap-state-evidence-summary-no-new-authority",
   "auditDate": "2026-07-03",
-  "roadmapEndStateClaim": "frontend-to-instruction-pack, advisory backend, proposal/review, activation previews including repo-local advisory hook script bundle materialization, analyzer/clarification previews, and Phase 13 controlled decision/readiness boundaries are represented; actual Codex execution, hook installation/activation, graph delta apply, graph-source mutation, Evidence acceptance, equivalence proof, scope/CI enforcement, CI required checks, branch protection, diff rejection, and approval/user-acceptance automation remain intentionally unimplemented.",
+  "roadmapEndStateClaim": "frontend-to-instruction-pack, advisory backend, proposal/review, activation previews including repo-local advisory hook script bundle materialization, analyzer/clarification previews, and Phase 13 controlled apply/evidence/proof/enforcement readiness boundaries are represented; approved apply dry-run, guarded graph-delta apply reporting, Evidence decision, accepted Evidence, Runtime Evidence Satisfaction readiness, runtime-gated Equivalence readiness, and runtime-gated Scope/CI readiness now exist as deterministic surfaces; actual Codex execution, hook installation/activation, runtime Evidence satisfaction, equivalence proof, scope/CI enforcement, CI required checks, branch protection, diff rejection, and approval/user-acceptance automation remain intentionally unimplemented.",
   "sourceAuthorityBoundary": "This audit summarizes existing artifacts and commands. It is not graph-source, not approval, not runtime Evidence satisfaction, not equivalence proof, not enforcement, and not graph delta apply.",
   "phaseSummary": [
     {
@@ -43,7 +43,7 @@
         "graph read-model propose-graph-delta --source <artifact> --json",
         "graph read-model review-graph-delta --proposal <proposalPath> --json"
       ],
-      "remaining": "Human decision record and approved-state preview surfaces are now implemented; graph apply remains future and disabled."
+      "remaining": "Human decision record, approved-state preview, approved apply dry-run, and guarded apply report surfaces are now implemented; the current Todo proposal remains blocked from graph-source mutation because it has no concrete mutation operations."
     },
     {
       "phase": "Phase 5 Runtime Performance Budget",
@@ -134,7 +134,7 @@
     },
     {
       "phase": "Phase 13 Human Decision / Approved Apply",
-      "status": "controlled-decision-and-readiness-chain-connected-no-apply-no-enforcement",
+      "status": "runtime-gated-apply-evidence-proof-enforcement-chain-connected-currently-blocked",
       "evidence": [
         "examples/valid/todo-app-pbe-run/generated/devview-human-decision-record-boundary.runtime-evidence-only.preview.json",
         "examples/valid/todo-app-pbe-run/generated/devview-human-decision-record-command-boundary.runtime-evidence-only.preview.json",
@@ -143,16 +143,21 @@
         "examples/valid/todo-app-pbe-run/generated/devview-approved-proposal-state.blocked-defer-decision.runtime-evidence-only.preview.json",
         "examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply-boundary.runtime-evidence-only.preview.json",
         "examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json",
         "examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-policy-boundary.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json",
         "examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-policy-boundary.runtime-evidence-only.preview.json",
         "examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
         "examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
         "examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-policy-boundary.runtime-evidence-only.preview.json",
-        "examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json",
         "examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-policy-boundary.runtime-evidence-only.preview.json",
-        "examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-defer-decision.runtime-evidence-only.preview.json"
+        "examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.json"
       ],
-      "remaining": "The calibration decision is defer-decision, so approved state, apply readiness, mutation readiness, Evidence acceptance readiness, equivalence proof readiness, and scope/CI enforcement readiness remain blocked. Actual graph apply, graph-source mutation, Evidence acceptance, equivalence proof, scope enforcement, CI enforcement, required checks, branch protection changes, diff rejection, and approval/user-acceptance automation remain intentionally unimplemented."
+      "remaining": "Approved apply dry-run and accepted Evidence are represented, but the current Todo graph apply report is blocked-no-concrete-operations, Runtime Evidence Satisfaction readiness is blocked by obligation mismatch, Equivalence readiness is blocked by runtime satisfaction readiness, and Scope/CI readiness is blocked and non-enforcing. Runtime Evidence satisfaction record creation, equivalence proof, scope enforcement, CI enforcement, required checks, branch protection changes, diff rejection, and approval/user-acceptance automation remain intentionally unimplemented."
     }
   ],
   "implementedCommandSurface": [
@@ -181,8 +186,13 @@
     "graph read-model record-human-decision",
     "graph read-model create-approved-proposal-state",
     "graph read-model check-graph-delta-apply",
+    "graph read-model report-approved-apply-dry-run",
+    "graph read-model apply-graph-delta",
     "graph read-model report-graph-source-mutation-readiness",
     "graph read-model report-evidence-acceptance-readiness",
+    "graph read-model record-evidence-decision",
+    "graph read-model create-accepted-evidence-record",
+    "graph read-model report-runtime-evidence-satisfaction-readiness",
     "graph read-model report-equivalence-proof-readiness",
     "graph read-model report-scope-ci-enforcement-readiness"
   ],
@@ -194,12 +204,10 @@
     "LLM/API provider execution",
     "automatic Request IR generation",
     "approval automation",
-    "approved proposal state creation in the current defer-decision calibration",
-    "graph delta apply",
-    "graph-source mutation",
-    "Evidence acceptance",
     "runtime Evidence satisfaction",
+    "runtime Evidence satisfaction record creation",
     "equivalence proof",
+    "equivalence proof record creation",
     "scope enforcement",
     "CI required checks",
     "branch protection changes",
@@ -211,9 +219,13 @@
     "graphDeltaApplied": false,
     "auditArtifactHumanDecisionRecorded": false,
     "calibrationDecisionRecordExists": true,
-    "calibrationDecisionValue": "defer-decision",
-    "approvedProposalStateCreated": false,
+    "calibrationDecisionValue": "accept-evidence-source-review-after-human-approval-boundary",
+    "approvedProposalStateCreatedPreview": true,
+    "approvedApplyDryRunReady": true,
+    "graphDeltaApplyReportStatus": "blocked-no-concrete-mutation-operations",
+    "acceptedEvidenceRecordExists": true,
     "approvalStatus": "not-approved",
+    "evidenceAccepted": false,
     "runtimeEvidenceSatisfied": false,
     "equivalenceProven": false,
     "scopeEnforced": false,

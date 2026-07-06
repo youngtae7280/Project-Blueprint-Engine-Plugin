@@ -4040,3 +4040,39 @@ protection mutation, no diff rejection, no strict/guided blocking activation, no
 satisfaction, no Evidence acceptance creation, no graph-source mutation, no graph delta apply, no automatic approval,
 no user acceptance automation, no provider invocation, no LLM/API or network call, and no Project Memory extension
 authority.
+
+## DEC-313 Refresh DevView Baseline And Final Handoff For Runtime-Gated Completion Chain
+
+DEC-313 does not supersede DEC-097 through DEC-312. It refreshes the existing DevView completion/baseline handoff
+surfaces after the runtime-gated chain was connected from accepted Evidence through Runtime Evidence Satisfaction
+readiness, Equivalence readiness, and Scope/CI readiness.
+
+The existing `graph read-model report-devview-baseline` command remains the only baseline command. It now accepts
+additional optional source-summary inputs for the approved apply dry-run, guarded Graph Delta apply report, Evidence
+decision record, accepted Evidence record, and Runtime Evidence Satisfaction readiness. These inputs are classified as
+completed, advisory, or blocked source artifacts only. The command has a narrow exception for a valid
+`devview-accepted-evidence-record` input with `evidenceAccepted: true`, but the baseline report itself keeps
+top-level `evidenceAccepted: false` and does not convert accepted Evidence into runtime Evidence satisfaction,
+equivalence proof, scope enforcement, or CI authority.
+
+The refreshed roadmap completion audit, final handoff, and core baseline freeze artifacts now describe Phase 13 as
+connected but currently blocked by the runtime Evidence obligation mismatch:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-roadmap-completion-audit.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-roadmap-final-handoff.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-roadmap-final-handoff.runtime-evidence-only.preview.md
+examples/valid/todo-app-pbe-run/generated/devview-core-baseline-freeze.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-core-baseline-freeze.runtime-evidence-only.preview.md
+```
+
+The refreshed classification keeps the current Todo Graph Delta apply report blocked because the tracked proposal has
+no concrete mutation operations; keeps Runtime Evidence Satisfaction readiness blocked by obligation mismatch; keeps
+Equivalence readiness blocked by Runtime Evidence Satisfaction readiness; and keeps Scope/CI readiness blocked and
+non-enforcing.
+
+This decision adds no default runtime smoke step. It adds no hook install or activation, no Codex execution or
+blocking, no graph-source mutation, no graph delta apply from the baseline command, no Evidence acceptance creation, no
+runtime Evidence satisfaction, no equivalence proof, no scope enforcement, no CI required checks, no branch protection,
+no diff rejection, no strict/guided blocking activation, no automatic approval, no user acceptance automation, no
+provider invocation, no LLM/API or network call, and no Project Memory extension authority.

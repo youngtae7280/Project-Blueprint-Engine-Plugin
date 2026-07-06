@@ -38,6 +38,29 @@ describe('DevView core baseline freeze report CLI', () => {
     expect(payload.baselineLanes.map((entry: { laneId: string }) => entry.laneId)).toEqual(
       expect.arrayContaining(['compiler-frontend', 'activation-preview', 'phase-13-controlled-apply-readiness']),
     )
+    expect(payload.sourceApprovedApplyDryRun).toBe('generated/approved-apply-dry-run.json')
+    expect(payload.sourceGraphDeltaApplyReport).toBe('generated/graph-delta-apply-report.json')
+    expect(payload.sourceEvidenceDecision).toBe('generated/evidence-decision.json')
+    expect(payload.sourceAcceptedEvidence).toBe('generated/accepted-evidence.json')
+    expect(payload.sourceRuntimeEvidenceSatisfactionReadiness).toBe(
+      'generated/runtime-evidence-satisfaction-readiness.json',
+    )
+    expect(
+      payload.sourceArtifacts.map((entry: { sourceId: string; classification: string }) => [
+        entry.sourceId,
+        entry.classification,
+      ]),
+    ).toEqual(
+      expect.arrayContaining([
+        ['approved-apply-dry-run', 'advisory'],
+        ['graph-delta-apply-report', 'blocked'],
+        ['evidence-decision', 'completed'],
+        ['accepted-evidence', 'completed'],
+        ['runtime-evidence-satisfaction-readiness', 'blocked'],
+        ['equivalence-proof-readiness', 'blocked'],
+        ['scope-ci-enforcement-readiness', 'blocked'],
+      ]),
+    )
     expectSafetyFalse(payload.safetyInvariantSummary)
     expect(written.writtenOutputPath).toBe('.tmp/baseline.json')
     expect(markdown).toContain('## Baseline Lanes')
@@ -72,7 +95,7 @@ describe('DevView core baseline freeze report CLI', () => {
     )
     expect(
       payload.sourceArtifacts.filter((entry: { readStatus: string }) => entry.readStatus === 'missing-optional'),
-    ).toHaveLength(7)
+    ).toHaveLength(12)
     expectSafetyFalse(payload.safetyInvariantSummary)
   })
 
@@ -129,6 +152,74 @@ describe('DevView core baseline freeze report CLI', () => {
     expect(payload.issues[0].message).toContain('graphDeltaApplied')
     expect(existsSync(join(workspace, '.tmp/baseline.json'))).toBe(false)
   })
+
+  it('blocks unsafe accepted Evidence source records', async () => {
+    const workspace = createWorkspace()
+    writeBaselineInputs(workspace)
+    writeJson(join(workspace, 'generated/accepted-evidence.json'), {
+      ...acceptedEvidenceRecord(),
+      runtimeEvidenceSatisfied: true,
+    })
+
+    const result = await runPbeCli([...baseArgs(), '--output', '.tmp/baseline.json'], {
+      cwd: workspace,
+      pluginRoot,
+    })
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues[0].message).toContain('runtimeEvidenceSatisfied')
+    expect(existsSync(join(workspace, '.tmp/baseline.json'))).toBe(false)
+  })
+
+  it('blocks evidenceAccepted true outside accepted Evidence records', async () => {
+    const workspace = createWorkspace()
+    writeBaselineInputs(workspace)
+    writeJson(join(workspace, 'generated/evidence-decision.json'), {
+      artifactRole: 'devview-evidence-decision-record',
+      status: 'devview-evidence-decision-recorded',
+      evidenceAccepted: true,
+      runtimeEvidenceSatisfied: false,
+      equivalenceProven: false,
+      scopeEnforced: false,
+      ciEnforcementEnabled: false,
+      graphDeltaApplied: false,
+      graphSourceMutated: false,
+    })
+
+    const result = await runPbeCli([...baseArgs(), '--output', '.tmp/baseline.json'], {
+      cwd: workspace,
+      pluginRoot,
+    })
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues[0].message).toContain('evidenceAccepted')
+    expect(existsSync(join(workspace, '.tmp/baseline.json'))).toBe(false)
+  })
+
+  it('blocks new optional source overwrite before JSON output is written', async () => {
+    const workspace = createWorkspace()
+    writeBaselineInputs(workspace)
+    const before = readFileSync(join(workspace, 'generated/runtime-evidence-satisfaction-readiness.json'), 'utf8')
+
+    const result = await runPbeCli(
+      [
+        ...baseArgs(),
+        '--output',
+        '.tmp/baseline.json',
+        '--markdown',
+        'generated/runtime-evidence-satisfaction-readiness.json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues[0].message).toContain('Runtime Evidence satisfaction readiness')
+    expect(existsSync(join(workspace, '.tmp/baseline.json'))).toBe(false)
+    expect(readFileSync(join(workspace, 'generated/runtime-evidence-satisfaction-readiness.json'), 'utf8')).toBe(before)
+  })
 })
 
 function baseArgs(): string[] {
@@ -146,10 +237,20 @@ function baseArgs(): string[] {
     'generated/hook-activation.json',
     '--apply-readiness',
     'generated/apply-readiness.json',
+    '--approved-apply-dry-run',
+    'generated/approved-apply-dry-run.json',
+    '--apply-report',
+    'generated/graph-delta-apply-report.json',
     '--mutation-readiness',
     'generated/mutation-readiness.json',
     '--evidence-acceptance-readiness',
     'generated/evidence-readiness.json',
+    '--evidence-decision',
+    'generated/evidence-decision.json',
+    '--accepted-evidence',
+    'generated/accepted-evidence.json',
+    '--runtime-evidence-satisfaction-readiness',
+    'generated/runtime-evidence-satisfaction-readiness.json',
     '--equivalence-proof-readiness',
     'generated/equivalence-readiness.json',
     '--scope-ci-enforcement-readiness',
@@ -193,6 +294,32 @@ function writeBaselineInputs(
     ciEnforcementEnabled: false,
   })
   writeJson(join(workspace, 'generated/apply-readiness.json'), readiness('devview-graph-delta-apply-readiness-preview'))
+  writeJson(join(workspace, 'generated/approved-apply-dry-run.json'), {
+    artifactRole: 'devview-approved-apply-dry-run-report',
+    status: 'devview-approved-apply-dry-run-ready',
+    dryRunReadinessStatus: 'dry-run-ready-for-future-apply-command',
+    nonEnforcing: true,
+    graphDeltaApplied: false,
+    graphSourceMutated: false,
+    runtimeEvidenceSatisfied: false,
+    evidenceAccepted: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+  })
+  writeJson(join(workspace, 'generated/graph-delta-apply-report.json'), {
+    artifactRole: 'devview-graph-delta-apply-report',
+    status: 'devview-graph-delta-apply-blocked',
+    applyStatus: 'blocked-no-concrete-mutation-operations',
+    mutationApplied: false,
+    graphDeltaApplied: false,
+    graphSourceMutated: false,
+    runtimeEvidenceSatisfied: false,
+    evidenceAccepted: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+  })
   writeJson(
     join(workspace, 'generated/mutation-readiness.json'),
     readiness('devview-graph-source-mutation-readiness-preview'),
@@ -201,6 +328,33 @@ function writeBaselineInputs(
     join(workspace, 'generated/evidence-readiness.json'),
     readiness('devview-evidence-acceptance-readiness-preview'),
   )
+  writeJson(join(workspace, 'generated/evidence-decision.json'), {
+    artifactRole: 'devview-evidence-decision-record',
+    status: 'devview-evidence-decision-recorded',
+    decisionKind: 'accept',
+    decisionValue: 'accept-evidence',
+    evidenceAccepted: false,
+    runtimeEvidenceSatisfied: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+    graphDeltaApplied: false,
+    graphSourceMutated: false,
+  })
+  writeJson(join(workspace, 'generated/accepted-evidence.json'), acceptedEvidenceRecord())
+  writeJson(join(workspace, 'generated/runtime-evidence-satisfaction-readiness.json'), {
+    artifactRole: 'devview-runtime-evidence-satisfaction-readiness-preview',
+    status: 'devview-runtime-evidence-satisfaction-readiness-blocked',
+    runtimeEvidenceSatisfactionReadinessStatus: 'blocked-required-obligation-mismatch',
+    nonEnforcing: true,
+    evidenceAccepted: false,
+    runtimeEvidenceSatisfied: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+    graphDeltaApplied: false,
+    graphSourceMutated: false,
+  })
   writeJson(
     join(workspace, 'generated/equivalence-readiness.json'),
     readiness('devview-equivalence-proof-readiness-preview'),
@@ -252,6 +406,23 @@ function writeBaselineInputs(
     },
     ...overrides.finalHandoff,
   })
+}
+
+function acceptedEvidenceRecord(): Record<string, unknown> {
+  return {
+    artifactRole: 'devview-accepted-evidence-record',
+    status: 'devview-accepted-evidence-recorded',
+    acceptedEvidenceState: 'accepted-evidence-recorded-not-runtime-satisfied',
+    evidenceAccepted: true,
+    runtimeEvidenceSatisfied: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+    graphDeltaApplied: false,
+    graphSourceMutated: false,
+    approvalAutomationEnabled: false,
+    userAcceptanceAutomated: false,
+  }
 }
 
 function readiness(artifactRole: string): Record<string, unknown> {

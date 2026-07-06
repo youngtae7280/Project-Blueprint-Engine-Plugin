@@ -10,10 +10,15 @@ Completeness: `complete`
 - Frontend chain report: `examples/valid/todo-app-pbe-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json` (advisory, read)
 - Hook activation chain report: `examples/valid/todo-app-pbe-run/generated/devview-hook-activation-chain.add-todo-runtime-evidence-only.preview.json` (advisory, read)
 - Graph Delta apply readiness: `examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply-readiness.blocked-defer-decision.runtime-evidence-only.preview.json` (blocked, read)
+- Approved apply dry-run: `examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json` (advisory, read)
+- Graph Delta apply report: `examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json` (blocked, read)
 - Graph-source mutation readiness: `examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-readiness.blocked-defer-decision.runtime-evidence-only.preview.json` (blocked, read)
 - Evidence acceptance readiness: `examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-readiness.blocked-defer-decision.runtime-evidence-only.preview.json` (blocked, read)
-- Equivalence proof readiness: `examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-defer-decision.runtime-evidence-only.preview.json` (blocked, read)
-- Scope/CI enforcement readiness: `examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-defer-decision.runtime-evidence-only.preview.json` (blocked, read)
+- Evidence decision record: `examples/valid/todo-app-pbe-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.json` (completed, read)
+- Accepted Evidence record: `examples/valid/todo-app-pbe-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.json` (completed, read)
+- Runtime Evidence satisfaction readiness: `examples/valid/todo-app-pbe-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json` (blocked, read)
+- Equivalence proof readiness: `examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json` (blocked, read)
+- Scope/CI enforcement readiness: `examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.json` (blocked, read)
 
 ## Baseline Lanes
 
@@ -21,27 +26,26 @@ Completeness: `complete`
 - ai-analyzer-and-clarification: advisory - Analyzer and clarification surfaces remain candidate-only and non-authoritative until validation reruns.
 - activation-preview: advisory - Hook Gateway activation is represented by non-active previews and repo-local script bundle materialization.
 - advisory-backend-and-review: advisory - Proposal-only and Human Review Packet surfaces are connected without apply authority.
-- phase-13-controlled-apply-readiness: blocked - Phase 13 readiness chain is connected but current calibration is blocked by defer-decision.
+- phase-13-controlled-apply-readiness: blocked - Phase 13 apply/evidence/proof/enforcement chain is connected but current calibration is blocked by runtime Evidence obligation mismatch.
 
 ## Future Only
 
 - active hook installation
 - active hook session runtime
 - approval automation
-- approved proposal state creation in the current defer-decision calibration
 - automatic Request IR generation
 - branch protection changes
 - CI required checks
 - Codex execution
 - diff rejection
 - equivalence proof
-- Evidence acceptance
-- graph delta apply
-- graph-source mutation
+- equivalence proof record creation
+- graph-source mutation from the current Todo calibration
 - guided or strict blocking
 - LLM/API provider execution
 - Project Memory extension authority
 - runtime Evidence satisfaction
+- runtime Evidence satisfaction record creation
 - scope enforcement
 - user acceptance automation
 

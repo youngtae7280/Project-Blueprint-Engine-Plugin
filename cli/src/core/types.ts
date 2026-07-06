@@ -105,6 +105,7 @@ export interface CliOptions {
   mockProviderResponse?: string
   proposal?: string
   dryRunReport?: string
+  approvedApplyDryRun?: string
   reviewPacket?: string
   decisionRecord?: string
   evidenceDecision?: string

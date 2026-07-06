@@ -144,6 +144,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     mockProviderResponse: undefined as string | undefined,
     proposal: undefined as string | undefined,
     dryRunReport: undefined as string | undefined,
+    approvedApplyDryRun: undefined as string | undefined,
     reviewPacket: undefined as string | undefined,
     decisionRecord: undefined as string | undefined,
     evidenceDecision: undefined as string | undefined,
@@ -549,6 +550,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--dry-run-report requires a file path.' }
       }
       options.dryRunReport = value
+      index += 1
+    } else if (arg === '--approved-apply-dry-run') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--approved-apply-dry-run requires a file path.' }
+      }
+      options.approvedApplyDryRun = value
       index += 1
     } else if (arg === '--review-packet') {
       const value = argv[index + 1]

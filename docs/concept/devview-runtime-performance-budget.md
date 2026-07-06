@@ -179,11 +179,13 @@ The DevView core baseline freeze report is also outside the current all-steps sm
 graph read-model report-devview-baseline --roadmap-audit <roadmapAudit> --final-handoff <finalHandoff> --json
 ```
 
-It is a human/worker orientation report over already-generated roadmap, frontend, hook activation, and readiness
-artifacts. It is not a per-request compiler step and must not be added to `core-critical-lane` without a later explicit
-decision. Missing optional inputs are warnings, not runtime blockers. The command creates no execution, hook
-activation, apply, mutation, approval, Evidence, equivalence, scope, CI, strict/guided blocking, or Project Memory
-extension authority.
+It is a human/worker orientation report over already-generated roadmap, frontend, hook activation, approved apply
+dry-run, guarded apply, Evidence decision, accepted Evidence, runtime satisfaction readiness, Equivalence readiness,
+Scope/CI readiness, and other readiness artifacts. It is not a per-request compiler step and must not be added to
+`core-critical-lane` without a later explicit decision. Missing optional inputs are warnings, not runtime blockers. The
+command may summarize an accepted Evidence source fact, but it creates no execution, hook activation, apply, mutation,
+approval, Evidence acceptance, runtime Evidence satisfaction, equivalence proof, scope, CI, strict/guided blocking, or
+Project Memory extension authority.
 
 The graph delta proposal boundary preview is now recorded at:
 

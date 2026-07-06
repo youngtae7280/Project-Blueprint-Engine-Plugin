@@ -10,10 +10,15 @@
   "sourceFrontendChain": "examples/valid/todo-app-pbe-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json",
   "sourceHookActivationChain": "examples/valid/todo-app-pbe-run/generated/devview-hook-activation-chain.add-todo-runtime-evidence-only.preview.json",
   "sourceApplyReadiness": "examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
+  "sourceApprovedApplyDryRun": "examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json",
+  "sourceGraphDeltaApplyReport": "examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json",
   "sourceGraphSourceMutationReadiness": "examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
   "sourceEvidenceAcceptanceReadiness": "examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
-  "sourceEquivalenceProofReadiness": "examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
-  "sourceScopeCiEnforcementReadiness": "examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
+  "sourceEvidenceDecision": "examples/valid/todo-app-pbe-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.json",
+  "sourceAcceptedEvidence": "examples/valid/todo-app-pbe-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.json",
+  "sourceRuntimeEvidenceSatisfactionReadiness": "examples/valid/todo-app-pbe-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json",
+  "sourceEquivalenceProofReadiness": "examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json",
+  "sourceScopeCiEnforcementReadiness": "examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.json",
   "sourceArtifacts": [
     {
       "sourceId": "roadmap-audit",
@@ -71,6 +76,28 @@
       "authorityStatus": "source-summary-only-no-new-authority"
     },
     {
+      "sourceId": "approved-apply-dry-run",
+      "label": "Approved apply dry-run",
+      "path": "examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json",
+      "required": false,
+      "readStatus": "read",
+      "artifactRole": "devview-approved-apply-dry-run-report",
+      "status": "devview-approved-apply-dry-run-ready",
+      "classification": "advisory",
+      "authorityStatus": "source-summary-only-no-new-authority"
+    },
+    {
+      "sourceId": "graph-delta-apply-report",
+      "label": "Graph Delta apply report",
+      "path": "examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json",
+      "required": false,
+      "readStatus": "read",
+      "artifactRole": "devview-graph-delta-apply-report",
+      "status": "devview-graph-delta-apply-blocked",
+      "classification": "blocked",
+      "authorityStatus": "source-summary-only-no-new-authority"
+    },
+    {
       "sourceId": "graph-source-mutation-readiness",
       "label": "Graph-source mutation readiness",
       "path": "examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
@@ -93,9 +120,42 @@
       "authorityStatus": "source-summary-only-no-new-authority"
     },
     {
+      "sourceId": "evidence-decision",
+      "label": "Evidence decision record",
+      "path": "examples/valid/todo-app-pbe-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.json",
+      "required": false,
+      "readStatus": "read",
+      "artifactRole": "devview-evidence-decision-record",
+      "status": "devview-evidence-decision-recorded",
+      "classification": "completed",
+      "authorityStatus": "source-summary-only-no-new-authority"
+    },
+    {
+      "sourceId": "accepted-evidence",
+      "label": "Accepted Evidence record",
+      "path": "examples/valid/todo-app-pbe-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.json",
+      "required": false,
+      "readStatus": "read",
+      "artifactRole": "devview-accepted-evidence-record",
+      "status": "devview-accepted-evidence-recorded",
+      "classification": "completed",
+      "authorityStatus": "source-summary-only-no-new-authority"
+    },
+    {
+      "sourceId": "runtime-evidence-satisfaction-readiness",
+      "label": "Runtime Evidence satisfaction readiness",
+      "path": "examples/valid/todo-app-pbe-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json",
+      "required": false,
+      "readStatus": "read",
+      "artifactRole": "devview-runtime-evidence-satisfaction-readiness-preview",
+      "status": "devview-runtime-evidence-satisfaction-readiness-blocked",
+      "classification": "blocked",
+      "authorityStatus": "source-summary-only-no-new-authority"
+    },
+    {
       "sourceId": "equivalence-proof-readiness",
       "label": "Equivalence proof readiness",
-      "path": "examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
+      "path": "examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json",
       "required": false,
       "readStatus": "read",
       "artifactRole": "devview-equivalence-proof-readiness-preview",
@@ -106,7 +166,7 @@
     {
       "sourceId": "scope-ci-enforcement-readiness",
       "label": "Scope/CI enforcement readiness",
-      "path": "examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
+      "path": "examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.json",
       "required": false,
       "readStatus": "read",
       "artifactRole": "devview-scope-ci-enforcement-readiness-preview",
@@ -182,34 +242,37 @@
     {
       "laneId": "phase-13-controlled-apply-readiness",
       "classification": "blocked",
-      "sourceStatus": "readiness-chain-connected-currently-blocked-by-defer-decision",
+      "sourceStatus": "readiness-chain-connected-currently-blocked-by-runtime-evidence-obligation-mismatch",
       "terminalArtifacts": [
-        "examples/valid/todo-app-pbe-run/generated/devview-human-decision-record.defer-decision.runtime-evidence-only.preview.json",
-        "examples/valid/todo-app-pbe-run/generated/devview-approved-proposal-state.blocked-defer-decision.runtime-evidence-only.preview.json",
-        "examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-defer-decision.runtime-evidence-only.preview.json"
+        "examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.json"
       ],
-      "baselineMeaning": "Phase 13 readiness chain is connected but current calibration is blocked by defer-decision.",
-      "authorityBoundary": "Current calibration uses defer-decision, so approved state, graph apply, mutation, Evidence acceptance, equivalence proof, and enforcement stay blocked."
+      "baselineMeaning": "Phase 13 apply/evidence/proof/enforcement chain is connected but current calibration is blocked by runtime Evidence obligation mismatch.",
+      "authorityBoundary": "Approved apply dry-run and accepted Evidence are represented, but the current Todo graph apply report is blocked-no-concrete-operations, runtime Evidence satisfaction readiness is blocked by obligation mismatch, Equivalence readiness is blocked by runtime satisfaction readiness, and Scope/CI readiness is blocked and non-enforcing."
     }
   ],
   "futureOnlyBoundaries": [
     "active hook installation",
     "active hook session runtime",
     "approval automation",
-    "approved proposal state creation in the current defer-decision calibration",
     "automatic Request IR generation",
     "branch protection changes",
     "CI required checks",
     "Codex execution",
     "diff rejection",
     "equivalence proof",
-    "Evidence acceptance",
-    "graph delta apply",
-    "graph-source mutation",
+    "equivalence proof record creation",
+    "graph-source mutation from the current Todo calibration",
     "guided or strict blocking",
     "LLM/API provider execution",
     "Project Memory extension authority",
     "runtime Evidence satisfaction",
+    "runtime Evidence satisfaction record creation",
     "scope enforcement",
     "user acceptance automation"
   ],

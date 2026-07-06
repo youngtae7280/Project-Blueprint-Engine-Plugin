@@ -15,8 +15,13 @@ export interface DevViewBaselineReportOptions {
   frontendChain?: string
   hookActivationChain?: string
   applyReadiness?: string
+  approvedApplyDryRun?: string
+  applyReport?: string
   mutationReadiness?: string
   evidenceAcceptanceReadiness?: string
+  evidenceDecision?: string
+  acceptedEvidence?: string
+  runtimeEvidenceSatisfactionReadiness?: string
   equivalenceProofReadiness?: string
   scopeCiEnforcementReadiness?: string
   output?: string
@@ -66,8 +71,13 @@ export interface DevViewCoreBaselineFreezeReport {
   sourceFrontendChain: string | null
   sourceHookActivationChain: string | null
   sourceApplyReadiness: string | null
+  sourceApprovedApplyDryRun: string | null
+  sourceGraphDeltaApplyReport: string | null
   sourceGraphSourceMutationReadiness: string | null
   sourceEvidenceAcceptanceReadiness: string | null
+  sourceEvidenceDecision: string | null
+  sourceAcceptedEvidence: string | null
+  sourceRuntimeEvidenceSatisfactionReadiness: string | null
   sourceEquivalenceProofReadiness: string | null
   sourceScopeCiEnforcementReadiness: string | null
   sourceArtifacts: DevViewBaselineSourceSummary[]
@@ -156,6 +166,18 @@ const OPTIONAL_SOURCE_DEFS = [
     expectedRole: 'devview-graph-delta-apply-readiness-preview',
   },
   {
+    sourceId: 'approved-apply-dry-run',
+    label: 'Approved apply dry-run',
+    optionKey: 'approvedApplyDryRun',
+    expectedRole: 'devview-approved-apply-dry-run-report',
+  },
+  {
+    sourceId: 'graph-delta-apply-report',
+    label: 'Graph Delta apply report',
+    optionKey: 'applyReport',
+    expectedRole: 'devview-graph-delta-apply-report',
+  },
+  {
     sourceId: 'graph-source-mutation-readiness',
     label: 'Graph-source mutation readiness',
     optionKey: 'mutationReadiness',
@@ -166,6 +188,24 @@ const OPTIONAL_SOURCE_DEFS = [
     label: 'Evidence acceptance readiness',
     optionKey: 'evidenceAcceptanceReadiness',
     expectedRole: 'devview-evidence-acceptance-readiness-preview',
+  },
+  {
+    sourceId: 'evidence-decision',
+    label: 'Evidence decision record',
+    optionKey: 'evidenceDecision',
+    expectedRole: 'devview-evidence-decision-record',
+  },
+  {
+    sourceId: 'accepted-evidence',
+    label: 'Accepted Evidence record',
+    optionKey: 'acceptedEvidence',
+    expectedRole: 'devview-accepted-evidence-record',
+  },
+  {
+    sourceId: 'runtime-evidence-satisfaction-readiness',
+    label: 'Runtime Evidence satisfaction readiness',
+    optionKey: 'runtimeEvidenceSatisfactionReadiness',
+    expectedRole: 'devview-runtime-evidence-satisfaction-readiness-preview',
   },
   {
     sourceId: 'equivalence-proof-readiness',
@@ -377,7 +417,10 @@ function expectRoleStatus(
 function validateUnsafeAuthoritySignals(source: LoadedSource, findings: DevViewBaselineFinding[]): void {
   const record = source.record
   if (!record) return
-  const unsafe = collectUnsafeAuthoritySignals(record)
+  const unsafe = collectUnsafeAuthoritySignals(record, {
+    allowTopLevelAcceptedEvidence:
+      source.sourceId === 'accepted-evidence' && isAcceptedEvidenceSourceFactAllowed(record),
+  })
   for (const entry of unsafe) {
     findings.push({
       code: 'DEVVIEW_BASELINE_UNSAFE_AUTHORITY_SIGNAL',
@@ -399,6 +442,14 @@ function validateUnsafeAuthoritySignals(source: LoadedSource, findings: DevViewB
       actual: entry.value,
     })
   }
+}
+
+function isAcceptedEvidenceSourceFactAllowed(record: JsonRecord): boolean {
+  return (
+    record.artifactRole === 'devview-accepted-evidence-record' &&
+    record.status === 'devview-accepted-evidence-recorded' &&
+    record.acceptedEvidenceState === 'accepted-evidence-recorded-not-runtime-satisfied'
+  )
 }
 
 function buildReport(
@@ -427,8 +478,13 @@ function buildReport(
     sourceFrontendChain: sourcePath('frontend-chain'),
     sourceHookActivationChain: sourcePath('hook-activation-chain'),
     sourceApplyReadiness: sourcePath('graph-delta-apply-readiness'),
+    sourceApprovedApplyDryRun: sourcePath('approved-apply-dry-run'),
+    sourceGraphDeltaApplyReport: sourcePath('graph-delta-apply-report'),
     sourceGraphSourceMutationReadiness: sourcePath('graph-source-mutation-readiness'),
     sourceEvidenceAcceptanceReadiness: sourcePath('evidence-acceptance-readiness'),
+    sourceEvidenceDecision: sourcePath('evidence-decision'),
+    sourceAcceptedEvidence: sourcePath('accepted-evidence'),
+    sourceRuntimeEvidenceSatisfactionReadiness: sourcePath('runtime-evidence-satisfaction-readiness'),
     sourceEquivalenceProofReadiness: sourcePath('equivalence-proof-readiness'),
     sourceScopeCiEnforcementReadiness: sourcePath('scope-ci-enforcement-readiness'),
     sourceArtifacts: sources.map((source) => summarizeSource(root, source)),
@@ -514,7 +570,13 @@ function classifyStatus(sourceId: string, status: string): BaselineClassificatio
   const normalized = status.toLowerCase()
   if (normalized.includes('blocked')) return 'blocked'
   if (sourceId === 'roadmap-audit' || sourceId === 'final-handoff') return 'completed'
+  if (sourceId === 'evidence-decision' && normalized === 'devview-evidence-decision-recorded') return 'completed'
+  if (sourceId === 'accepted-evidence' && normalized === 'devview-accepted-evidence-recorded') return 'completed'
+  if (sourceId === 'graph-delta-apply-report') {
+    return normalized.includes('applied') ? 'advisory' : 'blocked'
+  }
   if (sourceId.includes('readiness')) return normalized.includes('ready') ? 'advisory' : 'blocked'
+  if (sourceId === 'approved-apply-dry-run') return normalized.includes('ready') ? 'advisory' : 'blocked'
   return 'advisory'
 }
 
@@ -589,8 +651,8 @@ function buildBaselineLanes(finalHandoff: JsonRecord, roadmapAudit: JsonRecord):
   addFromHandoff(
     'phase-13-controlled-apply-readiness',
     'blocked',
-    'Phase 13 readiness chain is connected but current calibration is blocked by defer-decision.',
-    'Approved state, graph apply, mutation, Evidence acceptance, equivalence proof, and enforcement stay blocked.',
+    'Phase 13 apply/evidence/proof/enforcement chain is connected but current calibration is blocked by runtime Evidence obligation mismatch.',
+    'Apply dry-run, accepted Evidence, runtime satisfaction readiness, Equivalence readiness, and Scope/CI readiness are source summaries only; runtime satisfaction, proof, enforcement, graph apply, and graph-source mutation stay disabled.',
   )
 
   const commandSurface = arrayStrings(roadmapAudit.implementedCommandSurface)
@@ -787,7 +849,10 @@ const UNSAFE_TRUE_FIELDS = new Set([
   'ciEnforcementAllowed',
 ])
 
-function collectUnsafeAuthoritySignals(value: unknown): Array<{ path: string }> {
+function collectUnsafeAuthoritySignals(
+  value: unknown,
+  options: { allowTopLevelAcceptedEvidence?: boolean } = {},
+): Array<{ path: string }> {
   const findings: Array<{ path: string }> = []
   const visit = (entry: unknown, cursor: string, seen: Set<unknown>): void => {
     if (Array.isArray(entry)) {
@@ -799,7 +864,13 @@ function collectUnsafeAuthoritySignals(value: unknown): Array<{ path: string }> 
     seen.add(record)
     for (const [key, item] of Object.entries(record)) {
       const nextPath = cursor ? `${cursor}.${key}` : key
-      if (UNSAFE_TRUE_FIELDS.has(key) && item === true) findings.push({ path: nextPath })
+      if (
+        UNSAFE_TRUE_FIELDS.has(key) &&
+        item === true &&
+        !(options.allowTopLevelAcceptedEvidence && nextPath === 'evidenceAccepted')
+      ) {
+        findings.push({ path: nextPath })
+      }
       visit(item, nextPath, seen)
     }
   }

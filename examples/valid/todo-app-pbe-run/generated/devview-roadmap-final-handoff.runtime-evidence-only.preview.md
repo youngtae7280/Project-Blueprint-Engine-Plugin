@@ -10,9 +10,10 @@ Source audit:
 DevView is complete to the intended safe MVP boundary for the Todo App calibration. The deterministic frontend reaches
 Instruction Pack preview through Request IR validation, graph-aware validation, traversal planning, selected slice, and
 contract input generation. Advisory backend report/proposal/review surfaces exist. Analyzer and clarification remain
-candidate-only. Hook activation is represented by non-active previews plus a repo-local advisory script bundle. Phase 13
-decision/readiness surfaces are connected while apply, mutation, Evidence acceptance, equivalence proof, scope
-enforcement, and CI enforcement remain disabled.
+candidate-only. Hook activation is represented by non-active previews plus a repo-local advisory script bundle. Phase
+13 approved apply dry-run, guarded apply reporting, Evidence decision/accepted Evidence, Runtime Evidence Satisfaction
+readiness, Equivalence readiness, and Scope/CI readiness are represented while runtime satisfaction, equivalence proof,
+enforcement, hook activation, approval automation, and user acceptance automation remain disabled.
 
 ## Handoff Lanes
 
@@ -20,7 +21,8 @@ enforcement, and CI enforcement remain disabled.
 - `ai-analyzer-and-clarification`: candidate-only boundary complete; no LLM provider is active.
 - `activation-preview`: preview chain complete with repo-local advisory hook scripts; no active hooks.
 - `advisory-backend-and-review`: proposal-only and Human Review Packet surfaces are connected.
-- `phase-13-controlled-apply-readiness`: readiness chain is connected but blocked by the current `defer-decision`.
+- `phase-13-controlled-apply-readiness`: readiness chain is connected through accepted Evidence and blocked by runtime
+  Evidence obligation mismatch.
 
 ## Still Disabled
 
@@ -30,8 +32,8 @@ enforcement, and CI enforcement remain disabled.
 - LLM/API provider execution
 - automatic Request IR generation
 - approval automation
-- graph delta apply or graph-source mutation
-- Evidence acceptance or runtime Evidence satisfaction
+- graph-source mutation from the current Todo calibration
+- runtime Evidence satisfaction / runtime satisfaction record creation
 - equivalence proof
 - scope/CI enforcement, required checks, branch protection changes, or diff rejection
 - user acceptance automation
@@ -41,7 +43,7 @@ enforcement, and CI enforcement remain disabled.
 1. Broaden fixture and external project coverage.
 2. Design explicit hook install/trust flow only after a separate human decision boundary.
 3. Design actual LLM analyzer provider integration while keeping unvalidated output candidate-only.
-4. Design approved apply/mutation/evidence/equivalence/enforcement policies separately.
+4. Design runtime satisfaction, equivalence, and enforcement lifecycles after the accepted Evidence boundary.
 
 This handoff preview adds no new authority. It is not approval, apply, Evidence satisfaction, equivalence proof, hook
 activation, enforcement, or user acceptance.

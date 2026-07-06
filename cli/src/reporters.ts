@@ -310,9 +310,9 @@ Options:
   --decision-record <file>
                        Human Decision Record file for graph read-model create-approved-proposal-state.
   --evidence-decision <file>
-                       Hardened Evidence Decision Record file for graph read-model create-accepted-evidence-record.
+                       Hardened Evidence Decision Record file for graph read-model create-accepted-evidence-record or report-devview-baseline.
   --accepted-evidence <file>
-                       Accepted Evidence Record file for graph read-model report-runtime-evidence-satisfaction-readiness.
+                       Accepted Evidence Record file for graph read-model report-runtime-evidence-satisfaction-readiness or report-devview-baseline.
   --approved-state <file>
                        Approved Proposal State preview file for graph read-model check-graph-delta-apply.
   --approved-state-boundary <file>
@@ -321,6 +321,8 @@ Options:
                        Graph Delta Apply boundary file for graph read-model report-approved-apply-dry-run.
   --dry-run-report <file>
                        Approved apply dry-run report for graph read-model apply-graph-delta.
+  --approved-apply-dry-run <file>
+                       Approved apply dry-run report for graph read-model report-devview-baseline.
   --apply-readiness <file>
                        Graph Delta Apply readiness file for graph read-model report-graph-source-mutation-readiness.
   --mutation-policy <file>
@@ -330,9 +332,9 @@ Options:
   --evidence-acceptance-readiness <file>
                        Optional legacy Evidence Acceptance readiness provenance for graph read-model report-equivalence-proof-readiness.
   --runtime-evidence-satisfaction-readiness <file>
-                       Runtime Evidence Satisfaction readiness file for graph read-model report-equivalence-proof-readiness.
+                       Runtime Evidence Satisfaction readiness file for graph read-model report-equivalence-proof-readiness or report-devview-baseline.
   --equivalence-proof-readiness <file>
-                       Equivalence Proof readiness file for graph read-model report-scope-ci-enforcement-readiness.
+                       Equivalence Proof readiness file for graph read-model report-scope-ci-enforcement-readiness or report-devview-baseline.
   --scope-ci-enforcement-readiness <file>
                        Scope/CI Enforcement readiness file for graph read-model report-devview-baseline.
   --policy <file>      Policy boundary file for graph read-model report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, record-evidence-decision, create-accepted-evidence-record, report-equivalence-proof-readiness, or report-scope-ci-enforcement-readiness.
@@ -351,7 +353,7 @@ Options:
   --runtime-report <file>
                        Optional runtime report input for graph read-model record-human-decision, record-evidence-decision, create-accepted-evidence-record, report-runtime-evidence-satisfaction-readiness, or report-stop-post-run-advisory.
   --apply-report <file>
-                       Optional Graph Delta Apply report provenance for graph read-model record-evidence-decision, create-accepted-evidence-record, or report-runtime-evidence-satisfaction-readiness.
+                       Optional Graph Delta Apply report provenance for graph read-model record-evidence-decision, create-accepted-evidence-record, report-runtime-evidence-satisfaction-readiness, report-stop-post-run-advisory, or report-devview-baseline.
   --request-candidate <file>
                        Optional Request IR Candidate provenance for graph read-model record-evidence-decision.
   --candidate <file>   Request IR Candidate file for graph read-model validate-request-ir, generate-clarification-interview-pack, run-preflight-session, or report-user-prompt-submit-advisory.
