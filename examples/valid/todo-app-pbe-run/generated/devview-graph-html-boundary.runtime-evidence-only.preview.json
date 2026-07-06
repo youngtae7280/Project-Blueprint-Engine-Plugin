@@ -44,11 +44,12 @@
     "selectionModel": "single full network graph rendered once; selected subgraph, viewpoint trees, nodes, and edges are highlighted in-place"
   },
   "interactionModel": {
-    "requestPanel": "the current user-confirmed request, source record, selected node count, and selected edge count are visible before interaction",
-    "projectMemoryPanel": "optional Project Memory context shows mode, direction, portfolio role, detailed slice, taxonomy profile, and preview-only authority without changing graph selection",
+    "requestPanel": "the current user-confirmed request, task type, target, and boundary are visible before interaction",
+    "minimalDefaultSurface": "the left rail shows only Current Request, Needed Viewpoints, and Inspect actions; detailed Project Memory, SubGraph, Instruction Source, node, edge, and tree data is shown only after click",
+    "projectMemoryPanel": "optional Project Memory context is available through an Inspect action and shows mode, direction, portfolio role, detailed slice, taxonomy profile, and preview-only authority without changing graph selection",
     "workflowStepper": "a linked-list style 1 -> 2 -> 3 -> 4 -> 5 -> 6 stepper replays the current request flow from source record, through viewpoint trees, to selected subgraph and final instruction-pack preview; each step changes graph highlight and inspector detail only",
     "workHistoryNavigation": "top-level previous/next buttons plus a 1-based index input navigate graph-source retrofit records only; selecting a prior record highlights its graph record node and connected context",
-    "selectedViewpointTreePanel": "the trees selected by the current request are shown with directly clickable node and edge chips",
+    "selectedViewpointTreePanel": "the trees selected by the current request are shown as compact viewpoint buttons; node and edge chips are deferred to the click inspector",
     "panZoom": "mouse drag pans the graph; mouse wheel zooms around the pointer; +/-/R buttons provide bounded semantic zoom where node boxes, labels, and edge strokes keep stable screen size",
     "nodeClick": "show node kind, state, intent claim, record path, code locations, pack role, tree membership, subgraph membership, selection banner, and visible selected-node stroke",
     "edgeClick": "show from/to node ids, edge kind, edgeIntent classification, claim, confidence, tree membership, subgraph membership, selection banner, and visible selected-edge stroke",

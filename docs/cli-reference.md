@@ -1095,8 +1095,9 @@ node dist/cli/index.js graph read-model report-project-memory-impact `
 
 - Purpose: Render a static, read-only DevViewGraph HTML inspector and matching data JSON from a retrofit graph-source
   plus a retrofit instruction pack. The v1 layout is a deterministic network/orbit graph; viewpoint trees are highlight
-  sets over the same graph, not separate tree-shaped renderings. The inspector keeps the current request and selected
-  viewpoint trees visible, provides a Current Work Flow stepper for replaying one request as
+  sets over the same graph, not separate tree-shaped renderings. The inspector keeps the default surface minimal:
+  current request, needed viewpoint buttons, inspect actions, graph, and detail panel. It provides a Current Work Flow
+  stepper for replaying one request as
   `1 Request -> 2 Domain Tree -> 3 Change Tree -> 4 Risk Tree -> 5 SubGraph -> 6 Pack`, provides top-level record
   history controls, and uses semantic zoom so node labels, node boxes, and edge strokes remain readable.
 - Typical state before running: After a retrofit graph-source and instruction pack exist for the same source record.

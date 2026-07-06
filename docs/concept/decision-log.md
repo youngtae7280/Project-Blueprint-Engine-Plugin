@@ -3353,3 +3353,18 @@ This keeps the top work-history navigation separate: `<`, `>`, and the numeric i
 records, while the Current Work Flow stepper replays the inside of the current request. The feature remains
 visualization-only and does not execute Codex, call an LLM, mutate graph-source, apply graph deltas, approve work,
 satisfy runtime Evidence, prove equivalence, enforce scope, configure CI, or replace human review.
+
+## DEC-290 Simplify DevViewGraph Default Surface
+
+DEC-290 does not supersede DEC-097 through DEC-289. It reduces DevViewGraph's default visible surface so reviewers see
+only the current request, needed viewpoint buttons, compact inspect actions, the Current Work Flow stepper, the graph,
+and the right detail panel.
+
+Detailed Project Memory, SubGraph, Instruction Source, tree, node, and edge data is no longer expanded in the left rail
+by default. It is available only after clicking an inspect action, workflow step, viewpoint tree, graph node, or graph
+edge. This keeps the presentation view focused on the question "how does this one request narrow the graph?" while
+preserving all existing inspector evidence behind clicks.
+
+This decision changes presentation only. It does not change graph-source, Project Memory, traversal, selected slice,
+contract input, instruction-pack authority, Codex execution, approval, apply, runtime Evidence, equivalence, scope
+enforcement, CI, or human review boundaries.

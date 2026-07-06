@@ -1051,7 +1051,7 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
     }
     .shell {
       display: grid;
-      grid-template-columns: 340px minmax(620px, 1fr) 410px;
+      grid-template-columns: 280px minmax(620px, 1fr) 370px;
       grid-template-rows: auto 1fr;
       min-height: 100vh;
     }
@@ -1145,7 +1145,7 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
       overflow: auto;
       border-right: 1px solid var(--graph-line);
       background: var(--graph-surface);
-      padding: 14px;
+      padding: 12px;
     }
     .inspector {
       overflow: auto;
@@ -1364,6 +1364,29 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
       color: var(--graph-muted);
       font-size: 12px;
       line-height: 1.45;
+    }
+    .request-focus {
+      margin-top: 8px;
+      display: grid;
+      gap: 5px;
+      font-size: 12px;
+    }
+    .request-focus div {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr);
+      gap: 7px;
+    }
+    .request-focus span:first-child {
+      color: var(--graph-muted);
+    }
+    .request-focus span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .inspect-actions {
+      display: grid;
+      gap: 6px;
     }
     .memory-grid {
       display: grid;
@@ -1628,24 +1651,12 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
         <div id="current-request"></div>
       </div>
       <div class="section">
-        <h2>Project Memory</h2>
-        <div id="project-memory"></div>
-      </div>
-      <div class="section">
-        <h2>Selected Viewpoint Trees</h2>
+        <h2>Needed Viewpoints</h2>
         <div id="selected-tree-list"></div>
       </div>
       <div class="section">
-        <h2>All Trees</h2>
-        <div id="tree-list"></div>
-      </div>
-      <div class="section">
-        <h2>SubGraphs</h2>
-        <div id="subgraph-list"></div>
-      </div>
-      <div class="section">
-        <h2>Instruction Sources</h2>
-        <div id="mapping-list"></div>
+        <h2>Inspect</h2>
+        <div id="inspect-actions" class="inspect-actions"></div>
       </div>
     </aside>
     <main class="workspace">
@@ -1696,19 +1707,10 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
 
     function renderLists() {
       renderRequestPanel();
-      renderProjectMemoryPanel();
       renderWorkflowSteps();
       const selectedTreeIds = data.requestSummary?.selectedTreeIds || data.subgraphs[0]?.requiredTreeIds || [];
-      document.getElementById('selected-tree-list').innerHTML = treeBreakdownHtml(selectedTreeIds, 4);
-      document.getElementById('tree-list').innerHTML = data.trees.map((tree) =>
-        '<button class="item" data-kind="tree" data-id="' + esc(tree.id) + '"><span>' + esc(tree.label) + '</span><span class="count">' + tree.nodeIds.length + '/' + tree.edgeIds.length + '</span></button>'
-      ).join('');
-      document.getElementById('subgraph-list').innerHTML = data.subgraphs.map((subgraph) =>
-        '<button class="item" data-kind="subgraph" data-id="' + esc(subgraph.id) + '"><span>' + esc(subgraph.label) + '</span><span class="count">' + subgraph.nodeIds.length + '/' + subgraph.edgeIds.length + '</span></button>'
-      ).join('');
-      document.getElementById('mapping-list').innerHTML = data.packMapping.map((mapping) =>
-        '<button class="item" data-kind="mapping" data-id="' + esc(mapping.id) + '"><span>' + esc(mapping.displayLabel || mapping.packSection) + '</span><span class="count">' + esc(mapping.role || mapping.elementKind) + '</span></button>'
-      ).join('');
+      document.getElementById('selected-tree-list').innerHTML = compactTreeListHtml(selectedTreeIds);
+      renderInspectActions();
       document.querySelectorAll('[data-kind][data-id]').forEach((button) => {
         button.addEventListener('click', () => {
           const kind = button.getAttribute('data-kind');
@@ -1716,12 +1718,23 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
           if (kind === 'tree') selectTree(id);
           if (kind === 'subgraph') selectSubgraph(id);
           if (kind === 'workflow-step') selectWorkflowStep(id);
+          if (kind === 'project-memory') selectProjectMemory();
+          if (kind === 'instruction-sources') selectInstructionSources();
           if (kind === 'mapping') selectMapping(id);
           if (kind === 'node') selectNode(id);
           if (kind === 'edge') selectEdge(id);
         });
       });
       updateActiveButtons();
+    }
+
+    function renderInspectActions() {
+      const subgraph = data.subgraphs[0];
+      const hasMemory = Boolean(data.projectMemorySummary);
+      document.getElementById('inspect-actions').innerHTML =
+        '<button class="item" data-kind="subgraph" data-id="' + esc(subgraph?.id || '') + '"><span>Selected SubGraph</span><span class="count">' + esc((subgraph?.nodeIds?.length || 0) + '/' + (subgraph?.edgeIds?.length || 0)) + '</span></button>' +
+        '<button class="item" data-kind="instruction-sources" data-id="instruction-sources"><span>Instruction Sources</span><span class="count">' + esc(String((data.packMapping || []).length)) + '</span></button>' +
+        '<button class="item" data-kind="project-memory" data-id="project-memory"><span>Project Memory</span><span class="count">' + esc(hasMemory ? 'preview' : 'none') + '</span></button>';
     }
 
     function renderWorkflowSteps() {
@@ -1782,42 +1795,16 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
 
     function renderRequestPanel() {
       const summary = data.requestSummary || {};
+      const subgraph = data.subgraphs[0] || {};
       document.getElementById('current-request').innerHTML =
         '<div class="request-card">' +
         '<strong>' + esc(summary.userRequest || data.sourceRecordId) + '</strong>' +
-        '<p>' + esc(summary.writeBoundary || summary.targetSlice || 'Read-only graph inspection.') + '</p>' +
-        '<div class="mini-row">' +
-        '<span class="mini-pill">' + esc(summary.sourceRecordId || data.sourceRecordId) + '</span>' +
-        '<span class="mini-pill">' + esc(summary.projectName || 'project') + '</span>' +
-        '<span class="mini-pill">' + esc((summary.selectedNodeIds || []).length + ' nodes') + '</span>' +
-        '<span class="mini-pill">' + esc((summary.selectedEdgeIds || []).length + ' edges') + '</span>' +
+        '<div class="request-focus">' +
+        '<div><span>Type</span><span>' + esc(subgraph.taskType || 'graph inspection') + '</span></div>' +
+        '<div><span>Target</span><span>' + esc(summary.targetSlice || summary.sourceRecordId || data.sourceRecordId) + '</span></div>' +
+        '<div><span>Boundary</span><span>' + esc(summary.writeBoundary || 'read-only graph inspection') + '</span></div>' +
         '</div>' +
-        '</div>';
-    }
-
-    function renderProjectMemoryPanel() {
-      const memory = data.projectMemorySummary;
-      const target = document.getElementById('project-memory');
-      if (!memory) {
-        target.innerHTML = '<div class="memory-card"><strong>No Project Memory</strong><p>Graph and pack inspection only.</p></div>';
-        return;
-      }
-      target.innerHTML =
-        '<div class="memory-card">' +
-        '<strong>' + esc(memory.projectName || memory.projectId || 'Project Memory') + '</strong>' +
-        '<p>' + esc(memory.nonAuthorityWarning || 'Preview-only project context.') + '</p>' +
-        '<div class="memory-grid">' +
-        '<span>Project Mode</span><span>' + esc(memory.devviewMode || 'unknown') + '</span>' +
-        '<span>Direction</span><span>' + esc(memory.currentDirection || 'unknown') + '</span>' +
-        '<span>Portfolio</span><span>' + esc(memory.portfolioRole || 'context-only') + '</span>' +
-        '<span>Detailed Slice</span><span>' + esc((memory.detailedSliceLabel || 'slice') + ': ' + (memory.detailedSliceRole || 'unknown')) + '</span>' +
-        '<span>Taxonomy Profile</span><span>' + esc(memory.taxonomyProfileId || 'none') + '</span>' +
-        '<span>Authority</span><span>' + esc(memory.taxonomyAuthorityStatus || memory.status || 'preview-only') + '</span>' +
-        '</div>' +
-        '<div class="mini-row">' +
-        '<span class="mini-pill">' + esc(memory.viewTreeProfileId || 'view-tree-profile') + '</span>' +
-        '<span class="mini-pill">' + esc(memory.viewTreeAuthorityStatus || 'not-approved') + '</span>' +
-        '</div>' +
+        '<button class="item" data-kind="workflow-step" data-id="workflow.request-ir"><span>Request details</span><span class="count">open</span></button>' +
         '</div>';
     }
 
@@ -2095,6 +2082,40 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
       bindDetailChips();
     }
 
+    function selectProjectMemory() {
+      state.selectedType = 'project-memory';
+      state.selectedId = 'project-memory';
+      const memory = data.projectMemorySummary;
+      if (!memory) {
+        detail.innerHTML = '<h2>Project Memory</h2><div class="sub">Not Provided</div><p>No Project Memory preview was passed to this DevViewGraph render.</p>';
+        updateState();
+        return;
+      }
+      detail.innerHTML = '<h2>' + esc(memory.projectName || memory.projectId || 'Project Memory') + '</h2><div class="sub">Project Memory Preview</div>' + kv([
+        ['project mode', memory.devviewMode || 'unknown'],
+        ['direction', memory.currentDirection || 'unknown'],
+        ['portfolio', memory.portfolioRole || 'context-only'],
+        ['detailed slice', (memory.detailedSliceLabel || 'slice') + ': ' + (memory.detailedSliceRole || 'unknown')],
+        ['taxonomy profile', memory.taxonomyProfileId || 'none'],
+        ['taxonomy authority', memory.taxonomyAuthorityStatus || memory.status || 'preview-only'],
+        ['view tree profile', memory.viewTreeProfileId || 'none'],
+        ['view tree authority', memory.viewTreeAuthorityStatus || 'not-approved'],
+        ['boundary', memory.nonAuthorityWarning || 'Preview-only project context.']
+      ]);
+      updateState();
+    }
+
+    function selectInstructionSources() {
+      state.selectedType = 'instruction-sources';
+      state.selectedId = 'instruction-sources';
+      detail.innerHTML = '<h2>Instruction Sources</h2><div class="sub">Click a source to inspect its graph element or guardrail.</div>' + kv([
+        ['source count', String((data.packMapping || []).length)],
+        ['sources', instructionSourceListHtml()]
+      ]);
+      updateState();
+      bindDetailChips();
+    }
+
     function selectWorkflowStep(id) {
       state.selectedType = 'workflow-step';
       state.selectedId = id;
@@ -2263,6 +2284,23 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
       ).join('');
     }
 
+    function compactTreeListHtml(treeIds) {
+      const selected = (treeIds || [])
+        .map((id) => data.trees.find((tree) => tree.id === id))
+        .filter(Boolean);
+      if (selected.length === 0) return '<div class="memory-card"><p>No viewpoint tree selected.</p></div>';
+      return selected.map((tree) =>
+        '<button class="item" data-kind="tree" data-id="' + esc(tree.id) + '"><span>' + esc(tree.label) + '</span><span class="count">' + tree.nodeIds.length + '/' + tree.edgeIds.length + '</span></button>'
+      ).join('');
+    }
+
+    function instructionSourceListHtml() {
+      if (!Array.isArray(data.packMapping) || data.packMapping.length === 0) return 'none';
+      return '<div class="chip-row">' + data.packMapping.map((mapping) =>
+        '<button class="chip" data-kind="mapping" data-id="' + esc(mapping.id) + '">' + esc(mapping.displayLabel || mapping.packSection || mapping.id) + '</button>'
+      ).join('') + '</div>';
+    }
+
     function chipList(values, kind) {
       if (!Array.isArray(values) || values.length === 0) return 'none';
       return '<div class="chip-row">' + values.map((value) => '<button class="chip" data-kind="' + esc(kind) + '" data-id="' + esc(String(value)) + '">' + esc(shortDisplay(String(value))) + '</button>').join('') + '</div>';
@@ -2303,6 +2341,13 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
       if (state.selectedType === 'workflow-step') {
         const step = (data.workflowSteps || []).find((entry) => entry.id === state.selectedId);
         return { title: 'Flow step: ' + (step?.label || state.selectedId), subtitle: step ? step.phase + ' / ' + step.nodeIds.length + ' nodes / ' + step.edgeIds.length + ' edges' : 'workflow step' };
+      }
+      if (state.selectedType === 'project-memory') {
+        const memory = data.projectMemorySummary;
+        return { title: 'Project Memory', subtitle: memory ? (memory.devviewMode || 'unknown') + ' / ' + (memory.currentDirection || 'unknown') : 'not provided' };
+      }
+      if (state.selectedType === 'instruction-sources') {
+        return { title: 'Instruction Sources', subtitle: (data.packMapping || []).length + ' source entries from the preview pack' };
       }
       const subgraph = data.subgraphs.find((entry) => entry.id === state.selectedId);
       return { title: 'Selected subgraph: ' + (subgraph?.label || state.selectedId), subtitle: subgraph ? subgraph.nodeIds.length + ' nodes / ' + subgraph.edgeIds.length + ' edges from the current request' : 'subgraph' };

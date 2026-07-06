@@ -31,6 +31,9 @@ The generated inspector includes a Current Work Flow stepper for the active requ
 Clicking those steps changes graph highlight and inspector detail only. It does not run traversal, generate a new
 contract, execute Codex, mutate graph-source, approve work, or satisfy runtime Evidence.
 
+The default view is intentionally compact: current request, needed viewpoints, inspect actions, graph, and detail panel.
+Project Memory, SubGraph, Instruction Sources, and node/edge/tree details appear only after click.
+
 This fixture does not mutate `Utility_Windows`, mutate `WindowsUtility`, apply graph deltas, approve work, satisfy
 runtime Evidence, prove equivalence, enforce scope, or configure CI.
 
