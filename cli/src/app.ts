@@ -146,6 +146,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     dryRunReport: undefined as string | undefined,
     reviewPacket: undefined as string | undefined,
     decisionRecord: undefined as string | undefined,
+    evidenceDecision: undefined as string | undefined,
     decision: undefined as string | undefined,
     reviewer: undefined as string | undefined,
     rationale: undefined as string | undefined,
@@ -555,6 +556,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--decision-record requires a file path.' }
       }
       options.decisionRecord = value
+      index += 1
+    } else if (arg === '--evidence-decision') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--evidence-decision requires a file path.' }
+      }
+      options.evidenceDecision = value
       index += 1
     } else if (arg === '--decision') {
       const value = argv[index + 1]

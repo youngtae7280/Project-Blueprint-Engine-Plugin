@@ -1948,6 +1948,22 @@ candidate/source evidence artifact and a human `defer` decision. The record has
 `ciEnforcementEnabled`, `graphSourceMutated`, and `graphDeltaApplied` false. It records human review intent only; a
 future accepted-evidence record command must revalidate provenance before accepted Evidence can exist.
 
+The accepted Evidence calibration uses a separate hardened `accept-evidence` decision and then creates the only
+calibration artifact in this phase where `evidenceAccepted: true` is valid:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.md
+examples/valid/todo-app-pbe-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.md
+```
+
+The source evidence is still the blocked Graph Delta Apply report and the accepted claim is intentionally narrow:
+evidence that the blocked apply lifecycle report was reviewed. The accepted Evidence record keeps
+`acceptedEvidenceState: accepted-evidence-recorded-not-runtime-satisfied` and preserves
+`runtimeEvidenceSatisfied`, `equivalenceProven`, `scopeEnforced`, `ciEnforcementEnabled`, `graphSourceMutated`, and
+`graphDeltaApplied` false. Runtime Evidence satisfaction remains a separate future binding lifecycle.
+
 The Equivalence Proof Policy boundary preview is:
 
 ```text

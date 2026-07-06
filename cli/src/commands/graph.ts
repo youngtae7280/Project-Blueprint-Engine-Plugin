@@ -4,6 +4,7 @@ import { reportApprovedApplyDryRunFile } from '../core/approved-apply-dry-run.js
 import { createApprovedProposalStateFile } from '../core/approved-proposal-state.js'
 import { generateAiRequestAnalyzerPackFile } from '../core/ai-request-analyzer-pack.js'
 import { checkGraphDeltaApplyReadinessFile } from '../core/graph-delta-apply-readiness.js'
+import { createAcceptedEvidenceRecordFile } from '../core/accepted-evidence-record.js'
 import { recordEvidenceDecisionFile } from '../core/evidence-decision-record.js'
 import { reportEvidenceAcceptanceReadinessFile } from '../core/evidence-acceptance-readiness.js'
 import { reportEquivalenceProofReadinessFile } from '../core/equivalence-proof-readiness.js'
@@ -1395,6 +1396,70 @@ export async function graphReadModelRecordEvidenceDecisionCommand(context: Comma
           message,
           suggestedFix:
             'Provide a readable policy boundary, one readable source evidence artifact, explicit human reviewer/rationale, and dedicated evidence decision output paths. This command never accepts Evidence.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelCreateAcceptedEvidenceRecordCommand(
+  context: CommandContext,
+): Promise<CommandResult> {
+  if (!context.options.evidenceDecision) {
+    return invalidCommand('graph read-model create-accepted-evidence-record requires --evidence-decision <file>.')
+  }
+  if (!context.options.policy) {
+    return invalidCommand('graph read-model create-accepted-evidence-record requires --policy <file>.')
+  }
+  if (!context.options.sourceEvidence) {
+    return invalidCommand('graph read-model create-accepted-evidence-record requires --source-evidence <file>.')
+  }
+  if (!context.options.output) {
+    return invalidCommand('graph read-model create-accepted-evidence-record requires --output <file>.')
+  }
+
+  try {
+    const result = await createAcceptedEvidenceRecordFile(context.options.root, {
+      evidenceDecision: context.options.evidenceDecision,
+      policy: context.options.policy,
+      sourceEvidence: context.options.sourceEvidence,
+      readiness: context.options.readiness,
+      applyReport: context.options.applyReport,
+      runtimeReport: context.options.runtimeReport,
+      scopeReport: context.options.scopeReport,
+      proposal: context.options.proposal,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph read-model create-accepted-evidence-record',
+      exitCode: ExitCode.Success,
+      message:
+        'Accepted Evidence record created without satisfying runtime Evidence, proving equivalence, applying, mutating, or enforcing.',
+      issues: [],
+      data: {
+        ...result.record,
+        ...(result.outputPath ? { outputPath: result.outputPath } : {}),
+        ...(result.markdownReport ? { markdownReport: result.markdownReport } : {}),
+        next: 'Use this as accepted Evidence only. A separate future runtime Evidence satisfaction binding command must revalidate provenance before runtime Evidence can be satisfied.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model create-accepted-evidence-record',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Accepted Evidence record blocked.',
+      issues: [
+        issue({
+          validator: 'AcceptedEvidenceRecord',
+          code: 'ACCEPTED_EVIDENCE_RECORD_BLOCKED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide a hardened accept-evidence decision record, matching source evidence, a valid policy boundary, and dedicated accepted evidence output paths. This command never satisfies runtime Evidence.',
         }),
       ],
     }

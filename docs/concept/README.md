@@ -368,6 +368,13 @@ It is produced by `graph read-model record-evidence-decision ...` with one candi
 human `defer` decision. The record preserves human review intent but still keeps `acceptedEvidenceRecordCreated`,
 `evidenceAccepted`, `runtimeEvidenceSatisfied`, equivalence, scope/CI, graph mutation, and graph apply flags false.
 
+Accepted Evidence is now a separate explicit lifecycle step. The supporting accept-decision fixture is
+`examples/valid/todo-app-pbe-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.json`,
+and the accepted Evidence calibration is
+`examples/valid/todo-app-pbe-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.json`.
+Only this `devview-accepted-evidence-record` success artifact may set `evidenceAccepted: true`; it still keeps
+`runtimeEvidenceSatisfied`, equivalence, scope/CI, graph mutation, and graph apply flags false.
+
 The Equivalence Proof Policy boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-policy-boundary.runtime-evidence-only.preview.json`.
 It anchors the `graph read-model report-equivalence-proof-readiness ...` command. The first calibration equivalence

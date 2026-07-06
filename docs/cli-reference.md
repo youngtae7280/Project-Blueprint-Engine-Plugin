@@ -867,6 +867,38 @@ node dist/cli/index.js graph read-model record-evidence-decision `
   --json
 ```
 
+### `pbe graph read-model create-accepted-evidence-record`
+
+- Purpose: Create an Accepted Evidence record from a hardened human `accept-evidence` decision while still leaving
+  runtime Evidence satisfaction, equivalence, scope enforcement, CI enforcement, graph mutation, and graph apply false.
+- Typical state before running: After `graph read-model record-evidence-decision` has produced a hardened
+  `devview-evidence-decision-record` with `decisionKind: accept` and `decisionValue: accept-evidence`.
+- Options: `--evidence-decision <file>`, `--policy <policyBoundaryPath>`, `--source-evidence <file>`, and
+  `--output <file>` are required. `--readiness <file>`, `--apply-report <file>`, `--runtime-report <file>`,
+  `--scope-report <file>`, `--proposal <file>`, and `--markdown <file>` are optional provenance/report paths.
+- What it checks: Evidence decision role/status/hardening, human-only decision actor/source, source evidence path and
+  comparable role/status/claim provenance, source evidence hash, Evidence Acceptance Policy boundary role/status, unsafe
+  authority flags, and output authority.
+- What it writes: A `devview-accepted-evidence-record` JSON artifact and optional Markdown summary only at explicit
+  output paths. Blocked runs do not write an accepted-evidence artifact.
+- Success result: `evidenceAccepted: true` is allowed only in the successful `devview-accepted-evidence-record`. The
+  same artifact keeps `runtimeEvidenceSatisfied`, `equivalenceProven`, `scopeEnforced`, `ciEnforcementEnabled`,
+  `graphSourceMutated`, and `graphDeltaApplied` false.
+- Next command: Runtime Evidence Satisfaction Binding is a separate future lifecycle. Accepted Evidence alone is not a
+  runtime satisfaction claim, not an equivalence proof, not scope/CI enforcement, and not graph mutation permission.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model create-accepted-evidence-record `
+  --evidence-decision examples/valid/todo-app-pbe-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.json `
+  --policy examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-policy-boundary.runtime-evidence-only.preview.json `
+  --source-evidence examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json `
+  --output .tmp/devview-accepted-evidence-record.json `
+  --markdown .tmp/devview-accepted-evidence-record.md `
+  --json
+```
+
 ### `pbe graph read-model report-equivalence-proof-readiness`
 
 - Purpose: Report equivalence proof readiness from an Evidence Acceptance readiness preview without proving equivalence.

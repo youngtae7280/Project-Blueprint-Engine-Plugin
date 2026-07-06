@@ -3917,3 +3917,35 @@ This decision adds no default runtime smoke step. It adds no accepted Evidence r
 satisfaction, no equivalence proof, no scope enforcement, no CI enforcement, no graph-source mutation, no graph delta
 apply, no automatic approval, no user acceptance automation, no Codex self-acceptance, no provider invocation, no
 LLM/API or network call, and no Project Memory extension authority.
+
+## DEC-309 Create Accepted Evidence Record Without Runtime Satisfaction
+
+DEC-309 does not supersede DEC-097 through DEC-308. It adds
+`graph read-model create-accepted-evidence-record` as the explicit Accepted Evidence creation step after a hardened human
+Evidence decision.
+
+The command consumes a hardened `devview-evidence-decision-record`, the Evidence Acceptance Policy boundary, and the
+same single source evidence artifact referenced by the decision. It requires `decisionKind: accept`,
+`decisionValue: accept-evidence`, `decisionActorType: human`, an allowed decision source, source evidence provenance
+match, source evidence SHA-256 recording, and policy/source safety checks. Defer, reject, request-changes,
+legacy/unhardened, non-human, mismatched, unsafe source evidence, and unsafe output paths are blocked before writing an
+accepted Evidence artifact.
+
+This is the first DevView artifact where `evidenceAccepted: true` is valid. That authority is intentionally narrow and
+exists only on the successful `devview-accepted-evidence-record`. The record also declares
+`acceptedEvidenceState: accepted-evidence-recorded-not-runtime-satisfied`, records accepted claims and limitations, and
+keeps `runtimeEvidenceSatisfied`, `equivalenceProven`, `scopeEnforced`, `ciEnforcementEnabled`, `graphSourceMutated`,
+and `graphDeltaApplied` false.
+
+The tracked calibration artifacts are:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.json
+```
+
+The calibration source evidence is the blocked Graph Delta Apply report, and the claim is limited to human review of
+that blocked lifecycle report as candidate evidence. This decision adds no runtime Evidence satisfaction binding, no
+equivalence proof, no scope enforcement, no CI enforcement, no graph-source mutation, no graph delta apply, no automatic
+approval, no user acceptance automation, no Codex self-acceptance, no provider invocation, no LLM/API or network call,
+and no Project Memory extension authority.

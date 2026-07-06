@@ -107,6 +107,7 @@ export interface CliOptions {
   dryRunReport?: string
   reviewPacket?: string
   decisionRecord?: string
+  evidenceDecision?: string
   decision?: string
   reviewer?: string
   rationale?: string

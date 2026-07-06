@@ -43,6 +43,7 @@ import {
   graphReadModelProjectIntentCommand,
   graphReadModelReviewGraphDeltaCommand,
   graphReadModelRecordEvidenceDecisionCommand,
+  graphReadModelCreateAcceptedEvidenceRecordCommand,
   graphReadModelRecordHumanDecisionCommand,
   graphReadModelReviseRequestIrCandidateCommand,
   graphReadModelRunClarificationChainCommand,
@@ -290,6 +291,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'record-evidence-decision') {
     return graphReadModelRecordEvidenceDecisionCommand(context)
+  }
+  if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'create-accepted-evidence-record') {
+    return graphReadModelCreateAcceptedEvidenceRecordCommand(context)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'report-equivalence-proof-readiness') {
     return graphReadModelReportEquivalenceProofReadinessCommand(context)
