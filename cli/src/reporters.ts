@@ -334,7 +334,11 @@ Options:
                        Optional AI Request Analyzer provider config preview for graph read-model analyze-request.
   --external-candidate <file>
                        Explicit precomputed Request IR Candidate import for graph read-model analyze-request.
-  --invoke-provider    Enable mock-only analyzer provider parsing for graph read-model analyze-request; real provider/network calls are not implemented.
+  --invoke-provider    Enable analyzer provider parsing for graph read-model analyze-request. Mock mode remains no-network; live OpenAI mode also requires --allow-network-provider and --provider-mode openai.
+  --allow-network-provider
+                       Explicit network gate for graph read-model analyze-request live provider mode. Valid only with --provider-mode openai.
+  --provider-mode <mode>
+                       Provider mode for graph read-model analyze-request. Currently supports openai only when paired with --allow-network-provider.
   --mock-provider-response <file>
                        Mock analyzer provider response preview for --invoke-provider; no real provider is called.
   --clarification-pack <file>

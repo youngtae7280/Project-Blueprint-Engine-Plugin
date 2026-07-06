@@ -2,7 +2,12 @@ import path from 'node:path'
 import {
   createMockAnalyzerProviderAdapter,
   createUnavailableOpenAiAnalyzerProviderAdapter,
+  type AnalyzerProviderAdapterResult,
 } from './ai-request-analyzer-provider-adapter.js'
+import {
+  createOpenAiAnalyzerProviderAdapter,
+  type OpenAiAnalyzerProviderAdapter,
+} from './ai-request-analyzer-openai-provider-adapter.js'
 import { readJsonSafe, readTextSafe, relativePath, writeJsonAtomic } from './fs.js'
 import { validateRequestIrCandidateSchemaOnly } from './request-ir-candidate-validator.js'
 import type { IssueSeverity } from './types.js'
@@ -24,8 +29,10 @@ type ProviderState =
   | 'unavailable'
   | 'blocked-invalid-config'
   | 'future-invocation-allowed-only-after-explicit-config'
-type CandidateOutputMode = 'none' | 'external-import' | 'mock-provider'
-type RunMode = 'default' | 'mock-provider'
+type CandidateOutputMode = 'none' | 'external-import' | 'mock-provider' | 'openai-provider'
+type RunMode = 'default' | 'mock-provider' | 'openai-provider'
+type ProviderInvocationAuthority = 'none-preview-only' | 'mock-only-no-network' | 'explicit-openai-network-gated'
+type ProviderInvocationMode = 'none' | 'mock-no-network' | 'openai-live'
 
 const PROVIDER_STATE_STATUS: Record<Exclude<ProviderState, 'not-provided'>, string> = {
   disabled: 'ai-request-analyzer-provider-config-disabled-previewed',
@@ -99,10 +106,15 @@ export interface AiRequestAnalyzerRunResult {
     | 'ai-request-analyzer-provider-config-blocked'
     | 'ai-request-analyzer-mock-provider-candidate-generated'
     | 'ai-request-analyzer-mock-provider-blocked'
+    | 'ai-request-analyzer-openai-provider-candidate-generated'
+    | 'ai-request-analyzer-openai-provider-blocked'
     | 'ai-request-analyzer-external-candidate-imported'
     | 'ai-request-analyzer-external-candidate-blocked'
   analyzerName: typeof ANALYZER_NAME
-  runScope: 'provider-disabled-or-external-candidate-import-no-llm' | 'mock-provider-response-to-candidate-no-network'
+  runScope:
+    | 'provider-disabled-or-external-candidate-import-no-llm'
+    | 'mock-provider-response-to-candidate-no-network'
+    | 'openai-provider-response-to-candidate-network-gated'
   sourceAiRequestAnalyzerPack: string
   sourceProviderConfig: string | null
   sourceExternalCandidate: string | null
@@ -116,16 +128,18 @@ export interface AiRequestAnalyzerRunResult {
     | 'provider-config-blocked'
     | 'mock-provider-candidate-generated-no-network'
     | 'mock-provider-blocked-no-network'
+    | 'openai-provider-candidate-generated-live'
+    | 'openai-provider-blocked-live'
     | 'external-candidate-imported-provider-not-invoked'
     | 'external-candidate-blocked-provider-not-invoked'
   analyzerProviderConfigured: boolean
   providerState: ProviderState
-  providerInvocationAuthority: 'none-preview-only' | 'mock-only-no-network'
-  providerInvocationMode: 'none' | 'mock-no-network'
+  providerInvocationAuthority: ProviderInvocationAuthority
+  providerInvocationMode: ProviderInvocationMode
   providerInvocationSkipped: boolean
-  llmInvoked: false
-  networkCallsAllowed: false
-  runtimeAiCallsAllowed: false
+  llmInvoked: boolean
+  networkCallsAllowed: boolean
+  runtimeAiCallsAllowed: boolean
   requestIrCandidateGenerated: boolean
   requestIrCandidateImported: boolean
   candidateImportRequired: boolean
@@ -176,9 +190,15 @@ interface AnalyzeRequestWithProviderConfigInput {
   providerConfigArtifact?: unknown
   providerConfigText?: string
   invokeProvider?: boolean
+  allowNetworkProvider?: boolean
+  providerMode?: string
   mockProviderResponseArtifact?: unknown
   mockProviderResponseText?: string
   paths?: AnalyzeRequestPaths
+}
+
+interface AnalyzeRequestWithOpenAiProviderInput extends AnalyzeRequestWithProviderConfigInput {
+  openAiAdapter?: OpenAiAnalyzerProviderAdapter
 }
 
 interface ProviderConfigAnalysis {
@@ -198,6 +218,14 @@ interface ProviderConfigAnalysis {
     | 'ai-request-analyzer-provider-config-blocked'
   noExternalFinding: AiRequestAnalyzerRunFinding
   blocksExternalImport: boolean
+}
+
+interface ProviderRunMetadata {
+  providerInvocationMode: ProviderInvocationMode
+  providerInvocationAuthority: ProviderInvocationAuthority
+  llmInvoked: boolean
+  networkCallsAllowed: boolean
+  runtimeAiCallsAllowed: boolean
 }
 
 export function analyzeRequestWithDisabledProvider(
@@ -229,6 +257,10 @@ export function analyzeRequestWithProviderConfig(
   validateRequestText(requestText, findings)
   validateAnalyzerPack(pack, findings)
   const providerAnalysis = validateProviderConfig(providerConfig, input.providerConfigText, findings)
+  const gateStatus = validateProviderRuntimeGates(input, providerAnalysis, providerConfig, findings)
+  if (gateStatus.blockBeforeExistingProviderFlow) {
+    return buildResult(requestText, paths, findings, undefined, providerAnalysis, 'default', 'none')
+  }
 
   if (input.invokeProvider && input.externalCandidateArtifact !== undefined) {
     findings.push({
@@ -346,6 +378,63 @@ export function analyzeRequestWithProviderConfig(
   )
 }
 
+async function analyzeRequestWithOpenAiProvider(
+  requestText: string,
+  analyzerPackArtifact: unknown,
+  input: AnalyzeRequestWithOpenAiProviderInput,
+): Promise<AiRequestAnalyzerRunResult> {
+  const paths = input.paths ?? {}
+  const pack = asRecord(analyzerPackArtifact)
+  const providerConfig = input.providerConfigArtifact === undefined ? null : asRecord(input.providerConfigArtifact)
+  const findings: AiRequestAnalyzerRunFinding[] = []
+
+  validateRequestText(requestText, findings)
+  validateAnalyzerPack(pack, findings)
+  const providerAnalysis = validateProviderConfig(providerConfig, input.providerConfigText, findings)
+  validateProviderRuntimeGates(input, providerAnalysis, providerConfig, findings)
+  validateOpenAiProviderConfigDetails(providerConfig, findings)
+
+  if (findings.some((finding) => finding.severity === 'error')) {
+    return buildResult(requestText, paths, findings, undefined, providerAnalysis, 'openai-provider', 'none')
+  }
+
+  const adapter = input.openAiAdapter ?? createOpenAiAnalyzerProviderAdapter()
+  const adapterResult = await adapter.invoke({
+    requestText,
+    analyzerPack: pack,
+    providerConfig,
+    providerConfigPath: paths.providerConfigPath,
+    outputPath: paths.outputPath,
+  })
+  findings.push(...adapterResult.findings)
+
+  const candidateFromProvider = adapterResult.candidatePayload
+  if (candidateFromProvider) {
+    validateProviderCandidateAgainstRequest(
+      candidateFromProvider,
+      requestText,
+      pack,
+      findings,
+      'openAiProvider.response.candidate',
+      'AI_REQUEST_ANALYZER_OPENAI_PROVIDER',
+    )
+  }
+
+  const blocked = findings.some((finding) => finding.severity === 'error')
+  return buildResult(
+    requestText,
+    paths,
+    findings,
+    blocked || !candidateFromProvider
+      ? undefined
+      : buildOpenAiProviderCandidate(requestText, pack, candidateFromProvider, paths, providerAnalysis),
+    providerAnalysis,
+    'openai-provider',
+    blocked || !candidateFromProvider ? 'none' : 'openai-provider',
+    adapterMetadata(adapterResult),
+  )
+}
+
 export async function analyzeRequestFile(
   root: string,
   requestText: string,
@@ -354,8 +443,11 @@ export async function analyzeRequestFile(
     externalCandidate?: string
     providerConfig?: string
     invokeProvider?: boolean
+    allowNetworkProvider?: boolean
+    providerMode?: string
     mockProviderResponse?: string
     output?: string
+    openAiAdapter?: OpenAiAnalyzerProviderAdapter
   } = {},
 ): Promise<AiRequestAnalyzerRunFileResult> {
   const resolvedPackPath = resolveRepoPath(root, packPath)
@@ -424,26 +516,33 @@ export async function analyzeRequestFile(
   }
 
   const outputPath = options.output ? relativePath(root, resolveRepoPath(root, options.output)) : undefined
-  const result = analyzeRequestWithProviderConfig(requestText, pack.value, {
+  const paths: AnalyzeRequestPaths = {
+    root,
+    packPath: relativePath(root, resolvedPackPath),
+    providerConfigPath: resolvedProviderConfigPath ? relativePath(root, resolvedProviderConfigPath) : undefined,
+    externalCandidatePath: resolvedExternalCandidatePath
+      ? relativePath(root, resolvedExternalCandidatePath)
+      : undefined,
+    mockProviderResponsePath: resolvedMockProviderResponsePath
+      ? relativePath(root, resolvedMockProviderResponsePath)
+      : undefined,
+    outputPath,
+  }
+  const commonInput: AnalyzeRequestWithOpenAiProviderInput = {
     externalCandidateArtifact: externalCandidate,
     providerConfigArtifact: providerConfig,
     providerConfigText,
     invokeProvider: options.invokeProvider,
+    allowNetworkProvider: options.allowNetworkProvider,
+    providerMode: options.providerMode,
     mockProviderResponseArtifact: mockProviderResponse,
     mockProviderResponseText,
-    paths: {
-      root,
-      packPath: relativePath(root, resolvedPackPath),
-      providerConfigPath: resolvedProviderConfigPath ? relativePath(root, resolvedProviderConfigPath) : undefined,
-      externalCandidatePath: resolvedExternalCandidatePath
-        ? relativePath(root, resolvedExternalCandidatePath)
-        : undefined,
-      mockProviderResponsePath: resolvedMockProviderResponsePath
-        ? relativePath(root, resolvedMockProviderResponsePath)
-        : undefined,
-      outputPath,
-    },
-  })
+    paths,
+    openAiAdapter: options.openAiAdapter,
+  }
+  const result = shouldUseOpenAiProviderPath(options)
+    ? await analyzeRequestWithOpenAiProvider(requestText, pack.value, commonInput)
+    : analyzeRequestWithProviderConfig(requestText, pack.value, commonInput)
 
   if (
     options.output &&
@@ -852,11 +951,11 @@ function providerConfigAnalysis(providerState: ProviderState): ProviderConfigAna
           severity: 'error',
           field: 'providerConfig.providerState',
           message:
-            'AI Request Analyzer provider config is OpenAI-live-enabled, but this implementation has no OpenAI SDK, network gate, provider mode flag, or live adapter.',
-          expected: 'future OpenAI adapter slice with explicit network gate',
+            'AI Request Analyzer provider config is OpenAI-live-enabled, but invocation requires --invoke-provider, --allow-network-provider, and --provider-mode openai.',
+          expected: '--invoke-provider --allow-network-provider --provider-mode openai',
           actual: providerState,
           suggestedFix:
-            'Use the mock provider response path for deterministic testing, import an external Request IR Candidate, or wait for the future OpenAI adapter implementation slice.',
+            'Use all explicit OpenAI provider gates, use the mock provider response path for deterministic testing, or import an external Request IR Candidate.',
         },
         blocksExternalImport: false,
       }
@@ -895,6 +994,179 @@ function providerConfigAnalysis(providerState: ProviderState): ProviderConfigAna
         },
         blocksExternalImport: true,
       }
+  }
+}
+
+function validateProviderRuntimeGates(
+  input: AnalyzeRequestWithProviderConfigInput,
+  providerAnalysis: ProviderConfigAnalysis,
+  providerConfig: JsonRecord | null,
+  findings: AiRequestAnalyzerRunFinding[],
+): { blockBeforeExistingProviderFlow: boolean } {
+  const providerMode = input.providerMode ?? ''
+  const providerModeProvided = providerMode.length > 0
+  const allowNetwork = input.allowNetworkProvider === true
+  const openAiMode = providerMode === 'openai'
+  const before = findings.length
+
+  if (providerModeProvided && !openAiMode) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_PROVIDER_MODE_UNSUPPORTED',
+      severity: 'error',
+      field: 'providerMode',
+      message: 'analyze-request supports only provider mode "openai" for live provider invocation.',
+      expected: 'openai',
+      actual: providerMode,
+      suggestedFix: 'Use --provider-mode openai with explicit network gates, or omit --provider-mode.',
+    })
+  }
+  if (allowNetwork && !openAiMode) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_NETWORK_GATE_WITHOUT_OPENAI_MODE_BLOCKED',
+      severity: 'error',
+      field: 'allowNetworkProvider',
+      message: '--allow-network-provider is valid only with --provider-mode openai.',
+      expected: '--provider-mode openai',
+      actual: providerMode || null,
+      suggestedFix: 'Pair --allow-network-provider with --provider-mode openai, or remove the network gate.',
+    })
+  }
+  if (openAiMode && !allowNetwork) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_OPENAI_MODE_REQUIRES_NETWORK_GATE',
+      severity: 'error',
+      field: 'allowNetworkProvider',
+      message: '--provider-mode openai requires the explicit --allow-network-provider gate.',
+      expected: '--allow-network-provider',
+      actual: false,
+      suggestedFix: 'Add --allow-network-provider only when live provider invocation is intended.',
+    })
+  }
+  if (openAiMode && !input.invokeProvider) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_OPENAI_MODE_REQUIRES_INVOKE_PROVIDER',
+      severity: 'error',
+      field: 'invokeProvider',
+      message: '--provider-mode openai requires --invoke-provider.',
+      expected: '--invoke-provider',
+      actual: false,
+      suggestedFix: 'Add --invoke-provider only when live provider invocation is intended.',
+    })
+  }
+  if (openAiMode && input.mockProviderResponseArtifact !== undefined) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_OPENAI_MODE_WITH_MOCK_RESPONSE_BLOCKED',
+      severity: 'error',
+      field: 'mockProviderResponse',
+      message: '--provider-mode openai cannot be combined with --mock-provider-response.',
+      expected: 'choose live OpenAI mode or mock provider response mode',
+      actual: '--provider-mode openai and --mock-provider-response',
+      suggestedFix:
+        'Remove --mock-provider-response for live OpenAI mode, or omit --provider-mode openai for mock mode.',
+    })
+  }
+  if (openAiMode && providerAnalysis.providerState !== 'configured-openai-invocation-enabled') {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_OPENAI_MODE_REQUIRES_LIVE_PROVIDER_CONFIG',
+      severity: 'error',
+      field: 'providerConfig.providerState',
+      message: 'Live OpenAI mode requires providerState configured-openai-invocation-enabled.',
+      expected: 'configured-openai-invocation-enabled',
+      actual: providerAnalysis.providerState,
+      suggestedFix: 'Provide the OpenAI live provider config preview artifact.',
+    })
+  }
+  if (openAiMode && stringValue(providerConfig?.providerNameCandidate) !== 'openai') {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_OPENAI_PROVIDER_NAME_MISMATCH',
+      severity: 'error',
+      field: 'providerConfig.providerNameCandidate',
+      message: 'Live OpenAI mode requires providerNameCandidate openai.',
+      expected: 'openai',
+      actual: stringValue(providerConfig?.providerNameCandidate) || null,
+      suggestedFix: 'Use an OpenAI provider config preview artifact.',
+    })
+  }
+
+  return { blockBeforeExistingProviderFlow: findings.length > before }
+}
+
+function validateOpenAiProviderConfigDetails(
+  providerConfig: JsonRecord | null,
+  findings: AiRequestAnalyzerRunFinding[],
+): void {
+  const apiKeySourceRef = stringValue(providerConfig?.apiKeySourceRef)
+  if (!apiKeySourceRef || !/^[A-Z_][A-Z0-9_]*$/.test(apiKeySourceRef)) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_OPENAI_API_KEY_REF_INVALID',
+      severity: 'error',
+      field: 'providerConfig.apiKeySourceRef',
+      message: 'OpenAI provider config must contain an environment variable name reference only.',
+      expected: 'uppercase environment variable name reference',
+      actual: apiKeySourceRef || null,
+      suggestedFix: 'Use apiKeySourceRef such as OPENAI_API_KEY without storing the API key value.',
+    })
+  }
+  if (typeof providerConfig?.timeoutMs !== 'number' || providerConfig.timeoutMs <= 0) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_OPENAI_TIMEOUT_INVALID',
+      severity: 'error',
+      field: 'providerConfig.timeoutMs',
+      message: 'OpenAI provider config timeoutMs must be a positive number.',
+    })
+  }
+  if (typeof providerConfig?.maxOutputTokens !== 'number' || providerConfig.maxOutputTokens <= 0) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_OPENAI_MAX_OUTPUT_TOKENS_INVALID',
+      severity: 'error',
+      field: 'providerConfig.maxOutputTokens',
+      message: 'OpenAI provider config maxOutputTokens must be a positive number.',
+    })
+  }
+  if (!stringValue(providerConfig?.structuredOutputMode)) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_OPENAI_STRUCTURED_OUTPUT_MODE_MISSING',
+      severity: 'error',
+      field: 'providerConfig.structuredOutputMode',
+      message: 'OpenAI provider config must specify structuredOutputMode.',
+    })
+  }
+  if (providerConfig?.storeProviderResponse !== false) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_OPENAI_STORE_PROVIDER_RESPONSE_BLOCKED',
+      severity: 'error',
+      field: 'providerConfig.storeProviderResponse',
+      message: 'OpenAI provider config must keep storeProviderResponse false.',
+      expected: false,
+      actual: providerConfig?.storeProviderResponse,
+      suggestedFix: 'Do not persist raw provider responses in this slice.',
+    })
+  }
+}
+
+function shouldUseOpenAiProviderPath(options: {
+  invokeProvider?: boolean
+  allowNetworkProvider?: boolean
+  providerMode?: string
+  externalCandidate?: string
+  mockProviderResponse?: string
+}): boolean {
+  return (
+    options.invokeProvider === true &&
+    options.allowNetworkProvider === true &&
+    options.providerMode === 'openai' &&
+    !options.externalCandidate &&
+    !options.mockProviderResponse
+  )
+}
+
+function adapterMetadata(adapterResult: AnalyzerProviderAdapterResult): ProviderRunMetadata {
+  return {
+    providerInvocationMode: adapterResult.providerInvocationMode,
+    providerInvocationAuthority: adapterResult.providerInvocationAuthority,
+    llmInvoked: adapterResult.diagnostics.llmInvoked,
+    networkCallsAllowed: adapterResult.diagnostics.networkCallsAllowed,
+    runtimeAiCallsAllowed: adapterResult.diagnostics.runtimeAiCallsAllowed,
   }
 }
 
@@ -1022,6 +1294,80 @@ function validateMockProviderCandidateSchema(candidate: JsonRecord, findings: Ai
   }
 }
 
+function validateProviderCandidateAgainstRequest(
+  candidate: JsonRecord,
+  requestText: string,
+  pack: JsonRecord | null,
+  findings: AiRequestAnalyzerRunFinding[],
+  fieldPrefix: string,
+  codePrefix: string,
+): void {
+  const candidateRequestText = stringValue(candidate.requestText)
+  if (candidateRequestText && normalizeRequestText(candidateRequestText) !== normalizeRequestText(requestText)) {
+    findings.push({
+      code: `${codePrefix}_CANDIDATE_REQUEST_MISMATCH`,
+      severity: 'error',
+      field: `${fieldPrefix}.requestText`,
+      message: 'Provider candidate requestText does not match the CLI --request text.',
+      expected: requestText,
+      actual: candidateRequestText,
+      suggestedFix: 'Use a provider candidate generated for the exact natural-language request text.',
+    })
+  }
+  const sourceRequestText = stringValue(asRecord(candidate.sourceNaturalLanguageRequest)?.text)
+  if (sourceRequestText && normalizeRequestText(sourceRequestText) !== normalizeRequestText(requestText)) {
+    findings.push({
+      code: `${codePrefix}_CANDIDATE_REQUEST_MISMATCH`,
+      severity: 'error',
+      field: `${fieldPrefix}.sourceNaturalLanguageRequest.text`,
+      message: 'Provider candidate sourceNaturalLanguageRequest.text does not match the CLI --request text.',
+      expected: requestText,
+      actual: sourceRequestText,
+      suggestedFix: 'Use a provider candidate generated for the exact natural-language request text.',
+    })
+  }
+  const expectedSchemaId = stringValue(pack?.expectedOutputSchemaId)
+  const candidateSchemaId = stringValue(candidate.schemaId)
+  if (expectedSchemaId && candidateSchemaId && expectedSchemaId !== candidateSchemaId) {
+    findings.push({
+      code: `${codePrefix}_CANDIDATE_SCHEMA_MISMATCH`,
+      severity: 'error',
+      field: `${fieldPrefix}.schemaId`,
+      message: 'Provider candidate schemaId does not match the analyzer pack expected schema.',
+      expected: expectedSchemaId,
+      actual: candidateSchemaId,
+      suggestedFix: 'Use a provider candidate that conforms to the analyzer pack expected Request IR Candidate schema.',
+    })
+  }
+
+  const unsafe = findUnsafeAuthorityClaim(candidate)
+  if (unsafe) {
+    findings.push({
+      code: `${codePrefix}_CANDIDATE_AUTHORITY_ESCALATION`,
+      severity: 'error',
+      field: `${fieldPrefix}.${unsafe.field}`,
+      message: `Provider candidate attempts to claim unsafe authority via "${unsafe.field}".`,
+      expected: unsafe.expected,
+      actual: unsafe.actual,
+      suggestedFix:
+        'Provider candidates must remain candidate-only and must not claim traversal, contract, instruction, approval, Evidence, equivalence, graph mutation, graph apply, scope, or CI authority.',
+    })
+  }
+
+  const validation = validateRequestIrCandidateSchemaOnly(candidate)
+  for (const finding of validation.validationFindings.filter((entry) => entry.severity === 'error')) {
+    findings.push({
+      code: `${codePrefix}_${finding.code}`,
+      severity: 'error',
+      field: finding.field ? `${fieldPrefix}.${finding.field}` : fieldPrefix,
+      message: `Provider candidate is not safe for generation: ${finding.message}`,
+      expected: finding.expected,
+      actual: finding.actual,
+      suggestedFix: finding.suggestedFix,
+    })
+  }
+}
+
 function validateExternalCandidateAgainstRequest(
   candidate: JsonRecord,
   requestText: string,
@@ -1107,39 +1453,52 @@ function buildResult(
   providerAnalysis: ProviderConfigAnalysis,
   runMode: RunMode,
   candidateOutputMode: CandidateOutputMode,
+  providerRunMetadata?: ProviderRunMetadata,
 ): AiRequestAnalyzerRunResult {
   const externalMode = Boolean(paths.externalCandidatePath)
   const mockMode = runMode === 'mock-provider'
+  const openAiMode = runMode === 'openai-provider'
   const hasCandidateOutput = Boolean(candidateOutput)
   const imported = candidateOutputMode === 'external-import' && hasCandidateOutput
   const mockGenerated = candidateOutputMode === 'mock-provider' && hasCandidateOutput
-  const providerStatus = mockMode
-    ? mockGenerated
-      ? 'mock-provider-candidate-generated-no-network'
-      : 'mock-provider-blocked-no-network'
-    : imported || (externalMode && providerAnalysis.status !== 'provider-config-blocked')
-      ? imported
-        ? 'external-candidate-imported-provider-not-invoked'
-        : 'external-candidate-blocked-provider-not-invoked'
-      : providerAnalysis.status
+  const openAiGenerated = candidateOutputMode === 'openai-provider' && hasCandidateOutput
+  const providerStatus = openAiMode
+    ? openAiGenerated
+      ? 'openai-provider-candidate-generated-live'
+      : 'openai-provider-blocked-live'
+    : mockMode
+      ? mockGenerated
+        ? 'mock-provider-candidate-generated-no-network'
+        : 'mock-provider-blocked-no-network'
+      : imported || (externalMode && providerAnalysis.status !== 'provider-config-blocked')
+        ? imported
+          ? 'external-candidate-imported-provider-not-invoked'
+          : 'external-candidate-blocked-provider-not-invoked'
+        : providerAnalysis.status
   return {
     schemaVersion: 1,
     artifactRole: 'ai-request-analyzer-run-result',
-    status: mockMode
-      ? mockGenerated
-        ? 'ai-request-analyzer-mock-provider-candidate-generated'
-        : 'ai-request-analyzer-mock-provider-blocked'
-      : !externalMode
-        ? providerAnalysis.statusForNoExternal
-        : imported
-          ? 'ai-request-analyzer-external-candidate-imported'
-          : providerAnalysis.status === 'provider-config-blocked'
-            ? 'ai-request-analyzer-provider-config-blocked'
-            : 'ai-request-analyzer-external-candidate-blocked',
+    status: openAiMode
+      ? openAiGenerated
+        ? 'ai-request-analyzer-openai-provider-candidate-generated'
+        : 'ai-request-analyzer-openai-provider-blocked'
+      : mockMode
+        ? mockGenerated
+          ? 'ai-request-analyzer-mock-provider-candidate-generated'
+          : 'ai-request-analyzer-mock-provider-blocked'
+        : !externalMode
+          ? providerAnalysis.statusForNoExternal
+          : imported
+            ? 'ai-request-analyzer-external-candidate-imported'
+            : providerAnalysis.status === 'provider-config-blocked'
+              ? 'ai-request-analyzer-provider-config-blocked'
+              : 'ai-request-analyzer-external-candidate-blocked',
     analyzerName: ANALYZER_NAME,
-    runScope: mockMode
-      ? 'mock-provider-response-to-candidate-no-network'
-      : 'provider-disabled-or-external-candidate-import-no-llm',
+    runScope: openAiMode
+      ? 'openai-provider-response-to-candidate-network-gated'
+      : mockMode
+        ? 'mock-provider-response-to-candidate-no-network'
+        : 'provider-disabled-or-external-candidate-import-no-llm',
     sourceAiRequestAnalyzerPack: paths.packPath ?? '<in-memory>',
     sourceProviderConfig: paths.providerConfigPath ?? null,
     sourceExternalCandidate: paths.externalCandidatePath ?? null,
@@ -1148,12 +1507,13 @@ function buildResult(
     analyzerProviderStatus: providerStatus,
     analyzerProviderConfigured: providerAnalysis.providerConfigured,
     providerState: providerAnalysis.providerState,
-    providerInvocationAuthority: mockMode ? 'mock-only-no-network' : 'none-preview-only',
-    providerInvocationMode: mockMode ? 'mock-no-network' : 'none',
-    providerInvocationSkipped: !mockMode,
-    llmInvoked: false,
-    networkCallsAllowed: false,
-    runtimeAiCallsAllowed: false,
+    providerInvocationAuthority:
+      providerRunMetadata?.providerInvocationAuthority ?? (mockMode ? 'mock-only-no-network' : 'none-preview-only'),
+    providerInvocationMode: providerRunMetadata?.providerInvocationMode ?? (mockMode ? 'mock-no-network' : 'none'),
+    providerInvocationSkipped: providerRunMetadata ? false : !mockMode,
+    llmInvoked: providerRunMetadata?.llmInvoked ?? false,
+    networkCallsAllowed: providerRunMetadata?.networkCallsAllowed ?? false,
+    runtimeAiCallsAllowed: providerRunMetadata?.runtimeAiCallsAllowed ?? false,
     requestIrCandidateGenerated: hasCandidateOutput,
     requestIrCandidateImported: imported,
     candidateImportRequired: !hasCandidateOutput,
@@ -1177,7 +1537,7 @@ function buildResult(
     ciEnforcementEnabled: false,
     validationFindings: findings,
     ...(imported ? { importedCandidate: candidateOutput } : {}),
-    ...(mockGenerated ? { providerGeneratedCandidate: candidateOutput } : {}),
+    ...(mockGenerated || openAiGenerated ? { providerGeneratedCandidate: candidateOutput } : {}),
     outputWritePolicy: 'explicit-output-only',
     writtenOutputPath: paths.outputPath ?? null,
     writtenOutputArtifactRole: paths.outputPath
@@ -1188,8 +1548,9 @@ function buildResult(
     writtenOutputPathAuthorityStatus: paths.outputPath
       ? 'explicit-preview-output-not-source-authority'
       : 'not-written-stdout-only',
-    nonExecutionBoundary:
-      'This analyze-request command surface does not call an LLM, make network calls, configure an analyzer provider, validate Request IR, run graph traversal, generate selected graph slices, generate Contract Compiler Input, generate Instruction Packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
+    nonExecutionBoundary: openAiMode
+      ? 'This analyze-request command surface may invoke a live OpenAI provider only after explicit provider, network, and mode gates. It still does not validate Request IR, run graph traversal, generate selected graph slices, generate Contract Compiler Input, generate Instruction Packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.'
+      : 'This analyze-request command surface does not call an LLM, make network calls, configure an analyzer provider, validate Request IR, run graph traversal, generate selected graph slices, generate Contract Compiler Input, generate Instruction Packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
   }
 }
 
@@ -1345,6 +1706,92 @@ function buildMockProviderCandidate(
       : 'not-written-stdout-only',
     nonExecutionBoundary:
       'This Request IR Candidate was generated from a deterministic mock analyzer provider response without network calls or LLM invocation. It remains candidate-only and requires validate-request-ir and validate-request-ir-graph before traversal. It does not trigger Codex execution, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
+  }
+  return generated
+}
+
+function buildOpenAiProviderCandidate(
+  requestText: string,
+  pack: JsonRecord | null,
+  candidate: JsonRecord,
+  paths: AnalyzeRequestPaths,
+  providerAnalysis: ProviderConfigAnalysis,
+): JsonRecord {
+  const generated: JsonRecord = {
+    ...structuredClone(candidate),
+    artifactRole: 'request-ir-candidate',
+    status: 'request-ir-candidate-openai-provider-previewed',
+    schemaId: stringValue(candidate.schemaId) || stringValue(pack?.expectedOutputSchemaId) || COMPATIBLE_SCHEMA_ID,
+    requestIrCandidateStatus: 'candidate-only',
+    candidateOnly: true,
+    authorityStatus: 'not-authoritative-until-validated',
+    sourceAiRequestAnalyzerPack: paths.packPath ?? '<in-memory>',
+    sourceProviderConfig: paths.providerConfigPath ?? null,
+    sourceExternalCandidate: null,
+    sourceMockProviderResponse: null,
+    sourceNaturalLanguageRequest: {
+      ...(asRecord(candidate.sourceNaturalLanguageRequest) ?? {}),
+      sourceKind:
+        stringValue(asRecord(candidate.sourceNaturalLanguageRequest)?.sourceKind) || 'human-natural-language-request',
+      text: requestText,
+      authorityStatus: 'raw-request-text-not-compiler-authority',
+    },
+    requestText,
+    analyzerProviderStatus: 'openai-provider-candidate-generated-live',
+    analyzerProviderConfigured: providerAnalysis.providerConfigured,
+    providerState: providerAnalysis.providerState,
+    providerInvocationMode: 'openai-live',
+    providerInvocationAuthority: 'explicit-openai-network-gated',
+    providerInvocationSkipped: false,
+    providerRunProvenance: {
+      llmInvoked: true,
+      networkCallsAllowed: true,
+      runtimeAiCallsAllowed: true,
+      rawProviderResponseStored: false,
+      apiKeyValueStored: false,
+      apiKeyValuePrinted: false,
+    },
+    requestIrCandidateGenerated: true,
+    requestIrCandidateImported: false,
+    validationRequiredBeforeTraversal: true,
+    validatedRequestIr: false,
+    requestIrValidationStatus: 'not-validated-after-ai-request-analyzer-openai-provider',
+    schemaOnlyValidationResult: null,
+    graphAwareValidationResultStatus: 'not-run-after-ai-request-analyzer-openai-provider',
+    graphAwareValidationResultArtifact: null,
+    futureValidatorExpectations: {
+      ...(asRecord(candidate.futureValidatorExpectations) ?? {}),
+      schemaOnlyValidationResult: null,
+      graphAwareValidationResult: null,
+      analyzerOpenAiProviderValidationRequiredAgain: true,
+    },
+    graphTraversalAllowed: false,
+    contractGenerationAllowed: false,
+    instructionPackGenerationAllowed: false,
+    graphTraversalAllowedFromUnvalidatedAiOutput: false,
+    contractGenerationAllowedFromUnvalidatedAiOutput: false,
+    instructionPackGenerationAllowedFromUnvalidatedAiOutput: false,
+    selectedGraphSliceGenerated: false,
+    contractInputGenerated: false,
+    contractCompilerInputGenerated: false,
+    instructionPackGenerated: false,
+    codexExecutionTriggered: false,
+    graphSourceMutated: false,
+    graphDeltaApplied: false,
+    approvalStatus: 'not-approved',
+    humanDecisionRecorded: false,
+    equivalenceProven: false,
+    runtimeEvidenceSatisfied: false,
+    evidenceAccepted: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+    outputWritePolicy: 'explicit-output-only',
+    writtenOutputPath: paths.outputPath ?? null,
+    writtenOutputPathAuthorityStatus: paths.outputPath
+      ? 'explicit-preview-output-not-source-authority'
+      : 'not-written-stdout-only',
+    nonExecutionBoundary:
+      'This Request IR Candidate was generated through explicit OpenAI provider gates. It remains candidate-only and requires validate-request-ir and validate-request-ir-graph before traversal. It does not trigger Codex execution, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
   }
   return generated
 }

@@ -1284,6 +1284,8 @@ export async function graphReadModelAnalyzeRequestCommand(context: CommandContex
       providerConfig: context.options.providerConfig,
       externalCandidate: context.options.externalCandidate,
       invokeProvider: context.options.invokeProvider,
+      allowNetworkProvider: context.options.allowNetworkProvider,
+      providerMode: context.options.providerMode,
       mockProviderResponse: context.options.mockProviderResponse,
       output: context.options.output,
     })
@@ -1302,7 +1304,9 @@ export async function graphReadModelAnalyzeRequestCommand(context: CommandContex
         ? 'AI Request Analyzer provider is disabled or candidate generation/import was blocked before validation/traversal.'
         : run.result.analyzerProviderStatus === 'mock-provider-candidate-generated-no-network'
           ? 'Mock analyzer provider response generated a candidate-only Request IR Candidate without network calls.'
-          : 'External Request IR Candidate imported as candidate-only without invoking an analyzer provider.',
+          : run.result.analyzerProviderStatus === 'openai-provider-candidate-generated-live'
+            ? 'Gated OpenAI analyzer provider generated a candidate-only Request IR Candidate.'
+            : 'External Request IR Candidate imported as candidate-only without invoking an analyzer provider.',
       issues: blocked
         ? (errorFindings.length > 0 ? errorFindings : run.result.validationFindings).map((finding) =>
             issue({
@@ -1324,8 +1328,10 @@ export async function graphReadModelAnalyzeRequestCommand(context: CommandContex
         ...run.result,
         ...(run.outputPath ? { outputPath: run.outputPath } : {}),
         next: blocked
-          ? 'Provider mode is disabled in this implementation. Import an explicit external Request IR Candidate, or configure a future trusted provider in a separate task. This command did not call an LLM, run validation, run traversal, generate selected slices, generate contract input, generate instruction packs, execute Codex, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.'
-          : 'Run graph read-model validate-request-ir on the candidate before graph-aware validation or traversal. This command did not call an LLM, run graph validation, run traversal, generate selected slices, generate contract input, generate instruction packs, execute Codex, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
+          ? 'Provider candidate generation/import was blocked before validation or traversal. This command did not run graph validation, run traversal, generate selected slices, generate contract input, generate instruction packs, execute Codex, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.'
+          : run.result.analyzerProviderStatus === 'openai-provider-candidate-generated-live'
+            ? 'Run graph read-model validate-request-ir on the candidate before graph-aware validation or traversal. This command used explicit OpenAI provider gates, but did not run graph validation, run traversal, generate selected slices, generate contract input, generate instruction packs, execute Codex, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.'
+            : 'Run graph read-model validate-request-ir on the candidate before graph-aware validation or traversal. This command did not call an LLM, run graph validation, run traversal, generate selected slices, generate contract input, generate instruction packs, execute Codex, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
       },
     }
   } catch (error) {

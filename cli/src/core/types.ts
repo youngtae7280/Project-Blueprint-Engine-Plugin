@@ -93,6 +93,8 @@ export interface CliOptions {
   providerConfig?: string
   externalCandidate?: string
   invokeProvider: boolean
+  allowNetworkProvider: boolean
+  providerMode?: string
   mockProviderResponse?: string
   proposal?: string
   reviewPacket?: string

@@ -2,7 +2,8 @@ import { existsSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { runPbeCli } from '../app'
-import { analyzeRequestWithDisabledProvider } from '../core/ai-request-analyzer-run'
+import { analyzeRequestFile, analyzeRequestWithDisabledProvider } from '../core/ai-request-analyzer-run'
+import { createOpenAiAnalyzerProviderAdapter } from '../core/ai-request-analyzer-openai-provider-adapter'
 import { validateRequestIrCandidateSchemaOnly } from '../core/request-ir-candidate-validator'
 import { ExitCode } from '../core/types'
 import { cleanupWorkspaces, createWorkspace, writeJson } from './fixtures/workspace'
@@ -515,6 +516,308 @@ describe('AI Request Analyzer command surface CLI', () => {
     expect(writtenOutput.runtimeAiCallsAllowed).toBe(false)
   })
 
+  it('blocks provider-mode openai without the explicit network gate', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-openai-invocation-enabled'))
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--invoke-provider',
+        '--provider-mode',
+        'openai',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_OPENAI_MODE_REQUIRES_NETWORK_GATE',
+    )
+  })
+
+  it('blocks the network gate without provider-mode openai', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-openai-invocation-enabled'))
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--invoke-provider',
+        '--allow-network-provider',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_NETWORK_GATE_WITHOUT_OPENAI_MODE_BLOCKED',
+    )
+  })
+
+  it('blocks unsupported provider-mode values', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-openai-invocation-enabled'))
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--invoke-provider',
+        '--allow-network-provider',
+        '--provider-mode',
+        'other',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_PROVIDER_MODE_UNSUPPORTED',
+    )
+  })
+
+  it('blocks provider-mode openai combined with a mock provider response', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-openai-invocation-enabled'))
+    writeJson(join(workspace, 'mock-provider-response.json'), validMockProviderResponse())
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--invoke-provider',
+        '--allow-network-provider',
+        '--provider-mode',
+        'openai',
+        '--mock-provider-response',
+        'mock-provider-response.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_OPENAI_MODE_WITH_MOCK_RESPONSE_BLOCKED',
+    )
+  })
+
+  it('writes candidate-only output from gated OpenAI mode with a mocked SDK client', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-openai-invocation-enabled'))
+    const outputPath = join('.tmp', 'openai-candidate.json')
+    let requestPayload: Record<string, unknown> | null = null
+    const adapter = createOpenAiAnalyzerProviderAdapter({
+      envReader: (name) => (name === 'OPENAI_API_KEY' ? 'test-runtime-key' : undefined),
+      clientFactory: () => ({
+        responses: {
+          create: async (payload) => {
+            requestPayload = payload
+            return { output_text: JSON.stringify(validRequestIrCandidate()) }
+          },
+        },
+      }),
+    })
+
+    const run = await analyzeRequestFile(workspace, requestText, 'pack.json', {
+      providerConfig: 'provider-config.json',
+      invokeProvider: true,
+      allowNetworkProvider: true,
+      providerMode: 'openai',
+      output: outputPath,
+      openAiAdapter: adapter,
+    })
+    const writtenOutput = JSON.parse(readFileSync(join(workspace, outputPath), 'utf8'))
+    const validation = validateRequestIrCandidateSchemaOnly(writtenOutput)
+
+    expect(run.result.status).toBe('ai-request-analyzer-openai-provider-candidate-generated')
+    expect(run.result.llmInvoked).toBe(true)
+    expect(run.result.networkCallsAllowed).toBe(true)
+    expect(run.result.runtimeAiCallsAllowed).toBe(true)
+    expect(requestPayload?.store).toBe(false)
+    expect(writtenOutput.artifactRole).toBe('request-ir-candidate')
+    expect(writtenOutput.status).toBe('request-ir-candidate-openai-provider-previewed')
+    expect(writtenOutput.candidateOnly).toBe(true)
+    expect(writtenOutput.graphTraversalAllowed).toBe(false)
+    expect(writtenOutput.contractGenerationAllowed).toBe(false)
+    expect(writtenOutput.instructionPackGenerationAllowed).toBe(false)
+    expect(validation.schemaValidationStatus).toBe('schema-valid')
+    expect(validation.graphTraversalAllowed).toBe(false)
+    expect(validation.contractGenerationAllowed).toBe(false)
+    expect(validation.instructionPackGenerationAllowed).toBe(false)
+  })
+
+  it('blocks gated OpenAI mode when the configured environment variable is missing before SDK calls', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-openai-invocation-enabled'))
+    let clientFactoryCalled = false
+    const adapter = createOpenAiAnalyzerProviderAdapter({
+      envReader: () => undefined,
+      clientFactory: () => {
+        clientFactoryCalled = true
+        throw new Error('client factory should not be called')
+      },
+    })
+
+    const run = await analyzeRequestFile(workspace, requestText, 'pack.json', {
+      providerConfig: 'provider-config.json',
+      invokeProvider: true,
+      allowNetworkProvider: true,
+      providerMode: 'openai',
+      output: join('.tmp', 'openai-run-result.json'),
+      openAiAdapter: adapter,
+    })
+
+    expect(run.result.status).toBe('ai-request-analyzer-openai-provider-blocked')
+    expect(run.result.validationFindings.map((entry) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_OPENAI_API_KEY_ENV_MISSING',
+    )
+    expect(run.result.requestIrCandidateGenerated).toBe(false)
+    expect(run.result.llmInvoked).toBe(false)
+    expect(clientFactoryCalled).toBe(false)
+  })
+
+  it('blocks invalid OpenAI structured output before candidate output', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-openai-invocation-enabled'))
+    const adapter = createOpenAiAnalyzerProviderAdapter({
+      envReader: (name) => (name === 'OPENAI_API_KEY' ? 'test-runtime-key' : undefined),
+      clientFactory: () => ({
+        responses: {
+          create: async () => ({ output_text: 'not-json' }),
+        },
+      }),
+    })
+
+    const run = await analyzeRequestFile(workspace, requestText, 'pack.json', {
+      providerConfig: 'provider-config.json',
+      invokeProvider: true,
+      allowNetworkProvider: true,
+      providerMode: 'openai',
+      output: join('.tmp', 'openai-run-result.json'),
+      openAiAdapter: adapter,
+    })
+
+    expect(run.result.status).toBe('ai-request-analyzer-openai-provider-blocked')
+    expect(run.result.validationFindings.map((entry) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_OPENAI_RESPONSE_INVALID_JSON',
+    )
+    expect(run.result.requestIrCandidateGenerated).toBe(false)
+    expect(run.result.llmInvoked).toBe(true)
+  })
+
+  it('blocks unsafe authority fields from mocked OpenAI output', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-openai-invocation-enabled'))
+    const unsafeCandidate = {
+      ...validRequestIrCandidate(),
+      graphTraversalAllowed: true,
+    }
+    const adapter = createOpenAiAnalyzerProviderAdapter({
+      envReader: (name) => (name === 'OPENAI_API_KEY' ? 'test-runtime-key' : undefined),
+      clientFactory: () => ({
+        responses: {
+          create: async () => ({ output_text: JSON.stringify(unsafeCandidate) }),
+        },
+      }),
+    })
+
+    const run = await analyzeRequestFile(workspace, requestText, 'pack.json', {
+      providerConfig: 'provider-config.json',
+      invokeProvider: true,
+      allowNetworkProvider: true,
+      providerMode: 'openai',
+      output: join('.tmp', 'openai-run-result.json'),
+      openAiAdapter: adapter,
+    })
+
+    expect(run.result.status).toBe('ai-request-analyzer-openai-provider-blocked')
+    expect(run.result.validationFindings.map((entry) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_OPENAI_PROVIDER_CANDIDATE_AUTHORITY_ESCALATION',
+    )
+    expect(run.result.requestIrCandidateGenerated).toBe(false)
+  })
+
+  it('redacts OpenAI provider errors', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-openai-invocation-enabled'))
+    const runtimeSecretLikeValue = ['sk', 'thisisnotarealkey123456'].join('-')
+    const adapter = createOpenAiAnalyzerProviderAdapter({
+      envReader: (name) => (name === 'OPENAI_API_KEY' ? 'test-runtime-key' : undefined),
+      clientFactory: () => ({
+        responses: {
+          create: async () => {
+            throw new Error(`provider failed with ${runtimeSecretLikeValue}`)
+          },
+        },
+      }),
+    })
+
+    const run = await analyzeRequestFile(workspace, requestText, 'pack.json', {
+      providerConfig: 'provider-config.json',
+      invokeProvider: true,
+      allowNetworkProvider: true,
+      providerMode: 'openai',
+      output: join('.tmp', 'openai-run-result.json'),
+      openAiAdapter: adapter,
+    })
+    const rendered = JSON.stringify(run.result)
+
+    expect(run.result.status).toBe('ai-request-analyzer-openai-provider-blocked')
+    expect(run.result.validationFindings.map((entry) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_OPENAI_PROVIDER_ERROR',
+    )
+    expect(rendered).not.toContain(runtimeSecretLikeValue)
+    expect(rendered).toContain('<redacted-secret>')
+  })
+
   it('blocks invalid mock provider response before writing output', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
@@ -1002,6 +1305,11 @@ function validProviderConfig(
           : 'none-preview-only',
     providerNameCandidate: configured ? 'openai' : null,
     modelNameCandidate: configured ? 'gpt-future-preview' : null,
+    timeoutMs: providerState === 'configured-openai-invocation-enabled' ? 1000 : null,
+    maxOutputTokens: providerState === 'configured-openai-invocation-enabled' ? 1200 : null,
+    structuredOutputMode:
+      providerState === 'configured-openai-invocation-enabled' ? 'responses-text-format-json-schema' : null,
+    storeProviderResponse: providerState === 'configured-openai-invocation-enabled' ? false : null,
     providerConfigSource: providerState === 'disabled' ? 'disabled-default-preview' : 'repo-local-preview-config',
     apiKeySourceRef: configured ? 'OPENAI_API_KEY' : null,
     environmentVariableRefs: configured ? ['OPENAI_API_KEY'] : [],

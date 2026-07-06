@@ -747,17 +747,20 @@ node dist/cli/index.js graph read-model generate-ai-request-analyzer-pack `
 
 ### `pbe graph read-model analyze-request`
 
-- Purpose: Expose the AI Request Analyzer command surface while real provider execution is disabled. The command either
-  reports `provider-disabled`, imports an explicit precomputed external Request IR Candidate as candidate-only JSON, or
-  runs a deterministic mock provider response through the candidate parser/guard pipeline.
+- Purpose: Expose the AI Request Analyzer command surface. The command either reports `provider-disabled`, imports an
+  explicit precomputed external Request IR Candidate as candidate-only JSON, runs a deterministic mock provider response
+  through the candidate parser/guard pipeline, or invokes the OpenAI provider only when every explicit live gate is
+  present.
 - Typical state before running: After an AI Request Analyzer pack exists. No LLM/API provider is configured in this
-  implementation.
+  implementation unless a live OpenAI provider config and both explicit runtime gates are supplied.
 - Options: `--request <text>` and `--pack <aiRequestAnalyzerPackPath>` are required. `--provider-config <file>` may read
   an analyzer provider config preview. `--external-candidate <path>` may import a precomputed candidate.
   `--invoke-provider --mock-provider-response <path>` runs the mock-only no-network provider response pipeline when
-  provider state is `configured-invocation-enabled-preview`. `--output <file>` may write a
-  provider-disabled/provider-unavailable/configured-not-invoked run-result preview, an imported candidate preview, or a
-  mock-provider-generated candidate preview, depending on mode.
+  provider state is `configured-invocation-enabled-preview`. Live OpenAI provider invocation additionally requires
+  `--provider-config <liveOpenAiConfig> --invoke-provider --allow-network-provider --provider-mode openai`, no external
+  candidate, and no mock provider response. `--output <file>` may write a provider-disabled/provider-unavailable/
+  configured-not-invoked/openai-blocked run-result preview, an imported candidate preview, a mock-provider-generated
+  candidate preview, or a gated OpenAI-provider-generated candidate preview, depending on mode.
 - Provider-disabled behavior: Without `--external-candidate`, the command exits blocked with
   `analyzerProviderStatus: provider-disabled`, `llmInvoked: false`, `networkCallsAllowed: false`,
   `requestIrCandidateGenerated: false`, and `candidateImportRequired: true`.
@@ -772,12 +775,18 @@ node dist/cli/index.js graph read-model generate-ai-request-analyzer-pack `
   response artifact. It does not call OpenAI, any API, an LLM, or the network. The mock candidate is strictly parsed,
   checked for request/schema mismatch and authority escalation, and written as candidate-only output.
   `--external-candidate` and `--invoke-provider` cannot be combined.
+- OpenAI provider behavior: Live OpenAI invocation is available only when `--provider-mode openai` and
+  `--allow-network-provider` are both present with `--invoke-provider` and a provider config whose state is
+  `configured-openai-invocation-enabled`. The API key value is read only from the configured environment variable after
+  those gates and config checks pass; it is never written to artifacts, stdout, stderr, docs, or tests. OpenAI failures
+  do not fall back to mock or external candidates. Successful output remains `request-ir-candidate` candidate-only JSON
+  and must still pass `validate-request-ir` before graph-aware validation or traversal.
 - Output authority guard: explicit output paths are rejected before writing if they would overwrite the analyzer pack,
   provider config, mock provider response, external candidate, linked boundary/schema/intake/clarification artifacts,
   graph-source/read-model source authority, evidence paths, or source-authority-shaped JSON. Unsafe provider config,
   unsafe mock response, and blocked external imports write no partial output.
-- Next command: Run `graph read-model validate-request-ir` on an imported candidate before graph-aware validation or
-  traversal. This command does not call a real LLM/API, run validation, run traversal, generate selected slices,
+- Next command: Run `graph read-model validate-request-ir` on an imported or provider-generated candidate before
+  graph-aware validation or traversal. This command does not run validation, run traversal, generate selected slices,
   generate contract input, generate instruction packs, trigger Codex execution, mutate graph-source, apply graph deltas,
   approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.
 
@@ -826,6 +835,23 @@ node dist/cli/index.js graph read-model analyze-request `
   --output .tmp/request-ir-candidate.mock-provider.json `
   --json
 ```
+
+Gated OpenAI provider candidate generation:
+
+```powershell
+node dist/cli/index.js graph read-model analyze-request `
+  --request "Add Todo App runtime evidence for the add button behavior without touching production source." `
+  --pack examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.json `
+  --provider-config examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.openai-live-disabled-by-default.runtime-evidence-only.preview.json `
+  --invoke-provider `
+  --allow-network-provider `
+  --provider-mode openai `
+  --output .tmp/request-ir-candidate.openai-provider.json `
+  --json
+```
+
+This example requires the configured API key environment variable to be present at runtime. It is not part of
+`devview:runtime:smoke`, and it still produces only an unvalidated candidate.
 
 ### `pbe graph read-model generate-clarification-interview-pack`
 

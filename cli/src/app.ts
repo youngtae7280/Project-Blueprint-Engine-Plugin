@@ -132,6 +132,8 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     providerConfig: undefined as string | undefined,
     externalCandidate: undefined as string | undefined,
     invokeProvider: false,
+    allowNetworkProvider: false,
+    providerMode: undefined as string | undefined,
     mockProviderResponse: undefined as string | undefined,
     proposal: undefined as string | undefined,
     reviewPacket: undefined as string | undefined,
@@ -440,6 +442,15 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
       index += 1
     } else if (arg === '--invoke-provider') {
       options.invokeProvider = true
+    } else if (arg === '--allow-network-provider') {
+      options.allowNetworkProvider = true
+    } else if (arg === '--provider-mode') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--provider-mode requires a provider mode.' }
+      }
+      options.providerMode = value
+      index += 1
     } else if (arg === '--mock-provider-response') {
       const value = argv[index + 1]
       if (!value) {

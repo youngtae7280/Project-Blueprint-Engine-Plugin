@@ -91,7 +91,8 @@
   plus
   `examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.openai-live-disabled-by-default.runtime-evidence-only.preview.json`
   define disabled/configured/invocation-enabled-preview/OpenAI-live-shape/unavailable/blocked/future provider states and
-  secret-reference policy without invoking an LLM/API or generating Request IR.
+  secret-reference policy. Live OpenAI invocation is command-time gated by `--invoke-provider`,
+  `--allow-network-provider`, and `--provider-mode openai`; generated output remains candidate-only.
 - AI Request Analyzer mock provider response pipeline -
   `examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-mock-provider-response.add-todo-runtime-evidence-only.preview.json`
   and

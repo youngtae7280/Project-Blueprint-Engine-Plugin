@@ -3590,3 +3590,36 @@ contract input generation, no instruction pack generation, no hook execution/ins
 graph-source mutation, no graph delta apply, no approval/human decision automation, no Evidence acceptance, no runtime
 Evidence satisfaction, no equivalence proof, no scope/CI enforcement, no strict/guided blocking, and no Project Memory
 extension authority.
+
+## DEC-298 Implement Gated OpenAI Analyzer Provider Adapter
+
+DEC-298 does not supersede DEC-097 through DEC-297. It adds the explicit live OpenAI provider runtime gates for
+`graph read-model analyze-request`:
+
+```text
+--invoke-provider
+--allow-network-provider
+--provider-mode openai
+```
+
+The live OpenAI path is available only with a provider config whose state is
+`configured-openai-invocation-enabled`, `providerNameCandidate: openai`, and `apiKeySourceRef` naming an environment
+variable. The API key value is read only after all gates and config checks pass, and it is never written to artifacts,
+stdout, stderr, tests, or docs.
+
+This decision adds the runtime `openai` SDK dependency and the `OpenAiAnalyzerProviderAdapter`. The adapter uses the
+Responses API through the SDK, requests structured JSON output, sets `store: false`, uses config timeout/token limits,
+and keeps retries at zero for the MVP. Normal tests use injected/mocked clients and do not call OpenAI/API/LLM/network
+or require an API key.
+
+Successful live provider output may write only a candidate-only `request-ir-candidate` artifact. The command run-result
+records the live invocation, but the candidate still requires `validate-request-ir` and `validate-request-ir-graph`
+before traversal. OpenAI failures do not fall back to mock responses or external candidates. Invalid JSON, request/schema
+mismatch, unsafe authority fields, missing environment variables, provider errors, and unsupported gate combinations are
+blocked before candidate output.
+
+This decision does not add live provider runtime smoke, manual live smoke/reporting, graph validation, traversal,
+selected slice generation, contract input generation, instruction pack generation, hook execution/install, Codex
+execution, graph-source mutation, graph delta apply, approval/human decision automation, Evidence acceptance, runtime
+Evidence satisfaction, equivalence proof, scope/CI enforcement, strict/guided blocking, or Project Memory extension
+authority.

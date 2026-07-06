@@ -1,8 +1,11 @@
 import type { IssueSeverity } from './types.js'
 
-export type AnalyzerProviderAdapterKind = 'mock' | 'openai-unavailable'
-export type AnalyzerProviderInvocationMode = 'mock-no-network' | 'none'
-export type AnalyzerProviderInvocationAuthority = 'mock-only-no-network' | 'none-preview-only'
+export type AnalyzerProviderAdapterKind = 'mock' | 'openai-unavailable' | 'openai'
+export type AnalyzerProviderInvocationMode = 'mock-no-network' | 'openai-live' | 'none'
+export type AnalyzerProviderInvocationAuthority =
+  | 'mock-only-no-network'
+  | 'explicit-openai-network-gated'
+  | 'none-preview-only'
 
 export type JsonRecord = Record<string, unknown>
 
@@ -35,18 +38,18 @@ export interface AnalyzerProviderAdapterResult {
   candidatePayload?: JsonRecord
   findings: AnalyzerProviderAdapterFinding[]
   diagnostics: {
-    llmInvoked: false
-    networkCallsAllowed: false
-    runtimeAiCallsAllowed: false
-    secretValueRead: false
-    providerResponseStored: false
-    sdkDependencyLoaded: false
+    llmInvoked: boolean
+    networkCallsAllowed: boolean
+    runtimeAiCallsAllowed: boolean
+    secretValueRead: boolean
+    providerResponseStored: boolean
+    sdkDependencyLoaded: boolean
   }
 }
 
 export interface AnalyzerProviderAdapter {
   readonly adapterKind: AnalyzerProviderAdapterKind
-  invoke(input: AnalyzerProviderAdapterInput): AnalyzerProviderAdapterResult
+  invoke(input: AnalyzerProviderAdapterInput): AnalyzerProviderAdapterResult | Promise<AnalyzerProviderAdapterResult>
 }
 
 const EXPECTED_MOCK_PROVIDER_RESPONSE_ROLE = 'ai-request-analyzer-mock-provider-response-preview'
@@ -65,11 +68,11 @@ const SECRET_VALUE_PATTERNS = [
   /secretValue\s*:\s*["'][^"']+["']/i,
 ]
 
-export function createMockAnalyzerProviderAdapter(): AnalyzerProviderAdapter {
+export function createMockAnalyzerProviderAdapter(): MockAnalyzerProviderAdapter {
   return new MockAnalyzerProviderAdapter()
 }
 
-export function createUnavailableOpenAiAnalyzerProviderAdapter(): AnalyzerProviderAdapter {
+export function createUnavailableOpenAiAnalyzerProviderAdapter(): UnavailableOpenAiAnalyzerProviderAdapter {
   return new UnavailableOpenAiAnalyzerProviderAdapter()
 }
 

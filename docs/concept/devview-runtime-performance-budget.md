@@ -315,7 +315,7 @@ does not run analysis, validation, traversal, contract generation, execution ins
 execution, graph mutation, graph delta apply, approval, runtime Evidence satisfaction, equivalence proof, enforcement,
 or CI configuration. Future LLM inference time remains outside this deterministic runtime budget.
 
-The `analyze-request` command surface is not part of the core-critical lane by default. In the current implementation,
+The `analyze-request` command surface is not part of the core-critical lane by default. Without explicit provider gates,
 provider execution is disabled and no LLM/API/network call is made:
 
 ```text
@@ -324,8 +324,7 @@ graph read-model analyze-request --request <naturalLanguageText> --pack <aiReque
 
 Without `--external-candidate`, it returns a provider-disabled blocked result. With `--external-candidate`, it imports a
 precomputed Request IR Candidate as candidate-only output and still requires the deterministic validation path before
-traversal. Future provider inference time remains outside the 5 second deterministic budget until a separate provider
-trust/runtime policy decides otherwise.
+traversal. Live provider inference time remains outside the 5 second deterministic budget.
 
 The AI Request Analyzer provider config boundary is also outside the measured runtime path:
 
@@ -337,15 +336,14 @@ examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.in
 
 This slice adds no command and no smoke step. It fixes provider-state vocabulary and secret/provenance policy only.
 `configured-not-invoked` is still non-invoking: no network call, no LLM call, and no Request IR Candidate generation.
-`configured-invocation-enabled-preview` is also non-invoking in the current implementation. It records the future
-two-part enablement rule only: provider config state plus a future explicit `--invoke-provider` flag. Future provider
-invocation time remains outside the deterministic 5 second runtime budget until a separate explicit provider adapter
-decision exists.
+`configured-invocation-enabled-preview` is non-invoking unless it is used with the deterministic mock provider response
+fixture. Live provider invocation time remains outside the deterministic 5 second runtime budget.
 
 The provider-config-aware `analyze-request --provider-config <providerConfigPath>` adapter surface also stays outside
 the core-critical lane and does not add a runtime smoke step. It reads disabled/unavailable/configured provider config
-previews only to report blocked/import-required status or to record provenance beside an explicit external candidate
-import. It still makes no network call and invokes no LLM.
+previews to report blocked/import-required status, record provenance beside an explicit external candidate import, run
+the deterministic mock provider fixture path, or run the live OpenAI provider only when every explicit network gate is
+supplied.
 
 The mock provider pipeline is deterministic but remains outside the current runtime smoke:
 
@@ -354,7 +352,7 @@ graph read-model analyze-request --provider-config <invocationEnabledConfig> --i
 ```
 
 It parses a local mock response fixture and writes candidate-only Request IR output without network calls. Real provider
-network time remains outside the 5 second deterministic budget and is still unimplemented.
+network time remains outside the 5 second deterministic budget.
 
 The OpenAI live provider config shape preview is also outside the measured runtime path:
 
@@ -362,10 +360,10 @@ The OpenAI live provider config shape preview is also outside the measured runti
 examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.openai-live-disabled-by-default.runtime-evidence-only.preview.json
 ```
 
-It records only future live-provider configuration fields such as provider name, model candidate, environment variable
-reference name, timeout/token limits, structured-output mode, and future explicit gates. It does not add an SDK
-dependency, implement `--allow-network-provider` or `--provider-mode openai`, call OpenAI/API/LLM/network, read API key
-values, generate Request IR, or change the current advisory smoke lanes.
+It records live-provider configuration fields such as provider name, model candidate, environment variable reference
+name, timeout/token limits, structured-output mode, and explicit gates. Runtime OpenAI invocation requires
+`--invoke-provider --allow-network-provider --provider-mode openai`; it is not included in `devview:runtime:smoke`, and
+the smoke lanes must not call OpenAI/API/LLM/network or require an API key.
 
 The clarification interview boundary preview is outside the measured runtime path:
 

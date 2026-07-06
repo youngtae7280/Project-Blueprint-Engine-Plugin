@@ -137,17 +137,28 @@ graph read-model analyze-request --request <naturalLanguageText> --pack <aiReque
 ```
 
 This path reads a mock response artifact and writes a candidate-only Request IR Candidate. It does not call OpenAI, any
-API, an LLM, or the network. `--invoke-provider` is mock-only in this slice; without `--mock-provider-response` the
-command blocks, and `--external-candidate` plus `--invoke-provider` is blocked. The Todo App calibration artifacts are:
+API, an LLM, or the network. Without `--mock-provider-response`, mock mode blocks, and `--external-candidate` plus
+`--invoke-provider` is blocked. The Todo App calibration artifacts are:
 
 ```text
 examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-mock-provider-response.add-todo-runtime-evidence-only.preview.json
 examples/valid/todo-app-pbe-run/generated/request-ir-candidate.mock-provider.add-todo-runtime-evidence-only.preview.json
 ```
 
-This command surface is intended for future Hook Gateway/session integration, but it still does not implement an
-real LLM/API provider, hook script, Codex execution, graph-source mutation, graph delta apply, approval, runtime Evidence
-satisfaction, equivalence proof, or enforcement.
+Live OpenAI provider invocation is gated separately and requires all of:
+
+```text
+graph read-model analyze-request --request <naturalLanguageText> --pack <aiRequestAnalyzerPackPath> --provider-config <openAiLiveProviderConfigPath> --invoke-provider --allow-network-provider --provider-mode openai --output <candidateOutputPath> --json
+```
+
+The live path reads the configured API key environment variable only after all gates and provider config checks pass.
+It does not store or print the value, does not fall back to mock/external candidates on provider failure, and still
+writes only candidate-only Request IR output. That output must pass `validate-request-ir` and then
+`validate-request-ir-graph` before traversal.
+
+This command surface is intended for future Hook Gateway/session integration, but it still does not implement hook
+scripts, Codex execution, graph-source mutation, graph delta apply, approval, runtime Evidence satisfaction, equivalence
+proof, or enforcement.
 
 ## AI Request Analyzer Provider Config Boundary
 
@@ -195,17 +206,15 @@ two-part enablement boundary only: a later provider adapter must exist, and a fu
 must be supplied. Future `--external-candidate` plus `--invoke-provider` is blocked by policy so external imports do not
 accidentally trigger provider execution.
 
-`configured-openai-invocation-enabled` is the live-provider-specific config shape for a future OpenAI adapter. It is
-distinct from `configured-invocation-enabled-preview`, but still does not grant current invocation authority. Future live
-OpenAI invocation would require `--invoke-provider`, a future explicit `--allow-network-provider` gate, future provider
-mode `openai`, an implemented adapter/SDK dependency, and runtime secret handling that stores no API key value. The
-calibration artifact records `apiKeySourceRef: OPENAI_API_KEY` as an environment variable name only; it does not read,
-inspect, print, or persist the value.
+`configured-openai-invocation-enabled` is the live-provider-specific config shape. It is distinct from
+`configured-invocation-enabled-preview`, and invocation requires `--invoke-provider`, `--allow-network-provider`,
+`--provider-mode openai`, the OpenAI SDK adapter, and runtime secret handling that stores no API key value. The
+calibration artifact records `apiKeySourceRef: OPENAI_API_KEY` as an environment variable name only; persisted artifacts
+do not read, inspect, print, or persist the value.
 
-The current provider config boundary keeps `providerInvocationAuthority: none-preview-only`, `networkCallsAllowed:
-false`, `llmInvoked: false`, `requestIrCandidateGenerated: false`, and `candidateOnly: true`. Future
-`analyze-request --provider-config <providerConfigPath>` integration must remain separate from actual provider
-invocation until an explicit provider adapter decision is made.
+Provider config artifacts themselves keep `networkCallsAllowed: false`, `llmInvoked: false`,
+`requestIrCandidateGenerated: false`, and `candidateOnly: true`. Runtime invocation authority exists only at command
+time when every explicit gate is present.
 
 `analyze-request` now accepts `--provider-config <providerConfigPath>` as a disabled/unavailable-only adapter surface.
 The current Todo App provider-config-disabled run-result preview is:

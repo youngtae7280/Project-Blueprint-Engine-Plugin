@@ -2140,11 +2140,11 @@ must never be stored or inspected. The boundary keeps `networkCallsAllowed`, `ll
 a later provider adapter implementation and future `--invoke-provider` flag, and policy blocks combining that future flag
 with `--external-candidate`.
 
-`configured-openai-invocation-enabled` records the OpenAI live-provider config shape for a future adapter. The
+`configured-openai-invocation-enabled` records the OpenAI live-provider config shape. The
 calibration fixture is disabled by default: it records `providerNameCandidate: openai`, `modelNameCandidate: gpt-5.5`,
-`apiKeySourceRef: OPENAI_API_KEY`, timeout/token limits, structured-output mode, and future requirements for
-`--invoke-provider`, future `--allow-network-provider`, and future provider mode `openai`. It is still not an OpenAI
-call, not an SDK dependency, not network authority, not a provider response, and not Request IR Candidate generation.
+`apiKeySourceRef: OPENAI_API_KEY`, timeout/token limits, structured-output mode, and the runtime requirements
+`--invoke-provider`, `--allow-network-provider`, and `--provider-mode openai`. The fixture itself is still not an
+OpenAI call, not network authority, not a provider response, and not Request IR Candidate generation.
 
 The provider-config-aware analyzer run calibration is:
 
@@ -2172,6 +2172,11 @@ Candidate. The generated candidate records `providerInvocationMode: mock-no-netw
 `providerInvocationAuthority: mock-only-no-network`, `llmInvoked: false`, `networkCallsAllowed: false`, and
 `validationRequiredBeforeTraversal: true`; it still requires `validate-request-ir` and `validate-request-ir-graph`
 before any traversal, selected slice, contract input, or instruction pack step.
+
+Live OpenAI provider output is intentionally not tracked as a calibration artifact. The live path can write a
+candidate-only artifact only when all explicit runtime gates are supplied and the configured environment variable is
+available. Normal validation and `devview:runtime:smoke` continue to use local deterministic fixtures and must not call
+the live provider.
 
 The clarification interview boundary preview is:
 
