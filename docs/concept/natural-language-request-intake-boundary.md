@@ -166,6 +166,19 @@ false`, `llmInvoked: false`, `requestIrCandidateGenerated: false`, and `candidat
 `analyze-request --provider-config <providerConfigPath>` integration must remain separate from actual provider
 invocation until an explicit provider adapter decision is made.
 
+`analyze-request` now accepts `--provider-config <providerConfigPath>` as a disabled/unavailable-only adapter surface.
+The current Todo App provider-config-disabled run-result preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-run.provider-config-disabled.add-todo-runtime-evidence-only.preview.json
+```
+
+`disabled`, `unavailable`, `configured-not-invoked`, and
+`future-invocation-allowed-only-after-explicit-config` all keep `llmInvoked: false`, `networkCallsAllowed: false`,
+`providerInvocationAuthority: none-preview-only`, and `candidateImportRequired: true` unless an explicit external
+candidate is imported. External candidate import remains the only candidate-producing path. Unsafe or secret-looking
+provider config blocks the command even when an external candidate is supplied.
+
 ## Clarification Interview Boundary
 
 The clarification interview boundary preview is:

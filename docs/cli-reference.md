@@ -751,19 +751,24 @@ node dist/cli/index.js graph read-model generate-ai-request-analyzer-pack `
   reports `provider-disabled` or imports an explicit precomputed external Request IR Candidate as candidate-only JSON.
 - Typical state before running: After an AI Request Analyzer pack exists. No LLM/API provider is configured in this
   implementation.
-- Options: `--request <text>` and `--pack <aiRequestAnalyzerPackPath>` are required. `--external-candidate <path>` may
-  import a precomputed candidate. `--output <file>` may write a provider-disabled run-result preview or an imported
-  candidate preview, depending on mode.
+- Options: `--request <text>` and `--pack <aiRequestAnalyzerPackPath>` are required. `--provider-config <file>` may read
+  an analyzer provider config preview without invoking it. `--external-candidate <path>` may import a precomputed
+  candidate. `--output <file>` may write a provider-disabled/provider-unavailable/configured-not-invoked run-result
+  preview or an imported candidate preview, depending on mode.
 - Provider-disabled behavior: Without `--external-candidate`, the command exits blocked with
   `analyzerProviderStatus: provider-disabled`, `llmInvoked: false`, `networkCallsAllowed: false`,
   `requestIrCandidateGenerated: false`, and `candidateImportRequired: true`.
+- Provider-config behavior: `disabled`, `unavailable`, `configured-not-invoked`, and
+  `future-invocation-allowed-only-after-explicit-config` states do not invoke a provider and require external candidate
+  import. `blocked-invalid-config` or secret-looking provider config blocks the command before output is written.
 - External import behavior: With `--external-candidate`, the command checks request text, schema id, candidate-only
-  safety fields, and unsafe authority escalation before writing. Imported candidates are normalized to
-  `artifactRole: request-ir-candidate`, `requestIrCandidateStatus: candidate-only`,
+  safety fields, provider config safety when present, and unsafe authority escalation before writing. Imported
+  candidates are normalized to `artifactRole: request-ir-candidate`, `requestIrCandidateStatus: candidate-only`,
   `authorityStatus: not-authoritative-until-validated`, and downstream traversal/contract/instruction authority false.
 - Output authority guard: explicit output paths are rejected before writing if they would overwrite the analyzer pack,
-  external candidate, linked boundary/schema/intake/clarification artifacts, graph-source/read-model source authority,
-  evidence paths, or source-authority-shaped JSON. Blocked external imports write no partial output.
+  provider config, external candidate, linked boundary/schema/intake/clarification artifacts, graph-source/read-model
+  source authority, evidence paths, or source-authority-shaped JSON. Unsafe provider config and blocked external imports
+  write no partial output.
 - Next command: Run `graph read-model validate-request-ir` on an imported candidate before graph-aware validation or
   traversal. This command does not call an LLM/API, run validation, run traversal, generate selected slices, generate
   contract input, generate instruction packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve
@@ -779,12 +784,24 @@ node dist/cli/index.js graph read-model analyze-request `
   --json
 ```
 
-External candidate import example:
+Provider-config disabled example:
 
 ```powershell
 node dist/cli/index.js graph read-model analyze-request `
   --request "Add Todo App runtime evidence for the add button behavior without touching production source." `
   --pack examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.json `
+  --provider-config examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json `
+  --output .tmp/review-ai-request-analyzer-provider-config-disabled.json `
+  --json
+```
+
+External candidate import with provider-config provenance:
+
+```powershell
+node dist/cli/index.js graph read-model analyze-request `
+  --request "Add Todo App runtime evidence for the add button behavior without touching production source." `
+  --pack examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.json `
+  --provider-config examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json `
   --external-candidate .tmp/external-request-ir-candidate.json `
   --output .tmp/imported-request-ir-candidate.json `
   --json

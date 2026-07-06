@@ -88,6 +88,142 @@ describe('AI Request Analyzer command surface CLI', () => {
     expect(written.llmInvoked).toBe(false)
   })
 
+  it('reads disabled provider config and writes import-required run report without invocation', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('disabled'))
+    const outputPath = join('.tmp', 'provider-config-disabled.json')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--output',
+        outputPath,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+    const written = JSON.parse(readFileSync(join(workspace, outputPath), 'utf8'))
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.analyzerProviderStatus).toBe('provider-disabled')
+    expect(written.sourceProviderConfig).toBe('provider-config.json')
+    expect(written.providerState).toBe('disabled')
+    expect(written.providerInvocationAuthority).toBe('none-preview-only')
+    expect(written.providerInvocationSkipped).toBe(true)
+    expect(written.candidateImportRequired).toBe(true)
+    expect(written.llmInvoked).toBe(false)
+    expect(written.networkCallsAllowed).toBe(false)
+    expect(written.requestIrCandidateGenerated).toBe(false)
+  })
+
+  it('reports unavailable provider config as import-required without candidate output', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('unavailable'))
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.analyzerProviderStatus).toBe('provider-unavailable')
+    expect(payload.providerState).toBe('unavailable')
+    expect(payload.candidateImportRequired).toBe(true)
+    expect(payload.llmInvoked).toBe(false)
+    expect(payload.networkCallsAllowed).toBe(false)
+    expect(payload.requestIrCandidateGenerated).toBe(false)
+  })
+
+  it('blocks configured-not-invoked provider config without invoking a provider', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-not-invoked'))
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.analyzerProviderStatus).toBe('provider-configured-not-invoked')
+    expect(payload.providerState).toBe('configured-not-invoked')
+    expect(payload.analyzerProviderConfigured).toBe(true)
+    expect(payload.providerInvocationSkipped).toBe(true)
+    expect(payload.llmInvoked).toBe(false)
+    expect(payload.networkCallsAllowed).toBe(false)
+    expect(payload.requestIrCandidateGenerated).toBe(false)
+  })
+
+  it('blocks secret-looking provider config before writing output', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), {
+      ...validProviderConfig('disabled'),
+      apiKeyValue: 'sk-thisisnotarealkey123456',
+    })
+    const outputPath = join('.tmp', 'provider-config-disabled.json')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--output',
+        outputPath,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_PROVIDER_CONFIG_SECRET_VALUE_BLOCKED',
+    )
+    expect(existsSync(join(workspace, outputPath))).toBe(false)
+  })
+
   it('imports an explicit external candidate and writes a candidate-only output', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
@@ -123,6 +259,83 @@ describe('AI Request Analyzer command surface CLI', () => {
     expect(written.graphTraversalAllowed).toBe(false)
     expect(written.contractGenerationAllowed).toBe(false)
     expect(written.instructionPackGenerationAllowed).toBe(false)
+  })
+
+  it('imports an external candidate with safe provider config and records invocation skipped', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-not-invoked'))
+    writeJson(join(workspace, 'external-candidate.json'), validRequestIrCandidate())
+    const outputPath = join('.tmp', 'imported-candidate.json')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--external-candidate',
+        'external-candidate.json',
+        '--output',
+        outputPath,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+    const written = JSON.parse(readFileSync(join(workspace, outputPath), 'utf8'))
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.requestIrCandidateGenerated).toBe(true)
+    expect(written.artifactRole).toBe('request-ir-candidate')
+    expect(written.sourceProviderConfig).toBe('provider-config.json')
+    expect(written.providerState).toBe('configured-not-invoked')
+    expect(written.providerInvocationAuthority).toBe('none-preview-only')
+    expect(written.providerInvocationSkipped).toBe(true)
+    expect(written.llmInvoked).toBe(false)
+    expect(written.networkCallsAllowed).toBe(false)
+    expect(written.graphTraversalAllowed).toBe(false)
+  })
+
+  it('blocks unsafe provider config even when external candidate is provided', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('blocked-invalid-config'))
+    writeJson(join(workspace, 'external-candidate.json'), validRequestIrCandidate())
+    const outputPath = join('.tmp', 'imported-candidate.json')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--external-candidate',
+        'external-candidate.json',
+        '--output',
+        outputPath,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.analyzerProviderStatus).toBe('provider-config-blocked')
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_PROVIDER_CONFIG_BLOCKED_INVALID',
+    )
+    expect(existsSync(join(workspace, outputPath))).toBe(false)
   })
 
   it('blocks an external candidate whose request text differs and writes no output', async () => {
@@ -232,6 +445,37 @@ describe('AI Request Analyzer command surface CLI', () => {
     expect(payload.issues[0].message).toContain('would overwrite the source AI Request Analyzer Pack')
     expect(readFileSync(join(workspace, 'pack.json'), 'utf8')).toBe(packBefore)
   })
+
+  it('blocks output that would overwrite provider config and leaves it unchanged', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('disabled'))
+    const providerConfigBefore = readFileSync(join(workspace, 'provider-config.json'), 'utf8')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--output',
+        'provider-config.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.ok).toBe(false)
+    expect(payload.issues[0].message).toContain('would overwrite the source AI Request Analyzer provider config')
+    expect(readFileSync(join(workspace, 'provider-config.json'), 'utf8')).toBe(providerConfigBefore)
+  })
 })
 
 function validAnalyzerPack(): Record<string, unknown> {
@@ -299,5 +543,53 @@ function validRequestIrCandidate(): Record<string, unknown> {
     approvalStatus: 'not-approved',
     equivalenceProven: false,
     runtimeEvidenceSatisfied: false,
+  }
+}
+
+function validProviderConfig(
+  providerState:
+    | 'disabled'
+    | 'configured-not-invoked'
+    | 'unavailable'
+    | 'blocked-invalid-config'
+    | 'future-invocation-allowed-only-after-explicit-config',
+): Record<string, unknown> {
+  const statuses: Record<typeof providerState, string> = {
+    disabled: 'ai-request-analyzer-provider-config-disabled-previewed',
+    unavailable: 'ai-request-analyzer-provider-config-unavailable-previewed',
+    'configured-not-invoked': 'ai-request-analyzer-provider-config-configured-not-invoked-previewed',
+    'blocked-invalid-config': 'ai-request-analyzer-provider-config-blocked-invalid-previewed',
+    'future-invocation-allowed-only-after-explicit-config':
+      'ai-request-analyzer-provider-config-future-invocation-previewed',
+  }
+  return {
+    schemaVersion: 1,
+    artifactRole: 'ai-request-analyzer-provider-config-preview',
+    status: statuses[providerState],
+    providerState,
+    sourceProviderConfigBoundary: 'provider-config-boundary.json',
+    providerInvocationAuthority: 'none-preview-only',
+    providerNameCandidate: providerState === 'configured-not-invoked' ? 'openai' : null,
+    modelNameCandidate: providerState === 'configured-not-invoked' ? 'gpt-future-preview' : null,
+    providerConfigSource: providerState === 'disabled' ? 'disabled-default-preview' : 'repo-local-preview-config',
+    apiKeySourceRef: providerState === 'configured-not-invoked' ? 'OPENAI_API_KEY' : null,
+    environmentVariableRefs: providerState === 'configured-not-invoked' ? ['OPENAI_API_KEY'] : [],
+    secretValueStored: false,
+    secretValueInspected: false,
+    networkCallsAllowed: false,
+    llmInvoked: false,
+    runtimeAiCallsAllowed: false,
+    requestIrCandidateGenerated: false,
+    graphTraversalAllowed: false,
+    contractInputGenerated: false,
+    instructionPackGenerated: false,
+    codexExecutionTriggered: false,
+    graphSourceMutated: false,
+    graphDeltaApplied: false,
+    approvalStatus: 'not-approved',
+    runtimeEvidenceSatisfied: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
   }
 }

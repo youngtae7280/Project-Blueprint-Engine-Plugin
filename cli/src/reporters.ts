@@ -330,6 +330,8 @@ Options:
   --bundle-dir <dir>   Optional repo-local output directory for graph read-model materialize-hook-script-bundle. Defaults to .tmp/devview-hook-script-bundle.
   --request <text>     Natural-language request text for graph read-model analyze-request.
   --pack <file>        AI Request Analyzer Pack file for graph read-model analyze-request.
+  --provider-config <file>
+                       Optional AI Request Analyzer provider config preview for graph read-model analyze-request. Provider invocation remains disabled.
   --external-candidate <file>
                        Explicit precomputed Request IR Candidate import for graph read-model analyze-request.
   --clarification-pack <file>

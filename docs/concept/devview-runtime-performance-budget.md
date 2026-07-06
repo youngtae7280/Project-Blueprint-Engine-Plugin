@@ -339,6 +339,11 @@ This slice adds no command and no smoke step. It fixes provider-state vocabulary
 Future provider invocation time remains outside the deterministic 5 second runtime budget until a separate explicit
 provider adapter decision exists.
 
+The provider-config-aware `analyze-request --provider-config <providerConfigPath>` adapter surface also stays outside
+the core-critical lane and does not add a runtime smoke step. It reads disabled/unavailable/configured provider config
+previews only to report blocked/import-required status or to record provenance beside an explicit external candidate
+import. It still makes no network call, invokes no LLM, and generates no provider-produced Request IR Candidate.
+
 The clarification interview boundary preview is outside the measured runtime path:
 
 ```text

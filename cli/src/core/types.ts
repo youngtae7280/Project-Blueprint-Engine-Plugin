@@ -90,6 +90,7 @@ export interface CliOptions {
   markdown?: string
   request?: string
   pack?: string
+  providerConfig?: string
   externalCandidate?: string
   proposal?: string
   reviewPacket?: string

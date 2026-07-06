@@ -3429,3 +3429,34 @@ traversal, selected slice generation, contract input generation, instruction pac
 Codex execution, graph-source mutation, graph delta apply, approval/human decision automation, Evidence acceptance,
 runtime Evidence satisfaction, equivalence proof, scope/CI enforcement, strict/guided blocking, or Project Memory
 extension authority.
+
+## DEC-293 Read AI Analyzer Provider Config Without Invocation
+
+DEC-293 does not supersede DEC-097 through DEC-292. It extends `graph read-model analyze-request` with
+`--provider-config <providerConfigPath>` so the analyzer command surface can read provider config previews without
+invoking a provider.
+
+The first provider-config-aware calibration artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-run.provider-config-disabled.add-todo-runtime-evidence-only.preview.json
+```
+
+Provider state behavior remains non-invoking:
+
+```text
+disabled -> provider-disabled, candidateImportRequired true
+unavailable -> provider-unavailable, candidateImportRequired true
+configured-not-invoked -> provider-configured-not-invoked, future-only blocked
+future-invocation-allowed-only-after-explicit-config -> future invocation blocked
+blocked-invalid-config -> command blocked before output
+```
+
+External candidate import remains the only candidate-producing path. If safe provider config is supplied with an
+external candidate, the imported candidate records provider provenance and `providerInvocationSkipped: true`. Unsafe,
+secret-looking, or blocked-invalid provider config blocks the whole command even when an external candidate is supplied.
+
+This decision does not implement an OpenAI/API/LLM/network call, read or store secret values, generate Request IR from a
+provider, run graph validation, run traversal, generate selected slices, generate contract input, generate instruction
+packs, execute Codex, install hooks, mutate graph-source, apply graph deltas, automate approval or human decisions,
+accept or satisfy Evidence, prove equivalence, enforce scope/CI, or activate strict/guided blocking.

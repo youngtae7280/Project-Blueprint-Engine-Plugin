@@ -1281,6 +1281,7 @@ export async function graphReadModelAnalyzeRequestCommand(context: CommandContex
 
   try {
     const run = await analyzeRequestFile(context.options.root, context.options.request, context.options.pack, {
+      providerConfig: context.options.providerConfig,
       externalCandidate: context.options.externalCandidate,
       output: context.options.output,
     })

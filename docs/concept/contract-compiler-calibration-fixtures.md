@@ -2133,6 +2133,19 @@ references are provenance only; environment variable names such as `OPENAI_API_K
 token, password, and secret values must never be stored or inspected. The boundary keeps `networkCallsAllowed`,
 `llmInvoked`, and `requestIrCandidateGenerated` false.
 
+The provider-config-aware analyzer run calibration is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-run.provider-config-disabled.add-todo-runtime-evidence-only.preview.json
+```
+
+It reads the disabled provider config and records `providerState: disabled`,
+`providerInvocationAuthority: none-preview-only`, `providerInvocationSkipped: true`, `candidateImportRequired: true`,
+`llmInvoked: false`, `networkCallsAllowed: false`, and `requestIrCandidateGenerated: false`. It is blocked until an
+explicit external candidate is supplied. Reading provider config does not generate Request IR, call an LLM/API, run
+validation, run traversal, generate selected slices, generate contract input, generate instruction packs, or execute
+Codex.
+
 The clarification interview boundary preview is:
 
 ```text

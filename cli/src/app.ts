@@ -129,6 +129,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     markdown: undefined as string | undefined,
     request: undefined as string | undefined,
     pack: undefined as string | undefined,
+    providerConfig: undefined as string | undefined,
     externalCandidate: undefined as string | undefined,
     proposal: undefined as string | undefined,
     reviewPacket: undefined as string | undefined,
@@ -427,6 +428,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--pack requires a file path.' }
       }
       options.pack = value
+      index += 1
+    } else if (arg === '--provider-config') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--provider-config requires a file path.' }
+      }
+      options.providerConfig = value
       index += 1
     } else if (arg === '--external-candidate') {
       const value = argv[index + 1]
