@@ -17,8 +17,9 @@ export const defaultScopeComplianceEvaluationArtifactPath =
   'examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json'
 
 export interface AdvisoryScopeComplianceCheckOptions {
-  baseRef: string
-  headRef: string
+  baseRef?: string
+  headRef?: string
+  workingTree?: boolean
   output?: string
   markdown?: string
 }
@@ -26,8 +27,10 @@ export interface AdvisoryScopeComplianceCheckOptions {
 export interface CompactScopeComplianceRuntimeReport {
   reportStatus: 'compact-advisory-runtime-report-ready'
   command: 'graph read-model check-scope'
-  baseRef: string
-  headRef: string
+  sourceMode: 'explicit-base-head' | 'working-tree'
+  collectionMode: 'explicit-base-head' | 'working-tree-tracked-unstaged'
+  baseRef?: string
+  headRef?: string
   changedFileCount: number
   evaluatedFileCount: number
   scopeComplianceEvaluationStatus: AdvisoryScopeComplianceCheckArtifact['scopeComplianceEvaluationStatus']
@@ -59,10 +62,16 @@ export interface AdvisoryScopeComplianceCheckArtifact extends ScopeComplianceEva
   fixtureShape: 'test-only-behavior-proof'
   checkerAxis: 'scope-compliance-preview'
   evaluationMode: 'non-enforcing-local-deterministic-cli'
-  baseRef: string
-  headRef: string
+  sourceMode: 'explicit-base-head' | 'working-tree'
+  collectionMode: 'explicit-base-head' | 'working-tree-tracked-unstaged'
+  baseRef?: string
+  headRef?: string
   resolvedBaseRef?: string
   resolvedHeadRef?: string
+  workingTreeMode?: 'tracked-unstaged-only'
+  stagedChangesIncluded: false
+  untrackedFilesIncluded: false
+  changedFileNameStatusCollected: true
   changedFilesCollected: true
   changedFileCount: number
   inputConsumedForEvaluation: true
@@ -76,7 +85,9 @@ export interface AdvisoryScopeComplianceCheckArtifact extends ScopeComplianceEva
   cleanClaimed: boolean
   actualViolationClaimed: boolean
   collectionOutputWritten: false
-  changedFileInputArtifact: 'in-memory-git-derived-changed-file-collection'
+  changedFileInputArtifact:
+    | 'in-memory-git-derived-changed-file-collection'
+    | 'in-memory-working-tree-changed-file-collection'
   scopeInputBindingArtifact: string
   pathPatternPolicyArtifact: string
   pathMatchingHelperArtifact: string
@@ -121,6 +132,7 @@ export async function runAdvisoryScopeComplianceCheck(
     collectGitDerivedChangedFileArtifact(root, {
       baseRef: options.baseRef,
       headRef: options.headRef,
+      workingTree: options.workingTree,
     }),
     loadScopeCompliancePatterns(root),
   ])
@@ -133,6 +145,7 @@ export async function runAdvisoryScopeComplianceCheck(
   const artifact = buildAdvisoryScopeComplianceCheckArtifact({
     baseRef: options.baseRef,
     headRef: options.headRef,
+    workingTree: options.workingTree,
     collectionArtifact,
     scopePatterns,
     evaluation,
@@ -165,8 +178,9 @@ export async function runAdvisoryScopeComplianceCheck(
 }
 
 export function buildAdvisoryScopeComplianceCheckArtifact(input: {
-  baseRef: string
-  headRef: string
+  baseRef?: string
+  headRef?: string
+  workingTree?: boolean
   collectionArtifact: GitDerivedChangedFileCollectionArtifact
   scopePatterns: ScopePatternSource
   evaluation: ScopeComplianceEvaluationResult
@@ -186,10 +200,16 @@ export function buildAdvisoryScopeComplianceCheckArtifact(input: {
     fixtureShape: 'test-only-behavior-proof',
     checkerAxis: 'scope-compliance-preview',
     evaluationMode: 'non-enforcing-local-deterministic-cli',
-    baseRef: input.baseRef,
-    headRef: input.headRef,
+    sourceMode: input.collectionArtifact.sourceMode,
+    collectionMode: input.collectionArtifact.collectionMode,
+    ...(input.baseRef ? { baseRef: input.baseRef } : {}),
+    ...(input.headRef ? { headRef: input.headRef } : {}),
     ...(input.collectionArtifact.resolvedBaseRef ? { resolvedBaseRef: input.collectionArtifact.resolvedBaseRef } : {}),
     ...(input.collectionArtifact.resolvedHeadRef ? { resolvedHeadRef: input.collectionArtifact.resolvedHeadRef } : {}),
+    ...(input.collectionArtifact.workingTreeMode ? { workingTreeMode: input.collectionArtifact.workingTreeMode } : {}),
+    stagedChangesIncluded: false,
+    untrackedFilesIncluded: false,
+    changedFileNameStatusCollected: true,
     changedFilesCollected: true,
     changedFileCount: input.collectionArtifact.normalizedChangedFiles.length,
     inputConsumedForEvaluation: true,
@@ -203,7 +223,10 @@ export function buildAdvisoryScopeComplianceCheckArtifact(input: {
     cleanClaimed: false,
     actualViolationClaimed: false,
     collectionOutputWritten: false,
-    changedFileInputArtifact: 'in-memory-git-derived-changed-file-collection',
+    changedFileInputArtifact:
+      input.collectionArtifact.collectionMode === 'working-tree-tracked-unstaged'
+        ? 'in-memory-working-tree-changed-file-collection'
+        : 'in-memory-git-derived-changed-file-collection',
     scopeInputBindingArtifact:
       'examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json',
     pathPatternPolicyArtifact:
@@ -235,7 +258,9 @@ export function buildAdvisoryScopeComplianceCheckArtifact(input: {
     nonEnforcementBoundary:
       'This command runs the first advisory scope compliance evaluator surface. It collects changed-file names/status in memory and compares them with the current Todo App runtime Evidence-only scope inputs, but it remains non-enforcing. Advisory findings do not reject diffs, fail CI, configure required checks, approve fixtures, satisfy runtime Evidence, prove equivalence, apply graph deltas, or replace user acceptance.',
     allowedUse: [
-      'inspect advisory scope compliance findings from explicit base/head refs',
+      input.collectionArtifact.collectionMode === 'working-tree-tracked-unstaged'
+        ? 'inspect advisory scope compliance findings from tracked unstaged working tree changes'
+        : 'inspect advisory scope compliance findings from explicit base/head refs',
       'include local deterministic evaluator timing in DevView runtime smoke',
       'write an advisory evaluation artifact only when --output is explicitly provided',
       'review blocking or review-required findings without treating them as enforcement',
@@ -263,8 +288,10 @@ export function buildCompactScopeComplianceRuntimeReport(
   return {
     reportStatus: 'compact-advisory-runtime-report-ready',
     command: 'graph read-model check-scope',
-    baseRef: artifact.baseRef,
-    headRef: artifact.headRef,
+    sourceMode: artifact.sourceMode,
+    collectionMode: artifact.collectionMode,
+    ...(artifact.baseRef ? { baseRef: artifact.baseRef } : {}),
+    ...(artifact.headRef ? { headRef: artifact.headRef } : {}),
     changedFileCount: artifact.changedFileCount,
     evaluatedFileCount: artifact.evaluatedFiles.length,
     scopeComplianceEvaluationStatus: artifact.scopeComplianceEvaluationStatus,
@@ -298,8 +325,10 @@ export function renderCompactScopeComplianceRuntimeReport(
     '| Field | Value |',
     '| --- | --- |',
     `| Command | \`${report.command}\` |`,
-    `| Base ref | \`${report.baseRef}\` |`,
-    `| Head ref | \`${report.headRef}\` |`,
+    `| Source mode | \`${report.sourceMode}\` |`,
+    `| Collection mode | \`${report.collectionMode}\` |`,
+    `| Base ref | \`${report.baseRef || 'not-used'}\` |`,
+    `| Head ref | \`${report.headRef || 'not-used'}\` |`,
     `| Changed files | ${report.changedFileCount} |`,
     `| Evaluated files | ${report.evaluatedFileCount} |`,
     `| Evaluation status | \`${report.scopeComplianceEvaluationStatus}\` |`,

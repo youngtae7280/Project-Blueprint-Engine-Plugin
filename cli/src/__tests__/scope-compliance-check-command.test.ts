@@ -153,6 +153,89 @@ describe('scope compliance advisory CLI', () => {
     expect(markdown).not.toContain('approved')
     expect(existsSync(join(workspace, defaultEvaluationPath))).toBe(false)
   })
+
+  it('evaluates tracked unstaged working tree changes without enforcing scope', async () => {
+    const workspace = createWorkingTreeScopeWorkspace({
+      allowedScopePatterns: ['src/**'],
+      forbiddenScopePatterns: ['src/todos.ts'],
+      changedPath: 'src/todos.ts',
+      changedContents: 'export const value = "working-tree"\n',
+    })
+
+    const result = await runPbeCli(['graph', 'read-model', 'check-scope', '--working-tree', '--json'], {
+      cwd: workspace,
+      pluginRoot,
+    })
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.ok).toBe(true)
+    expect(payload.sourceMode).toBe('working-tree')
+    expect(payload.collectionMode).toBe('working-tree-tracked-unstaged')
+    expect(payload.workingTreeMode).toBe('tracked-unstaged-only')
+    expect(payload.changedFileInputArtifact).toBe('in-memory-working-tree-changed-file-collection')
+    expect(payload.stagedChangesIncluded).toBe(false)
+    expect(payload.untrackedFilesIncluded).toBe(false)
+    expect(payload.changedFileNameStatusCollected).toBe(true)
+    expect(payload.changedFileCount).toBe(1)
+    expect(payload.nonEnforcing).toBe(true)
+    expect(payload.enforcementStatus).toBe('not-enforced')
+    expect(payload.diffRejected).toBe(false)
+    expect(payload.scopeEnforced).toBe(false)
+    expect(payload.approvalStatus).toBe('not-approved')
+    expect(payload.equivalenceProven).toBe(false)
+    expect(payload.scopeComplianceResult).toBe('evaluated-with-blocking-violations')
+    expect(payload.evaluatedViolations).toEqual([
+      expect.objectContaining({
+        category: 'forbidden-scope-match',
+        path: 'src/todos.ts',
+      }),
+    ])
+  })
+
+  it('reports a clean working tree without approval or evidence satisfaction', async () => {
+    const workspace = createWorkingTreeScopeWorkspace({
+      allowedScopePatterns: ['src/**'],
+      forbiddenScopePatterns: ['src/todos.ts'],
+      changedPath: 'src/todos.ts',
+    })
+
+    const result = await runPbeCli(['graph', 'read-model', 'check-scope', '--working-tree', '--json'], {
+      cwd: workspace,
+      pluginRoot,
+    })
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.sourceMode).toBe('working-tree')
+    expect(payload.collectionMode).toBe('working-tree-tracked-unstaged')
+    expect(payload.changedFileCount).toBe(0)
+    expect(payload.scopeComplianceResult).toBe('evaluated-clean')
+    expect(payload.cleanClaimed).toBe(false)
+    expect(payload.approvalStatus).toBe('not-approved')
+    expect(payload.compactRuntimeReport.runtimeEvidenceSatisfied).toBe(false)
+    expect(payload.compactRuntimeReport.graphDeltaApplied).toBe(false)
+  })
+
+  it('rejects explicit refs with working tree scope mode', async () => {
+    const workspace = createWorkingTreeScopeWorkspace({
+      allowedScopePatterns: ['src/**'],
+      forbiddenScopePatterns: ['src/todos.ts'],
+      changedPath: 'src/todos.ts',
+    })
+
+    const result = await runPbeCli(
+      ['graph', 'read-model', 'check-scope', '--working-tree', '--base', 'HEAD~1', '--head', 'HEAD', '--json'],
+      {
+        cwd: workspace,
+        pluginRoot,
+      },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.InvalidArguments)
+    expect(payload.message).toContain('cannot combine --working-tree with --base or --head')
+  })
 })
 
 function createScopeWorkspace(input: {
@@ -186,5 +269,40 @@ function createScopeWorkspace(input: {
   writeText(join(workspace, input.changedPath), 'export const value = "changed"\n')
   execFileSync('git', ['add', '.'], { cwd: workspace, stdio: 'ignore' })
   execFileSync('git', ['commit', '-m', 'changed'], { cwd: workspace, stdio: 'ignore' })
+  return workspace
+}
+
+function createWorkingTreeScopeWorkspace(input: {
+  allowedScopePatterns: string[]
+  forbiddenScopePatterns: string[]
+  changedPath: string
+  changedContents?: string
+}): string {
+  const workspace = createWorkspace()
+  writeJson(join(workspace, draftPath), {
+    targetScopeCandidates: [
+      {
+        id: 'scope-test-allowed',
+        paths: input.allowedScopePatterns,
+      },
+    ],
+    policySnapshot: {
+      forbiddenScopeRules: [
+        {
+          id: 'scope-test-forbidden',
+          paths: input.forbiddenScopePatterns,
+        },
+      ],
+    },
+  })
+  writeText(join(workspace, input.changedPath), 'export const value = "baseline"\n')
+  execFileSync('git', ['init'], { cwd: workspace, stdio: 'ignore' })
+  execFileSync('git', ['config', 'user.email', 'pbe@example.test'], { cwd: workspace, stdio: 'ignore' })
+  execFileSync('git', ['config', 'user.name', 'PBE Test'], { cwd: workspace, stdio: 'ignore' })
+  execFileSync('git', ['add', '.'], { cwd: workspace, stdio: 'ignore' })
+  execFileSync('git', ['commit', '-m', 'baseline'], { cwd: workspace, stdio: 'ignore' })
+  if (input.changedContents) {
+    writeText(join(workspace, input.changedPath), input.changedContents)
+  }
   return workspace
 }

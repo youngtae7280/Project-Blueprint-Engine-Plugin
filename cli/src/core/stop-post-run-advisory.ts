@@ -73,6 +73,8 @@ export interface StopPostRunAdvisoryReport {
     generatedFileCount: number
     changedFiles: Array<{ path: string; status: string }>
     authorityClass: string
+    collectionMode: string
+    sourceMode: string
   }
   instructionSummary: {
     instructionPackStatus: 'missing' | 'present'
@@ -538,6 +540,8 @@ function summarizeChangedFiles(artifact: JsonRecord | null): StopPostRunAdvisory
       generatedFileCount: 0,
       changedFiles: [],
       authorityClass: 'missing',
+      collectionMode: 'missing',
+      sourceMode: 'missing',
     }
   }
   const entries = changedFileEntries(artifact)
@@ -550,6 +554,8 @@ function summarizeChangedFiles(artifact: JsonRecord | null): StopPostRunAdvisory
       status: stringValue(entry.status ?? entry.statusCode ?? entry.changeType),
     })),
     authorityClass: stringValue(artifact.authorityClass) || 'git-derived-changed-files',
+    collectionMode: stringValue(artifact.collectionMode) || 'explicit-base-head',
+    sourceMode: stringValue(artifact.sourceMode) || 'explicit-base-head',
   }
 }
 
@@ -777,7 +783,7 @@ function nextRequiredCommands(
     ]
   }
   if (status === 'missing-changed-files') {
-    return ['graph read-model collect-changed-files --base <baseRef> --head <headRef> --output <changedFiles> --json']
+    return ['graph read-model collect-changed-files --working-tree --output <changedFiles> --json']
   }
   if (status === 'clean-no-changes-observed') {
     return [
@@ -790,6 +796,9 @@ function nextRequiredCommands(
     ]
   }
   if (status === 'missing-scope-report' && changedFiles.changedFileCount > 0) {
+    if (changedFiles.collectionMode === 'working-tree-tracked-unstaged') {
+      return ['graph read-model check-scope --working-tree --output <scopeReport> --markdown <runtimeReport> --json']
+    }
     return [
       'graph read-model check-scope --base <baseRef> --head <headRef> --output <scopeReport> --markdown <runtimeReport> --json',
     ]
@@ -826,6 +835,8 @@ export function renderStopPostRunAdvisoryMarkdown(report: StopPostRunAdvisoryRep
     '## Changed Files',
     '',
     `- Status: ${report.changedFileSummary.changedFilesStatus}`,
+    `- Source mode: ${report.changedFileSummary.sourceMode}`,
+    `- Collection mode: ${report.changedFileSummary.collectionMode}`,
     `- Count: ${report.changedFileSummary.changedFileCount}`,
     ...renderChangedFileRows(report.changedFileSummary.changedFiles),
     '',

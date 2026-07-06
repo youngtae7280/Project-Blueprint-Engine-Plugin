@@ -165,9 +165,9 @@ Commands:
   graph read-model compile-contract
                        Compile a non-executing dry-run contract candidate from the Compiler Input Model with --dry-run
   graph read-model collect-changed-files
-                       Collect git-derived changed-file names/status between explicit refs without scope evaluation
+                       Collect git-derived changed-file names/status between explicit refs or tracked unstaged working tree without scope evaluation
   graph read-model check-scope
-                       Run advisory non-enforcing scope compliance evaluation for explicit refs
+                       Run advisory non-enforcing scope compliance evaluation for explicit refs or tracked unstaged working tree
   graph read-model propose-graph-delta
                        Generate proposal-only Graph Delta preview JSON from an advisory source artifact
   graph read-model review-graph-delta
@@ -396,5 +396,6 @@ Options:
                        Wrapped graph operation script command. Defaults to operation-chain.
   --base <ref>         Base git ref for graph read-model collect-changed-files or check-scope.
   --head <ref>         Head git ref for graph read-model collect-changed-files or check-scope.
+  --working-tree       Use tracked unstaged working tree changes for graph read-model collect-changed-files or check-scope; mutually exclusive with --base/--head.
 `
 }

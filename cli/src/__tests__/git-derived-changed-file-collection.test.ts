@@ -1,10 +1,22 @@
-import { describe, expect, it } from 'vitest'
+import { execFileSync } from 'node:child_process'
+import { join, resolve } from 'node:path'
+import { afterEach, describe, expect, it } from 'vitest'
+import { runPbeCli } from '../app'
 import {
   buildGitDerivedChangedFileCollectionArtifact,
+  collectGitDerivedChangedFiles,
   normalizeRepositoryRelativePath,
   parseNameStatusZ,
   validateExplicitGitRef,
 } from '../core/git-derived-changed-file-collection'
+import { ExitCode } from '../core/types'
+import { cleanupWorkspaces, createWorkspace, writeText } from './fixtures/workspace'
+
+const pluginRoot = resolve(process.cwd())
+
+afterEach(() => {
+  cleanupWorkspaces()
+})
 
 describe('git-derived changed-file collection', () => {
   it('validates explicit base/head refs before collection', () => {
@@ -62,6 +74,11 @@ describe('git-derived changed-file collection', () => {
     )
     expect(artifact.authorityClass).toBe('git-derived-changed-files')
     expect(artifact.collectionMode).toBe('explicit-base-head')
+    expect(artifact.sourceMode).toBe('explicit-base-head')
+    expect(artifact.gitCommandMode).toBe('diff-name-status-explicit-base-head-with-renames')
+    expect(artifact.changedFileNameStatusCollected).toBe(true)
+    expect(artifact.stagedChangesIncluded).toBe(false)
+    expect(artifact.untrackedFilesIncluded).toBe(false)
     expect(artifact.changedFilesCollected).toBe(true)
     expect(artifact.checkerRun).toBe(false)
     expect(artifact.scopeComplianceEvaluationStatus).toBe('not-evaluated')
@@ -97,4 +114,98 @@ describe('git-derived changed-file collection', () => {
     expect(artifact.forbiddenUse).toContain('scope compliance evaluation')
     expect(artifact.forbiddenUse).toContain('no-violation claim')
   })
+
+  it('collects tracked unstaged working tree changes without patch contents', async () => {
+    const workspace = createCommittedWorkspace('src/todos.ts', 'export const value = "baseline"\n')
+    writeText(join(workspace, 'src', 'todos.ts'), 'export const value = "changed"\n')
+
+    const result = await collectGitDerivedChangedFiles(workspace, {
+      workingTree: true,
+      output: join('.tmp', 'changed-files-working-tree.json'),
+    })
+
+    expect(result.artifact.collectionMode).toBe('working-tree-tracked-unstaged')
+    expect(result.artifact.sourceMode).toBe('working-tree')
+    expect(result.artifact.workingTreeMode).toBe('tracked-unstaged-only')
+    expect(result.artifact.gitCommandMode).toBe('diff-name-status-working-tree-with-renames')
+    expect(result.artifact.stagedChangesIncluded).toBe(false)
+    expect(result.artifact.untrackedFilesIncluded).toBe(false)
+    expect(result.artifact.patchContentsInspected).toBe(false)
+    expect(result.artifact.changedFileNameStatusCollected).toBe(true)
+    expect(result.artifact.checkerRun).toBe(false)
+    expect(result.artifact.baseRef).toBeUndefined()
+    expect(result.artifact.headRef).toBeUndefined()
+    expect(result.artifact.normalizedChangedFiles).toEqual([
+      expect.objectContaining({
+        path: 'src/todos.ts',
+        statusCode: 'M',
+        changeType: 'modified',
+      }),
+    ])
+  })
+
+  it('reports zero files for a clean working tree without claiming approval', async () => {
+    const workspace = createCommittedWorkspace('src/todos.ts', 'export const value = "baseline"\n')
+
+    const result = await collectGitDerivedChangedFiles(workspace, {
+      workingTree: true,
+      output: join('.tmp', 'changed-files-working-tree.json'),
+    })
+
+    expect(result.artifact.collectionMode).toBe('working-tree-tracked-unstaged')
+    expect(result.artifact.normalizedChangedFiles).toEqual([])
+    expect(result.artifact.cleanClaimed).toBe(false)
+    expect(result.artifact.scopeEnforced).toBe(false)
+    expect(result.artifact.diffRejected).toBe(false)
+  })
+
+  it('excludes untracked files in working tree mode v1', async () => {
+    const workspace = createCommittedWorkspace('src/todos.ts', 'export const value = "baseline"\n')
+    writeText(join(workspace, 'src', 'new-file.ts'), 'export const value = "untracked"\n')
+
+    const result = await collectGitDerivedChangedFiles(workspace, {
+      workingTree: true,
+      output: join('.tmp', 'changed-files-working-tree.json'),
+    })
+
+    expect(result.artifact.untrackedFilesIncluded).toBe(false)
+    expect(result.artifact.normalizedChangedFiles).toEqual([])
+  })
+
+  it('rejects base/head refs when working tree mode is selected', async () => {
+    const workspace = createCommittedWorkspace('src/todos.ts', 'export const value = "baseline"\n')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'collect-changed-files',
+        '--working-tree',
+        '--base',
+        'HEAD~1',
+        '--head',
+        'HEAD',
+        '--json',
+      ],
+      {
+        cwd: workspace,
+        pluginRoot,
+      },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.InvalidArguments)
+    expect(payload.message).toContain('cannot combine --working-tree with --base or --head')
+  })
 })
+
+function createCommittedWorkspace(filePath: string, contents: string): string {
+  const workspace = createWorkspace()
+  execFileSync('git', ['init'], { cwd: workspace, stdio: 'ignore' })
+  execFileSync('git', ['config', 'user.email', 'pbe@example.test'], { cwd: workspace, stdio: 'ignore' })
+  execFileSync('git', ['config', 'user.name', 'PBE Test'], { cwd: workspace, stdio: 'ignore' })
+  writeText(join(workspace, filePath), contents)
+  execFileSync('git', ['add', '.'], { cwd: workspace, stdio: 'ignore' })
+  execFileSync('git', ['commit', '-m', 'baseline'], { cwd: workspace, stdio: 'ignore' })
+  return workspace
+}

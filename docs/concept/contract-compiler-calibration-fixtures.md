@@ -1447,11 +1447,16 @@ The new command shape is:
 
 ```text
 graph read-model collect-changed-files --base <baseRef> --head <headRef> --json
+graph read-model collect-changed-files --working-tree --output <changedFiles> --json
 ```
 
 This is the first implementation slice for the scope compliance input layer. It uses Git only to collect changed-file
 names/status between explicit refs. It normalizes paths to repository-root-relative POSIX-style paths and reports
 generated files honestly. It does not inspect patch contents.
+
+The working-tree mode reuses the same `git-derived-changed-file-collection-preview` role for compatibility, but records
+`collectionMode: working-tree-tracked-unstaged` and `sourceMode: working-tree`. It is tracked unstaged only; staged and
+untracked files remain future slices, and no tracked calibration artifact is committed for local working tree state.
 
 The third-fixture observation now records collection-only progress while preserving:
 

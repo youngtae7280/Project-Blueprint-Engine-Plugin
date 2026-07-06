@@ -15,6 +15,8 @@ Non-enforcing: true
 ## Changed Files
 
 - Status: missing
+- Source mode: missing
+- Collection mode: missing
 - Count: 0
 - No changed files listed.
 
@@ -42,7 +44,7 @@ Non-enforcing: true
 
 ## Missing Artifacts And Next Commands
 
-- `graph read-model collect-changed-files --base <baseRef> --head <headRef> --output <changedFiles> --json`
+- `graph read-model collect-changed-files --working-tree --output <changedFiles> --json`
 
 ## Safety Boundary
 

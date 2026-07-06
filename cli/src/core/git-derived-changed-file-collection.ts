@@ -9,10 +9,15 @@ export const defaultGitDerivedChangedFileCollectionPath =
   'examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json'
 
 export interface GitDerivedCollectionOptions {
-  baseRef: string
-  headRef: string
+  baseRef?: string
+  headRef?: string
+  workingTree?: boolean
   output?: string
 }
+
+export type GitDerivedCollectionMode = 'explicit-base-head' | 'working-tree-tracked-unstaged'
+
+export type GitDerivedSourceMode = 'explicit-base-head' | 'working-tree'
 
 export interface ParsedNameStatusEntry {
   status: string
@@ -47,11 +52,14 @@ export interface GitDerivedChangedFileCollectionArtifact {
   scopeComplianceViolationCategorySchemaStatus: 'scope-compliance-violation-category-schema-previewed'
   scopeComplianceEvaluationResultShapeStatus: 'scope-compliance-evaluation-result-shape-previewed'
   authorityClass: 'git-derived-changed-files'
-  collectionMode: 'explicit-base-head'
-  baseRef: string
-  headRef: string
+  collectionMode: GitDerivedCollectionMode
+  sourceMode: GitDerivedSourceMode
+  baseRef?: string
+  headRef?: string
   resolvedBaseRef?: string
   resolvedHeadRef?: string
+  workingTreeMode?: 'tracked-unstaged-only'
+  gitCommandMode: 'diff-name-status-explicit-base-head-with-renames' | 'diff-name-status-working-tree-with-renames'
   changedFilesCollected: true
   checkerRun: false
   scopeComplianceEvaluationStatus: 'not-evaluated'
@@ -59,6 +67,9 @@ export interface GitDerivedChangedFileCollectionArtifact {
   actualDiffInspected: false
   patchContentsInspected: false
   gitNameStatusCollected: true
+  changedFileNameStatusCollected: true
+  stagedChangesIncluded: false
+  untrackedFilesIncluded: false
   scopeEnforced: false
   diffRejected: false
   cleanClaimed: false
@@ -175,12 +186,16 @@ export function normalizeRepositoryRelativePath(filePath: string): { path: strin
 }
 
 export function buildGitDerivedChangedFileCollectionArtifact(input: {
-  baseRef: string
-  headRef: string
+  collectionMode?: GitDerivedCollectionMode
+  baseRef?: string
+  headRef?: string
   resolvedBaseRef?: string
   resolvedHeadRef?: string
   nameStatusOutput: string
 }): GitDerivedChangedFileCollectionArtifact {
+  const collectionMode = input.collectionMode || 'explicit-base-head'
+  const workingTreeMode = collectionMode === 'working-tree-tracked-unstaged'
+  const sourceMode: GitDerivedSourceMode = workingTreeMode ? 'working-tree' : 'explicit-base-head'
   const parsed = parseNameStatusZ(input.nameStatusOutput)
   const collectionWarnings: string[] = []
   const normalizedChangedFiles = parsed.map((entry): NormalizedChangedFileEntry => {
@@ -222,11 +237,16 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
     scopeComplianceViolationCategorySchemaStatus: 'scope-compliance-violation-category-schema-previewed',
     scopeComplianceEvaluationResultShapeStatus: 'scope-compliance-evaluation-result-shape-previewed',
     authorityClass: 'git-derived-changed-files',
-    collectionMode: 'explicit-base-head',
-    baseRef: input.baseRef,
-    headRef: input.headRef,
+    collectionMode,
+    sourceMode,
+    ...(input.baseRef ? { baseRef: input.baseRef } : {}),
+    ...(input.headRef ? { headRef: input.headRef } : {}),
     ...(input.resolvedBaseRef ? { resolvedBaseRef: input.resolvedBaseRef } : {}),
     ...(input.resolvedHeadRef ? { resolvedHeadRef: input.resolvedHeadRef } : {}),
+    ...(workingTreeMode ? { workingTreeMode: 'tracked-unstaged-only' as const } : {}),
+    gitCommandMode: workingTreeMode
+      ? 'diff-name-status-working-tree-with-renames'
+      : 'diff-name-status-explicit-base-head-with-renames',
     changedFilesCollected: true,
     checkerRun: false,
     scopeComplianceEvaluationStatus: 'not-evaluated',
@@ -234,6 +254,9 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
     actualDiffInspected: false,
     patchContentsInspected: false,
     gitNameStatusCollected: true,
+    changedFileNameStatusCollected: true,
+    stagedChangesIncluded: false,
+    untrackedFilesIncluded: false,
     scopeEnforced: false,
     diffRejected: false,
     cleanClaimed: false,
@@ -282,7 +305,9 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
     },
     collectionWarnings: [...new Set(collectionWarnings)],
     allowedUse: [
-      'collect git-derived changed-file names and status for a later scope compliance input',
+      workingTreeMode
+        ? 'collect tracked unstaged working tree changed-file names and status for a later scope compliance input'
+        : 'collect git-derived changed-file names and status for a later scope compliance input',
       'review normalized repository-root-relative paths',
       'confirm that collection-only output keeps checkerRun false',
       'prepare a later non-enforcing scope evaluation slice',
@@ -302,8 +327,9 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
       'equivalence proof',
       'user acceptance',
     ],
-    nonEvaluationBoundary:
-      'This artifact is collection-only. It records git-derived changed-file names/status between explicit refs, but it does not inspect patch contents, evaluate allowedScope or forbiddenScope, run the compliance checker, report clean or violation results, reject diffs, enforce scope, approve fixtures, satisfy runtime Evidence, or prove equivalence.',
+    nonEvaluationBoundary: workingTreeMode
+      ? 'This artifact is collection-only. It records tracked unstaged working tree changed-file names/status, but it does not include staged changes, include untracked files, inspect patch contents, evaluate allowedScope or forbiddenScope, run the compliance checker, report clean or violation results, reject diffs, enforce scope, approve fixtures, satisfy runtime Evidence, or prove equivalence.'
+      : 'This artifact is collection-only. It records git-derived changed-file names/status between explicit refs, but it does not inspect patch contents, evaluate allowedScope or forbiddenScope, run the compliance checker, report clean or violation results, reject diffs, enforce scope, approve fixtures, satisfy runtime Evidence, or prove equivalence.',
   }
 }
 
@@ -322,8 +348,11 @@ export async function collectGitDerivedChangedFiles(
 
 export async function collectGitDerivedChangedFileArtifact(
   root: string,
-  options: Pick<GitDerivedCollectionOptions, 'baseRef' | 'headRef'>,
+  options: Pick<GitDerivedCollectionOptions, 'baseRef' | 'headRef' | 'workingTree'>,
 ): Promise<GitDerivedChangedFileCollectionArtifact> {
+  if (options.workingTree) {
+    return collectWorkingTreeChangedFileArtifact(root)
+  }
   const validationProblems = [
     ...validateExplicitGitRef('base', options.baseRef),
     ...validateExplicitGitRef('head', options.headRef),
@@ -333,9 +362,9 @@ export async function collectGitDerivedChangedFileArtifact(
   }
 
   const [resolvedBaseRef, resolvedHeadRef, nameStatusOutput] = await Promise.all([
-    resolveCommitRef(root, options.baseRef),
-    resolveCommitRef(root, options.headRef),
-    readGitNameStatus(root, options.baseRef, options.headRef),
+    resolveCommitRef(root, options.baseRef || ''),
+    resolveCommitRef(root, options.headRef || ''),
+    readGitNameStatus(root, options.baseRef || '', options.headRef || ''),
   ])
   const artifact = buildGitDerivedChangedFileCollectionArtifact({
     baseRef: options.baseRef,
@@ -345,6 +374,16 @@ export async function collectGitDerivedChangedFileArtifact(
     nameStatusOutput,
   })
   return artifact
+}
+
+export async function collectWorkingTreeChangedFileArtifact(
+  root: string,
+): Promise<GitDerivedChangedFileCollectionArtifact> {
+  const nameStatusOutput = await readGitWorkingTreeNameStatus(root)
+  return buildGitDerivedChangedFileCollectionArtifact({
+    collectionMode: 'working-tree-tracked-unstaged',
+    nameStatusOutput,
+  })
 }
 
 async function resolveCommitRef(root: string, ref: string): Promise<string> {
@@ -364,6 +403,14 @@ async function readGitNameStatus(root: string, baseRef: string, headRef: string)
       maxBuffer: 1024 * 1024 * 10,
     },
   )
+  return stdout
+}
+
+async function readGitWorkingTreeNameStatus(root: string): Promise<string> {
+  const { stdout } = await execFileAsync('git', ['-C', root, 'diff', '--name-status', '--find-renames', '-z', '--'], {
+    encoding: 'utf8',
+    maxBuffer: 1024 * 1024 * 10,
+  })
   return stdout
 }
 

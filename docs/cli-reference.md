@@ -417,14 +417,49 @@ node dist/cli/index.js graph execution-contract report --slice examples/adoption
 
 For the practical end-to-end sequence, see [Graph Operation Runbook](graph-operation-runbook.md).
 
+### `pbe graph read-model collect-changed-files`
+
+- Purpose: Collect Git-derived changed-file names/status without running the scope evaluator.
+- Typical state before running: After a Codex run, before Stop/Post Run advisory review or advisory scope checking.
+- Options: Use either `--base <baseRef> --head <headRef>` for explicit ref comparison, or `--working-tree` for tracked
+  unstaged working tree changes. `--working-tree` is mutually exclusive with `--base` and `--head`. `--output <file>`
+  may write the collection artifact.
+- What it checks: Git name-status paths only. Working tree mode uses tracked unstaged changes from
+  `git diff --name-status --find-renames -z --`; it excludes staged and untracked files in this v1 and does not inspect
+  patch hunks or full file contents.
+- What it writes: Nothing by default. It writes only when `--output` is supplied.
+- Success result: `artifactRole: git-derived-changed-file-collection-preview` with `collectionMode: explicit-base-head`
+  or `working-tree-tracked-unstaged`, `checkerRun:false`, `scopeEnforced:false`, and `diffRejected:false`.
+- Common failures: invalid refs, combining `--working-tree` with refs, or running outside a Git repository.
+- Next command: Pass the artifact to Stop/Post Run advisory review or run `check-scope` explicitly. Do not treat the
+  collection as a scope result, approval, Evidence satisfaction, equivalence proof, or enforcement.
+
+Examples:
+
+```powershell
+node dist/cli/index.js graph read-model collect-changed-files `
+  --base HEAD~1 `
+  --head HEAD `
+  --output .tmp/changed-files-base-head.json `
+  --json
+
+node dist/cli/index.js graph read-model collect-changed-files `
+  --working-tree `
+  --output .tmp/changed-files-working-tree.json `
+  --json
+```
+
 ### `pbe graph read-model check-scope`
 
-- Purpose: Run the local advisory scope compliance evaluator for explicit Git refs.
+- Purpose: Run the local advisory scope compliance evaluator for explicit Git refs or tracked unstaged working tree
+  changes.
 - Typical state before running: After building the CLI, when a local DevView runtime slice needs a fast scope summary.
-- Options: `--base <baseRef>` and `--head <headRef>` are required. `--output <file>` may write the full advisory JSON
-  artifact. `--markdown <file>` may write a compact advisory runtime report.
+- Options: Use either `--base <baseRef> --head <headRef>` for explicit ref comparison, or `--working-tree` for tracked
+  unstaged working tree changes. `--working-tree` is mutually exclusive with `--base` and `--head`. `--output <file>`
+  may write the full advisory JSON artifact. `--markdown <file>` may write a compact advisory runtime report.
 - What it checks: Git-derived changed-file names/status, current Todo App runtime Evidence-only scope inputs, and the
-  non-enforcing scope evaluator. It does not inspect patch hunks or read full file contents.
+  non-enforcing scope evaluator. Working tree mode excludes staged and untracked files in this v1. It does not inspect
+  patch hunks or read full file contents.
 - What it writes: Nothing by default. It writes only when `--output` or `--markdown` is supplied.
 - Success result: Advisory JSON with `nonEnforcing: true`, `enforcementStatus: not-enforced`, finding counts, and result
   state. Advisory findings do not fail the command.
@@ -439,6 +474,12 @@ node dist/cli/index.js graph read-model check-scope `
   --base HEAD~1 `
   --head HEAD `
   --markdown .tmp/devview-scope-runtime-report.md `
+  --json
+
+node dist/cli/index.js graph read-model check-scope `
+  --working-tree `
+  --output .tmp/scope-working-tree.json `
+  --markdown .tmp/scope-working-tree.md `
   --json
 ```
 

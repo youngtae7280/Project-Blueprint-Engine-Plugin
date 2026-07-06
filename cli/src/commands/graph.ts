@@ -623,10 +623,13 @@ export async function graphReadModelCompileContractCommand(context: CommandConte
 }
 
 export async function graphReadModelCollectChangedFilesCommand(context: CommandContext): Promise<CommandResult> {
-  if (!context.options.base) {
+  if (context.options.workingTree && (context.options.base || context.options.head)) {
+    return invalidCommand('graph read-model collect-changed-files cannot combine --working-tree with --base or --head.')
+  }
+  if (!context.options.workingTree && !context.options.base) {
     return invalidCommand('graph read-model collect-changed-files requires --base <baseRef>.')
   }
-  if (!context.options.head) {
+  if (!context.options.workingTree && !context.options.head) {
     return invalidCommand('graph read-model collect-changed-files requires --head <headRef>.')
   }
 
@@ -634,6 +637,7 @@ export async function graphReadModelCollectChangedFilesCommand(context: CommandC
     const result = await collectGitDerivedChangedFiles(context.options.root, {
       baseRef: context.options.base,
       headRef: context.options.head,
+      workingTree: context.options.workingTree,
       output: context.options.output,
     })
     return {
@@ -661,8 +665,9 @@ export async function graphReadModelCollectChangedFilesCommand(context: CommandC
           code: 'GIT_DERIVED_CHANGED_FILE_COLLECTION_BLOCKED',
           severity: 'error',
           message,
-          suggestedFix:
-            'Provide valid explicit --base and --head refs in the target repository. This command collects names/status only and does not evaluate scope compliance.',
+          suggestedFix: context.options.workingTree
+            ? 'Run inside a safe Git repository with tracked unstaged changes, or omit --working-tree and provide explicit --base and --head refs. This command collects names/status only and does not evaluate scope compliance.'
+            : 'Provide valid explicit --base and --head refs in the target repository. This command collects names/status only and does not evaluate scope compliance.',
         }),
       ],
     }
@@ -670,10 +675,13 @@ export async function graphReadModelCollectChangedFilesCommand(context: CommandC
 }
 
 export async function graphReadModelCheckScopeCommand(context: CommandContext): Promise<CommandResult> {
-  if (!context.options.base) {
+  if (context.options.workingTree && (context.options.base || context.options.head)) {
+    return invalidCommand('graph read-model check-scope cannot combine --working-tree with --base or --head.')
+  }
+  if (!context.options.workingTree && !context.options.base) {
     return invalidCommand('graph read-model check-scope requires --base <baseRef>.')
   }
-  if (!context.options.head) {
+  if (!context.options.workingTree && !context.options.head) {
     return invalidCommand('graph read-model check-scope requires --head <headRef>.')
   }
 
@@ -681,6 +689,7 @@ export async function graphReadModelCheckScopeCommand(context: CommandContext): 
     const result = await runAdvisoryScopeComplianceCheck(context.options.root, {
       baseRef: context.options.base,
       headRef: context.options.head,
+      workingTree: context.options.workingTree,
       output: context.options.output,
       markdown: context.options.markdown,
     })
@@ -711,8 +720,9 @@ export async function graphReadModelCheckScopeCommand(context: CommandContext): 
           code: 'SCOPE_COMPLIANCE_ADVISORY_CHECK_BLOCKED',
           severity: 'error',
           message,
-          suggestedFix:
-            'Provide valid explicit --base and --head refs and keep the Todo App runtime Evidence-only calibration draft readable. Advisory findings are non-enforcing once the command can run.',
+          suggestedFix: context.options.workingTree
+            ? 'Run inside a safe Git repository with tracked unstaged changes and keep the Todo App runtime Evidence-only calibration draft readable. Advisory findings are non-enforcing once the command can run.'
+            : 'Provide valid explicit --base and --head refs and keep the Todo App runtime Evidence-only calibration draft readable. Advisory findings are non-enforcing once the command can run.',
         }),
       ],
     }

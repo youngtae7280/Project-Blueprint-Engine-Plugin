@@ -22,7 +22,9 @@
     "changedFileCount": 0,
     "generatedFileCount": 0,
     "changedFiles": [],
-    "authorityClass": "missing"
+    "authorityClass": "missing",
+    "collectionMode": "missing",
+    "sourceMode": "missing"
   },
   "instructionSummary": {
     "instructionPackStatus": "present",
@@ -59,9 +61,7 @@
     "blockingReviewItemCount": 0,
     "reviewRequiredItemCount": 0
   },
-  "nextRequiredCommands": [
-    "graph read-model collect-changed-files --base <baseRef> --head <headRef> --output <changedFiles> --json"
-  ],
+  "nextRequiredCommands": ["graph read-model collect-changed-files --working-tree --output <changedFiles> --json"],
   "validationFindings": [],
   "advisoryFindings": [
     {

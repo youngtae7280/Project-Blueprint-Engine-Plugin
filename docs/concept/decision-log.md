@@ -3736,3 +3736,31 @@ execution or blocking, changed-file revert/modify behavior, graph-source mutatio
 decision automation, Evidence acceptance, runtime Evidence satisfaction, equivalence proof, scope enforcement, CI
 enforcement, required checks, branch protection, diff rejection, strict/guided blocking activation, or Project Memory
 extension authority.
+
+## DEC-303 Add Post-run Working Tree Scope Check Mode
+
+DEC-303 does not supersede DEC-097 through DEC-302. It extends the existing changed-file collection and advisory
+scope-compliance CLI surfaces with an explicit tracked-unstaged working tree mode:
+
+```text
+graph read-model collect-changed-files --working-tree --output <changedFiles> --json
+graph read-model check-scope --working-tree --output <scopeReport> --markdown <runtimeReport> --json
+```
+
+The collection artifact keeps `artifactRole: git-derived-changed-file-collection-preview` for compatibility with
+Stop/Post Run advisory review, but records `collectionMode: working-tree-tracked-unstaged`,
+`sourceMode: working-tree`, `workingTreeMode: tracked-unstaged-only`, and
+`gitCommandMode: diff-name-status-working-tree-with-renames`. Working tree mode uses `git diff --name-status
+--find-renames -z --`, so it is limited to tracked unstaged changes. It does not include staged changes, untracked files,
+patch hunks, or full file contents.
+
+`check-scope --working-tree` creates an in-memory working-tree changed-file collection and passes normalized paths to the
+existing non-enforcing evaluator. It records the working-tree source mode and
+`changedFileInputArtifact: in-memory-working-tree-changed-file-collection`. The explicit base/head mode remains
+compatible and unchanged; `--working-tree` is mutually exclusive with `--base` and `--head`.
+
+This decision adds no default runtime smoke step. It adds no staged/untracked full mode, no hunk or patch inspection, no
+destructive Git command, no `git add`, `commit`, `reset`, `checkout`, `restore`, or `clean`, no scope enforcement, no
+diff rejection, no CI required checks, no branch protection, no approval or human decision automation, no Evidence
+acceptance or runtime Evidence satisfaction, no equivalence proof, no graph-source mutation, no graph delta apply, no
+LLM/API/network call, and no Project Memory extension authority.
