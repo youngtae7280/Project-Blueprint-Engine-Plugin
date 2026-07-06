@@ -1,4 +1,8 @@
 import path from 'node:path'
+import {
+  createMockAnalyzerProviderAdapter,
+  createUnavailableOpenAiAnalyzerProviderAdapter,
+} from './ai-request-analyzer-provider-adapter.js'
 import { readJsonSafe, readTextSafe, relativePath, writeJsonAtomic } from './fs.js'
 import { validateRequestIrCandidateSchemaOnly } from './request-ir-candidate-validator.js'
 import type { IssueSeverity } from './types.js'
@@ -8,7 +12,6 @@ const EXPECTED_PACK_ROLE = 'ai-request-analyzer-pack'
 const EXPECTED_PACK_STATUS = 'ai-request-analyzer-pack-generated'
 const EXPECTED_PROVIDER_CONFIG_ROLE = 'ai-request-analyzer-provider-config-preview'
 const EXPECTED_MOCK_PROVIDER_RESPONSE_ROLE = 'ai-request-analyzer-mock-provider-response-preview'
-const EXPECTED_MOCK_PROVIDER_RESPONSE_STATUS = 'ai-request-analyzer-mock-provider-response-previewed'
 const COMPATIBLE_SCHEMA_ID = 'devview-request-ir-candidate-v0-preview'
 
 type JsonRecord = Record<string, unknown>
@@ -17,6 +20,7 @@ type ProviderState =
   | 'disabled'
   | 'configured-not-invoked'
   | 'configured-invocation-enabled-preview'
+  | 'configured-openai-invocation-enabled'
   | 'unavailable'
   | 'blocked-invalid-config'
   | 'future-invocation-allowed-only-after-explicit-config'
@@ -28,6 +32,8 @@ const PROVIDER_STATE_STATUS: Record<Exclude<ProviderState, 'not-provided'>, stri
   unavailable: 'ai-request-analyzer-provider-config-unavailable-previewed',
   'configured-not-invoked': 'ai-request-analyzer-provider-config-configured-not-invoked-previewed',
   'configured-invocation-enabled-preview': 'ai-request-analyzer-provider-config-invocation-enabled-previewed',
+  'configured-openai-invocation-enabled':
+    'ai-request-analyzer-provider-config-openai-live-disabled-by-default-previewed',
   'blocked-invalid-config': 'ai-request-analyzer-provider-config-blocked-invalid-previewed',
   'future-invocation-allowed-only-after-explicit-config':
     'ai-request-analyzer-provider-config-future-invocation-previewed',
@@ -239,6 +245,18 @@ export function analyzeRequestWithProviderConfig(
   }
 
   if (input.invokeProvider) {
+    if (providerAnalysis.providerState === 'configured-openai-invocation-enabled') {
+      const adapterResult = createUnavailableOpenAiAnalyzerProviderAdapter().invoke({
+        requestText,
+        analyzerPack: pack,
+        providerConfig,
+        providerConfigPath: paths.providerConfigPath,
+        outputPath: paths.outputPath,
+      })
+      findings.push(...adapterResult.findings)
+      return buildResult(requestText, paths, findings, undefined, providerAnalysis, 'default', 'none')
+    }
+
     if (providerAnalysis.providerState !== 'configured-invocation-enabled-preview') {
       findings.push({
         code: 'AI_REQUEST_ANALYZER_PROVIDER_INVOCATION_STATE_BLOCKED',
@@ -268,11 +286,13 @@ export function analyzeRequestWithProviderConfig(
       return buildResult(requestText, paths, findings, undefined, providerAnalysis, 'mock-provider', 'none')
     }
 
-    const candidateFromMock = validateMockProviderResponse(
+    const candidateFromMock = invokeMockProviderAdapter(
       mockProviderResponse,
       input.mockProviderResponseText,
       requestText,
       pack,
+      providerConfig,
+      paths,
       findings,
     )
     const blocked = findings.some((finding) => finding.severity === 'error')
@@ -680,7 +700,9 @@ function validateProviderConfig(
   const expectedInvocationAuthority =
     providerState === 'configured-invocation-enabled-preview'
       ? 'explicit-future-flag-required-not-implemented'
-      : 'none-preview-only'
+      : providerState === 'configured-openai-invocation-enabled'
+        ? 'explicit-invocation-and-network-flags-required-not-implemented'
+        : 'none-preview-only'
   const requiredSafeFields: Array<[string, unknown]> = [
     ['providerInvocationAuthority', expectedInvocationAuthority],
     ['networkCallsAllowed', false],
@@ -819,6 +841,25 @@ function providerConfigAnalysis(providerState: ProviderState): ProviderConfigAna
         },
         blocksExternalImport: false,
       }
+    case 'configured-openai-invocation-enabled':
+      return {
+        providerState,
+        providerConfigured: true,
+        status: 'provider-future-invocation-blocked',
+        statusForNoExternal: 'ai-request-analyzer-provider-future-invocation-blocked',
+        noExternalFinding: {
+          code: 'AI_REQUEST_ANALYZER_OPENAI_PROVIDER_ADAPTER_UNAVAILABLE',
+          severity: 'error',
+          field: 'providerConfig.providerState',
+          message:
+            'AI Request Analyzer provider config is OpenAI-live-enabled, but this implementation has no OpenAI SDK, network gate, provider mode flag, or live adapter.',
+          expected: 'future OpenAI adapter slice with explicit network gate',
+          actual: providerState,
+          suggestedFix:
+            'Use the mock provider response path for deterministic testing, import an external Request IR Candidate, or wait for the future OpenAI adapter implementation slice.',
+        },
+        blocksExternalImport: false,
+      }
     case 'future-invocation-allowed-only-after-explicit-config':
       return {
         providerState,
@@ -857,67 +898,15 @@ function providerConfigAnalysis(providerState: ProviderState): ProviderConfigAna
   }
 }
 
-function validateMockProviderResponse(
+function invokeMockProviderAdapter(
   mockProviderResponse: JsonRecord | null,
   mockProviderResponseText: string | undefined,
   requestText: string,
   pack: JsonRecord | null,
+  providerConfig: JsonRecord | null,
+  paths: AnalyzeRequestPaths,
   findings: AiRequestAnalyzerRunFinding[],
 ): JsonRecord | null {
-  if (!mockProviderResponse) {
-    findings.push({
-      code: 'AI_REQUEST_ANALYZER_MOCK_PROVIDER_RESPONSE_NOT_OBJECT',
-      severity: 'error',
-      field: 'mockProviderResponse',
-      message: 'Mock provider response must be a JSON object.',
-      expected: EXPECTED_MOCK_PROVIDER_RESPONSE_ROLE,
-      actual: typeof mockProviderResponse,
-      suggestedFix: 'Provide a mock provider response preview artifact.',
-    })
-    return null
-  }
-
-  const expectedFields: Array<[string, unknown]> = [
-    ['artifactRole', EXPECTED_MOCK_PROVIDER_RESPONSE_ROLE],
-    ['status', EXPECTED_MOCK_PROVIDER_RESPONSE_STATUS],
-    ['providerInvocationMode', 'mock-no-network'],
-    ['networkCallsAllowed', false],
-    ['llmInvoked', false],
-    ['runtimeAiCallsAllowed', false],
-    ['secretValueStored', false],
-    ['secretValueInspected', false],
-  ]
-  for (const [field, expected] of expectedFields) {
-    if (mockProviderResponse[field] !== expected) {
-      findings.push({
-        code: 'AI_REQUEST_ANALYZER_MOCK_PROVIDER_RESPONSE_MISMATCH',
-        severity: 'error',
-        field: `mockProviderResponse.${field}`,
-        message: `Mock provider response field "${field}" is not safe for candidate generation.`,
-        expected,
-        actual: mockProviderResponse[field],
-        suggestedFix:
-          'Regenerate the mock provider response preview without network, LLM, secret, or authority claims.',
-      })
-      return null
-    }
-  }
-
-  const responseText = mockProviderResponseText ?? JSON.stringify(mockProviderResponse)
-  const secretPattern = SECRET_VALUE_PATTERNS.find((pattern) => pattern.test(responseText))
-  if (secretPattern) {
-    findings.push({
-      code: 'AI_REQUEST_ANALYZER_MOCK_PROVIDER_RESPONSE_SECRET_VALUE_BLOCKED',
-      severity: 'error',
-      field: 'mockProviderResponse',
-      message: 'Mock provider response appears to contain a secret-looking literal value.',
-      expected: 'mock response without API key, token, or bearer values',
-      actual: 'secret-looking literal detected',
-      suggestedFix: 'Remove secret values from the mock provider response fixture.',
-    })
-    return null
-  }
-
   const unsafe = findUnsafeAuthorityClaim(mockProviderResponse)
   if (unsafe) {
     findings.push({
@@ -933,17 +922,20 @@ function validateMockProviderResponse(
     return null
   }
 
-  const candidate = asRecord(mockProviderResponse.candidate)
-  if (!candidate) {
-    findings.push({
-      code: 'AI_REQUEST_ANALYZER_MOCK_PROVIDER_CANDIDATE_MISSING',
-      severity: 'error',
-      field: 'mockProviderResponse.candidate',
-      message: 'Mock provider response must contain a candidate JSON object.',
-      expected: 'request-ir-candidate object',
-      actual: mockProviderResponse.candidate,
-      suggestedFix: 'Include candidate as a JSON object in the mock provider response preview.',
-    })
+  const adapterResult = createMockAnalyzerProviderAdapter().invoke({
+    requestText,
+    analyzerPack: pack,
+    providerConfig,
+    providerConfigPath: paths.providerConfigPath,
+    mockProviderResponse,
+    mockProviderResponseText,
+    mockProviderResponsePath: paths.mockProviderResponsePath,
+    outputPath: paths.outputPath,
+  })
+  findings.push(...adapterResult.findings)
+
+  const candidate = adapterResult.candidatePayload
+  if (adapterResult.status !== 'candidate-payload-ready' || !candidate) {
     return null
   }
 

@@ -3562,3 +3562,31 @@ no graph validation, no traversal, no selected slice generation, no contract inp
 generation, no hook execution/install, no Codex execution, no graph-source mutation, no graph delta apply, no
 approval/human decision automation, no Evidence acceptance, no runtime Evidence satisfaction, no equivalence proof, no
 scope/CI enforcement, no strict/guided blocking, and no Project Memory extension authority.
+
+## DEC-297 Introduce Analyzer Provider Adapter Interface
+
+DEC-297 does not supersede DEC-097 through DEC-296. It adds an internal analyzer provider adapter interface so the
+existing mock provider response parser/guard path is separated from future live provider adapters.
+
+The interface is implemented in:
+
+```text
+cli/src/core/ai-request-analyzer-provider-adapter.ts
+```
+
+The mock adapter returns only a candidate payload envelope plus no-network diagnostics. It does not wrap that payload as
+an authoritative Request IR Candidate, write outputs, or grant traversal/contract/instruction authority. The
+`ai-request-analyzer-run` core remains responsible for unsafe authority checks, schema/request validation, candidate-only
+wrapping, and output authority guards.
+
+This decision also records an unavailable OpenAI adapter placeholder for the `configured-openai-invocation-enabled`
+provider state. The placeholder always blocks with no SDK, no network, no secret reads, no provider response storage,
+and no candidate generation.
+
+This decision adds no CLI syntax, no SDK dependency, no `--allow-network-provider` parser support, no
+`--provider-mode openai` parser support, no real OpenAI adapter, no OpenAI/API/LLM/network call, no API key value read,
+no provider-generated authoritative Request IR, no graph validation, no traversal, no selected slice generation, no
+contract input generation, no instruction pack generation, no hook execution/install, no Codex execution, no
+graph-source mutation, no graph delta apply, no approval/human decision automation, no Evidence acceptance, no runtime
+Evidence satisfaction, no equivalence proof, no scope/CI enforcement, no strict/guided blocking, and no Project Memory
+extension authority.

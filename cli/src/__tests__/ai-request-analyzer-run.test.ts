@@ -468,6 +468,53 @@ describe('AI Request Analyzer command surface CLI', () => {
     expect(existsSync(join(workspace, outputPath))).toBe(false)
   })
 
+  it('blocks OpenAI live config invocation because the live adapter is unavailable', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-openai-invocation-enabled'))
+    const outputPath = join('.tmp', 'candidate.json')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--invoke-provider',
+        '--output',
+        outputPath,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.analyzerProviderStatus).toBe('provider-future-invocation-blocked')
+    expect(payload.providerState).toBe('configured-openai-invocation-enabled')
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_OPENAI_PROVIDER_ADAPTER_UNAVAILABLE',
+    )
+    expect(payload.llmInvoked).toBe(false)
+    expect(payload.networkCallsAllowed).toBe(false)
+    expect(payload.runtimeAiCallsAllowed).toBe(false)
+    expect(payload.requestIrCandidateGenerated).toBe(false)
+    expect(existsSync(join(workspace, outputPath))).toBe(true)
+    const writtenOutput = JSON.parse(readFileSync(join(workspace, outputPath), 'utf8'))
+    expect(writtenOutput.artifactRole).toBe('ai-request-analyzer-run-result')
+    expect(writtenOutput.status).toBe('ai-request-analyzer-provider-future-invocation-blocked')
+    expect(writtenOutput.writtenOutputArtifactRole).toBe('ai-request-analyzer-run-result')
+    expect(writtenOutput.requestIrCandidateGenerated).toBe(false)
+    expect(writtenOutput.llmInvoked).toBe(false)
+    expect(writtenOutput.networkCallsAllowed).toBe(false)
+    expect(writtenOutput.runtimeAiCallsAllowed).toBe(false)
+  })
+
   it('blocks invalid mock provider response before writing output', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
@@ -921,6 +968,7 @@ function validProviderConfig(
     | 'disabled'
     | 'configured-not-invoked'
     | 'configured-invocation-enabled-preview'
+    | 'configured-openai-invocation-enabled'
     | 'unavailable'
     | 'blocked-invalid-config'
     | 'future-invocation-allowed-only-after-explicit-config',
@@ -930,12 +978,16 @@ function validProviderConfig(
     unavailable: 'ai-request-analyzer-provider-config-unavailable-previewed',
     'configured-not-invoked': 'ai-request-analyzer-provider-config-configured-not-invoked-previewed',
     'configured-invocation-enabled-preview': 'ai-request-analyzer-provider-config-invocation-enabled-previewed',
+    'configured-openai-invocation-enabled':
+      'ai-request-analyzer-provider-config-openai-live-disabled-by-default-previewed',
     'blocked-invalid-config': 'ai-request-analyzer-provider-config-blocked-invalid-previewed',
     'future-invocation-allowed-only-after-explicit-config':
       'ai-request-analyzer-provider-config-future-invocation-previewed',
   }
   const configured =
-    providerState === 'configured-not-invoked' || providerState === 'configured-invocation-enabled-preview'
+    providerState === 'configured-not-invoked' ||
+    providerState === 'configured-invocation-enabled-preview' ||
+    providerState === 'configured-openai-invocation-enabled'
   return {
     schemaVersion: 1,
     artifactRole: 'ai-request-analyzer-provider-config-preview',
@@ -945,7 +997,9 @@ function validProviderConfig(
     providerInvocationAuthority:
       providerState === 'configured-invocation-enabled-preview'
         ? 'explicit-future-flag-required-not-implemented'
-        : 'none-preview-only',
+        : providerState === 'configured-openai-invocation-enabled'
+          ? 'explicit-invocation-and-network-flags-required-not-implemented'
+          : 'none-preview-only',
     providerNameCandidate: configured ? 'openai' : null,
     modelNameCandidate: configured ? 'gpt-future-preview' : null,
     providerConfigSource: providerState === 'disabled' ? 'disabled-default-preview' : 'repo-local-preview-config',
