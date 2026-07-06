@@ -421,16 +421,19 @@ For the practical end-to-end sequence, see [Graph Operation Runbook](graph-opera
 
 - Purpose: Collect Git-derived changed-file names/status without running the scope evaluator.
 - Typical state before running: After a Codex run, before Stop/Post Run advisory review or advisory scope checking.
-- Options: Use either `--base <baseRef> --head <headRef>` for explicit ref comparison, or `--working-tree` for tracked
-  unstaged working tree changes. `--working-tree` is mutually exclusive with `--base` and `--head`. `--output <file>`
-  may write the collection artifact.
+- Options: Use exactly one source mode: `--base <baseRef> --head <headRef>` for explicit ref comparison,
+  `--working-tree` for tracked unstaged working tree changes, `--staged` for staged index changes, or `--untracked` for
+  untracked files. Local modes are mutually exclusive with refs and with each other. `--output <file>` may write the
+  collection artifact.
 - What it checks: Git name-status paths only. Working tree mode uses tracked unstaged changes from
-  `git diff --name-status --find-renames -z --`; it excludes staged and untracked files in this v1 and does not inspect
-  patch hunks or full file contents.
+  `git diff --name-status --find-renames -z --`; staged mode uses the staged index name-status surface; untracked mode
+  lists untracked paths that respect `.gitignore`. None of the modes inspect patch hunks or full file contents.
 - What it writes: Nothing by default. It writes only when `--output` is supplied.
 - Success result: `artifactRole: git-derived-changed-file-collection-preview` with `collectionMode: explicit-base-head`
-  or `working-tree-tracked-unstaged`, `checkerRun:false`, `scopeEnforced:false`, and `diffRejected:false`.
-- Common failures: invalid refs, combining `--working-tree` with refs, or running outside a Git repository.
+  or a local mode such as `working-tree-tracked-unstaged`, `staged-index`, or `untracked-files`, `checkerRun:false`,
+  `scopeEnforced:false`, and `diffRejected:false`.
+- Common failures: invalid refs, combining refs with a local source mode, combining local source modes, or running
+  outside a Git repository.
 - Next command: Pass the artifact to Stop/Post Run advisory review or run `check-scope` explicitly. Do not treat the
   collection as a scope result, approval, Evidence satisfaction, equivalence proof, or enforcement.
 
@@ -447,19 +450,29 @@ node dist/cli/index.js graph read-model collect-changed-files `
   --working-tree `
   --output .tmp/changed-files-working-tree.json `
   --json
+
+node dist/cli/index.js graph read-model collect-changed-files `
+  --staged `
+  --output .tmp/changed-files-staged.json `
+  --json
+
+node dist/cli/index.js graph read-model collect-changed-files `
+  --untracked `
+  --output .tmp/changed-files-untracked.json `
+  --json
 ```
 
 ### `pbe graph read-model check-scope`
 
-- Purpose: Run the local advisory scope compliance evaluator for explicit Git refs or tracked unstaged working tree
-  changes.
+- Purpose: Run the local advisory scope compliance evaluator for explicit Git refs, tracked unstaged working tree
+  changes, staged index changes, or untracked files.
 - Typical state before running: After building the CLI, when a local DevView runtime slice needs a fast scope summary.
-- Options: Use either `--base <baseRef> --head <headRef>` for explicit ref comparison, or `--working-tree` for tracked
-  unstaged working tree changes. `--working-tree` is mutually exclusive with `--base` and `--head`. `--output <file>`
-  may write the full advisory JSON artifact. `--markdown <file>` may write a compact advisory runtime report.
+- Options: Use exactly one source mode: `--base <baseRef> --head <headRef>`, `--working-tree`, `--staged`, or
+  `--untracked`. Local modes are mutually exclusive with refs and with each other. `--output <file>` may write the full
+  advisory JSON artifact. `--markdown <file>` may write a compact advisory runtime report.
 - What it checks: Git-derived changed-file names/status, current Todo App runtime Evidence-only scope inputs, and the
-  non-enforcing scope evaluator. Working tree mode excludes staged and untracked files in this v1. It does not inspect
-  patch hunks or read full file contents.
+  non-enforcing scope evaluator. Local modes keep provenance separate: tracked unstaged, staged index, and untracked
+  file paths are not combined. It does not inspect patch hunks or read full file contents.
 - What it writes: Nothing by default. It writes only when `--output` or `--markdown` is supplied.
 - Success result: Advisory JSON with `nonEnforcing: true`, `enforcementStatus: not-enforced`, finding counts, and result
   state. Advisory findings do not fail the command.
@@ -480,6 +493,18 @@ node dist/cli/index.js graph read-model check-scope `
   --working-tree `
   --output .tmp/scope-working-tree.json `
   --markdown .tmp/scope-working-tree.md `
+  --json
+
+node dist/cli/index.js graph read-model check-scope `
+  --staged `
+  --output .tmp/scope-staged.json `
+  --markdown .tmp/scope-staged.md `
+  --json
+
+node dist/cli/index.js graph read-model check-scope `
+  --untracked `
+  --output .tmp/scope-untracked.json `
+  --markdown .tmp/scope-untracked.md `
   --json
 ```
 

@@ -193,6 +193,83 @@ describe('scope compliance advisory CLI', () => {
     ])
   })
 
+  it('evaluates staged index changes without enforcing scope', async () => {
+    const workspace = createWorkingTreeScopeWorkspace({
+      allowedScopePatterns: ['src/**'],
+      forbiddenScopePatterns: ['src/todos.ts'],
+      changedPath: 'src/todos.ts',
+      changedContents: 'export const value = "staged"\n',
+    })
+    execFileSync('git', ['add', 'src/todos.ts'], { cwd: workspace, stdio: 'ignore' })
+
+    const result = await runPbeCli(['graph', 'read-model', 'check-scope', '--staged', '--json'], {
+      cwd: workspace,
+      pluginRoot,
+    })
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.sourceMode).toBe('staged-index')
+    expect(payload.collectionMode).toBe('staged-index')
+    expect(payload.stagedMode).toBe('staged-index-only')
+    expect(payload.changedFileInputArtifact).toBe('in-memory-staged-index-changed-file-collection')
+    expect(payload.stagedChangesIncluded).toBe(true)
+    expect(payload.unstagedTrackedChangesIncluded).toBe(false)
+    expect(payload.untrackedFilesIncluded).toBe(false)
+    expect(payload.changedFileCount).toBe(1)
+    expect(payload.nonEnforcing).toBe(true)
+    expect(payload.enforcementStatus).toBe('not-enforced')
+    expect(payload.diffRejected).toBe(false)
+    expect(payload.scopeEnforced).toBe(false)
+    expect(payload.approvalStatus).toBe('not-approved')
+    expect(payload.compactRuntimeReport.runtimeEvidenceSatisfied).toBe(false)
+    expect(payload.compactRuntimeReport.graphDeltaApplied).toBe(false)
+    expect(payload.evaluatedViolations).toEqual([
+      expect.objectContaining({
+        category: 'forbidden-scope-match',
+        path: 'src/todos.ts',
+      }),
+    ])
+  })
+
+  it('evaluates untracked file paths without enforcing scope', async () => {
+    const workspace = createWorkingTreeScopeWorkspace({
+      allowedScopePatterns: ['src/**'],
+      forbiddenScopePatterns: ['src/new.ts'],
+      changedPath: 'src/todos.ts',
+    })
+    writeText(join(workspace, 'src', 'new.ts'), 'export const value = "untracked"\n')
+
+    const result = await runPbeCli(['graph', 'read-model', 'check-scope', '--untracked', '--json'], {
+      cwd: workspace,
+      pluginRoot,
+    })
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.sourceMode).toBe('untracked-files')
+    expect(payload.collectionMode).toBe('untracked-files')
+    expect(payload.untrackedMode).toBe('ls-files-others-exclude-standard')
+    expect(payload.changedFileInputArtifact).toBe('in-memory-untracked-file-collection')
+    expect(payload.stagedChangesIncluded).toBe(false)
+    expect(payload.unstagedTrackedChangesIncluded).toBe(false)
+    expect(payload.untrackedFilesIncluded).toBe(true)
+    expect(payload.changedFileCount).toBe(1)
+    expect(payload.nonEnforcing).toBe(true)
+    expect(payload.enforcementStatus).toBe('not-enforced')
+    expect(payload.diffRejected).toBe(false)
+    expect(payload.scopeEnforced).toBe(false)
+    expect(payload.approvalStatus).toBe('not-approved')
+    expect(payload.compactRuntimeReport.runtimeEvidenceSatisfied).toBe(false)
+    expect(payload.compactRuntimeReport.graphDeltaApplied).toBe(false)
+    expect(payload.evaluatedViolations).toEqual([
+      expect.objectContaining({
+        category: 'forbidden-scope-match',
+        path: 'src/new.ts',
+      }),
+    ])
+  })
+
   it('reports a clean working tree without approval or evidence satisfaction', async () => {
     const workspace = createWorkingTreeScopeWorkspace({
       allowedScopePatterns: ['src/**'],
@@ -217,6 +294,38 @@ describe('scope compliance advisory CLI', () => {
     expect(payload.compactRuntimeReport.graphDeltaApplied).toBe(false)
   })
 
+  it('reports clean staged and untracked modes without approval or evidence satisfaction', async () => {
+    const workspace = createWorkingTreeScopeWorkspace({
+      allowedScopePatterns: ['src/**'],
+      forbiddenScopePatterns: ['src/todos.ts'],
+      changedPath: 'src/todos.ts',
+    })
+
+    const stagedResult = await runPbeCli(['graph', 'read-model', 'check-scope', '--staged', '--json'], {
+      cwd: workspace,
+      pluginRoot,
+    })
+    const untrackedResult = await runPbeCli(['graph', 'read-model', 'check-scope', '--untracked', '--json'], {
+      cwd: workspace,
+      pluginRoot,
+    })
+    const stagedPayload = JSON.parse(stagedResult.stdout)
+    const untrackedPayload = JSON.parse(untrackedResult.stdout)
+
+    expect(stagedResult.exitCode).toBe(ExitCode.Success)
+    expect(stagedPayload.collectionMode).toBe('staged-index')
+    expect(stagedPayload.changedFileCount).toBe(0)
+    expect(stagedPayload.scopeComplianceResult).toBe('evaluated-clean')
+    expect(stagedPayload.approvalStatus).toBe('not-approved')
+    expect(stagedPayload.compactRuntimeReport.runtimeEvidenceSatisfied).toBe(false)
+    expect(untrackedResult.exitCode).toBe(ExitCode.Success)
+    expect(untrackedPayload.collectionMode).toBe('untracked-files')
+    expect(untrackedPayload.changedFileCount).toBe(0)
+    expect(untrackedPayload.scopeComplianceResult).toBe('evaluated-clean')
+    expect(untrackedPayload.approvalStatus).toBe('not-approved')
+    expect(untrackedPayload.compactRuntimeReport.runtimeEvidenceSatisfied).toBe(false)
+  })
+
   it('rejects explicit refs with working tree scope mode', async () => {
     const workspace = createWorkingTreeScopeWorkspace({
       allowedScopePatterns: ['src/**'],
@@ -235,6 +344,23 @@ describe('scope compliance advisory CLI', () => {
 
     expect(result.exitCode).toBe(ExitCode.InvalidArguments)
     expect(payload.message).toContain('cannot combine --working-tree with --base or --head')
+  })
+
+  it('rejects mixed local scope modes before collection', async () => {
+    const workspace = createWorkingTreeScopeWorkspace({
+      allowedScopePatterns: ['src/**'],
+      forbiddenScopePatterns: ['src/todos.ts'],
+      changedPath: 'src/todos.ts',
+    })
+
+    const result = await runPbeCli(['graph', 'read-model', 'check-scope', '--working-tree', '--untracked', '--json'], {
+      cwd: workspace,
+      pluginRoot,
+    })
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.InvalidArguments)
+    expect(payload.message).toContain('requires exactly one changed-file source mode')
   })
 })
 

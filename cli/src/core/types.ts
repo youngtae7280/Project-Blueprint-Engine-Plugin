@@ -57,6 +57,8 @@ export interface CliOptions {
   dryRun: boolean
   all: boolean
   workingTree: boolean
+  staged: boolean
+  untracked: boolean
   profile?: 'full' | 'lite' | 'bypass'
   brief?: string
   maxChars?: number

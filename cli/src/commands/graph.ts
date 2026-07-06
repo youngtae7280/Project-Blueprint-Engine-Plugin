@@ -623,13 +623,15 @@ export async function graphReadModelCompileContractCommand(context: CommandConte
 }
 
 export async function graphReadModelCollectChangedFilesCommand(context: CommandContext): Promise<CommandResult> {
-  if (context.options.workingTree && (context.options.base || context.options.head)) {
-    return invalidCommand('graph read-model collect-changed-files cannot combine --working-tree with --base or --head.')
+  const sourceModeProblem = validateChangedFileSourceMode('graph read-model collect-changed-files', context)
+  if (sourceModeProblem) {
+    return sourceModeProblem
   }
-  if (!context.options.workingTree && !context.options.base) {
+
+  if (!hasLocalChangedFileMode(context) && !context.options.base) {
     return invalidCommand('graph read-model collect-changed-files requires --base <baseRef>.')
   }
-  if (!context.options.workingTree && !context.options.head) {
+  if (!hasLocalChangedFileMode(context) && !context.options.head) {
     return invalidCommand('graph read-model collect-changed-files requires --head <headRef>.')
   }
 
@@ -638,6 +640,8 @@ export async function graphReadModelCollectChangedFilesCommand(context: CommandC
       baseRef: context.options.base,
       headRef: context.options.head,
       workingTree: context.options.workingTree,
+      staged: context.options.staged,
+      untracked: context.options.untracked,
       output: context.options.output,
     })
     return {
@@ -665,9 +669,7 @@ export async function graphReadModelCollectChangedFilesCommand(context: CommandC
           code: 'GIT_DERIVED_CHANGED_FILE_COLLECTION_BLOCKED',
           severity: 'error',
           message,
-          suggestedFix: context.options.workingTree
-            ? 'Run inside a safe Git repository with tracked unstaged changes, or omit --working-tree and provide explicit --base and --head refs. This command collects names/status only and does not evaluate scope compliance.'
-            : 'Provide valid explicit --base and --head refs in the target repository. This command collects names/status only and does not evaluate scope compliance.',
+          suggestedFix: sourceModeSuggestedFix(context),
         }),
       ],
     }
@@ -675,13 +677,15 @@ export async function graphReadModelCollectChangedFilesCommand(context: CommandC
 }
 
 export async function graphReadModelCheckScopeCommand(context: CommandContext): Promise<CommandResult> {
-  if (context.options.workingTree && (context.options.base || context.options.head)) {
-    return invalidCommand('graph read-model check-scope cannot combine --working-tree with --base or --head.')
+  const sourceModeProblem = validateChangedFileSourceMode('graph read-model check-scope', context)
+  if (sourceModeProblem) {
+    return sourceModeProblem
   }
-  if (!context.options.workingTree && !context.options.base) {
+
+  if (!hasLocalChangedFileMode(context) && !context.options.base) {
     return invalidCommand('graph read-model check-scope requires --base <baseRef>.')
   }
-  if (!context.options.workingTree && !context.options.head) {
+  if (!hasLocalChangedFileMode(context) && !context.options.head) {
     return invalidCommand('graph read-model check-scope requires --head <headRef>.')
   }
 
@@ -690,6 +694,8 @@ export async function graphReadModelCheckScopeCommand(context: CommandContext): 
       baseRef: context.options.base,
       headRef: context.options.head,
       workingTree: context.options.workingTree,
+      staged: context.options.staged,
+      untracked: context.options.untracked,
       output: context.options.output,
       markdown: context.options.markdown,
     })
@@ -720,13 +726,52 @@ export async function graphReadModelCheckScopeCommand(context: CommandContext): 
           code: 'SCOPE_COMPLIANCE_ADVISORY_CHECK_BLOCKED',
           severity: 'error',
           message,
-          suggestedFix: context.options.workingTree
-            ? 'Run inside a safe Git repository with tracked unstaged changes and keep the Todo App runtime Evidence-only calibration draft readable. Advisory findings are non-enforcing once the command can run.'
-            : 'Provide valid explicit --base and --head refs and keep the Todo App runtime Evidence-only calibration draft readable. Advisory findings are non-enforcing once the command can run.',
+          suggestedFix: sourceModeSuggestedFix(context, true),
         }),
       ],
     }
   }
+}
+
+function localChangedFileModes(context: CommandContext): string[] {
+  return [
+    context.options.workingTree ? '--working-tree' : '',
+    context.options.staged ? '--staged' : '',
+    context.options.untracked ? '--untracked' : '',
+  ].filter(Boolean)
+}
+
+function hasLocalChangedFileMode(context: CommandContext): boolean {
+  return localChangedFileModes(context).length > 0
+}
+
+function validateChangedFileSourceMode(command: string, context: CommandContext): CommandResult | null {
+  const localModes = localChangedFileModes(context)
+  if (localModes.length > 1) {
+    return invalidCommand(
+      `${command} requires exactly one changed-file source mode; do not combine ${localModes.join(', ')}.`,
+    )
+  }
+  if (localModes.length === 1 && (context.options.base || context.options.head)) {
+    return invalidCommand(`${command} cannot combine ${localModes[0]} with --base or --head.`)
+  }
+  return null
+}
+
+function sourceModeSuggestedFix(context: CommandContext, scope = false): string {
+  const tail = scope
+    ? 'Keep the Todo App runtime Evidence-only calibration draft readable. Advisory findings are non-enforcing once the command can run.'
+    : 'This command collects names/status only and does not evaluate scope compliance.'
+  if (context.options.workingTree) {
+    return `Run inside a safe Git repository with tracked unstaged changes, or omit --working-tree and provide explicit --base and --head refs. ${tail}`
+  }
+  if (context.options.staged) {
+    return `Run inside a safe Git repository with staged index changes, or omit --staged and provide explicit --base and --head refs. ${tail}`
+  }
+  if (context.options.untracked) {
+    return `Run inside a safe Git repository with untracked files, or omit --untracked and provide explicit --base and --head refs. ${tail}`
+  }
+  return `Provide valid explicit --base and --head refs in the target repository. ${tail}`
 }
 
 export async function graphReadModelProposeGraphDeltaCommand(context: CommandContext): Promise<CommandResult> {

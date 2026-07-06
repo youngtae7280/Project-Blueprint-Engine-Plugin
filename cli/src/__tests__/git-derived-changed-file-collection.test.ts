@@ -78,6 +78,7 @@ describe('git-derived changed-file collection', () => {
     expect(artifact.gitCommandMode).toBe('diff-name-status-explicit-base-head-with-renames')
     expect(artifact.changedFileNameStatusCollected).toBe(true)
     expect(artifact.stagedChangesIncluded).toBe(false)
+    expect(artifact.unstagedTrackedChangesIncluded).toBe(false)
     expect(artifact.untrackedFilesIncluded).toBe(false)
     expect(artifact.changedFilesCollected).toBe(true)
     expect(artifact.checkerRun).toBe(false)
@@ -129,6 +130,7 @@ describe('git-derived changed-file collection', () => {
     expect(result.artifact.workingTreeMode).toBe('tracked-unstaged-only')
     expect(result.artifact.gitCommandMode).toBe('diff-name-status-working-tree-with-renames')
     expect(result.artifact.stagedChangesIncluded).toBe(false)
+    expect(result.artifact.unstagedTrackedChangesIncluded).toBe(true)
     expect(result.artifact.untrackedFilesIncluded).toBe(false)
     expect(result.artifact.patchContentsInspected).toBe(false)
     expect(result.artifact.changedFileNameStatusCollected).toBe(true)
@@ -172,6 +174,92 @@ describe('git-derived changed-file collection', () => {
     expect(result.artifact.normalizedChangedFiles).toEqual([])
   })
 
+  it('collects staged index changes without unstaged or untracked files', async () => {
+    const workspace = createCommittedWorkspace('src/todos.ts', 'export const value = "baseline"\n')
+    writeText(join(workspace, 'src', 'todos.ts'), 'export const value = "staged"\n')
+    writeText(join(workspace, 'src', 'untracked.ts'), 'export const value = "untracked"\n')
+    execFileSync('git', ['add', 'src/todos.ts'], { cwd: workspace, stdio: 'ignore' })
+
+    const result = await collectGitDerivedChangedFiles(workspace, {
+      staged: true,
+      output: join('.tmp', 'changed-files-staged.json'),
+    })
+
+    expect(result.artifact.collectionMode).toBe('staged-index')
+    expect(result.artifact.sourceMode).toBe('staged-index')
+    expect(result.artifact.stagedMode).toBe('staged-index-only')
+    expect(result.artifact.gitCommandMode).toBe('diff-cached-name-status-with-renames')
+    expect(result.artifact.stagedChangesIncluded).toBe(true)
+    expect(result.artifact.unstagedTrackedChangesIncluded).toBe(false)
+    expect(result.artifact.untrackedFilesIncluded).toBe(false)
+    expect(result.artifact.patchContentsInspected).toBe(false)
+    expect(result.artifact.normalizedChangedFiles).toEqual([
+      expect.objectContaining({
+        path: 'src/todos.ts',
+        statusCode: 'M',
+        changeType: 'modified',
+      }),
+    ])
+  })
+
+  it('collects untracked files with explicit untracked provenance', async () => {
+    const workspace = createCommittedWorkspace('src/todos.ts', 'export const value = "baseline"\n')
+    writeText(join(workspace, 'src', 'untracked.ts'), 'export const value = "untracked"\n')
+
+    const result = await collectGitDerivedChangedFiles(workspace, {
+      untracked: true,
+      output: join('.tmp', 'changed-files-untracked.json'),
+    })
+
+    expect(result.artifact.collectionMode).toBe('untracked-files')
+    expect(result.artifact.sourceMode).toBe('untracked-files')
+    expect(result.artifact.untrackedMode).toBe('ls-files-others-exclude-standard')
+    expect(result.artifact.gitCommandMode).toBe('ls-files-others-exclude-standard')
+    expect(result.artifact.stagedChangesIncluded).toBe(false)
+    expect(result.artifact.unstagedTrackedChangesIncluded).toBe(false)
+    expect(result.artifact.untrackedFilesIncluded).toBe(true)
+    expect(result.artifact.patchContentsInspected).toBe(false)
+    expect(result.artifact.changedFiles).toEqual([
+      expect.objectContaining({
+        path: 'src/untracked.ts',
+        status: '??',
+        statusCode: '??',
+      }),
+    ])
+    expect(result.artifact.normalizedChangedFiles).toEqual([
+      expect.objectContaining({
+        path: 'src/untracked.ts',
+        status: '??',
+        statusCode: '??',
+        changeType: 'untracked',
+      }),
+    ])
+  })
+
+  it('reports untracked generated-looking files as warning-only churn', async () => {
+    const workspace = createCommittedWorkspace('src/todos.ts', 'export const value = "baseline"\n')
+    writeText(
+      join(workspace, 'examples', 'valid', 'todo-app-pbe-run', 'generated', 'candidate.json'),
+      '{"preview":true}\n',
+    )
+
+    const result = await collectGitDerivedChangedFiles(workspace, {
+      untracked: true,
+      output: join('.tmp', 'changed-files-untracked.json'),
+    })
+
+    expect(result.artifact.generatedFileHandling.generatedFilesPresent).toBe(true)
+    expect(result.artifact.generatedFileHandling.generatedFiles).toEqual([
+      'examples/valid/todo-app-pbe-run/generated/candidate.json',
+    ])
+    expect(result.artifact.collectionWarnings).toContain(
+      'Untracked generated-looking files were collected as advisory input only; this warning does not approve, reject, enforce, or satisfy Evidence.',
+    )
+    expect(result.artifact.scopeEnforced).toBe(false)
+    expect(result.artifact.diffRejected).toBe(false)
+    expect(result.artifact.cleanClaimed).toBe(false)
+  })
+
   it('rejects base/head refs when working tree mode is selected', async () => {
     const workspace = createCommittedWorkspace('src/todos.ts', 'export const value = "baseline"\n')
 
@@ -196,6 +284,46 @@ describe('git-derived changed-file collection', () => {
 
     expect(result.exitCode).toBe(ExitCode.InvalidArguments)
     expect(payload.message).toContain('cannot combine --working-tree with --base or --head')
+  })
+
+  it('rejects mixed local changed-file modes', async () => {
+    const workspace = createCommittedWorkspace('src/todos.ts', 'export const value = "baseline"\n')
+
+    const result = await runPbeCli(
+      ['graph', 'read-model', 'collect-changed-files', '--working-tree', '--staged', '--json'],
+      {
+        cwd: workspace,
+        pluginRoot,
+      },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.InvalidArguments)
+    expect(payload.message).toContain('requires exactly one changed-file source mode')
+  })
+
+  it('rejects explicit refs when staged or untracked local mode is selected', async () => {
+    const workspace = createCommittedWorkspace('src/todos.ts', 'export const value = "baseline"\n')
+
+    const stagedResult = await runPbeCli(
+      ['graph', 'read-model', 'collect-changed-files', '--staged', '--base', 'HEAD~1', '--head', 'HEAD', '--json'],
+      {
+        cwd: workspace,
+        pluginRoot,
+      },
+    )
+    const untrackedResult = await runPbeCli(
+      ['graph', 'read-model', 'collect-changed-files', '--untracked', '--base', 'HEAD~1', '--head', 'HEAD', '--json'],
+      {
+        cwd: workspace,
+        pluginRoot,
+      },
+    )
+
+    expect(stagedResult.exitCode).toBe(ExitCode.InvalidArguments)
+    expect(JSON.parse(stagedResult.stderr).message).toContain('cannot combine --staged with --base or --head')
+    expect(untrackedResult.exitCode).toBe(ExitCode.InvalidArguments)
+    expect(JSON.parse(untrackedResult.stderr).message).toContain('cannot combine --untracked with --base or --head')
   })
 })
 

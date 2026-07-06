@@ -105,6 +105,60 @@ describe('Stop/Post Run advisory report CLI', () => {
     expect(payload.nextRequiredCommands[0]).toContain('check-scope')
   })
 
+  it('suggests staged scope check for staged changed-file collections', async () => {
+    const workspace = createWorkspace()
+    writeStopPostRunInputs(workspace, {
+      changedFiles: {
+        collectionMode: 'staged-index',
+        sourceMode: 'staged-index',
+      },
+    })
+
+    const result = await runPbeCli(
+      [
+        ...baseArgs(),
+        '--changed-files',
+        'generated/changed-files.json',
+        '--instruction-pack',
+        'generated/instruction-pack.json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.postRunCompletenessStatus).toBe('missing-scope-report')
+    expect(payload.changedFileSummary.collectionMode).toBe('staged-index')
+    expect(payload.nextRequiredCommands[0]).toContain('check-scope --staged')
+  })
+
+  it('suggests untracked scope check for untracked changed-file collections', async () => {
+    const workspace = createWorkspace()
+    writeStopPostRunInputs(workspace, {
+      changedFiles: {
+        collectionMode: 'untracked-files',
+        sourceMode: 'untracked-files',
+      },
+    })
+
+    const result = await runPbeCli(
+      [
+        ...baseArgs(),
+        '--changed-files',
+        'generated/changed-files.json',
+        '--instruction-pack',
+        'generated/instruction-pack.json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.postRunCompletenessStatus).toBe('missing-scope-report')
+    expect(payload.changedFileSummary.collectionMode).toBe('untracked-files')
+    expect(payload.nextRequiredCommands[0]).toContain('check-scope --untracked')
+  })
+
   it('reports missing proposal and missing review packet as next deterministic commands', async () => {
     const workspace = createWorkspace()
     writeStopPostRunInputs(workspace)
@@ -203,6 +257,11 @@ describe('Stop/Post Run advisory report CLI', () => {
     expect(result.exitCode).toBe(ExitCode.Success)
     expect(payload.postRunCompletenessStatus).toBe('missing-changed-files')
     expect(payload.nextRequiredCommands[0]).toContain('collect-changed-files')
+    expect(payload.nextRequiredCommands).toEqual([
+      'graph read-model collect-changed-files --working-tree --output <changedFiles> --json',
+      'graph read-model collect-changed-files --staged --output <changedFiles> --json',
+      'graph read-model collect-changed-files --untracked --output <changedFiles> --json',
+    ])
     expect(existsSync(join(workspace, '.tmp/devview-runtime-timing-smoke'))).toBe(false)
     expect(existsSync(join(workspace, '.tmp/devview-preflight'))).toBe(false)
     expect(payload.codexExecutionControlled).toBe(false)

@@ -96,6 +96,8 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     dryRun: false,
     all: false,
     workingTree: false,
+    staged: false,
+    untracked: false,
     profile: undefined as 'full' | 'lite' | 'bypass' | undefined,
     brief: undefined as string | undefined,
     maxChars: undefined as number | undefined,
@@ -210,6 +212,10 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
       options.all = true
     } else if (arg === '--working-tree') {
       options.workingTree = true
+    } else if (arg === '--staged') {
+      options.staged = true
+    } else if (arg === '--untracked') {
+      options.untracked = true
     } else if (arg === '--root') {
       const value = argv[index + 1]
       if (!value) {

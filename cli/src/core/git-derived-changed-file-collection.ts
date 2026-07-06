@@ -12,12 +12,18 @@ export interface GitDerivedCollectionOptions {
   baseRef?: string
   headRef?: string
   workingTree?: boolean
+  staged?: boolean
+  untracked?: boolean
   output?: string
 }
 
-export type GitDerivedCollectionMode = 'explicit-base-head' | 'working-tree-tracked-unstaged'
+export type GitDerivedCollectionMode =
+  | 'explicit-base-head'
+  | 'working-tree-tracked-unstaged'
+  | 'staged-index'
+  | 'untracked-files'
 
-export type GitDerivedSourceMode = 'explicit-base-head' | 'working-tree'
+export type GitDerivedSourceMode = 'explicit-base-head' | 'working-tree' | 'staged-index' | 'untracked-files'
 
 export interface ParsedNameStatusEntry {
   status: string
@@ -59,7 +65,13 @@ export interface GitDerivedChangedFileCollectionArtifact {
   resolvedBaseRef?: string
   resolvedHeadRef?: string
   workingTreeMode?: 'tracked-unstaged-only'
-  gitCommandMode: 'diff-name-status-explicit-base-head-with-renames' | 'diff-name-status-working-tree-with-renames'
+  stagedMode?: 'staged-index-only'
+  untrackedMode?: 'ls-files-others-exclude-standard'
+  gitCommandMode:
+    | 'diff-name-status-explicit-base-head-with-renames'
+    | 'diff-name-status-working-tree-with-renames'
+    | 'diff-cached-name-status-with-renames'
+    | 'ls-files-others-exclude-standard'
   changedFilesCollected: true
   checkerRun: false
   scopeComplianceEvaluationStatus: 'not-evaluated'
@@ -68,8 +80,9 @@ export interface GitDerivedChangedFileCollectionArtifact {
   patchContentsInspected: false
   gitNameStatusCollected: true
   changedFileNameStatusCollected: true
-  stagedChangesIncluded: false
-  untrackedFilesIncluded: false
+  stagedChangesIncluded: boolean
+  unstagedTrackedChangesIncluded: boolean
+  untrackedFilesIncluded: boolean
   scopeEnforced: false
   diffRejected: false
   cleanClaimed: false
@@ -191,12 +204,21 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
   headRef?: string
   resolvedBaseRef?: string
   resolvedHeadRef?: string
-  nameStatusOutput: string
+  nameStatusOutput?: string
+  parsedEntries?: ParsedNameStatusEntry[]
 }): GitDerivedChangedFileCollectionArtifact {
   const collectionMode = input.collectionMode || 'explicit-base-head'
-  const workingTreeMode = collectionMode === 'working-tree-tracked-unstaged'
-  const sourceMode: GitDerivedSourceMode = workingTreeMode ? 'working-tree' : 'explicit-base-head'
-  const parsed = parseNameStatusZ(input.nameStatusOutput)
+  const isWorkingTreeMode = collectionMode === 'working-tree-tracked-unstaged'
+  const isStagedMode = collectionMode === 'staged-index'
+  const isUntrackedMode = collectionMode === 'untracked-files'
+  const sourceMode: GitDerivedSourceMode = isWorkingTreeMode
+    ? 'working-tree'
+    : isStagedMode
+      ? 'staged-index'
+      : isUntrackedMode
+        ? 'untracked-files'
+        : 'explicit-base-head'
+  const parsed = input.parsedEntries ?? parseNameStatusZ(input.nameStatusOutput || '')
   const collectionWarnings: string[] = []
   const normalizedChangedFiles = parsed.map((entry): NormalizedChangedFileEntry => {
     const normalizedPath = entry.path ? normalizeRepositoryRelativePath(entry.path) : undefined
@@ -221,6 +243,11 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
   const generatedFiles = normalizedChangedFiles
     .flatMap((entry) => [entry.path, entry.oldPath, entry.newPath].filter((value): value is string => Boolean(value)))
     .filter(isGeneratedPath)
+  if (isUntrackedMode && generatedFiles.length > 0) {
+    collectionWarnings.push(
+      'Untracked generated-looking files were collected as advisory input only; this warning does not approve, reject, enforce, or satisfy Evidence.',
+    )
+  }
 
   return {
     schemaVersion: 1,
@@ -243,10 +270,10 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
     ...(input.headRef ? { headRef: input.headRef } : {}),
     ...(input.resolvedBaseRef ? { resolvedBaseRef: input.resolvedBaseRef } : {}),
     ...(input.resolvedHeadRef ? { resolvedHeadRef: input.resolvedHeadRef } : {}),
-    ...(workingTreeMode ? { workingTreeMode: 'tracked-unstaged-only' as const } : {}),
-    gitCommandMode: workingTreeMode
-      ? 'diff-name-status-working-tree-with-renames'
-      : 'diff-name-status-explicit-base-head-with-renames',
+    ...(isWorkingTreeMode ? { workingTreeMode: 'tracked-unstaged-only' as const } : {}),
+    ...(isStagedMode ? { stagedMode: 'staged-index-only' as const } : {}),
+    ...(isUntrackedMode ? { untrackedMode: 'ls-files-others-exclude-standard' as const } : {}),
+    gitCommandMode: gitCommandModeForCollection(collectionMode),
     changedFilesCollected: true,
     checkerRun: false,
     scopeComplianceEvaluationStatus: 'not-evaluated',
@@ -255,8 +282,9 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
     patchContentsInspected: false,
     gitNameStatusCollected: true,
     changedFileNameStatusCollected: true,
-    stagedChangesIncluded: false,
-    untrackedFilesIncluded: false,
+    stagedChangesIncluded: isStagedMode,
+    unstagedTrackedChangesIncluded: isWorkingTreeMode,
+    untrackedFilesIncluded: isUntrackedMode,
     scopeEnforced: false,
     diffRejected: false,
     cleanClaimed: false,
@@ -305,9 +333,7 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
     },
     collectionWarnings: [...new Set(collectionWarnings)],
     allowedUse: [
-      workingTreeMode
-        ? 'collect tracked unstaged working tree changed-file names and status for a later scope compliance input'
-        : 'collect git-derived changed-file names and status for a later scope compliance input',
+      collectionAllowedUse(collectionMode),
       'review normalized repository-root-relative paths',
       'confirm that collection-only output keeps checkerRun false',
       'prepare a later non-enforcing scope evaluation slice',
@@ -327,10 +353,49 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
       'equivalence proof',
       'user acceptance',
     ],
-    nonEvaluationBoundary: workingTreeMode
-      ? 'This artifact is collection-only. It records tracked unstaged working tree changed-file names/status, but it does not include staged changes, include untracked files, inspect patch contents, evaluate allowedScope or forbiddenScope, run the compliance checker, report clean or violation results, reject diffs, enforce scope, approve fixtures, satisfy runtime Evidence, or prove equivalence.'
-      : 'This artifact is collection-only. It records git-derived changed-file names/status between explicit refs, but it does not inspect patch contents, evaluate allowedScope or forbiddenScope, run the compliance checker, report clean or violation results, reject diffs, enforce scope, approve fixtures, satisfy runtime Evidence, or prove equivalence.',
+    nonEvaluationBoundary: collectionBoundary(collectionMode),
   }
+}
+
+function gitCommandModeForCollection(
+  collectionMode: GitDerivedCollectionMode,
+): GitDerivedChangedFileCollectionArtifact['gitCommandMode'] {
+  if (collectionMode === 'working-tree-tracked-unstaged') {
+    return 'diff-name-status-working-tree-with-renames'
+  }
+  if (collectionMode === 'staged-index') {
+    return 'diff-cached-name-status-with-renames'
+  }
+  if (collectionMode === 'untracked-files') {
+    return 'ls-files-others-exclude-standard'
+  }
+  return 'diff-name-status-explicit-base-head-with-renames'
+}
+
+function collectionAllowedUse(collectionMode: GitDerivedCollectionMode): string {
+  if (collectionMode === 'working-tree-tracked-unstaged') {
+    return 'collect tracked unstaged working tree changed-file names and status for a later scope compliance input'
+  }
+  if (collectionMode === 'staged-index') {
+    return 'collect staged index changed-file names and status for a later scope compliance input'
+  }
+  if (collectionMode === 'untracked-files') {
+    return 'collect untracked file paths for a later scope compliance input'
+  }
+  return 'collect git-derived changed-file names and status for a later scope compliance input'
+}
+
+function collectionBoundary(collectionMode: GitDerivedCollectionMode): string {
+  if (collectionMode === 'working-tree-tracked-unstaged') {
+    return 'This artifact is collection-only. It records tracked unstaged working tree changed-file names/status, but it does not include staged changes, include untracked files, inspect patch contents, evaluate allowedScope or forbiddenScope, run the compliance checker, report clean or violation results, reject diffs, enforce scope, approve fixtures, satisfy runtime Evidence, or prove equivalence.'
+  }
+  if (collectionMode === 'staged-index') {
+    return 'This artifact is collection-only. It records staged index changed-file names/status, but it does not include unstaged tracked changes, include untracked files, inspect patch contents, evaluate allowedScope or forbiddenScope, run the compliance checker, report clean or violation results, reject diffs, enforce scope, approve fixtures, satisfy runtime Evidence, or prove equivalence.'
+  }
+  if (collectionMode === 'untracked-files') {
+    return 'This artifact is collection-only. It records untracked file paths, but it does not include staged changes, include unstaged tracked changes, inspect patch contents or full file contents, evaluate allowedScope or forbiddenScope, run the compliance checker, report clean or violation results, reject diffs, enforce scope, approve fixtures, satisfy runtime Evidence, or prove equivalence.'
+  }
+  return 'This artifact is collection-only. It records git-derived changed-file names/status between explicit refs, but it does not inspect patch contents, evaluate allowedScope or forbiddenScope, run the compliance checker, report clean or violation results, reject diffs, enforce scope, approve fixtures, satisfy runtime Evidence, or prove equivalence.'
 }
 
 export async function collectGitDerivedChangedFiles(
@@ -348,10 +413,16 @@ export async function collectGitDerivedChangedFiles(
 
 export async function collectGitDerivedChangedFileArtifact(
   root: string,
-  options: Pick<GitDerivedCollectionOptions, 'baseRef' | 'headRef' | 'workingTree'>,
+  options: Pick<GitDerivedCollectionOptions, 'baseRef' | 'headRef' | 'workingTree' | 'staged' | 'untracked'>,
 ): Promise<GitDerivedChangedFileCollectionArtifact> {
   if (options.workingTree) {
     return collectWorkingTreeChangedFileArtifact(root)
+  }
+  if (options.staged) {
+    return collectStagedChangedFileArtifact(root)
+  }
+  if (options.untracked) {
+    return collectUntrackedChangedFileArtifact(root)
   }
   const validationProblems = [
     ...validateExplicitGitRef('base', options.baseRef),
@@ -386,6 +457,24 @@ export async function collectWorkingTreeChangedFileArtifact(
   })
 }
 
+export async function collectStagedChangedFileArtifact(root: string): Promise<GitDerivedChangedFileCollectionArtifact> {
+  const nameStatusOutput = await readGitStagedNameStatus(root)
+  return buildGitDerivedChangedFileCollectionArtifact({
+    collectionMode: 'staged-index',
+    nameStatusOutput,
+  })
+}
+
+export async function collectUntrackedChangedFileArtifact(
+  root: string,
+): Promise<GitDerivedChangedFileCollectionArtifact> {
+  const untrackedOutput = await readGitUntrackedFiles(root)
+  return buildGitDerivedChangedFileCollectionArtifact({
+    collectionMode: 'untracked-files',
+    parsedEntries: parseUntrackedFilesZ(untrackedOutput),
+  })
+}
+
 async function resolveCommitRef(root: string, ref: string): Promise<string> {
   const { stdout } = await execFileAsync('git', ['-C', root, 'rev-parse', '--verify', `${ref}^{commit}`], {
     encoding: 'utf8',
@@ -414,8 +503,40 @@ async function readGitWorkingTreeNameStatus(root: string): Promise<string> {
   return stdout
 }
 
+async function readGitStagedNameStatus(root: string): Promise<string> {
+  const { stdout } = await execFileAsync(
+    'git',
+    ['-C', root, 'diff', '--cached', '--name-status', '--find-renames', '-z', '--'],
+    {
+      encoding: 'utf8',
+      maxBuffer: 1024 * 1024 * 10,
+    },
+  )
+  return stdout
+}
+
+async function readGitUntrackedFiles(root: string): Promise<string> {
+  const { stdout } = await execFileAsync('git', ['-C', root, 'ls-files', '--others', '--exclude-standard', '-z'], {
+    encoding: 'utf8',
+    maxBuffer: 1024 * 1024 * 10,
+  })
+  return stdout
+}
+
+function parseUntrackedFilesZ(output: string): ParsedNameStatusEntry[] {
+  return output
+    .split('\0')
+    .filter((entry) => entry.length > 0)
+    .map((filePath) => ({
+      status: '??',
+      statusCode: '??',
+      path: filePath,
+    }))
+}
+
 function changeTypeForStatus(statusCode: string): string {
   const map: Record<string, string> = {
+    '??': 'untracked',
     A: 'added',
     C: 'copied',
     D: 'deleted',

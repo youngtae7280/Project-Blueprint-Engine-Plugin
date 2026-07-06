@@ -783,7 +783,11 @@ function nextRequiredCommands(
     ]
   }
   if (status === 'missing-changed-files') {
-    return ['graph read-model collect-changed-files --working-tree --output <changedFiles> --json']
+    return [
+      'graph read-model collect-changed-files --working-tree --output <changedFiles> --json',
+      'graph read-model collect-changed-files --staged --output <changedFiles> --json',
+      'graph read-model collect-changed-files --untracked --output <changedFiles> --json',
+    ]
   }
   if (status === 'clean-no-changes-observed') {
     return [
@@ -798,6 +802,12 @@ function nextRequiredCommands(
   if (status === 'missing-scope-report' && changedFiles.changedFileCount > 0) {
     if (changedFiles.collectionMode === 'working-tree-tracked-unstaged') {
       return ['graph read-model check-scope --working-tree --output <scopeReport> --markdown <runtimeReport> --json']
+    }
+    if (changedFiles.collectionMode === 'staged-index') {
+      return ['graph read-model check-scope --staged --output <scopeReport> --markdown <runtimeReport> --json']
+    }
+    if (changedFiles.collectionMode === 'untracked-files') {
+      return ['graph read-model check-scope --untracked --output <scopeReport> --markdown <runtimeReport> --json']
     }
     return [
       'graph read-model check-scope --base <baseRef> --head <headRef> --output <scopeReport> --markdown <runtimeReport> --json',

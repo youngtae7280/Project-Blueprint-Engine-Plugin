@@ -441,11 +441,11 @@ Review Packet. Missing artifacts are reported with next commands, but the comman
 tree, run scope checks, generate proposals/review packets, install hooks, block tools, mutate graph-source, apply graph
 deltas, accept Evidence, prove equivalence, enforce scope, or configure CI.
 
-The post-run working tree checker mode adds `collect-changed-files --working-tree` and `check-scope --working-tree` as
-explicit local commands for tracked unstaged changes. They are deterministic Git name-status surfaces, but they are not
-new default smoke steps and do not enter the core-critical lane. They do not inspect hunks, include staged/untracked
-files, reject diffs, enforce scope, configure CI, approve work, satisfy Evidence, prove equivalence, mutate graph-source,
-or apply graph deltas.
+The post-run local checker modes add `collect-changed-files --working-tree`, `--staged`, and `--untracked`, plus matching
+`check-scope` modes. They are deterministic local Git name/path surfaces, but they are not new default smoke steps and do
+not enter the core-critical lane. The modes keep provenance separate: tracked unstaged working tree, staged index, and
+untracked files are not combined. They do not inspect hunks or full file contents, reject diffs, enforce scope,
+configure CI, approve work, satisfy Evidence, prove equivalence, mutate graph-source, or apply graph deltas.
 
 Clarification interview time is human interaction time and is outside the 5 second deterministic DevView runtime budget.
 If a future clarification flow produces a revised Request IR Candidate, that revised candidate must re-enter the

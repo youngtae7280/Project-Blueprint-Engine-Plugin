@@ -2,6 +2,8 @@ import path from 'node:path'
 import {
   collectGitDerivedChangedFileArtifact,
   type GitDerivedChangedFileCollectionArtifact,
+  type GitDerivedCollectionMode,
+  type GitDerivedSourceMode,
 } from './git-derived-changed-file-collection.js'
 import { readJsonSafe, relativePath, writeJsonAtomic, writeTextAtomic } from './fs.js'
 import {
@@ -20,6 +22,8 @@ export interface AdvisoryScopeComplianceCheckOptions {
   baseRef?: string
   headRef?: string
   workingTree?: boolean
+  staged?: boolean
+  untracked?: boolean
   output?: string
   markdown?: string
 }
@@ -27,8 +31,8 @@ export interface AdvisoryScopeComplianceCheckOptions {
 export interface CompactScopeComplianceRuntimeReport {
   reportStatus: 'compact-advisory-runtime-report-ready'
   command: 'graph read-model check-scope'
-  sourceMode: 'explicit-base-head' | 'working-tree'
-  collectionMode: 'explicit-base-head' | 'working-tree-tracked-unstaged'
+  sourceMode: GitDerivedSourceMode
+  collectionMode: GitDerivedCollectionMode
   baseRef?: string
   headRef?: string
   changedFileCount: number
@@ -62,15 +66,18 @@ export interface AdvisoryScopeComplianceCheckArtifact extends ScopeComplianceEva
   fixtureShape: 'test-only-behavior-proof'
   checkerAxis: 'scope-compliance-preview'
   evaluationMode: 'non-enforcing-local-deterministic-cli'
-  sourceMode: 'explicit-base-head' | 'working-tree'
-  collectionMode: 'explicit-base-head' | 'working-tree-tracked-unstaged'
+  sourceMode: GitDerivedSourceMode
+  collectionMode: GitDerivedCollectionMode
   baseRef?: string
   headRef?: string
   resolvedBaseRef?: string
   resolvedHeadRef?: string
   workingTreeMode?: 'tracked-unstaged-only'
-  stagedChangesIncluded: false
-  untrackedFilesIncluded: false
+  stagedMode?: 'staged-index-only'
+  untrackedMode?: 'ls-files-others-exclude-standard'
+  stagedChangesIncluded: boolean
+  unstagedTrackedChangesIncluded: boolean
+  untrackedFilesIncluded: boolean
   changedFileNameStatusCollected: true
   changedFilesCollected: true
   changedFileCount: number
@@ -88,6 +95,8 @@ export interface AdvisoryScopeComplianceCheckArtifact extends ScopeComplianceEva
   changedFileInputArtifact:
     | 'in-memory-git-derived-changed-file-collection'
     | 'in-memory-working-tree-changed-file-collection'
+    | 'in-memory-staged-index-changed-file-collection'
+    | 'in-memory-untracked-file-collection'
   scopeInputBindingArtifact: string
   pathPatternPolicyArtifact: string
   pathMatchingHelperArtifact: string
@@ -133,6 +142,8 @@ export async function runAdvisoryScopeComplianceCheck(
       baseRef: options.baseRef,
       headRef: options.headRef,
       workingTree: options.workingTree,
+      staged: options.staged,
+      untracked: options.untracked,
     }),
     loadScopeCompliancePatterns(root),
   ])
@@ -146,6 +157,8 @@ export async function runAdvisoryScopeComplianceCheck(
     baseRef: options.baseRef,
     headRef: options.headRef,
     workingTree: options.workingTree,
+    staged: options.staged,
+    untracked: options.untracked,
     collectionArtifact,
     scopePatterns,
     evaluation,
@@ -181,6 +194,8 @@ export function buildAdvisoryScopeComplianceCheckArtifact(input: {
   baseRef?: string
   headRef?: string
   workingTree?: boolean
+  staged?: boolean
+  untracked?: boolean
   collectionArtifact: GitDerivedChangedFileCollectionArtifact
   scopePatterns: ScopePatternSource
   evaluation: ScopeComplianceEvaluationResult
@@ -207,8 +222,11 @@ export function buildAdvisoryScopeComplianceCheckArtifact(input: {
     ...(input.collectionArtifact.resolvedBaseRef ? { resolvedBaseRef: input.collectionArtifact.resolvedBaseRef } : {}),
     ...(input.collectionArtifact.resolvedHeadRef ? { resolvedHeadRef: input.collectionArtifact.resolvedHeadRef } : {}),
     ...(input.collectionArtifact.workingTreeMode ? { workingTreeMode: input.collectionArtifact.workingTreeMode } : {}),
-    stagedChangesIncluded: false,
-    untrackedFilesIncluded: false,
+    ...(input.collectionArtifact.stagedMode ? { stagedMode: input.collectionArtifact.stagedMode } : {}),
+    ...(input.collectionArtifact.untrackedMode ? { untrackedMode: input.collectionArtifact.untrackedMode } : {}),
+    stagedChangesIncluded: input.collectionArtifact.stagedChangesIncluded,
+    unstagedTrackedChangesIncluded: input.collectionArtifact.unstagedTrackedChangesIncluded,
+    untrackedFilesIncluded: input.collectionArtifact.untrackedFilesIncluded,
     changedFileNameStatusCollected: true,
     changedFilesCollected: true,
     changedFileCount: input.collectionArtifact.normalizedChangedFiles.length,
@@ -223,10 +241,7 @@ export function buildAdvisoryScopeComplianceCheckArtifact(input: {
     cleanClaimed: false,
     actualViolationClaimed: false,
     collectionOutputWritten: false,
-    changedFileInputArtifact:
-      input.collectionArtifact.collectionMode === 'working-tree-tracked-unstaged'
-        ? 'in-memory-working-tree-changed-file-collection'
-        : 'in-memory-git-derived-changed-file-collection',
+    changedFileInputArtifact: changedFileInputArtifactForCollection(input.collectionArtifact.collectionMode),
     scopeInputBindingArtifact:
       'examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json',
     pathPatternPolicyArtifact:
@@ -258,9 +273,7 @@ export function buildAdvisoryScopeComplianceCheckArtifact(input: {
     nonEnforcementBoundary:
       'This command runs the first advisory scope compliance evaluator surface. It collects changed-file names/status in memory and compares them with the current Todo App runtime Evidence-only scope inputs, but it remains non-enforcing. Advisory findings do not reject diffs, fail CI, configure required checks, approve fixtures, satisfy runtime Evidence, prove equivalence, apply graph deltas, or replace user acceptance.',
     allowedUse: [
-      input.collectionArtifact.collectionMode === 'working-tree-tracked-unstaged'
-        ? 'inspect advisory scope compliance findings from tracked unstaged working tree changes'
-        : 'inspect advisory scope compliance findings from explicit base/head refs',
+      scopeAllowedUseForCollection(input.collectionArtifact.collectionMode),
       'include local deterministic evaluator timing in DevView runtime smoke',
       'write an advisory evaluation artifact only when --output is explicitly provided',
       'review blocking or review-required findings without treating them as enforcement',
@@ -280,6 +293,34 @@ export function buildAdvisoryScopeComplianceCheckArtifact(input: {
       'production source edit permission',
     ],
   }
+}
+
+function changedFileInputArtifactForCollection(
+  collectionMode: GitDerivedCollectionMode,
+): AdvisoryScopeComplianceCheckArtifact['changedFileInputArtifact'] {
+  if (collectionMode === 'working-tree-tracked-unstaged') {
+    return 'in-memory-working-tree-changed-file-collection'
+  }
+  if (collectionMode === 'staged-index') {
+    return 'in-memory-staged-index-changed-file-collection'
+  }
+  if (collectionMode === 'untracked-files') {
+    return 'in-memory-untracked-file-collection'
+  }
+  return 'in-memory-git-derived-changed-file-collection'
+}
+
+function scopeAllowedUseForCollection(collectionMode: GitDerivedCollectionMode): string {
+  if (collectionMode === 'working-tree-tracked-unstaged') {
+    return 'inspect advisory scope compliance findings from tracked unstaged working tree changes'
+  }
+  if (collectionMode === 'staged-index') {
+    return 'inspect advisory scope compliance findings from staged index changes'
+  }
+  if (collectionMode === 'untracked-files') {
+    return 'inspect advisory scope compliance findings from untracked file paths'
+  }
+  return 'inspect advisory scope compliance findings from explicit base/head refs'
 }
 
 export function buildCompactScopeComplianceRuntimeReport(

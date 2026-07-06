@@ -3764,3 +3764,34 @@ destructive Git command, no `git add`, `commit`, `reset`, `checkout`, `restore`,
 diff rejection, no CI required checks, no branch protection, no approval or human decision automation, no Evidence
 acceptance or runtime Evidence satisfaction, no equivalence proof, no graph-source mutation, no graph delta apply, no
 LLM/API/network call, and no Project Memory extension authority.
+
+## DEC-304 Add Staged And Untracked Scope Check Modes
+
+DEC-304 does not supersede DEC-097 through DEC-303. It extends the changed-file collection and advisory scope compliance
+surfaces with two additional local source modes:
+
+```text
+graph read-model collect-changed-files --staged --output <changedFiles> --json
+graph read-model collect-changed-files --untracked --output <changedFiles> --json
+graph read-model check-scope --staged --output <scopeReport> --markdown <runtimeReport> --json
+graph read-model check-scope --untracked --output <scopeReport> --markdown <runtimeReport> --json
+```
+
+The collection artifact continues to use `artifactRole: git-derived-changed-file-collection-preview` for compatibility
+with Stop/Post Run advisory review. Staged mode records `collectionMode: staged-index`, `sourceMode: staged-index`,
+`stagedMode: staged-index-only`, and `gitCommandMode: diff-cached-name-status-with-renames`. Untracked mode records
+`collectionMode: untracked-files`, `sourceMode: untracked-files`, `untrackedMode: ls-files-others-exclude-standard`,
+and `gitCommandMode: ls-files-others-exclude-standard`. Untracked entries use `statusCode: ??` and
+`changeType: untracked`.
+
+Source modes are mutually exclusive: callers must use exactly one of explicit base/head refs, `--working-tree`,
+`--staged`, or `--untracked`. Combined/post-run-all mode and `check-scope --changed-files` remain future-only.
+`check-scope --staged` and `check-scope --untracked` create in-memory collections and continue to use the existing
+non-enforcing evaluator. Stop/Post Run advisory review remains artifact-only, but its next-command guidance now points
+to `check-scope --staged` or `check-scope --untracked` when the changed-file artifact provenance says so.
+
+This decision adds no default runtime smoke step. It adds no combined local mode, no hunk or patch inspection, no full
+file content inspection, no destructive Git behavior, no scope enforcement, no diff rejection, no CI required checks, no
+branch protection, no approval or human decision automation, no Evidence acceptance or runtime Evidence satisfaction, no
+equivalence proof, no graph-source mutation, no graph delta apply, no LLM/API/network call, and no Project Memory
+extension authority.
