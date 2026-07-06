@@ -1388,6 +1388,38 @@ node dist/cli/index.js graph read-model report-user-prompt-submit-advisory `
   --json
 ```
 
+### `pbe graph read-model report-stop-post-run-advisory`
+
+- Purpose: Read post-run lifecycle artifacts and report which Stop/Post Run follow-up artifacts are present or missing.
+  It is an advisory auditor only.
+- Typical state before running: After a `UserPromptSubmit` advisory report exists and Codex work has ended. Optional
+  changed-file, scope, runtime, proposal, and review-packet artifacts may or may not exist yet.
+- Options: `--user-prompt-advisory <file>`, `--hook-health <file>`, and `--output <file>` are required.
+  `--preflight-session <file>`, `--instruction-pack <file>`, `--instruction-markdown <file>`, `--changed-files <file>`,
+  `--scope-report <file>`, `--runtime-report <file>`, `--proposal <file>`, `--review-packet <file>`, and
+  `--markdown <file>` are optional.
+- What it checks: UserPromptSubmit context readiness, Hook Gateway health safety flags, instruction/preflight summary,
+  changed-file artifact presence/counts, advisory scope report presence/findings, linked runtime report presence, and
+  proposal/review-packet state. It validates output authority before writing JSON or Markdown.
+- Success result: JSON with `artifactRole: devview-stop-post-run-advisory-report`, `postRunCompletenessStatus`,
+  summaries, safety flags, and `nextRequiredCommands`. Missing artifacts are reported; no follow-up command is run
+  automatically.
+- Non-goals: This command does not call Git, inspect the working tree, run `check-scope`, generate proposals or review
+  packets, install hooks, block Codex/tools, revert or modify changed files, mutate graph-source, apply graph deltas,
+  approve work, accept or satisfy Evidence, prove equivalence, enforce scope, or configure CI.
+
+```powershell
+node dist/cli/index.js graph read-model report-stop-post-run-advisory `
+  --user-prompt-advisory examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-advisory.add-todo-runtime-evidence-only.preview.json `
+  --hook-health examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json `
+  --preflight-session examples/valid/todo-app-pbe-run/generated/devview-preflight-session-chain.add-todo-runtime-evidence-only.preview.json `
+  --instruction-pack examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json `
+  --instruction-markdown examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md `
+  --output .tmp/review-stop-post-run-advisory.json `
+  --markdown .tmp/review-stop-post-run-advisory.md `
+  --json
+```
+
 ### `pbe graph read-model generate-hook-script-scaffold`
 
 - Purpose: Read the Hook Gateway boundary, Hook Gateway health boundary, install/trust boundary, and `UserPromptSubmit`

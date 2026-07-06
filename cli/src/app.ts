@@ -177,11 +177,14 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     hookActivationChain: undefined as string | undefined,
     scopeCiEnforcementReadiness: undefined as string | undefined,
     hookHealth: undefined as string | undefined,
+    userPromptAdvisory: undefined as string | undefined,
     preflightSession: undefined as string | undefined,
     devviewMode: undefined as string | undefined,
     installTrust: undefined as string | undefined,
     userPromptContext: undefined as string | undefined,
     instructionMarkdown: undefined as string | undefined,
+    changedFiles: undefined as string | undefined,
+    scopeReport: undefined as string | undefined,
     schema: undefined as string | undefined,
     chainCommand: undefined as string | undefined,
     base: undefined as string | undefined,
@@ -769,6 +772,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
       }
       options.hookHealth = value
       index += 1
+    } else if (arg === '--user-prompt-advisory') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--user-prompt-advisory requires a file path.' }
+      }
+      options.userPromptAdvisory = value
+      index += 1
     } else if (arg === '--preflight-session') {
       const value = argv[index + 1]
       if (!value) {
@@ -803,6 +813,20 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--instruction-markdown requires a file path.' }
       }
       options.instructionMarkdown = value
+      index += 1
+    } else if (arg === '--changed-files') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--changed-files requires a file path.' }
+      }
+      options.changedFiles = value
+      index += 1
+    } else if (arg === '--scope-report') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--scope-report requires a file path.' }
+      }
+      options.scopeReport = value
       index += 1
     } else if (arg === '--schema') {
       const value = argv[index + 1]

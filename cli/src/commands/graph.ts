@@ -31,6 +31,7 @@ import { reportFrontendChainFile } from '../core/frontend-chain-report.js'
 import { generateProposalOnlyGraphDeltaPreview } from '../core/graph-delta-proposal-generator.js'
 import { reviseRequestIrCandidateFile } from '../core/request-ir-candidate-reviser.js'
 import { generateSelectedGraphSliceFile } from '../core/selected-graph-slice.js'
+import { reportStopPostRunAdvisoryFile } from '../core/stop-post-run-advisory.js'
 import { prepareUserPromptContextFile } from '../core/user-prompt-context.js'
 import { reportUserPromptSubmitAdvisoryFile } from '../core/user-prompt-submit-advisory.js'
 import { validateRequestIrGraphAwareFile } from '../core/request-ir-graph-aware-validator.js'
@@ -2530,6 +2531,92 @@ export async function graphReadModelReportUserPromptSubmitAdvisoryCommand(
           message,
           suggestedFix:
             'Provide a prompt, Hook Gateway health artifact, optional preflight session chain, and dedicated safe output paths.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelReportStopPostRunAdvisoryCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.userPromptAdvisory) {
+    return invalidCommand('graph read-model report-stop-post-run-advisory requires --user-prompt-advisory <file>.')
+  }
+  if (!context.options.hookHealth) {
+    return invalidCommand('graph read-model report-stop-post-run-advisory requires --hook-health <file>.')
+  }
+  if (!context.options.output) {
+    return invalidCommand('graph read-model report-stop-post-run-advisory requires --output <file>.')
+  }
+
+  try {
+    const result = await reportStopPostRunAdvisoryFile(context.options.root, {
+      userPromptAdvisory: context.options.userPromptAdvisory,
+      hookHealth: context.options.hookHealth,
+      preflightSession: context.options.preflightSession,
+      instructionPack: context.options.instructionPack,
+      instructionMarkdown: context.options.instructionMarkdown,
+      changedFiles: context.options.changedFiles,
+      scopeReport: context.options.scopeReport,
+      runtimeReport: context.options.runtimeReport,
+      proposal: context.options.proposal,
+      reviewPacket: context.options.reviewPacket,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    const errorFindings = result.report.validationFindings.filter((finding) => finding.severity === 'error')
+
+    return {
+      ok: errorFindings.length === 0,
+      command: 'graph read-model report-stop-post-run-advisory',
+      exitCode: errorFindings.length > 0 ? ExitCode.ValidationFailed : ExitCode.Success,
+      message:
+        result.report.postRunCompletenessStatus === 'review-ready-not-approved'
+          ? 'Stop/Post Run advisory report summarized proposal and review packet state without approval.'
+          : result.report.postRunCompletenessStatus === 'clean-no-changes-observed'
+            ? 'Stop/Post Run advisory report found no changed files; this is not approval or Evidence satisfaction.'
+            : 'Stop/Post Run advisory report generated missing-artifact guidance without executing post-run commands.',
+      issues:
+        errorFindings.length > 0
+          ? errorFindings.map((finding) =>
+              issue({
+                validator: 'StopPostRunAdvisoryReporter',
+                code: finding.code,
+                severity: finding.severity,
+                message: finding.message,
+                reason: finding.field ? `Field: ${finding.field}` : undefined,
+                suggestedFix:
+                  finding.suggestedFix ??
+                  'Repair the Stop/Post Run advisory inputs and rerun into dedicated output paths.',
+              }),
+            )
+          : [],
+      data: {
+        ...result.report,
+        outputPath: result.outputPath,
+        ...(result.markdownReport ? { markdownReport: result.markdownReport } : {}),
+        next:
+          result.report.nextRequiredCommands.length > 0
+            ? result.report.nextRequiredCommands
+            : [
+                'Human review remains required. This command did not approve, apply graph deltas, mutate graph-source, accept Evidence, enforce scope, or configure CI.',
+              ],
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model report-stop-post-run-advisory',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Stop/Post Run advisory report could not run.',
+      issues: [
+        issue({
+          validator: 'StopPostRunAdvisoryReporter',
+          code: 'STOP_POST_RUN_ADVISORY_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide UserPromptSubmit advisory, Hook Gateway health, optional post-run artifacts, and dedicated safe output paths.',
         }),
       ],
     }

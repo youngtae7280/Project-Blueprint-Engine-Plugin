@@ -2697,6 +2697,27 @@ preflight is missing or blocked, the same command reports why context injection 
 trigger Codex execution, mutate graph-source, apply graph deltas, automate approval or human decisions, accept or
 satisfy Evidence, prove equivalence, enforce scope, or configure CI.
 
+## Stop/Post Run Advisory Report
+
+The Stop/Post Run advisory report for the same calibration is recorded in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-stop-post-run-advisory.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-stop-post-run-advisory.add-todo-runtime-evidence-only.preview.md
+```
+
+It is generated with:
+
+```text
+graph read-model report-stop-post-run-advisory --user-prompt-advisory examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-advisory.add-todo-runtime-evidence-only.preview.json --hook-health examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --preflight-session examples/valid/todo-app-pbe-run/generated/devview-preflight-session-chain.add-todo-runtime-evidence-only.preview.json --instruction-pack examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json --instruction-markdown examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md --output examples/valid/todo-app-pbe-run/generated/devview-stop-post-run-advisory.add-todo-runtime-evidence-only.preview.json --markdown examples/valid/todo-app-pbe-run/generated/devview-stop-post-run-advisory.add-todo-runtime-evidence-only.preview.md --json
+```
+
+The calibration intentionally omits a changed-file collection artifact, so it reports
+`postRunCompletenessStatus: missing-changed-files` and suggests `collect-changed-files`. The command does not run Git,
+inspect working tree state, run `check-scope`, generate proposal/review artifacts, install hooks, block tools, trigger
+Codex execution, mutate graph-source, apply graph deltas, automate approval or human decisions, accept or satisfy
+Evidence, prove equivalence, enforce scope, or configure CI.
+
 ## DevViewGraph HTML Inspector Demo
 
 The DevViewGraph HTML inspector boundary is recorded in:

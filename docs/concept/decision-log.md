@@ -3707,3 +3707,32 @@ execution or blocking, PreToolUse/PostToolUse blocking, guided/strict enforcemen
 provider invocation, automatic validation/traversal/preflight, graph-source mutation, graph delta apply, approval/human
 decision automation, Evidence acceptance, runtime Evidence satisfaction, equivalence proof, scope enforcement, CI
 enforcement, required checks, branch protection, or diff rejection.
+
+## DEC-302 Implement Stop/Post Run Advisory Report
+
+DEC-302 does not supersede DEC-097 through DEC-301. It adds
+`graph read-model report-stop-post-run-advisory` as a Stop/Post Run lifecycle auditor for existing post-run artifacts.
+
+The command requires a `devview-user-prompt-submit-advisory-report`, Hook Gateway health report or boundary, and an
+explicit output path. It may read an existing preflight session chain, Instruction Pack JSON/Markdown, changed-file
+collection artifact, advisory scope report, compact runtime report, proposal-only Graph Delta preview, and Human Review
+Packet. It emits `artifactRole: devview-stop-post-run-advisory-report`, summaries, safety flags, and
+`nextRequiredCommands` for missing artifacts.
+
+The command is artifact-only. It does not call Git, inspect the working tree, run `check-scope`, generate proposals,
+generate review packets, run preflight, invoke providers, or call an LLM/API. Missing changed-file input suggests
+`collect-changed-files`; missing scope report suggests `check-scope`; missing proposal/review artifacts suggest
+`propose-graph-delta` and `review-graph-delta`. A complete proposal/review packet state is reported as
+`review-ready-not-approved` and still requires human review.
+
+The command validates JSON/Markdown output targets before writing either file. It rejects overwrite attempts against the
+source advisory report, Hook Gateway health artifacts, preflight/session child artifacts, Instruction Pack JSON/Markdown,
+changed-file artifacts, scope/runtime reports, proposal/review packets, graph-source/read-model authority, Evidence
+artifacts, Project Memory artifacts, hook config/script paths, PBE source/control paths, and source-authority-shaped
+JSON.
+
+This decision adds no default runtime smoke step. It adds no hook install/trust mutation, active hook session, Codex
+execution or blocking, changed-file revert/modify behavior, graph-source mutation, graph delta apply, approval/human
+decision automation, Evidence acceptance, runtime Evidence satisfaction, equivalence proof, scope enforcement, CI
+enforcement, required checks, branch protection, diff rejection, strict/guided blocking activation, or Project Memory
+extension authority.

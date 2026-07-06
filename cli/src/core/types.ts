@@ -138,11 +138,14 @@ export interface CliOptions {
   hookActivationChain?: string
   scopeCiEnforcementReadiness?: string
   hookHealth?: string
+  userPromptAdvisory?: string
   preflightSession?: string
   devviewMode?: string
   installTrust?: string
   userPromptContext?: string
   instructionMarkdown?: string
+  changedFiles?: string
+  scopeReport?: string
   schema?: string
   chainCommand?: string
   base?: string

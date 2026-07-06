@@ -431,6 +431,13 @@ to the default smoke lane because it duplicates preflight/instruction context al
 checks. It does not run preflight, invoke providers, call an LLM/API, install hooks, block tools, trigger Codex
 execution, mutate graph-source, accept Evidence, prove equivalence, enforce scope, or configure CI.
 
+The `report-stop-post-run-advisory` command is also outside the default smoke lane. It is a Stop/Post Run lifecycle
+auditor over existing artifacts: UserPromptSubmit advisory context, Hook Gateway health, optional preflight/instruction
+context, changed-file collection, advisory scope report, runtime report, proposal-only Graph Delta preview, and Human
+Review Packet. Missing artifacts are reported with next commands, but the command does not run Git, inspect the working
+tree, run scope checks, generate proposals/review packets, install hooks, block tools, mutate graph-source, apply graph
+deltas, accept Evidence, prove equivalence, enforce scope, or configure CI.
+
 Clarification interview time is human interaction time and is outside the 5 second deterministic DevView runtime budget.
 If a future clarification flow produces a revised Request IR Candidate, that revised candidate must re-enter the
 deterministic validation path with `validate-request-ir` and `validate-request-ir-graph`; those validation commands stay
