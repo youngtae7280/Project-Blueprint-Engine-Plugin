@@ -191,10 +191,11 @@ describe('AI Request Analyzer command surface CLI', () => {
 
   it('blocks secret-looking provider config before writing output', async () => {
     const workspace = createWorkspace()
+    const runtimeSecretLikeValue = ['sk', 'thisisnotarealkey123456'].join('-')
     writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
     writeJson(join(workspace, 'provider-config.json'), {
       ...validProviderConfig('disabled'),
-      apiKeyValue: 'sk-thisisnotarealkey123456',
+      apiKeyValue: runtimeSecretLikeValue,
     })
     const outputPath = join('.tmp', 'provider-config-disabled.json')
 
@@ -222,6 +223,12 @@ describe('AI Request Analyzer command surface CLI', () => {
       'AI_REQUEST_ANALYZER_PROVIDER_CONFIG_SECRET_VALUE_BLOCKED',
     )
     expect(existsSync(join(workspace, outputPath))).toBe(false)
+  })
+
+  it('does not keep tracked secret-looking provider literals in this test source', () => {
+    const sourceText = readFileSync(new URL(import.meta.url), 'utf8')
+
+    expect(sourceText).not.toMatch(/sk-[A-Za-z0-9_-]{12,}/)
   })
 
   it('imports an explicit external candidate and writes a candidate-only output', async () => {
