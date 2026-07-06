@@ -143,6 +143,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     providerMode: undefined as string | undefined,
     mockProviderResponse: undefined as string | undefined,
     proposal: undefined as string | undefined,
+    dryRunReport: undefined as string | undefined,
     reviewPacket: undefined as string | undefined,
     decisionRecord: undefined as string | undefined,
     decision: undefined as string | undefined,
@@ -163,6 +164,8 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     applyBoundary: undefined as string | undefined,
     applyReadiness: undefined as string | undefined,
     mutationPolicy: undefined as string | undefined,
+    backupDir: undefined as string | undefined,
+    readModelOutput: undefined as string | undefined,
     mutationReadiness: undefined as string | undefined,
     evidenceAcceptanceReadiness: undefined as string | undefined,
     equivalenceProofReadiness: undefined as string | undefined,
@@ -528,6 +531,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
       }
       options.proposal = value
       index += 1
+    } else if (arg === '--dry-run-report') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--dry-run-report requires a file path.' }
+      }
+      options.dryRunReport = value
+      index += 1
     } else if (arg === '--review-packet') {
       const value = argv[index + 1]
       if (!value) {
@@ -667,6 +677,20 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--mutation-policy requires a file path.' }
       }
       options.mutationPolicy = value
+      index += 1
+    } else if (arg === '--backup-dir') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--backup-dir requires a directory path.' }
+      }
+      options.backupDir = value
+      index += 1
+    } else if (arg === '--read-model-output') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--read-model-output requires a file path.' }
+      }
+      options.readModelOutput = value
       index += 1
     } else if (arg === '--mutation-readiness') {
       const value = argv[index + 1]

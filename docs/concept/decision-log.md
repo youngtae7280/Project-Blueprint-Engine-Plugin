@@ -3854,3 +3854,36 @@ This decision adds no default runtime smoke step. It adds no graph-source mutati
 approval, no Codex self-approval, no Evidence acceptance or runtime Evidence satisfaction, no equivalence proof, no
 scope enforcement, no CI enforcement, no required checks, no branch protection, no provider invocation, no LLM/API or
 network call, and no Project Memory extension authority.
+
+## DEC-307 Implement Guarded Graph Delta Apply
+
+DEC-307 does not supersede DEC-097 through DEC-306. It adds
+`graph read-model apply-graph-delta` as the first DevView lifecycle command that may mutate an explicit graph-source
+target, but only after approved apply dry-run readiness, mutation policy validation, backup creation, concrete operation
+validation, safe write, and post-mutation read-model validation.
+
+The command revalidates the dry-run report, proposal, mutation policy, and current graph-source target instead of
+trusting readiness artifacts alone. The supported v1 mutation shape is deliberately narrow:
+`graphDeltaOperations[]` with `action: replace-field`, `targetKind: record|node|edge`, stable `targetId`, property-only
+`fieldPath`, exact `expectedBeforeValue`, and explicit `afterValue`. It never infers operations from natural language,
+proposal summaries, review packets, changed-file summaries, or dry-run reports. Unsupported add/remove/bulk/inferred
+operation shapes are blocked.
+
+Before mutation, the command validates all output/backup/read-model/validation paths, rejects protected graph-source,
+read-model, evidence, proposal, review, decision, hook/config, and `.pbe` targets, hashes the original graph-source,
+creates a verified backup, builds the mutated graph in memory, writes a same-directory temp graph, and replaces only the
+explicit graph-source target. Post-mutation success requires graph-source parse/shape validation and deterministic
+read-model projection to the explicit `--read-model-output`, with validation output written to
+`--validation-output`. If post-validation fails after replacement, the command may restore the one mutated graph-source
+from the verified backup and reports rollback status.
+
+The tracked Todo App calibration is intentionally blocked because its proposal-only preview has no concrete deterministic
+`graphDeltaOperations`:
+`examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json`.
+Successful mutation is covered only in temporary test fixtures.
+
+This decision adds no default runtime smoke step. It adds no production source mutation, no read-model, evidence,
+proposal, review, decision, hook, or config mutation target, no natural-language inferred mutation, no Evidence
+acceptance or runtime Evidence satisfaction, no equivalence proof, no scope enforcement, no CI enforcement, no required
+checks, no branch protection, no automatic approval, no Codex self-approval, no provider invocation, no LLM/API or
+network call, and no Project Memory extension authority.

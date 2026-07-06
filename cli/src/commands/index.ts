@@ -16,6 +16,7 @@ import {
   graphOperationRunChainCommand,
   graphReadModelCheckScopeCommand,
   graphReadModelAnalyzeRequestCommand,
+  graphReadModelApplyGraphDeltaCommand,
   graphRetrofitPlanCommand,
   graphReadModelCollectChangedFilesCommand,
   graphReadModelCompareCommand,
@@ -272,6 +273,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'report-approved-apply-dry-run') {
     return graphReadModelReportApprovedApplyDryRunCommand(context)
+  }
+  if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'apply-graph-delta') {
+    return graphReadModelApplyGraphDeltaCommand(context)
   }
   if (
     command === 'graph' &&

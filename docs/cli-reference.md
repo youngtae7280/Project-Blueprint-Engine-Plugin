@@ -714,6 +714,58 @@ node dist/cli/index.js graph read-model report-approved-apply-dry-run `
   --json
 ```
 
+### `pbe graph read-model apply-graph-delta`
+
+- Purpose: Apply an explicit concrete Graph Delta operation list to one explicit graph-source target after hardened
+  human approval, approved apply dry-run readiness, mutation policy validation, backup creation, and post-mutation
+  read-model validation.
+- Typical state before running: After `graph read-model report-approved-apply-dry-run` has produced
+  `dryRunReadinessStatus: dry-run-ready-for-future-apply-command`, and only when the proposal contains supported
+  concrete `graphDeltaOperations`. The current Todo App proposal-only calibration has no concrete operations and is
+  expected to block.
+- Options: `--dry-run-report <file>`, `--proposal <file>`, `--graph-source <file>`, `--mutation-policy <file>`,
+  `--backup-dir <dir>`, `--read-model-output <file>`, `--validation-output <file>`, and `--output <file>` are required.
+  `--markdown <file>` writes a concise apply report summary.
+- Supported mutation shape: v1 supports only deterministic `replace-field` operations in `graphDeltaOperations[]` with
+  `targetKind: record|node|edge`, `targetId`, a safe property-only `fieldPath`, exact `expectedBeforeValue`, and
+  `afterValue`. Unsupported add/remove/bulk/natural-language/inferred operations are blocked. The command never infers
+  operations from proposal prose, review packets, changed-file summaries, or dry-run reports.
+- What it checks: dry-run report role/status/readiness and false safety flags, proposal id/path consistency and
+  proposal-only/not-applied boundaries, explicit graph-source target safety, mutation policy role/status and
+  `explicit-current-graph-source-only` target policy, backup availability, supported operation shape, exact before-value
+  matches, mutated graph parse/shape validity, and read-model regeneration/consistency.
+- What it writes: On success, it backs up the original graph-source, mutates only the explicit graph-source target,
+  writes a regenerated read-model, writes a validation artifact, and writes the apply JSON/Markdown report. On blocked
+  pre-mutation failures it writes only the explicit report/Markdown. Unsafe output/Markdown/backup/read-model/validation
+  paths are zero-write and do not mutate graph-source.
+- Success result: JSON with `artifactRole: devview-graph-delta-apply-report`,
+  `status: devview-graph-delta-apply-applied`, `applyStatus: applied-graph-source-mutated`, `mutationApplied: true`,
+  backup/rollback metadata, and post-mutation validation status. Evidence acceptance, runtime Evidence satisfaction,
+  equivalence proof, scope enforcement, CI enforcement, approval automation, Codex self-approval, and user acceptance
+  automation remain false.
+- Common failures: dry-run not ready, proposal mismatch, protected graph-source target, no concrete mutation operations,
+  unsupported operation shape, `expectedBeforeValue` mismatch, backup unavailable, invalid mutated graph, read-model
+  regeneration failure, unsafe authority flags, or unsafe output paths.
+- Non-goals: no production source mutation, no read-model/evidence/proposal/review/decision/hook/config mutation target,
+  no natural-language inferred mutation, no Evidence acceptance, no runtime Evidence satisfaction, no equivalence proof,
+  no scope/CI enforcement, no automatic approval, no Codex self-approval, no provider invocation, and no network call.
+
+Example blocked calibration command:
+
+```powershell
+node dist/cli/index.js graph read-model apply-graph-delta `
+  --dry-run-report examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json `
+  --proposal examples/valid/todo-app-pbe-run/generated/graph-delta-proposal.add-todo-runtime-evidence-only.preview.json `
+  --graph-source examples/valid/todo-app-pbe-run/graph-source.json `
+  --mutation-policy examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-policy-boundary.runtime-evidence-only.preview.json `
+  --backup-dir .tmp/devview-graph-delta-apply/backups `
+  --read-model-output .tmp/devview-graph-delta-apply/read-model.json `
+  --validation-output .tmp/devview-graph-delta-apply/validation.json `
+  --output .tmp/review-graph-delta-apply.json `
+  --markdown .tmp/review-graph-delta-apply.md `
+  --json
+```
+
 ### `pbe graph read-model report-graph-source-mutation-readiness`
 
 - Purpose: Report graph-source mutation readiness from a Graph Delta Apply readiness preview without writing

@@ -180,6 +180,8 @@ Commands:
                        Check Graph Delta apply readiness without apply, mutation, or enforcement
   graph read-model report-approved-apply-dry-run
                        Report approved proposal/apply readiness dry-run without applying or mutating graph-source
+  graph read-model apply-graph-delta
+                       Apply explicit Graph Delta operations to an explicit graph-source target after dry-run readiness, backup, and validation
   graph read-model report-graph-source-mutation-readiness
                        Report graph-source mutation readiness without writing graph-source
   graph read-model report-evidence-acceptance-readiness
@@ -282,7 +284,7 @@ Options:
   --generated <file>   Generated read-model file for graph read-model comparison.
   --read-model <file>  Optional generated read-model input for project-memory extension gap reporting.
   --graph-source <file>
-                       Graph source artifact for graph read-model projection, retrofit plan, project-intent, report-intent, project-memory gap reporting, or render-devview-graph.
+                       Graph source artifact for graph read-model projection, retrofit plan, project-intent, report-intent, project-memory gap reporting, render-devview-graph, or apply-graph-delta.
   --project-memory <file>
                        DevView Project Memory preview for extension gap reporting, impact reporting, or render-devview-graph.
   --direction-change <file>
@@ -293,10 +295,10 @@ Options:
   --graph-delta <file> Graph delta file for graph operation propose-update.
   --target-repo <path> Target git repository path for graph operation capture-delta.
   --manual <file>      Manual parity artifact for graph read-model comparison.
-  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-approved-apply-dry-run, report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, report-equivalence-proof-readiness, report-scope-ci-enforcement-readiness, generate-ai-request-analyzer-pack, analyze-request, generate-clarification-interview-pack, revise-request-ir-candidate, run-clarification-chain, validate-request-ir, validate-request-ir-graph, plan-traversal, select-slice, generate-contract-input, generate-instruction-pack, report-project-memory-extension-gaps, report-project-memory-impact, render-devview-graph, report-hook-gateway-health, report-frontend-chain, prepare-user-prompt-context, report-user-prompt-submit-advisory, report-stop-post-run-advisory, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, materialize-hook-script-bundle, report-hook-activation-chain, or report-devview-baseline.
+  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-approved-apply-dry-run, apply-graph-delta, report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, report-equivalence-proof-readiness, report-scope-ci-enforcement-readiness, generate-ai-request-analyzer-pack, analyze-request, generate-clarification-interview-pack, revise-request-ir-candidate, run-clarification-chain, validate-request-ir, validate-request-ir-graph, plan-traversal, select-slice, generate-contract-input, generate-instruction-pack, report-project-memory-extension-gaps, report-project-memory-impact, render-devview-graph, report-hook-gateway-health, report-frontend-chain, prepare-user-prompt-context, report-user-prompt-submit-advisory, report-stop-post-run-advisory, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, materialize-hook-script-bundle, report-hook-activation-chain, or report-devview-baseline.
   --data-output <file> Data JSON output for graph read-model render-devview-graph.
-  --markdown <file>    Optional Markdown summary output for graph read-model report-health, check-scope, review-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-approved-apply-dry-run, report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, report-equivalence-proof-readiness, report-scope-ci-enforcement-readiness, generate-ai-request-analyzer-pack, generate-clarification-interview-pack, run-clarification-chain, run-preflight-session, generate-instruction-pack, report-project-memory-extension-gaps, report-project-memory-impact, report-frontend-chain, prepare-user-prompt-context, report-user-prompt-submit-advisory, report-stop-post-run-advisory, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, materialize-hook-script-bundle, report-hook-activation-chain, or report-devview-baseline.
-  --proposal <file>    Graph update proposal file for graph operation apply-proposal, graph read-model review-graph-delta, or graph read-model record-human-decision.
+  --markdown <file>    Optional Markdown summary output for graph read-model report-health, check-scope, review-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-approved-apply-dry-run, apply-graph-delta, report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, report-equivalence-proof-readiness, report-scope-ci-enforcement-readiness, generate-ai-request-analyzer-pack, generate-clarification-interview-pack, run-clarification-chain, run-preflight-session, generate-instruction-pack, report-project-memory-extension-gaps, report-project-memory-impact, report-frontend-chain, prepare-user-prompt-context, report-user-prompt-submit-advisory, report-stop-post-run-advisory, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, materialize-hook-script-bundle, report-hook-activation-chain, or report-devview-baseline.
+  --proposal <file>    Graph update proposal file for graph operation apply-proposal, graph read-model review-graph-delta, record-human-decision, report-approved-apply-dry-run, or apply-graph-delta.
   --review-packet <file>
                        Human Review Packet file for graph read-model record-human-decision or report-stop-post-run-advisory.
   --decision-record <file>
@@ -307,10 +309,12 @@ Options:
                        Approved Proposal State boundary file for graph read-model report-approved-apply-dry-run.
   --apply-boundary <file>
                        Graph Delta Apply boundary file for graph read-model report-approved-apply-dry-run.
+  --dry-run-report <file>
+                       Approved apply dry-run report for graph read-model apply-graph-delta.
   --apply-readiness <file>
                        Graph Delta Apply readiness file for graph read-model report-graph-source-mutation-readiness.
   --mutation-policy <file>
-                       Graph-source Mutation Policy boundary file for graph read-model report-approved-apply-dry-run.
+                       Graph-source Mutation Policy boundary file for graph read-model report-approved-apply-dry-run or apply-graph-delta.
   --mutation-readiness <file>
                        Graph-source Mutation readiness file for graph read-model report-evidence-acceptance-readiness.
   --evidence-acceptance-readiness <file>
@@ -373,7 +377,10 @@ Options:
   --revised-candidate-output <file>
                        Revised Request IR Candidate output for graph read-model run-clarification-chain.
   --validation-output <file>
-                       Schema-only Request IR validation output for graph read-model run-clarification-chain.
+                       Schema-only Request IR validation output for graph read-model run-clarification-chain, or post-mutation validation output for graph read-model apply-graph-delta.
+  --backup-dir <dir>   Backup directory for graph read-model apply-graph-delta.
+  --read-model-output <file>
+                       Regenerated read-model output for graph read-model apply-graph-delta.
   --boundary <file>    Boundary file for graph read-model report-hook-gateway-health, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, generate-ai-request-analyzer-pack, generate-clarification-interview-pack, or generate-hook-script-scaffold.
   --intake <file>      Natural-language request intake boundary file for graph read-model report-frontend-chain.
   --frontend-chain <file>

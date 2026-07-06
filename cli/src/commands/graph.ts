@@ -1,4 +1,5 @@
 import { relativePath } from '../core/fs.js'
+import { applyGraphDeltaFile } from '../core/graph-delta-apply.js'
 import { reportApprovedApplyDryRunFile } from '../core/approved-apply-dry-run.js'
 import { createApprovedProposalStateFile } from '../core/approved-proposal-state.js'
 import { generateAiRequestAnalyzerPackFile } from '../core/ai-request-analyzer-pack.js'
@@ -1118,6 +1119,98 @@ export async function graphReadModelReportApprovedApplyDryRunCommand(context: Co
           message,
           suggestedFix:
             'Provide readable decision, proposal, approved-state boundary, apply boundary, mutation policy, and dedicated output paths. This command never applies graph deltas or mutates graph-source.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelApplyGraphDeltaCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.dryRunReport) {
+    return invalidCommand('graph read-model apply-graph-delta requires --dry-run-report <file>.')
+  }
+  if (!context.options.proposal) {
+    return invalidCommand('graph read-model apply-graph-delta requires --proposal <file>.')
+  }
+  if (!context.options.graphSource) {
+    return invalidCommand('graph read-model apply-graph-delta requires --graph-source <file>.')
+  }
+  if (!context.options.mutationPolicy) {
+    return invalidCommand('graph read-model apply-graph-delta requires --mutation-policy <file>.')
+  }
+  if (!context.options.backupDir) {
+    return invalidCommand('graph read-model apply-graph-delta requires --backup-dir <dir>.')
+  }
+  if (!context.options.readModelOutput) {
+    return invalidCommand('graph read-model apply-graph-delta requires --read-model-output <file>.')
+  }
+  if (!context.options.validationOutput) {
+    return invalidCommand('graph read-model apply-graph-delta requires --validation-output <file>.')
+  }
+  if (!context.options.output) {
+    return invalidCommand('graph read-model apply-graph-delta requires --output <file>.')
+  }
+
+  try {
+    const result = await applyGraphDeltaFile(context.options.root, {
+      dryRunReport: context.options.dryRunReport,
+      proposal: context.options.proposal,
+      graphSource: context.options.graphSource,
+      mutationPolicy: context.options.mutationPolicy,
+      backupDir: context.options.backupDir,
+      readModelOutput: context.options.readModelOutput,
+      validationOutput: context.options.validationOutput,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    const errorFindings = result.report.validationFindings.filter((finding) => finding.severity === 'error')
+    return {
+      ok: result.report.status === 'devview-graph-delta-apply-applied',
+      command: 'graph read-model apply-graph-delta',
+      exitCode: errorFindings.length > 0 ? ExitCode.ValidationFailed : ExitCode.Success,
+      message:
+        result.report.status === 'devview-graph-delta-apply-applied'
+          ? 'Graph Delta Apply mutated the explicit graph-source target after backup and post-mutation validation.'
+          : result.report.status === 'devview-graph-delta-apply-rolled-back'
+            ? 'Graph Delta Apply rolled back after post-mutation validation failed.'
+            : 'Graph Delta Apply was blocked before graph-source mutation.',
+      issues: errorFindings.map((findingEntry) =>
+        issue({
+          validator: 'GraphDeltaApply',
+          code: findingEntry.code,
+          severity: findingEntry.severity,
+          message: findingEntry.message,
+          suggestedFix:
+            result.report.applyStatus === 'blocked-no-concrete-mutation-operations'
+              ? 'Provide a proposal with explicit supported graphDeltaOperations; proposal-only previews cannot mutate graph-source.'
+              : 'Repair Graph Delta Apply inputs and rerun with explicit current graph-source, backup, and validation outputs.',
+        }),
+      ),
+      data: {
+        ...result.report,
+        outputPath: result.outputPath,
+        ...(result.markdownReport ? { markdownReport: result.markdownReport } : {}),
+        next:
+          result.report.status === 'devview-graph-delta-apply-applied'
+            ? 'Run the separate Evidence Acceptance lifecycle if human review wants to consider post-apply outputs. This command did not accept Evidence, prove equivalence, enforce scope, or configure CI.'
+            : 'Resolve the apply blocker. This command did not mutate graph-source unless status is devview-graph-delta-apply-applied, and it did not accept Evidence, prove equivalence, enforce scope, or configure CI.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model apply-graph-delta',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Graph Delta Apply could not run.',
+      issues: [
+        issue({
+          validator: 'GraphDeltaApply',
+          code: 'GRAPH_DELTA_APPLY_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide safe, distinct output/backup/read-model/validation paths and concrete mutation operations.',
         }),
       ],
     }

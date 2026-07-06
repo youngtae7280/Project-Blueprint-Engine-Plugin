@@ -343,6 +343,15 @@ artifact is blocked because the approved-state preview was not created:
 The command checks approved-state/proposal preconditions only. It does not add an apply command, enable graph delta
 apply, mutate graph-source, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.
 
+The guarded DevView Graph Delta Apply lifecycle command is now `graph read-model apply-graph-delta`. The tracked Todo App
+calibration remains blocked at
+`examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json`
+because the proposal-only preview has no concrete deterministic `graphDeltaOperations`. Successful mutation is limited
+to focused temporary fixtures with a narrow `replace-field` operation, backup verification, safe graph-source
+replacement, read-model regeneration, validation output, and rollback behavior. Apply remains separate from Evidence
+acceptance, runtime Evidence satisfaction, equivalence proof, scope/CI enforcement, automatic approval, and user
+acceptance.
+
 The Evidence Acceptance Policy boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-policy-boundary.runtime-evidence-only.preview.json`.
 It now anchors the `graph read-model report-evidence-acceptance-readiness ...` command. The first calibration Evidence

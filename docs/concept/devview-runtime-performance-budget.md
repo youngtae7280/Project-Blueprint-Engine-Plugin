@@ -638,6 +638,19 @@ contractGenerationAllowed: false
 The health report does not run the timing smoke, evaluator, generator, review packet command, or Request IR graph-aware
 validator. It only names the advisory surfaces and preserves the non-enforcement/non-apply/non-approval boundary.
 
+## Graph Delta Apply
+
+`graph read-model apply-graph-delta` is a guarded lifecycle command, not a default runtime-smoke step. It may mutate one
+explicit graph-source target only after hardened human approval, approved apply dry-run readiness, mutation policy
+validation, backup creation, supported concrete mutation operations, and post-mutation read-model validation. The current
+tracked Todo App calibration remains blocked because its proposal-only preview has no concrete `graphDeltaOperations`.
+
+The command is intentionally outside the user request to instruction-pack core-critical timing lane and is not added to
+`devview:runtime:smoke`. Focused tests cover the successful mutation path in temporary graph-source fixtures, including
+backup, safe replacement, read-model projection, validation output, and rollback after post-validation failure. The
+command does not accept Evidence, set `runtimeEvidenceSatisfied: true`, prove equivalence, enforce scope, configure CI,
+run required checks, change branch protection, automate approval, invoke providers, or call the network.
+
 ## Evidence Acceptance Readiness
 
 The Evidence acceptance readiness command is intentionally outside the current core-critical timing lane. It belongs to
@@ -703,6 +716,6 @@ This budget does not:
 - mark calibration fixtures as supported;
 - set `equivalenceProven: true`;
 - inspect patch contents;
-- implement graph delta apply;
+- include Graph Delta Apply in the default smoke or core-critical timing lane;
 - automate user acceptance;
 - introduce executor automation.

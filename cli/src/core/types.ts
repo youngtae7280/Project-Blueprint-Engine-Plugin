@@ -104,6 +104,7 @@ export interface CliOptions {
   providerMode?: string
   mockProviderResponse?: string
   proposal?: string
+  dryRunReport?: string
   reviewPacket?: string
   decisionRecord?: string
   decision?: string
@@ -124,6 +125,8 @@ export interface CliOptions {
   applyBoundary?: string
   applyReadiness?: string
   mutationPolicy?: string
+  backupDir?: string
+  readModelOutput?: string
   mutationReadiness?: string
   evidenceAcceptanceReadiness?: string
   equivalenceProofReadiness?: string

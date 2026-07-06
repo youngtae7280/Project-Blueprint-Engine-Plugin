@@ -2752,6 +2752,29 @@ generated. It is not approval by itself. The dry-run report may become
 rollback/fallback requirements; this dry-run report does not mutate graph-source, apply graph deltas, accept or satisfy
 Evidence, prove equivalence, enforce scope, configure CI, or automate approval/user acceptance.
 
+## Graph Delta Apply Blocked Calibration
+
+The first DevView Graph Delta Apply lifecycle report for the same calibration is recorded in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.md
+```
+
+It is generated with:
+
+```text
+graph read-model apply-graph-delta --dry-run-report examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json --proposal examples/valid/todo-app-pbe-run/generated/graph-delta-proposal.add-todo-runtime-evidence-only.preview.json --graph-source examples/valid/todo-app-pbe-run/graph-source.json --mutation-policy examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-policy-boundary.runtime-evidence-only.preview.json --backup-dir .tmp/devview-graph-delta-apply/backups --read-model-output .tmp/devview-graph-delta-apply/read-model.json --validation-output .tmp/devview-graph-delta-apply/validation.json --output examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json --markdown examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.md --json
+```
+
+The tracked Todo App proposal remains a proposal-only preview and intentionally has no concrete deterministic
+`graphDeltaOperations`; the apply report therefore records `applyStatus: blocked-no-concrete-mutation-operations`. A
+successful apply path is covered only in temporary test fixtures with a narrow explicit `replace-field` operation,
+backup verification, graph-source replacement, read-model regeneration, validation output, and rollback behavior. The
+tracked calibration does not mutate graph-source and records `mutationApplied: false`, `graphSourceMutated: false`,
+`graphDeltaApplied: false`, `evidenceAccepted: false`, `runtimeEvidenceSatisfied: false`, `equivalenceProven: false`,
+`scopeEnforced: false`, and `ciEnforcementEnabled: false`.
+
 ## DevViewGraph HTML Inspector Demo
 
 The DevViewGraph HTML inspector boundary is recorded in:
