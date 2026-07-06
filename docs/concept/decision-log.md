@@ -3646,3 +3646,34 @@ traversal, selected slice generation, Contract Compiler Input generation, Instru
 graph-source mutation, graph delta apply, approval or human decision automation, Evidence acceptance, runtime Evidence
 satisfaction, equivalence proof, scope enforcement, CI enforcement, strict/guided blocking, live provider invocation, or
 Project Memory extension authority.
+
+## DEC-300 Implement DevView Preflight Session Chain
+
+DEC-300 does not supersede DEC-097 through DEC-299. It adds `graph read-model run-preflight-session` as a
+deterministic frontend preflight orchestration command from Request IR Candidate to Instruction Pack preview.
+
+The command requires:
+
+```text
+--candidate <candidatePath>
+--output-dir <directoryPath>
+```
+
+It writes deterministic child artifacts under the explicit output directory: schema-only Request IR validation,
+graph-aware Request IR validation, graph traversal plan, selected graph slice, Contract Compiler Input, Instruction
+Pack JSON/Markdown, and a `devview-preflight-session-chain-report`. The current calibration report copy is recorded at:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-preflight-session-chain.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-preflight-session-chain.add-todo-runtime-evidence-only.preview.md
+```
+
+The chain reuses the existing file APIs for each stage and does not shell out. Schema validation blocks before
+graph-aware validation; graph-aware validation blocks before traversal; traversal, slice, contract, and instruction
+stages stop the chain at their own terminal stage. Unsafe output directory, child output path, or optional Markdown path
+targets are rejected before any stage runs, so path-unsafe failures produce zero writes.
+
+This decision adds no runtime smoke step because the chain overlaps the already measured validated
+candidate-to-instruction-pack lane. It adds no LLM/API/network call, Codex execution, graph-source mutation, graph delta
+apply, approval/human decision automation, Evidence acceptance, runtime Evidence satisfaction, equivalence proof,
+scope/CI enforcement, strict/guided blocking activation, or Project Memory extension authority.

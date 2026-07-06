@@ -964,6 +964,42 @@ node dist/cli/index.js graph read-model run-clarification-chain `
   --json
 ```
 
+### `pbe graph read-model run-preflight-session`
+
+- Purpose: Run the deterministic frontend preflight chain from a Request IR Candidate through Instruction Pack preview
+  in one read-only orchestration command.
+- Typical state before running: A candidate-only Request IR Candidate exists and should be checked through the same
+  schema validation, graph-aware validation, traversal plan, selected slice, Contract Compiler Input, and Instruction
+  Pack stages used by the individual commands.
+- Options: `--candidate <candidatePath>` and `--output-dir <directoryPath>` are required. `--session-id <id>` is
+  optional metadata. `--markdown <file>` may write a compact chain summary.
+- What it writes: Deterministic child outputs under `--output-dir`: `request-ir-validation.json`,
+  `request-ir-graph-validation.json`, `graph-traversal-plan.json`, `selected-graph-slice.json`,
+  `contract-compiler-input.json`, `instruction-pack.json`, `instruction-pack.md`, and `preflight-session-chain.json`.
+- Output authority guard: the output directory, every child output, and optional Markdown path are checked before any
+  stage runs. Unsafe paths block with zero writes if they would overwrite the candidate, linked source/schema/intake
+  artifacts, graph-source/read-model authority, Evidence paths, PBE source/control paths, active hook/config paths, or
+  source-authority-shaped JSON. Child output collisions are also blocked before writing.
+- Blocked-stage behavior: schema-only validation stops before graph-aware validation; graph-aware validation stops
+  before traversal; traversal, slice, contract, and instruction stages stop the chain at their own terminal stage. Prior
+  stage artifacts may already exist when a later stage blocks, and the final report records the stopped stage.
+- Success result: JSON with `artifactRole: devview-preflight-session-chain-report`,
+  `terminalStage: instruction-pack-preview-generated-no-codex-execution`, generated stage artifact paths, and
+  instruction pack generation without Codex execution.
+- Boundary: The command does not call an LLM/API, trigger Codex execution, mutate graph-source, apply graph deltas,
+  automate approval or human decisions, accept or satisfy Evidence, prove equivalence, enforce scope, enable
+  strict/guided blocking, or configure CI.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model run-preflight-session `
+  --candidate examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json `
+  --output-dir .tmp/devview-preflight/add-todo-runtime-evidence-only `
+  --markdown .tmp/devview-preflight/add-todo-runtime-evidence-only/preflight-session-chain.md `
+  --json
+```
+
 ### `pbe graph read-model validate-request-ir`
 
 - Purpose: Validate a Request IR Candidate artifact's schema and candidate-only safety boundaries.

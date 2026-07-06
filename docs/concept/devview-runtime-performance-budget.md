@@ -407,6 +407,24 @@ It is deterministic and read-only, but it is an alternate clarification branch a
 `graphAwareValidationExecuted: false`, `graphTraversalExecuted: false`, `contractInputGenerated: false`, and
 `instructionPackGenerated: false`; graph-aware validation and traversal remain separate explicit commands.
 
+The preflight session chain combines the validated frontend stages from candidate through Instruction Pack preview:
+
+```text
+graph read-model run-preflight-session --candidate <candidatePath> --output-dir <directoryPath> --json
+```
+
+It reuses the existing deterministic file APIs for schema-only validation, graph-aware validation, traversal planning,
+selected slice generation, Contract Compiler Input generation, and Instruction Pack generation. It writes child
+artifacts under the explicit output directory and a `devview-preflight-session-chain-report`. It is not added as a new
+`devview:runtime:smoke` step because it intentionally overlaps the already measured core-critical lane stages. The
+chain remains useful for session setup and regression checks outside the smoke lane.
+
+The preflight chain guards all child output paths before any stage runs. If any output path is unsafe, it writes
+nothing. If a later deterministic stage blocks, previous stage artifacts may remain and the chain report records the
+terminal stopped stage. It does not trigger Codex execution, mutate graph-source, apply graph deltas, automate approval
+or human decisions, accept or satisfy Evidence, prove equivalence, enforce scope, enable strict/guided blocking, or
+configure CI.
+
 Clarification interview time is human interaction time and is outside the 5 second deterministic DevView runtime budget.
 If a future clarification flow produces a revised Request IR Candidate, that revised candidate must re-enter the
 deterministic validation path with `validate-request-ir` and `validate-request-ir-graph`; those validation commands stay

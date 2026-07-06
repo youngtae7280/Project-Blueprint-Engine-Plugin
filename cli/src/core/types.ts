@@ -120,6 +120,8 @@ export interface CliOptions {
   scriptTemplates?: string
   sessionManifest?: string
   bundleDir?: string
+  outputDir?: string
+  sessionId?: string
   clarificationPack?: string
   answers?: string
   revisedCandidateOutput?: string

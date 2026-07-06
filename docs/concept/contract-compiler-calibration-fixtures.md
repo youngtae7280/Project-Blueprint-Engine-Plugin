@@ -2651,6 +2651,30 @@ The report verifies preview chain continuity and hook event readiness only. It d
 trust/config, block Codex execution, run validation or traversal, mutate graph-source, apply graph deltas, approve work,
 record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.
 
+## DevView Preflight Session Chain
+
+The preflight session chain report for the Todo App calibration is recorded in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-preflight-session-chain.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-preflight-session-chain.add-todo-runtime-evidence-only.preview.md
+```
+
+It is generated from the calibration Request IR Candidate with:
+
+```text
+graph read-model run-preflight-session --candidate examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json --output-dir .tmp/devview-preflight/add-todo-runtime-evidence-only --markdown .tmp/devview-preflight/add-todo-runtime-evidence-only/preflight-session-chain.md --json
+```
+
+The command writes transient child artifacts under `.tmp/devview-preflight/...`: schema-only validation, graph-aware
+validation, traversal plan, selected graph slice, Contract Compiler Input, Instruction Pack JSON/Markdown, and the
+session chain report. The tracked JSON/Markdown files are the calibration copy of that report. The chain stops at the
+first blocked stage and records the terminal stage; unsafe output paths block before any child artifact is written.
+
+This report is a deterministic preflight convenience surface only. It does not call an LLM/API, execute Codex, mutate
+graph-source, apply graph deltas, automate approval or human decisions, accept or satisfy Evidence, prove equivalence,
+enforce scope, enable strict/guided blocking, configure CI, require checks, change branch protection, or reject diffs.
+
 ## DevViewGraph HTML Inspector Demo
 
 The DevViewGraph HTML inspector boundary is recorded in:

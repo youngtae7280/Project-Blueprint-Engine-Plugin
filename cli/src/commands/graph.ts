@@ -15,6 +15,7 @@ import { generateGraphTraversalPlanFile } from '../core/graph-traversal-plan.js'
 import { generateContractCompilerInputFile } from '../core/contract-input-generator.js'
 import { runClarificationRuntimeChainFile } from '../core/clarification-runtime-chain.js'
 import { reportDevViewBaselineFile } from '../core/devview-baseline-report.js'
+import { runPreflightSessionChainFile } from '../core/preflight-session-chain.js'
 import { recordHumanDecisionFile } from '../core/human-decision-record.js'
 import { reportHookGatewayHealthFile } from '../core/hook-gateway-health-report.js'
 import { reportHookActivationChainFile } from '../core/hook-activation-chain-report.js'
@@ -1587,6 +1588,80 @@ export async function graphReadModelRunClarificationChainCommand(context: Comman
           message,
           suggestedFix:
             'Provide readable clarification pack and answers artifacts plus dedicated revised candidate, validation, report, and Markdown output paths.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelRunPreflightSessionCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.candidate) {
+    return invalidCommand('graph read-model run-preflight-session requires --candidate <candidatePath>.')
+  }
+  if (!context.options.outputDir) {
+    return invalidCommand('graph read-model run-preflight-session requires --output-dir <directoryPath>.')
+  }
+
+  try {
+    const chain = await runPreflightSessionChainFile(context.options.root, {
+      candidate: context.options.candidate,
+      outputDir: context.options.outputDir,
+      sessionId: context.options.sessionId,
+      markdown: context.options.markdown,
+    })
+    const blocked = chain.report.status !== 'devview-preflight-session-chain-report-generated'
+    const errorFindings = chain.report.validationFindings.filter((finding) => finding.severity === 'error')
+
+    return {
+      ok: !blocked,
+      command: 'graph read-model run-preflight-session',
+      exitCode: blocked ? ExitCode.ValidationFailed : ExitCode.Success,
+      message: blocked
+        ? 'DevView preflight session chain stopped before instruction-pack preview completion.'
+        : 'DevView preflight session chain generated instruction-pack preview artifacts without Codex execution.',
+      issues: blocked
+        ? (errorFindings.length > 0 ? errorFindings : chain.report.validationFindings).map((finding) =>
+            issue({
+              validator: 'PreflightSessionChainReporter',
+              code: finding.code,
+              severity: finding.severity,
+              message: finding.message,
+              reason: finding.stage
+                ? `Stage: ${finding.stage}${finding.field ? `; field: ${finding.field}` : ''}`
+                : finding.field
+                  ? `Field: ${finding.field}`
+                  : undefined,
+              suggestedFix:
+                finding.suggestedFix ??
+                'Fix the preflight stage inputs and rerun the chain into a dedicated safe output directory.',
+            }),
+          )
+        : [],
+      data: {
+        ...chain.report,
+        outputDir: chain.outputDir,
+        outputPath: chain.outputPath,
+        ...(chain.markdownReport ? { markdownReport: chain.markdownReport } : {}),
+        next: blocked
+          ? 'Repair the stopped stage, then rerun the preflight chain. No Codex execution, graph mutation, approval, Evidence acceptance, equivalence proof, scope enforcement, strict/guided blocking, or CI enforcement occurred.'
+          : 'Review the instruction pack preview. This chain did not trigger Codex execution, mutate graph-source, apply graph deltas, automate approval, satisfy or accept Evidence, prove equivalence, enforce scope, or configure CI.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model run-preflight-session',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'DevView preflight session chain could not run.',
+      issues: [
+        issue({
+          validator: 'PreflightSessionChainReporter',
+          code: 'PREFLIGHT_SESSION_CHAIN_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide a readable Request IR Candidate plus a dedicated safe output directory and optional Markdown report path.',
         }),
       ],
     }

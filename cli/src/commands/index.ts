@@ -42,6 +42,7 @@ import {
   graphReadModelRecordHumanDecisionCommand,
   graphReadModelReviseRequestIrCandidateCommand,
   graphReadModelRunClarificationChainCommand,
+  graphReadModelRunPreflightSessionCommand,
   graphReadModelReportHookGatewayHealthCommand,
   graphReadModelReportCompilerBoundaryCommand,
   graphReadModelReportCompilerInputCommand,
@@ -304,6 +305,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'run-clarification-chain') {
     return graphReadModelRunClarificationChainCommand(context)
+  }
+  if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'run-preflight-session') {
+    return graphReadModelRunPreflightSessionCommand(context)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'validate-request-ir') {
     return graphReadModelValidateRequestIrCommand(context)

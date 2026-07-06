@@ -159,6 +159,8 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     scriptTemplates: undefined as string | undefined,
     sessionManifest: undefined as string | undefined,
     bundleDir: undefined as string | undefined,
+    outputDir: undefined as string | undefined,
+    sessionId: undefined as string | undefined,
     clarificationPack: undefined as string | undefined,
     answers: undefined as string | undefined,
     revisedCandidateOutput: undefined as string | undefined,
@@ -634,6 +636,20 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--bundle-dir requires a directory path.' }
       }
       options.bundleDir = value
+      index += 1
+    } else if (arg === '--output-dir') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--output-dir requires a directory path.' }
+      }
+      options.outputDir = value
+      index += 1
+    } else if (arg === '--session-id') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--session-id requires a value.' }
+      }
+      options.sessionId = value
       index += 1
     } else if (arg === '--clarification-pack') {
       const value = argv[index + 1]

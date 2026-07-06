@@ -701,6 +701,28 @@ source Contract Compiler Input, graph/source authority artifacts, selected front
 paths, graph snapshot artifacts, Evidence authority artifacts, selected scope candidate paths, or existing
 graph-source/source-authority-shaped JSON files.
 
+## Preflight Session Chain
+
+The deterministic frontend stages can also be run as a single preflight session chain:
+
+```text
+graph read-model run-preflight-session --candidate <candidatePath> --output-dir <directoryPath> --json
+```
+
+The chain writes schema-only validation, graph-aware validation, traversal plan, selected graph slice, Contract Compiler
+Input, Instruction Pack JSON/Markdown, and a `devview-preflight-session-chain-report` under the requested output
+directory. It reuses the existing file APIs for each stage and stops at the first blocked stage. Schema validation
+blocks before graph-aware validation; graph-aware validation blocks before traversal; traversal/slice/contract/
+instruction failures are recorded as the terminal stage in the report.
+
+The output directory and all child paths are checked before any stage runs. Unsafe paths produce zero writes if they
+would overwrite the candidate, linked schema/intake/analyzer artifacts, graph-source/read-model authority, Evidence
+paths, PBE source/control paths, active hook/config paths, or source-authority-shaped JSON.
+
+The chain is a preflight/report surface only. It does not call an LLM/API, execute Codex, mutate graph-source, apply
+graph deltas, automate approval or human decisions, accept or satisfy Evidence, prove equivalence, enforce scope,
+enable strict/guided blocking, or configure CI.
+
 ## Frontend Artifact Chain Manifest
 
 The frontend chain manifest command is now available as:
