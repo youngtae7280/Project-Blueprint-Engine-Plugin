@@ -3395,3 +3395,37 @@ This decision is report-only. It does not call an LLM/API, execute Codex, instal
 blocking, grant Project Memory extension authority, mutate graph-source, apply graph deltas, automate approval or human
 decisions, accept Evidence, satisfy runtime Evidence, prove equivalence, enforce scope, configure CI required checks,
 change branch protection, reject diffs, or replace user acceptance.
+
+## DEC-292 Define AI Request Analyzer Provider Config Boundary
+
+DEC-292 does not supersede DEC-097 through DEC-291. It defines the provider configuration boundary for future AI Request
+Analyzer provider adapters before any LLM/API/network invocation exists.
+
+The new preview artifacts are:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json
+```
+
+The provider state taxonomy is:
+
+```text
+disabled
+configured-not-invoked
+unavailable
+blocked-invalid-config
+future-invocation-allowed-only-after-explicit-config
+```
+
+The default calibration config is `providerState: disabled`. `configured-not-invoked` is provenance-only and still
+cannot make network calls, invoke an LLM, or generate Request IR Candidate output. Provider config artifacts may record
+environment variable reference names such as `OPENAI_API_KEY`, but must not store, inspect, print, or persist API key,
+token, password, credential manager, or `.env` secret values.
+
+This decision adds no CLI command and no runtime smoke step. It is boundary-only and does not implement a provider
+config reader, provider adapter, OpenAI/API/LLM/network call, Request IR Candidate generation, graph validation,
+traversal, selected slice generation, contract input generation, instruction pack generation, hook execution/install,
+Codex execution, graph-source mutation, graph delta apply, approval/human decision automation, Evidence acceptance,
+runtime Evidence satisfaction, equivalence proof, scope/CI enforcement, strict/guided blocking, or Project Memory
+extension authority.

@@ -134,6 +134,38 @@ This command surface is intended for future Hook Gateway/session integration, bu
 LLM/API provider, hook script, Codex execution, graph-source mutation, graph delta apply, approval, runtime Evidence
 satisfaction, equivalence proof, or enforcement.
 
+## AI Request Analyzer Provider Config Boundary
+
+The provider configuration boundary is previewed in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json
+```
+
+The current disabled/default provider config preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json
+```
+
+This boundary fixes provider state vocabulary before any provider adapter is implemented:
+
+- `disabled`
+- `configured-not-invoked`
+- `unavailable`
+- `blocked-invalid-config`
+- `future-invocation-allowed-only-after-explicit-config`
+
+`configured-not-invoked` means provider/model/environment references may exist for future review only. It does not allow
+an LLM/API call, network access, or Request IR Candidate generation. Provider configuration artifacts may record
+environment variable names such as `OPENAI_API_KEY`, but must never store, inspect, or print API key, token, password, or
+secret values.
+
+The current provider config boundary keeps `providerInvocationAuthority: none-preview-only`, `networkCallsAllowed:
+false`, `llmInvoked: false`, `requestIrCandidateGenerated: false`, and `candidateOnly: true`. Future
+`analyze-request --provider-config <providerConfigPath>` integration must remain separate from actual provider
+invocation until an explicit provider adapter decision is made.
+
 ## Clarification Interview Boundary
 
 The clarification interview boundary preview is:

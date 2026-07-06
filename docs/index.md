@@ -82,6 +82,12 @@
   Graph Traversal Plan generation, Selected Graph Slice generation, selected-slice-to-contract-input generation, and
   Contract-Input-to-Instruction-Pack generation without implementing an AI classifier, runtime LLM calls, Codex
   execution, graph-source mutation, apply, or approval.
+- AI Request Analyzer provider config boundary preview -
+  `examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json`
+  and
+  `examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json`
+  define disabled/configured/unavailable/blocked/future provider states and secret-reference policy without invoking an
+  LLM/API or generating Request IR.
 - [DevView Project Memory](concept/devview-project-memory.md) - Persistent project profile boundary for project
   identity, native/retrofit mode, direction, preservation/improvement policy, taxonomy profile refs, view tree profile
   refs, direction-change revision flow, and proposal-only extension decisions before any project-specific vocabulary can

@@ -327,6 +327,18 @@ precomputed Request IR Candidate as candidate-only output and still requires the
 traversal. Future provider inference time remains outside the 5 second deterministic budget until a separate provider
 trust/runtime policy decides otherwise.
 
+The AI Request Analyzer provider config boundary is also outside the measured runtime path:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json
+```
+
+This slice adds no command and no smoke step. It fixes provider-state vocabulary and secret/provenance policy only.
+`configured-not-invoked` is still non-invoking: no network call, no LLM call, and no Request IR Candidate generation.
+Future provider invocation time remains outside the deterministic 5 second runtime budget until a separate explicit
+provider adapter decision exists.
+
 The clarification interview boundary preview is outside the measured runtime path:
 
 ```text

@@ -2119,6 +2119,20 @@ Without `--external-candidate`, the command records `analyzerProviderStatus: pro
 candidate-only output after checking request text, schema id, and unsafe authority escalation. Imported candidates still
 require `validate-request-ir` and `validate-request-ir-graph` before traversal.
 
+The AI Request Analyzer provider config boundary previews the future provider configuration vocabulary without adding a
+provider adapter:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json
+```
+
+The default config is `providerState: disabled`. The taxonomy also reserves `configured-not-invoked`, `unavailable`,
+`blocked-invalid-config`, and `future-invocation-allowed-only-after-explicit-config`. Provider/model/environment
+references are provenance only; environment variable names such as `OPENAI_API_KEY` may be recorded, but API key,
+token, password, and secret values must never be stored or inspected. The boundary keeps `networkCallsAllowed`,
+`llmInvoked`, and `requestIrCandidateGenerated` false.
+
 The clarification interview boundary preview is:
 
 ```text
