@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-project-memory-boundary-preview",
+  "status": "devview-project-memory-boundary-previewed",
+  "boundaryName": "DevView Project Memory Boundary",
+  "boundaryScope": "persistent-project-profile-and-extension-decision-foundation",
+  "purpose": "Define the persistent, repo-stored project memory layer that records project identity, direction, preservation policy, and extension profile references before DevView can safely generalize project-specific graph vocabulary.",
+  "projectMemoryLifecycle": {
+    "candidateMayBeAIGenerated": true,
+    "aiCandidateAuthoritative": false,
+    "projectMemoryMustBePersistentArtifact": true,
+    "approvedProjectMemoryStateImplemented": false,
+    "profileApplyImplemented": false,
+    "revisionHistoryRequired": true,
+    "humanReviewRequired": true
+  },
+  "requiredMemorySections": {
+    "projectIdentity": {
+      "description": "Stable project/repo identity, relevant roots, graph source references, and observed confidence level.",
+      "requiredFields": ["projectId", "projectName", "repositoryKind", "primaryGraphSource"]
+    },
+    "devviewMode": {
+      "allowedValues": ["native", "retrofit", "hybrid", "unknown"],
+      "description": "The project mode that determines which profile schema and extension vocabulary candidates are relevant."
+    },
+    "projectDirection": {
+      "description": "Current project direction and candidate direction vocabulary, such as product growth for native projects or legacy-preserving retrofit for legacy projects.",
+      "authorityRule": "Direction is advisory until reviewed and accepted as a future project memory revision."
+    },
+    "preservationPolicy": {
+      "description": "Behavior, compatibility, hardware, interop, UI, and evidence preservation rules that must bias future traversal and contract generation only after approval."
+    },
+    "improvementPolicy": {
+      "description": "Allowed improvement themes, forbidden drift, and evidence required before behavior-changing improvements can be considered."
+    },
+    "sourceAuthorityPolicy": {
+      "description": "Which sources are authoritative, observed-only, candidate-only, or forbidden to mutate."
+    },
+    "taxonomyProfileRef": {
+      "description": "Reference to the base taxonomy profile and project extension vocabulary proposal boundary.",
+      "authorityRule": "Unapproved extension kinds are not traversal or contract authority."
+    },
+    "viewTreeProfileRef": {
+      "description": "Reference to viewpoint tree profile candidates used to explain project-specific graph perspectives.",
+      "authorityRule": "Unapproved view trees are presentation/planning candidates only."
+    },
+    "revisionPolicy": {
+      "description": "How direction changes, taxonomy deltas, and view tree deltas must be recorded as proposals and human review packets before a future approved revision exists."
+    },
+    "nonAuthorityBoundary": {
+      "description": "Explicit statement that project memory previews do not mutate graph-source, approve extension vocabulary, trigger traversal, or generate contracts."
+    }
+  },
+  "profileDecisionFlow": [
+    "project-memory-candidate",
+    "profile-schema-boundary-check",
+    "taxonomy-profile-extension-candidate",
+    "view-tree-profile-candidate",
+    "extension-delta-proposal-only",
+    "human-review-packet",
+    "approved-project-memory-revision-future-only"
+  ],
+  "linkedBoundaryPreviews": {
+    "projectProfileSchemaBoundary": "examples/valid/todo-app-pbe-run/generated/devview-project-profile-schema-boundary.runtime-evidence-only.preview.json",
+    "taxonomyProfileExtensionBoundary": "examples/valid/todo-app-pbe-run/generated/devview-taxonomy-profile-extension-boundary.runtime-evidence-only.preview.json",
+    "projectDirectionChangeBoundary": "examples/valid/todo-app-pbe-run/generated/devview-project-direction-change-boundary.runtime-evidence-only.preview.json",
+    "windowsUtilityProjectMemoryPreview": "examples/retrofit/windowsutility/devview-project-memory.preview.json"
+  },
+  "extensionAuthorityRules": {
+    "coreVocabularyAuthority": "existing-devview-core-vocabulary-only",
+    "projectExtensionAuthority": "proposal-only-until-human-reviewed-future-approved-project-memory-revision",
+    "unapprovedExtensionTraversalAuthority": false,
+    "unapprovedExtensionContractAuthority": false,
+    "unapprovedExtensionInstructionPackAuthority": false,
+    "automaticExtensionApplyAllowed": false
+  },
+  "futureWork": {
+    "extensionGapDetector": {
+      "implemented": false,
+      "description": "Compare Project Memory required extension vocabulary against current graph-source/read-model vocabulary and report missing, extra, or deprecated kinds without applying changes."
+    },
+    "projectMemoryRevisionApply": {
+      "implemented": false,
+      "description": "Future-only apply path after explicit human decision records and approved project memory revision state."
+    }
+  },
+  "safetyFlags": {
+    "boundaryPreviewOnly": true,
+    "automaticProjectCharacterizationLlmCall": false,
+    "activeProfileMutationApplied": false,
+    "approvedProjectMemoryStateImplemented": false,
+    "traversalPlannerBehaviorChanged": false,
+    "unapprovedExtensionUsedAsAuthority": false,
+    "selectedSliceGeneratedFromProjectMemory": false,
+    "contractInputGeneratedFromProjectMemory": false,
+    "instructionPackGeneratedFromProjectMemory": false,
+    "graphSourceMutated": false,
+    "graphDeltaApplied": false,
+    "codexExecutionTriggered": false,
+    "humanDecisionAutomated": false,
+    "runtimeEvidenceSatisfied": false,
+    "equivalenceProven": false,
+    "scopeEnforced": false,
+    "ciEnforcementEnabled": false
+  },
+  "nonAuthorityBoundary": "DevView Project Memory previews are persistent planning artifacts only. They may guide future proposal and review work, but they do not approve taxonomy extensions, mutate graph-source, change traversal behavior, generate selected slices or contracts, apply graph deltas, satisfy Evidence, prove equivalence, enforce scope, configure CI, or replace human review."
+}

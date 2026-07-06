@@ -3268,3 +3268,36 @@ This decision changes read-only visualization and navigation only. It does not c
 subgraph semantics, instruction pack authority, output authority guards, Codex execution, graph mutation, graph delta
 apply, approval, runtime Evidence satisfaction, equivalence proof, scope enforcement, CI enforcement, required checks,
 branch protection, diff rejection, or user acceptance.
+
+## DEC-287 Define DevView Project Memory Boundary
+
+DEC-287 does not supersede DEC-097 through DEC-286. It defines DevView Project Memory as the persistent project profile
+layer that records project identity, DevView mode, project direction, preservation policy, improvement policy, source
+authority policy, taxonomy profile refs, view tree profile refs, and revision policy before project-specific vocabulary
+can be reviewed as extension authority.
+
+The boundary artifacts are:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-project-memory-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-project-profile-schema-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-taxonomy-profile-extension-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-project-direction-change-boundary.runtime-evidence-only.preview.json
+examples/retrofit/windowsutility/devview-project-memory.preview.json
+```
+
+The profile schema boundary separates DevView Native, Retrofit, Hybrid, and Unknown project modes. Native projects bias
+toward current-source product growth view trees such as route, component, service, domain, test, and runtime. Retrofit
+projects bias toward legacy behavior preservation, parity, migration target, hardware/native/interop, UI layout surface,
+and forbidden behavior drift boundaries.
+
+The taxonomy profile extension boundary separates DevView core vocabulary from project extension vocabulary. The
+WindowsUtility preview records `legacy-retrofit-windowsutility-v0` as a proposal-only taxonomy profile candidate with
+extension node kinds such as `legacy-utility-module`, `execution-flow`, `ui-layout-surface`,
+`forbidden-flow-boundary`, `integration-target`, `native-interop`, and `hardware-boundary`. The whole WindowsUtility /
+Utility_Windows portfolio remains observed inventory; CardPrinterConfig is the detailed retrofit slice.
+
+This decision records `Project Memory -> Taxonomy Profile -> Extension Proposal -> Human Review` as the directionally
+correct chain. Unapproved extension vocabulary is not traversal authority, selected-slice authority, contract authority,
+instruction-pack authority, source mutation authority, approval authority, Evidence authority, equivalence authority,
+scope enforcement authority, or CI authority. The future Extension Gap Detector remains report-only and unimplemented.

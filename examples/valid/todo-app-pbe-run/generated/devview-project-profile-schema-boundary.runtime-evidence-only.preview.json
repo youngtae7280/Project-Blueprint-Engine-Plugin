@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-project-profile-schema-boundary-preview",
+  "status": "devview-project-profile-schema-boundary-previewed",
+  "boundaryName": "DevView Native / Retrofit Project Profile Schema Boundary",
+  "sourceProjectMemoryBoundary": "examples/valid/todo-app-pbe-run/generated/devview-project-memory-boundary.runtime-evidence-only.preview.json",
+  "purpose": "Separate DevView Native, Retrofit, Hybrid, and Unknown project modes so project memory can choose profile-shaped vocabulary without granting authority to unapproved extensions.",
+  "profileModes": [
+    {
+      "mode": "native",
+      "summary": "A project whose current source structure is the primary product growth surface.",
+      "typicalDirections": [
+        "product-growth",
+        "feature-expansion",
+        "architecture-hardening",
+        "runtime-observability",
+        "test-coverage-expansion"
+      ],
+      "typicalViewTrees": ["route", "component", "service", "domain", "test", "runtime", "risk"],
+      "extensionBias": ["route", "component", "service", "domain-capability", "test-surface", "runtime-signal"],
+      "preservationBias": "Preserve current user-facing behavior and source contracts unless a reviewed task explicitly opens behavior change."
+    },
+    {
+      "mode": "retrofit",
+      "summary": "A project whose existing legacy behavior must be mapped and preserved before bounded improvement, porting, or refactoring work is compiled.",
+      "typicalDirections": [
+        "legacy-preserving-retrofit",
+        "legacy-preserving-port",
+        "behavior-preserving-refactor",
+        "ui-modernization",
+        "platform-migration",
+        "hardware-aware-maintenance"
+      ],
+      "typicalViewTrees": [
+        "legacy-module",
+        "execution-flow",
+        "parity",
+        "migration-target",
+        "ui-layout-surface",
+        "hardware-boundary",
+        "forbidden-flow-boundary"
+      ],
+      "extensionBias": [
+        "legacy-utility-module",
+        "execution-flow",
+        "ui-layout-surface",
+        "forbidden-flow-boundary",
+        "integration-target",
+        "native-interop",
+        "hardware-boundary"
+      ],
+      "preservationBias": "Legacy behavior, parity claims, hardware communication, native interop, and forbidden behavior drift require explicit evidence and human review before any future authority."
+    },
+    {
+      "mode": "hybrid",
+      "summary": "A project where native growth and retrofit preservation both matter, commonly during staged migration from legacy modules into a new shell.",
+      "typicalDirections": ["legacy-preserving-retrofit", "platform-migration", "product-growth", "interop-hardening"],
+      "typicalViewTrees": ["legacy-module", "integration-target", "route", "component", "service", "parity", "risk"],
+      "extensionBias": ["legacy-utility-module", "integration-target", "component", "service", "native-interop"],
+      "preservationBias": "Hybrid work must state which side is editable and which side is context-only before traversal can be considered."
+    },
+    {
+      "mode": "unknown",
+      "summary": "A project that has not yet been profiled.",
+      "typicalDirections": ["requires-clarification"],
+      "typicalViewTrees": [],
+      "extensionBias": [],
+      "preservationBias": "Unknown mode must block extension authority and should route to profile clarification or human review."
+    }
+  ],
+  "profileCandidateRules": {
+    "candidateMayBeGeneratedByAI": true,
+    "candidateMayBeGeneratedByHuman": true,
+    "candidateAuthorityStatus": "candidate-only-not-authoritative",
+    "profileMustReferenceProjectMemory": true,
+    "modeChangeRequiresDirectionChangeBoundary": true,
+    "approvedModeStateImplemented": false
+  },
+  "nativeRetrofitBoundary": {
+    "nativeCoreQuestion": "What source structure should DevView treat as the current product growth graph?",
+    "retrofitCoreQuestion": "What legacy behavior and boundary must DevView preserve before compiling any bounded work?",
+    "retrofitCannotAssumePorting": true,
+    "retrofitCannotAssumeRefactor": true,
+    "directionMustBeExplicit": true
+  },
+  "safetyFlags": {
+    "schemaPreviewOnly": true,
+    "profileClassificationApplied": false,
+    "llmInvoked": false,
+    "traversalPlannerBehaviorChanged": false,
+    "unapprovedExtensionUsedAsAuthority": false,
+    "graphSourceMutated": false,
+    "graphDeltaApplied": false,
+    "humanDecisionAutomated": false,
+    "runtimeEvidenceSatisfied": false,
+    "equivalenceProven": false,
+    "scopeEnforced": false,
+    "ciEnforcementEnabled": false
+  },
+  "nonAuthorityBoundary": "This schema preview classifies project profile shapes only. It does not approve a profile, apply extensions, change traversal, generate contracts, mutate graph-source, or replace human review."
+}

@@ -577,6 +577,26 @@ inspected without implying git-history scraping or scope expansion. It is visual
 graph-source mutation, graph delta apply, approval, runtime Evidence satisfaction, equivalence proof, scope enforcement,
 or CI enforcement is introduced.
 
+The DevView Project Memory boundary is recorded in
+`examples/valid/todo-app-pbe-run/generated/devview-project-memory-boundary.runtime-evidence-only.preview.json`.
+It defines the persistent project profile layer that stores project identity, DevView mode, project direction,
+preservation policy, improvement policy, source authority policy, taxonomy profile refs, view tree profile refs, and
+revision policy before project-specific vocabulary can become reviewable extension authority. The companion previews
+are:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-project-profile-schema-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-taxonomy-profile-extension-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-project-direction-change-boundary.runtime-evidence-only.preview.json
+examples/retrofit/windowsutility/devview-project-memory.preview.json
+```
+
+The WindowsUtility Project Memory preview classifies the portfolio as `devviewMode: retrofit` with
+`projectDirection.current: legacy-preserving-retrofit`. It keeps the whole WindowsUtility / Utility_Windows portfolio as
+observed inventory and CardPrinterConfig as the current detailed retrofit slice. Project Memory connects to extension
+decisions through `Project Memory -> Taxonomy Profile -> Extension Proposal -> Human Review`; unapproved extension kinds
+are not traversal authority, contract authority, instruction-pack authority, or source mutation authority.
+
 The traversal boundary separates graph vocabulary from planner semantics: `*NodeTypes` and `*EdgeTypes` contain only
 actual graph taxonomy values, while target/scope/evidence/output meanings are represented as roles and selection
 intents.

@@ -23,3 +23,14 @@ node dist/cli/index.js graph read-model render-devview-graph `
 
 This fixture does not mutate `Utility_Windows`, mutate `WindowsUtility`, apply graph deltas, approve work, satisfy
 runtime Evidence, prove equivalence, enforce scope, or configure CI.
+
+The project memory preview is:
+
+```text
+examples/retrofit/windowsutility/devview-project-memory.preview.json
+```
+
+It records WindowsUtility as a retrofit project with `legacy-preserving-retrofit` direction. The whole portfolio remains
+observed inventory, while CardPrinterConfig is the detailed retrofit slice. The memory preview is persistent but not
+approved authority; taxonomy and view tree extensions remain proposal-only until a future human-reviewed project memory
+revision exists.

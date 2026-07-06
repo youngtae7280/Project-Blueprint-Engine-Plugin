@@ -82,6 +82,10 @@
   Graph Traversal Plan generation, Selected Graph Slice generation, selected-slice-to-contract-input generation, and
   Contract-Input-to-Instruction-Pack generation without implementing an AI classifier, runtime LLM calls, Codex
   execution, graph-source mutation, apply, or approval.
+- [DevView Project Memory](concept/devview-project-memory.md) - Persistent project profile boundary for project
+  identity, native/retrofit mode, direction, preservation/improvement policy, taxonomy profile refs, view tree profile
+  refs, direction-change revision flow, and proposal-only extension decisions before any project-specific vocabulary can
+  affect traversal or contracts.
 - DevView roadmap completion audit preview -
   `examples/valid/todo-app-pbe-run/generated/devview-roadmap-completion-audit.runtime-evidence-only.preview.json`
   summarizes Phase 1 through Phase 13 evidence without adding execution, approval automation, apply, Evidence

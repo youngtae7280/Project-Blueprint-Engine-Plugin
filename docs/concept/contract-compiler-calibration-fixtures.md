@@ -2596,3 +2596,36 @@ only; it does not inspect arbitrary git history or expand editable scope.
 This is a read-only visualization/report artifact. It does not execute Codex, call an LLM, mutate graph-source, apply
 graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or
 configure CI.
+
+## DevView Project Memory Boundary
+
+The DevView Project Memory boundary is recorded in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-project-memory-boundary.runtime-evidence-only.preview.json
+```
+
+Its companion boundary previews are:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-project-profile-schema-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-taxonomy-profile-extension-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-project-direction-change-boundary.runtime-evidence-only.preview.json
+```
+
+The WindowsUtility retrofit project memory preview is:
+
+```text
+examples/retrofit/windowsutility/devview-project-memory.preview.json
+```
+
+Project Memory is the persistent profile store for project identity, DevView mode, direction, preservation policy,
+improvement policy, source authority policy, taxonomy profile refs, view tree profile refs, and revision policy. The
+WindowsUtility preview classifies the project as `retrofit` with `legacy-preserving-retrofit` direction, treats the full
+portfolio graph as observed inventory, and keeps CardPrinterConfig as the detailed retrofit slice.
+
+The taxonomy profile extension boundary keeps core vocabulary separate from project extension candidates such as
+`legacy-utility-module`, `execution-flow`, `ui-layout-surface`, `forbidden-flow-boundary`, `integration-target`,
+`native-interop`, and `hardware-boundary`. These extensions remain proposal-only and cannot drive traversal, selected
+slice generation, contract input, instruction packs, graph-source mutation, approval, Evidence satisfaction,
+equivalence, scope enforcement, or CI enforcement.
