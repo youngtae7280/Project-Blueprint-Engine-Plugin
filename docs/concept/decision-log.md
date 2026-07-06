@@ -3460,3 +3460,35 @@ This decision does not implement an OpenAI/API/LLM/network call, read or store s
 provider, run graph validation, run traversal, generate selected slices, generate contract input, generate instruction
 packs, execute Codex, install hooks, mutate graph-source, apply graph deltas, automate approval or human decisions,
 accept or satisfy Evidence, prove equivalence, enforce scope/CI, or activate strict/guided blocking.
+
+## DEC-294 Define Analyzer Provider Invocation Enablement Boundary
+
+DEC-294 does not supersede DEC-097 through DEC-293. It extends the AI Request Analyzer provider config boundary with the
+future-only provider state `configured-invocation-enabled-preview`.
+
+The new calibration preview artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json
+```
+
+This state does not grant current invocation authority. It records the future two-part enablement rule only:
+
+```text
+providerState must be configured-invocation-enabled-preview
+future explicit CLI flag must be --invoke-provider
+```
+
+The future policy blocks combining `--external-candidate` with `--invoke-provider`, so explicit external imports cannot
+accidentally trigger provider execution. The `--invoke-provider` flag is not implemented in this decision, and
+`analyze-request` still cannot call a provider.
+
+The preview may record provider and model candidates plus an environment variable reference name such as
+`OPENAI_API_KEY`, but it must not store, inspect, print, or persist API key, token, password, credential manager, `.env`,
+or other secret values.
+
+This decision adds no CLI flag and no runtime smoke step. It does not implement provider invocation, a provider adapter,
+OpenAI/API/LLM/network calls, Request IR Candidate generation, graph validation, traversal, selected slice generation,
+contract input generation, instruction pack generation, hook execution/install, Codex execution, graph-source mutation,
+graph delta apply, approval/human decision automation, Evidence acceptance, runtime Evidence satisfaction, equivalence
+proof, scope/CI enforcement, strict/guided blocking, or Project Memory extension authority.

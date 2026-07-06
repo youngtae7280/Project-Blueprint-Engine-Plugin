@@ -9,6 +9,7 @@
   "sourceProviderDisabledRunResult": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-run.provider-disabled.add-todo-runtime-evidence-only.preview.json",
   "sourceCoreBaselineFreeze": "examples/valid/todo-app-pbe-run/generated/devview-core-baseline-freeze.runtime-evidence-only.preview.json",
   "firstCalibrationDisabledConfigPreview": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json",
+  "firstCalibrationInvocationEnabledConfigPreview": "examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json",
   "providerConfigBoundaryPreviewed": true,
   "providerConfigReaderImplemented": false,
   "providerAdapterImplemented": false,
@@ -25,6 +26,15 @@
     {
       "providerState": "configured-not-invoked",
       "meaning": "Provider name, model name, and environment variable references may be present for future review, but this state still grants no invocation authority in the current implementation.",
+      "networkCallsAllowed": false,
+      "llmInvoked": false,
+      "requestIrCandidateGenerated": false
+    },
+    {
+      "providerState": "configured-invocation-enabled-preview",
+      "meaning": "Future explicit invocation candidate state. It records that a provider config could be eligible for a future adapter only when a separate --invoke-provider flag is explicitly provided. This state grants no current invocation authority.",
+      "futureExplicitInvocationFlagRequired": "--invoke-provider",
+      "explicitInvocationFlagImplemented": false,
       "networkCallsAllowed": false,
       "llmInvoked": false,
       "requestIrCandidateGenerated": false
@@ -73,6 +83,9 @@
     "modelNameCandidateField": "modelNameCandidate",
     "providerConfigSourceField": "providerConfigSource",
     "apiKeySourceRefField": "apiKeySourceRef",
+    "invocationEnablementState": "configured-invocation-enabled-preview",
+    "explicitInvocationFlagRequired": "--invoke-provider",
+    "externalCandidateWithInvokeProviderPolicy": "blocked-future-policy",
     "allowedProviderConfigSources": [
       "disabled-default-preview",
       "repo-local-preview-config",
@@ -84,8 +97,17 @@
   },
   "futureAnalyzeRequestIntegration": {
     "futureOptionCandidate": "--provider-config <providerConfigPath>",
+    "futureExplicitInvocationFlagCandidate": "--invoke-provider",
+    "futureInvocationEnablementRequirements": [
+      "providerState must be configured-invocation-enabled-preview",
+      "--invoke-provider must be explicitly supplied",
+      "external candidate import must not be supplied in the same command",
+      "provider adapter implementation must exist in a later slice"
+    ],
+    "externalCandidateWithInvokeProviderPolicy": "blocked-future-policy",
     "currentAnalyzeRequestBehavior": "provider-disabled-or-external-candidate-import-only",
     "configuredProviderCurrentMeaning": "configured-not-invoked must still return no network call and no candidate generation until a future provider adapter is explicitly implemented",
+    "invocationEnabledProviderCurrentMeaning": "configured-invocation-enabled-preview is a boundary-only future state and still grants no current invocation authority",
     "externalCandidateImportStillAllowed": true,
     "validationRequiredBeforeTraversal": true
   },
@@ -120,6 +142,9 @@
     "store API key, token, or secret values in provider config artifacts",
     "inspect or print secret values",
     "treat providerState=configured-not-invoked as network-call authority",
+    "treat providerState=configured-invocation-enabled-preview as current network-call authority",
+    "treat the future --invoke-provider flag as implemented in this slice",
+    "combine future --invoke-provider with --external-candidate",
     "generate Request IR Candidate JSON from provider config alone",
     "skip analyze-request provider-disabled behavior without a future explicit provider adapter",
     "drive graph validation or traversal from provider config",

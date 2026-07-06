@@ -10,10 +10,15 @@ const disabledConfigPath = resolve(
   process.cwd(),
   'examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json',
 )
+const invocationEnabledConfigPath = resolve(
+  process.cwd(),
+  'examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json',
+)
 
 const expectedProviderStates = [
   'disabled',
   'configured-not-invoked',
+  'configured-invocation-enabled-preview',
   'unavailable',
   'blocked-invalid-config',
   'future-invocation-allowed-only-after-explicit-config',
@@ -36,12 +41,16 @@ describe('AI Request Analyzer provider config boundary previews', () => {
   it('parses both provider config artifacts', () => {
     const boundary = readJson(boundaryPath)
     const disabledConfig = readJson(disabledConfigPath)
+    const invocationEnabledConfig = readJson(invocationEnabledConfigPath)
 
     expect(boundary.artifactRole).toBe('ai-request-analyzer-provider-config-boundary-preview')
     expect(boundary.status).toBe('ai-request-analyzer-provider-config-boundary-previewed')
     expect(disabledConfig.artifactRole).toBe('ai-request-analyzer-provider-config-preview')
     expect(disabledConfig.status).toBe('ai-request-analyzer-provider-config-disabled-previewed')
     expect(disabledConfig.providerState).toBe('disabled')
+    expect(invocationEnabledConfig.artifactRole).toBe('ai-request-analyzer-provider-config-preview')
+    expect(invocationEnabledConfig.status).toBe('ai-request-analyzer-provider-config-invocation-enabled-previewed')
+    expect(invocationEnabledConfig.providerState).toBe('configured-invocation-enabled-preview')
   })
 
   it('defines the provider state taxonomy', () => {
@@ -68,11 +77,31 @@ describe('AI Request Analyzer provider config boundary previews', () => {
     expect(disabledConfig.candidateOnly).toBe(true)
   })
 
+  it('keeps invocation-enabled preview from granting current invocation authority', () => {
+    const invocationEnabledConfig = readJson(invocationEnabledConfigPath)
+
+    expect(invocationEnabledConfig.providerState).toBe('configured-invocation-enabled-preview')
+    expect(invocationEnabledConfig.providerInvocationAuthority).toBe('explicit-future-flag-required-not-implemented')
+    expect(invocationEnabledConfig.explicitInvocationFlagRequired).toBe('--invoke-provider')
+    expect(invocationEnabledConfig.externalCandidateWithInvokeProviderPolicy).toBe('blocked-future-policy')
+    expect(invocationEnabledConfig.providerAdapterImplemented).toBe(false)
+    expect(invocationEnabledConfig.providerInvocationImplemented).toBe(false)
+    expect(invocationEnabledConfig.explicitInvocationFlagImplemented).toBe(false)
+    expect(invocationEnabledConfig.networkCallsAllowed).toBe(false)
+    expect(invocationEnabledConfig.llmInvoked).toBe(false)
+    expect(invocationEnabledConfig.runtimeAiCallsAllowed).toBe(false)
+    expect(invocationEnabledConfig.requestIrCandidateGenerated).toBe(false)
+    expect(invocationEnabledConfig.candidateOnly).toBe(true)
+  })
+
   it('does not store secret-looking literal values while allowing env var references', () => {
     const boundaryText = readFileSync(boundaryPath, 'utf8')
     const disabledConfigText = readFileSync(disabledConfigPath, 'utf8')
+    const invocationEnabledConfigText = readFileSync(invocationEnabledConfigPath, 'utf8')
+    const testSourceText = readFileSync(new URL(import.meta.url), 'utf8')
 
     expect(boundaryText).toContain('OPENAI_API_KEY')
+    expect(invocationEnabledConfigText).toContain('OPENAI_API_KEY')
     expect(readJson(boundaryPath).secretPolicy).toMatchObject({
       secretValueStored: false,
       secretValueInspected: false,
@@ -81,22 +110,31 @@ describe('AI Request Analyzer provider config boundary previews', () => {
     for (const pattern of unsafeSecretPatterns) {
       expect(boundaryText).not.toMatch(pattern)
       expect(disabledConfigText).not.toMatch(pattern)
+      expect(invocationEnabledConfigText).not.toMatch(pattern)
+      expect(testSourceText).not.toMatch(pattern)
     }
   })
 
   it('keeps downstream safety and authority flags false or disabled', () => {
     const boundary = readJson(boundaryPath)
     const disabledConfig = readJson(disabledConfigPath)
+    const invocationEnabledConfig = readJson(invocationEnabledConfigPath)
 
     expectFalseFlags(boundary.currentBoundaryFlags as Record<string, unknown>)
     expectFalseFlags(disabledConfig.currentBoundaryFlags as Record<string, unknown>)
     expectFalseFlags(disabledConfig.downstreamAuthorityBoundaries as Record<string, unknown>)
+    expectFalseFlags(invocationEnabledConfig.currentBoundaryFlags as Record<string, unknown>)
+    expectFalseFlags(invocationEnabledConfig.downstreamAuthorityBoundaries as Record<string, unknown>)
     expect(boundary.currentBoundaryFlags).toMatchObject({
       approvalStatus: 'not-approved',
       candidateOnly: true,
       projectMemoryExtensionAuthorityGranted: false,
     })
     expect(disabledConfig.currentBoundaryFlags).toMatchObject({
+      approvalStatus: 'not-approved',
+      projectMemoryExtensionAuthorityGranted: false,
+    })
+    expect(invocationEnabledConfig.currentBoundaryFlags).toMatchObject({
       approvalStatus: 'not-approved',
       projectMemoryExtensionAuthorityGranted: false,
     })

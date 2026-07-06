@@ -148,10 +148,17 @@ The current disabled/default provider config preview is:
 examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json
 ```
 
+The future explicit invocation enablement preview is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json
+```
+
 This boundary fixes provider state vocabulary before any provider adapter is implemented:
 
 - `disabled`
 - `configured-not-invoked`
+- `configured-invocation-enabled-preview`
 - `unavailable`
 - `blocked-invalid-config`
 - `future-invocation-allowed-only-after-explicit-config`
@@ -160,6 +167,11 @@ This boundary fixes provider state vocabulary before any provider adapter is imp
 an LLM/API call, network access, or Request IR Candidate generation. Provider configuration artifacts may record
 environment variable names such as `OPENAI_API_KEY`, but must never store, inspect, or print API key, token, password, or
 secret values.
+
+`configured-invocation-enabled-preview` is also non-invoking in the current implementation. It records the future
+two-part enablement boundary only: a later provider adapter must exist, and a future explicit `--invoke-provider` flag
+must be supplied. Future `--external-candidate` plus `--invoke-provider` is blocked by policy so external imports do not
+accidentally trigger provider execution.
 
 The current provider config boundary keeps `providerInvocationAuthority: none-preview-only`, `networkCallsAllowed:
 false`, `llmInvoked: false`, `requestIrCandidateGenerated: false`, and `candidateOnly: true`. Future

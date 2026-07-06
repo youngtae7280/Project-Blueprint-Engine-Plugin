@@ -332,12 +332,15 @@ The AI Request Analyzer provider config boundary is also outside the measured ru
 ```text
 examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json
 examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json
 ```
 
 This slice adds no command and no smoke step. It fixes provider-state vocabulary and secret/provenance policy only.
 `configured-not-invoked` is still non-invoking: no network call, no LLM call, and no Request IR Candidate generation.
-Future provider invocation time remains outside the deterministic 5 second runtime budget until a separate explicit
-provider adapter decision exists.
+`configured-invocation-enabled-preview` is also non-invoking in the current implementation. It records the future
+two-part enablement rule only: provider config state plus a future explicit `--invoke-provider` flag. Future provider
+invocation time remains outside the deterministic 5 second runtime budget until a separate explicit provider adapter
+decision exists.
 
 The provider-config-aware `analyze-request --provider-config <providerConfigPath>` adapter surface also stays outside
 the core-critical lane and does not add a runtime smoke step. It reads disabled/unavailable/configured provider config

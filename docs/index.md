@@ -86,8 +86,10 @@
   `examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json`
   and
   `examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json`
-  define disabled/configured/unavailable/blocked/future provider states and secret-reference policy without invoking an
-  LLM/API or generating Request IR.
+  plus
+  `examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json`
+  define disabled/configured/invocation-enabled-preview/unavailable/blocked/future provider states and secret-reference
+  policy without invoking an LLM/API or generating Request IR.
 - [DevView Project Memory](concept/devview-project-memory.md) - Persistent project profile boundary for project
   identity, native/retrofit mode, direction, preservation/improvement policy, taxonomy profile refs, view tree profile
   refs, direction-change revision flow, and proposal-only extension decisions before any project-specific vocabulary can
