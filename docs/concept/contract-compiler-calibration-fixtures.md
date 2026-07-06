@@ -2579,7 +2579,7 @@ outputs/devview-graph/windowsutility.devviewgraph.data.json
 They are generated with:
 
 ```text
-graph read-model render-devview-graph --graph-source examples/retrofit/windowsutility/graph-source.json --record change.laminator-tag-layout --instruction-pack outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json --output outputs/devview-graph/windowsutility.devviewgraph.html --data-output outputs/devview-graph/windowsutility.devviewgraph.data.json --json
+graph read-model render-devview-graph --graph-source examples/retrofit/windowsutility/graph-source.json --record change.laminator-tag-layout --instruction-pack outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json --project-memory examples/retrofit/windowsutility/devview-project-memory.preview.json --output outputs/devview-graph/windowsutility.devviewgraph.html --data-output outputs/devview-graph/windowsutility.devviewgraph.data.json --json
 ```
 
 The inspector renders one full WindowsUtility portfolio graph with a deterministic network/orbit layout and highlights
@@ -2629,3 +2629,26 @@ The taxonomy profile extension boundary keeps core vocabulary separate from proj
 `native-interop`, and `hardware-boundary`. These extensions remain proposal-only and cannot drive traversal, selected
 slice generation, contract input, instruction packs, graph-source mutation, approval, Evidence satisfaction,
 equivalence, scope enforcement, or CI enforcement.
+
+The first report-only diagnostics are:
+
+```text
+examples/retrofit/windowsutility/project-memory-extension-gaps.preview.json
+examples/retrofit/windowsutility/project-memory-extension-gaps.preview.md
+examples/retrofit/windowsutility/project-direction-change.behavior-preserving-refactor.preview.json
+examples/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.json
+examples/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.md
+```
+
+They are generated with:
+
+```text
+graph read-model report-project-memory-extension-gaps --project-memory examples/retrofit/windowsutility/devview-project-memory.preview.json --graph-source examples/retrofit/windowsutility/graph-source.json --output examples/retrofit/windowsutility/project-memory-extension-gaps.preview.json --markdown examples/retrofit/windowsutility/project-memory-extension-gaps.preview.md --json
+graph read-model report-project-memory-impact --project-memory examples/retrofit/windowsutility/devview-project-memory.preview.json --direction-change examples/retrofit/windowsutility/project-direction-change.behavior-preserving-refactor.preview.json --output examples/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.json --markdown examples/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.md --json
+```
+
+The DevViewGraph demo command now includes optional Project Memory context:
+
+```text
+graph read-model render-devview-graph --graph-source examples/retrofit/windowsutility/graph-source.json --record change.laminator-tag-layout --instruction-pack outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json --project-memory examples/retrofit/windowsutility/devview-project-memory.preview.json --output outputs/devview-graph/windowsutility.devviewgraph.html --data-output outputs/devview-graph/windowsutility.devviewgraph.data.json --json
+```

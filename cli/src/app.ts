@@ -115,7 +115,10 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     slice: undefined as string | undefined,
     slices: undefined as string | undefined,
     generated: undefined as string | undefined,
+    readModel: undefined as string | undefined,
     graphSource: undefined as string | undefined,
+    projectMemory: undefined as string | undefined,
+    directionChange: undefined as string | undefined,
     record: undefined as string | undefined,
     instructionPack: undefined as string | undefined,
     graphDelta: undefined as string | undefined,
@@ -329,6 +332,27 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--graph-source requires a file path.' }
       }
       options.graphSource = value
+      index += 1
+    } else if (arg === '--read-model') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--read-model requires a file path.' }
+      }
+      options.readModel = value
+      index += 1
+    } else if (arg === '--project-memory') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--project-memory requires a file path.' }
+      }
+      options.projectMemory = value
+      index += 1
+    } else if (arg === '--direction-change') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--direction-change requires a file path.' }
+      }
+      options.directionChange = value
       index += 1
     } else if (arg === '--record') {
       const value = argv[index + 1]

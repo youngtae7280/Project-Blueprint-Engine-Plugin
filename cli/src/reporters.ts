@@ -206,6 +206,10 @@ Commands:
                        Generate deterministic Contract Compiler Input from a Selected Graph Slice
   graph read-model generate-instruction-pack
                        Generate deterministic Instruction Pack from Contract Compiler Input without execution
+  graph read-model report-project-memory-extension-gaps
+                       Report Project Memory taxonomy extension gaps without applying extensions
+  graph read-model report-project-memory-impact
+                       Report Project Memory direction-change impact without approving or applying a revision
   graph read-model render-devview-graph
                        Render a read-only DevViewGraph HTML inspector from retrofit graph-source and instruction pack
   graph read-model report-hook-gateway-health
@@ -264,17 +268,22 @@ Options:
   --slice <path>       Selected slice path for graph read-model generation.
   --slices <paths>     Slice paths for graph read-model summarize, comma-separated.
   --generated <file>   Generated read-model file for graph read-model comparison.
+  --read-model <file>  Optional generated read-model input for project-memory extension gap reporting.
   --graph-source <file>
-                       Graph source artifact for graph read-model projection, retrofit plan, project-intent, report-intent, or render-devview-graph.
+                       Graph source artifact for graph read-model projection, retrofit plan, project-intent, report-intent, project-memory gap reporting, or render-devview-graph.
+  --project-memory <file>
+                       DevView Project Memory preview for extension gap reporting, impact reporting, or render-devview-graph.
+  --direction-change <file>
+                       Project direction change candidate for project-memory impact reporting.
   --record <id>        Graph source record id for graph operation generate-pack or graph read-model render-devview-graph.
   --instruction-pack <file>
                        Graph instruction pack file for graph operation capture-delta, UserPromptSubmit context preview, or render-devview-graph.
   --graph-delta <file> Graph delta file for graph operation propose-update.
   --target-repo <path> Target git repository path for graph operation capture-delta.
   --manual <file>      Manual parity artifact for graph read-model comparison.
-  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, report-equivalence-proof-readiness, report-scope-ci-enforcement-readiness, generate-ai-request-analyzer-pack, analyze-request, generate-clarification-interview-pack, revise-request-ir-candidate, validate-request-ir, validate-request-ir-graph, plan-traversal, select-slice, generate-contract-input, generate-instruction-pack, render-devview-graph, report-hook-gateway-health, report-frontend-chain, prepare-user-prompt-context, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, materialize-hook-script-bundle, or report-hook-activation-chain.
+  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, report-equivalence-proof-readiness, report-scope-ci-enforcement-readiness, generate-ai-request-analyzer-pack, analyze-request, generate-clarification-interview-pack, revise-request-ir-candidate, validate-request-ir, validate-request-ir-graph, plan-traversal, select-slice, generate-contract-input, generate-instruction-pack, report-project-memory-extension-gaps, report-project-memory-impact, render-devview-graph, report-hook-gateway-health, report-frontend-chain, prepare-user-prompt-context, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, materialize-hook-script-bundle, or report-hook-activation-chain.
   --data-output <file> Data JSON output for graph read-model render-devview-graph.
-  --markdown <file>    Optional Markdown summary output for graph read-model report-health, check-scope, review-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, report-equivalence-proof-readiness, report-scope-ci-enforcement-readiness, generate-ai-request-analyzer-pack, generate-clarification-interview-pack, generate-instruction-pack, report-frontend-chain, prepare-user-prompt-context, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, materialize-hook-script-bundle, or report-hook-activation-chain.
+  --markdown <file>    Optional Markdown summary output for graph read-model report-health, check-scope, review-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, report-equivalence-proof-readiness, report-scope-ci-enforcement-readiness, generate-ai-request-analyzer-pack, generate-clarification-interview-pack, generate-instruction-pack, report-project-memory-extension-gaps, report-project-memory-impact, report-frontend-chain, prepare-user-prompt-context, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, materialize-hook-script-bundle, or report-hook-activation-chain.
   --proposal <file>    Graph update proposal file for graph operation apply-proposal, graph read-model review-graph-delta, or graph read-model record-human-decision.
   --review-packet <file>
                        Human Review Packet file for graph read-model record-human-decision.

@@ -1046,6 +1046,51 @@ node dist/cli/index.js graph read-model generate-instruction-pack `
   --json
 ```
 
+### `pbe graph read-model report-project-memory-extension-gaps`
+
+- Purpose: Compare a DevView Project Memory taxonomy profile candidate against observed graph-source/read-model
+  vocabulary and emit a report-only extension gap summary.
+- Options: `--project-memory <file>` and `--graph-source <file>` are required. `--read-model <file>`,
+  `--output <jsonFile>`, and `--markdown <mdFile>` are optional.
+- What it reports: expected core/extension node and edge kinds, observed graph/read-model vocabulary, `missingKinds`,
+  `extraObservedKinds`, `deprecatedKinds`, `unapprovedExtensionKinds`, and `viewTreeCoverageGaps`.
+- Non-goals: This command does not approve extensions, mutate graph-source, change traversal, generate selected slices
+  or contracts, satisfy Evidence, prove equivalence, enforce scope, or configure CI.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model report-project-memory-extension-gaps `
+  --project-memory examples/retrofit/windowsutility/devview-project-memory.preview.json `
+  --graph-source examples/retrofit/windowsutility/graph-source.json `
+  --output examples/retrofit/windowsutility/project-memory-extension-gaps.preview.json `
+  --markdown examples/retrofit/windowsutility/project-memory-extension-gaps.preview.md `
+  --json
+```
+
+### `pbe graph read-model report-project-memory-impact`
+
+- Purpose: Read a Project Memory preview and direction-change candidate, then emit a report-only impact summary before
+  any project memory revision, taxonomy delta, or view tree delta can be reviewed.
+- Options: `--project-memory <file>` and `--direction-change <file>` are required. `--output <jsonFile>` and
+  `--markdown <mdFile>` are optional.
+- What it reports: current/proposed direction, preservation/improvement/source-authority impact, taxonomy impact, view
+  tree impact, whether taxonomy/view tree delta proposals are required, and `humanReviewRequired: true`.
+- Non-goals: This command does not approve a Project Memory revision, apply taxonomy/view tree changes, mutate
+  graph-source, change traversal, generate selected slices or contracts, satisfy Evidence, prove equivalence, enforce
+  scope, or configure CI.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model report-project-memory-impact `
+  --project-memory examples/retrofit/windowsutility/devview-project-memory.preview.json `
+  --direction-change examples/retrofit/windowsutility/project-direction-change.behavior-preserving-refactor.preview.json `
+  --output examples/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.json `
+  --markdown examples/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.md `
+  --json
+```
+
 ### `pbe graph read-model render-devview-graph`
 
 - Purpose: Render a static, read-only DevViewGraph HTML inspector and matching data JSON from a retrofit graph-source
@@ -1055,15 +1100,15 @@ node dist/cli/index.js graph read-model generate-instruction-pack `
   boxes, and edge strokes remain readable.
 - Typical state before running: After a retrofit graph-source and instruction pack exist for the same source record.
 - Options: `--graph-source <file>`, `--record <id>`, `--instruction-pack <file>`, `--output <htmlFile>`, and
-  `--data-output <jsonFile>` are required.
-- What it checks: input artifact roles/statuses, instruction-pack record and graph-source provenance, selected
-  graphContext nodes/edges, and output authority before any writes.
+  `--data-output <jsonFile>` are required. `--project-memory <file>` may add read-only Project Memory context.
+- What it checks: input artifact roles/statuses, instruction-pack record and graph-source provenance, optional Project
+  Memory provenance, selected graphContext nodes/edges, and output authority before any writes.
 - What it writes: Only the explicit HTML and data JSON outputs. The HTML embeds the same data model written to
-  `--data-output`, including `requestSummary`, `workHistory[]`, graph layout data, selected tree breakdowns, and safety
-  flags.
+  `--data-output`, including `requestSummary`, optional `projectMemorySummary`, `workHistory[]`, graph layout data,
+  selected tree breakdowns, and safety flags.
 - Output authority guard: explicit outputs are rejected before writing if they would overwrite the source graph-source,
-  source instruction pack, source record artifacts, linked source/generated authority artifacts, or if `--output` and
-  `--data-output` resolve to the same path.
+  source instruction pack, source Project Memory, source record artifacts, linked source/generated authority artifacts,
+  or if `--output` and `--data-output` resolve to the same path.
 - Success result: JSON summary with node/edge/tree/subgraph counts, selected node and edge ids, HTML/data output paths,
   deterministic graph layout data, and safety flags.
 - Non-goals: This command does not execute Codex, call an LLM, mutate graph-source, apply graph deltas, approve work,
@@ -1076,6 +1121,7 @@ node dist/cli/index.js graph read-model render-devview-graph `
   --graph-source examples/retrofit/windowsutility/graph-source.json `
   --record change.laminator-tag-layout `
   --instruction-pack outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json `
+  --project-memory examples/retrofit/windowsutility/devview-project-memory.preview.json `
   --output outputs/devview-graph/windowsutility.devviewgraph.html `
   --data-output outputs/devview-graph/windowsutility.devviewgraph.data.json `
   --json

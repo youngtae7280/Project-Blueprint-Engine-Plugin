@@ -562,7 +562,7 @@ The first DevViewGraph HTML inspector boundary is recorded in
 implemented command is:
 
 ```text
-graph read-model render-devview-graph --graph-source <graphSource> --record <recordId> --instruction-pack <pack> --output <html> --data-output <json> --json
+graph read-model render-devview-graph --graph-source <graphSource> --record <recordId> --instruction-pack <pack> --project-memory <memory> --output <html> --data-output <json> --json
 ```
 
 The WindowsUtility retrofit demo output is tracked at `outputs/devview-graph/windowsutility.devviewgraph.html` and
@@ -596,6 +596,16 @@ The WindowsUtility Project Memory preview classifies the portfolio as `devviewMo
 observed inventory and CardPrinterConfig as the current detailed retrofit slice. Project Memory connects to extension
 decisions through `Project Memory -> Taxonomy Profile -> Extension Proposal -> Human Review`; unapproved extension kinds
 are not traversal authority, contract authority, instruction-pack authority, or source mutation authority.
+
+The first Project Memory diagnostics are exposed through
+`graph read-model report-project-memory-extension-gaps --project-memory <memory> --graph-source <graphSource> --json`
+and `graph read-model report-project-memory-impact --project-memory <memory> --direction-change <candidate> --json`.
+The WindowsUtility calibration reports are
+`examples/retrofit/windowsutility/project-memory-extension-gaps.preview.json` and
+`examples/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.json`. These reports remain
+read-only and do not approve extensions, apply Project Memory revisions, change traversal, generate contracts, or
+mutate graph-source. DevViewGraph may display Project Memory through optional `--project-memory`, but this is
+visualization context only.
 
 The traversal boundary separates graph vocabulary from planner semantics: `*NodeTypes` and `*EdgeTypes` contain only
 actual graph taxonomy values, while target/scope/evidence/output meanings are represented as roles and selection

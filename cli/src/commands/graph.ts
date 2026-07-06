@@ -22,6 +22,8 @@ import { generateHookScriptScaffoldFile } from '../core/hook-script-scaffold.js'
 import { generateHookScriptTemplatePreviewFile } from '../core/hook-script-template-preview.js'
 import { generateInstructionPackFile } from '../core/instruction-pack-generator.js'
 import { renderDevViewGraphHtmlFile } from '../core/devview-graph-html.js'
+import { reportProjectMemoryExtensionGapsFile } from '../core/project-memory-extension-gap-report.js'
+import { reportProjectMemoryImpactFile } from '../core/project-memory-impact-report.js'
 import { reportFrontendChainFile } from '../core/frontend-chain-report.js'
 import { generateProposalOnlyGraphDeltaPreview } from '../core/graph-delta-proposal-generator.js'
 import { reviseRequestIrCandidateFile } from '../core/request-ir-candidate-reviser.js'
@@ -1898,6 +1900,7 @@ export async function graphReadModelRenderDevViewGraphCommand(context: CommandCo
       graphSource: context.options.graphSource,
       record: context.options.record,
       instructionPack: context.options.instructionPack,
+      projectMemory: context.options.projectMemory,
       output: context.options.output,
       dataOutput: context.options.dataOutput,
     })
@@ -1915,7 +1918,9 @@ export async function graphReadModelRenderDevViewGraphCommand(context: CommandCo
         dataOutputPath: result.dataOutputPath,
         sourceGraphSource: result.data.sourceGraphSource,
         sourceInstructionPack: result.data.sourceInstructionPack,
+        sourceProjectMemory: result.data.sourceProjectMemory,
         sourceRecordId: result.data.sourceRecordId,
+        projectMemorySummary: result.data.projectMemorySummary,
         nodeCount: result.data.graph.nodes.length,
         edgeCount: result.data.graph.edges.length,
         treeCount: result.data.trees.length,
@@ -1941,6 +1946,115 @@ export async function graphReadModelRenderDevViewGraphCommand(context: CommandCo
           message,
           suggestedFix:
             'Provide a readable retrofit graph-source, matching retrofit instruction pack, and dedicated HTML/data output paths.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelReportProjectMemoryExtensionGapsCommand(
+  context: CommandContext,
+): Promise<CommandResult> {
+  if (!context.options.projectMemory) {
+    return invalidCommand(
+      'graph read-model report-project-memory-extension-gaps requires --project-memory <projectMemoryPath>.',
+    )
+  }
+  if (!context.options.graphSource) {
+    return invalidCommand(
+      'graph read-model report-project-memory-extension-gaps requires --graph-source <graphSourcePath>.',
+    )
+  }
+
+  try {
+    const result = await reportProjectMemoryExtensionGapsFile(context.options.root, {
+      projectMemory: context.options.projectMemory,
+      graphSource: context.options.graphSource,
+      readModel: context.options.readModel,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph read-model report-project-memory-extension-gaps',
+      exitCode: ExitCode.Success,
+      message: 'Project Memory extension gap report generated without applying extensions or changing authority.',
+      issues: [],
+      data: {
+        ...result.report,
+        ...(result.outputPath ? { outputPath: result.outputPath } : {}),
+        ...(result.markdownReport ? { markdownReport: result.markdownReport } : {}),
+        next: 'Review missing, extra, deprecated, and unapproved extension kinds. This command did not apply extensions, mutate graph-source, change traversal, generate contracts, satisfy Evidence, or enforce scope.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model report-project-memory-extension-gaps',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Project Memory extension gap report could not run.',
+      issues: [
+        issue({
+          validator: 'ProjectMemoryExtensionGapReporter',
+          code: 'PROJECT_MEMORY_EXTENSION_GAP_REPORT_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide readable Project Memory and graph-source inputs plus dedicated output paths. This command is report-only.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelReportProjectMemoryImpactCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.projectMemory) {
+    return invalidCommand(
+      'graph read-model report-project-memory-impact requires --project-memory <projectMemoryPath>.',
+    )
+  }
+  if (!context.options.directionChange) {
+    return invalidCommand(
+      'graph read-model report-project-memory-impact requires --direction-change <directionChangeCandidatePath>.',
+    )
+  }
+
+  try {
+    const result = await reportProjectMemoryImpactFile(context.options.root, {
+      projectMemory: context.options.projectMemory,
+      directionChange: context.options.directionChange,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph read-model report-project-memory-impact',
+      exitCode: ExitCode.Success,
+      message: 'Project Memory impact report generated without approving or applying a direction change.',
+      issues: [],
+      data: {
+        ...result.report,
+        ...(result.outputPath ? { outputPath: result.outputPath } : {}),
+        ...(result.markdownReport ? { markdownReport: result.markdownReport } : {}),
+        next: 'Review direction-change impact and proposal requirements. This command did not approve a Project Memory revision, apply taxonomy/view tree changes, mutate graph-source, change traversal, generate contracts, satisfy Evidence, or enforce scope.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model report-project-memory-impact',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Project Memory impact report could not run.',
+      issues: [
+        issue({
+          validator: 'ProjectMemoryImpactReporter',
+          code: 'PROJECT_MEMORY_IMPACT_REPORT_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide a readable Project Memory preview, direction-change candidate, and dedicated output paths. This command is report-only.',
         }),
       ],
     }

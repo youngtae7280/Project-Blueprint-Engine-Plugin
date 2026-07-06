@@ -113,6 +113,25 @@ export interface DevViewGraphRequestSummary {
   selectedEdgeIds: string[]
 }
 
+export interface DevViewGraphProjectMemorySummary {
+  sourceProjectMemory: string
+  artifactRole: string
+  status: string
+  projectMemoryId: string
+  projectId: string
+  projectName: string
+  devviewMode: string
+  currentDirection: string
+  portfolioRole: string
+  detailedSliceRole: string
+  detailedSliceLabel: string
+  taxonomyProfileId: string
+  taxonomyAuthorityStatus: string
+  viewTreeProfileId: string
+  viewTreeAuthorityStatus: string
+  nonAuthorityWarning: string
+}
+
 export interface DevViewGraphWorkHistoryEntry {
   index: number
   recordId: string
@@ -132,8 +151,10 @@ export interface DevViewGraphData {
   renderScope: 'retrofit-graph-source-to-readonly-html-inspector'
   sourceGraphSource: string
   sourceInstructionPack: string
+  sourceProjectMemory: string | null
   sourceRecordId: string
   requestSummary: DevViewGraphRequestSummary
+  projectMemorySummary: DevViewGraphProjectMemorySummary | null
   workHistory: DevViewGraphWorkHistoryEntry[]
   graph: {
     nodes: DevViewGraphNode[]
@@ -165,6 +186,7 @@ export interface DevViewGraphData {
     dataOutputPath: string
     graphSourcePath: string
     instructionPackPath: string
+    projectMemoryPath: string | null
     sourceRecordPath: string
   }
   validationFindings: DevViewGraphHtmlFinding[]
@@ -180,8 +202,10 @@ export interface DevViewGraphHtmlFileResult {
 interface GraphInput {
   graphSource: JsonRecord
   instructionPack: JsonRecord
+  projectMemory?: JsonRecord
   graphSourcePath: string
   instructionPackPath: string
+  projectMemoryPath?: string
   recordId: string
   outputPath: string
   dataOutputPath: string
@@ -198,12 +222,14 @@ export async function renderDevViewGraphHtmlFile(
     graphSource: string
     record: string
     instructionPack: string
+    projectMemory?: string
     output: string
     dataOutput: string
   },
 ): Promise<DevViewGraphHtmlFileResult> {
   const graphSourcePath = resolveRepoPath(root, options.graphSource)
   const instructionPackPath = resolveRepoPath(root, options.instructionPack)
+  const projectMemoryPath = options.projectMemory ? resolveRepoPath(root, options.projectMemory) : undefined
   const outputPath = resolveRepoPath(root, options.output)
   const dataOutputPath = resolveRepoPath(root, options.dataOutput)
 
@@ -217,12 +243,18 @@ export async function renderDevViewGraphHtmlFile(
       `Unable to read DevViewGraph instruction pack from ${options.instructionPack}: ${instructionPack.error}`,
     )
   }
+  const projectMemory = projectMemoryPath ? await readJsonSafe<JsonRecord>(projectMemoryPath) : undefined
+  if (projectMemory && !projectMemory.ok) {
+    throw new Error(`Unable to read DevView Project Memory from ${options.projectMemory}: ${projectMemory.error}`)
+  }
 
   await assertDevViewGraphOutputAuthority(root, {
     graphSource: graphSource.value,
     instructionPack: instructionPack.value,
+    projectMemory: projectMemory?.value,
     graphSourcePath,
     instructionPackPath,
+    projectMemoryPath,
     recordId: options.record,
     outputPath,
     dataOutputPath,
@@ -231,8 +263,10 @@ export async function renderDevViewGraphHtmlFile(
   const data = buildDevViewGraphData(root, {
     graphSource: graphSource.value,
     instructionPack: instructionPack.value,
+    projectMemory: projectMemory?.value,
     graphSourcePath,
     instructionPackPath,
+    projectMemoryPath,
     recordId: options.record,
     outputPath,
     dataOutputPath,
@@ -312,6 +346,7 @@ function buildDevViewGraphData(root: string, input: GraphInput): DevViewGraphDat
   const packMapping = buildPackMapping(input.instructionPack, selectedNodeIds, selectedEdgeIds)
   subgraphs[0].packMappingIds = packMapping.map((entry) => entry.id)
   const requestSummary = buildRequestSummary(input.instructionPack, input.recordId, subgraphs[0])
+  const projectMemorySummary = buildProjectMemorySummary(root, input)
   const workHistory = buildWorkHistory(input.graphSource, graphNodeById, input.recordId)
 
   return {
@@ -322,8 +357,10 @@ function buildDevViewGraphData(root: string, input: GraphInput): DevViewGraphDat
     renderScope: 'retrofit-graph-source-to-readonly-html-inspector',
     sourceGraphSource: relativePath(root, input.graphSourcePath),
     sourceInstructionPack: relativePath(root, input.instructionPackPath),
+    sourceProjectMemory: input.projectMemoryPath ? relativePath(root, input.projectMemoryPath) : null,
     sourceRecordId: input.recordId,
     requestSummary,
+    projectMemorySummary,
     workHistory,
     graph: { nodes, edges, layoutMode: 'deterministic-network-orbit', viewport: buildViewport(nodes) },
     trees,
@@ -347,6 +384,7 @@ function buildDevViewGraphData(root: string, input: GraphInput): DevViewGraphDat
       dataOutputPath: relativePath(root, input.dataOutputPath),
       graphSourcePath: relativePath(root, input.graphSourcePath),
       instructionPackPath: relativePath(root, input.instructionPackPath),
+      projectMemoryPath: input.projectMemoryPath ? relativePath(root, input.projectMemoryPath) : null,
       sourceRecordPath: collectSourceRecordPath(input.instructionPack, input.graphSource, input.recordId),
     },
     validationFindings: findings,
@@ -412,6 +450,29 @@ function validateInputs(root: string, input: GraphInput): DevViewGraphHtmlFindin
       expected: relativePath(root, input.graphSourcePath),
       actual: graphSourceReference,
     })
+  }
+  if (input.projectMemory) {
+    if (input.projectMemory.artifactRole !== 'devview-project-memory-preview') {
+      findings.push({
+        code: 'DEVVIEW_GRAPH_PROJECT_MEMORY_ROLE_UNSUPPORTED',
+        severity: 'error',
+        field: 'projectMemory.artifactRole',
+        message: 'DevViewGraph Project Memory input must be a DevView Project Memory preview.',
+        expected: 'devview-project-memory-preview',
+        actual: input.projectMemory.artifactRole,
+      })
+    }
+    const primaryGraphSource = stringValue(asRecord(input.projectMemory.projectIdentity)?.primaryGraphSource)
+    if (primaryGraphSource && pathKey(resolveRepoPath(root, primaryGraphSource)) !== pathKey(input.graphSourcePath)) {
+      findings.push({
+        code: 'DEVVIEW_GRAPH_PROJECT_MEMORY_GRAPH_SOURCE_MISMATCH',
+        severity: 'error',
+        field: 'projectMemory.projectIdentity.primaryGraphSource',
+        message: 'Project Memory primaryGraphSource does not match the provided graph-source input.',
+        expected: relativePath(root, input.graphSourcePath),
+        actual: primaryGraphSource,
+      })
+    }
   }
   return findings
 }
@@ -706,6 +767,38 @@ function buildRequestSummary(
     selectedTreeIds: subgraph.requiredTreeIds,
     selectedNodeIds: subgraph.nodeIds,
     selectedEdgeIds: subgraph.edgeIds,
+  }
+}
+
+function buildProjectMemorySummary(root: string, input: GraphInput): DevViewGraphProjectMemorySummary | null {
+  if (!input.projectMemory || !input.projectMemoryPath) {
+    return null
+  }
+  const identity = asRecord(input.projectMemory.projectIdentity) ?? {}
+  const direction = asRecord(input.projectMemory.projectDirection) ?? {}
+  const portfolio = asRecord(input.projectMemory.portfolioModel) ?? {}
+  const taxonomy = asRecord(input.projectMemory.taxonomyProfileRef) ?? {}
+  const viewTree = asRecord(input.projectMemory.viewTreeProfileRef) ?? {}
+  const wholePortfolio = asRecord(portfolio.wholeWindowsUtility) ?? {}
+  const cardPrinterConfig = asRecord(portfolio.cardPrinterConfig) ?? {}
+  return {
+    sourceProjectMemory: relativePath(root, input.projectMemoryPath),
+    artifactRole: stringValue(input.projectMemory.artifactRole),
+    status: stringValue(input.projectMemory.status),
+    projectMemoryId: stringValue(input.projectMemory.projectMemoryId),
+    projectId: stringValue(identity.projectId),
+    projectName: stringValue(identity.projectName),
+    devviewMode: stringValue(input.projectMemory.devviewMode),
+    currentDirection: stringValue(direction.current),
+    portfolioRole: stringValue(wholePortfolio.role),
+    detailedSliceRole: stringValue(cardPrinterConfig.role),
+    detailedSliceLabel: 'CardPrinterConfig',
+    taxonomyProfileId: stringValue(taxonomy.taxonomyProfileId),
+    taxonomyAuthorityStatus: stringValue(taxonomy.authorityStatus),
+    viewTreeProfileId: stringValue(viewTree.viewTreeProfileId),
+    viewTreeAuthorityStatus: stringValue(viewTree.authorityStatus),
+    nonAuthorityWarning:
+      'Project Memory is displayed as persistent preview context only. It does not change graph selection, traversal, contract input, instruction packs, approval, apply, Evidence, equivalence, scope, or CI authority.',
   }
 }
 
@@ -1004,26 +1097,51 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
       font-size: 11px;
     }
     .request-card,
+    .memory-card,
     .tree-card,
     .selection-banner {
       border: 1px solid var(--graph-line);
       border-radius: 8px;
       background: #fff;
     }
-    .request-card {
+    .request-card,
+    .memory-card {
       padding: 10px;
     }
-    .request-card strong {
+    .request-card strong,
+    .memory-card strong {
       display: block;
       margin-bottom: 6px;
       font-size: 13px;
       line-height: 1.35;
     }
-    .request-card p {
+    .request-card p,
+    .memory-card p {
       margin: 0;
       color: var(--graph-muted);
       font-size: 12px;
       line-height: 1.45;
+    }
+    .memory-grid {
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr);
+      gap: 6px 8px;
+      margin-top: 8px;
+      font-size: 12px;
+    }
+    .memory-grid span:nth-child(odd) {
+      color: var(--graph-muted);
+    }
+    .memory-grid span:nth-child(even) {
+      overflow-wrap: anywhere;
+    }
+    .authority-note {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--graph-line);
+      color: var(--graph-muted);
+      font-size: 11px;
+      line-height: 1.4;
     }
     .mini-row {
       display: flex;
@@ -1267,6 +1385,10 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
         <div id="current-request"></div>
       </div>
       <div class="section">
+        <h2>Project Memory</h2>
+        <div id="project-memory"></div>
+      </div>
+      <div class="section">
         <h2>Selected Viewpoint Trees</h2>
         <div id="selected-tree-list"></div>
       </div>
@@ -1323,6 +1445,7 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
 
     function renderLists() {
       renderRequestPanel();
+      renderProjectMemoryPanel();
       const selectedTreeIds = data.requestSummary?.selectedTreeIds || data.subgraphs[0]?.requiredTreeIds || [];
       document.getElementById('selected-tree-list').innerHTML = treeBreakdownHtml(selectedTreeIds, 4);
       document.getElementById('tree-list').innerHTML = data.trees.map((tree) =>
@@ -1398,6 +1521,32 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
         '<span class="mini-pill">' + esc(summary.projectName || 'project') + '</span>' +
         '<span class="mini-pill">' + esc((summary.selectedNodeIds || []).length + ' nodes') + '</span>' +
         '<span class="mini-pill">' + esc((summary.selectedEdgeIds || []).length + ' edges') + '</span>' +
+        '</div>' +
+        '</div>';
+    }
+
+    function renderProjectMemoryPanel() {
+      const memory = data.projectMemorySummary;
+      const target = document.getElementById('project-memory');
+      if (!memory) {
+        target.innerHTML = '<div class="memory-card"><strong>No Project Memory</strong><p>Graph and pack inspection only.</p></div>';
+        return;
+      }
+      target.innerHTML =
+        '<div class="memory-card">' +
+        '<strong>' + esc(memory.projectName || memory.projectId || 'Project Memory') + '</strong>' +
+        '<p>' + esc(memory.nonAuthorityWarning || 'Preview-only project context.') + '</p>' +
+        '<div class="memory-grid">' +
+        '<span>Project Mode</span><span>' + esc(memory.devviewMode || 'unknown') + '</span>' +
+        '<span>Direction</span><span>' + esc(memory.currentDirection || 'unknown') + '</span>' +
+        '<span>Portfolio</span><span>' + esc(memory.portfolioRole || 'context-only') + '</span>' +
+        '<span>Detailed Slice</span><span>' + esc((memory.detailedSliceLabel || 'slice') + ': ' + (memory.detailedSliceRole || 'unknown')) + '</span>' +
+        '<span>Taxonomy Profile</span><span>' + esc(memory.taxonomyProfileId || 'none') + '</span>' +
+        '<span>Authority</span><span>' + esc(memory.taxonomyAuthorityStatus || memory.status || 'preview-only') + '</span>' +
+        '</div>' +
+        '<div class="mini-row">' +
+        '<span class="mini-pill">' + esc(memory.viewTreeProfileId || 'view-tree-profile') + '</span>' +
+        '<span class="mini-pill">' + esc(memory.viewTreeAuthorityStatus || 'not-approved') + '</span>' +
         '</div>' +
         '</div>';
     }
@@ -1940,9 +2089,13 @@ function buildProtectedOutputPathMap(root: string, input: GraphInput): Map<strin
 
   addResolved(input.graphSourcePath, 'the source retrofit graph-source')
   addResolved(input.instructionPackPath, 'the source retrofit instruction pack')
+  if (input.projectMemoryPath) {
+    addResolved(input.projectMemoryPath, 'the source DevView Project Memory preview')
+  }
   add(input.graphSource.sourceCandidate, 'the graph-source source candidate')
   add(input.instructionPack.graphSourcePath, 'instructionPack.graphSourcePath source authority')
   add(input.instructionPack.sourceRecordPath, 'instructionPack.sourceRecordPath source record')
+  add(asRecord(input.projectMemory)?.sourceProjectMemoryBoundary, 'Project Memory source boundary')
 
   for (const record of arrayRecords(input.graphSource.records)) {
     add(record.path, `graph-source record ${stringValue(record.id) || stringValue(record.path)}`)
@@ -1952,6 +2105,11 @@ function buildProtectedOutputPathMap(root: string, input: GraphInput): Map<strin
   }
   for (const candidatePath of collectConcretePathStrings(input.instructionPack)) {
     add(candidatePath, `instruction-pack linked artifact ${candidatePath}`)
+  }
+  if (input.projectMemory) {
+    for (const candidatePath of collectConcretePathStrings(input.projectMemory)) {
+      add(candidatePath, `Project Memory linked artifact ${candidatePath}`)
+    }
   }
   return protectedPaths
 }
@@ -1971,6 +2129,9 @@ async function classifyExistingSourceAuthority(filePath: string): Promise<string
   }
   if (artifactRole.includes('graph-source')) {
     return `graph-source artifactRole "${artifactRole}"`
+  }
+  if (artifactRole.includes('project-memory')) {
+    return `project-memory artifactRole "${artifactRole}"`
   }
   if (artifactRole.includes('instruction-pack')) {
     return `instruction-pack artifactRole "${artifactRole}"`

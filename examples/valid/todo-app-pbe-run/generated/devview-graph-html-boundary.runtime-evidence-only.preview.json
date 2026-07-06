@@ -14,8 +14,13 @@
       "--output <htmlOutputPath>",
       "--data-output <dataOutputPath>"
     ],
+    "optionalInputs": ["--project-memory <devviewProjectMemoryPreview>"],
     "outputArtifacts": ["static HTML inspector", "DevViewGraph data JSON"],
-    "supportedInputArtifactRolesV1": ["retrofit-graph-source-v0", "retrofit-instruction-pack-v0"]
+    "supportedInputArtifactRolesV1": [
+      "retrofit-graph-source-v0",
+      "retrofit-instruction-pack-v0",
+      "devview-project-memory-preview"
+    ]
   },
   "dataModel": {
     "requiredSections": [
@@ -32,12 +37,14 @@
       "graph.layoutMode",
       "graph.viewport"
     ],
+    "optionalSections": ["sourceProjectMemory", "projectMemorySummary"],
     "treeIds": ["tree.domain-source", "tree.retrofit-change", "tree.risk-boundary", "tree.selected-pack-context"],
     "layoutModel": "deterministic-network-orbit; not a tree/column pipeline layout",
     "selectionModel": "single full network graph rendered once; selected subgraph, viewpoint trees, nodes, and edges are highlighted in-place"
   },
   "interactionModel": {
     "requestPanel": "the current user-confirmed request, source record, selected node count, and selected edge count are visible before interaction",
+    "projectMemoryPanel": "optional Project Memory context shows mode, direction, portfolio role, detailed slice, taxonomy profile, and preview-only authority without changing graph selection",
     "workHistoryNavigation": "top-level previous/next buttons plus a 1-based index input navigate graph-source retrofit records only; selecting a prior record highlights its graph record node and connected context",
     "selectedViewpointTreePanel": "the trees selected by the current request are shown with directly clickable node and edge chips",
     "panZoom": "mouse drag pans the graph; mouse wheel zooms around the pointer; +/-/R buttons provide bounded semantic zoom where node boxes, labels, and edge strokes keep stable screen size",
@@ -50,6 +57,7 @@
     "graphSource": "examples/retrofit/windowsutility/graph-source.json",
     "record": "change.laminator-tag-layout",
     "instructionPack": "outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json",
+    "projectMemory": "examples/retrofit/windowsutility/devview-project-memory.preview.json",
     "htmlOutput": "outputs/devview-graph/windowsutility.devviewgraph.html",
     "dataOutput": "outputs/devview-graph/windowsutility.devviewgraph.data.json",
     "portfolioGraphMustInclude": [
@@ -70,6 +78,7 @@
     "forbiddenOverwriteTargets": [
       "source graph-source",
       "source instruction pack",
+      "source Project Memory",
       "source record artifacts",
       "graph-source source candidate",
       "linked generated/source-authority artifacts",

@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs'
+import { cpSync, existsSync, readFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { runPbeCli } from '../app'
@@ -214,6 +214,95 @@ describe('DevViewGraph HTML inspector CLI', () => {
     expect(payload.ok).toBe(false)
     expect(payload.issues[0].message).toContain('--output and --data-output resolve to the same path')
     expect(existsSync(join(workspace, '.tmp/same-path'))).toBe(false)
+  })
+
+  it('renders WindowsUtility Project Memory as read-only inspector context', async () => {
+    const workspace = createWorkspace()
+    copyWindowsUtilityDemoFixture(workspace)
+    const htmlOutput = join('.tmp', 'windowsutility.devviewgraph.html')
+    const dataOutput = join('.tmp', 'windowsutility.devviewgraph.data.json')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'render-devview-graph',
+        '--graph-source',
+        'examples/retrofit/windowsutility/graph-source.json',
+        '--record',
+        'change.laminator-tag-layout',
+        '--instruction-pack',
+        'outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json',
+        '--project-memory',
+        'examples/retrofit/windowsutility/devview-project-memory.preview.json',
+        '--output',
+        htmlOutput,
+        '--data-output',
+        dataOutput,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+
+    const payload = JSON.parse(result.stdout)
+    const data = JSON.parse(readFileSync(join(workspace, dataOutput), 'utf8'))
+    const html = readFileSync(join(workspace, htmlOutput), 'utf8')
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.ok).toBe(true)
+    expect(data.sourceProjectMemory).toBe('examples/retrofit/windowsutility/devview-project-memory.preview.json')
+    expect(data.projectMemorySummary.devviewMode).toBe('retrofit')
+    expect(data.projectMemorySummary.currentDirection).toBe('legacy-preserving-retrofit')
+    expect(data.projectMemorySummary.taxonomyProfileId).toBe('legacy-retrofit-windowsutility-v0')
+    expect(data.projectMemorySummary.taxonomyAuthorityStatus).toBe('preview-only-not-approved')
+    expect(html).toContain('Project Memory')
+    expect(html).toContain('Project Mode')
+    expect(html).toContain('legacy-preserving-retrofit')
+    expect(html).toContain('Detailed Slice')
+    expect(html).toContain('CardPrinterConfig')
+    expect(html).toContain('legacy-retrofit-windowsutility-v0')
+    expect(html).toContain('preview-only-not-approved')
+    expect(data.safetyFlags.graphSourceMutated).toBe(false)
+    expect(data.safetyFlags.graphDeltaApplied).toBe(false)
+    expect(data.safetyFlags.runtimeEvidenceSatisfied).toBe(false)
+    expect(data.safetyFlags.scopeEnforced).toBe(false)
+    expect(data.safetyFlags.ciEnforcementEnabled).toBe(false)
+  })
+
+  it('blocks DevViewGraph output that would overwrite Project Memory before writing partial HTML', async () => {
+    const workspace = createWorkspace()
+    copyWindowsUtilityDemoFixture(workspace)
+    const projectMemoryPath = join(workspace, 'examples/retrofit/windowsutility/devview-project-memory.preview.json')
+    const before = readFileSync(projectMemoryPath, 'utf8')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'render-devview-graph',
+        '--graph-source',
+        'examples/retrofit/windowsutility/graph-source.json',
+        '--record',
+        'change.laminator-tag-layout',
+        '--instruction-pack',
+        'outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json',
+        '--project-memory',
+        'examples/retrofit/windowsutility/devview-project-memory.preview.json',
+        '--output',
+        '.tmp/should-not-exist.html',
+        '--data-output',
+        'examples/retrofit/windowsutility/devview-project-memory.preview.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.ok).toBe(false)
+    expect(payload.issues[0].message).toContain('would overwrite the source DevView Project Memory preview')
+    expect(readFileSync(projectMemoryPath, 'utf8')).toBe(before)
+    expect(existsSync(join(workspace, '.tmp/should-not-exist.html'))).toBe(false)
   })
 })
 
@@ -462,4 +551,15 @@ function writeCardPrinterConfigFixture(workspace: string): void {
       },
     },
   })
+}
+
+function copyWindowsUtilityDemoFixture(workspace: string): void {
+  cpSync(join(pluginRoot, 'examples/retrofit/windowsutility'), join(workspace, 'examples/retrofit/windowsutility'), {
+    recursive: true,
+  })
+  cpSync(
+    join(pluginRoot, 'outputs/retrofit/instruction-packs'),
+    join(workspace, 'outputs/retrofit/instruction-packs'),
+    { recursive: true },
+  )
 }

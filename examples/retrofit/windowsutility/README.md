@@ -16,6 +16,7 @@ node dist/cli/index.js graph read-model render-devview-graph `
   --graph-source examples/retrofit/windowsutility/graph-source.json `
   --record change.laminator-tag-layout `
   --instruction-pack outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json `
+  --project-memory examples/retrofit/windowsutility/devview-project-memory.preview.json `
   --output outputs/devview-graph/windowsutility.devviewgraph.html `
   --data-output outputs/devview-graph/windowsutility.devviewgraph.data.json `
   --json
@@ -34,3 +35,21 @@ It records WindowsUtility as a retrofit project with `legacy-preserving-retrofit
 observed inventory, while CardPrinterConfig is the detailed retrofit slice. The memory preview is persistent but not
 approved authority; taxonomy and view tree extensions remain proposal-only until a future human-reviewed project memory
 revision exists.
+
+The report-only Project Memory commands are:
+
+```powershell
+node dist/cli/index.js graph read-model report-project-memory-extension-gaps `
+  --project-memory examples/retrofit/windowsutility/devview-project-memory.preview.json `
+  --graph-source examples/retrofit/windowsutility/graph-source.json `
+  --output examples/retrofit/windowsutility/project-memory-extension-gaps.preview.json `
+  --markdown examples/retrofit/windowsutility/project-memory-extension-gaps.preview.md `
+  --json
+
+node dist/cli/index.js graph read-model report-project-memory-impact `
+  --project-memory examples/retrofit/windowsutility/devview-project-memory.preview.json `
+  --direction-change examples/retrofit/windowsutility/project-direction-change.behavior-preserving-refactor.preview.json `
+  --output examples/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.json `
+  --markdown examples/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.md `
+  --json
+```

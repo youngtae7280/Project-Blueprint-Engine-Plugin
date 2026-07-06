@@ -93,13 +93,38 @@ Direction Change Candidate
 
 The current boundary does not implement approval or apply.
 
-## Future Extension Gap Detector
+## Extension Gap Detector
 
-The next natural task is a report-only detector:
+The first report-only detector is implemented as:
 
 ```text
-Project Memory 기반으로 현재 graph-source/read-model vocabulary와 필요한 extension vocabulary를 비교해 missing/extra/deprecated kind를 report한다.
+graph read-model report-project-memory-extension-gaps
 ```
 
-That detector should remain advisory and proposal-only. It should not apply extensions, mutate graph-source, change
-traversal, or authorize contracts.
+It compares Project Memory required extension vocabulary against current graph-source/read-model vocabulary and reports
+missing, extra, deprecated, and unapproved kinds. It remains advisory and proposal-only. It does not apply extensions,
+mutate graph-source, change traversal, or authorize contracts.
+
+The WindowsUtility calibration report is:
+
+```text
+examples/retrofit/windowsutility/project-memory-extension-gaps.preview.json
+```
+
+## Impact Report
+
+The first direction-change impact report is implemented as:
+
+```text
+graph read-model report-project-memory-impact
+```
+
+It reads a direction-change candidate and reports preservation, improvement, source authority, taxonomy, and view tree
+impact before any future revision can be reviewed. It does not approve or apply a Project Memory revision.
+
+The WindowsUtility behavior-preserving refactor candidate and impact report are:
+
+```text
+examples/retrofit/windowsutility/project-direction-change.behavior-preserving-refactor.preview.json
+examples/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.json
+```

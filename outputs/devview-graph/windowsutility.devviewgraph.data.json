@@ -6,6 +6,7 @@
   "renderScope": "retrofit-graph-source-to-readonly-html-inspector",
   "sourceGraphSource": "examples/retrofit/windowsutility/graph-source.json",
   "sourceInstructionPack": "outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json",
+  "sourceProjectMemory": "examples/retrofit/windowsutility/devview-project-memory.preview.json",
   "sourceRecordId": "change.laminator-tag-layout",
   "requestSummary": {
     "sourceRecordId": "change.laminator-tag-layout",
@@ -26,6 +27,24 @@
       "boundary.laminator-layout-only"
     ],
     "selectedEdgeIds": ["edge.tag-layout-drives-laminator-record", "edge.laminator-record-guards-logic"]
+  },
+  "projectMemorySummary": {
+    "sourceProjectMemory": "examples/retrofit/windowsutility/devview-project-memory.preview.json",
+    "artifactRole": "devview-project-memory-preview",
+    "status": "project-memory-preview-candidate-not-approved",
+    "projectMemoryId": "windowsutility-retrofit-project-memory-v0",
+    "projectId": "windowsutility-retrofit",
+    "projectName": "WindowsUtility / Utility_Windows Retrofit Portfolio",
+    "devviewMode": "retrofit",
+    "currentDirection": "legacy-preserving-retrofit",
+    "portfolioRole": "observed-portfolio-inventory",
+    "detailedSliceRole": "detailed-retrofit-slice",
+    "detailedSliceLabel": "CardPrinterConfig",
+    "taxonomyProfileId": "legacy-retrofit-windowsutility-v0",
+    "taxonomyAuthorityStatus": "preview-only-not-approved",
+    "viewTreeProfileId": "windowsutility-retrofit-view-tree-profile-v0",
+    "viewTreeAuthorityStatus": "preview-only-not-approved",
+    "nonAuthorityWarning": "Project Memory is displayed as persistent preview context only. It does not change graph selection, traversal, contract input, instruction packs, approval, apply, Evidence, equivalence, scope, or CI authority."
   },
   "workHistory": [
     {
@@ -1594,6 +1613,7 @@
     "dataOutputPath": "outputs/devview-graph/windowsutility.devviewgraph.data.json",
     "graphSourcePath": "examples/retrofit/windowsutility/graph-source.json",
     "instructionPackPath": "outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json",
+    "projectMemoryPath": "examples/retrofit/windowsutility/devview-project-memory.preview.json",
     "sourceRecordPath": "examples/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json"
   },
   "validationFindings": [],

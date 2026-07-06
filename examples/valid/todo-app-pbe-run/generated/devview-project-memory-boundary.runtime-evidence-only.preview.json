@@ -76,8 +76,10 @@
   },
   "futureWork": {
     "extensionGapDetector": {
-      "implemented": false,
-      "description": "Compare Project Memory required extension vocabulary against current graph-source/read-model vocabulary and report missing, extra, or deprecated kinds without applying changes."
+      "implemented": true,
+      "command": "graph read-model report-project-memory-extension-gaps",
+      "artifactRole": "devview-project-memory-extension-gap-report",
+      "description": "Compare Project Memory required extension vocabulary against current graph-source/read-model vocabulary and report missing, extra, deprecated, or unapproved kinds without applying changes."
     },
     "projectMemoryRevisionApply": {
       "implemented": false,

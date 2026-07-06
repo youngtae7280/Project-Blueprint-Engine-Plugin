@@ -3300,4 +3300,34 @@ Utility_Windows portfolio remains observed inventory; CardPrinterConfig is the d
 This decision records `Project Memory -> Taxonomy Profile -> Extension Proposal -> Human Review` as the directionally
 correct chain. Unapproved extension vocabulary is not traversal authority, selected-slice authority, contract authority,
 instruction-pack authority, source mutation authority, approval authority, Evidence authority, equivalence authority,
-scope enforcement authority, or CI authority. The future Extension Gap Detector remains report-only and unimplemented.
+scope enforcement authority, or CI authority. DEC-288 later implements the Extension Gap Detector as report-only.
+
+## DEC-288 Implement Project Memory Gap And Impact Reports
+
+DEC-288 does not supersede DEC-097 through DEC-287. It implements the first report-only Project Memory diagnostics and
+adds optional Project Memory context to DevViewGraph.
+
+The new commands are:
+
+```text
+graph read-model report-project-memory-extension-gaps
+graph read-model report-project-memory-impact
+```
+
+`report-project-memory-extension-gaps` reads a Project Memory preview plus graph-source, optionally a read-model, and
+emits `artifactRole: devview-project-memory-extension-gap-report`. It reports expected taxonomy profile vocabulary,
+observed graph/read-model vocabulary, `missingKinds`, `extraObservedKinds`, `deprecatedKinds`,
+`unapprovedExtensionKinds`, and `viewTreeCoverageGaps`.
+
+`report-project-memory-impact` reads a Project Memory preview plus a direction-change candidate and emits
+`artifactRole: devview-project-memory-impact-report`. The WindowsUtility candidate records a report-only move from
+`legacy-preserving-retrofit` to `behavior-preserving-refactor`.
+
+DevViewGraph now accepts optional `--project-memory` and records `projectMemorySummary` in the data JSON. The
+WindowsUtility inspector shows Project Mode, Direction, Portfolio, Detailed Slice, Taxonomy Profile, and preview-only
+authority status before any graph click.
+
+This decision remains read-only/report-only/visualization-only. It does not approve Project Memory revisions, apply
+taxonomy or view tree extensions, mutate graph-source, change traversal, generate selected slices, generate contract
+input, generate instruction packs from Project Memory, execute Codex, satisfy runtime Evidence, prove equivalence,
+enforce scope, configure CI, or replace human review.

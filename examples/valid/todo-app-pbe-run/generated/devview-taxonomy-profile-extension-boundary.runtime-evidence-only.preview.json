@@ -82,9 +82,11 @@
     ],
     "applyImplemented": false
   },
-  "futureExtensionGapDetector": {
-    "implemented": false,
-    "description": "Project Memory 기반으로 현재 graph-source/read-model vocabulary와 필요한 extension vocabulary를 비교해 missing/extra/deprecated kind를 report한다.",
+  "extensionGapDetector": {
+    "implemented": true,
+    "command": "graph read-model report-project-memory-extension-gaps",
+    "artifactRole": "devview-project-memory-extension-gap-report",
+    "description": "Compare Project Memory required extension vocabulary against current graph-source/read-model vocabulary and report missing, extra, deprecated, or unapproved kinds.",
     "reportOnly": true,
     "automaticApplyAllowed": false
   },
