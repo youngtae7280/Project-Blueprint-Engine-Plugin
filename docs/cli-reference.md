@@ -672,6 +672,48 @@ node dist/cli/index.js graph read-model check-graph-delta-apply `
   --json
 ```
 
+### `pbe graph read-model report-approved-apply-dry-run`
+
+- Purpose: Report the end-to-end dry-run readiness from a hardened Human Decision Record, proposal-only Graph Delta
+  preview, Approved Proposal State boundary, Graph Delta Apply boundary, and Graph-source Mutation Policy boundary.
+- Typical state before running: After `graph read-model record-human-decision` has created a hardened `approve-proposal`
+  human decision record. Defer, reject, request-changes, legacy, or mismatched records produce blocked dry-run reports.
+- Options: `--decision-record <file>`, `--proposal <file>`, `--approved-state-boundary <file>`,
+  `--apply-boundary <file>`, `--mutation-policy <file>`, and `--output <file>` are the ready-path inputs.
+  `--review-packet <file>` adds provenance validation, and `--markdown <file>` writes a concise summary. If
+  `--mutation-policy` is omitted, the command can still write a blocked report with
+  `dryRunReadinessStatus: blocked-mutation-policy-missing`.
+- What it checks: hardened human approval decision fields, proposal-only/not-applied/not-mutated boundaries, proposal
+  id/path consistency, Approved Proposal State and Graph Delta Apply boundary role/status, mutation target policy
+  `explicit-current-graph-source-only`, rollback/fallback/read-model regeneration/consistency preview requirements, and
+  output authority.
+- What it writes: Only the explicit dry-run JSON/Markdown report. It does not write child approved-state,
+  apply-readiness, mutation-readiness, graph-source, evidence, runtime report, hook, or `.pbe` artifacts.
+- Success result: JSON with `artifactRole: devview-approved-apply-dry-run-report`,
+  `dryRunReadinessStatus: dry-run-ready-for-future-apply-command`, and `approvedProposalStateCreatedPreview: true`. This
+  is readiness context only; future Graph Delta Apply must revalidate current graph-source identity/hash,
+  rollback/fallback behavior, and all policy boundaries.
+- Common failures: unhardened or non-approve decision, incomplete review packet, proposal mismatch, invalid apply
+  boundary, missing/invalid mutation policy, proposal already applied/mutated, unsafe evidence/equivalence/scope/CI
+  authority flags, or unsafe output paths.
+- Non-goals: no graph delta apply, graph-source mutation, automatic approval, Codex self-approval, Evidence acceptance,
+  runtime Evidence satisfaction, equivalence proof, scope/CI enforcement, required checks, branch protection, provider
+  invocation, or network call.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model report-approved-apply-dry-run `
+  --decision-record examples/valid/todo-app-pbe-run/generated/devview-human-decision-record.approve-proposal.runtime-evidence-only.preview.json `
+  --proposal examples/valid/todo-app-pbe-run/generated/graph-delta-proposal.add-todo-runtime-evidence-only.preview.json `
+  --approved-state-boundary examples/valid/todo-app-pbe-run/generated/devview-approved-proposal-state-boundary.runtime-evidence-only.preview.json `
+  --apply-boundary examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply-boundary.runtime-evidence-only.preview.json `
+  --mutation-policy examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-policy-boundary.runtime-evidence-only.preview.json `
+  --output .tmp/devview-approved-apply-dry-run.json `
+  --markdown .tmp/devview-approved-apply-dry-run.md `
+  --json
+```
+
 ### `pbe graph read-model report-graph-source-mutation-readiness`
 
 - Purpose: Report graph-source mutation readiness from a Graph Delta Apply readiness preview without writing

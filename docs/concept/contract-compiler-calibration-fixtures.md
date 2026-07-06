@@ -2725,6 +2725,33 @@ inspect working tree state, run `check-scope`, generate proposal/review artifact
 Codex execution, mutate graph-source, apply graph deltas, automate approval or human decisions, accept or satisfy
 Evidence, prove equivalence, enforce scope, or configure CI.
 
+## Approved Apply Dry Run Report
+
+The explicit hardened approval dry-run readiness report for the same calibration is recorded in:
+
+```text
+examples/valid/todo-app-pbe-run/generated/graph-delta-human-review-packet.complete-approve.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-human-decision-record.approve-proposal.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-human-decision-record.approve-proposal.runtime-evidence-only.preview.md
+examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.md
+```
+
+It is generated with:
+
+```text
+graph read-model report-approved-apply-dry-run --decision-record examples/valid/todo-app-pbe-run/generated/devview-human-decision-record.approve-proposal.runtime-evidence-only.preview.json --proposal examples/valid/todo-app-pbe-run/generated/graph-delta-proposal.add-todo-runtime-evidence-only.preview.json --approved-state-boundary examples/valid/todo-app-pbe-run/generated/devview-approved-proposal-state-boundary.runtime-evidence-only.preview.json --apply-boundary examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply-boundary.runtime-evidence-only.preview.json --mutation-policy examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-policy-boundary.runtime-evidence-only.preview.json --output examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json --markdown examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.md --json
+```
+
+The complete review packet is a calibration fixture that allows an explicit human approval decision record to be
+generated. It is not approval by itself. The dry-run report may become
+`dry-run-ready-for-future-apply-command`, but it still records `graphDeltaApplyEnabled: false`,
+`graphDeltaApplied: false`, `graphSourceMutationAllowed: false`, `graphSourceMutated: false`, `mutationAllowed: false`,
+`runtimeEvidenceSatisfied: false`, `evidenceAccepted: false`, `equivalenceProven: false`, `scopeEnforced: false`, and
+`ciEnforcementEnabled: false`. Future Graph Delta Apply must revalidate current graph-source identity/hash and
+rollback/fallback requirements; this dry-run report does not mutate graph-source, apply graph deltas, accept or satisfy
+Evidence, prove equivalence, enforce scope, configure CI, or automate approval/user acceptance.
+
 ## DevViewGraph HTML Inspector Demo
 
 The DevViewGraph HTML inspector boundary is recorded in:

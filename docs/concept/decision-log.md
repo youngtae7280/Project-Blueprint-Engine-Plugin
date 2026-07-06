@@ -3828,3 +3828,29 @@ no Codex self-approval, no inferred approval from review packets, tests, validat
 graph-source mutation, no graph delta apply, no Evidence acceptance or runtime Evidence satisfaction, no equivalence
 proof, no scope enforcement, no CI enforcement, no required checks, no branch protection, no LLM/API/network call, and
 no Project Memory extension authority.
+
+## DEC-306 Report Approved Apply Dry Run Readiness
+
+DEC-306 does not supersede DEC-097 through DEC-305. It adds
+`graph read-model report-approved-apply-dry-run` as a report-only lifecycle chain from hardened Human Decision Record,
+proposal-only Graph Delta preview, Approved Proposal State boundary, Graph Delta Apply boundary, and Graph-source
+Mutation Policy boundary to a single machine-readable dry-run readiness report.
+
+The command requires explicit report output and checks that the decision is a hardened human `approve-proposal` record
+with `decisionKind: approve`, `decisionActorType: human`, allowed `decisionSource`,
+`decisionProvenance: human-authored-explicit-decision`, complete review-packet provenance, and no unsafe automation,
+apply, mutation, Evidence, equivalence, scope, or CI flags. It also verifies proposal id/path consistency, proposal-only
+not-applied/not-mutated boundaries, apply boundary role/status, and mutation policy role/status plus
+`explicit-current-graph-source-only` future target policy and rollback/fallback/regeneration/consistency requirement
+previews.
+
+The ready status is `dry-run-ready-for-future-apply-command`, not permission and not approval automation. The report may
+summarize `approvedProposalStateCreatedPreview: true` as an in-memory dry-run stage, but it does not write child
+approved-state, apply-readiness, or mutation-readiness artifacts. Missing mutation policy, defer/reject/request-changes
+decisions, legacy/unhardened decisions, proposal mismatch, unsafe authority flags, or already-applied/mutated proposals
+produce blocked reports. Unsafe output or Markdown paths remain zero-write failures.
+
+This decision adds no default runtime smoke step. It adds no graph-source mutation, no graph delta apply, no automatic
+approval, no Codex self-approval, no Evidence acceptance or runtime Evidence satisfaction, no equivalence proof, no
+scope enforcement, no CI enforcement, no required checks, no branch protection, no provider invocation, no LLM/API or
+network call, and no Project Memory extension authority.

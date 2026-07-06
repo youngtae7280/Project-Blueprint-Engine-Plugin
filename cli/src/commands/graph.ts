@@ -1,4 +1,5 @@
 import { relativePath } from '../core/fs.js'
+import { reportApprovedApplyDryRunFile } from '../core/approved-apply-dry-run.js'
 import { createApprovedProposalStateFile } from '../core/approved-proposal-state.js'
 import { generateAiRequestAnalyzerPackFile } from '../core/ai-request-analyzer-pack.js'
 import { checkGraphDeltaApplyReadinessFile } from '../core/graph-delta-apply-readiness.js'
@@ -1033,6 +1034,90 @@ export async function graphReadModelCheckGraphDeltaApplyCommand(context: Command
           message,
           suggestedFix:
             'Provide a readable apply boundary, approved proposal state preview, proposal-only preview, and dedicated apply-readiness output paths. This command is read-only and never mutates graph-source.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelReportApprovedApplyDryRunCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.decisionRecord) {
+    return invalidCommand('graph read-model report-approved-apply-dry-run requires --decision-record <file>.')
+  }
+  if (!context.options.proposal) {
+    return invalidCommand('graph read-model report-approved-apply-dry-run requires --proposal <file>.')
+  }
+  if (!context.options.approvedStateBoundary) {
+    return invalidCommand('graph read-model report-approved-apply-dry-run requires --approved-state-boundary <file>.')
+  }
+  if (!context.options.applyBoundary) {
+    return invalidCommand('graph read-model report-approved-apply-dry-run requires --apply-boundary <file>.')
+  }
+  if (!context.options.output) {
+    return invalidCommand('graph read-model report-approved-apply-dry-run requires --output <file>.')
+  }
+
+  try {
+    const result = await reportApprovedApplyDryRunFile(context.options.root, {
+      decisionRecord: context.options.decisionRecord,
+      proposal: context.options.proposal,
+      approvedStateBoundary: context.options.approvedStateBoundary,
+      applyBoundary: context.options.applyBoundary,
+      mutationPolicy: context.options.mutationPolicy,
+      reviewPacket: context.options.reviewPacket,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    const errorFindings = result.report.validationFindings.filter((finding) => finding.severity === 'error')
+
+    return {
+      ok: errorFindings.length === 0,
+      command: 'graph read-model report-approved-apply-dry-run',
+      exitCode: errorFindings.length > 0 ? ExitCode.ValidationFailed : ExitCode.Success,
+      message:
+        result.report.status === 'devview-approved-apply-dry-run-ready'
+          ? 'Approved apply dry-run report is ready for a future separate apply command without mutation.'
+          : 'Approved apply dry-run report is blocked without apply, mutation, approval automation, or enforcement.',
+      issues:
+        errorFindings.length > 0
+          ? errorFindings.map((finding) =>
+              issue({
+                validator: 'ApprovedApplyDryRun',
+                code: finding.code,
+                severity: finding.severity,
+                message: finding.message,
+                reason: finding.field ? `Field: ${finding.field}` : undefined,
+                suggestedFix:
+                  finding.suggestedFix ??
+                  'Repair the approved apply dry-run inputs and rerun into dedicated output paths. This command is report-only.',
+              }),
+            )
+          : [],
+      data: {
+        ...result.report,
+        outputPath: result.outputPath,
+        ...(result.markdownReport ? { markdownReport: result.markdownReport } : {}),
+        next:
+          result.report.status === 'devview-approved-apply-dry-run-ready'
+            ? 'Future Graph Delta Apply must revalidate current graph-source identity, rollback/fallback, and all safety boundaries. This command did not apply or mutate anything.'
+            : 'Resolve the reported dry-run blocker before any future apply path. This command did not apply graph deltas, mutate graph-source, accept Evidence, prove equivalence, enforce scope, or configure CI.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model report-approved-apply-dry-run',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Approved apply dry-run report blocked before output write.',
+      issues: [
+        issue({
+          validator: 'ApprovedApplyDryRun',
+          code: 'APPROVED_APPLY_DRY_RUN_BLOCKED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide readable decision, proposal, approved-state boundary, apply boundary, mutation policy, and dedicated output paths. This command never applies graph deltas or mutates graph-source.',
         }),
       ],
     }

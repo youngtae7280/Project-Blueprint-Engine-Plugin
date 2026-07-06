@@ -120,7 +120,10 @@ export interface CliOptions {
   selectedSlice?: string
   contractInput?: string
   approvedState?: string
+  approvedStateBoundary?: string
+  applyBoundary?: string
   applyReadiness?: string
+  mutationPolicy?: string
   mutationReadiness?: string
   evidenceAcceptanceReadiness?: string
   equivalenceProofReadiness?: string

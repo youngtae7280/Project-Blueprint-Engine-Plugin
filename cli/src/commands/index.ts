@@ -48,6 +48,7 @@ import {
   graphReadModelReportHookGatewayHealthCommand,
   graphReadModelReportCompilerBoundaryCommand,
   graphReadModelReportCompilerInputCommand,
+  graphReadModelReportApprovedApplyDryRunCommand,
   graphReadModelReportEvidenceAcceptanceReadinessCommand,
   graphReadModelReportEquivalenceProofReadinessCommand,
   graphReadModelReportFrontendChainCommand,
@@ -268,6 +269,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'check-graph-delta-apply') {
     return graphReadModelCheckGraphDeltaApplyCommand(context)
+  }
+  if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'report-approved-apply-dry-run') {
+    return graphReadModelReportApprovedApplyDryRunCommand(context)
   }
   if (
     command === 'graph' &&

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "graph-delta-human-review-packet",
+  "reviewPacketStatus": "review-required",
+  "sourceProposal": "examples/valid/todo-app-pbe-run/generated/graph-delta-proposal.add-todo-runtime-evidence-only.preview.json",
+  "proposalId": "proposal-only-preview-ch-001",
+  "schemaId": "pbe-graph-update-proposal-v0",
+  "sourceRecordIdCandidate": "CH-001",
+  "sourceRecordIdAuthorityStatus": "human-review-confirmed-for-calibration",
+  "proposalGenerationStatus": "generated-proposal-only-preview",
+  "changedFileCount": 0,
+  "proposedNodeUpdateCount": 0,
+  "candidateEvidenceLinkCount": 3,
+  "candidateRuntimeReportLinkCount": 1,
+  "humanReviewQuestions": [],
+  "blockingReviewItems": [],
+  "reviewRequiredItems": [],
+  "candidateOnlyItems": [
+    "Proposal preview is candidate-only and unapproved.",
+    "Candidate Evidence links remain review context only.",
+    "Candidate runtime report links remain review context only."
+  ],
+  "approvalStatus": "not-approved",
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "humanDecisionRecorded": false,
+  "candidateEvidenceAccepted": false,
+  "runtimeEvidenceSatisfied": false,
+  "equivalenceProven": false,
+  "nonEnforcing": true,
+  "enforcementStatus": "not-enforced",
+  "allowedUse": [
+    "serve as a complete Human Review Packet fixture for explicit human approval decision calibration",
+    "preserve proposal-only review provenance without approval automation",
+    "feed record-human-decision only when a human reviewer provides explicit approval"
+  ],
+  "forbiddenUse": [
+    "approval recording by itself",
+    "graph-source mutation",
+    "graph delta apply",
+    "runtime Evidence satisfaction",
+    "Evidence acceptance",
+    "equivalence proof",
+    "scope enforcement",
+    "diff rejection",
+    "CI required check",
+    "user acceptance automation"
+  ],
+  "markdownReport": null,
+  "next": "Use this complete review packet only with an explicit human decision record. This packet does not approve, apply graph deltas, mutate graph-source, satisfy runtime Evidence, prove equivalence, enforce scope, reject diffs, or create required checks."
+}
