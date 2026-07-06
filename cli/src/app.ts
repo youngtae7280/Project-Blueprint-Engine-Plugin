@@ -147,6 +147,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     reviewPacket: undefined as string | undefined,
     decisionRecord: undefined as string | undefined,
     evidenceDecision: undefined as string | undefined,
+    acceptedEvidence: undefined as string | undefined,
     decision: undefined as string | undefined,
     reviewer: undefined as string | undefined,
     rationale: undefined as string | undefined,
@@ -170,10 +171,15 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     mutationReadiness: undefined as string | undefined,
     readiness: undefined as string | undefined,
     sourceEvidence: undefined as string | undefined,
+    runtimeEvidenceAuthority: undefined as string | undefined,
+    evidenceCheckBinding: undefined as string | undefined,
+    outputRequirement: undefined as string | undefined,
+    requiredEvidenceId: undefined as string | undefined,
     evidenceAcceptanceReadiness: undefined as string | undefined,
     equivalenceProofReadiness: undefined as string | undefined,
     policy: undefined as string | undefined,
     applyReport: undefined as string | undefined,
+    checkReport: undefined as string | undefined,
     requestCandidate: undefined as string | undefined,
     scaffold: undefined as string | undefined,
     scriptScaffold: undefined as string | undefined,
@@ -564,6 +570,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
       }
       options.evidenceDecision = value
       index += 1
+    } else if (arg === '--accepted-evidence') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--accepted-evidence requires a file path.' }
+      }
+      options.acceptedEvidence = value
+      index += 1
     } else if (arg === '--decision') {
       const value = argv[index + 1]
       if (!value) {
@@ -725,6 +738,34 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
       }
       options.sourceEvidence = value
       index += 1
+    } else if (arg === '--runtime-evidence-authority') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--runtime-evidence-authority requires a file path.' }
+      }
+      options.runtimeEvidenceAuthority = value
+      index += 1
+    } else if (arg === '--evidence-check-binding') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--evidence-check-binding requires a file path.' }
+      }
+      options.evidenceCheckBinding = value
+      index += 1
+    } else if (arg === '--output-requirement') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--output-requirement requires a file path.' }
+      }
+      options.outputRequirement = value
+      index += 1
+    } else if (arg === '--required-evidence-id') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--required-evidence-id requires a value.' }
+      }
+      options.requiredEvidenceId = value
+      index += 1
     } else if (arg === '--evidence-acceptance-readiness') {
       const value = argv[index + 1]
       if (!value) {
@@ -759,6 +800,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--apply-report requires a file path.' }
       }
       options.applyReport = value
+      index += 1
+    } else if (arg === '--check-report') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--check-report requires a file path.' }
+      }
+      options.checkReport = value
       index += 1
     } else if (arg === '--request-candidate') {
       const value = argv[index + 1]

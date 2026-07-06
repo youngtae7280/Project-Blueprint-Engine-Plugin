@@ -108,6 +108,7 @@ export interface CliOptions {
   reviewPacket?: string
   decisionRecord?: string
   evidenceDecision?: string
+  acceptedEvidence?: string
   decision?: string
   reviewer?: string
   rationale?: string
@@ -131,10 +132,15 @@ export interface CliOptions {
   mutationReadiness?: string
   readiness?: string
   sourceEvidence?: string
+  runtimeEvidenceAuthority?: string
+  evidenceCheckBinding?: string
+  outputRequirement?: string
+  requiredEvidenceId?: string
   evidenceAcceptanceReadiness?: string
   equivalenceProofReadiness?: string
   policy?: string
   applyReport?: string
+  checkReport?: string
   requestCandidate?: string
   scaffold?: string
   scriptScaffold?: string

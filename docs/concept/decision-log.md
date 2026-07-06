@@ -3949,3 +3949,31 @@ that blocked lifecycle report as candidate evidence. This decision adds no runti
 equivalence proof, no scope enforcement, no CI enforcement, no graph-source mutation, no graph delta apply, no automatic
 approval, no user acceptance automation, no Codex self-acceptance, no provider invocation, no LLM/API or network call,
 and no Project Memory extension authority.
+
+## DEC-310 Report Runtime Evidence Satisfaction Binding Readiness
+
+DEC-310 does not supersede DEC-097 through DEC-309. It adds
+`graph read-model report-runtime-evidence-satisfaction-readiness` as a readiness-only lifecycle surface between
+Accepted Evidence and any future runtime Evidence satisfaction record.
+
+The command consumes a `devview-accepted-evidence-record`, an Instruction Pack, a required Evidence id, and optional
+contract/source/runtime/check/output provenance inputs. It verifies that the Accepted Evidence record is human-reviewed,
+accepted, and still not runtime-satisfied; then it conservatively checks whether the accepted evidence source
+path/kind/claim exactly matches the selected `requiredEvidence[]` obligation. Optional source evidence can be
+re-hashed, and optional authority/binding/output previews remain context-only.
+
+The first tracked calibration report is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json
+```
+
+It is blocked because the current accepted Evidence claim only reviews the blocked Graph Delta Apply report and does
+not match Todo App Instruction Pack `required-evidence-tt-1`. The report may record
+`sourceAcceptedEvidenceAccepted: true` as an input fact, but the report itself keeps top-level `evidenceAccepted: false`
+and `runtimeEvidenceSatisfied: false`.
+
+This decision adds no default runtime smoke step. It adds no actual runtime satisfaction record, no promotion of
+runtime Evidence to satisfied, no equivalence proof, no scope enforcement, no CI enforcement, no graph-source mutation,
+no graph delta apply, no automatic approval, no user acceptance automation, no Codex self-acceptance, no provider
+invocation, no LLM/API or network call, and no Project Memory extension authority.

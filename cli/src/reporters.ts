@@ -190,6 +190,8 @@ Commands:
                        Record an explicit human Evidence decision without creating accepted Evidence
   graph read-model create-accepted-evidence-record
                        Create an Accepted Evidence record from a hardened human Evidence decision without runtime satisfaction
+  graph read-model report-runtime-evidence-satisfaction-readiness
+                       Report readiness to bind accepted Evidence to a runtime obligation without satisfying runtime Evidence
   graph read-model report-equivalence-proof-readiness
                        Report equivalence proof readiness without proving equivalence
   graph read-model report-scope-ci-enforcement-readiness
@@ -299,9 +301,9 @@ Options:
   --graph-delta <file> Graph delta file for graph operation propose-update.
   --target-repo <path> Target git repository path for graph operation capture-delta.
   --manual <file>      Manual parity artifact for graph read-model comparison.
-  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-approved-apply-dry-run, apply-graph-delta, report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, record-evidence-decision, create-accepted-evidence-record, report-equivalence-proof-readiness, report-scope-ci-enforcement-readiness, generate-ai-request-analyzer-pack, analyze-request, generate-clarification-interview-pack, revise-request-ir-candidate, run-clarification-chain, validate-request-ir, validate-request-ir-graph, plan-traversal, select-slice, generate-contract-input, generate-instruction-pack, report-project-memory-extension-gaps, report-project-memory-impact, render-devview-graph, report-hook-gateway-health, report-frontend-chain, prepare-user-prompt-context, report-user-prompt-submit-advisory, report-stop-post-run-advisory, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, materialize-hook-script-bundle, report-hook-activation-chain, or report-devview-baseline.
+  --output <file>      Output file for graph read-model projection, project-intent, collect-changed-files, check-scope, propose-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-approved-apply-dry-run, apply-graph-delta, report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, record-evidence-decision, create-accepted-evidence-record, report-runtime-evidence-satisfaction-readiness, report-equivalence-proof-readiness, report-scope-ci-enforcement-readiness, generate-ai-request-analyzer-pack, analyze-request, generate-clarification-interview-pack, revise-request-ir-candidate, run-clarification-chain, validate-request-ir, validate-request-ir-graph, plan-traversal, select-slice, generate-contract-input, generate-instruction-pack, report-project-memory-extension-gaps, report-project-memory-impact, render-devview-graph, report-hook-gateway-health, report-frontend-chain, prepare-user-prompt-context, report-user-prompt-submit-advisory, report-stop-post-run-advisory, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, materialize-hook-script-bundle, report-hook-activation-chain, or report-devview-baseline.
   --data-output <file> Data JSON output for graph read-model render-devview-graph.
-  --markdown <file>    Optional Markdown summary output for graph read-model report-health, check-scope, review-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-approved-apply-dry-run, apply-graph-delta, report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, record-evidence-decision, create-accepted-evidence-record, report-equivalence-proof-readiness, report-scope-ci-enforcement-readiness, generate-ai-request-analyzer-pack, generate-clarification-interview-pack, run-clarification-chain, run-preflight-session, generate-instruction-pack, report-project-memory-extension-gaps, report-project-memory-impact, report-frontend-chain, prepare-user-prompt-context, report-user-prompt-submit-advisory, report-stop-post-run-advisory, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, materialize-hook-script-bundle, report-hook-activation-chain, or report-devview-baseline.
+  --markdown <file>    Optional Markdown summary output for graph read-model report-health, check-scope, review-graph-delta, record-human-decision, create-approved-proposal-state, check-graph-delta-apply, report-approved-apply-dry-run, apply-graph-delta, report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, record-evidence-decision, create-accepted-evidence-record, report-runtime-evidence-satisfaction-readiness, report-equivalence-proof-readiness, report-scope-ci-enforcement-readiness, generate-ai-request-analyzer-pack, generate-clarification-interview-pack, run-clarification-chain, run-preflight-session, generate-instruction-pack, report-project-memory-extension-gaps, report-project-memory-impact, report-frontend-chain, prepare-user-prompt-context, report-user-prompt-submit-advisory, report-stop-post-run-advisory, generate-hook-script-scaffold, generate-hook-script-templates, generate-hook-session-manifest, materialize-hook-script-bundle, report-hook-activation-chain, or report-devview-baseline.
   --proposal <file>    Graph update proposal file for graph operation apply-proposal, graph read-model review-graph-delta, record-human-decision, report-approved-apply-dry-run, apply-graph-delta, record-evidence-decision, or create-accepted-evidence-record.
   --review-packet <file>
                        Human Review Packet file for graph read-model record-human-decision or report-stop-post-run-advisory.
@@ -309,6 +311,8 @@ Options:
                        Human Decision Record file for graph read-model create-approved-proposal-state.
   --evidence-decision <file>
                        Hardened Evidence Decision Record file for graph read-model create-accepted-evidence-record.
+  --accepted-evidence <file>
+                       Accepted Evidence Record file for graph read-model report-runtime-evidence-satisfaction-readiness.
   --approved-state <file>
                        Approved Proposal State preview file for graph read-model check-graph-delta-apply.
   --approved-state-boundary <file>
@@ -332,7 +336,7 @@ Options:
   --policy <file>      Policy boundary file for graph read-model report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, record-evidence-decision, create-accepted-evidence-record, report-equivalence-proof-readiness, or report-scope-ci-enforcement-readiness.
   --readiness <file>   Optional Evidence Acceptance readiness provenance for graph read-model record-evidence-decision or create-accepted-evidence-record.
   --source-evidence <file>
-                       Single candidate/source Evidence artifact for graph read-model record-evidence-decision or create-accepted-evidence-record.
+                       Single candidate/source Evidence artifact for graph read-model record-evidence-decision, create-accepted-evidence-record, or report-runtime-evidence-satisfaction-readiness.
   --decision <value>   Explicit human decision value for graph read-model record-human-decision or record-evidence-decision.
   --reviewer <value>   Human reviewer identity for graph read-model record-human-decision or record-evidence-decision.
   --rationale <value>  Human-authored rationale for graph read-model record-human-decision or record-evidence-decision.
@@ -343,9 +347,9 @@ Options:
   --decision-timestamp <iso8601>
                        Optional explicit ISO8601 timestamp for graph read-model record-human-decision or record-evidence-decision.
   --runtime-report <file>
-                       Optional runtime report input for graph read-model record-human-decision, record-evidence-decision, create-accepted-evidence-record, or report-stop-post-run-advisory.
+                       Optional runtime report input for graph read-model record-human-decision, record-evidence-decision, create-accepted-evidence-record, report-runtime-evidence-satisfaction-readiness, or report-stop-post-run-advisory.
   --apply-report <file>
-                       Optional Graph Delta Apply report provenance for graph read-model record-evidence-decision or create-accepted-evidence-record.
+                       Optional Graph Delta Apply report provenance for graph read-model record-evidence-decision, create-accepted-evidence-record, or report-runtime-evidence-satisfaction-readiness.
   --request-candidate <file>
                        Optional Request IR Candidate provenance for graph read-model record-evidence-decision.
   --candidate <file>   Request IR Candidate file for graph read-model validate-request-ir, generate-clarification-interview-pack, run-preflight-session, or report-user-prompt-submit-advisory.
@@ -424,7 +428,17 @@ Options:
   --changed-files <file>
                        Changed-file collection artifact for graph read-model report-stop-post-run-advisory.
   --scope-report <file>
-                       Advisory scope report artifact for graph read-model record-evidence-decision, create-accepted-evidence-record, or report-stop-post-run-advisory.
+                       Advisory scope report artifact for graph read-model record-evidence-decision, create-accepted-evidence-record, report-runtime-evidence-satisfaction-readiness, or report-stop-post-run-advisory.
+  --required-evidence-id <id>
+                       Required Evidence id for graph read-model report-runtime-evidence-satisfaction-readiness.
+  --runtime-evidence-authority <file>
+                       Optional runtime Evidence authority preview for graph read-model report-runtime-evidence-satisfaction-readiness.
+  --evidence-check-binding <file>
+                       Optional Evidence check binding preview for graph read-model report-runtime-evidence-satisfaction-readiness.
+  --output-requirement <file>
+                       Optional output requirement preview for graph read-model report-runtime-evidence-satisfaction-readiness.
+  --check-report <file>
+                       Optional check report provenance for graph read-model report-runtime-evidence-satisfaction-readiness.
   --schema <file>      Request IR Candidate schema file for graph read-model generate-ai-request-analyzer-pack.
   --chain-command <name>
                        Wrapped graph operation script command. Defaults to operation-chain.

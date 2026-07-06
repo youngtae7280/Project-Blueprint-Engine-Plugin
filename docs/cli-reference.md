@@ -899,6 +899,43 @@ node dist/cli/index.js graph read-model create-accepted-evidence-record `
   --json
 ```
 
+### `pbe graph read-model report-runtime-evidence-satisfaction-readiness`
+
+- Purpose: Report whether an Accepted Evidence record can be conservatively linked to an explicit Instruction Pack
+  runtime Evidence obligation. This is readiness-only and never creates a runtime satisfaction record.
+- Typical state before running: After `graph read-model create-accepted-evidence-record` has produced a
+  `devview-accepted-evidence-record`.
+- Options: `--accepted-evidence <file>`, `--instruction-pack <file>`, `--required-evidence-id <id>`, and
+  `--output <file>` are required. `--contract-input <file>`, `--source-evidence <file>`,
+  `--runtime-evidence-authority <file>`, `--evidence-check-binding <file>`, `--output-requirement <file>`,
+  `--runtime-report <file>`, `--scope-report <file>`, `--apply-report <file>`, `--check-report <file>`, and
+  `--markdown <file>` are optional provenance/report inputs.
+- What it checks: Accepted Evidence role/status/provenance/hash, Instruction Pack role/status, selected
+  `requiredEvidence[]` id, optional source evidence hash/path, optional preview-only authority/binding/output
+  requirement inputs, unsafe authority flags, and output authority.
+- What it writes: A `devview-runtime-evidence-satisfaction-readiness-preview` JSON artifact and optional Markdown
+  summary only at explicit output paths.
+- Success result: Ready output uses
+  `runtimeEvidenceSatisfactionReadinessStatus: ready-accepted-evidence-linked-to-runtime-obligation`; blocked output
+  records mismatch or missing-obligation status. In every status the report keeps top-level `evidenceAccepted`,
+  `runtimeEvidenceSatisfied`, `equivalenceProven`, `scopeEnforced`, `ciEnforcementEnabled`, `graphSourceMutated`, and
+  `graphDeltaApplied` false.
+- Boundary: Accepted Evidence remains an input fact only (`sourceAcceptedEvidenceAccepted: true`). This command never
+  infers runtime satisfaction from accepted Evidence, runtime smoke, validator pass, scope pass, apply report existence,
+  or prose. Equivalence proof and scope/CI enforcement remain separate future lifecycles.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model report-runtime-evidence-satisfaction-readiness `
+  --accepted-evidence examples/valid/todo-app-pbe-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.json `
+  --instruction-pack examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json `
+  --required-evidence-id required-evidence-tt-1 `
+  --output .tmp/devview-runtime-evidence-satisfaction-readiness.json `
+  --markdown .tmp/devview-runtime-evidence-satisfaction-readiness.md `
+  --json
+```
+
 ### `pbe graph read-model report-equivalence-proof-readiness`
 
 - Purpose: Report equivalence proof readiness from an Evidence Acceptance readiness preview without proving equivalence.

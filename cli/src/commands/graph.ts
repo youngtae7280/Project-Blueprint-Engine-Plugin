@@ -5,6 +5,7 @@ import { createApprovedProposalStateFile } from '../core/approved-proposal-state
 import { generateAiRequestAnalyzerPackFile } from '../core/ai-request-analyzer-pack.js'
 import { checkGraphDeltaApplyReadinessFile } from '../core/graph-delta-apply-readiness.js'
 import { createAcceptedEvidenceRecordFile } from '../core/accepted-evidence-record.js'
+import { reportRuntimeEvidenceSatisfactionReadinessFile } from '../core/runtime-evidence-satisfaction-readiness.js'
 import { recordEvidenceDecisionFile } from '../core/evidence-decision-record.js'
 import { reportEvidenceAcceptanceReadinessFile } from '../core/evidence-acceptance-readiness.js'
 import { reportEquivalenceProofReadinessFile } from '../core/equivalence-proof-readiness.js'
@@ -1460,6 +1461,82 @@ export async function graphReadModelCreateAcceptedEvidenceRecordCommand(
           message,
           suggestedFix:
             'Provide a hardened accept-evidence decision record, matching source evidence, a valid policy boundary, and dedicated accepted evidence output paths. This command never satisfies runtime Evidence.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelReportRuntimeEvidenceSatisfactionReadinessCommand(
+  context: CommandContext,
+): Promise<CommandResult> {
+  if (!context.options.acceptedEvidence) {
+    return invalidCommand(
+      'graph read-model report-runtime-evidence-satisfaction-readiness requires --accepted-evidence <file>.',
+    )
+  }
+  if (!context.options.instructionPack) {
+    return invalidCommand(
+      'graph read-model report-runtime-evidence-satisfaction-readiness requires --instruction-pack <file>.',
+    )
+  }
+  if (!context.options.requiredEvidenceId) {
+    return invalidCommand(
+      'graph read-model report-runtime-evidence-satisfaction-readiness requires --required-evidence-id <id>.',
+    )
+  }
+  if (!context.options.output) {
+    return invalidCommand('graph read-model report-runtime-evidence-satisfaction-readiness requires --output <file>.')
+  }
+
+  try {
+    const result = await reportRuntimeEvidenceSatisfactionReadinessFile(context.options.root, {
+      acceptedEvidence: context.options.acceptedEvidence,
+      instructionPack: context.options.instructionPack,
+      requiredEvidenceId: context.options.requiredEvidenceId,
+      contractInput: context.options.contractInput,
+      sourceEvidence: context.options.sourceEvidence,
+      runtimeEvidenceAuthority: context.options.runtimeEvidenceAuthority,
+      evidenceCheckBinding: context.options.evidenceCheckBinding,
+      outputRequirement: context.options.outputRequirement,
+      runtimeReport: context.options.runtimeReport,
+      scopeReport: context.options.scopeReport,
+      applyReport: context.options.applyReport,
+      checkReport: context.options.checkReport,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph read-model report-runtime-evidence-satisfaction-readiness',
+      exitCode: ExitCode.Success,
+      message:
+        result.readiness.status === 'devview-runtime-evidence-satisfaction-readiness-ready'
+          ? 'Runtime Evidence satisfaction binding readiness preview created without satisfying runtime Evidence.'
+          : 'Runtime Evidence satisfaction binding readiness preview blocked without satisfying runtime Evidence.',
+      issues: [],
+      data: {
+        ...result.readiness,
+        ...(result.outputPath ? { outputPath: result.outputPath } : {}),
+        ...(result.markdownReport ? { markdownReport: result.markdownReport } : {}),
+        next: 'Use this as readiness context only. This command did not promote runtime Evidence to satisfied, create a satisfaction record, prove equivalence, enforce scope, apply graph deltas, mutate graph-source, or configure CI.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model report-runtime-evidence-satisfaction-readiness',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Runtime Evidence satisfaction binding readiness report blocked.',
+      issues: [
+        issue({
+          validator: 'RuntimeEvidenceSatisfactionReadiness',
+          code: 'RUNTIME_EVIDENCE_SATISFACTION_READINESS_BLOCKED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide a valid Accepted Evidence Record, Instruction Pack, required evidence id, optional provenance artifacts with safe flags, and dedicated readiness output paths. This command never satisfies runtime Evidence.',
         }),
       ],
     }

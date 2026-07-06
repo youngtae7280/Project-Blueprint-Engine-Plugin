@@ -53,6 +53,7 @@ import {
   graphReadModelReportCompilerInputCommand,
   graphReadModelReportApprovedApplyDryRunCommand,
   graphReadModelReportEvidenceAcceptanceReadinessCommand,
+  graphReadModelReportRuntimeEvidenceSatisfactionReadinessCommand,
   graphReadModelReportEquivalenceProofReadinessCommand,
   graphReadModelReportFrontendChainCommand,
   graphReadModelReportProjectMemoryExtensionGapsCommand,
@@ -294,6 +295,13 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'create-accepted-evidence-record') {
     return graphReadModelCreateAcceptedEvidenceRecordCommand(context)
+  }
+  if (
+    command === 'graph' &&
+    subcommand === 'read-model' &&
+    positionals[2] === 'report-runtime-evidence-satisfaction-readiness'
+  ) {
+    return graphReadModelReportRuntimeEvidenceSatisfactionReadinessCommand(context)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'report-equivalence-proof-readiness') {
     return graphReadModelReportEquivalenceProofReadinessCommand(context)

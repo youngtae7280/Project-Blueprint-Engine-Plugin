@@ -1257,6 +1257,17 @@ The workflow now captures Todo Search graph-source `projectionContractStatus` fr
 manifest, Step Summary, and uploaded artifact bundle. Manual run `28218687289` and PR #4 run `28218854329` reviewed that
 capture path as `ci-evidence-pass`.
 
+The Runtime Evidence Satisfaction Binding readiness surface is now recorded:
+
+- command: `pbe graph read-model report-runtime-evidence-satisfaction-readiness`
+- artifact role: `devview-runtime-evidence-satisfaction-readiness-preview`
+- calibration: `examples/valid/todo-app-pbe-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json`
+
+The readiness report can observe that a source Accepted Evidence record has `evidenceAccepted: true`, but the report
+itself keeps top-level `evidenceAccepted: false` and `runtimeEvidenceSatisfied: false`. It does not create a satisfaction
+record, prove equivalence, enforce scope, configure CI, mutate graph-source, apply graph deltas, or infer runtime
+satisfaction from accepted Evidence alone.
+
 ## Outline-Only Later-Phase Docs
 
 No `docs/concept` policy file remains outline-only after Representative Runtime Feasibility Demo slice selection.

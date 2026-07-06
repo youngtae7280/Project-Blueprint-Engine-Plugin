@@ -1964,6 +1964,22 @@ evidence that the blocked apply lifecycle report was reviewed. The accepted Evid
 `runtimeEvidenceSatisfied`, `equivalenceProven`, `scopeEnforced`, `ciEnforcementEnabled`, `graphSourceMutated`, and
 `graphDeltaApplied` false. Runtime Evidence satisfaction remains a separate future binding lifecycle.
 
+The Runtime Evidence Satisfaction Binding readiness calibration is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.md
+```
+
+It runs `graph read-model report-runtime-evidence-satisfaction-readiness` against the accepted Evidence record and the
+Todo App Instruction Pack `required-evidence-tt-1` obligation. It is intentionally blocked with
+`runtimeEvidenceSatisfactionReadinessStatus: blocked-required-obligation-mismatch`, because the accepted Evidence claim
+only records human review of the blocked Graph Delta Apply lifecycle report and does not exactly match the Todo runtime
+Evidence obligation. The readiness report records `sourceAcceptedEvidenceAccepted: true` as an input fact, but keeps
+top-level `evidenceAccepted`, `runtimeEvidenceSatisfied`, `equivalenceProven`, `scopeEnforced`,
+`ciEnforcementEnabled`, `graphSourceMutated`, and `graphDeltaApplied` false. It creates no satisfaction record and does
+not advance equivalence or enforcement.
+
 The Equivalence Proof Policy boundary preview is:
 
 ```text
