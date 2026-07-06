@@ -345,7 +345,16 @@ decision exists.
 The provider-config-aware `analyze-request --provider-config <providerConfigPath>` adapter surface also stays outside
 the core-critical lane and does not add a runtime smoke step. It reads disabled/unavailable/configured provider config
 previews only to report blocked/import-required status or to record provenance beside an explicit external candidate
-import. It still makes no network call, invokes no LLM, and generates no provider-produced Request IR Candidate.
+import. It still makes no network call and invokes no LLM.
+
+The mock provider pipeline is deterministic but remains outside the current runtime smoke:
+
+```text
+graph read-model analyze-request --provider-config <invocationEnabledConfig> --invoke-provider --mock-provider-response <mockResponse> --output <candidate> --json
+```
+
+It parses a local mock response fixture and writes candidate-only Request IR output without network calls. Real provider
+network time remains outside the 5 second deterministic budget and is still unimplemented.
 
 The clarification interview boundary preview is outside the measured runtime path:
 

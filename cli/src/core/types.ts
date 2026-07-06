@@ -92,6 +92,8 @@ export interface CliOptions {
   pack?: string
   providerConfig?: string
   externalCandidate?: string
+  invokeProvider: boolean
+  mockProviderResponse?: string
   proposal?: string
   reviewPacket?: string
   decisionRecord?: string

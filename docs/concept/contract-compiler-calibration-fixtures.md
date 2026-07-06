@@ -2152,6 +2152,20 @@ explicit external candidate is supplied. Reading provider config does not genera
 validation, run traversal, generate selected slices, generate contract input, generate instruction packs, or execute
 Codex.
 
+The mock provider parser/guard calibration artifacts are:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-mock-provider-response.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/request-ir-candidate.mock-provider.add-todo-runtime-evidence-only.preview.json
+```
+
+The mock response is local fixture input only. `graph read-model analyze-request --invoke-provider
+--mock-provider-response <path>` parses it without OpenAI/API/LLM/network calls and writes a candidate-only Request IR
+Candidate. The generated candidate records `providerInvocationMode: mock-no-network`,
+`providerInvocationAuthority: mock-only-no-network`, `llmInvoked: false`, `networkCallsAllowed: false`, and
+`validationRequiredBeforeTraversal: true`; it still requires `validate-request-ir` and `validate-request-ir-graph`
+before any traversal, selected slice, contract input, or instruction pack step.
+
 The clarification interview boundary preview is:
 
 ```text

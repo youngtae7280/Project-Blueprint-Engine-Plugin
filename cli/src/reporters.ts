@@ -189,7 +189,7 @@ Commands:
   graph read-model generate-ai-request-analyzer-pack
                        Generate deterministic AI Request Analyzer prompt/input pack without LLM calls
   graph read-model analyze-request
-                       Report provider-disabled analyzer status or import an explicit external Request IR Candidate
+                       Report provider-disabled analyzer status, import an external Request IR Candidate, or parse a mock provider response
   graph read-model generate-clarification-interview-pack
                        Generate deterministic clarification question-plan pack without UI or LLM calls
   graph read-model revise-request-ir-candidate
@@ -331,9 +331,12 @@ Options:
   --request <text>     Natural-language request text for graph read-model analyze-request.
   --pack <file>        AI Request Analyzer Pack file for graph read-model analyze-request.
   --provider-config <file>
-                       Optional AI Request Analyzer provider config preview for graph read-model analyze-request. Provider invocation remains disabled.
+                       Optional AI Request Analyzer provider config preview for graph read-model analyze-request.
   --external-candidate <file>
                        Explicit precomputed Request IR Candidate import for graph read-model analyze-request.
+  --invoke-provider    Enable mock-only analyzer provider parsing for graph read-model analyze-request; real provider/network calls are not implemented.
+  --mock-provider-response <file>
+                       Mock analyzer provider response preview for --invoke-provider; no real provider is called.
   --clarification-pack <file>
                        Clarification Interview Pack file for graph read-model revise-request-ir-candidate.
   --answers <file>     Clarification answers file for graph read-model revise-request-ir-candidate.

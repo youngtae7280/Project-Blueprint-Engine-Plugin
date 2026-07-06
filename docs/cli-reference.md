@@ -747,14 +747,17 @@ node dist/cli/index.js graph read-model generate-ai-request-analyzer-pack `
 
 ### `pbe graph read-model analyze-request`
 
-- Purpose: Expose the AI Request Analyzer command surface while provider execution is disabled. The command either
-  reports `provider-disabled` or imports an explicit precomputed external Request IR Candidate as candidate-only JSON.
+- Purpose: Expose the AI Request Analyzer command surface while real provider execution is disabled. The command either
+  reports `provider-disabled`, imports an explicit precomputed external Request IR Candidate as candidate-only JSON, or
+  runs a deterministic mock provider response through the candidate parser/guard pipeline.
 - Typical state before running: After an AI Request Analyzer pack exists. No LLM/API provider is configured in this
   implementation.
 - Options: `--request <text>` and `--pack <aiRequestAnalyzerPackPath>` are required. `--provider-config <file>` may read
-  an analyzer provider config preview without invoking it. `--external-candidate <path>` may import a precomputed
-  candidate. `--output <file>` may write a provider-disabled/provider-unavailable/configured-not-invoked run-result
-  preview or an imported candidate preview, depending on mode.
+  an analyzer provider config preview. `--external-candidate <path>` may import a precomputed candidate.
+  `--invoke-provider --mock-provider-response <path>` runs the mock-only no-network provider response pipeline when
+  provider state is `configured-invocation-enabled-preview`. `--output <file>` may write a
+  provider-disabled/provider-unavailable/configured-not-invoked run-result preview, an imported candidate preview, or a
+  mock-provider-generated candidate preview, depending on mode.
 - Provider-disabled behavior: Without `--external-candidate`, the command exits blocked with
   `analyzerProviderStatus: provider-disabled`, `llmInvoked: false`, `networkCallsAllowed: false`,
   `requestIrCandidateGenerated: false`, and `candidateImportRequired: true`.
@@ -765,14 +768,18 @@ node dist/cli/index.js graph read-model generate-ai-request-analyzer-pack `
   safety fields, provider config safety when present, and unsafe authority escalation before writing. Imported
   candidates are normalized to `artifactRole: request-ir-candidate`, `requestIrCandidateStatus: candidate-only`,
   `authorityStatus: not-authoritative-until-validated`, and downstream traversal/contract/instruction authority false.
+- Mock provider behavior: With `--invoke-provider --mock-provider-response <path>`, the command reads only the mock
+  response artifact. It does not call OpenAI, any API, an LLM, or the network. The mock candidate is strictly parsed,
+  checked for request/schema mismatch and authority escalation, and written as candidate-only output.
+  `--external-candidate` and `--invoke-provider` cannot be combined.
 - Output authority guard: explicit output paths are rejected before writing if they would overwrite the analyzer pack,
-  provider config, external candidate, linked boundary/schema/intake/clarification artifacts, graph-source/read-model
-  source authority, evidence paths, or source-authority-shaped JSON. Unsafe provider config and blocked external imports
-  write no partial output.
+  provider config, mock provider response, external candidate, linked boundary/schema/intake/clarification artifacts,
+  graph-source/read-model source authority, evidence paths, or source-authority-shaped JSON. Unsafe provider config,
+  unsafe mock response, and blocked external imports write no partial output.
 - Next command: Run `graph read-model validate-request-ir` on an imported candidate before graph-aware validation or
-  traversal. This command does not call an LLM/API, run validation, run traversal, generate selected slices, generate
-  contract input, generate instruction packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve
-  work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.
+  traversal. This command does not call a real LLM/API, run validation, run traversal, generate selected slices,
+  generate contract input, generate instruction packs, trigger Codex execution, mutate graph-source, apply graph deltas,
+  approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.
 
 Provider-disabled example:
 
@@ -804,6 +811,19 @@ node dist/cli/index.js graph read-model analyze-request `
   --provider-config examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json `
   --external-candidate .tmp/external-request-ir-candidate.json `
   --output .tmp/imported-request-ir-candidate.json `
+  --json
+```
+
+Mock provider response candidate generation:
+
+```powershell
+node dist/cli/index.js graph read-model analyze-request `
+  --request "Add Todo App runtime evidence for the add button behavior without touching production source." `
+  --pack examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.json `
+  --provider-config examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json `
+  --invoke-provider `
+  --mock-provider-response examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-mock-provider-response.add-todo-runtime-evidence-only.preview.json `
+  --output .tmp/request-ir-candidate.mock-provider.json `
   --json
 ```
 

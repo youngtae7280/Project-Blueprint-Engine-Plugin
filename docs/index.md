@@ -90,6 +90,11 @@
   `examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json`
   define disabled/configured/invocation-enabled-preview/unavailable/blocked/future provider states and secret-reference
   policy without invoking an LLM/API or generating Request IR.
+- AI Request Analyzer mock provider response pipeline -
+  `examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-mock-provider-response.add-todo-runtime-evidence-only.preview.json`
+  and
+  `examples/valid/todo-app-pbe-run/generated/request-ir-candidate.mock-provider.add-todo-runtime-evidence-only.preview.json`
+  exercise provider-output parsing and candidate-only guards without real provider, LLM/API, or network calls.
 - [DevView Project Memory](concept/devview-project-memory.md) - Persistent project profile boundary for project
   identity, native/retrofit mode, direction, preservation/improvement policy, taxonomy profile refs, view tree profile
   refs, direction-change revision flow, and proposal-only extension decisions before any project-specific vocabulary can

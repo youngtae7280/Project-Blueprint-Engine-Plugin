@@ -7,6 +7,8 @@ const ANALYZER_NAME = 'AiRequestAnalyzerCommandSurface'
 const EXPECTED_PACK_ROLE = 'ai-request-analyzer-pack'
 const EXPECTED_PACK_STATUS = 'ai-request-analyzer-pack-generated'
 const EXPECTED_PROVIDER_CONFIG_ROLE = 'ai-request-analyzer-provider-config-preview'
+const EXPECTED_MOCK_PROVIDER_RESPONSE_ROLE = 'ai-request-analyzer-mock-provider-response-preview'
+const EXPECTED_MOCK_PROVIDER_RESPONSE_STATUS = 'ai-request-analyzer-mock-provider-response-previewed'
 const COMPATIBLE_SCHEMA_ID = 'devview-request-ir-candidate-v0-preview'
 
 type JsonRecord = Record<string, unknown>
@@ -14,14 +16,18 @@ type ProviderState =
   | 'not-provided'
   | 'disabled'
   | 'configured-not-invoked'
+  | 'configured-invocation-enabled-preview'
   | 'unavailable'
   | 'blocked-invalid-config'
   | 'future-invocation-allowed-only-after-explicit-config'
+type CandidateOutputMode = 'none' | 'external-import' | 'mock-provider'
+type RunMode = 'default' | 'mock-provider'
 
 const PROVIDER_STATE_STATUS: Record<Exclude<ProviderState, 'not-provided'>, string> = {
   disabled: 'ai-request-analyzer-provider-config-disabled-previewed',
   unavailable: 'ai-request-analyzer-provider-config-unavailable-previewed',
   'configured-not-invoked': 'ai-request-analyzer-provider-config-configured-not-invoked-previewed',
+  'configured-invocation-enabled-preview': 'ai-request-analyzer-provider-config-invocation-enabled-previewed',
   'blocked-invalid-config': 'ai-request-analyzer-provider-config-blocked-invalid-previewed',
   'future-invocation-allowed-only-after-explicit-config':
     'ai-request-analyzer-provider-config-future-invocation-previewed',
@@ -85,13 +91,16 @@ export interface AiRequestAnalyzerRunResult {
     | 'ai-request-analyzer-provider-configured-not-invoked'
     | 'ai-request-analyzer-provider-future-invocation-blocked'
     | 'ai-request-analyzer-provider-config-blocked'
+    | 'ai-request-analyzer-mock-provider-candidate-generated'
+    | 'ai-request-analyzer-mock-provider-blocked'
     | 'ai-request-analyzer-external-candidate-imported'
     | 'ai-request-analyzer-external-candidate-blocked'
   analyzerName: typeof ANALYZER_NAME
-  runScope: 'provider-disabled-or-external-candidate-import-no-llm'
+  runScope: 'provider-disabled-or-external-candidate-import-no-llm' | 'mock-provider-response-to-candidate-no-network'
   sourceAiRequestAnalyzerPack: string
   sourceProviderConfig: string | null
   sourceExternalCandidate: string | null
+  sourceMockProviderResponse: string | null
   requestText: string
   analyzerProviderStatus:
     | 'provider-disabled'
@@ -99,11 +108,14 @@ export interface AiRequestAnalyzerRunResult {
     | 'provider-configured-not-invoked'
     | 'provider-future-invocation-blocked'
     | 'provider-config-blocked'
+    | 'mock-provider-candidate-generated-no-network'
+    | 'mock-provider-blocked-no-network'
     | 'external-candidate-imported-provider-not-invoked'
     | 'external-candidate-blocked-provider-not-invoked'
   analyzerProviderConfigured: boolean
   providerState: ProviderState
-  providerInvocationAuthority: 'none-preview-only'
+  providerInvocationAuthority: 'none-preview-only' | 'mock-only-no-network'
+  providerInvocationMode: 'none' | 'mock-no-network'
   providerInvocationSkipped: boolean
   llmInvoked: false
   networkCallsAllowed: false
@@ -131,6 +143,7 @@ export interface AiRequestAnalyzerRunResult {
   ciEnforcementEnabled: false
   validationFindings: AiRequestAnalyzerRunFinding[]
   importedCandidate?: JsonRecord
+  providerGeneratedCandidate?: JsonRecord
   outputWritePolicy: 'explicit-output-only'
   writtenOutputPath: string | null
   writtenOutputArtifactRole: 'ai-request-analyzer-run-result' | 'request-ir-candidate' | null
@@ -148,6 +161,7 @@ interface AnalyzeRequestPaths {
   packPath?: string
   providerConfigPath?: string
   externalCandidatePath?: string
+  mockProviderResponsePath?: string
   outputPath?: string
 }
 
@@ -155,6 +169,9 @@ interface AnalyzeRequestWithProviderConfigInput {
   externalCandidateArtifact?: unknown
   providerConfigArtifact?: unknown
   providerConfigText?: string
+  invokeProvider?: boolean
+  mockProviderResponseArtifact?: unknown
+  mockProviderResponseText?: string
   paths?: AnalyzeRequestPaths
 }
 
@@ -199,17 +216,84 @@ export function analyzeRequestWithProviderConfig(
   const externalCandidate =
     input.externalCandidateArtifact === undefined ? null : asRecord(input.externalCandidateArtifact)
   const providerConfig = input.providerConfigArtifact === undefined ? null : asRecord(input.providerConfigArtifact)
+  const mockProviderResponse =
+    input.mockProviderResponseArtifact === undefined ? null : asRecord(input.mockProviderResponseArtifact)
   const findings: AiRequestAnalyzerRunFinding[] = []
 
   validateRequestText(requestText, findings)
   validateAnalyzerPack(pack, findings)
   const providerAnalysis = validateProviderConfig(providerConfig, input.providerConfigText, findings)
 
+  if (input.invokeProvider && input.externalCandidateArtifact !== undefined) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_EXTERNAL_CANDIDATE_WITH_PROVIDER_INVOCATION_BLOCKED',
+      severity: 'error',
+      field: 'externalCandidate',
+      message: 'analyze-request cannot combine --external-candidate with --invoke-provider.',
+      expected: 'choose either --external-candidate or mock --invoke-provider path',
+      actual: '--external-candidate and --invoke-provider',
+      suggestedFix:
+        'Use external candidate import without --invoke-provider, or run mock provider generation without --external-candidate.',
+    })
+    return buildResult(requestText, paths, findings, undefined, providerAnalysis, 'mock-provider', 'none')
+  }
+
+  if (input.invokeProvider) {
+    if (providerAnalysis.providerState !== 'configured-invocation-enabled-preview') {
+      findings.push({
+        code: 'AI_REQUEST_ANALYZER_PROVIDER_INVOCATION_STATE_BLOCKED',
+        severity: 'error',
+        field: 'providerConfig.providerState',
+        message:
+          'Mock provider invocation requires providerState configured-invocation-enabled-preview and does not fall back to a real provider.',
+        expected: 'configured-invocation-enabled-preview',
+        actual: providerAnalysis.providerState,
+        suggestedFix:
+          'Use the invocation-enabled provider config preview, or omit --invoke-provider and import an external candidate.',
+      })
+      return buildResult(requestText, paths, findings, undefined, providerAnalysis, 'mock-provider', 'none')
+    }
+
+    if (input.mockProviderResponseArtifact === undefined) {
+      findings.push({
+        code: 'AI_REQUEST_ANALYZER_MOCK_PROVIDER_RESPONSE_REQUIRED',
+        severity: 'error',
+        field: 'mockProviderResponse',
+        message:
+          '--invoke-provider is mock-only in this slice and requires --mock-provider-response; no network fallback is available.',
+        expected: '--mock-provider-response <path>',
+        actual: null,
+        suggestedFix: 'Provide a mock provider response preview artifact or omit --invoke-provider.',
+      })
+      return buildResult(requestText, paths, findings, undefined, providerAnalysis, 'mock-provider', 'none')
+    }
+
+    const candidateFromMock = validateMockProviderResponse(
+      mockProviderResponse,
+      input.mockProviderResponseText,
+      requestText,
+      pack,
+      findings,
+    )
+    const blocked = findings.some((finding) => finding.severity === 'error')
+    return buildResult(
+      requestText,
+      paths,
+      findings,
+      blocked || !candidateFromMock
+        ? undefined
+        : buildMockProviderCandidate(requestText, pack, candidateFromMock, paths, providerAnalysis),
+      providerAnalysis,
+      'mock-provider',
+      blocked || !candidateFromMock ? 'none' : 'mock-provider',
+    )
+  }
+
   if (!input.externalCandidateArtifact) {
     if (providerAnalysis.status !== 'provider-config-blocked') {
       findings.push(providerAnalysis.noExternalFinding)
     }
-    return buildResult(requestText, paths, findings, undefined, providerAnalysis)
+    return buildResult(requestText, paths, findings, undefined, providerAnalysis, 'default', 'none')
   }
 
   if (!externalCandidate) {
@@ -219,11 +303,11 @@ export function analyzeRequestWithProviderConfig(
       field: 'externalCandidate',
       message: 'External Request IR Candidate import requires a JSON object.',
     })
-    return buildResult(requestText, paths, findings, undefined, providerAnalysis)
+    return buildResult(requestText, paths, findings, undefined, providerAnalysis, 'default', 'none')
   }
 
   if (providerAnalysis.blocksExternalImport) {
-    return buildResult(requestText, paths, findings, undefined, providerAnalysis)
+    return buildResult(requestText, paths, findings, undefined, providerAnalysis, 'default', 'none')
   }
 
   validateExternalCandidateAgainstRequest(externalCandidate, requestText, pack, findings)
@@ -237,6 +321,8 @@ export function analyzeRequestWithProviderConfig(
     findings,
     blocked ? undefined : buildImportedCandidate(requestText, pack, externalCandidate, paths, providerAnalysis),
     providerAnalysis,
+    'default',
+    blocked ? 'none' : 'external-import',
   )
 }
 
@@ -244,7 +330,13 @@ export async function analyzeRequestFile(
   root: string,
   requestText: string,
   packPath: string,
-  options: { externalCandidate?: string; providerConfig?: string; output?: string } = {},
+  options: {
+    externalCandidate?: string
+    providerConfig?: string
+    invokeProvider?: boolean
+    mockProviderResponse?: string
+    output?: string
+  } = {},
 ): Promise<AiRequestAnalyzerRunFileResult> {
   const resolvedPackPath = resolveRepoPath(root, packPath)
   const pack = await readJsonSafe<JsonRecord>(resolvedPackPath)
@@ -288,11 +380,37 @@ export async function analyzeRequestFile(
     }
   }
 
+  let mockProviderResponse: JsonRecord | undefined
+  let mockProviderResponseText: string | undefined
+  let resolvedMockProviderResponsePath: string | undefined
+  if (options.mockProviderResponse) {
+    resolvedMockProviderResponsePath = resolveRepoPath(root, options.mockProviderResponse)
+    const mockResponseText = await readTextSafe(resolvedMockProviderResponsePath)
+    if (!mockResponseText.ok) {
+      throw new Error(
+        `Unable to read AI Request Analyzer mock provider response from ${options.mockProviderResponse}: ${mockResponseText.error}`,
+      )
+    }
+    mockProviderResponseText = mockResponseText.value
+    try {
+      mockProviderResponse = JSON.parse(mockProviderResponseText.replace(/^\uFEFF/, '')) as JsonRecord
+    } catch (error) {
+      throw new Error(
+        `Unable to parse AI Request Analyzer mock provider response from ${options.mockProviderResponse}: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+      )
+    }
+  }
+
   const outputPath = options.output ? relativePath(root, resolveRepoPath(root, options.output)) : undefined
   const result = analyzeRequestWithProviderConfig(requestText, pack.value, {
     externalCandidateArtifact: externalCandidate,
     providerConfigArtifact: providerConfig,
     providerConfigText,
+    invokeProvider: options.invokeProvider,
+    mockProviderResponseArtifact: mockProviderResponse,
+    mockProviderResponseText,
     paths: {
       root,
       packPath: relativePath(root, resolvedPackPath),
@@ -300,19 +418,27 @@ export async function analyzeRequestFile(
       externalCandidatePath: resolvedExternalCandidatePath
         ? relativePath(root, resolvedExternalCandidatePath)
         : undefined,
+      mockProviderResponsePath: resolvedMockProviderResponsePath
+        ? relativePath(root, resolvedMockProviderResponsePath)
+        : undefined,
       outputPath,
     },
   })
 
-  if (options.output && shouldWriteAnalyzerRunOutput(result, Boolean(options.externalCandidate))) {
+  if (
+    options.output &&
+    shouldWriteAnalyzerRunOutput(result, Boolean(options.externalCandidate), options.invokeProvider)
+  ) {
     await assertAnalyzerRunOutputAuthority(
       root,
       resolvedPackPath,
       resolvedProviderConfigPath,
       resolvedExternalCandidatePath,
+      resolvedMockProviderResponsePath,
       pack.value,
       providerConfig,
       externalCandidate,
+      mockProviderResponse,
       options.output,
     )
   }
@@ -320,10 +446,11 @@ export async function analyzeRequestFile(
   let writtenOutputPath: string | undefined
   if (options.output) {
     const resolvedOutputPath = resolveRepoPath(root, options.output)
-    if (result.importedCandidate) {
-      await writeJsonAtomic(resolvedOutputPath, result.importedCandidate)
+    const candidateOutput = result.importedCandidate ?? result.providerGeneratedCandidate
+    if (candidateOutput) {
+      await writeJsonAtomic(resolvedOutputPath, candidateOutput)
       writtenOutputPath = outputPath
-    } else if (shouldWriteAnalyzerRunOutput(result, Boolean(options.externalCandidate))) {
+    } else if (shouldWriteAnalyzerRunOutput(result, Boolean(options.externalCandidate), options.invokeProvider)) {
       await writeJsonAtomic(resolvedOutputPath, { ...result, writtenOutputPath: outputPath ?? null })
       writtenOutputPath = outputPath
     } else {
@@ -341,9 +468,11 @@ async function assertAnalyzerRunOutputAuthority(
   resolvedPackPath: string,
   resolvedProviderConfigPath: string | undefined,
   resolvedExternalCandidatePath: string | undefined,
+  resolvedMockProviderResponsePath: string | undefined,
   pack: JsonRecord,
   providerConfig: JsonRecord | undefined,
   externalCandidate: JsonRecord | undefined,
+  mockProviderResponse: JsonRecord | undefined,
   outputPath: string,
 ): Promise<void> {
   const resolvedOutputPath = resolveRepoPath(root, outputPath)
@@ -352,9 +481,11 @@ async function assertAnalyzerRunOutputAuthority(
     resolvedPackPath,
     resolvedProviderConfigPath,
     resolvedExternalCandidatePath,
+    resolvedMockProviderResponsePath,
     pack,
     providerConfig,
     externalCandidate,
+    mockProviderResponse,
   )
   const protectedReason = protectedPaths.get(pathKey(resolvedOutputPath))
   if (protectedReason) {
@@ -377,9 +508,11 @@ function buildProtectedOutputPathMap(
   resolvedPackPath: string,
   resolvedProviderConfigPath: string | undefined,
   resolvedExternalCandidatePath: string | undefined,
+  resolvedMockProviderResponsePath: string | undefined,
   pack: JsonRecord,
   providerConfig: JsonRecord | undefined,
   externalCandidate: JsonRecord | undefined,
+  mockProviderResponse: JsonRecord | undefined,
 ): Map<string, string> {
   const protectedPaths = new Map<string, string>()
   const add = (candidate: unknown, reason: string): void => {
@@ -400,6 +533,9 @@ function buildProtectedOutputPathMap(
   if (resolvedExternalCandidatePath) {
     protectedPaths.set(pathKey(resolvedExternalCandidatePath), 'the source external Request IR Candidate')
   }
+  if (resolvedMockProviderResponsePath) {
+    protectedPaths.set(pathKey(resolvedMockProviderResponsePath), 'the source mock provider response')
+  }
   for (const candidatePath of collectConcretePathStrings(pack)) {
     add(candidatePath, `linked analyzer pack artifact ${candidatePath}`)
   }
@@ -409,14 +545,21 @@ function buildProtectedOutputPathMap(
   for (const candidatePath of collectConcretePathStrings(externalCandidate)) {
     add(candidatePath, `linked external candidate artifact ${candidatePath}`)
   }
+  for (const candidatePath of collectConcretePathStrings(mockProviderResponse)) {
+    add(candidatePath, `linked mock provider response artifact ${candidatePath}`)
+  }
   return protectedPaths
 }
 
-function shouldWriteAnalyzerRunOutput(result: AiRequestAnalyzerRunResult, externalCandidateProvided: boolean): boolean {
-  if (result.importedCandidate) {
+function shouldWriteAnalyzerRunOutput(
+  result: AiRequestAnalyzerRunResult,
+  externalCandidateProvided: boolean,
+  invokeProvider = false,
+): boolean {
+  if (result.importedCandidate || result.providerGeneratedCandidate) {
     return true
   }
-  if (externalCandidateProvided) {
+  if (externalCandidateProvided || (invokeProvider && result.status === 'ai-request-analyzer-mock-provider-blocked')) {
     return false
   }
   return result.status !== 'ai-request-analyzer-provider-config-blocked'
@@ -534,8 +677,12 @@ function validateProviderConfig(
     return providerConfigAnalysis('blocked-invalid-config')
   }
 
+  const expectedInvocationAuthority =
+    providerState === 'configured-invocation-enabled-preview'
+      ? 'explicit-future-flag-required-not-implemented'
+      : 'none-preview-only'
   const requiredSafeFields: Array<[string, unknown]> = [
-    ['providerInvocationAuthority', 'none-preview-only'],
+    ['providerInvocationAuthority', expectedInvocationAuthority],
     ['networkCallsAllowed', false],
     ['llmInvoked', false],
     ['runtimeAiCallsAllowed', false],
@@ -653,6 +800,25 @@ function providerConfigAnalysis(providerState: ProviderState): ProviderConfigAna
         },
         blocksExternalImport: false,
       }
+    case 'configured-invocation-enabled-preview':
+      return {
+        providerState,
+        providerConfigured: true,
+        status: 'provider-future-invocation-blocked',
+        statusForNoExternal: 'ai-request-analyzer-provider-future-invocation-blocked',
+        noExternalFinding: {
+          code: 'AI_REQUEST_ANALYZER_PROVIDER_INVOCATION_FLAG_REQUIRED',
+          severity: 'error',
+          field: 'providerConfig.providerState',
+          message:
+            'AI Request Analyzer provider config is invocation-enabled-preview, but current invocation is mock-only and requires --invoke-provider with --mock-provider-response.',
+          expected: '--invoke-provider --mock-provider-response <path>',
+          actual: providerState,
+          suggestedFix:
+            'Use the mock provider response path for deterministic testing, or import an external Request IR Candidate.',
+        },
+        blocksExternalImport: false,
+      }
     case 'future-invocation-allowed-only-after-explicit-config':
       return {
         providerState,
@@ -688,6 +854,179 @@ function providerConfigAnalysis(providerState: ProviderState): ProviderConfigAna
         },
         blocksExternalImport: true,
       }
+  }
+}
+
+function validateMockProviderResponse(
+  mockProviderResponse: JsonRecord | null,
+  mockProviderResponseText: string | undefined,
+  requestText: string,
+  pack: JsonRecord | null,
+  findings: AiRequestAnalyzerRunFinding[],
+): JsonRecord | null {
+  if (!mockProviderResponse) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_MOCK_PROVIDER_RESPONSE_NOT_OBJECT',
+      severity: 'error',
+      field: 'mockProviderResponse',
+      message: 'Mock provider response must be a JSON object.',
+      expected: EXPECTED_MOCK_PROVIDER_RESPONSE_ROLE,
+      actual: typeof mockProviderResponse,
+      suggestedFix: 'Provide a mock provider response preview artifact.',
+    })
+    return null
+  }
+
+  const expectedFields: Array<[string, unknown]> = [
+    ['artifactRole', EXPECTED_MOCK_PROVIDER_RESPONSE_ROLE],
+    ['status', EXPECTED_MOCK_PROVIDER_RESPONSE_STATUS],
+    ['providerInvocationMode', 'mock-no-network'],
+    ['networkCallsAllowed', false],
+    ['llmInvoked', false],
+    ['runtimeAiCallsAllowed', false],
+    ['secretValueStored', false],
+    ['secretValueInspected', false],
+  ]
+  for (const [field, expected] of expectedFields) {
+    if (mockProviderResponse[field] !== expected) {
+      findings.push({
+        code: 'AI_REQUEST_ANALYZER_MOCK_PROVIDER_RESPONSE_MISMATCH',
+        severity: 'error',
+        field: `mockProviderResponse.${field}`,
+        message: `Mock provider response field "${field}" is not safe for candidate generation.`,
+        expected,
+        actual: mockProviderResponse[field],
+        suggestedFix:
+          'Regenerate the mock provider response preview without network, LLM, secret, or authority claims.',
+      })
+      return null
+    }
+  }
+
+  const responseText = mockProviderResponseText ?? JSON.stringify(mockProviderResponse)
+  const secretPattern = SECRET_VALUE_PATTERNS.find((pattern) => pattern.test(responseText))
+  if (secretPattern) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_MOCK_PROVIDER_RESPONSE_SECRET_VALUE_BLOCKED',
+      severity: 'error',
+      field: 'mockProviderResponse',
+      message: 'Mock provider response appears to contain a secret-looking literal value.',
+      expected: 'mock response without API key, token, or bearer values',
+      actual: 'secret-looking literal detected',
+      suggestedFix: 'Remove secret values from the mock provider response fixture.',
+    })
+    return null
+  }
+
+  const unsafe = findUnsafeAuthorityClaim(mockProviderResponse)
+  if (unsafe) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_MOCK_PROVIDER_RESPONSE_AUTHORITY_ESCALATION',
+      severity: 'error',
+      field: `mockProviderResponse.${unsafe.field}`,
+      message: `Mock provider response attempts to claim unsafe authority via "${unsafe.field}".`,
+      expected: unsafe.expected,
+      actual: unsafe.actual,
+      suggestedFix:
+        'Mock provider responses must not claim traversal, contract, instruction, approval, Evidence, equivalence, graph mutation, graph apply, scope, CI, hook, or execution authority.',
+    })
+    return null
+  }
+
+  const candidate = asRecord(mockProviderResponse.candidate)
+  if (!candidate) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_MOCK_PROVIDER_CANDIDATE_MISSING',
+      severity: 'error',
+      field: 'mockProviderResponse.candidate',
+      message: 'Mock provider response must contain a candidate JSON object.',
+      expected: 'request-ir-candidate object',
+      actual: mockProviderResponse.candidate,
+      suggestedFix: 'Include candidate as a JSON object in the mock provider response preview.',
+    })
+    return null
+  }
+
+  validateMockProviderCandidateAgainstRequest(candidate, requestText, pack, findings)
+  validateMockProviderCandidateAuthority(candidate, findings)
+  validateMockProviderCandidateSchema(candidate, findings)
+  return candidate
+}
+
+function validateMockProviderCandidateAgainstRequest(
+  candidate: JsonRecord,
+  requestText: string,
+  pack: JsonRecord | null,
+  findings: AiRequestAnalyzerRunFinding[],
+): void {
+  const candidateRequestText = stringValue(candidate.requestText)
+  if (candidateRequestText && normalizeRequestText(candidateRequestText) !== normalizeRequestText(requestText)) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_MOCK_PROVIDER_CANDIDATE_REQUEST_MISMATCH',
+      severity: 'error',
+      field: 'mockProviderResponse.candidate.requestText',
+      message: 'Mock provider candidate requestText does not match the CLI --request text.',
+      expected: requestText,
+      actual: candidateRequestText,
+      suggestedFix: 'Use a mock provider candidate generated for the exact natural-language request text.',
+    })
+  }
+  const sourceRequestText = stringValue(asRecord(candidate.sourceNaturalLanguageRequest)?.text)
+  if (sourceRequestText && normalizeRequestText(sourceRequestText) !== normalizeRequestText(requestText)) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_MOCK_PROVIDER_CANDIDATE_REQUEST_MISMATCH',
+      severity: 'error',
+      field: 'mockProviderResponse.candidate.sourceNaturalLanguageRequest.text',
+      message: 'Mock provider candidate sourceNaturalLanguageRequest.text does not match the CLI --request text.',
+      expected: requestText,
+      actual: sourceRequestText,
+      suggestedFix: 'Use a mock provider candidate generated for the exact natural-language request text.',
+    })
+  }
+  const expectedSchemaId = stringValue(pack?.expectedOutputSchemaId)
+  const candidateSchemaId = stringValue(candidate.schemaId)
+  if (expectedSchemaId && candidateSchemaId && expectedSchemaId !== candidateSchemaId) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_MOCK_PROVIDER_CANDIDATE_SCHEMA_MISMATCH',
+      severity: 'error',
+      field: 'mockProviderResponse.candidate.schemaId',
+      message: 'Mock provider candidate schemaId does not match the analyzer pack expected schema.',
+      expected: expectedSchemaId,
+      actual: candidateSchemaId,
+      suggestedFix:
+        'Use a mock provider candidate that conforms to the analyzer pack expected Request IR Candidate schema.',
+    })
+  }
+}
+
+function validateMockProviderCandidateAuthority(candidate: JsonRecord, findings: AiRequestAnalyzerRunFinding[]): void {
+  const unsafe = findUnsafeAuthorityClaim(candidate)
+  if (unsafe) {
+    findings.push({
+      code: 'AI_REQUEST_ANALYZER_MOCK_PROVIDER_CANDIDATE_AUTHORITY_ESCALATION',
+      severity: 'error',
+      field: `mockProviderResponse.candidate.${unsafe.field}`,
+      message: `Mock provider candidate attempts to claim unsafe authority via "${unsafe.field}".`,
+      expected: unsafe.expected,
+      actual: unsafe.actual,
+      suggestedFix:
+        'Mock provider candidates must remain candidate-only and must not claim traversal, contract, instruction, approval, Evidence, equivalence, graph mutation, graph apply, scope, or CI authority.',
+    })
+  }
+}
+
+function validateMockProviderCandidateSchema(candidate: JsonRecord, findings: AiRequestAnalyzerRunFinding[]): void {
+  const validation = validateRequestIrCandidateSchemaOnly(candidate)
+  for (const finding of validation.validationFindings.filter((entry) => entry.severity === 'error')) {
+    findings.push({
+      code: `AI_REQUEST_ANALYZER_MOCK_PROVIDER_${finding.code}`,
+      severity: 'error',
+      field: finding.field ? `mockProviderResponse.candidate.${finding.field}` : 'mockProviderResponse.candidate',
+      message: `Mock provider candidate is not safe for generation: ${finding.message}`,
+      expected: finding.expected,
+      actual: finding.actual,
+      suggestedFix: finding.suggestedFix,
+    })
   }
 }
 
@@ -772,13 +1111,21 @@ function buildResult(
   requestText: string,
   paths: AnalyzeRequestPaths,
   findings: AiRequestAnalyzerRunFinding[],
-  importedCandidate: JsonRecord | undefined,
+  candidateOutput: JsonRecord | undefined,
   providerAnalysis: ProviderConfigAnalysis,
+  runMode: RunMode,
+  candidateOutputMode: CandidateOutputMode,
 ): AiRequestAnalyzerRunResult {
   const externalMode = Boolean(paths.externalCandidatePath)
-  const imported = Boolean(importedCandidate)
-  const providerStatus =
-    imported || (externalMode && providerAnalysis.status !== 'provider-config-blocked')
+  const mockMode = runMode === 'mock-provider'
+  const hasCandidateOutput = Boolean(candidateOutput)
+  const imported = candidateOutputMode === 'external-import' && hasCandidateOutput
+  const mockGenerated = candidateOutputMode === 'mock-provider' && hasCandidateOutput
+  const providerStatus = mockMode
+    ? mockGenerated
+      ? 'mock-provider-candidate-generated-no-network'
+      : 'mock-provider-blocked-no-network'
+    : imported || (externalMode && providerAnalysis.status !== 'provider-config-blocked')
       ? imported
         ? 'external-candidate-imported-provider-not-invoked'
         : 'external-candidate-blocked-provider-not-invoked'
@@ -786,30 +1133,38 @@ function buildResult(
   return {
     schemaVersion: 1,
     artifactRole: 'ai-request-analyzer-run-result',
-    status: !externalMode
-      ? providerAnalysis.statusForNoExternal
-      : imported
-        ? 'ai-request-analyzer-external-candidate-imported'
-        : providerAnalysis.status === 'provider-config-blocked'
-          ? 'ai-request-analyzer-provider-config-blocked'
-          : 'ai-request-analyzer-external-candidate-blocked',
+    status: mockMode
+      ? mockGenerated
+        ? 'ai-request-analyzer-mock-provider-candidate-generated'
+        : 'ai-request-analyzer-mock-provider-blocked'
+      : !externalMode
+        ? providerAnalysis.statusForNoExternal
+        : imported
+          ? 'ai-request-analyzer-external-candidate-imported'
+          : providerAnalysis.status === 'provider-config-blocked'
+            ? 'ai-request-analyzer-provider-config-blocked'
+            : 'ai-request-analyzer-external-candidate-blocked',
     analyzerName: ANALYZER_NAME,
-    runScope: 'provider-disabled-or-external-candidate-import-no-llm',
+    runScope: mockMode
+      ? 'mock-provider-response-to-candidate-no-network'
+      : 'provider-disabled-or-external-candidate-import-no-llm',
     sourceAiRequestAnalyzerPack: paths.packPath ?? '<in-memory>',
     sourceProviderConfig: paths.providerConfigPath ?? null,
     sourceExternalCandidate: paths.externalCandidatePath ?? null,
+    sourceMockProviderResponse: paths.mockProviderResponsePath ?? null,
     requestText,
     analyzerProviderStatus: providerStatus,
     analyzerProviderConfigured: providerAnalysis.providerConfigured,
     providerState: providerAnalysis.providerState,
-    providerInvocationAuthority: 'none-preview-only',
-    providerInvocationSkipped: true,
+    providerInvocationAuthority: mockMode ? 'mock-only-no-network' : 'none-preview-only',
+    providerInvocationMode: mockMode ? 'mock-no-network' : 'none',
+    providerInvocationSkipped: !mockMode,
     llmInvoked: false,
     networkCallsAllowed: false,
     runtimeAiCallsAllowed: false,
-    requestIrCandidateGenerated: imported,
+    requestIrCandidateGenerated: hasCandidateOutput,
     requestIrCandidateImported: imported,
-    candidateImportRequired: !imported,
+    candidateImportRequired: !hasCandidateOutput,
     candidateOnly: true,
     candidateAuthorityStatus: 'ai-generated-candidate-not-validated',
     requestIrAuthorityStatus: 'not-authoritative-until-validated',
@@ -829,11 +1184,12 @@ function buildResult(
     scopeEnforced: false,
     ciEnforcementEnabled: false,
     validationFindings: findings,
-    ...(importedCandidate ? { importedCandidate } : {}),
+    ...(imported ? { importedCandidate: candidateOutput } : {}),
+    ...(mockGenerated ? { providerGeneratedCandidate: candidateOutput } : {}),
     outputWritePolicy: 'explicit-output-only',
     writtenOutputPath: paths.outputPath ?? null,
     writtenOutputArtifactRole: paths.outputPath
-      ? imported
+      ? hasCandidateOutput
         ? 'request-ir-candidate'
         : 'ai-request-analyzer-run-result'
       : null,
@@ -921,6 +1277,86 @@ function buildImportedCandidate(
   return imported
 }
 
+function buildMockProviderCandidate(
+  requestText: string,
+  pack: JsonRecord | null,
+  candidate: JsonRecord,
+  paths: AnalyzeRequestPaths,
+  providerAnalysis: ProviderConfigAnalysis,
+): JsonRecord {
+  const generated: JsonRecord = {
+    ...structuredClone(candidate),
+    artifactRole: 'request-ir-candidate',
+    status: 'request-ir-candidate-mock-provider-previewed',
+    schemaId: stringValue(candidate.schemaId) || stringValue(pack?.expectedOutputSchemaId) || COMPATIBLE_SCHEMA_ID,
+    requestIrCandidateStatus: 'candidate-only',
+    candidateOnly: true,
+    authorityStatus: 'not-authoritative-until-validated',
+    sourceAiRequestAnalyzerPack: paths.packPath ?? '<in-memory>',
+    sourceProviderConfig: paths.providerConfigPath ?? null,
+    sourceMockProviderResponse: paths.mockProviderResponsePath ?? '<in-memory>',
+    sourceExternalCandidate: null,
+    sourceNaturalLanguageRequest: {
+      ...(asRecord(candidate.sourceNaturalLanguageRequest) ?? {}),
+      sourceKind:
+        stringValue(asRecord(candidate.sourceNaturalLanguageRequest)?.sourceKind) || 'human-natural-language-request',
+      text: requestText,
+      authorityStatus: 'raw-request-text-not-compiler-authority',
+    },
+    requestText,
+    analyzerProviderStatus: 'mock-provider-candidate-generated-no-network',
+    analyzerProviderConfigured: providerAnalysis.providerConfigured,
+    providerState: providerAnalysis.providerState,
+    providerInvocationMode: 'mock-no-network',
+    providerInvocationAuthority: 'mock-only-no-network',
+    providerInvocationSkipped: false,
+    llmInvoked: false,
+    networkCallsAllowed: false,
+    runtimeAiCallsAllowed: false,
+    requestIrCandidateGenerated: true,
+    requestIrCandidateImported: false,
+    validationRequiredBeforeTraversal: true,
+    validatedRequestIr: false,
+    requestIrValidationStatus: 'not-validated-after-ai-request-analyzer-mock-provider',
+    schemaOnlyValidationResult: null,
+    graphAwareValidationResultStatus: 'not-run-after-ai-request-analyzer-mock-provider',
+    graphAwareValidationResultArtifact: null,
+    futureValidatorExpectations: {
+      ...(asRecord(candidate.futureValidatorExpectations) ?? {}),
+      schemaOnlyValidationResult: null,
+      graphAwareValidationResult: null,
+      analyzerMockProviderValidationRequiredAgain: true,
+    },
+    graphTraversalAllowed: false,
+    contractGenerationAllowed: false,
+    instructionPackGenerationAllowed: false,
+    graphTraversalAllowedFromUnvalidatedAiOutput: false,
+    contractGenerationAllowedFromUnvalidatedAiOutput: false,
+    instructionPackGenerationAllowedFromUnvalidatedAiOutput: false,
+    selectedGraphSliceGenerated: false,
+    contractInputGenerated: false,
+    contractCompilerInputGenerated: false,
+    instructionPackGenerated: false,
+    codexExecutionTriggered: false,
+    graphSourceMutated: false,
+    graphDeltaApplied: false,
+    approvalStatus: 'not-approved',
+    humanDecisionRecorded: false,
+    equivalenceProven: false,
+    runtimeEvidenceSatisfied: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+    outputWritePolicy: 'explicit-output-only',
+    writtenOutputPath: paths.outputPath ?? null,
+    writtenOutputPathAuthorityStatus: paths.outputPath
+      ? 'explicit-preview-output-not-source-authority'
+      : 'not-written-stdout-only',
+    nonExecutionBoundary:
+      'This Request IR Candidate was generated from a deterministic mock analyzer provider response without network calls or LLM invocation. It remains candidate-only and requires validate-request-ir and validate-request-ir-graph before traversal. It does not trigger Codex execution, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
+  }
+  return generated
+}
+
 function findUnsafeAuthorityClaim(value: unknown): { field: string; expected: unknown; actual: unknown } | null {
   const visit = (entry: unknown): { field: string; expected: unknown; actual: unknown } | null => {
     if (Array.isArray(entry)) {
@@ -970,6 +1406,7 @@ async function classifyExistingSourceAuthority(filePath: string): Promise<string
   if (
     artifactRole === EXPECTED_PACK_ROLE ||
     artifactRole === EXPECTED_PROVIDER_CONFIG_ROLE ||
+    artifactRole === EXPECTED_MOCK_PROVIDER_RESPONSE_ROLE ||
     artifactRole === 'ai-request-analyzer-provider-config-boundary-preview' ||
     artifactRole === 'ai-request-analyzer-boundary' ||
     artifactRole === 'request-ir-candidate-schema-preview' ||

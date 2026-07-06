@@ -3492,3 +3492,40 @@ OpenAI/API/LLM/network calls, Request IR Candidate generation, graph validation,
 contract input generation, instruction pack generation, hook execution/install, Codex execution, graph-source mutation,
 graph delta apply, approval/human decision automation, Evidence acceptance, runtime Evidence satisfaction, equivalence
 proof, scope/CI enforcement, strict/guided blocking, or Project Memory extension authority.
+
+## DEC-295 Generate Request IR Candidate From Mock Analyzer Provider
+
+DEC-295 does not supersede DEC-097 through DEC-294. It implements the mock-only analyzer provider response parsing and
+guard pipeline for `graph read-model analyze-request`.
+
+The command accepts the following mock-only provider path:
+
+```text
+graph read-model analyze-request --provider-config <configured-invocation-enabled-preview> --invoke-provider --mock-provider-response <mockProviderResponse> --output <candidateOutput> --json
+```
+
+All four provider invocation inputs are required: analyzer pack, invocation-enabled provider config, explicit
+`--invoke-provider`, and a mock provider response artifact. `--invoke-provider` without `--mock-provider-response`
+blocks and never falls back to OpenAI/API/network calls. `--external-candidate` plus `--invoke-provider` also blocks.
+
+The first calibration artifacts are:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-mock-provider-response.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/request-ir-candidate.mock-provider.add-todo-runtime-evidence-only.preview.json
+```
+
+The mock response artifact is local deterministic fixture input. It contains a candidate JSON payload but no real
+provider IDs, API keys, bearer tokens, secret values, network logs, or raw provider metadata. The generated candidate is
+`artifactRole: request-ir-candidate`, `requestIrCandidateStatus: candidate-only`,
+`providerInvocationMode: mock-no-network`, and `providerInvocationAuthority: mock-only-no-network`.
+
+Mock provider candidate output still has no traversal, selected slice, contract input, instruction pack, Codex
+execution, graph mutation, apply, approval, Evidence satisfaction, equivalence, scope, or CI authority. It must pass
+`validate-request-ir` and then `validate-request-ir-graph` before any graph traversal step can occur.
+
+This decision does not implement real OpenAI/API/LLM/network invocation, read or store secret values, generate
+provider-backed authoritative Request IR, run graph validation, run traversal, generate selected slices, generate
+contract input, generate instruction packs, execute Codex, install hooks, mutate graph-source, apply graph deltas,
+automate approval or human decisions, accept or satisfy Evidence, prove equivalence, enforce scope/CI, or activate
+strict/guided blocking.

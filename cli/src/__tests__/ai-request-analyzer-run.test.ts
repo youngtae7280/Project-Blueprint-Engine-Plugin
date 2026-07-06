@@ -309,6 +309,369 @@ describe('AI Request Analyzer command surface CLI', () => {
     expect(written.graphTraversalAllowed).toBe(false)
   })
 
+  it('generates candidate-only output from a mock provider response without network calls', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-invocation-enabled-preview'))
+    writeJson(join(workspace, 'mock-provider-response.json'), validMockProviderResponse())
+    const outputPath = join('.tmp', 'mock-provider-candidate.json')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--invoke-provider',
+        '--mock-provider-response',
+        'mock-provider-response.json',
+        '--output',
+        outputPath,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+    const written = JSON.parse(readFileSync(join(workspace, outputPath), 'utf8'))
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.analyzerProviderStatus).toBe('mock-provider-candidate-generated-no-network')
+    expect(payload.requestIrCandidateGenerated).toBe(true)
+    expect(written.artifactRole).toBe('request-ir-candidate')
+    expect(written.status).toBe('request-ir-candidate-mock-provider-previewed')
+    expect(written.sourceMockProviderResponse).toBe('mock-provider-response.json')
+    expect(written.providerInvocationMode).toBe('mock-no-network')
+    expect(written.providerInvocationAuthority).toBe('mock-only-no-network')
+    expect(written.llmInvoked).toBe(false)
+    expect(written.networkCallsAllowed).toBe(false)
+    expect(written.graphTraversalAllowed).toBe(false)
+    expect(written.contractGenerationAllowed).toBe(false)
+    expect(written.instructionPackGenerationAllowed).toBe(false)
+
+    const validation = validateRequestIrCandidateSchemaOnly(written)
+    expect(validation.requestIrValidationStatus).toBe('schema-valid-graph-validation-not-run')
+    expect(validation.graphTraversalAllowed).toBe(false)
+  })
+
+  it('blocks --invoke-provider without a mock provider response and writes no output', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-invocation-enabled-preview'))
+    const outputPath = join('.tmp', 'mock-provider-candidate.json')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--invoke-provider',
+        '--output',
+        outputPath,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_MOCK_PROVIDER_RESPONSE_REQUIRED',
+    )
+    expect(payload.llmInvoked).toBe(false)
+    expect(payload.networkCallsAllowed).toBe(false)
+    expect(existsSync(join(workspace, outputPath))).toBe(false)
+  })
+
+  it('blocks external candidate import combined with provider invocation', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-invocation-enabled-preview'))
+    writeJson(join(workspace, 'external-candidate.json'), validRequestIrCandidate())
+    writeJson(join(workspace, 'mock-provider-response.json'), validMockProviderResponse())
+    const outputPath = join('.tmp', 'candidate.json')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--external-candidate',
+        'external-candidate.json',
+        '--invoke-provider',
+        '--mock-provider-response',
+        'mock-provider-response.json',
+        '--output',
+        outputPath,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_EXTERNAL_CANDIDATE_WITH_PROVIDER_INVOCATION_BLOCKED',
+    )
+    expect(existsSync(join(workspace, outputPath))).toBe(false)
+  })
+
+  it('blocks disabled provider config with provider invocation', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('disabled'))
+    writeJson(join(workspace, 'mock-provider-response.json'), validMockProviderResponse())
+    const outputPath = join('.tmp', 'candidate.json')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--invoke-provider',
+        '--mock-provider-response',
+        'mock-provider-response.json',
+        '--output',
+        outputPath,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_PROVIDER_INVOCATION_STATE_BLOCKED',
+    )
+    expect(existsSync(join(workspace, outputPath))).toBe(false)
+  })
+
+  it('blocks invalid mock provider response before writing output', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-invocation-enabled-preview'))
+    writeJson(join(workspace, 'mock-provider-response.json'), {
+      ...validMockProviderResponse(),
+      status: 'wrong-status',
+    })
+    const outputPath = join('.tmp', 'candidate.json')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--invoke-provider',
+        '--mock-provider-response',
+        'mock-provider-response.json',
+        '--output',
+        outputPath,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_MOCK_PROVIDER_RESPONSE_MISMATCH',
+    )
+    expect(existsSync(join(workspace, outputPath))).toBe(false)
+  })
+
+  it('blocks unsafe authority fields in mock provider candidate before writing output', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-invocation-enabled-preview'))
+    writeJson(join(workspace, 'mock-provider-response.json'), {
+      ...validMockProviderResponse(),
+      candidate: {
+        ...validRequestIrCandidate(),
+        graphTraversalAllowed: true,
+      },
+    })
+    const outputPath = join('.tmp', 'candidate.json')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--invoke-provider',
+        '--mock-provider-response',
+        'mock-provider-response.json',
+        '--output',
+        outputPath,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_MOCK_PROVIDER_RESPONSE_AUTHORITY_ESCALATION',
+    )
+    expect(existsSync(join(workspace, outputPath))).toBe(false)
+  })
+
+  it('blocks mock provider candidate request text mismatch', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-invocation-enabled-preview'))
+    writeJson(join(workspace, 'mock-provider-response.json'), {
+      ...validMockProviderResponse(),
+      candidate: {
+        ...validRequestIrCandidate(),
+        requestText: 'Different request.',
+        sourceNaturalLanguageRequest: {
+          sourceKind: 'human-natural-language-request',
+          language: 'en',
+          text: 'Different request.',
+        },
+      },
+    })
+    const outputPath = join('.tmp', 'candidate.json')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--invoke-provider',
+        '--mock-provider-response',
+        'mock-provider-response.json',
+        '--output',
+        outputPath,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_MOCK_PROVIDER_CANDIDATE_REQUEST_MISMATCH',
+    )
+    expect(existsSync(join(workspace, outputPath))).toBe(false)
+  })
+
+  it('blocks mock provider candidate schema mismatch', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-invocation-enabled-preview'))
+    writeJson(join(workspace, 'mock-provider-response.json'), {
+      ...validMockProviderResponse(),
+      candidate: {
+        ...validRequestIrCandidate(),
+        schemaId: 'wrong-schema',
+      },
+    })
+    const outputPath = join('.tmp', 'candidate.json')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--invoke-provider',
+        '--mock-provider-response',
+        'mock-provider-response.json',
+        '--output',
+        outputPath,
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues.map((entry: { code: string }) => entry.code)).toContain(
+      'AI_REQUEST_ANALYZER_MOCK_PROVIDER_CANDIDATE_SCHEMA_MISMATCH',
+    )
+    expect(existsSync(join(workspace, outputPath))).toBe(false)
+  })
+
+  it('blocks output that would overwrite mock provider response and leaves it unchanged', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
+    writeJson(join(workspace, 'provider-config.json'), validProviderConfig('configured-invocation-enabled-preview'))
+    writeJson(join(workspace, 'mock-provider-response.json'), validMockProviderResponse())
+    const mockResponseBefore = readFileSync(join(workspace, 'mock-provider-response.json'), 'utf8')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'analyze-request',
+        '--request',
+        requestText,
+        '--pack',
+        'pack.json',
+        '--provider-config',
+        'provider-config.json',
+        '--invoke-provider',
+        '--mock-provider-response',
+        'mock-provider-response.json',
+        '--output',
+        'mock-provider-response.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues[0].message).toContain('would overwrite the source mock provider response')
+    expect(readFileSync(join(workspace, 'mock-provider-response.json'), 'utf8')).toBe(mockResponseBefore)
+  })
+
   it('blocks unsafe provider config even when external candidate is provided', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, 'pack.json'), validAnalyzerPack())
@@ -557,6 +920,7 @@ function validProviderConfig(
   providerState:
     | 'disabled'
     | 'configured-not-invoked'
+    | 'configured-invocation-enabled-preview'
     | 'unavailable'
     | 'blocked-invalid-config'
     | 'future-invocation-allowed-only-after-explicit-config',
@@ -565,22 +929,28 @@ function validProviderConfig(
     disabled: 'ai-request-analyzer-provider-config-disabled-previewed',
     unavailable: 'ai-request-analyzer-provider-config-unavailable-previewed',
     'configured-not-invoked': 'ai-request-analyzer-provider-config-configured-not-invoked-previewed',
+    'configured-invocation-enabled-preview': 'ai-request-analyzer-provider-config-invocation-enabled-previewed',
     'blocked-invalid-config': 'ai-request-analyzer-provider-config-blocked-invalid-previewed',
     'future-invocation-allowed-only-after-explicit-config':
       'ai-request-analyzer-provider-config-future-invocation-previewed',
   }
+  const configured =
+    providerState === 'configured-not-invoked' || providerState === 'configured-invocation-enabled-preview'
   return {
     schemaVersion: 1,
     artifactRole: 'ai-request-analyzer-provider-config-preview',
     status: statuses[providerState],
     providerState,
     sourceProviderConfigBoundary: 'provider-config-boundary.json',
-    providerInvocationAuthority: 'none-preview-only',
-    providerNameCandidate: providerState === 'configured-not-invoked' ? 'openai' : null,
-    modelNameCandidate: providerState === 'configured-not-invoked' ? 'gpt-future-preview' : null,
+    providerInvocationAuthority:
+      providerState === 'configured-invocation-enabled-preview'
+        ? 'explicit-future-flag-required-not-implemented'
+        : 'none-preview-only',
+    providerNameCandidate: configured ? 'openai' : null,
+    modelNameCandidate: configured ? 'gpt-future-preview' : null,
     providerConfigSource: providerState === 'disabled' ? 'disabled-default-preview' : 'repo-local-preview-config',
-    apiKeySourceRef: providerState === 'configured-not-invoked' ? 'OPENAI_API_KEY' : null,
-    environmentVariableRefs: providerState === 'configured-not-invoked' ? ['OPENAI_API_KEY'] : [],
+    apiKeySourceRef: configured ? 'OPENAI_API_KEY' : null,
+    environmentVariableRefs: configured ? ['OPENAI_API_KEY'] : [],
     secretValueStored: false,
     secretValueInspected: false,
     networkCallsAllowed: false,
@@ -598,5 +968,22 @@ function validProviderConfig(
     equivalenceProven: false,
     scopeEnforced: false,
     ciEnforcementEnabled: false,
+  }
+}
+
+function validMockProviderResponse(): Record<string, unknown> {
+  return {
+    schemaVersion: 1,
+    artifactRole: 'ai-request-analyzer-mock-provider-response-preview',
+    status: 'ai-request-analyzer-mock-provider-response-previewed',
+    providerInvocationMode: 'mock-no-network',
+    providerNameCandidate: 'mock-analyzer-provider',
+    modelNameCandidate: 'mock-request-ir-candidate-generator',
+    networkCallsAllowed: false,
+    llmInvoked: false,
+    runtimeAiCallsAllowed: false,
+    secretValueStored: false,
+    secretValueInspected: false,
+    candidate: validRequestIrCandidate(),
   }
 }

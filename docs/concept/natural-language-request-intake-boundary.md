@@ -118,7 +118,7 @@ run-result preview is:
 examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-run.provider-disabled.add-todo-runtime-evidence-only.preview.json
 ```
 
-The only current candidate-producing mode is explicit external import:
+One current candidate-producing mode is explicit external import:
 
 ```text
 graph read-model analyze-request --request <naturalLanguageText> --pack <aiRequestAnalyzerPackPath> --external-candidate <candidatePath> --output <candidateOutputPath> --json
@@ -130,8 +130,23 @@ traversal, contract, instruction, approval, graph mutation, graph apply, runtime
 authority. Imported candidates are normalized to candidate-only output and must still run through `validate-request-ir`
 and `validate-request-ir-graph` before traversal.
 
+The deterministic mock provider pipeline is also available for parser/guard testing only:
+
+```text
+graph read-model analyze-request --request <naturalLanguageText> --pack <aiRequestAnalyzerPackPath> --provider-config <invocationEnabledProviderConfigPath> --invoke-provider --mock-provider-response <mockResponsePath> --output <candidateOutputPath> --json
+```
+
+This path reads a mock response artifact and writes a candidate-only Request IR Candidate. It does not call OpenAI, any
+API, an LLM, or the network. `--invoke-provider` is mock-only in this slice; without `--mock-provider-response` the
+command blocks, and `--external-candidate` plus `--invoke-provider` is blocked. The Todo App calibration artifacts are:
+
+```text
+examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-mock-provider-response.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/request-ir-candidate.mock-provider.add-todo-runtime-evidence-only.preview.json
+```
+
 This command surface is intended for future Hook Gateway/session integration, but it still does not implement an
-LLM/API provider, hook script, Codex execution, graph-source mutation, graph delta apply, approval, runtime Evidence
+real LLM/API provider, hook script, Codex execution, graph-source mutation, graph delta apply, approval, runtime Evidence
 satisfaction, equivalence proof, or enforcement.
 
 ## AI Request Analyzer Provider Config Boundary
@@ -188,8 +203,9 @@ examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-run.provider-confi
 `disabled`, `unavailable`, `configured-not-invoked`, and
 `future-invocation-allowed-only-after-explicit-config` all keep `llmInvoked: false`, `networkCallsAllowed: false`,
 `providerInvocationAuthority: none-preview-only`, and `candidateImportRequired: true` unless an explicit external
-candidate is imported. External candidate import remains the only candidate-producing path. Unsafe or secret-looking
-provider config blocks the command even when an external candidate is supplied.
+candidate is imported. The current real-provider-free candidate-producing paths are explicit external import and the
+mock provider response parser/guard pipeline. Unsafe or secret-looking provider config blocks the command even when an
+external candidate is supplied.
 
 ## Clarification Interview Boundary
 

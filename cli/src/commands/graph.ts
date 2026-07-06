@@ -1283,12 +1283,15 @@ export async function graphReadModelAnalyzeRequestCommand(context: CommandContex
     const run = await analyzeRequestFile(context.options.root, context.options.request, context.options.pack, {
       providerConfig: context.options.providerConfig,
       externalCandidate: context.options.externalCandidate,
+      invokeProvider: context.options.invokeProvider,
+      mockProviderResponse: context.options.mockProviderResponse,
       output: context.options.output,
     })
     const blocked =
       run.result.analyzerProviderStatus === 'provider-disabled' ||
       run.result.validationFindings.some((finding) => finding.severity === 'error') ||
-      (Boolean(context.options.externalCandidate) && !run.result.requestIrCandidateGenerated)
+      ((Boolean(context.options.externalCandidate) || context.options.invokeProvider) &&
+        !run.result.requestIrCandidateGenerated)
     const errorFindings = run.result.validationFindings.filter((finding) => finding.severity === 'error')
 
     return {
@@ -1296,8 +1299,10 @@ export async function graphReadModelAnalyzeRequestCommand(context: CommandContex
       command: 'graph read-model analyze-request',
       exitCode: blocked ? ExitCode.ValidationFailed : ExitCode.Success,
       message: blocked
-        ? 'AI Request Analyzer provider is disabled or external candidate import was blocked before validation/traversal.'
-        : 'External Request IR Candidate imported as candidate-only without invoking an analyzer provider.',
+        ? 'AI Request Analyzer provider is disabled or candidate generation/import was blocked before validation/traversal.'
+        : run.result.analyzerProviderStatus === 'mock-provider-candidate-generated-no-network'
+          ? 'Mock analyzer provider response generated a candidate-only Request IR Candidate without network calls.'
+          : 'External Request IR Candidate imported as candidate-only without invoking an analyzer provider.',
       issues: blocked
         ? (errorFindings.length > 0 ? errorFindings : run.result.validationFindings).map((finding) =>
             issue({
@@ -1320,7 +1325,7 @@ export async function graphReadModelAnalyzeRequestCommand(context: CommandContex
         ...(run.outputPath ? { outputPath: run.outputPath } : {}),
         next: blocked
           ? 'Provider mode is disabled in this implementation. Import an explicit external Request IR Candidate, or configure a future trusted provider in a separate task. This command did not call an LLM, run validation, run traversal, generate selected slices, generate contract input, generate instruction packs, execute Codex, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.'
-          : 'Run graph read-model validate-request-ir on the imported candidate before graph-aware validation or traversal. This command did not call an LLM, run validation, run traversal, generate selected slices, generate contract input, generate instruction packs, execute Codex, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
+          : 'Run graph read-model validate-request-ir on the candidate before graph-aware validation or traversal. This command did not call an LLM, run graph validation, run traversal, generate selected slices, generate contract input, generate instruction packs, execute Codex, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
       },
     }
   } catch (error) {
