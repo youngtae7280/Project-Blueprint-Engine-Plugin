@@ -396,6 +396,17 @@ command must not call an LLM/API, run graph traversal, generate selected slices,
 generate Instruction Packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve work, satisfy
 runtime Evidence, prove equivalence, enforce scope, or configure CI.
 
+The clarification runtime chain combines the revised-candidate generation step with schema-only Request IR validation:
+
+```text
+graph read-model run-clarification-chain --clarification-pack <packPath> --answers <answersPath> --revised-candidate-output <revisedCandidatePath> --validation-output <validationPath> --output <chainReportPath> --json
+```
+
+It is deterministic and read-only, but it is an alternate clarification branch and is not added to
+`devview:runtime:smoke` by default. The chain stops at schema-only validation and records
+`graphAwareValidationExecuted: false`, `graphTraversalExecuted: false`, `contractInputGenerated: false`, and
+`instructionPackGenerated: false`; graph-aware validation and traversal remain separate explicit commands.
+
 Clarification interview time is human interaction time and is outside the 5 second deterministic DevView runtime budget.
 If a future clarification flow produces a revised Request IR Candidate, that revised candidate must re-enter the
 deterministic validation path with `validate-request-ir` and `validate-request-ir-graph`; those validation commands stay

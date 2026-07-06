@@ -122,6 +122,8 @@ export interface CliOptions {
   bundleDir?: string
   clarificationPack?: string
   answers?: string
+  revisedCandidateOutput?: string
+  validationOutput?: string
   boundary?: string
   intake?: string
   frontendChain?: string

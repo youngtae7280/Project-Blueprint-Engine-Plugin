@@ -161,6 +161,8 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     bundleDir: undefined as string | undefined,
     clarificationPack: undefined as string | undefined,
     answers: undefined as string | undefined,
+    revisedCandidateOutput: undefined as string | undefined,
+    validationOutput: undefined as string | undefined,
     boundary: undefined as string | undefined,
     intake: undefined as string | undefined,
     frontendChain: undefined as string | undefined,
@@ -646,6 +648,20 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--answers requires a file path.' }
       }
       options.answers = value
+      index += 1
+    } else if (arg === '--revised-candidate-output') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--revised-candidate-output requires a file path.' }
+      }
+      options.revisedCandidateOutput = value
+      index += 1
+    } else if (arg === '--validation-output') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--validation-output requires a file path.' }
+      }
+      options.validationOutput = value
       index += 1
     } else if (arg === '--boundary') {
       const value = argv[index + 1]

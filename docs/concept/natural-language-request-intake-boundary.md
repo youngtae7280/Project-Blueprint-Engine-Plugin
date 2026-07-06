@@ -290,11 +290,21 @@ Clarification answers can now feed a deterministic revised Request IR Candidate 
 graph read-model revise-request-ir-candidate --clarification-pack <packPath> --answers <answersPath> --output <revisedCandidatePath> --json
 ```
 
+They can also be run through the deterministic clarification runtime chain, which performs the same candidate-only
+revision and then runs schema-only Request IR validation on the revised candidate:
+
+```text
+graph read-model run-clarification-chain --clarification-pack <packPath> --answers <answersPath> --revised-candidate-output <revisedCandidatePath> --validation-output <schemaValidationPath> --output <chainReportPath> --json
+```
+
 The current no-op calibration answer and revised candidate artifacts are:
 
 ```text
 examples/valid/todo-app-pbe-run/generated/clarification-answers.add-todo-runtime-evidence-only.preview.json
 examples/valid/todo-app-pbe-run/generated/request-ir-candidate.revised.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/request-ir-validation.revised.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.md
 ```
 
 The revised candidate uses `artifactRole: request-ir-candidate`,
@@ -304,6 +314,8 @@ The revised candidate uses `artifactRole: request-ir-candidate`,
 Only answers whose `questionId` and `mapsToRequestIrField` match the generated question plan can update candidate fields,
 and only the clarification boundary vocabulary may be revised. Answers cannot set approval, graph apply, runtime
 Evidence satisfaction, equivalence proof, enforcement, traversal, contract, or instruction-pack authority.
+The runtime chain stops after schema-only validation; graph-aware validation, traversal, selected slice generation,
+contract input generation, and instruction pack generation remain separate explicit commands.
 
 ## Frontend Flow
 

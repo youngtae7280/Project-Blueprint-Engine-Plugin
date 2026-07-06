@@ -926,6 +926,44 @@ node dist/cli/index.js graph read-model revise-request-ir-candidate `
   --json
 ```
 
+### `pbe graph read-model run-clarification-chain`
+
+- Purpose: Deterministically run the clarification revision branch through schema-only Request IR validation. It reads a
+  Clarification Interview Pack and clarification answers, writes a revised Request IR Candidate, writes a schema-only
+  validation result for that revised candidate, and writes a compact chain report.
+- Typical state before running: After `generate-clarification-interview-pack` and clarification answers exist. For the
+  current calibration, `questionCount: 0`, so the chain performs a no-op revision and still validates the revised
+  candidate shape.
+- Options: `--clarification-pack <packPath>`, `--answers <answersPath>`, `--revised-candidate-output <candidatePath>`,
+  `--validation-output <validationPath>`, and `--output <chainReportPath>` are required. `--markdown <file>` may write a
+  compact Markdown chain summary.
+- What it checks: pack and answers provenance through the existing reviser, answer authority safety, allowed Request IR
+  revision fields, output path authority for all outputs before any write, and schema-only Request IR validation on the
+  revised candidate.
+- What it writes: Only explicit outputs. If any output path is unsafe, no revised candidate, validation result, JSON
+  report, or Markdown report is written.
+- Success result: JSON with `artifactRole: devview-clarification-runtime-chain-report`, `revisionMode: no-op-revision`
+  or `answer-applied-revision`, `schemaValidationExecuted: true`,
+  `requestIrValidationStatus: schema-valid-graph-validation-not-run`, and all graph-aware/traversal/contract/
+  instruction/execution/apply/approval/evidence/equivalence/enforcement flags false.
+- Boundary: The chain stops after schema-only validation. It does not run graph-aware validation, graph traversal,
+  selected slice generation, Contract Compiler Input generation, Instruction Pack generation, Codex execution,
+  graph-source mutation, graph delta apply, approval recording, Evidence acceptance, runtime Evidence satisfaction,
+  equivalence proof, scope enforcement, or CI enforcement.
+
+Example:
+
+```powershell
+node dist/cli/index.js graph read-model run-clarification-chain `
+  --clarification-pack examples/valid/todo-app-pbe-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.json `
+  --answers examples/valid/todo-app-pbe-run/generated/clarification-answers.add-todo-runtime-evidence-only.preview.json `
+  --revised-candidate-output .tmp/review-request-ir-candidate-revised.json `
+  --validation-output .tmp/review-request-ir-validation-revised.json `
+  --output .tmp/review-clarification-runtime-chain.json `
+  --markdown .tmp/review-clarification-runtime-chain.md `
+  --json
+```
+
 ### `pbe graph read-model validate-request-ir`
 
 - Purpose: Validate a Request IR Candidate artifact's schema and candidate-only safety boundaries.

@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-clarification-runtime-chain-report",
+  "status": "devview-clarification-runtime-chain-report-generated",
+  "reporterName": "ClarificationRuntimeChainReporter",
+  "chainScope": "clarification-answers-to-revised-request-ir-schema-validation-only",
+  "sourceClarificationInterviewPack": "examples/valid/todo-app-pbe-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.json",
+  "sourceClarificationAnswers": "examples/valid/todo-app-pbe-run/generated/clarification-answers.add-todo-runtime-evidence-only.preview.json",
+  "sourceOriginalRequestIrCandidate": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json",
+  "revisedCandidateOutputPath": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate.revised.add-todo-runtime-evidence-only.preview.json",
+  "schemaValidationOutputPath": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.revised.add-todo-runtime-evidence-only.preview.json",
+  "questionCount": 0,
+  "revisionMode": "no-op-revision",
+  "revisionStatus": "no-op-revision-generated",
+  "revisedCandidateGenerated": true,
+  "schemaValidationExecuted": true,
+  "schemaValidationStatus": "schema-valid",
+  "requestIrValidationStatus": "schema-valid-graph-validation-not-run",
+  "graphAwareValidationExecuted": false,
+  "graphTraversalExecuted": false,
+  "selectedGraphSliceGenerated": false,
+  "contractInputGenerated": false,
+  "instructionPackGenerated": false,
+  "codexExecutionTriggered": false,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "approvalRecorded": false,
+  "approvalStatus": "not-approved",
+  "humanDecisionRecorded": false,
+  "runtimeEvidenceSatisfied": false,
+  "evidenceAccepted": false,
+  "equivalenceProven": false,
+  "scopeEnforced": false,
+  "ciEnforcementEnabled": false,
+  "humanReviewRequired": true,
+  "revisionFindings": [],
+  "schemaValidationFindings": [
+    {
+      "code": "REQUEST_IR_CANDIDATE_UNRESOLVED_AMBIGUITY",
+      "severity": "warning",
+      "field": "ambiguities",
+      "message": "One or more candidate ambiguities remain unresolved; human review remains required.",
+      "actual": 2,
+      "suggestedFix": "Resolve ambiguity through deterministic validation or human clarification before traversal."
+    }
+  ],
+  "validationFindings": [
+    {
+      "code": "REQUEST_IR_CANDIDATE_UNRESOLVED_AMBIGUITY",
+      "severity": "warning",
+      "field": "ambiguities",
+      "message": "One or more candidate ambiguities remain unresolved; human review remains required.",
+      "actual": 2,
+      "suggestedFix": "Resolve ambiguity through deterministic validation or human clarification before traversal."
+    }
+  ],
+  "outputWritePolicy": "explicit-output-only",
+  "writtenOutputPath": "examples/valid/todo-app-pbe-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.json",
+  "markdownReportPath": "examples/valid/todo-app-pbe-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.md",
+  "writtenOutputPathAuthorityStatus": "explicit-chain-output-not-source-authority",
+  "markdownReportAuthorityStatus": "explicit-chain-output-not-source-authority",
+  "nonExecutionBoundary": "This clarification runtime chain runs only deterministic clarification revision and schema-only Request IR validation. It does not call an LLM/API, run graph-aware validation, run graph traversal, generate selected slices, generate contract input, generate instruction packs, trigger Codex execution, mutate graph-source, apply graph deltas, record approval, satisfy or accept Evidence, prove equivalence, enforce scope, or configure CI."
+}

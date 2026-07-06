@@ -3623,3 +3623,26 @@ selected slice generation, contract input generation, instruction pack generatio
 execution, graph-source mutation, graph delta apply, approval/human decision automation, Evidence acceptance, runtime
 Evidence satisfaction, equivalence proof, scope/CI enforcement, strict/guided blocking, or Project Memory extension
 authority.
+
+## DEC-299 Implement Clarification Runtime Chain
+
+DEC-299 does not supersede DEC-097 through DEC-298. It adds
+`graph read-model run-clarification-chain` as a deterministic clarification branch that reuses the existing
+clarification answer reviser and schema-only Request IR validator.
+
+The command reads a Clarification Interview Pack and clarification answers, writes a revised Request IR Candidate
+preview, writes schema-only validation for that revised candidate, and writes a
+`devview-clarification-runtime-chain-report` JSON/Markdown summary. The current Todo App calibration path has
+`questionCount: 0`, so the chain records `revisionMode: no-op-revision` while still proving the revised candidate can
+re-enter schema-only validation.
+
+The chain guards all output paths before any write. It refuses to overwrite the pack, answers, original candidate,
+linked schema/intake/analyzer artifacts, graph-source/read-model source authority, Evidence paths, PBE source/control
+paths, or source-authority-shaped JSON. Unsafe pack/answer provenance, unknown question ids, unsafe authority answer
+fields, and unsafe output targets block without partial candidate/validation/report writes.
+
+This decision intentionally stops at schema-only validation. It adds no graph-aware validation execution, graph
+traversal, selected slice generation, Contract Compiler Input generation, Instruction Pack generation, Codex execution,
+graph-source mutation, graph delta apply, approval or human decision automation, Evidence acceptance, runtime Evidence
+satisfaction, equivalence proof, scope enforcement, CI enforcement, strict/guided blocking, live provider invocation, or
+Project Memory extension authority.

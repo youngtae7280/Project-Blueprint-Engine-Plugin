@@ -13,6 +13,7 @@ import { collectGitDerivedChangedFiles } from '../core/git-derived-changed-file-
 import { generateGraphDeltaHumanReviewPacket } from '../core/graph-delta-human-review-packet.js'
 import { generateGraphTraversalPlanFile } from '../core/graph-traversal-plan.js'
 import { generateContractCompilerInputFile } from '../core/contract-input-generator.js'
+import { runClarificationRuntimeChainFile } from '../core/clarification-runtime-chain.js'
 import { reportDevViewBaselineFile } from '../core/devview-baseline-report.js'
 import { recordHumanDecisionFile } from '../core/human-decision-record.js'
 import { reportHookGatewayHealthFile } from '../core/hook-gateway-health-report.js'
@@ -1500,6 +1501,92 @@ export async function graphReadModelReviseRequestIrCandidateCommand(context: Com
           message,
           suggestedFix:
             'Provide readable clarification pack and answers artifacts, plus a dedicated revised candidate preview output path.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelRunClarificationChainCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.clarificationPack) {
+    return invalidCommand('graph read-model run-clarification-chain requires --clarification-pack <packPath>.')
+  }
+  if (!context.options.answers) {
+    return invalidCommand('graph read-model run-clarification-chain requires --answers <answersPath>.')
+  }
+  if (!context.options.revisedCandidateOutput) {
+    return invalidCommand(
+      'graph read-model run-clarification-chain requires --revised-candidate-output <candidatePath>.',
+    )
+  }
+  if (!context.options.validationOutput) {
+    return invalidCommand('graph read-model run-clarification-chain requires --validation-output <validationPath>.')
+  }
+  if (!context.options.output) {
+    return invalidCommand('graph read-model run-clarification-chain requires --output <chainReportPath>.')
+  }
+
+  try {
+    const chain = await runClarificationRuntimeChainFile(context.options.root, {
+      clarificationPack: context.options.clarificationPack,
+      answers: context.options.answers,
+      revisedCandidateOutput: context.options.revisedCandidateOutput,
+      validationOutput: context.options.validationOutput,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    const blocked =
+      chain.report.status !== 'devview-clarification-runtime-chain-report-generated' ||
+      chain.report.requestIrValidationStatus === 'validation-blocked'
+    const errorFindings = chain.report.validationFindings.filter((finding) => finding.severity === 'error')
+
+    return {
+      ok: !blocked,
+      command: 'graph read-model run-clarification-chain',
+      exitCode: blocked ? ExitCode.ValidationFailed : ExitCode.Success,
+      message: blocked
+        ? 'Clarification runtime chain blocked before downstream graph authority.'
+        : 'Clarification runtime chain generated a revised candidate and schema-only validation report.',
+      issues: blocked
+        ? (errorFindings.length > 0 ? errorFindings : chain.report.validationFindings).map((finding) =>
+            issue({
+              validator: 'ClarificationRuntimeChainReporter',
+              code: finding.code,
+              severity: finding.severity,
+              message: finding.message,
+              reason: finding.field ? `Field: ${finding.field}` : undefined,
+              suggestedFix:
+                finding.suggestedFix ??
+                'Fix the clarification pack, answers, revised candidate, or schema-only validation boundary.',
+            }),
+          )
+        : [],
+      data: {
+        ...chain.report,
+        ...(chain.revisedCandidateOutput ? { revisedCandidateOutput: chain.revisedCandidateOutput } : {}),
+        ...(chain.validationOutput ? { validationOutput: chain.validationOutput } : {}),
+        ...(chain.outputPath ? { outputPath: chain.outputPath } : {}),
+        ...(chain.markdownReport ? { markdownReport: chain.markdownReport } : {}),
+        next: blocked
+          ? 'Repair the clarification revision or schema-only validation findings. This chain did not run graph-aware validation, traversal, selected slice generation, contract input, instruction pack generation, Codex execution, graph mutation, approval, Evidence acceptance, equivalence proof, scope enforcement, or CI enforcement.'
+          : 'Run graph read-model validate-request-ir-graph only as a separate explicit step if graph-aware validation is desired. This chain stopped after schema-only validation.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model run-clarification-chain',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Clarification runtime chain could not run.',
+      issues: [
+        issue({
+          validator: 'ClarificationRuntimeChainReporter',
+          code: 'CLARIFICATION_RUNTIME_CHAIN_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide readable clarification pack and answers artifacts plus dedicated revised candidate, validation, report, and Markdown output paths.',
         }),
       ],
     }

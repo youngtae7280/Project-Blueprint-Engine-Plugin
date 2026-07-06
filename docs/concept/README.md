@@ -545,6 +545,14 @@ The current no-op calibration answer and revised candidate artifacts are
 The revised candidate is still candidate-only and must rerun deterministic validation before graph-aware validation or
 traversal.
 
+`graph read-model run-clarification-chain --clarification-pack <packPath> --answers <answersPath>
+--revised-candidate-output <candidatePath> --validation-output <validationPath> --output <chainReportPath> --json`
+ties the clarification branch to schema-only validation without running graph-aware validation or traversal. The
+calibration outputs are
+`examples/valid/todo-app-pbe-run/generated/request-ir-validation.revised.add-todo-runtime-evidence-only.preview.json`,
+`examples/valid/todo-app-pbe-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.json`, and
+`examples/valid/todo-app-pbe-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.md`.
+
 The Request IR Candidate schema and first calibration fixture are recorded in
 `examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json` and
 `examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json`. They

@@ -78,10 +78,10 @@
   apply, CI enforcement, or strict mode.
 - [Natural Language Request Intake Boundary](concept/natural-language-request-intake-boundary.md) - DevView compiler
   frontend boundary for natural language request intake, AI Request Analyzer candidate-only boundaries, Request IR
-  Candidate schema/calibration fixtures, schema-only validation, non-traversing graph-aware validation, deterministic
-  Graph Traversal Plan generation, Selected Graph Slice generation, selected-slice-to-contract-input generation, and
-  Contract-Input-to-Instruction-Pack generation without implementing an AI classifier, runtime LLM calls, Codex
-  execution, graph-source mutation, apply, or approval.
+  Candidate schema/calibration fixtures, clarification runtime chain schema-only validation, non-traversing graph-aware
+  validation, deterministic Graph Traversal Plan generation, Selected Graph Slice generation,
+  selected-slice-to-contract-input generation, and Contract-Input-to-Instruction-Pack generation without implementing an
+  AI classifier, runtime LLM calls, Codex execution, graph-source mutation, apply, or approval.
 - AI Request Analyzer provider config boundary preview -
   `examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json`
   and

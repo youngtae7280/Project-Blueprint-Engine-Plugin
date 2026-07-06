@@ -2224,6 +2224,22 @@ It is still only a Request IR Candidate. It records
 approval/evidence/equivalence/enforcement flags false. The schema-only validator accepts the revised candidate shape but
 returns `schema-valid-graph-validation-not-run`; graph-aware validation and traversal remain separate later passes.
 
+The clarification runtime chain ties that no-op revision to schema-only validation without running graph-aware
+validation or any downstream compiler step:
+
+```text
+examples/valid/todo-app-pbe-run/generated/request-ir-validation.revised.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.md
+```
+
+The chain report uses `artifactRole: devview-clarification-runtime-chain-report`, records `revisionMode:
+no-op-revision` for the current calibration, and preserves `graphAwareValidationExecuted: false`,
+`graphTraversalExecuted: false`, `contractInputGenerated: false`, `instructionPackGenerated: false`,
+`codexExecutionTriggered: false`, `graphSourceMutated: false`, `graphDeltaApplied: false`, `runtimeEvidenceSatisfied:
+false`, `evidenceAccepted: false`, `equivalenceProven: false`, `scopeEnforced: false`, and
+`ciEnforcementEnabled: false`.
+
 The Request IR Candidate schema and first calibration candidate fixture are:
 
 ```text
