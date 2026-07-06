@@ -978,11 +978,12 @@ node dist/cli/index.js graph read-model report-equivalence-proof-readiness `
 - What it checks: Scope/CI Enforcement Policy boundary role/status, equivalence-proof-readiness role/status/safety
   fields, and output authority.
 - What it writes: Nothing by default. It writes only to explicit `--output` and `--markdown` paths.
-- Success result: JSON with `artifactRole: devview-scope-ci-enforcement-readiness-preview`. If equivalence proof
-  readiness is ready, disabled enforcement readiness is `dry-run-ready-equivalence-proof-readiness-present`; otherwise
-  it is blocked. In all cases `scopeEnforcementAllowed`, `ciEnforcementAllowed`, `scopeEnforced`,
-  `ciEnforcementEnabled`, `requiredChecksConfigured`, `branchProtectionChanged`, `diffRejectionEnabled`,
-  `strictModeEnabled`, and `guidedEnforcementEnabled` remain false.
+- Success result: JSON with `artifactRole: devview-scope-ci-enforcement-readiness-preview`. Scope/CI readiness now
+  depends on runtime-satisfaction-gated Equivalence readiness provenance and remains blocked in this slice even if a
+  future Equivalence readiness input is ready-shaped, because no enforcement command/activation surface exists. In all
+  cases `scopeEnforcementAllowed`, `ciEnforcementAllowed`, `scopeEnforced`, `ciEnforcementEnabled`,
+  `requiredChecksConfigured`, `branchProtectionChanged`, `diffRejectionEnabled`, `strictModeEnabled`, and
+  `guidedEnforcementEnabled` remain false.
 - Next command: Separate future commands and explicit human/trust policy would be required before any enforcement. This
   command itself never rejects diffs, configures required checks, changes branch protection, or activates strict/guided
   blocking.
@@ -992,7 +993,7 @@ Example:
 ```powershell
 node dist/cli/index.js graph read-model report-scope-ci-enforcement-readiness `
   --policy examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-policy-boundary.runtime-evidence-only.preview.json `
-  --equivalence-proof-readiness examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-defer-decision.runtime-evidence-only.preview.json `
+  --equivalence-proof-readiness examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json `
   --output .tmp/devview-scope-ci-enforcement-readiness.json `
   --json
 ```
@@ -1873,8 +1874,8 @@ node dist/cli/index.js graph read-model report-devview-baseline `
   --apply-readiness examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply-readiness.blocked-defer-decision.runtime-evidence-only.preview.json `
   --mutation-readiness examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-readiness.blocked-defer-decision.runtime-evidence-only.preview.json `
   --evidence-acceptance-readiness examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-readiness.blocked-defer-decision.runtime-evidence-only.preview.json `
-  --equivalence-proof-readiness examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-defer-decision.runtime-evidence-only.preview.json `
-  --scope-ci-enforcement-readiness examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-defer-decision.runtime-evidence-only.preview.json `
+  --equivalence-proof-readiness examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json `
+  --scope-ci-enforcement-readiness examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.json `
   --output .tmp/review-devview-baseline.json `
   --markdown .tmp/review-devview-baseline.md `
   --json

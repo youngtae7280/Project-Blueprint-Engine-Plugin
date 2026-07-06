@@ -2013,16 +2013,19 @@ It anchors the `graph read-model report-scope-ci-enforcement-readiness` command.
 artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-defer-decision.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.md
 ```
 
-It is blocked because Equivalence Proof readiness is blocked. The command reports disabled readiness only and keeps
-`scopeEnforcementAllowed`, `ciEnforcementAllowed`, `scopeEnforced`, `ciEnforcementEnabled`,
-`requiredChecksConfigured`, `branchProtectionChanged`, `diffRejectionEnabled`, `strictModeEnabled`,
-`guidedEnforcementEnabled`, `equivalenceProven`, `evidenceAccepted`, `runtimeEvidenceSatisfied`,
-`graphDeltaApplied`, and `graphSourceMutated` false. It performs no scope enforcement, CI required check setup,
-branch protection mutation, diff rejection, strict/guided blocking, equivalence proof, Evidence acceptance, graph apply,
-or graph-source mutation.
+It is blocked because the canonical Equivalence Proof readiness artifact is itself blocked by Runtime Evidence
+Satisfaction readiness. The Scope/CI report carries `sourceRuntimeEvidenceSatisfactionReadiness`,
+`runtimeEvidenceSatisfactionReadinessStatus`, accepted-evidence/source-evidence/instruction-pack provenance, and the
+required Evidence id as context only. It keeps `scopeEnforcementAllowed`, `ciEnforcementAllowed`, `scopeEnforced`,
+`ciEnforcementEnabled`, `requiredChecksConfigured`, `branchProtectionChanged`, `diffRejectionEnabled`,
+`strictModeEnabled`, `guidedEnforcementEnabled`, `equivalenceProven`, top-level `evidenceAccepted`,
+`runtimeEvidenceSatisfied`, `graphDeltaApplied`, and `graphSourceMutated` false. It performs no scope enforcement, CI
+required check setup, branch protection mutation, diff rejection, strict/guided blocking, equivalence proof, Evidence
+acceptance, graph apply, or graph-source mutation.
 
 The Graph-source Mutation Policy boundary preview is:
 

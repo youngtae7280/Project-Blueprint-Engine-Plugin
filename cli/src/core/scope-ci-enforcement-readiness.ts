@@ -28,19 +28,38 @@ export interface ScopeCiEnforcementReadinessPreview {
   readinessScope: 'scope-ci-enforcement-readiness-preview-disabled-no-enforcement'
   sourcePolicyBoundary: string
   sourceEquivalenceProofReadiness: string
+  sourceRuntimeEvidenceSatisfactionReadiness: string | null
   sourceEvidenceAcceptanceReadiness: string | null
+  sourceAcceptedEvidenceRecord: string | null
+  sourceEvidenceArtifact: string | null
+  sourceInstructionPack: string | null
+  sourceContractInput: string | null
+  sourceRuntimeEvidenceAuthority: string | null
+  sourceEvidenceCheckBinding: string | null
+  sourceOutputRequirement: string | null
+  sourceRuntimeReport: string | null
+  sourceScopeReport: string | null
+  sourceGraphDeltaApplyReport: string | null
+  sourceCheckReport: string | null
   sourceGraphSourceMutationReadiness: string | null
   sourceApplyReadiness: string | null
   sourceApprovedProposalState: string | null
   sourceGraphDeltaProposal: string | null
   proposalId: string
+  requiredEvidenceId: string | null
+  matchedRequiredEvidence: JsonRecord | null
+  sourceAcceptedEvidenceAccepted: boolean
   scopeCiEnforcementReadinessStatus:
-    | 'dry-run-ready-equivalence-proof-readiness-present'
     | 'blocked-equivalence-proof-readiness-not-ready'
+    | 'blocked-equivalence-runtime-satisfaction-provenance-missing'
+    | 'blocked-scope-ci-enforcement-command-not-implemented'
+    | 'blocked-unsafe-authority-flag'
+    | 'ready-for-future-scope-ci-enforcement-command'
   equivalenceProofReadinessStatus: string
-  evidenceAcceptanceReadinessStatus: string
-  mutationReadinessStatus: string
-  applyReadinessStatus: string
+  runtimeEvidenceSatisfactionReadinessStatus: string | null
+  evidenceAcceptanceReadinessStatus: string | null
+  mutationReadinessStatus: string | null
+  applyReadinessStatus: string | null
   scopeEnforcementAllowed: false
   ciEnforcementAllowed: false
   scopeEnforcementCommandImplemented: false
@@ -62,6 +81,7 @@ export interface ScopeCiEnforcementReadinessPreview {
   mutationAllowed: false
   acceptanceAllowed: false
   equivalenceAllowed: false
+  nonEnforcing: true
   approvedProposalStateCreated: boolean
   humanDecisionRecorded: boolean
   humanReviewRequired: true
@@ -129,6 +149,9 @@ export async function reportScopeCiEnforcementReadinessFile(
     markdownReport = relativePath(root, resolvedMarkdownPath)
     readiness.markdownReportPath = markdownReport
     await writeTextAtomic(resolvedMarkdownPath, renderScopeCiEnforcementReadinessMarkdown(readiness))
+    if (options.output) {
+      await writeJsonAtomic(resolveRepoPath(root, options.output), readiness)
+    }
   }
 
   return { readiness, ...(outputPath ? { outputPath } : {}), ...(markdownReport ? { markdownReport } : {}) }
@@ -142,29 +165,54 @@ function buildScopeCiReadiness(
     resolvedEquivalenceReadinessPath: string
   },
 ): ScopeCiEnforcementReadinessPreview {
-  const ready = input.equivalenceReadiness.status === 'devview-equivalence-proof-readiness-ready'
+  const equivalenceReady = input.equivalenceReadiness.status === 'devview-equivalence-proof-readiness-ready'
+  const hasRuntimeSatisfactionProvenance =
+    Boolean(stringValue(input.equivalenceReadiness.sourceRuntimeEvidenceSatisfactionReadiness)) &&
+    Boolean(stringValue(input.equivalenceReadiness.runtimeEvidenceSatisfactionReadinessStatus))
+  const scopeCiStatus = scopeCiReadinessStatus(input.equivalenceReadiness, {
+    equivalenceReady,
+    hasRuntimeSatisfactionProvenance,
+  })
+
   return {
     schemaVersion: 1,
     artifactRole: READINESS_ROLE,
-    status: ready ? 'devview-scope-ci-enforcement-readiness-ready' : 'devview-scope-ci-enforcement-readiness-blocked',
+    status: 'devview-scope-ci-enforcement-readiness-blocked',
     readinessScope: 'scope-ci-enforcement-readiness-preview-disabled-no-enforcement',
     sourcePolicyBoundary: relativePath(root, input.resolvedPolicyPath),
     sourceEquivalenceProofReadiness: relativePath(root, input.resolvedEquivalenceReadinessPath),
+    sourceRuntimeEvidenceSatisfactionReadiness:
+      stringValue(input.equivalenceReadiness.sourceRuntimeEvidenceSatisfactionReadiness) || null,
     sourceEvidenceAcceptanceReadiness:
       stringValue(input.equivalenceReadiness.sourceEvidenceAcceptanceReadiness) || null,
+    sourceAcceptedEvidenceRecord: stringValue(input.equivalenceReadiness.sourceAcceptedEvidenceRecord) || null,
+    sourceEvidenceArtifact: stringValue(input.equivalenceReadiness.sourceEvidenceArtifact) || null,
+    sourceInstructionPack: stringValue(input.equivalenceReadiness.sourceInstructionPack) || null,
+    sourceContractInput: stringValue(input.equivalenceReadiness.sourceContractInput) || null,
+    sourceRuntimeEvidenceAuthority: stringValue(input.equivalenceReadiness.sourceRuntimeEvidenceAuthority) || null,
+    sourceEvidenceCheckBinding: stringValue(input.equivalenceReadiness.sourceEvidenceCheckBinding) || null,
+    sourceOutputRequirement: stringValue(input.equivalenceReadiness.sourceOutputRequirement) || null,
+    sourceRuntimeReport: stringValue(input.equivalenceReadiness.sourceRuntimeReport) || null,
+    sourceScopeReport: stringValue(input.equivalenceReadiness.sourceScopeReport) || null,
+    sourceGraphDeltaApplyReport: stringValue(input.equivalenceReadiness.sourceGraphDeltaApplyReport) || null,
+    sourceCheckReport: stringValue(input.equivalenceReadiness.sourceCheckReport) || null,
     sourceGraphSourceMutationReadiness:
       stringValue(input.equivalenceReadiness.sourceGraphSourceMutationReadiness) || null,
     sourceApplyReadiness: stringValue(input.equivalenceReadiness.sourceApplyReadiness) || null,
     sourceApprovedProposalState: stringValue(input.equivalenceReadiness.sourceApprovedProposalState) || null,
     sourceGraphDeltaProposal: stringValue(input.equivalenceReadiness.sourceGraphDeltaProposal) || null,
     proposalId: stringValue(input.equivalenceReadiness.proposalId) || 'unknown-proposal',
-    scopeCiEnforcementReadinessStatus: ready
-      ? 'dry-run-ready-equivalence-proof-readiness-present'
-      : 'blocked-equivalence-proof-readiness-not-ready',
+    requiredEvidenceId: stringValue(input.equivalenceReadiness.requiredEvidenceId) || null,
+    matchedRequiredEvidence: asRecord(input.equivalenceReadiness.matchedRequiredEvidence),
+    sourceAcceptedEvidenceAccepted: input.equivalenceReadiness.sourceAcceptedEvidenceAccepted === true,
+    scopeCiEnforcementReadinessStatus: scopeCiStatus,
     equivalenceProofReadinessStatus: stringValue(input.equivalenceReadiness.equivalenceProofReadinessStatus),
-    evidenceAcceptanceReadinessStatus: stringValue(input.equivalenceReadiness.evidenceAcceptanceReadinessStatus),
-    mutationReadinessStatus: stringValue(input.equivalenceReadiness.mutationReadinessStatus),
-    applyReadinessStatus: stringValue(input.equivalenceReadiness.applyReadinessStatus),
+    runtimeEvidenceSatisfactionReadinessStatus:
+      stringValue(input.equivalenceReadiness.runtimeEvidenceSatisfactionReadinessStatus) || null,
+    evidenceAcceptanceReadinessStatus:
+      stringValue(input.equivalenceReadiness.evidenceAcceptanceReadinessStatus) || null,
+    mutationReadinessStatus: stringValue(input.equivalenceReadiness.mutationReadinessStatus) || null,
+    applyReadinessStatus: stringValue(input.equivalenceReadiness.applyReadinessStatus) || null,
     scopeEnforcementAllowed: false,
     ciEnforcementAllowed: false,
     scopeEnforcementCommandImplemented: false,
@@ -186,32 +234,16 @@ function buildScopeCiReadiness(
     mutationAllowed: false,
     acceptanceAllowed: false,
     equivalenceAllowed: false,
+    nonEnforcing: true,
     approvedProposalStateCreated: input.equivalenceReadiness.approvedProposalStateCreated === true,
     humanDecisionRecorded: input.equivalenceReadiness.humanDecisionRecorded === true,
     humanReviewRequired: true,
-    validationFindings: ready
-      ? []
-      : [
-          {
-            code: 'SCOPE_CI_ENFORCEMENT_EQUIVALENCE_PROOF_READINESS_NOT_READY',
-            severity: 'warning',
-            field: 'equivalenceProofReadinessStatus',
-            expected: 'dry-run-ready-evidence-acceptance-readiness-present',
-            actual: input.equivalenceReadiness.equivalenceProofReadinessStatus,
-            message: 'Scope/CI enforcement readiness is blocked because Equivalence Proof readiness is not ready.',
-          },
-        ],
-    allowedUse: ready
-      ? [
-          'review future scope/CI enforcement readiness before separate enforcement commands exist',
-          'preserve equivalence proof readiness provenance without enabling enforcement',
-          'serve as disabled enforcement readiness context only',
-        ]
-      : [
-          'document why scope/CI enforcement readiness is blocked',
-          'preserve equivalence proof readiness provenance for human review',
-          'keep blocked inputs out of enforcement-ready state',
-        ],
+    validationFindings: buildValidationFindings(input.equivalenceReadiness, scopeCiStatus),
+    allowedUse: [
+      'document why scope/CI enforcement readiness is blocked',
+      'preserve runtime-satisfaction-gated Equivalence Proof readiness provenance for human review',
+      'keep Scope/CI enforcement disabled until a separate future enforcement command and trust policy exist',
+    ],
     forbiddenUse: [
       'scope enforcement',
       'CI required check',
@@ -227,7 +259,7 @@ function buildScopeCiReadiness(
       'Codex hook or config mutation',
       'approval automation',
       'user acceptance automation',
-      'inference of enforcement from Codex, AI, validators, runtime smoke, CI, review packet, equivalence readiness, Evidence readiness, mutation readiness, or apply readiness',
+      'inference of enforcement from Codex, AI, validators, runtime smoke, CI, review packet, equivalence readiness, Evidence readiness, runtime Evidence satisfaction readiness, mutation readiness, or apply readiness',
     ],
     outputWritePolicy: 'explicit-output-only',
     writtenOutputPath: null,
@@ -238,21 +270,92 @@ function buildScopeCiReadiness(
   }
 }
 
+function scopeCiReadinessStatus(
+  equivalenceReadiness: JsonRecord,
+  input: {
+    equivalenceReady: boolean
+    hasRuntimeSatisfactionProvenance: boolean
+  },
+): ScopeCiEnforcementReadinessPreview['scopeCiEnforcementReadinessStatus'] {
+  if (!input.hasRuntimeSatisfactionProvenance) {
+    return 'blocked-equivalence-runtime-satisfaction-provenance-missing'
+  }
+  if (!input.equivalenceReady) {
+    return 'blocked-equivalence-proof-readiness-not-ready'
+  }
+  if (
+    equivalenceReadiness.equivalenceProofReadinessStatus === 'ready-for-future-equivalence-proof-command' ||
+    equivalenceReadiness.status === 'devview-equivalence-proof-readiness-ready'
+  ) {
+    return 'blocked-scope-ci-enforcement-command-not-implemented'
+  }
+  return 'blocked-equivalence-proof-readiness-not-ready'
+}
+
+function buildValidationFindings(
+  equivalenceReadiness: JsonRecord,
+  status: ScopeCiEnforcementReadinessPreview['scopeCiEnforcementReadinessStatus'],
+): ScopeCiEnforcementReadinessFinding[] {
+  if (status === 'blocked-equivalence-runtime-satisfaction-provenance-missing') {
+    return [
+      {
+        code: 'SCOPE_CI_ENFORCEMENT_EQUIVALENCE_RUNTIME_SATISFACTION_PROVENANCE_MISSING',
+        severity: 'warning',
+        field: 'sourceRuntimeEvidenceSatisfactionReadiness',
+        expected: 'runtime-satisfaction-gated equivalence readiness provenance',
+        actual: equivalenceReadiness.sourceRuntimeEvidenceSatisfactionReadiness ?? null,
+        message:
+          'Scope/CI enforcement readiness is blocked because Equivalence Proof readiness does not carry Runtime Evidence Satisfaction readiness provenance.',
+      },
+    ]
+  }
+  if (status === 'blocked-scope-ci-enforcement-command-not-implemented') {
+    return [
+      {
+        code: 'SCOPE_CI_ENFORCEMENT_COMMAND_NOT_IMPLEMENTED',
+        severity: 'warning',
+        field: 'scopeCiEnforcementReadinessStatus',
+        expected: 'separate future Scope/CI enforcement command and trust policy',
+        actual: 'readiness-only-disabled-surface',
+        message:
+          'Scope/CI enforcement readiness remains blocked because this slice does not implement enforcement commands, required checks, branch protection, diff rejection, or strict/guided blocking.',
+      },
+    ]
+  }
+  return [
+    {
+      code: 'SCOPE_CI_ENFORCEMENT_EQUIVALENCE_PROOF_READINESS_NOT_READY',
+      severity: 'warning',
+      field: 'equivalenceProofReadinessStatus',
+      expected: 'future equivalence proof readiness after runtime Evidence satisfaction binding',
+      actual: equivalenceReadiness.equivalenceProofReadinessStatus,
+      message:
+        'Scope/CI enforcement readiness is blocked because Equivalence Proof readiness is not ready and remains runtime-satisfaction-gated.',
+    },
+  ]
+}
+
 export function renderScopeCiEnforcementReadinessMarkdown(readiness: ScopeCiEnforcementReadinessPreview): string {
+  const summaryRows: Array<[string, string]> = [
+    ['Scope/CI enforcement readiness', `\`${readiness.scopeCiEnforcementReadinessStatus}\``],
+    ['Equivalence proof readiness', `\`${readiness.equivalenceProofReadinessStatus}\``],
+    [
+      'Runtime Evidence satisfaction readiness',
+      `\`${readiness.runtimeEvidenceSatisfactionReadinessStatus ?? 'none'}\``,
+    ],
+    ['Scope enforcement allowed', `\`${readiness.scopeEnforcementAllowed}\``],
+    ['CI enforcement allowed', `\`${readiness.ciEnforcementAllowed}\``],
+    ['Equivalence readiness source', `\`${readiness.sourceEquivalenceProofReadiness}\``],
+    ['Runtime satisfaction readiness source', `\`${readiness.sourceRuntimeEvidenceSatisfactionReadiness ?? 'none'}\``],
+    ['Instruction pack', `\`${readiness.sourceInstructionPack ?? 'none'}\``],
+    ['Required Evidence ID', `\`${readiness.requiredEvidenceId ?? 'none'}\``],
+  ]
+
   return `# DevView Scope/CI Enforcement Readiness
 
 Status: \`${readiness.status}\`
 
-| Field | Value |
-| --- | --- |
-| Scope/CI enforcement readiness | \`${readiness.scopeCiEnforcementReadinessStatus}\` |
-| Equivalence proof readiness | \`${readiness.equivalenceProofReadinessStatus}\` |
-| Evidence acceptance readiness | \`${readiness.evidenceAcceptanceReadinessStatus}\` |
-| Scope enforcement allowed | \`${readiness.scopeEnforcementAllowed}\` |
-| CI enforcement allowed | \`${readiness.ciEnforcementAllowed}\` |
-| Proposal | \`${readiness.sourceGraphDeltaProposal ?? 'none'}\` |
-| Proposal ID | \`${readiness.proposalId}\` |
-| Equivalence readiness source | \`${readiness.sourceEquivalenceProofReadiness}\` |
+${renderMarkdownTable(['Field', 'Value'], summaryRows)}
 
 ## Non-Execution Boundary
 
@@ -269,6 +372,19 @@ Status: \`${readiness.status}\`
 - Graph delta applied: \`${readiness.graphDeltaApplied}\`
 - Graph-source mutated: \`${readiness.graphSourceMutated}\`
 `
+}
+
+function renderMarkdownTable(headers: [string, string], rows: Array<[string, string]>): string {
+  const allRows = [headers, ...rows]
+  const firstWidth = Math.max(...allRows.map((row) => row[0].length))
+  const secondWidth = Math.max(...allRows.map((row) => row[1].length))
+  const renderRow = (row: [string, string]): string =>
+    `| ${row[0].padEnd(firstWidth)} | ${row[1].padEnd(secondWidth)} |`
+  return [
+    renderRow(headers),
+    `| ${'-'.repeat(firstWidth)} | ${'-'.repeat(secondWidth)} |`,
+    ...rows.map((row) => renderRow(row)),
+  ].join('\n')
 }
 
 function validateRequiredInputs(options: ScopeCiEnforcementReadinessOptions): void {
@@ -319,6 +435,19 @@ function validateEquivalenceReadiness(readiness: JsonRecord): void {
   ]) {
     if (readiness[field] !== false) {
       throw new Error(`Unsafe Equivalence Proof readiness boundary: ${field} must be false.`)
+    }
+  }
+  for (const field of [
+    'requiredChecksConfigured',
+    'branchProtectionChanged',
+    'diffRejectionEnabled',
+    'strictModeEnabled',
+    'guidedEnforcementEnabled',
+    'approvalAutomationEnabled',
+    'userAcceptanceAutomated',
+  ]) {
+    if (readiness[field] === true) {
+      throw new Error(`Unsafe Equivalence Proof readiness boundary: ${field} must not be true.`)
     }
   }
 }
@@ -391,6 +520,21 @@ function buildProtectedPathMap(
 
   addResolved(input.resolvedPolicyPath, 'the source Scope/CI Enforcement Policy boundary')
   addResolved(input.resolvedEquivalenceReadinessPath, 'the source Equivalence Proof readiness')
+  addConcrete(
+    input.equivalenceReadiness.sourceRuntimeEvidenceSatisfactionReadiness,
+    'the source Runtime Evidence Satisfaction readiness',
+  )
+  addConcrete(input.equivalenceReadiness.sourceAcceptedEvidenceRecord, 'the source Accepted Evidence record')
+  addConcrete(input.equivalenceReadiness.sourceEvidenceArtifact, 'the source Evidence artifact')
+  addConcrete(input.equivalenceReadiness.sourceInstructionPack, 'the source instruction pack')
+  addConcrete(input.equivalenceReadiness.sourceContractInput, 'the source contract compiler input')
+  addConcrete(input.equivalenceReadiness.sourceRuntimeEvidenceAuthority, 'the source Runtime Evidence authority')
+  addConcrete(input.equivalenceReadiness.sourceEvidenceCheckBinding, 'the source Evidence check binding')
+  addConcrete(input.equivalenceReadiness.sourceOutputRequirement, 'the source output requirement')
+  addConcrete(input.equivalenceReadiness.sourceRuntimeReport, 'the source runtime report')
+  addConcrete(input.equivalenceReadiness.sourceScopeReport, 'the source scope report')
+  addConcrete(input.equivalenceReadiness.sourceGraphDeltaApplyReport, 'the source Graph Delta Apply report')
+  addConcrete(input.equivalenceReadiness.sourceCheckReport, 'the source check report')
   addConcrete(input.equivalenceReadiness.sourceEvidenceAcceptanceReadiness, 'the source Evidence Acceptance readiness')
   addConcrete(
     input.equivalenceReadiness.sourceGraphSourceMutationReadiness,

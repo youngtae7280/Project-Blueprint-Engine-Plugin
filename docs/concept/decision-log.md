@@ -4007,3 +4007,36 @@ Evidence acceptance creation, no direct Accepted Evidence consumption by Equival
 delta apply, no scope enforcement, no CI enforcement, no required checks, no branch protection, no diff rejection, no
 automatic approval, no user acceptance automation, no provider invocation, no LLM/API or network call, and no Project
 Memory extension authority.
+
+## DEC-312 Repoint Scope/CI Enforcement Readiness To Runtime-Gated Equivalence
+
+DEC-312 does not supersede DEC-097 through DEC-311. It hardens the existing
+`graph read-model report-scope-ci-enforcement-readiness` command so Scope/CI readiness no longer treats legacy
+Evidence Acceptance readiness provenance as authority through Equivalence readiness.
+
+The command still consumes only the Scope/CI Enforcement Policy boundary and an Equivalence Proof readiness preview.
+The Equivalence readiness must now carry Runtime Evidence Satisfaction readiness provenance. If that runtime-gated
+provenance is missing, Scope/CI readiness is blocked. If Equivalence readiness is blocked, Scope/CI readiness is
+blocked. Even if a future Equivalence readiness input is ready-shaped, this slice keeps Scope/CI readiness blocked
+because there is no enforcement command, required-check configuration, branch-protection mutation, diff rejection, or
+strict/guided blocking activation surface.
+
+The new canonical calibration artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.json
+```
+
+It is blocked because the canonical Equivalence Proof readiness artifact is blocked by Runtime Evidence Satisfaction
+readiness. The report preserves `sourceRuntimeEvidenceSatisfactionReadiness`,
+`runtimeEvidenceSatisfactionReadinessStatus`, accepted-evidence/source-evidence/instruction-pack provenance, and the
+required Evidence id as context only. It keeps `scopeEnforced`, `ciEnforcementEnabled`, `requiredChecksConfigured`,
+`branchProtectionChanged`, `diffRejectionEnabled`, `strictModeEnabled`, `guidedEnforcementEnabled`,
+`equivalenceProven`, top-level `evidenceAccepted`, `runtimeEvidenceSatisfied`, graph apply/mutation, and automation
+flags false.
+
+This decision adds no default runtime smoke step. It adds no scope enforcement, no CI required checks, no branch
+protection mutation, no diff rejection, no strict/guided blocking activation, no equivalence proof, no runtime Evidence
+satisfaction, no Evidence acceptance creation, no graph-source mutation, no graph delta apply, no automatic approval,
+no user acceptance automation, no provider invocation, no LLM/API or network call, and no Project Memory extension
+authority.

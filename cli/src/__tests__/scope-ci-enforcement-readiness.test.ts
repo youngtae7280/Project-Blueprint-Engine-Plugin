@@ -38,13 +38,21 @@ describe('Scope/CI Enforcement readiness CLI', () => {
     expect(result.exitCode).toBe(ExitCode.Success)
     expect(payload.status).toBe('devview-scope-ci-enforcement-readiness-blocked')
     expect(payload.scopeCiEnforcementReadinessStatus).toBe('blocked-equivalence-proof-readiness-not-ready')
+    expect(payload.equivalenceProofReadinessStatus).toBe('blocked-runtime-evidence-satisfaction-readiness-not-ready')
+    expect(payload.runtimeEvidenceSatisfactionReadinessStatus).toBe('blocked-required-obligation-mismatch')
+    expect(payload.sourceRuntimeEvidenceSatisfactionReadiness).toBe('runtime-satisfaction-readiness.json')
+    expect(payload.sourceAcceptedEvidenceRecord).toBe('accepted-evidence.json')
+    expect(payload.sourceEvidenceArtifact).toBe('source-evidence.json')
+    expect(payload.sourceInstructionPack).toBe('instruction-pack.json')
+    expect(payload.requiredEvidenceId).toBe('required-evidence-test-1')
+    expect(payload.sourceAcceptedEvidenceAccepted).toBe(true)
     expectDisabled(payload)
     expect(written.validationFindings.map((finding: { code: string }) => finding.code)).toContain(
       'SCOPE_CI_ENFORCEMENT_EQUIVALENCE_PROOF_READINESS_NOT_READY',
     )
   })
 
-  it('reports ready-shaped disabled context without enabling enforcement', async () => {
+  it('keeps future ready-shaped Equivalence input blocked because enforcement is not implemented', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, 'policy.json'), validPolicy())
     writeJson(join(workspace, 'equivalence-readiness.json'), validEquivalenceReadiness({ ready: true }))
@@ -65,8 +73,43 @@ describe('Scope/CI Enforcement readiness CLI', () => {
     const payload = JSON.parse(result.stdout)
 
     expect(result.exitCode).toBe(ExitCode.Success)
-    expect(payload.status).toBe('devview-scope-ci-enforcement-readiness-ready')
-    expect(payload.scopeCiEnforcementReadinessStatus).toBe('dry-run-ready-equivalence-proof-readiness-present')
+    expect(payload.status).toBe('devview-scope-ci-enforcement-readiness-blocked')
+    expect(payload.scopeCiEnforcementReadinessStatus).toBe('blocked-scope-ci-enforcement-command-not-implemented')
+    expect(payload.validationFindings.map((finding: { code: string }) => finding.code)).toContain(
+      'SCOPE_CI_ENFORCEMENT_COMMAND_NOT_IMPLEMENTED',
+    )
+    expectDisabled(payload)
+  })
+
+  it('does not let legacy Evidence-acceptance-based Equivalence readiness grant Scope/CI readiness', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'policy.json'), validPolicy())
+    writeJson(join(workspace, 'equivalence-readiness.json'), validEquivalenceReadiness({ ready: true, legacy: true }))
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'report-scope-ci-enforcement-readiness',
+        '--policy',
+        'policy.json',
+        '--equivalence-proof-readiness',
+        'equivalence-readiness.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.status).toBe('devview-scope-ci-enforcement-readiness-blocked')
+    expect(payload.scopeCiEnforcementReadinessStatus).toBe(
+      'blocked-equivalence-runtime-satisfaction-provenance-missing',
+    )
+    expect(payload.sourceRuntimeEvidenceSatisfactionReadiness).toBeNull()
+    expect(payload.validationFindings.map((finding: { code: string }) => finding.code)).toContain(
+      'SCOPE_CI_ENFORCEMENT_EQUIVALENCE_RUNTIME_SATISFACTION_PROVENANCE_MISSING',
+    )
     expectDisabled(payload)
   })
 
@@ -97,6 +140,36 @@ describe('Scope/CI Enforcement readiness CLI', () => {
 
     expect(result.exitCode).toBe(ExitCode.ValidationFailed)
     expect(payload.issues[0].message).toContain('ciEnforcementEnabled')
+    expect(existsSync(join(workspace, '.tmp/scope-ci-readiness.json'))).toBe(false)
+  })
+
+  it('blocks unsafe optional authority fields on Equivalence Proof readiness', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'policy.json'), validPolicy())
+    writeJson(join(workspace, 'equivalence-readiness.json'), {
+      ...validEquivalenceReadiness({ ready: false }),
+      requiredChecksConfigured: true,
+    })
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'report-scope-ci-enforcement-readiness',
+        '--policy',
+        'policy.json',
+        '--equivalence-proof-readiness',
+        'equivalence-readiness.json',
+        '--output',
+        '.tmp/scope-ci-readiness.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues[0].message).toContain('requiredChecksConfigured')
     expect(existsSync(join(workspace, '.tmp/scope-ci-readiness.json'))).toBe(false)
   })
 
@@ -157,6 +230,41 @@ describe('Scope/CI Enforcement readiness CLI', () => {
     expect(readFileSync(join(workspace, 'equivalence-readiness.json'), 'utf8')).toBe(sourceBefore)
     expect(existsSync(join(workspace, '.tmp/scope-ci-readiness.json'))).toBe(false)
   })
+
+  it('blocks linked runtime-gated source overwrite before JSON output is written', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'policy.json'), validPolicy())
+    writeJson(join(workspace, 'accepted-evidence.json'), {
+      artifactRole: 'devview-accepted-evidence-record',
+      status: 'devview-accepted-evidence-recorded',
+    })
+    writeJson(join(workspace, 'equivalence-readiness.json'), validEquivalenceReadiness({ ready: false }))
+    const sourceBefore = readFileSync(join(workspace, 'accepted-evidence.json'), 'utf8')
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'report-scope-ci-enforcement-readiness',
+        '--policy',
+        'policy.json',
+        '--equivalence-proof-readiness',
+        'equivalence-readiness.json',
+        '--output',
+        '.tmp/scope-ci-readiness.json',
+        '--markdown',
+        'accepted-evidence.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues[0].message).toContain('would overwrite the source Accepted Evidence record')
+    expect(readFileSync(join(workspace, 'accepted-evidence.json'), 'utf8')).toBe(sourceBefore)
+    expect(existsSync(join(workspace, '.tmp/scope-ci-readiness.json'))).toBe(false)
+  })
 })
 
 function expectDisabled(payload: Record<string, unknown>): void {
@@ -176,6 +284,7 @@ function expectDisabled(payload: Record<string, unknown>): void {
   expect(payload.runtimeEvidenceSatisfied).toBe(false)
   expect(payload.graphDeltaApplied).toBe(false)
   expect(payload.graphSourceMutated).toBe(false)
+  expect(payload.nonEnforcing).toBe(true)
 }
 
 function validPolicy(): Record<string, unknown> {
@@ -197,10 +306,37 @@ function validPolicy(): Record<string, unknown> {
   }
 }
 
-function validEquivalenceReadiness(input: { ready: boolean }): Record<string, unknown> {
+function validEquivalenceReadiness(input: { ready: boolean; legacy?: boolean }): Record<string, unknown> {
+  const runtimeGatedFields = input.legacy
+    ? {}
+    : {
+        sourceRuntimeEvidenceSatisfactionReadiness: 'runtime-satisfaction-readiness.json',
+        sourceAcceptedEvidenceRecord: 'accepted-evidence.json',
+        sourceEvidenceArtifact: 'source-evidence.json',
+        sourceInstructionPack: 'instruction-pack.json',
+        sourceContractInput: 'contract-input.json',
+        sourceRuntimeEvidenceAuthority: 'runtime-evidence-authority.json',
+        sourceEvidenceCheckBinding: 'evidence-check-binding.json',
+        sourceOutputRequirement: 'output-requirement.json',
+        sourceRuntimeReport: 'runtime-report.json',
+        sourceScopeReport: 'scope-report.json',
+        sourceGraphDeltaApplyReport: 'graph-delta-apply-report.json',
+        sourceCheckReport: 'check-report.json',
+        requiredEvidenceId: 'required-evidence-test-1',
+        matchedRequiredEvidence: {
+          id: 'required-evidence-test-1',
+          evidenceType: 'runtime-report',
+        },
+        sourceAcceptedEvidenceAccepted: true,
+        runtimeEvidenceSatisfactionReadinessStatus: input.ready
+          ? 'ready-accepted-evidence-linked-to-runtime-obligation'
+          : 'blocked-required-obligation-mismatch',
+        nonEnforcing: true,
+      }
   return {
     artifactRole: 'devview-equivalence-proof-readiness-preview',
     status: input.ready ? 'devview-equivalence-proof-readiness-ready' : 'devview-equivalence-proof-readiness-blocked',
+    ...runtimeGatedFields,
     sourceEvidenceAcceptanceReadiness: 'evidence-readiness.json',
     sourceGraphSourceMutationReadiness: 'mutation-readiness.json',
     sourceApplyReadiness: 'apply-readiness.json',
@@ -208,8 +344,12 @@ function validEquivalenceReadiness(input: { ready: boolean }): Record<string, un
     sourceGraphDeltaProposal: 'proposal.json',
     proposalId: 'GDP-TEST',
     equivalenceProofReadinessStatus: input.ready
-      ? 'dry-run-ready-evidence-acceptance-readiness-present'
-      : 'blocked-evidence-acceptance-readiness-not-ready',
+      ? input.legacy
+        ? 'dry-run-ready-evidence-acceptance-readiness-present'
+        : 'ready-for-future-equivalence-proof-command'
+      : input.legacy
+        ? 'blocked-evidence-acceptance-readiness-not-ready'
+        : 'blocked-runtime-evidence-satisfaction-readiness-not-ready',
     evidenceAcceptanceReadinessStatus: input.ready
       ? 'dry-run-ready-mutation-readiness-present'
       : 'blocked-mutation-readiness-not-ready',
