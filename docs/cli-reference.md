@@ -1069,11 +1069,11 @@ Example:
 
 ```powershell
 node dist/cli/index.js graph read-model render-devview-graph `
-  --graph-source examples/retrofit/cardprinterconfig/graph-source.json `
+  --graph-source examples/retrofit/windowsutility/graph-source.json `
   --record change.laminator-tag-layout `
-  --instruction-pack outputs/retrofit/instruction-packs/laminator-tag-layout.instruction-pack.json `
-  --output outputs/devview-graph/cardprinterconfig.devviewgraph.html `
-  --data-output outputs/devview-graph/cardprinterconfig.devviewgraph.data.json `
+  --instruction-pack outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json `
+  --output outputs/devview-graph/windowsutility.devviewgraph.html `
+  --data-output outputs/devview-graph/windowsutility.devviewgraph.data.json `
   --json
 ```
 

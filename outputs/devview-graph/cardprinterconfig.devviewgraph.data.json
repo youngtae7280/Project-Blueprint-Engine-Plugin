@@ -25,8 +25,8 @@
         "riskBoundary": false,
         "treeIds": ["tree.domain-source"],
         "subgraphIds": [],
-        "x": 40,
-        "y": 288
+        "x": 380,
+        "y": 416
       },
       {
         "id": "module.smart51-printer",
@@ -44,7 +44,7 @@
         "riskBoundary": false,
         "treeIds": ["tree.domain-source"],
         "subgraphIds": [],
-        "x": 200,
+        "x": 380,
         "y": 64
       },
       {
@@ -63,8 +63,8 @@
         "riskBoundary": false,
         "treeIds": ["tree.domain-source"],
         "subgraphIds": [],
-        "x": 200,
-        "y": 288
+        "x": 380,
+        "y": 328
       },
       {
         "id": "module.smart52-laminator",
@@ -82,8 +82,8 @@
         "riskBoundary": false,
         "treeIds": ["tree.domain-source"],
         "subgraphIds": [],
-        "x": 200,
-        "y": 512
+        "x": 380,
+        "y": 504
       },
       {
         "id": "flow.smart51-getconfig-index-000",
@@ -101,7 +101,7 @@
         "riskBoundary": false,
         "treeIds": ["tree.domain-source"],
         "subgraphIds": [],
-        "x": 360,
+        "x": 560,
         "y": 64
       },
       {
@@ -120,8 +120,8 @@
         "riskBoundary": false,
         "treeIds": ["tree.domain-source", "tree.selected-pack-context"],
         "subgraphIds": ["subgraph.change.laminator-tag-layout"],
-        "x": 360,
-        "y": 400
+        "x": 560,
+        "y": 416
       },
       {
         "id": "boundary.smart51-test-read-only",
@@ -153,7 +153,7 @@
         "riskBoundary": true,
         "treeIds": ["tree.risk-boundary"],
         "subgraphIds": [],
-        "x": 720,
+        "x": 920,
         "y": 64
       },
       {
@@ -187,8 +187,8 @@
         "riskBoundary": true,
         "treeIds": ["tree.risk-boundary", "tree.selected-pack-context"],
         "subgraphIds": ["subgraph.change.laminator-tag-layout"],
-        "x": 720,
-        "y": 400
+        "x": 920,
+        "y": 416
       },
       {
         "id": "change.smart51-test-setting",
@@ -208,7 +208,7 @@
         "riskBoundary": false,
         "treeIds": ["tree.retrofit-change"],
         "subgraphIds": [],
-        "x": 540,
+        "x": 740,
         "y": 64
       },
       {
@@ -230,8 +230,8 @@
         "riskBoundary": false,
         "treeIds": ["tree.retrofit-change", "tree.selected-pack-context"],
         "subgraphIds": ["subgraph.change.laminator-tag-layout"],
-        "x": 540,
-        "y": 400
+        "x": 740,
+        "y": 416
       }
     ],
     "edges": [
@@ -385,7 +385,11 @@
         "treeIds": ["tree.retrofit-change", "tree.risk-boundary", "tree.selected-pack-context"],
         "subgraphIds": ["subgraph.change.laminator-tag-layout"]
       }
-    ]
+    ],
+    "viewport": {
+      "width": 1130,
+      "height": 760
+    }
   },
   "trees": [
     {
@@ -485,22 +489,8 @@
         "mapping.edge.edge.tag-layout-drives-laminator-record",
         "mapping.edge.edge.laminator-record-guards-logic",
         "mapping.file.src-cardprinterconfig-cardprinterconfig-rc",
-        "mapping.flow.subdlg51laminator-cpp-subdlg52laminator-cpp-logic",
-        "mapping.flow.getconfig-setconfig-saveconfig-loadconfig",
-        "mapping.flow.resource-h-control-ids",
-        "mapping.flow.hardware-communication",
-        "mapping.flow.no-subdlg51laminator-cpp-change",
-        "mapping.flow.no-subdlg52laminator-cpp-change",
-        "mapping.flow.no-header-resource-id-change",
-        "mapping.flow.no-logic-read-write-save-load-or-hardware-behavior-change",
-        "mapping.flow.no-c-logic-changes",
-        "mapping.flow.no-read-write-behavior-changes",
-        "mapping.flow.no-save-load-behavior-changes",
-        "mapping.flow.no-hardware-communication-changes",
-        "mapping.flow.no-unrelated-model-or-module-changes",
-        "mapping.verification.build",
-        "mapping.verification.runtime",
-        "mapping.verification.hardware"
+        "mapping.flow.forbidden-scope",
+        "mapping.verification.required"
       ]
     }
   ],
@@ -509,185 +499,105 @@
       "id": "mapping.source-record",
       "elementKind": "node",
       "elementId": "change.laminator-tag-layout",
+      "displayLabel": "Current task",
       "packSection": "sourceRecordId",
-      "role": "target/current task",
-      "reason": "The instruction pack sourceRecordId identifies the active retrofit task."
+      "role": "target task",
+      "reason": "The instruction pack sourceRecordId identifies the active retrofit task.",
+      "details": ["change.laminator-tag-layout"]
     },
     {
       "id": "mapping.node.change.laminator-tag-layout",
       "elementKind": "node",
       "elementId": "change.laminator-tag-layout",
+      "displayLabel": "Selected node: laminator-tag-layout",
       "packSection": "graphContext.nodes",
       "role": "current task node",
-      "reason": "This node is explicitly carried in instructionPack.graphContext.nodes or sourceRecordId."
+      "reason": "This node is explicitly carried in instructionPack.graphContext.nodes or sourceRecordId.",
+      "details": ["change.laminator-tag-layout"]
     },
     {
       "id": "mapping.node.ui.laminator-tag-param-columns",
       "elementKind": "node",
       "elementId": "ui.laminator-tag-param-columns",
+      "displayLabel": "Selected node: laminator-tag-param-columns",
       "packSection": "graphContext.nodes",
-      "role": "selected graph context",
-      "reason": "This node is explicitly carried in instructionPack.graphContext.nodes or sourceRecordId."
+      "role": "graph context node",
+      "reason": "This node is explicitly carried in instructionPack.graphContext.nodes or sourceRecordId.",
+      "details": ["ui.laminator-tag-param-columns"]
     },
     {
       "id": "mapping.node.boundary.laminator-layout-only",
       "elementKind": "node",
       "elementId": "boundary.laminator-layout-only",
+      "displayLabel": "Selected node: laminator-layout-only",
       "packSection": "graphContext.nodes",
-      "role": "selected graph context",
-      "reason": "This node is explicitly carried in instructionPack.graphContext.nodes or sourceRecordId."
+      "role": "graph context node",
+      "reason": "This node is explicitly carried in instructionPack.graphContext.nodes or sourceRecordId.",
+      "details": ["boundary.laminator-layout-only"]
     },
     {
       "id": "mapping.edge.edge.tag-layout-drives-laminator-record",
       "elementKind": "edge",
       "elementId": "edge.tag-layout-drives-laminator-record",
+      "displayLabel": "Selected edge: tag-layout-drives-laminator-record",
       "packSection": "graphContext.edgeIntents",
-      "role": "selected edge intent",
-      "reason": "This edge intent is part of the selected subgraph used by the instruction pack."
+      "role": "edge intent",
+      "reason": "This edge intent is part of the selected subgraph used by the instruction pack.",
+      "details": ["edge.tag-layout-drives-laminator-record"]
     },
     {
       "id": "mapping.edge.edge.laminator-record-guards-logic",
       "elementKind": "edge",
       "elementId": "edge.laminator-record-guards-logic",
+      "displayLabel": "Selected edge: laminator-record-guards-logic",
       "packSection": "graphContext.edgeIntents",
-      "role": "selected edge intent",
-      "reason": "This edge intent is part of the selected subgraph used by the instruction pack."
+      "role": "edge intent",
+      "reason": "This edge intent is part of the selected subgraph used by the instruction pack.",
+      "details": ["edge.laminator-record-guards-logic"]
     },
     {
       "id": "mapping.file.src-cardprinterconfig-cardprinterconfig-rc",
       "elementKind": "file",
       "elementId": "src/CardPrinterConfig/CardPrinterConfig.rc",
+      "displayLabel": "Allowed file: CardPrinterConfig.rc",
       "packSection": "allowedScope.files",
-      "role": "code location",
-      "reason": "Allowed scope restricts write consideration to this file path."
+      "role": "editable code location",
+      "reason": "Allowed scope restricts write consideration to this file path.",
+      "details": ["src/CardPrinterConfig/CardPrinterConfig.rc"]
     },
     {
-      "id": "mapping.flow.subdlg51laminator-cpp-subdlg52laminator-cpp-logic",
+      "id": "mapping.flow.forbidden-scope",
       "elementKind": "flow",
-      "elementId": "SubDlg51LAMINATOR.cpp / SubDlg52LAMINATOR.cpp logic",
+      "elementId": "forbidden-scope",
+      "displayLabel": "Forbidden scope",
       "packSection": "forbiddenScope.flows/nonGoals",
-      "role": "forbidden panel",
-      "reason": "Forbidden scope keeps this flow outside the task boundary."
+      "role": "13 guardrails",
+      "reason": "Forbidden scope keeps these flows outside the task boundary.",
+      "details": [
+        "SubDlg51LAMINATOR.cpp / SubDlg52LAMINATOR.cpp logic",
+        "GetConfig / SetConfig / SaveConfig / LoadConfig",
+        "resource.h control IDs",
+        "hardware communication",
+        "No SubDlg51LAMINATOR.cpp change.",
+        "No SubDlg52LAMINATOR.cpp change.",
+        "No header/resource id change.",
+        "No logic, read/write, save/load, or hardware behavior change.",
+        "No C++ logic changes.",
+        "No read/write behavior changes.",
+        "No save/load behavior changes.",
+        "No hardware communication changes.",
+        "No unrelated model or module changes."
+      ]
     },
     {
-      "id": "mapping.flow.getconfig-setconfig-saveconfig-loadconfig",
-      "elementKind": "flow",
-      "elementId": "GetConfig / SetConfig / SaveConfig / LoadConfig",
-      "packSection": "forbiddenScope.flows/nonGoals",
-      "role": "forbidden panel",
-      "reason": "Forbidden scope keeps this flow outside the task boundary."
-    },
-    {
-      "id": "mapping.flow.resource-h-control-ids",
-      "elementKind": "flow",
-      "elementId": "resource.h control IDs",
-      "packSection": "forbiddenScope.flows/nonGoals",
-      "role": "forbidden panel",
-      "reason": "Forbidden scope keeps this flow outside the task boundary."
-    },
-    {
-      "id": "mapping.flow.hardware-communication",
-      "elementKind": "flow",
-      "elementId": "hardware communication",
-      "packSection": "forbiddenScope.flows/nonGoals",
-      "role": "forbidden panel",
-      "reason": "Forbidden scope keeps this flow outside the task boundary."
-    },
-    {
-      "id": "mapping.flow.no-subdlg51laminator-cpp-change",
-      "elementKind": "flow",
-      "elementId": "No SubDlg51LAMINATOR.cpp change.",
-      "packSection": "forbiddenScope.flows/nonGoals",
-      "role": "forbidden panel",
-      "reason": "Forbidden scope keeps this flow outside the task boundary."
-    },
-    {
-      "id": "mapping.flow.no-subdlg52laminator-cpp-change",
-      "elementKind": "flow",
-      "elementId": "No SubDlg52LAMINATOR.cpp change.",
-      "packSection": "forbiddenScope.flows/nonGoals",
-      "role": "forbidden panel",
-      "reason": "Forbidden scope keeps this flow outside the task boundary."
-    },
-    {
-      "id": "mapping.flow.no-header-resource-id-change",
-      "elementKind": "flow",
-      "elementId": "No header/resource id change.",
-      "packSection": "forbiddenScope.flows/nonGoals",
-      "role": "forbidden panel",
-      "reason": "Forbidden scope keeps this flow outside the task boundary."
-    },
-    {
-      "id": "mapping.flow.no-logic-read-write-save-load-or-hardware-behavior-change",
-      "elementKind": "flow",
-      "elementId": "No logic, read/write, save/load, or hardware behavior change.",
-      "packSection": "forbiddenScope.flows/nonGoals",
-      "role": "forbidden panel",
-      "reason": "Forbidden scope keeps this flow outside the task boundary."
-    },
-    {
-      "id": "mapping.flow.no-c-logic-changes",
-      "elementKind": "flow",
-      "elementId": "No C++ logic changes.",
-      "packSection": "forbiddenScope.flows/nonGoals",
-      "role": "forbidden panel",
-      "reason": "Forbidden scope keeps this flow outside the task boundary."
-    },
-    {
-      "id": "mapping.flow.no-read-write-behavior-changes",
-      "elementKind": "flow",
-      "elementId": "No read/write behavior changes.",
-      "packSection": "forbiddenScope.flows/nonGoals",
-      "role": "forbidden panel",
-      "reason": "Forbidden scope keeps this flow outside the task boundary."
-    },
-    {
-      "id": "mapping.flow.no-save-load-behavior-changes",
-      "elementKind": "flow",
-      "elementId": "No save/load behavior changes.",
-      "packSection": "forbiddenScope.flows/nonGoals",
-      "role": "forbidden panel",
-      "reason": "Forbidden scope keeps this flow outside the task boundary."
-    },
-    {
-      "id": "mapping.flow.no-hardware-communication-changes",
-      "elementKind": "flow",
-      "elementId": "No hardware communication changes.",
-      "packSection": "forbiddenScope.flows/nonGoals",
-      "role": "forbidden panel",
-      "reason": "Forbidden scope keeps this flow outside the task boundary."
-    },
-    {
-      "id": "mapping.flow.no-unrelated-model-or-module-changes",
-      "elementKind": "flow",
-      "elementId": "No unrelated model or module changes.",
-      "packSection": "forbiddenScope.flows/nonGoals",
-      "role": "forbidden panel",
-      "reason": "Forbidden scope keeps this flow outside the task boundary."
-    },
-    {
-      "id": "mapping.verification.build",
+      "id": "mapping.verification.required",
       "elementKind": "verification",
-      "elementId": "build",
+      "elementId": "verification.required",
+      "displayLabel": "Verification",
       "packSection": "verification.required",
-      "role": "evidence/verification panel",
-      "reason": "Verification requirement \"build\" is recorded as \"pass\"."
-    },
-    {
-      "id": "mapping.verification.runtime",
-      "elementKind": "verification",
-      "elementId": "runtime",
-      "packSection": "verification.required",
-      "role": "evidence/verification panel",
-      "reason": "Verification requirement \"runtime\" is recorded as \"user-confirmed-ui-pass\"."
-    },
-    {
-      "id": "mapping.verification.hardware",
-      "elementKind": "verification",
-      "elementId": "hardware",
-      "packSection": "verification.required",
-      "role": "evidence/verification panel",
-      "reason": "Verification requirement \"hardware\" is recorded as \"not-applicable\"."
+      "role": "3 checks",
+      "reason": "Verification requirements are recorded as review context; they are not runtime Evidence satisfaction.",
+      "details": ["build: \"pass\"", "runtime: \"user-confirmed-ui-pass\"", "hardware: \"not-applicable\""]
     }
   ],
   "compilationTrace": [

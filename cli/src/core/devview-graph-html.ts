@@ -84,9 +84,11 @@ export interface DevViewGraphPackMapping {
   id: string
   elementKind: 'node' | 'edge' | 'file' | 'flow' | 'verification'
   elementId: string
+  displayLabel: string
   packSection: string
   role: string
   reason: string
+  details: string[]
 }
 
 export interface DevViewGraphCompilationTraceEntry {
@@ -109,6 +111,10 @@ export interface DevViewGraphData {
   graph: {
     nodes: DevViewGraphNode[]
     edges: DevViewGraphEdge[]
+    viewport: {
+      width: number
+      height: number
+    }
   }
   trees: DevViewGraphTree[]
   subgraphs: DevViewGraphSubgraph[]
@@ -244,6 +250,7 @@ function buildDevViewGraphData(root: string, input: GraphInput): DevViewGraphDat
       recordById,
     ),
   )
+  applyDeterministicLayout(nodes)
   const contextOnlyNodeIds = new Set(nodes.filter((node) => node.contextOnly).map((node) => node.id))
   const edges = graphEdges.map((edge) =>
     buildEdge(edge, selectedEdgeIds, selectedSubgraphId, contextOnlyNodeIds, graphNodeById),
@@ -286,7 +293,7 @@ function buildDevViewGraphData(root: string, input: GraphInput): DevViewGraphDat
     sourceGraphSource: relativePath(root, input.graphSourcePath),
     sourceInstructionPack: relativePath(root, input.instructionPackPath),
     sourceRecordId: input.recordId,
-    graph: { nodes, edges },
+    graph: { nodes, edges, viewport: buildViewport(nodes) },
     trees,
     subgraphs,
     packMapping,
@@ -468,10 +475,28 @@ function buildEdge(
 function buildTrees(nodes: DevViewGraphNode[], edges: DevViewGraphEdge[]): DevViewGraphTree[] {
   const nodeKind = new Map(nodes.map((node) => [node.id, node.kind]))
   const domainNodeIds = nodes
-    .filter((node) => ['product-intent', 'module', 'execution-flow', 'ui-layout-surface'].includes(node.kind))
+    .filter((node) =>
+      [
+        'product-intent',
+        'module',
+        'legacy-utility-module',
+        'integration-target',
+        'execution-flow',
+        'ui-layout-surface',
+      ].includes(node.kind),
+    )
     .map((node) => node.id)
   const domainEdgeIds = edges
-    .filter((edge) => ['domain-scope', 'execution-ownership', 'ui-surface-ownership'].includes(edge.kind))
+    .filter((edge) =>
+      [
+        'domain-scope',
+        'legacy-module-scope',
+        'integration-target-scope',
+        'retrofit-detail-scope',
+        'execution-ownership',
+        'ui-surface-ownership',
+      ].includes(edge.kind),
+    )
     .map((edge) => edge.id)
   const changeNodeIds = nodes.filter((node) => node.kind === 'retrofit-change-record').map((node) => node.id)
   const changeEdgeIds = edges
@@ -553,9 +578,11 @@ function buildPackMapping(
       id: 'mapping.source-record',
       elementKind: 'node',
       elementId: sourceRecordId,
+      displayLabel: 'Current task',
       packSection: 'sourceRecordId',
-      role: 'target/current task',
+      role: 'target task',
       reason: 'The instruction pack sourceRecordId identifies the active retrofit task.',
+      details: [sourceRecordId],
     })
   }
   for (const nodeId of selectedNodeIds) {
@@ -563,9 +590,11 @@ function buildPackMapping(
       id: `mapping.node.${nodeId}`,
       elementKind: 'node',
       elementId: nodeId,
+      displayLabel: `Selected node: ${shortLabel(nodeId)}`,
       packSection: 'graphContext.nodes',
-      role: nodeId === sourceRecordId ? 'current task node' : 'selected graph context',
+      role: nodeId === sourceRecordId ? 'current task node' : 'graph context node',
       reason: 'This node is explicitly carried in instructionPack.graphContext.nodes or sourceRecordId.',
+      details: [nodeId],
     })
   }
   for (const edgeId of selectedEdgeIds) {
@@ -573,9 +602,11 @@ function buildPackMapping(
       id: `mapping.edge.${edgeId}`,
       elementKind: 'edge',
       elementId: edgeId,
+      displayLabel: `Selected edge: ${shortLabel(edgeId)}`,
       packSection: 'graphContext.edgeIntents',
-      role: 'selected edge intent',
+      role: 'edge intent',
       reason: 'This edge intent is part of the selected subgraph used by the instruction pack.',
+      details: [edgeId],
     })
   }
   for (const file of collectAllowedFiles(instructionPack)) {
@@ -583,30 +614,40 @@ function buildPackMapping(
       id: `mapping.file.${slug(file)}`,
       elementKind: 'file',
       elementId: file,
+      displayLabel: `Allowed file: ${path.posix.basename(file)}`,
       packSection: 'allowedScope.files',
-      role: 'code location',
+      role: 'editable code location',
       reason: 'Allowed scope restricts write consideration to this file path.',
+      details: [file],
     })
   }
-  for (const flow of collectForbiddenFlows(instructionPack)) {
+  const forbiddenFlows = collectForbiddenFlows(instructionPack)
+  if (forbiddenFlows.length > 0) {
     mappings.push({
-      id: `mapping.flow.${slug(flow)}`,
+      id: 'mapping.flow.forbidden-scope',
       elementKind: 'flow',
-      elementId: flow,
+      elementId: 'forbidden-scope',
+      displayLabel: 'Forbidden scope',
       packSection: 'forbiddenScope.flows/nonGoals',
-      role: 'forbidden panel',
-      reason: 'Forbidden scope keeps this flow outside the task boundary.',
+      role: `${forbiddenFlows.length} guardrails`,
+      reason: 'Forbidden scope keeps these flows outside the task boundary.',
+      details: forbiddenFlows,
     })
   }
   const verificationRequired = asRecord(asRecord(instructionPack.verification)?.required) ?? {}
-  for (const [key, value] of Object.entries(verificationRequired)) {
+  const verificationDetails = Object.entries(verificationRequired).map(
+    ([key, value]) => `${key}: ${JSON.stringify(value)}`,
+  )
+  if (verificationDetails.length > 0) {
     mappings.push({
-      id: `mapping.verification.${slug(key)}`,
+      id: 'mapping.verification.required',
       elementKind: 'verification',
-      elementId: key,
+      elementId: 'verification.required',
+      displayLabel: 'Verification',
       packSection: 'verification.required',
-      role: 'evidence/verification panel',
-      reason: `Verification requirement "${key}" is recorded as ${JSON.stringify(value)}.`,
+      role: `${verificationDetails.length} checks`,
+      reason: 'Verification requirements are recorded as review context; they are not runtime Evidence satisfaction.',
+      details: verificationDetails,
     })
   }
   return uniqueMappings(mappings)
@@ -730,16 +771,53 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
       padding: 16px;
     }
     .graph-frame {
+      position: relative;
       min-width: 780px;
       border: 1px solid var(--graph-line);
       border-radius: 8px;
       background: var(--graph-surface);
       box-shadow: var(--graph-shadow);
+      overflow: hidden;
     }
     svg {
       display: block;
       width: 100%;
       height: 760px;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+    svg.dragging {
+      cursor: grabbing;
+    }
+    .graph-tools {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      display: flex;
+      gap: 6px;
+      padding: 4px;
+      border: 1px solid var(--graph-line);
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--graph-shadow);
+    }
+    .graph-tools button {
+      width: 30px;
+      height: 28px;
+      border: 1px solid var(--graph-line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--graph-ink);
+      font: inherit;
+      font-size: 15px;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .graph-tools button:hover {
+      border-color: var(--graph-selected);
+      color: var(--graph-selected);
     }
     .section {
       margin-bottom: 18px;
@@ -905,13 +983,18 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
         <div id="subgraph-list"></div>
       </div>
       <div class="section">
-        <h2>Pack Mapping</h2>
+        <h2>Instruction Sources</h2>
         <div id="mapping-list"></div>
       </div>
     </aside>
     <main class="workspace">
       <div class="graph-frame">
-        <svg id="graph-svg" viewBox="0 0 920 760" role="img" aria-label="DevViewGraph static graph inspector"></svg>
+        <div class="graph-tools" aria-label="Graph controls">
+          <button id="zoom-out" title="Zoom out" aria-label="Zoom out">-</button>
+          <button id="zoom-in" title="Zoom in" aria-label="Zoom in">+</button>
+          <button id="zoom-reset" title="Reset view" aria-label="Reset view">R</button>
+        </div>
+        <svg id="graph-svg" viewBox="0 0 ${data.graph.viewport.width} ${data.graph.viewport.height}" role="img" aria-label="DevViewGraph static graph inspector"></svg>
       </div>
     </main>
     <aside class="inspector">
@@ -924,12 +1007,14 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
     const svg = document.getElementById('graph-svg');
     const detail = document.getElementById('detail');
     const state = { selectedType: 'subgraph', selectedId: data.subgraphs[0]?.id || '' };
+    const viewport = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0, originX: 0, originY: 0, moved: false };
     const nodeById = new Map(data.graph.nodes.map((node) => [node.id, node]));
     const edgeById = new Map(data.graph.edges.map((edge) => [edge.id, edge]));
 
     function render() {
       renderLists();
       renderGraph();
+      bindViewportControls();
       if (state.selectedType === 'node') selectNode(state.selectedId);
       else if (state.selectedType === 'edge') selectEdge(state.selectedId);
       else if (state.selectedType === 'tree') selectTree(state.selectedId);
@@ -944,7 +1029,7 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
         '<button class="item" data-kind="subgraph" data-id="' + esc(subgraph.id) + '"><span>' + esc(subgraph.label) + '</span><span class="count">' + subgraph.nodeIds.length + '/' + subgraph.edgeIds.length + '</span></button>'
       ).join('');
       document.getElementById('mapping-list').innerHTML = data.packMapping.map((mapping) =>
-        '<button class="item" data-kind="mapping" data-id="' + esc(mapping.id) + '"><span>' + esc(mapping.packSection) + '</span><span class="count">' + esc(mapping.elementKind) + '</span></button>'
+        '<button class="item" data-kind="mapping" data-id="' + esc(mapping.id) + '"><span>' + esc(mapping.displayLabel || mapping.packSection) + '</span><span class="count">' + esc(mapping.role || mapping.elementKind) + '</span></button>'
       ).join('');
       document.querySelectorAll('button.item').forEach((button) => {
         button.addEventListener('click', () => {
@@ -960,10 +1045,13 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
 
     function renderGraph() {
       svg.innerHTML = '<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#8b919b"></path></marker></defs>';
+      const contentLayer = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      contentLayer.setAttribute('id', 'graph-content');
       const edgeLayer = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       const nodeLayer = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-      svg.appendChild(edgeLayer);
-      svg.appendChild(nodeLayer);
+      contentLayer.appendChild(edgeLayer);
+      contentLayer.appendChild(nodeLayer);
+      svg.appendChild(contentLayer);
       for (const edge of data.graph.edges) {
         const from = nodeById.get(edge.from);
         const to = nodeById.get(edge.to);
@@ -971,7 +1059,9 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         group.setAttribute('class', edgeClass(edge));
         group.setAttribute('data-edge-id', edge.id);
-        group.addEventListener('click', () => selectEdge(edge.id));
+        group.addEventListener('click', () => {
+          if (!viewport.moved) selectEdge(edge.id);
+        });
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         const x1 = from.x + 68;
         const y1 = from.y + 18;
@@ -992,7 +1082,9 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
         group.setAttribute('class', nodeClass(node));
         group.setAttribute('transform', 'translate(' + node.x + ' ' + node.y + ')');
         group.setAttribute('data-node-id', node.id);
-        group.addEventListener('click', () => selectNode(node.id));
+        group.addEventListener('click', () => {
+          if (!viewport.moved) selectNode(node.id);
+        });
         const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         rect.setAttribute('width', '142');
         rect.setAttribute('height', '58');
@@ -1010,7 +1102,87 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
         group.appendChild(kind);
         nodeLayer.appendChild(group);
       }
+      updateViewportTransform();
       applyHighlight();
+    }
+
+    function bindViewportControls() {
+      svg.addEventListener('pointerdown', beginPan);
+      svg.addEventListener('pointermove', movePan);
+      svg.addEventListener('pointerup', endPan);
+      svg.addEventListener('pointerleave', endPan);
+      svg.addEventListener('wheel', onWheelZoom, { passive: false });
+      document.getElementById('zoom-in')?.addEventListener('click', () => zoomGraph(1.18));
+      document.getElementById('zoom-out')?.addEventListener('click', () => zoomGraph(0.84));
+      document.getElementById('zoom-reset')?.addEventListener('click', resetGraphView);
+    }
+
+    function beginPan(event) {
+      if (event.button !== 0) return;
+      viewport.dragging = true;
+      viewport.moved = false;
+      viewport.startX = event.clientX;
+      viewport.startY = event.clientY;
+      viewport.originX = viewport.x;
+      viewport.originY = viewport.y;
+      svg.classList.add('dragging');
+      svg.setPointerCapture?.(event.pointerId);
+    }
+
+    function movePan(event) {
+      if (!viewport.dragging) return;
+      const dx = event.clientX - viewport.startX;
+      const dy = event.clientY - viewport.startY;
+      if (Math.abs(dx) + Math.abs(dy) > 3) viewport.moved = true;
+      viewport.x = viewport.originX + dx / viewport.scale;
+      viewport.y = viewport.originY + dy / viewport.scale;
+      updateViewportTransform();
+    }
+
+    function endPan(event) {
+      if (!viewport.dragging) return;
+      viewport.dragging = false;
+      svg.classList.remove('dragging');
+      svg.releasePointerCapture?.(event.pointerId);
+      window.setTimeout(() => {
+        viewport.moved = false;
+      }, 0);
+    }
+
+    function onWheelZoom(event) {
+      event.preventDefault();
+      const factor = event.deltaY < 0 ? 1.12 : 0.9;
+      zoomGraph(factor, graphPoint(event));
+    }
+
+    function zoomGraph(factor, origin) {
+      const point = origin || { x: data.graph.viewport.width / 2, y: data.graph.viewport.height / 2 };
+      const nextScale = Math.max(0.35, Math.min(3.5, viewport.scale * factor));
+      const applied = nextScale / viewport.scale;
+      viewport.x = point.x - (point.x - viewport.x) / applied;
+      viewport.y = point.y - (point.y - viewport.y) / applied;
+      viewport.scale = nextScale;
+      updateViewportTransform();
+    }
+
+    function resetGraphView() {
+      viewport.scale = 1;
+      viewport.x = 0;
+      viewport.y = 0;
+      updateViewportTransform();
+    }
+
+    function graphPoint(event) {
+      const point = svg.createSVGPoint();
+      point.x = event.clientX;
+      point.y = event.clientY;
+      return point.matrixTransform(svg.getScreenCTM().inverse());
+    }
+
+    function updateViewportTransform() {
+      const content = document.getElementById('graph-content');
+      if (!content) return;
+      content.setAttribute('transform', 'translate(' + viewport.x + ' ' + viewport.y + ') scale(' + viewport.scale + ')');
     }
 
     function selectNode(id) {
@@ -1091,11 +1263,13 @@ function renderDevViewGraphHtml(data: DevViewGraphData): string {
       } else {
         state.selectedType = 'mapping';
         state.selectedId = id;
-        detail.innerHTML = '<h2>' + esc(mapping.packSection) + '</h2><div class="sub">Pack Mapping</div>' + kv([
+        detail.innerHTML = '<h2>' + esc(mapping.displayLabel || mapping.packSection) + '</h2><div class="sub">Instruction Source</div>' + kv([
           ['element kind', mapping.elementKind],
           ['element id', mapping.elementId],
           ['role', mapping.role],
-          ['reason', mapping.reason]
+          ['source section', mapping.packSection],
+          ['reason', mapping.reason],
+          ['details', list(mapping.details)]
         ]);
         updateState();
       }
@@ -1357,6 +1531,81 @@ function inferNodeRoles(
     roles.push('risk-boundary')
   }
   return uniqueStrings(roles)
+}
+
+function applyDeterministicLayout(nodes: DevViewGraphNode[]): void {
+  const rowCounters = new Map<number, number>()
+  for (const node of nodes) {
+    const x = layoutColumnForNode(node)
+    const fixedRow = fixedRowForNode(node)
+    const row =
+      fixedRow ??
+      (() => {
+        const next = rowCounters.get(x) ?? 0
+        rowCounters.set(x, next + 1)
+        return next
+      })()
+    node.x = x
+    node.y = 64 + row * 88
+  }
+}
+
+function buildViewport(nodes: DevViewGraphNode[]): { width: number; height: number } {
+  const maxX = Math.max(920, ...nodes.map((node) => node.x + 210))
+  const maxY = Math.max(760, ...nodes.map((node) => node.y + 140))
+  return {
+    width: maxX,
+    height: maxY,
+  }
+}
+
+function layoutColumnForNode(node: DevViewGraphNode): number {
+  if (node.selected && node.kind === 'ui-layout-surface') {
+    return 560
+  }
+  if (node.selected && node.kind === 'retrofit-change-record') {
+    return 740
+  }
+  if (node.selected && node.kind === 'forbidden-flow-boundary') {
+    return 920
+  }
+
+  const columns: Record<string, number> = {
+    'product-intent': node.id.includes('windowsutility') ? 40 : 380,
+    'legacy-utility-module': 210,
+    module: 380,
+    'integration-target': 560,
+    'execution-flow': 560,
+    'ui-layout-surface': 560,
+    'retrofit-change-record': 740,
+    'forbidden-flow-boundary': 920,
+  }
+  return columns[node.kind] ?? 560
+}
+
+function fixedRowForNode(node: DevViewGraphNode): number | null {
+  if (node.selected) {
+    return 4
+  }
+  if (node.id === 'product.windowsutility-legacy') {
+    return 1
+  }
+  if (node.id === 'product.windowsutility-integrated') {
+    return 7
+  }
+  if (node.id === 'product.cardprinterconfig') {
+    return 4
+  }
+  if (node.id.includes('smart51-printer') || node.id.includes('getconfig') || node.id.includes('test')) {
+    return 0
+  }
+  if (node.id.includes('smart51-laminator')) {
+    return 3
+  }
+  if (node.id.includes('smart52-laminator')) {
+    return 5
+  }
+  return null
 }
 
 function layoutPosition(kind: string, id: string, index: number): { x: number; y: number } {

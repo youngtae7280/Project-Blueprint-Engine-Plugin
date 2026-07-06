@@ -2569,23 +2569,24 @@ The DevViewGraph HTML inspector boundary is recorded in:
 examples/valid/todo-app-pbe-run/generated/devview-graph-html-boundary.runtime-evidence-only.preview.json
 ```
 
-The CardPrinterConfig retrofit demo artifacts are:
+The WindowsUtility portfolio retrofit demo artifacts are:
 
 ```text
-outputs/devview-graph/cardprinterconfig.devviewgraph.html
-outputs/devview-graph/cardprinterconfig.devviewgraph.data.json
+outputs/devview-graph/windowsutility.devviewgraph.html
+outputs/devview-graph/windowsutility.devviewgraph.data.json
 ```
 
 They are generated with:
 
 ```text
-graph read-model render-devview-graph --graph-source examples/retrofit/cardprinterconfig/graph-source.json --record change.laminator-tag-layout --instruction-pack outputs/retrofit/instruction-packs/laminator-tag-layout.instruction-pack.json --output outputs/devview-graph/cardprinterconfig.devviewgraph.html --data-output outputs/devview-graph/cardprinterconfig.devviewgraph.data.json --json
+graph read-model render-devview-graph --graph-source examples/retrofit/windowsutility/graph-source.json --record change.laminator-tag-layout --instruction-pack outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json --output outputs/devview-graph/windowsutility.devviewgraph.html --data-output outputs/devview-graph/windowsutility.devviewgraph.data.json --json
 ```
 
-The inspector renders one full graph and highlights only the selected Instruction Pack context for
-`change.laminator-tag-layout`. The selected subgraph includes `change.laminator-tag-layout`,
+The inspector renders one full WindowsUtility portfolio graph and highlights only the selected Instruction Pack context
+for `change.laminator-tag-layout`. The selected subgraph includes `change.laminator-tag-layout`,
 `ui.laminator-tag-param-columns`, and `boundary.laminator-layout-only`; the reverted/context record
-`change.smart51-test-setting` remains visible in the full graph but outside the selected subgraph.
+`change.smart51-test-setting` remains visible in the full graph but outside the selected subgraph. The graph supports
+mouse drag, wheel zoom, and compact Instruction Sources instead of the earlier raw pack mapping list.
 
 This is a read-only visualization/report artifact. It does not execute Codex, call an LLM, mutate graph-source, apply
 graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or

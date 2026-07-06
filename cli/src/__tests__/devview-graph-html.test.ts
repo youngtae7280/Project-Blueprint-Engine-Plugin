@@ -73,8 +73,16 @@ describe('DevViewGraph HTML inspector CLI', () => {
     expect(html).toContain('function selectEdge')
     expect(html).toContain('function selectTree')
     expect(html).toContain('function selectSubgraph')
+    expect(html).toContain('function zoomGraph')
+    expect(html).toContain('function beginPan')
+    expect(html).toContain('Instruction Sources')
+    expect(html).not.toContain('Pack Mapping')
     expect(html).toContain('SMART-51')
     expect(html).toContain('laminator-tag-layout')
+    expect(data.graph.viewport.width).toBeGreaterThanOrEqual(920)
+    expect(data.packMapping.map((mapping: { displayLabel: string }) => mapping.displayLabel)).toEqual(
+      expect.arrayContaining(['Current task', 'Forbidden scope', 'Verification']),
+    )
     expect(data.safetyFlags.graphSourceMutated).toBe(false)
     expect(data.safetyFlags.graphDeltaApplied).toBe(false)
     expect(data.safetyFlags.codexExecutionTriggered).toBe(false)

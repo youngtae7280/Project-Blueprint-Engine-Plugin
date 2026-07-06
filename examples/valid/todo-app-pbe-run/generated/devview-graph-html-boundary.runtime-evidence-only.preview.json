@@ -26,23 +26,31 @@
       "packMapping[]",
       "compilationTrace[]",
       "safetyFlags",
-      "artifacts"
+      "artifacts",
+      "graph.viewport"
     ],
     "treeIds": ["tree.domain-source", "tree.retrofit-change", "tree.risk-boundary", "tree.selected-pack-context"],
     "selectionModel": "single full graph rendered once; selected subgraph, trees, nodes, and edges are highlighted in-place"
   },
   "interactionModel": {
+    "panZoom": "mouse drag pans the graph; mouse wheel zooms around the pointer; +/-/R buttons provide bounded zoom and reset",
     "nodeClick": "show node kind, state, intent claim, record path, code locations, pack role, tree membership, and subgraph membership",
     "edgeClick": "show from/to node ids, edge kind, edgeIntent classification, claim, confidence, tree membership, and subgraph membership",
     "treeClick": "highlight all nodes and edges in that viewpoint tree and show viewpoint summary",
     "subgraphClick": "highlight selected task subgraph and show task type, start node, selected nodes/edges, required trees, pack mapping, allowed files, forbidden flows, and verification requirements"
   },
   "demoCalibration": {
-    "graphSource": "examples/retrofit/cardprinterconfig/graph-source.json",
+    "graphSource": "examples/retrofit/windowsutility/graph-source.json",
     "record": "change.laminator-tag-layout",
-    "instructionPack": "outputs/retrofit/instruction-packs/laminator-tag-layout.instruction-pack.json",
-    "htmlOutput": "outputs/devview-graph/cardprinterconfig.devviewgraph.html",
-    "dataOutput": "outputs/devview-graph/cardprinterconfig.devviewgraph.data.json",
+    "instructionPack": "outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json",
+    "htmlOutput": "outputs/devview-graph/windowsutility.devviewgraph.html",
+    "dataOutput": "outputs/devview-graph/windowsutility.devviewgraph.data.json",
+    "portfolioGraphMustInclude": [
+      "product.windowsutility-legacy",
+      "product.windowsutility-integrated",
+      "module.cardprinterconfig",
+      "integration.config"
+    ],
     "selectedSubgraphMustInclude": [
       "change.laminator-tag-layout",
       "ui.laminator-tag-param-columns",

@@ -3153,7 +3153,7 @@ The boundary artifact is:
 examples/valid/todo-app-pbe-run/generated/devview-graph-html-boundary.runtime-evidence-only.preview.json
 ```
 
-The demo artifacts are:
+The original CardPrinterConfig-only demo artifacts are:
 
 ```text
 outputs/devview-graph/cardprinterconfig.devviewgraph.html
@@ -3173,3 +3173,32 @@ This decision implements a visualization/report artifact only. It does not execu
 graph-source, apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence,
 enforce scope, configure CI, configure required checks, change branch protection, reject diffs, or replace user
 acceptance.
+
+## DEC-283 Expand DevViewGraph To WindowsUtility Portfolio View
+
+DEC-283 does not supersede DEC-097 through DEC-282. It expands the DevViewGraph demo from a CardPrinterConfig-only
+slice to a WindowsUtility portfolio graph with CardPrinterConfig as the selected detailed retrofit subgraph.
+
+The portfolio graph and matching instruction pack are:
+
+```text
+examples/retrofit/windowsutility/graph-source.json
+outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json
+```
+
+The generated inspector artifacts are:
+
+```text
+outputs/devview-graph/windowsutility.devviewgraph.html
+outputs/devview-graph/windowsutility.devviewgraph.data.json
+```
+
+The portfolio graph treats top-level `Utility_Windows/src` directories as observed inventory nodes. Only the
+CardPrinterConfig detailed retrofit nodes, edges, and records are used as the selected instruction-pack context. The
+HTML inspector now supports mouse drag, mouse-wheel zoom, compact zoom controls, and a clearer `Instruction Sources`
+panel that groups allowed files, forbidden scope, and verification instead of exposing a raw pack mapping list.
+
+This decision implements visualization/report improvements only. It does not mutate `Utility_Windows`, mutate
+`WindowsUtility`, execute Codex, call an LLM/API, apply graph deltas, approve work, record human decisions, satisfy
+runtime Evidence, prove equivalence, enforce scope, configure CI, configure required checks, change branch protection,
+reject diffs, or replace user acceptance.

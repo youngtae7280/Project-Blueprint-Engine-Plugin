@@ -565,11 +565,12 @@ implemented command is:
 graph read-model render-devview-graph --graph-source <graphSource> --record <recordId> --instruction-pack <pack> --output <html> --data-output <json> --json
 ```
 
-The CardPrinterConfig retrofit demo output is tracked at `outputs/devview-graph/cardprinterconfig.devviewgraph.html` and
-`outputs/devview-graph/cardprinterconfig.devviewgraph.data.json`. DevViewGraph renders one full graph, highlights the
-selected Instruction Pack subgraph and viewpoint trees, and lets reviewers inspect node, edge, tree, subgraph, and pack
-mapping details. It is visualization/report-only: no Codex execution, graph-source mutation, graph delta apply,
-approval, runtime Evidence satisfaction, equivalence proof, scope enforcement, or CI enforcement is introduced.
+The WindowsUtility retrofit demo output is tracked at `outputs/devview-graph/windowsutility.devviewgraph.html` and
+`outputs/devview-graph/windowsutility.devviewgraph.data.json`. DevViewGraph renders one full portfolio graph, highlights
+the selected CardPrinterConfig Instruction Pack subgraph and viewpoint trees, supports mouse drag and wheel zoom, and
+lets reviewers inspect node, edge, tree, subgraph, and Instruction Sources details. It is visualization/report-only: no
+Codex execution, graph-source mutation, graph delta apply, approval, runtime Evidence satisfaction, equivalence proof,
+scope enforcement, or CI enforcement is introduced.
 
 The traversal boundary separates graph vocabulary from planner semantics: `*NodeTypes` and `*EdgeTypes` contain only
 actual graph taxonomy values, while target/scope/evidence/output meanings are represented as roles and selection
