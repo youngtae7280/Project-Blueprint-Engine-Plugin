@@ -1987,17 +1987,21 @@ examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-policy-bound
 ```
 
 It anchors the `graph read-model report-equivalence-proof-readiness` command. The first calibration readiness artifact
-is:
+has been repointed through Runtime Evidence Satisfaction Binding readiness. The canonical calibration readiness
+artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-defer-decision.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json
+examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.md
 ```
 
-It is blocked because Evidence acceptance readiness is blocked. The command reports readiness only and keeps
-`equivalenceAllowed`, `equivalenceProven`, `evidenceAccepted`, `runtimeEvidenceSatisfied`, `graphDeltaApplied`,
-`graphSourceMutated`, `scopeEnforced`, and `ciEnforcementEnabled` false. It performs no equivalence proof and does not
-accept Evidence, satisfy runtime Evidence, apply graph deltas, mutate graph-source, configure required checks, or
-automate user acceptance.
+It is blocked because the Runtime Evidence Satisfaction readiness artifact is blocked with
+`blocked-required-obligation-mismatch`. Evidence acceptance readiness can be supplied as legacy provenance only and does
+not grant equivalence readiness. The command reports readiness only and keeps `equivalenceAllowed`,
+`equivalenceProven`, top-level `evidenceAccepted`, `runtimeEvidenceSatisfied`, `graphDeltaApplied`,
+`graphSourceMutated`, `scopeEnforced`, and `ciEnforcementEnabled` false. It performs no equivalence proof, does not
+consume accepted Evidence directly, and does not accept Evidence, satisfy runtime Evidence, apply graph deltas, mutate
+graph-source, configure required checks, or automate user acceptance.
 
 The Scope/CI Enforcement Policy boundary preview is:
 

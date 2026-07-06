@@ -175,6 +175,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     evidenceCheckBinding: undefined as string | undefined,
     outputRequirement: undefined as string | undefined,
     requiredEvidenceId: undefined as string | undefined,
+    runtimeEvidenceSatisfactionReadiness: undefined as string | undefined,
     evidenceAcceptanceReadiness: undefined as string | undefined,
     equivalenceProofReadiness: undefined as string | undefined,
     policy: undefined as string | undefined,
@@ -765,6 +766,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--required-evidence-id requires a value.' }
       }
       options.requiredEvidenceId = value
+      index += 1
+    } else if (arg === '--runtime-evidence-satisfaction-readiness') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--runtime-evidence-satisfaction-readiness requires a file path.' }
+      }
+      options.runtimeEvidenceSatisfactionReadiness = value
       index += 1
     } else if (arg === '--evidence-acceptance-readiness') {
       const value = argv[index + 1]

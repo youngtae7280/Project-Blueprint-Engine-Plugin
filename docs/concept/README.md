@@ -377,11 +377,13 @@ Only this `devview-accepted-evidence-record` success artifact may set `evidenceA
 
 The Equivalence Proof Policy boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-policy-boundary.runtime-evidence-only.preview.json`.
-It anchors the `graph read-model report-equivalence-proof-readiness ...` command. The first calibration equivalence
-readiness artifact is blocked because Evidence acceptance readiness is blocked:
-`examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-defer-decision.runtime-evidence-only.preview.json`.
-The command reports readiness only. It does not prove equivalence, set `equivalenceProven: true`, accept Evidence,
-satisfy runtime Evidence, apply graph deltas, mutate graph-source, enforce scope, or configure CI.
+It anchors the `graph read-model report-equivalence-proof-readiness ...` command, now gated by Runtime Evidence
+Satisfaction Binding readiness rather than direct Evidence acceptance. The canonical calibration equivalence readiness
+artifact is blocked because runtime Evidence satisfaction readiness is blocked:
+`examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json`.
+The command reports readiness only. It does not consume accepted Evidence directly, prove equivalence, promote the
+equivalence flag to true, accept Evidence, satisfy runtime Evidence, apply graph deltas, mutate graph-source, enforce
+scope, or configure CI.
 
 The Scope/CI Enforcement Policy boundary is previewed in
 `examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-policy-boundary.runtime-evidence-only.preview.json`.

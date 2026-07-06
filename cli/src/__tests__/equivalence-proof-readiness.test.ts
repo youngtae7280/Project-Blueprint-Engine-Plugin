@@ -12,10 +12,10 @@ afterEach(() => {
 })
 
 describe('Equivalence Proof readiness CLI', () => {
-  it('writes blocked equivalence proof readiness for blocked Evidence acceptance readiness without proof', async () => {
+  it('writes blocked equivalence proof readiness for blocked Runtime Evidence satisfaction readiness without proof', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, 'policy.json'), validPolicy())
-    writeJson(join(workspace, 'evidence-acceptance-readiness.json'), validEvidenceAcceptanceReadiness({ ready: false }))
+    writeJson(join(workspace, 'runtime-readiness.json'), validRuntimeEvidenceSatisfactionReadiness({ ready: false }))
 
     const result = await runPbeCli(
       [
@@ -24,8 +24,8 @@ describe('Equivalence Proof readiness CLI', () => {
         'report-equivalence-proof-readiness',
         '--policy',
         'policy.json',
-        '--evidence-acceptance-readiness',
-        'evidence-acceptance-readiness.json',
+        '--runtime-evidence-satisfaction-readiness',
+        'runtime-readiness.json',
         '--output',
         '.tmp/equivalence-proof-readiness.json',
         '--json',
@@ -37,21 +37,47 @@ describe('Equivalence Proof readiness CLI', () => {
 
     expect(result.exitCode).toBe(ExitCode.Success)
     expect(payload.status).toBe('devview-equivalence-proof-readiness-blocked')
-    expect(payload.equivalenceProofReadinessStatus).toBe('blocked-evidence-acceptance-readiness-not-ready')
-    expect(payload.equivalenceAllowed).toBe(false)
-    expect(payload.equivalenceProven).toBe(false)
-    expect(payload.evidenceAccepted).toBe(false)
-    expect(payload.runtimeEvidenceSatisfied).toBe(false)
-    expect(payload.graphDeltaApplied).toBe(false)
-    expect(payload.graphSourceMutated).toBe(false)
-    expect(payload.scopeEnforced).toBe(false)
-    expect(payload.ciEnforcementEnabled).toBe(false)
+    expect(payload.equivalenceProofReadinessStatus).toBe('blocked-runtime-evidence-satisfaction-readiness-not-ready')
+    expect(payload.runtimeEvidenceSatisfactionReadinessStatus).toBe('blocked-required-obligation-mismatch')
+    expect(payload.sourceRuntimeEvidenceSatisfactionReadiness).toBe('runtime-readiness.json')
+    expect(payload.sourceAcceptedEvidenceRecord).toBe('accepted-evidence.json')
+    expect(payload.sourceAcceptedEvidenceAccepted).toBe(true)
+    expectNoAuthority(payload)
     expect(written.validationFindings.map((finding: { code: string }) => finding.code)).toContain(
-      'EQUIVALENCE_PROOF_EVIDENCE_ACCEPTANCE_READINESS_NOT_READY',
+      'EQUIVALENCE_PROOF_RUNTIME_SATISFACTION_READINESS_NOT_READY',
     )
   })
 
-  it('reports ready proof context for ready Evidence acceptance readiness without proving equivalence', async () => {
+  it('keeps equivalence blocked for ready Runtime Evidence satisfaction readiness until an actual satisfaction record exists', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'policy.json'), validPolicy())
+    writeJson(join(workspace, 'runtime-readiness.json'), validRuntimeEvidenceSatisfactionReadiness({ ready: true }))
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'report-equivalence-proof-readiness',
+        '--policy',
+        'policy.json',
+        '--runtime-evidence-satisfaction-readiness',
+        'runtime-readiness.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.status).toBe('devview-equivalence-proof-readiness-blocked')
+    expect(payload.equivalenceProofReadinessStatus).toBe('blocked-runtime-evidence-satisfaction-record-missing')
+    expect(payload.runtimeEvidenceSatisfactionReadinessStatus).toBe(
+      'ready-accepted-evidence-linked-to-runtime-obligation',
+    )
+    expectNoAuthority(payload)
+  })
+
+  it('does not allow legacy Evidence acceptance readiness alone to grant equivalence readiness', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, 'policy.json'), validPolicy())
     writeJson(join(workspace, 'evidence-acceptance-readiness.json'), validEvidenceAcceptanceReadiness({ ready: true }))
@@ -69,28 +95,49 @@ describe('Equivalence Proof readiness CLI', () => {
       ],
       { cwd: workspace, pluginRoot },
     )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.InvalidArguments)
+    expect(payload.issues[0].message).toContain('--runtime-evidence-satisfaction-readiness')
+  })
+
+  it('carries optional Evidence acceptance readiness as provenance only', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'policy.json'), validPolicy())
+    writeJson(join(workspace, 'runtime-readiness.json'), validRuntimeEvidenceSatisfactionReadiness({ ready: false }))
+    writeJson(join(workspace, 'evidence-acceptance-readiness.json'), validEvidenceAcceptanceReadiness({ ready: true }))
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'report-equivalence-proof-readiness',
+        '--policy',
+        'policy.json',
+        '--runtime-evidence-satisfaction-readiness',
+        'runtime-readiness.json',
+        '--evidence-acceptance-readiness',
+        'evidence-acceptance-readiness.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
     const payload = JSON.parse(result.stdout)
 
     expect(result.exitCode).toBe(ExitCode.Success)
-    expect(payload.status).toBe('devview-equivalence-proof-readiness-ready')
-    expect(payload.equivalenceProofReadinessStatus).toBe('dry-run-ready-evidence-acceptance-readiness-present')
-    expect(payload.equivalenceAllowed).toBe(false)
-    expect(payload.equivalenceProofCommandImplemented).toBe(false)
-    expect(payload.equivalenceProven).toBe(false)
-    expect(payload.evidenceAccepted).toBe(false)
-    expect(payload.runtimeEvidenceSatisfied).toBe(false)
-    expect(payload.graphDeltaApplied).toBe(false)
-    expect(payload.graphSourceMutated).toBe(false)
-    expect(payload.scopeEnforced).toBe(false)
-    expect(payload.ciEnforcementEnabled).toBe(false)
+    expect(payload.status).toBe('devview-equivalence-proof-readiness-blocked')
+    expect(payload.sourceEvidenceAcceptanceReadiness).toBe('evidence-acceptance-readiness.json')
+    expect(payload.evidenceAcceptanceReadinessStatus).toBe('dry-run-ready-mutation-readiness-present')
+    expect(payload.equivalenceProofReadinessStatus).toBe('blocked-runtime-evidence-satisfaction-readiness-not-ready')
+    expectNoAuthority(payload)
   })
 
-  it('fails unsafe Evidence acceptance readiness flags before writing output', async () => {
+  it('fails wrong Runtime Evidence satisfaction readiness role before writing output', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, 'policy.json'), validPolicy())
-    writeJson(join(workspace, 'evidence-acceptance-readiness.json'), {
-      ...validEvidenceAcceptanceReadiness({ ready: true }),
-      equivalenceProven: true,
+    writeJson(join(workspace, 'runtime-readiness.json'), {
+      ...validRuntimeEvidenceSatisfactionReadiness({ ready: false }),
+      artifactRole: 'devview-accepted-evidence-record',
     })
 
     const result = await runPbeCli(
@@ -100,6 +147,69 @@ describe('Equivalence Proof readiness CLI', () => {
         'report-equivalence-proof-readiness',
         '--policy',
         'policy.json',
+        '--runtime-evidence-satisfaction-readiness',
+        'runtime-readiness.json',
+        '--output',
+        '.tmp/equivalence-proof-readiness.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues[0].message).toContain('artifactRole')
+    expect(existsSync(join(workspace, '.tmp/equivalence-proof-readiness.json'))).toBe(false)
+  })
+
+  it('fails unsafe Runtime Evidence satisfaction readiness flags before writing output', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'policy.json'), validPolicy())
+    writeJson(join(workspace, 'runtime-readiness.json'), {
+      ...validRuntimeEvidenceSatisfactionReadiness({ ready: true }),
+      runtimeEvidenceSatisfied: unsafeTrue(),
+    })
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'report-equivalence-proof-readiness',
+        '--policy',
+        'policy.json',
+        '--runtime-evidence-satisfaction-readiness',
+        'runtime-readiness.json',
+        '--output',
+        '.tmp/equivalence-proof-readiness.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues[0].message).toContain('runtimeEvidenceSatisfied')
+    expect(existsSync(join(workspace, '.tmp/equivalence-proof-readiness.json'))).toBe(false)
+  })
+
+  it('fails unsafe optional Evidence acceptance readiness flags before writing output', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, 'policy.json'), validPolicy())
+    writeJson(join(workspace, 'runtime-readiness.json'), validRuntimeEvidenceSatisfactionReadiness({ ready: false }))
+    writeJson(join(workspace, 'evidence-acceptance-readiness.json'), {
+      ...validEvidenceAcceptanceReadiness({ ready: true }),
+      equivalenceProven: unsafeTrue(),
+    })
+
+    const result = await runPbeCli(
+      [
+        'graph',
+        'read-model',
+        'report-equivalence-proof-readiness',
+        '--policy',
+        'policy.json',
+        '--runtime-evidence-satisfaction-readiness',
+        'runtime-readiness.json',
         '--evidence-acceptance-readiness',
         'evidence-acceptance-readiness.json',
         '--output',
@@ -117,8 +227,8 @@ describe('Equivalence Proof readiness CLI', () => {
 
   it('fails unsafe policy boundary fields', async () => {
     const workspace = createWorkspace()
-    writeJson(join(workspace, 'policy.json'), { ...validPolicy(), equivalenceProven: true })
-    writeJson(join(workspace, 'evidence-acceptance-readiness.json'), validEvidenceAcceptanceReadiness({ ready: true }))
+    writeJson(join(workspace, 'policy.json'), { ...validPolicy(), equivalenceProven: unsafeTrue() })
+    writeJson(join(workspace, 'runtime-readiness.json'), validRuntimeEvidenceSatisfactionReadiness({ ready: true }))
 
     const result = await runPbeCli(
       [
@@ -127,8 +237,8 @@ describe('Equivalence Proof readiness CLI', () => {
         'report-equivalence-proof-readiness',
         '--policy',
         'policy.json',
-        '--evidence-acceptance-readiness',
-        'evidence-acceptance-readiness.json',
+        '--runtime-evidence-satisfaction-readiness',
+        'runtime-readiness.json',
         '--output',
         '.tmp/equivalence-proof-readiness.json',
         '--json',
@@ -142,11 +252,15 @@ describe('Equivalence Proof readiness CLI', () => {
     expect(existsSync(join(workspace, '.tmp/equivalence-proof-readiness.json'))).toBe(false)
   })
 
-  it('blocks unsafe markdown before JSON output is written', async () => {
+  it('blocks unsafe linked source overwrite before JSON output is written', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, 'policy.json'), validPolicy())
-    writeJson(join(workspace, 'evidence-acceptance-readiness.json'), validEvidenceAcceptanceReadiness({ ready: true }))
-    const sourceBefore = readFileSync(join(workspace, 'evidence-acceptance-readiness.json'), 'utf8')
+    writeJson(join(workspace, 'runtime-readiness.json'), validRuntimeEvidenceSatisfactionReadiness({ ready: true }))
+    writeJson(join(workspace, 'accepted-evidence.json'), {
+      artifactRole: 'devview-accepted-evidence-record',
+      status: 'devview-accepted-evidence-recorded',
+    })
+    const sourceBefore = readFileSync(join(workspace, 'accepted-evidence.json'), 'utf8')
 
     const result = await runPbeCli(
       [
@@ -155,12 +269,12 @@ describe('Equivalence Proof readiness CLI', () => {
         'report-equivalence-proof-readiness',
         '--policy',
         'policy.json',
-        '--evidence-acceptance-readiness',
-        'evidence-acceptance-readiness.json',
+        '--runtime-evidence-satisfaction-readiness',
+        'runtime-readiness.json',
         '--output',
         '.tmp/equivalence-proof-readiness.json',
         '--markdown',
-        'evidence-acceptance-readiness.json',
+        'accepted-evidence.json',
         '--json',
       ],
       { cwd: workspace, pluginRoot },
@@ -168,11 +282,32 @@ describe('Equivalence Proof readiness CLI', () => {
     const payload = JSON.parse(result.stderr)
 
     expect(result.exitCode).toBe(ExitCode.ValidationFailed)
-    expect(payload.issues[0].message).toContain('would overwrite the source Evidence Acceptance readiness')
-    expect(readFileSync(join(workspace, 'evidence-acceptance-readiness.json'), 'utf8')).toBe(sourceBefore)
+    expect(payload.issues[0].message).toContain('would overwrite the source Accepted Evidence record')
+    expect(readFileSync(join(workspace, 'accepted-evidence.json'), 'utf8')).toBe(sourceBefore)
     expect(existsSync(join(workspace, '.tmp/equivalence-proof-readiness.json'))).toBe(false)
   })
 })
+
+function expectNoAuthority(payload: Record<string, unknown>): void {
+  expect(payload.equivalenceAllowed).toBe(false)
+  expect(payload.equivalenceProofCommandImplemented).toBe(false)
+  expect(payload.equivalenceProven).toBe(false)
+  expect(payload.evidenceAccepted).toBe(false)
+  expect(payload.runtimeEvidenceSatisfied).toBe(false)
+  expect(payload.graphDeltaApplyEnabled).toBe(false)
+  expect(payload.graphDeltaApplied).toBe(false)
+  expect(payload.graphSourceMutationAllowed).toBe(false)
+  expect(payload.graphSourceMutated).toBe(false)
+  expect(payload.scopeEnforced).toBe(false)
+  expect(payload.ciEnforcementEnabled).toBe(false)
+  expect(payload.approvalAutomationEnabled).toBe(false)
+  expect(payload.userAcceptanceAutomated).toBe(false)
+  expect(payload.nonEnforcing).toBe(true)
+}
+
+function unsafeTrue(): boolean {
+  return JSON.parse('true') as boolean
+}
 
 function validPolicy(): Record<string, unknown> {
   return {
@@ -185,6 +320,51 @@ function validPolicy(): Record<string, unknown> {
     graphSourceMutated: false,
     scopeEnforced: false,
     ciEnforcementEnabled: false,
+  }
+}
+
+function validRuntimeEvidenceSatisfactionReadiness(input: { ready: boolean }): Record<string, unknown> {
+  return {
+    artifactRole: 'devview-runtime-evidence-satisfaction-readiness-preview',
+    status: input.ready
+      ? 'devview-runtime-evidence-satisfaction-readiness-ready'
+      : 'devview-runtime-evidence-satisfaction-readiness-blocked',
+    readinessScope: 'runtime-evidence-satisfaction-binding-readiness-preview-no-satisfaction',
+    sourceAcceptedEvidenceRecord: 'accepted-evidence.json',
+    sourceInstructionPack: 'instruction-pack.json',
+    sourceContractInput: 'contract-input.json',
+    sourceEvidenceArtifact: 'source-evidence.json',
+    sourceRuntimeEvidenceAuthority: 'runtime-authority.json',
+    sourceEvidenceCheckBinding: 'evidence-check-binding.json',
+    sourceOutputRequirement: 'output-requirement.json',
+    sourceRuntimeReport: 'runtime-report.json',
+    sourceScopeReport: 'scope-report.json',
+    sourceGraphDeltaApplyReport: 'apply-report.json',
+    sourceCheckReport: 'check-report.json',
+    requiredEvidenceId: 'required-evidence-1',
+    matchedRequiredEvidence: {
+      id: 'required-evidence-1',
+      sourceEvidenceId: 'source-evidence-1',
+      evidenceType: 'runtime-report',
+      artifact: 'source-evidence.json',
+      runtimeEvidenceSatisfied: false,
+      acceptedEvidence: false,
+    },
+    sourceAcceptedEvidenceAccepted: true,
+    runtimeEvidenceSatisfactionReadinessStatus: input.ready
+      ? 'ready-accepted-evidence-linked-to-runtime-obligation'
+      : 'blocked-required-obligation-mismatch',
+    runtimeEvidenceSatisfactionAllowed: false,
+    runtimeEvidenceSatisfied: false,
+    evidenceAccepted: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+    graphSourceMutated: false,
+    graphDeltaApplied: false,
+    approvalAutomationEnabled: false,
+    userAcceptanceAutomated: false,
+    nonEnforcing: true,
   }
 }
 

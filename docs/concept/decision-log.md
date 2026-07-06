@@ -3977,3 +3977,33 @@ This decision adds no default runtime smoke step. It adds no actual runtime sati
 runtime Evidence to satisfied, no equivalence proof, no scope enforcement, no CI enforcement, no graph-source mutation,
 no graph delta apply, no automatic approval, no user acceptance automation, no Codex self-acceptance, no provider
 invocation, no LLM/API or network call, and no Project Memory extension authority.
+
+## DEC-311 Repoint Equivalence Proof Readiness To Runtime Satisfaction Readiness
+
+DEC-311 does not supersede DEC-097 through DEC-310. It hardens the existing
+`graph read-model report-equivalence-proof-readiness` command so Equivalence Proof readiness no longer depends on
+Evidence Acceptance readiness as the authoritative precursor.
+
+The command now requires `--runtime-evidence-satisfaction-readiness` and treats
+`--evidence-acceptance-readiness` as optional legacy provenance only. Accepted Evidence is not consumed directly by
+Equivalence readiness. Runtime Evidence Satisfaction readiness that is blocked keeps Equivalence readiness blocked; a
+ready binding readiness is still not enough to prove equivalence or make the readiness ready until a future actual
+runtime Evidence satisfaction record exists.
+
+The new canonical calibration artifact is:
+
+```text
+examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json
+```
+
+It is blocked because the current runtime satisfaction readiness calibration is blocked with
+`blocked-required-obligation-mismatch`. The report preserves runtime readiness provenance and may record
+`sourceAcceptedEvidenceAccepted: true` as an input fact, but it keeps top-level `evidenceAccepted: false`,
+`runtimeEvidenceSatisfied: false`, and `equivalenceProven: false`.
+
+This decision adds no default runtime smoke step. It adds no actual equivalence proof record, no promotion of the
+equivalence flag to true, no runtime satisfaction record, no promotion of runtime Evidence satisfaction to true, no
+Evidence acceptance creation, no direct Accepted Evidence consumption by Equivalence, no graph-source mutation, no graph
+delta apply, no scope enforcement, no CI enforcement, no required checks, no branch protection, no diff rejection, no
+automatic approval, no user acceptance automation, no provider invocation, no LLM/API or network call, and no Project
+Memory extension authority.

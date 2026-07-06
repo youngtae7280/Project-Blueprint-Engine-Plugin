@@ -6,11 +6,33 @@ type JsonRecord = Record<string, unknown>
 const POLICY_ROLE = 'devview-equivalence-proof-policy-boundary-preview'
 const POLICY_STATUS = 'devview-equivalence-proof-policy-boundary-previewed'
 const EVIDENCE_ACCEPTANCE_READINESS_ROLE = 'devview-evidence-acceptance-readiness-preview'
+const RUNTIME_EVIDENCE_SATISFACTION_READINESS_ROLE = 'devview-runtime-evidence-satisfaction-readiness-preview'
 const READINESS_ROLE = 'devview-equivalence-proof-readiness-preview'
+
+const unsafeAuthorityFields = [
+  'equivalenceProven',
+  'runtimeEvidenceSatisfied',
+  'evidenceAccepted',
+  'scopeEnforced',
+  'ciEnforcementEnabled',
+  'graphSourceMutated',
+  'graphDeltaApplied',
+  'approvalAutomationEnabled',
+  'userAcceptanceAutomated',
+  'mutationAllowed',
+  'graphSourceMutationAllowed',
+  'graphDeltaApplyEnabled',
+  'scopeEnforcementEnabled',
+  'ciEnforcementAllowed',
+  'requiredChecksConfigured',
+  'branchProtectionChanged',
+  'diffRejectionEnabled',
+]
 
 export interface EquivalenceProofReadinessOptions {
   policy: string
-  evidenceAcceptanceReadiness: string
+  runtimeEvidenceSatisfactionReadiness: string
+  evidenceAcceptanceReadiness?: string
   output?: string
   markdown?: string
 }
@@ -27,18 +49,37 @@ export interface EquivalenceProofReadinessPreview {
   status: 'devview-equivalence-proof-readiness-ready' | 'devview-equivalence-proof-readiness-blocked'
   readinessScope: 'equivalence-proof-readiness-preview-no-proof'
   sourcePolicyBoundary: string
-  sourceEvidenceAcceptanceReadiness: string
+  sourceRuntimeEvidenceSatisfactionReadiness: string
+  sourceEvidenceAcceptanceReadiness: string | null
+  sourceAcceptedEvidenceRecord: string | null
+  sourceEvidenceArtifact: string | null
+  sourceInstructionPack: string | null
+  sourceContractInput: string | null
+  sourceRuntimeEvidenceAuthority: string | null
+  sourceEvidenceCheckBinding: string | null
+  sourceOutputRequirement: string | null
+  sourceRuntimeReport: string | null
+  sourceScopeReport: string | null
+  sourceGraphDeltaApplyReport: string | null
+  sourceCheckReport: string | null
   sourceGraphSourceMutationReadiness: string | null
   sourceApplyReadiness: string | null
   sourceApprovedProposalState: string | null
   sourceGraphDeltaProposal: string | null
   proposalId: string
+  requiredEvidenceId: string | null
+  matchedRequiredEvidence: JsonRecord | null
+  sourceAcceptedEvidenceAccepted: boolean
   equivalenceProofReadinessStatus:
-    | 'dry-run-ready-evidence-acceptance-readiness-present'
-    | 'blocked-evidence-acceptance-readiness-not-ready'
-  evidenceAcceptanceReadinessStatus: string
-  mutationReadinessStatus: string
-  applyReadinessStatus: string
+    | 'ready-for-future-equivalence-proof-command'
+    | 'blocked-runtime-evidence-satisfaction-readiness-not-ready'
+    | 'blocked-runtime-evidence-satisfaction-record-missing'
+    | 'blocked-runtime-evidence-satisfaction-readiness-invalid'
+    | 'blocked-unsafe-authority-flag'
+  runtimeEvidenceSatisfactionReadinessStatus: string
+  evidenceAcceptanceReadinessStatus: string | null
+  mutationReadinessStatus: string | null
+  applyReadinessStatus: string | null
   equivalenceAllowed: false
   equivalenceProofCommandImplemented: false
   equivalenceProven: false
@@ -57,6 +98,9 @@ export interface EquivalenceProofReadinessPreview {
   ciEnforcementEnabled: false
   strictModeEnabled: false
   guidedEnforcementEnabled: false
+  approvalAutomationEnabled: false
+  userAcceptanceAutomated: false
+  nonEnforcing: true
   validationFindings: EquivalenceProofReadinessFinding[]
   allowedUse: string[]
   forbiddenUse: string[]
@@ -88,16 +132,31 @@ export async function reportEquivalenceProofReadinessFile(
   const policy = await readRequiredJson(resolvedPolicyPath, 'Equivalence Proof Policy boundary')
   validatePolicy(policy)
 
-  const resolvedEvidenceAcceptanceReadinessPath = resolveRepoPath(root, options.evidenceAcceptanceReadiness)
-  const evidenceAcceptanceReadiness = await readRequiredJson(
-    resolvedEvidenceAcceptanceReadinessPath,
-    'Evidence Acceptance readiness',
+  const resolvedRuntimeReadinessPath = resolveRepoPath(root, options.runtimeEvidenceSatisfactionReadiness)
+  const runtimeReadiness = await readRequiredJson(
+    resolvedRuntimeReadinessPath,
+    'Runtime Evidence Satisfaction readiness',
   )
-  validateEvidenceAcceptanceReadiness(evidenceAcceptanceReadiness)
+  validateRuntimeEvidenceSatisfactionReadiness(runtimeReadiness)
+
+  const evidenceAcceptanceReadiness = options.evidenceAcceptanceReadiness
+    ? await readRequiredJson(
+        resolveRepoPath(root, options.evidenceAcceptanceReadiness),
+        'Evidence Acceptance readiness',
+      )
+    : null
+  if (evidenceAcceptanceReadiness) {
+    validateEvidenceAcceptanceReadiness(evidenceAcceptanceReadiness)
+  }
+  const resolvedEvidenceAcceptanceReadinessPath = options.evidenceAcceptanceReadiness
+    ? resolveRepoPath(root, options.evidenceAcceptanceReadiness)
+    : null
 
   await assertOutputAuthority(root, {
     policy,
     resolvedPolicyPath,
+    runtimeReadiness,
+    resolvedRuntimeReadinessPath,
     evidenceAcceptanceReadiness,
     resolvedEvidenceAcceptanceReadinessPath,
     output: options.output,
@@ -106,6 +165,8 @@ export async function reportEquivalenceProofReadinessFile(
 
   const readiness = buildEquivalenceProofReadiness(root, {
     resolvedPolicyPath,
+    runtimeReadiness,
+    resolvedRuntimeReadinessPath,
     evidenceAcceptanceReadiness,
     resolvedEvidenceAcceptanceReadinessPath,
   })
@@ -124,6 +185,9 @@ export async function reportEquivalenceProofReadinessFile(
     markdownReport = relativePath(root, resolvedMarkdownPath)
     readiness.markdownReportPath = markdownReport
     await writeTextAtomic(resolvedMarkdownPath, renderEquivalenceProofReadinessMarkdown(readiness))
+    if (options.output) {
+      await writeJsonAtomic(resolveRepoPath(root, options.output), readiness)
+    }
   }
 
   return { readiness, ...(outputPath ? { outputPath } : {}), ...(markdownReport ? { markdownReport } : {}) }
@@ -133,30 +197,69 @@ function buildEquivalenceProofReadiness(
   root: string,
   input: {
     resolvedPolicyPath: string
-    evidenceAcceptanceReadiness: JsonRecord
-    resolvedEvidenceAcceptanceReadinessPath: string
+    runtimeReadiness: JsonRecord
+    resolvedRuntimeReadinessPath: string
+    evidenceAcceptanceReadiness: JsonRecord | null
+    resolvedEvidenceAcceptanceReadinessPath: string | null
   },
 ): EquivalenceProofReadinessPreview {
-  const ready = input.evidenceAcceptanceReadiness.status === 'devview-evidence-acceptance-readiness-ready'
+  const runtimeReady =
+    input.runtimeReadiness.status === 'devview-runtime-evidence-satisfaction-readiness-ready' &&
+    input.runtimeReadiness.runtimeEvidenceSatisfactionReadinessStatus ===
+      'ready-accepted-evidence-linked-to-runtime-obligation'
+  const readinessStatus = runtimeReady
+    ? 'blocked-runtime-evidence-satisfaction-record-missing'
+    : 'blocked-runtime-evidence-satisfaction-readiness-not-ready'
+
   return {
     schemaVersion: 1,
     artifactRole: READINESS_ROLE,
-    status: ready ? 'devview-equivalence-proof-readiness-ready' : 'devview-equivalence-proof-readiness-blocked',
+    status: 'devview-equivalence-proof-readiness-blocked',
     readinessScope: 'equivalence-proof-readiness-preview-no-proof',
     sourcePolicyBoundary: relativePath(root, input.resolvedPolicyPath),
-    sourceEvidenceAcceptanceReadiness: relativePath(root, input.resolvedEvidenceAcceptanceReadinessPath),
+    sourceRuntimeEvidenceSatisfactionReadiness: relativePath(root, input.resolvedRuntimeReadinessPath),
+    sourceEvidenceAcceptanceReadiness: input.resolvedEvidenceAcceptanceReadinessPath
+      ? relativePath(root, input.resolvedEvidenceAcceptanceReadinessPath)
+      : stringValue(input.runtimeReadiness.sourceEvidenceAcceptanceReadiness) || null,
+    sourceAcceptedEvidenceRecord: stringValue(input.runtimeReadiness.sourceAcceptedEvidenceRecord) || null,
+    sourceEvidenceArtifact: stringValue(input.runtimeReadiness.sourceEvidenceArtifact) || null,
+    sourceInstructionPack: stringValue(input.runtimeReadiness.sourceInstructionPack) || null,
+    sourceContractInput: stringValue(input.runtimeReadiness.sourceContractInput) || null,
+    sourceRuntimeEvidenceAuthority: stringValue(input.runtimeReadiness.sourceRuntimeEvidenceAuthority) || null,
+    sourceEvidenceCheckBinding: stringValue(input.runtimeReadiness.sourceEvidenceCheckBinding) || null,
+    sourceOutputRequirement: stringValue(input.runtimeReadiness.sourceOutputRequirement) || null,
+    sourceRuntimeReport: stringValue(input.runtimeReadiness.sourceRuntimeReport) || null,
+    sourceScopeReport: stringValue(input.runtimeReadiness.sourceScopeReport) || null,
+    sourceGraphDeltaApplyReport: stringValue(input.runtimeReadiness.sourceGraphDeltaApplyReport) || null,
+    sourceCheckReport: stringValue(input.runtimeReadiness.sourceCheckReport) || null,
     sourceGraphSourceMutationReadiness:
-      stringValue(input.evidenceAcceptanceReadiness.sourceGraphSourceMutationReadiness) || null,
-    sourceApplyReadiness: stringValue(input.evidenceAcceptanceReadiness.sourceApplyReadiness) || null,
-    sourceApprovedProposalState: stringValue(input.evidenceAcceptanceReadiness.sourceApprovedProposalState) || null,
-    sourceGraphDeltaProposal: stringValue(input.evidenceAcceptanceReadiness.sourceGraphDeltaProposal) || null,
-    proposalId: stringValue(input.evidenceAcceptanceReadiness.proposalId) || 'unknown-proposal',
-    equivalenceProofReadinessStatus: ready
-      ? 'dry-run-ready-evidence-acceptance-readiness-present'
-      : 'blocked-evidence-acceptance-readiness-not-ready',
-    evidenceAcceptanceReadinessStatus: stringValue(input.evidenceAcceptanceReadiness.evidenceAcceptanceReadinessStatus),
-    mutationReadinessStatus: stringValue(input.evidenceAcceptanceReadiness.mutationReadinessStatus),
-    applyReadinessStatus: stringValue(input.evidenceAcceptanceReadiness.applyReadinessStatus),
+      stringValue(input.evidenceAcceptanceReadiness?.sourceGraphSourceMutationReadiness) || null,
+    sourceApplyReadiness: stringValue(input.evidenceAcceptanceReadiness?.sourceApplyReadiness) || null,
+    sourceApprovedProposalState: stringValue(input.evidenceAcceptanceReadiness?.sourceApprovedProposalState) || null,
+    sourceGraphDeltaProposal:
+      stringValue(input.evidenceAcceptanceReadiness?.sourceGraphDeltaProposal) ||
+      stringValue(input.runtimeReadiness.sourceGraphDeltaProposal) ||
+      null,
+    proposalId:
+      stringValue(input.evidenceAcceptanceReadiness?.proposalId) ||
+      stringValue(input.runtimeReadiness.proposalId) ||
+      'unknown-proposal',
+    requiredEvidenceId: stringValue(input.runtimeReadiness.requiredEvidenceId) || null,
+    matchedRequiredEvidence: asRecord(input.runtimeReadiness.matchedRequiredEvidence),
+    sourceAcceptedEvidenceAccepted: input.runtimeReadiness.sourceAcceptedEvidenceAccepted === true,
+    equivalenceProofReadinessStatus: readinessStatus,
+    runtimeEvidenceSatisfactionReadinessStatus: stringValue(
+      input.runtimeReadiness.runtimeEvidenceSatisfactionReadinessStatus,
+    ),
+    evidenceAcceptanceReadinessStatus: input.evidenceAcceptanceReadiness
+      ? stringValue(input.evidenceAcceptanceReadiness.evidenceAcceptanceReadinessStatus)
+      : null,
+    mutationReadinessStatus: input.evidenceAcceptanceReadiness
+      ? stringValue(input.evidenceAcceptanceReadiness.mutationReadinessStatus)
+      : null,
+    applyReadinessStatus: input.evidenceAcceptanceReadiness
+      ? stringValue(input.evidenceAcceptanceReadiness.applyReadinessStatus)
+      : null,
     equivalenceAllowed: false,
     equivalenceProofCommandImplemented: false,
     equivalenceProven: false,
@@ -168,40 +271,48 @@ function buildEquivalenceProofReadiness(
     graphSourceMutated: false,
     mutationAllowed: false,
     acceptanceAllowed: false,
-    approvedProposalStateCreated: input.evidenceAcceptanceReadiness.approvedProposalStateCreated === true,
-    humanDecisionRecorded: input.evidenceAcceptanceReadiness.humanDecisionRecorded === true,
+    approvedProposalStateCreated: input.evidenceAcceptanceReadiness?.approvedProposalStateCreated === true,
+    humanDecisionRecorded: input.evidenceAcceptanceReadiness?.humanDecisionRecorded === true,
     humanReviewRequired: true,
     scopeEnforced: false,
     ciEnforcementEnabled: false,
     strictModeEnabled: false,
     guidedEnforcementEnabled: false,
-    validationFindings: ready
-      ? []
-      : [
-          {
-            code: 'EQUIVALENCE_PROOF_EVIDENCE_ACCEPTANCE_READINESS_NOT_READY',
+    approvalAutomationEnabled: false,
+    userAcceptanceAutomated: false,
+    nonEnforcing: true,
+    validationFindings: [
+      runtimeReady
+        ? {
+            code: 'EQUIVALENCE_PROOF_RUNTIME_SATISFACTION_RECORD_MISSING',
             severity: 'warning',
-            field: 'evidenceAcceptanceReadinessStatus',
-            expected: 'dry-run-ready-mutation-readiness-present',
-            actual: input.evidenceAcceptanceReadiness.evidenceAcceptanceReadinessStatus,
-            message: 'Equivalence proof readiness is blocked because Evidence acceptance readiness is not ready.',
+            field: 'runtimeEvidenceSatisfied',
+            expected: 'future-explicit-runtime-evidence-satisfaction-record',
+            actual: input.runtimeReadiness.runtimeEvidenceSatisfactionReadinessStatus,
+            message:
+              'Equivalence proof readiness is blocked because runtime Evidence satisfaction binding readiness is not an actual satisfaction record.',
+          }
+        : {
+            code: 'EQUIVALENCE_PROOF_RUNTIME_SATISFACTION_READINESS_NOT_READY',
+            severity: 'warning',
+            field: 'runtimeEvidenceSatisfactionReadinessStatus',
+            expected: 'ready-accepted-evidence-linked-to-runtime-obligation',
+            actual: input.runtimeReadiness.runtimeEvidenceSatisfactionReadinessStatus,
+            message:
+              'Equivalence proof readiness is blocked because Runtime Evidence Satisfaction readiness is not ready.',
           },
-        ],
-    allowedUse: ready
-      ? [
-          'review future equivalence proof readiness before a separate proof command exists',
-          'preserve Evidence acceptance readiness provenance without proving equivalence',
-          'serve as equivalence proof dry-run readiness context only',
-        ]
-      : [
-          'document why equivalence proof readiness is blocked',
-          'preserve Evidence acceptance readiness provenance for human review',
-          'keep blocked inputs out of equivalence-ready state',
-        ],
+    ],
+    allowedUse: [
+      'document why equivalence proof readiness is blocked',
+      'preserve runtime Evidence satisfaction readiness provenance for human review',
+      'keep accepted Evidence and readiness-only inputs out of equivalence-proof state',
+    ],
     forbiddenUse: [
       'equivalence proof',
       'Evidence acceptance',
       'runtime Evidence satisfaction',
+      'runtime satisfaction record creation',
+      'direct Accepted Evidence consumption for equivalence',
       'graph delta apply',
       'graph-source mutation',
       'scope enforcement',
@@ -210,32 +321,36 @@ function buildEquivalenceProofReadiness(
       'production source mutation',
       'Codex hook or config mutation',
       'user acceptance automation',
-      'inference of equivalence from Codex, AI, validators, runtime smoke, CI, review packet, Evidence acceptance readiness, mutation readiness, or apply readiness',
+      'inference of equivalence from Codex, AI, validators, runtime smoke, CI, review packet, accepted Evidence, Evidence acceptance readiness, runtime satisfaction readiness, mutation readiness, or apply readiness',
     ],
     outputWritePolicy: 'explicit-output-only',
     writtenOutputPath: null,
     writtenOutputPathAuthorityStatus: 'not-written-stdout-only',
     markdownReportPath: null,
     nonExecutionBoundary:
-      'This Equivalence Proof readiness command reports readiness only. It does not prove equivalence, accept Evidence, satisfy runtime Evidence, apply graph deltas, mutate graph-source, enforce scope, configure CI or required checks, change branch protection, mutate production source, mutate Codex hook/config files, or replace user acceptance.',
+      'This Equivalence Proof readiness command reports readiness only. It does not prove equivalence, accept Evidence, satisfy runtime Evidence, create a runtime satisfaction record, apply graph deltas, mutate graph-source, enforce scope, configure CI or required checks, change branch protection, mutate production source, mutate Codex hook/config files, or replace user acceptance.',
   }
 }
 
 export function renderEquivalenceProofReadinessMarkdown(readiness: EquivalenceProofReadinessPreview): string {
+  const table = renderMarkdownTable([
+    ['Field', 'Value'],
+    ['Equivalence proof readiness', `\`${readiness.equivalenceProofReadinessStatus}\``],
+    ['Runtime Evidence satisfaction readiness', `\`${readiness.runtimeEvidenceSatisfactionReadinessStatus}\``],
+    ['Runtime readiness source', `\`${readiness.sourceRuntimeEvidenceSatisfactionReadiness}\``],
+    ['Required Evidence ID', `\`${readiness.requiredEvidenceId ?? 'none'}\``],
+    ['Source Accepted Evidence accepted', `\`${readiness.sourceAcceptedEvidenceAccepted}\``],
+    ['Top-level Evidence accepted', `\`${readiness.evidenceAccepted}\``],
+    ['Runtime Evidence satisfied', `\`${readiness.runtimeEvidenceSatisfied}\``],
+    ['Equivalence allowed', `\`${readiness.equivalenceAllowed}\``],
+    ['Evidence acceptance readiness source', `\`${readiness.sourceEvidenceAcceptanceReadiness ?? 'none'}\``],
+  ])
+
   return `# DevView Equivalence Proof Readiness
 
 Status: \`${readiness.status}\`
 
-| Field | Value |
-| --- | --- |
-| Equivalence proof readiness | \`${readiness.equivalenceProofReadinessStatus}\` |
-| Evidence acceptance readiness | \`${readiness.evidenceAcceptanceReadinessStatus}\` |
-| Mutation readiness | \`${readiness.mutationReadinessStatus}\` |
-| Apply readiness | \`${readiness.applyReadinessStatus}\` |
-| Equivalence allowed | \`${readiness.equivalenceAllowed}\` |
-| Proposal | \`${readiness.sourceGraphDeltaProposal ?? 'none'}\` |
-| Proposal ID | \`${readiness.proposalId}\` |
-| Evidence acceptance readiness source | \`${readiness.sourceEvidenceAcceptanceReadiness}\` |
+${table}
 
 ## Non-Execution Boundary
 
@@ -249,12 +364,25 @@ Status: \`${readiness.status}\`
 `
 }
 
+function renderMarkdownTable(rows: Array<[string, string]>): string {
+  const [header, ...body] = rows
+  const firstWidth = Math.max(...rows.map(([first]) => first.length))
+  const secondWidth = Math.max(...rows.map(([, second]) => second.length))
+  const renderRow = ([first, second]: [string, string]): string =>
+    `| ${first.padEnd(firstWidth)} | ${second.padEnd(secondWidth)} |`
+  return [renderRow(header), `| ${'-'.repeat(firstWidth)} | ${'-'.repeat(secondWidth)} |`, ...body.map(renderRow)].join(
+    '\n',
+  )
+}
+
 function validateRequiredInputs(options: EquivalenceProofReadinessOptions): void {
   if (!options.policy) {
     throw new Error('report-equivalence-proof-readiness requires --policy <policyBoundaryPath>.')
   }
-  if (!options.evidenceAcceptanceReadiness) {
-    throw new Error('report-equivalence-proof-readiness requires --evidence-acceptance-readiness <readinessPath>.')
+  if (!options.runtimeEvidenceSatisfactionReadiness) {
+    throw new Error(
+      'report-equivalence-proof-readiness requires --runtime-evidence-satisfaction-readiness <readinessPath>.',
+    )
   }
 }
 
@@ -277,6 +405,54 @@ function validatePolicy(policy: JsonRecord): void {
   }
 }
 
+function validateRuntimeEvidenceSatisfactionReadiness(readiness: JsonRecord): void {
+  if (readiness.artifactRole !== RUNTIME_EVIDENCE_SATISFACTION_READINESS_ROLE) {
+    throw new Error(
+      `Unsafe Runtime Evidence Satisfaction readiness input: artifactRole must be ${JSON.stringify(
+        RUNTIME_EVIDENCE_SATISFACTION_READINESS_ROLE,
+      )}.`,
+    )
+  }
+  if (
+    readiness.status !== 'devview-runtime-evidence-satisfaction-readiness-ready' &&
+    readiness.status !== 'devview-runtime-evidence-satisfaction-readiness-blocked'
+  ) {
+    throw new Error('Unsafe Runtime Evidence Satisfaction readiness input: status must be ready or blocked preview.')
+  }
+  if (
+    readiness.readinessScope !== undefined &&
+    readiness.readinessScope !== 'runtime-evidence-satisfaction-binding-readiness-preview-no-satisfaction'
+  ) {
+    throw new Error(
+      'Unsafe Runtime Evidence Satisfaction readiness input: readinessScope must be runtime-evidence-satisfaction-binding-readiness-preview-no-satisfaction.',
+    )
+  }
+  if (!stringValue(readiness.runtimeEvidenceSatisfactionReadinessStatus)) {
+    throw new Error('Unsafe Runtime Evidence Satisfaction readiness input: readiness status is required.')
+  }
+  if (readiness.nonEnforcing !== true) {
+    throw new Error('Unsafe Runtime Evidence Satisfaction readiness input: nonEnforcing must be true.')
+  }
+  for (const field of [
+    'runtimeEvidenceSatisfied',
+    'evidenceAccepted',
+    'equivalenceProven',
+    'scopeEnforced',
+    'ciEnforcementEnabled',
+    'graphSourceMutated',
+    'graphDeltaApplied',
+  ]) {
+    if (readiness[field] !== false) {
+      throw new Error(`Unsafe Runtime Evidence Satisfaction readiness input: ${field} must be false.`)
+    }
+  }
+  validateNoUnsafeAuthority(
+    readiness,
+    'Runtime Evidence Satisfaction readiness input',
+    new Set(['sourceAcceptedEvidenceAccepted']),
+  )
+}
+
 function validateEvidenceAcceptanceReadiness(readiness: JsonRecord): void {
   if (readiness.artifactRole !== EVIDENCE_ACCEPTANCE_READINESS_ROLE) {
     throw new Error(
@@ -291,23 +467,42 @@ function validateEvidenceAcceptanceReadiness(readiness: JsonRecord): void {
   ) {
     throw new Error('Unsafe Evidence Acceptance readiness input: status must be ready or blocked preview.')
   }
-  for (const field of [
-    'acceptanceAllowed',
-    'evidenceAccepted',
-    'runtimeEvidenceSatisfied',
-    'equivalenceProven',
-    'graphDeltaApplyEnabled',
-    'graphDeltaApplied',
-    'graphSourceMutationAllowed',
-    'graphSourceMutated',
-    'mutationAllowed',
-    'scopeEnforced',
-    'ciEnforcementEnabled',
-  ]) {
-    if (readiness[field] !== false) {
-      throw new Error(`Unsafe Evidence Acceptance readiness boundary: ${field} must be false.`)
-    }
+  validateNoUnsafeAuthority(readiness, 'Evidence Acceptance readiness boundary')
+}
+
+function validateNoUnsafeAuthority(record: JsonRecord, label: string, allowedTrueFields = new Set<string>()): void {
+  const hits = collectUnsafeAuthorityHits(record, [], new Set(), allowedTrueFields)
+  if (hits.length > 0) {
+    const first = hits[0]
+    throw new Error(`Unsafe ${label}: ${first.field} must be false.`)
   }
+}
+
+function collectUnsafeAuthorityHits(
+  value: unknown,
+  pathParts: string[] = [],
+  seen = new Set<unknown>(),
+  allowedTrueFields = new Set<string>(),
+): Array<{ field: string }> {
+  if (typeof value !== 'object' || value === null || seen.has(value)) {
+    return []
+  }
+  seen.add(value)
+  if (Array.isArray(value)) {
+    return value.flatMap((entry, index) =>
+      collectUnsafeAuthorityHits(entry, [...pathParts, String(index)], seen, allowedTrueFields),
+    )
+  }
+  const record = value as JsonRecord
+  const hits: Array<{ field: string }> = []
+  for (const [key, entry] of Object.entries(record)) {
+    const nextPath = [...pathParts, key]
+    if (unsafeAuthorityFields.includes(key) && entry === true && !allowedTrueFields.has(key)) {
+      hits.push({ field: nextPath.join('.') })
+    }
+    hits.push(...collectUnsafeAuthorityHits(entry, nextPath, seen, allowedTrueFields))
+  }
+  return hits
 }
 
 async function assertOutputAuthority(
@@ -315,8 +510,10 @@ async function assertOutputAuthority(
   input: {
     policy: JsonRecord
     resolvedPolicyPath: string
-    evidenceAcceptanceReadiness: JsonRecord
-    resolvedEvidenceAcceptanceReadinessPath: string
+    runtimeReadiness: JsonRecord
+    resolvedRuntimeReadinessPath: string
+    evidenceAcceptanceReadiness: JsonRecord | null
+    resolvedEvidenceAcceptanceReadinessPath: string | null
     output?: string
     markdown?: string
   },
@@ -344,6 +541,11 @@ async function assertOutputAuthority(
         `Equivalence Proof readiness ${label} path is unsafe: ${requested} would overwrite ${protectedReason}.`,
       )
     }
+    if (isProtectedControlPath(root, resolved)) {
+      throw new Error(
+        `Equivalence Proof readiness ${label} path is unsafe: ${requested} is inside a protected source/control path.`,
+      )
+    }
     const existingAuthority = await classifyExistingSourceAuthority(resolved)
     if (existingAuthority) {
       throw new Error(
@@ -358,12 +560,14 @@ function buildProtectedPathMap(
   input: {
     policy: JsonRecord
     resolvedPolicyPath: string
-    evidenceAcceptanceReadiness: JsonRecord
-    resolvedEvidenceAcceptanceReadinessPath: string
+    runtimeReadiness: JsonRecord
+    resolvedRuntimeReadinessPath: string
+    evidenceAcceptanceReadiness: JsonRecord | null
+    resolvedEvidenceAcceptanceReadinessPath: string | null
   },
 ): Map<string, string> {
   const protectedPaths = new Map<string, string>()
-  const addResolved = (candidatePath: string | undefined, reason: string): void => {
+  const addResolved = (candidatePath: string | undefined | null, reason: string): void => {
     if (candidatePath && !protectedPaths.has(pathKey(candidatePath))) {
       protectedPaths.set(pathKey(candidatePath), reason)
     }
@@ -377,16 +581,30 @@ function buildProtectedPathMap(
   }
 
   addResolved(input.resolvedPolicyPath, 'the source Equivalence Proof Policy boundary')
+  addResolved(input.resolvedRuntimeReadinessPath, 'the source Runtime Evidence Satisfaction readiness')
   addResolved(input.resolvedEvidenceAcceptanceReadinessPath, 'the source Evidence Acceptance readiness')
-  addConcrete(
-    input.evidenceAcceptanceReadiness.sourceGraphSourceMutationReadiness,
-    'the source Graph-source Mutation readiness',
-  )
-  addConcrete(input.evidenceAcceptanceReadiness.sourceApplyReadiness, 'the source Graph Delta Apply readiness')
-  addConcrete(input.evidenceAcceptanceReadiness.sourceApprovedProposalState, 'the source Approved Proposal State')
-  addConcrete(input.evidenceAcceptanceReadiness.sourceGraphDeltaProposal, 'the source Graph Delta proposal')
+  addConcrete(input.runtimeReadiness.sourceAcceptedEvidenceRecord, 'the source Accepted Evidence record')
+  addConcrete(input.runtimeReadiness.sourceEvidenceArtifact, 'the source Evidence artifact')
+  addConcrete(input.runtimeReadiness.sourceInstructionPack, 'the source Instruction Pack')
+  addConcrete(input.runtimeReadiness.sourceContractInput, 'the source Contract Input')
+  addConcrete(input.runtimeReadiness.sourceRuntimeEvidenceAuthority, 'the source Runtime Evidence Authority')
+  addConcrete(input.runtimeReadiness.sourceEvidenceCheckBinding, 'the source Evidence Check Binding')
+  addConcrete(input.runtimeReadiness.sourceOutputRequirement, 'the source Output Requirement')
+  addConcrete(input.runtimeReadiness.sourceRuntimeReport, 'the source runtime report')
+  addConcrete(input.runtimeReadiness.sourceScopeReport, 'the source scope report')
+  addConcrete(input.runtimeReadiness.sourceGraphDeltaApplyReport, 'the source Graph Delta Apply report')
+  addConcrete(input.runtimeReadiness.sourceCheckReport, 'the source check report')
+  if (input.evidenceAcceptanceReadiness) {
+    addConcrete(
+      input.evidenceAcceptanceReadiness.sourceGraphSourceMutationReadiness,
+      'the source Graph-source Mutation readiness',
+    )
+    addConcrete(input.evidenceAcceptanceReadiness.sourceApplyReadiness, 'the source Graph Delta Apply readiness')
+    addConcrete(input.evidenceAcceptanceReadiness.sourceApprovedProposalState, 'the source Approved Proposal State')
+    addConcrete(input.evidenceAcceptanceReadiness.sourceGraphDeltaProposal, 'the source Graph Delta proposal')
+  }
 
-  for (const source of [input.policy, input.evidenceAcceptanceReadiness]) {
+  for (const source of [input.policy, input.runtimeReadiness, input.evidenceAcceptanceReadiness]) {
     for (const candidatePath of collectConcretePathStrings(source, new Set(), new Set(OWN_OUTPUT_LINK_KEYS))) {
       addConcrete(candidatePath, `linked source artifact ${candidatePath}`)
     }
@@ -407,10 +625,17 @@ async function classifyExistingSourceAuthority(filePath: string): Promise<string
   if (
     artifactRole === POLICY_ROLE ||
     artifactRole === EVIDENCE_ACCEPTANCE_READINESS_ROLE ||
+    artifactRole === RUNTIME_EVIDENCE_SATISFACTION_READINESS_ROLE ||
     artifactRole.includes('graph-source') ||
     artifactRole.includes('evidence') ||
     artifactRole.includes('read-model') ||
+    artifactRole.includes('source-authority') ||
     [
+      'devview-accepted-evidence-record',
+      'runtime-evidence-authority-preview',
+      'evidence-check-binding-preview',
+      'output-requirement-for-test-evidence-preview',
+      'devview-graph-delta-apply-report',
       'devview-graph-source-mutation-readiness-preview',
       'devview-graph-delta-apply-readiness-preview',
       'devview-approved-proposal-state-preview',
@@ -478,6 +703,19 @@ function isConcreteOutputProtectedPath(value: string): boolean {
     value.endsWith('.json') ||
     value.endsWith('.md') ||
     value.endsWith('.txt')
+  )
+}
+
+function isProtectedControlPath(root: string, filePath: string): boolean {
+  const relative = relativePath(root, filePath)
+  return (
+    relative.startsWith('.pbe/') ||
+    relative.startsWith('.codex/') ||
+    relative.includes('/.pbe/') ||
+    relative.includes('/.codex/') ||
+    /\.codex\/hooks/i.test(relative) ||
+    /^\.pbe\/evidence\//i.test(relative) ||
+    /(^|\/)(graph-source|source-authority|project-memory)(\.|-)/i.test(relative)
   )
 }
 

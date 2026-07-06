@@ -136,6 +136,7 @@ export interface CliOptions {
   evidenceCheckBinding?: string
   outputRequirement?: string
   requiredEvidenceId?: string
+  runtimeEvidenceSatisfactionReadiness?: string
   evidenceAcceptanceReadiness?: string
   equivalenceProofReadiness?: string
   policy?: string

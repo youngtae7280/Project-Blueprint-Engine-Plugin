@@ -1549,15 +1549,16 @@ export async function graphReadModelReportEquivalenceProofReadinessCommand(
   if (!context.options.policy) {
     return invalidCommand('graph read-model report-equivalence-proof-readiness requires --policy <file>.')
   }
-  if (!context.options.evidenceAcceptanceReadiness) {
+  if (!context.options.runtimeEvidenceSatisfactionReadiness) {
     return invalidCommand(
-      'graph read-model report-equivalence-proof-readiness requires --evidence-acceptance-readiness <file>.',
+      'graph read-model report-equivalence-proof-readiness requires --runtime-evidence-satisfaction-readiness <file>.',
     )
   }
 
   try {
     const result = await reportEquivalenceProofReadinessFile(context.options.root, {
       policy: context.options.policy,
+      runtimeEvidenceSatisfactionReadiness: context.options.runtimeEvidenceSatisfactionReadiness,
       evidenceAcceptanceReadiness: context.options.evidenceAcceptanceReadiness,
       output: context.options.output,
       markdown: context.options.markdown,
@@ -1592,7 +1593,7 @@ export async function graphReadModelReportEquivalenceProofReadinessCommand(
           severity: 'error',
           message,
           suggestedFix:
-            'Provide a readable Equivalence Proof Policy boundary, Evidence Acceptance readiness preview, and dedicated equivalence-proof-readiness output paths. This command is read-only and never proves equivalence.',
+            'Provide a readable Equivalence Proof Policy boundary, Runtime Evidence Satisfaction readiness preview, and dedicated equivalence-proof-readiness output paths. This command is read-only and never proves equivalence.',
         }),
       ],
     }

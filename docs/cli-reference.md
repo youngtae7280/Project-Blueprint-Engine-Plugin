@@ -938,17 +938,20 @@ node dist/cli/index.js graph read-model report-runtime-evidence-satisfaction-rea
 
 ### `pbe graph read-model report-equivalence-proof-readiness`
 
-- Purpose: Report equivalence proof readiness from an Evidence Acceptance readiness preview without proving equivalence.
-- Typical state before running: After `graph read-model report-evidence-acceptance-readiness` has produced
-  Evidence-acceptance-readiness output.
-- Options: `--policy <policyBoundaryPath>` and `--evidence-acceptance-readiness <readinessPath>` are required.
-  `--output <file>` and `--markdown <file>` may write explicit readiness outputs.
-- What it checks: Equivalence Proof Policy boundary role/status, Evidence-acceptance-readiness role/status/safety
-  fields, and output authority.
+- Purpose: Report equivalence proof readiness from Runtime Evidence Satisfaction Binding readiness without proving
+  equivalence.
+- Typical state before running: After `graph read-model report-runtime-evidence-satisfaction-readiness` has produced
+  runtime-satisfaction-readiness output. Accepted Evidence is not consumed directly by this command.
+- Options: `--policy <policyBoundaryPath>` and `--runtime-evidence-satisfaction-readiness <readinessPath>` are required.
+  `--evidence-acceptance-readiness <readinessPath>` is optional legacy provenance only and cannot make equivalence
+  readiness ready. `--output <file>` and `--markdown <file>` may write explicit readiness outputs.
+- What it checks: Equivalence Proof Policy boundary role/status, Runtime Evidence Satisfaction readiness
+  role/status/safety fields, optional Evidence-acceptance-readiness provenance safety, and output authority.
 - What it writes: Nothing by default. It writes only to explicit `--output` and `--markdown` paths.
-- Success result: JSON with `artifactRole: devview-equivalence-proof-readiness-preview`. If Evidence acceptance
-  readiness is ready, equivalence proof readiness is `dry-run-ready-evidence-acceptance-readiness-present`; otherwise it
-  is blocked. In all cases `equivalenceAllowed`, `equivalenceProven`, `evidenceAccepted`, `runtimeEvidenceSatisfied`,
+- Success result: JSON with `artifactRole: devview-equivalence-proof-readiness-preview`. Runtime satisfaction readiness
+  that is blocked keeps equivalence blocked. Runtime satisfaction readiness that is ready still blocks with
+  `blocked-runtime-evidence-satisfaction-record-missing` until a future actual runtime satisfaction record exists. In
+  all cases `equivalenceAllowed`, `equivalenceProven`, top-level `evidenceAccepted`, `runtimeEvidenceSatisfied`,
   `graphDeltaApplied`, `graphSourceMutated`, `scopeEnforced`, and `ciEnforcementEnabled` remain false.
 - Next command: A separate future equivalence proof command would still need policy execution and explicit promotion.
   This command itself never proves equivalence or sets `equivalenceProven: true`.
@@ -958,8 +961,9 @@ Example:
 ```powershell
 node dist/cli/index.js graph read-model report-equivalence-proof-readiness `
   --policy examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-policy-boundary.runtime-evidence-only.preview.json `
-  --evidence-acceptance-readiness examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-readiness.blocked-defer-decision.runtime-evidence-only.preview.json `
+  --runtime-evidence-satisfaction-readiness examples/valid/todo-app-pbe-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json `
   --output .tmp/devview-equivalence-proof-readiness.json `
+  --markdown .tmp/devview-equivalence-proof-readiness.md `
   --json
 ```
 

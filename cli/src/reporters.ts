@@ -328,7 +328,9 @@ Options:
   --mutation-readiness <file>
                        Graph-source Mutation readiness file for graph read-model report-evidence-acceptance-readiness.
   --evidence-acceptance-readiness <file>
-                       Evidence Acceptance readiness file for graph read-model report-equivalence-proof-readiness.
+                       Optional legacy Evidence Acceptance readiness provenance for graph read-model report-equivalence-proof-readiness.
+  --runtime-evidence-satisfaction-readiness <file>
+                       Runtime Evidence Satisfaction readiness file for graph read-model report-equivalence-proof-readiness.
   --equivalence-proof-readiness <file>
                        Equivalence Proof readiness file for graph read-model report-scope-ci-enforcement-readiness.
   --scope-ci-enforcement-readiness <file>
