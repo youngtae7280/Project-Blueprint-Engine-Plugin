@@ -4,6 +4,10 @@ import {
   ExtensionProfileCatalogValidationError,
 } from '../core/extension-profile-catalog.js'
 import { ExtensionContextPlanValidationError, planExtensionContext } from '../core/extension-context-plan.js'
+import {
+  ExtensionAdapterCompatibilityValidationError,
+  validateExtensionAdapterCompatibility,
+} from '../core/extension-adapter-compatibility.js'
 import type { CommandResult } from '../core/types.js'
 import { ExitCode, issue } from '../core/types.js'
 import type { CommandContext } from './shared.js'
@@ -183,6 +187,71 @@ export async function extensionsPlanContextCommand(context: CommandContext): Pro
           message,
           suggestedFix:
             'Write extension context plan output to a dedicated report path outside source/control artifacts and rerun the command.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function extensionsValidateAdaptersCommand(context: CommandContext): Promise<CommandResult> {
+  try {
+    const report = await validateExtensionAdapterCompatibility(context.options.root, {
+      extensionProfileCatalog: context.options.extensionProfileCatalog,
+      extensionContextPlan: context.options.extensionContextPlan,
+      runtimeEvidenceSatisfactionReadiness: context.options.runtimeEvidenceSatisfactionReadiness,
+      equivalenceProofReadiness: context.options.equivalenceProofReadiness,
+      scopeCiEnforcementReadiness: context.options.scopeCiEnforcementReadiness,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+
+    return {
+      ok: true,
+      command: 'extensions validate-adapters',
+      exitCode: ExitCode.Success,
+      message: 'Extension adapter compatibility validated without executing adapters or policy extensions.',
+      issues: [],
+      data: { ...report },
+    }
+  } catch (error) {
+    if (error instanceof ExtensionAdapterCompatibilityValidationError) {
+      const report = error.report
+      const errorFindings = report.findings.filter((finding) => finding.severity === 'error')
+      return {
+        ok: false,
+        command: 'extensions validate-adapters',
+        exitCode: ExitCode.ValidationFailed,
+        message: 'Extension adapter compatibility is blocked before any adapter execution.',
+        issues: errorFindings.map((finding) =>
+          issue({
+            validator: 'ExtensionAdapterCompatibility',
+            code: finding.code,
+            severity: finding.severity,
+            message: finding.message,
+            file: finding.path,
+            reason: finding.field ? `Field: ${finding.field}` : undefined,
+            suggestedFix:
+              'Provide a compiled extension profile catalog, generated extension context plan, and optional valid readiness sources.',
+          }),
+        ),
+        data: { ...report },
+      }
+    }
+
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'extensions validate-adapters',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Extension adapter compatibility validation could not run.',
+      issues: [
+        issue({
+          validator: 'ExtensionAdapterCompatibility',
+          code: 'EXTENSION_ADAPTER_COMPATIBILITY_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Write adapter compatibility output to a dedicated report path outside source/control artifacts and rerun the command.',
         }),
       ],
     }

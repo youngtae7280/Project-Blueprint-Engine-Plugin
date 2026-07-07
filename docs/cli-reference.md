@@ -87,6 +87,26 @@ and summarized without mutation. The report does not execute extension code, run
 Graphify, call providers, make network calls, mutate View Tree or Context Pack artifacts, mutate the Maintainability
 Graph, satisfy runtime Evidence, prove equivalence, enforce scope/CI, activate hooks, or automate approval.
 
+### Project-Specific Extension Adapter Compatibility
+
+```bash
+devview extensions validate-adapters \
+  --extension-profile-catalog <extension-profile-catalog.json> \
+  --extension-context-plan <extension-context-plan.json> \
+  --runtime-evidence-satisfaction-readiness <runtime-readiness.json> \
+  --equivalence-proof-readiness <equivalence-readiness.json> \
+  --scope-ci-enforcement-readiness <scope-ci-readiness.json> \
+  --output <extension-adapter-compatibility.json> \
+  --markdown <extension-adapter-compatibility.md> \
+  --json
+```
+
+Validates declared Evidence Adapter and Policy Extension compatibility with runtime Evidence, Equivalence Proof, and
+Scope/CI readiness artifacts as source facts only. The readiness inputs are optional. The report can identify
+compatible, missing, future-only, and not-applicable mappings, but it does not execute adapters, enforce policy, install
+or run graph providers, call networks, mutate View Tree or Context Pack artifacts, mutate the Maintainability Graph,
+satisfy Evidence, prove equivalence, enforce scope/CI, activate hooks, or automate approval.
+
 ### Work Journal
 
 ```bash

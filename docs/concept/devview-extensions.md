@@ -69,3 +69,22 @@ The context plan connects catalog hints to View Tree and Context Pack planning a
 which extractor, analyzer, context, Evidence, policy, Native/Retrofit, or protocol-only graph-ingestion hints are
 available, but it does not execute adapters, install or run external graph tooling, mutate artifacts, or grant traversal,
 Evidence, proof, scope, CI, hook, provider, network, shell, approval, or user-acceptance authority.
+
+## Adapter Compatibility
+
+```bash
+devview extensions validate-adapters \
+  --extension-profile-catalog .tmp/devview-extension-profile-catalog.json \
+  --extension-context-plan .tmp/devview-extension-context-plan.json \
+  --runtime-evidence-satisfaction-readiness .tmp/devview-runtime-readiness.json \
+  --equivalence-proof-readiness .tmp/devview-equivalence-readiness.json \
+  --scope-ci-enforcement-readiness .tmp/devview-scope-ci-readiness.json \
+  --output .tmp/devview-extension-adapter-compatibility.json \
+  --markdown .tmp/devview-extension-adapter-compatibility.md \
+  --json
+```
+
+Adapter compatibility validation checks whether declared Evidence Adapter and Policy Extension capabilities can inform
+later runtime Evidence, proof, and Scope/CI lifecycle validation. It is still report-only: adapters and policies are not
+executed, Evidence is not satisfied, equivalence is not proven, scope is not enforced, graph ingestion remains
+protocol-only, and no provider, network, shell, hook, graph mutation, approval, or user-acceptance authority is granted.

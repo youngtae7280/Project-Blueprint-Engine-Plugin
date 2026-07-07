@@ -9,6 +9,7 @@ import {
   extensionsCompileProfileCommand,
   extensionsPlanContextCommand,
   extensionsReportReadinessCommand,
+  extensionsValidateAdaptersCommand,
 } from './extensions.js'
 import { filesCheckCommand } from './files.js'
 import { gateAssessCommand, gateCommand } from './gate.js'
@@ -133,6 +134,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'extensions' && subcommand === 'plan-context') {
     return extensionsPlanContextCommand(context)
+  }
+  if (command === 'extensions' && subcommand === 'validate-adapters') {
+    return extensionsValidateAdaptersCommand(context)
   }
   if (command === 'work-journal' && subcommand === 'render') {
     return workJournalRenderCommand(context)
