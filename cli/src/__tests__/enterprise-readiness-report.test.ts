@@ -506,6 +506,80 @@ describe('security report-enterprise-readiness CLI', () => {
     expectSafetyFalse(payload)
   })
 
+  it('summarizes SBOM validation without treating it as generation or attestation', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, '.tmp/sbom-validation.json'), sbomValidationReport())
+
+    const result = await runDevViewCli(
+      [
+        'security',
+        'report-enterprise-readiness',
+        '--sbom-validation',
+        '.tmp/sbom-validation.json',
+        '--output',
+        '.tmp/enterprise-readiness.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.readinessLevel).toBe('not-ready')
+    expect(payload.sourceSbomValidationReports).toHaveLength(1)
+    expect(payload.sourceSbomValidationReports[0]).toEqual(
+      expect.objectContaining({
+        path: '.tmp/sbom-validation.json',
+        artifactRole: 'devview-sbom-validation-report',
+        status: 'devview-sbom-validation-passed',
+        sbomValidationStatus: 'validated-structural-source-fact-only',
+        sbomFormat: 'devview-minimal-sbom-v1',
+        packageName: 'devview',
+        packageVersion: '0.2.0-alpha',
+        componentCount: 2,
+        packageIdentityAlignmentStatus: 'matched',
+        sbomSha256Present: true,
+        sourceArtifactDigestCount: 3,
+        findingCount: 3,
+        downstreamActionCount: 2,
+        sbomGeneratedByDevView: false,
+        sbomGenerated: false,
+        sbomAttested: false,
+        packageSigned: false,
+        packageSigningPresent: false,
+        provenanceAttested: false,
+      }),
+    )
+    expect(payload.sbomValidationReadiness.status).toBe('structural-validation-recorded')
+    expect(payload.sbomValidationReadiness.sourceCount).toBe(1)
+    expect(payload.sbomValidationReadiness.sourceStatuses).toEqual(['devview-sbom-validation-passed'])
+    expect(payload.sbomValidationReadiness.sbomValidationStatuses).toEqual(['validated-structural-source-fact-only'])
+    expect(payload.sbomValidationReadiness.sbomFormats).toEqual(['devview-minimal-sbom-v1'])
+    expect(payload.sbomValidationReadiness.packageIdentityMatchedCount).toBe(1)
+    expect(payload.sbomValidationReadiness.componentCount).toBe(2)
+    expect(payload.sbomValidationReadiness.sbomByteDigestPresentCount).toBe(1)
+    expect(payload.sbomValidationReadiness.sourceArtifactDigestCount).toBe(3)
+    expect(payload.sbomValidationReadiness.findingCount).toBe(3)
+    expect(payload.sbomValidationReadiness.downstreamActionCount).toBe(2)
+    expect(payload.sbomValidationReadiness.sbomGeneratedByDevViewCount).toBe(0)
+    expect(payload.sbomValidationReadiness.sbomGeneratedCount).toBe(0)
+    expect(payload.sbomValidationReadiness.sbomAttestedCount).toBe(0)
+    expect(payload.sbomValidationReadiness.packageSignedCount).toBe(0)
+    expect(payload.sbomValidationReadiness.packageSigningPresentCount).toBe(0)
+    expect(payload.sbomValidationReadiness.provenanceAttestedCount).toBe(0)
+    expect(payload.enterpriseReadinessFindings.map((entry: { code: string }) => entry.code)).toEqual(
+      expect.arrayContaining([
+        'ENTERPRISE_SBOM_VALIDATION_RECORDED',
+        'ENTERPRISE_RELEASE_PROVENANCE_ARTIFACTS_MISSING',
+        'ENTERPRISE_RBAC_SIGNING_MISSING',
+      ]),
+    )
+    expect(payload.enterpriseReadinessFindings.map((entry: { code: string }) => entry.code)).not.toContain(
+      'ENTERPRISE_SBOM_VALIDATION_NOT_SUPPLIED',
+    )
+    expectSafetyFalse(payload)
+  })
+
   it('blocks invalid or authority-claiming release provenance readiness sources with zero writes', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, '.tmp/wrong-release-provenance.json'), {
@@ -597,6 +671,85 @@ describe('security report-enterprise-readiness CLI', () => {
       'ENTERPRISE_READINESS_UNSAFE_SOURCE_AUTHORITY_FLAG',
     )
     expect(existsSync(join(workspace, '.tmp/network-release-enterprise.json'))).toBe(false)
+  })
+
+  it('blocks invalid or authority-claiming SBOM validation sources with zero writes', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, '.tmp/wrong-sbom-validation.json'), {
+      ...sbomValidationReport(),
+      status: 'devview-sbom-validation-blocked',
+    })
+    writeJson(join(workspace, '.tmp/generated-sbom-validation.json'), {
+      ...sbomValidationReport(),
+      sbomGeneratedByDevView: true,
+    })
+    writeJson(join(workspace, '.tmp/attested-sbom-validation.json'), {
+      ...sbomValidationReport(),
+      sbomAttested: true,
+    })
+    writeJson(join(workspace, '.tmp/signed-sbom-validation.json'), {
+      ...sbomValidationReport(),
+      packageSigned: true,
+    })
+    writeJson(join(workspace, '.tmp/provenance-sbom-validation.json'), {
+      ...sbomValidationReport(),
+      provenanceAttested: true,
+    })
+    writeJson(join(workspace, '.tmp/crypto-sbom-validation.json'), {
+      ...sbomValidationReport(),
+      cryptographicSignatureVerified: true,
+    })
+    writeJson(join(workspace, '.tmp/key-sbom-validation.json'), {
+      ...sbomValidationReport(),
+      keyGenerated: true,
+    })
+    writeJson(join(workspace, '.tmp/rbac-sbom-validation.json'), {
+      ...sbomValidationReport(),
+      rbacEnforced: true,
+    })
+    writeJson(join(workspace, '.tmp/network-sbom-validation.json'), {
+      ...sbomValidationReport(),
+      networkCallMade: true,
+    })
+
+    const wrong = await runEnterpriseWithSbomValidation(
+      workspace,
+      '.tmp/wrong-sbom-validation.json',
+      '.tmp/wrong-sbom-enterprise.json',
+    )
+    expect(wrong.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(wrong.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_SBOM_VALIDATION_SOURCE_ROLE_STATUS_INVALID',
+    )
+    expect(existsSync(join(workspace, '.tmp/wrong-sbom-enterprise.json'))).toBe(false)
+
+    for (const [source, output] of [
+      ['.tmp/generated-sbom-validation.json', '.tmp/generated-sbom-enterprise.json'],
+      ['.tmp/attested-sbom-validation.json', '.tmp/attested-sbom-enterprise.json'],
+      ['.tmp/signed-sbom-validation.json', '.tmp/signed-sbom-enterprise.json'],
+      ['.tmp/provenance-sbom-validation.json', '.tmp/provenance-sbom-enterprise.json'],
+      ['.tmp/crypto-sbom-validation.json', '.tmp/crypto-sbom-enterprise.json'],
+      ['.tmp/key-sbom-validation.json', '.tmp/key-sbom-enterprise.json'],
+      ['.tmp/rbac-sbom-validation.json', '.tmp/rbac-sbom-enterprise.json'],
+    ] as const) {
+      const result = await runEnterpriseWithSbomValidation(workspace, source, output)
+      expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+      expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+        'ENTERPRISE_READINESS_SBOM_VALIDATION_AUTHORITY_CLAIM_UNSUPPORTED',
+      )
+      expect(existsSync(join(workspace, output))).toBe(false)
+    }
+
+    const network = await runEnterpriseWithSbomValidation(
+      workspace,
+      '.tmp/network-sbom-validation.json',
+      '.tmp/network-sbom-enterprise.json',
+    )
+    expect(network.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(network.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_UNSAFE_SOURCE_AUTHORITY_FLAG',
+    )
+    expect(existsSync(join(workspace, '.tmp/network-sbom-enterprise.json'))).toBe(false)
   })
 
   it('blocks invalid or authority-claiming RBAC policy validation sources with zero writes', async () => {
@@ -1032,6 +1185,7 @@ describe('security report-enterprise-readiness CLI', () => {
     writeJson(join(workspace, '.tmp/signing-readiness.json'), signingReadinessReport())
     writeJson(join(workspace, '.tmp/rbac-policy-validation.json'), rbacPolicyValidationReport())
     writeJson(join(workspace, '.tmp/release-provenance-readiness.json'), releaseProvenanceReadinessReport())
+    writeJson(join(workspace, '.tmp/sbom-validation.json'), sbomValidationReport())
     const cases = [
       { output: '.tmp/benchmark-governance.json', expected: 'would overwrite a source input' },
       {
@@ -1057,6 +1211,11 @@ describe('security report-enterprise-readiness CLI', () => {
       {
         sourceArgs: ['--release-provenance-readiness', '.tmp/release-provenance-readiness.json'],
         output: '.tmp/release-provenance-readiness.json',
+        expected: 'would overwrite a source input',
+      },
+      {
+        sourceArgs: ['--sbom-validation', '.tmp/sbom-validation.json'],
+        output: '.tmp/sbom-validation.json',
         expected: 'would overwrite a source input',
       },
       { output: '.tmp/enterprise.json', markdown: '.tmp/enterprise.json', expected: 'must be different' },
@@ -1630,6 +1789,127 @@ function releaseProvenanceReadinessReport(overrides: Record<string, unknown> = {
   }
 }
 
+function sbomValidationReport(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    schemaVersion: 1,
+    artifactRole: 'devview-sbom-validation-report',
+    status: 'devview-sbom-validation-passed',
+    validationScope: 'sbom-artifact-validation-report-only',
+    sourceFactsOnly: true,
+    reportOnly: true,
+    sbomValidationStatus: 'validated-structural-source-fact-only',
+    sourceSbomArtifact: {
+      path: '.tmp/sbom-artifact.json',
+      artifactRole: 'devview-sbom-artifact',
+      status: 'devview-sbom-artifact-supplied',
+      sbomScope: 'package-sbom-source-fact-only',
+      sbomFormat: 'devview-minimal-sbom-v1',
+      packageName: 'devview',
+      packageVersion: '0.2.0-alpha',
+      documentName: 'DevView minimal SBOM',
+      documentVersion: '1',
+      componentCount: 2,
+      externalReferenceCount: 1,
+    },
+    sourceReleaseProvenanceReadiness: {
+      supplied: true,
+      path: '.tmp/release-provenance-readiness.json',
+      artifactRole: 'devview-release-provenance-readiness-report',
+      status: 'devview-release-provenance-readiness-reported',
+      releaseProvenanceReadinessStatus: 'not-ready-sbom-and-signing-missing',
+      sbomGenerated: false,
+      sbomAttested: false,
+    },
+    sourceReleaseSurfaceValidation: {
+      supplied: true,
+      path: '.tmp/release-surface-validation.json',
+      artifactRole: 'devview-release-surface-validation-report',
+      status: 'devview-release-surface-validation-passed',
+      packageName: 'devview',
+      packageVersion: '0.2.0-alpha',
+      packageFileCount: 14,
+      forbiddenFindingCount: 0,
+    },
+    packageJsonSummary: {
+      supplied: true,
+      path: 'package.json',
+      packageName: 'devview',
+      packageVersion: '0.2.0-alpha',
+      packagePrivate: true,
+      packageFilesAllowlistPresent: true,
+      packageFilesAllowlistCount: 14,
+    },
+    sbomStructuralValidation: {
+      formatRecognized: true,
+      requiredFieldsPresent: true,
+      componentListPresent: true,
+      duplicateComponentIds: [],
+      unsupportedInstructionFieldCount: 0,
+      requiredFieldsMissing: [],
+    },
+    packageIdentityAlignment: {
+      packageJsonNameMatch: true,
+      packageJsonVersionMatch: true,
+      releaseSurfaceNameMatch: true,
+      releaseSurfaceVersionMatch: true,
+      alignmentStatus: 'matched',
+    },
+    componentCoverageSummary: {
+      componentCount: 2,
+      packageRootComponentPresent: true,
+      dependencyComponentCount: 1,
+      fileReferenceCount: 1,
+    },
+    digestSummary: {
+      sbomSha256: '0'.repeat(64),
+      sbomByteLength: 1024,
+      declaredPackageDigest: 'sha256:package-digest-placeholder',
+      sourceDigestsRecorded: true,
+      sourceArtifactDigests: [
+        { sourceKind: 'sbom', path: '.tmp/sbom-artifact.json', sha256: '0'.repeat(64), byteLength: 1024 },
+        { sourceKind: 'package-json', path: 'package.json', sha256: '1'.repeat(64), byteLength: 2227 },
+        {
+          sourceKind: 'release-provenance-readiness',
+          path: '.tmp/release-provenance-readiness.json',
+          sha256: '2'.repeat(64),
+          byteLength: 4096,
+        },
+      ],
+    },
+    validationFindings: [
+      { severity: 'satisfied', code: 'SBOM_VALIDATION_ARTIFACT_ACCEPTED', message: 'Accepted.' },
+      { severity: 'satisfied', code: 'SBOM_VALIDATION_DIGEST_RECORDED', message: 'Digest recorded.' },
+      { severity: 'gap', code: 'SBOM_VALIDATION_NOT_ATTESTED', message: 'No attestation.' },
+    ],
+    downstreamActionPlan: ['Integrate into enterprise readiness.', 'Record package provenance inputs later.'],
+    sbomGeneratedByDevView: false,
+    sbomGenerated: false,
+    sbomAttested: false,
+    packageSigned: false,
+    packageSigningPresent: false,
+    packageSignaturePresent: false,
+    packageSignatureVerified: false,
+    provenanceAttestationPresent: false,
+    provenanceAttested: false,
+    releaseProvenanceAttested: false,
+    npmProvenanceEnabled: false,
+    slsaProvenanceGenerated: false,
+    cryptographicSigningImplemented: false,
+    cryptographicSignaturePresent: false,
+    cryptographicSignatureVerified: false,
+    keyGenerated: false,
+    privateKeyStored: false,
+    keyManagementImplemented: false,
+    keyRegistryCreated: false,
+    trustRootCreated: false,
+    rbacEnforced: false,
+    permissionVerified: false,
+    rbacPermissionVerified: false,
+    ...safetyFlags(),
+    ...overrides,
+  }
+}
+
 function safetyFlags(): Record<string, unknown> {
   return {
     benchmarkExecuted: false,
@@ -1773,6 +2053,13 @@ function runEnterpriseWithReleaseProvenance(workspace: string, releaseProvenance
       output,
       '--json',
     ],
+    { cwd: workspace, pluginRoot },
+  )
+}
+
+function runEnterpriseWithSbomValidation(workspace: string, sbomValidation: string, output: string) {
+  return runDevViewCli(
+    ['security', 'report-enterprise-readiness', '--sbom-validation', sbomValidation, '--output', output, '--json'],
     { cwd: workspace, pluginRoot },
   )
 }

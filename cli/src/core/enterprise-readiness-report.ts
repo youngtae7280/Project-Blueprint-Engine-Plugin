@@ -36,6 +36,8 @@ const RBAC_POLICY_VALIDATION_ROLE = 'devview-rbac-policy-validation-report'
 const RBAC_POLICY_VALIDATION_STATUS = 'devview-rbac-policy-validation-passed'
 const RELEASE_PROVENANCE_READINESS_ROLE = 'devview-release-provenance-readiness-report'
 const RELEASE_PROVENANCE_READINESS_STATUS = 'devview-release-provenance-readiness-reported'
+const SBOM_VALIDATION_ROLE = 'devview-sbom-validation-report'
+const SBOM_VALIDATION_STATUS = 'devview-sbom-validation-passed'
 
 const unsafeAuthorityFields = [
   'enterpriseGateActivated',
@@ -92,6 +94,7 @@ const signingReadinessAuthorityFields = [
 ]
 
 const releaseProvenanceAuthorityFields = [
+  'sbomGeneratedByDevView',
   'sbomGenerated',
   'sbomPresent',
   'sbomAttested',
@@ -120,6 +123,7 @@ export interface EnterpriseReadinessReportOptions {
   signingReadiness?: string
   rbacPolicyValidation?: string
   releaseProvenanceReadiness?: string
+  sbomValidation?: string
   output?: string
   markdown?: string
 }
@@ -281,6 +285,28 @@ export interface EnterpriseReadinessReport {
     findingCount: number | null
     downstreamActionCount: number | null
   }>
+  sourceSbomValidationReports: Array<{
+    supplied: true
+    path: string
+    artifactRole: string | null
+    status: string | null
+    sbomValidationStatus: string | null
+    sbomFormat: string | null
+    packageName: string | null
+    packageVersion: string | null
+    componentCount: number | null
+    packageIdentityAlignmentStatus: string | null
+    sbomSha256Present: boolean
+    sourceArtifactDigestCount: number | null
+    findingCount: number | null
+    downstreamActionCount: number | null
+    sbomGeneratedByDevView: boolean | null
+    sbomGenerated: boolean | null
+    sbomAttested: boolean | null
+    packageSigned: boolean | null
+    packageSigningPresent: boolean | null
+    provenanceAttested: boolean | null
+  }>
   releaseSurfaceReadiness: {
     status: 'satisfied' | 'failed' | 'not-supplied'
     packageAllowlistPresent: boolean
@@ -307,6 +333,26 @@ export interface EnterpriseReadinessReport {
     provenanceAttestedCount: number
     findingCount: number
     downstreamActionCount: number
+    gaps: string[]
+  }
+  sbomValidationReadiness: {
+    status: 'gap' | 'structural-validation-recorded'
+    sourceCount: number
+    sourceStatuses: string[]
+    sbomValidationStatuses: string[]
+    sbomFormats: string[]
+    packageIdentityMatchedCount: number
+    componentCount: number
+    sbomByteDigestPresentCount: number
+    sourceArtifactDigestCount: number
+    findingCount: number
+    downstreamActionCount: number
+    sbomGeneratedByDevViewCount: number
+    sbomGeneratedCount: number
+    sbomAttestedCount: number
+    packageSignedCount: number
+    packageSigningPresentCount: number
+    provenanceAttestedCount: number
     gaps: string[]
   }
   extensionExecutionReadiness: {
@@ -457,6 +503,7 @@ interface LoadedSource {
     | 'signing-readiness-report'
     | 'rbac-policy-validation-report'
     | 'release-provenance-readiness-report'
+    | 'sbom-validation-report'
   record: JsonRecord | null
   readError: string | null
 }
@@ -480,6 +527,7 @@ export async function reportEnterpriseReadiness(
   const signingReadinessPaths = parseList(options.signingReadiness)
   const rbacPolicyValidationPaths = parseList(options.rbacPolicyValidation)
   const releaseProvenanceReadinessPaths = parseList(options.releaseProvenanceReadiness)
+  const sbomValidationPaths = parseList(options.sbomValidation)
   const sourcePaths = [
     options.benchmarkGovernanceVerification,
     options.releaseSurfaceValidation,
@@ -489,6 +537,7 @@ export async function reportEnterpriseReadiness(
     ...signingReadinessPaths,
     ...rbacPolicyValidationPaths,
     ...releaseProvenanceReadinessPaths,
+    ...sbomValidationPaths,
   ].filter((entry): entry is string => Boolean(entry))
   await assertOutputAuthority(
     root,
@@ -520,6 +569,9 @@ export async function reportEnterpriseReadiness(
   const releaseProvenanceReadinessReports = await Promise.all(
     releaseProvenanceReadinessPaths.map((entry) => loadSource(root, entry, 'release-provenance-readiness-report')),
   )
+  const sbomValidationReports = await Promise.all(
+    sbomValidationPaths.map((entry) => loadSource(root, entry, 'sbom-validation-report')),
+  )
   const blockingFindings = validateSources(
     benchmarkGovernance,
     releaseSurface,
@@ -529,6 +581,7 @@ export async function reportEnterpriseReadiness(
     signingReadinessReports,
     rbacPolicyValidationReports,
     releaseProvenanceReadinessReports,
+    sbomValidationReports,
   )
   if (blockingFindings.length > 0) {
     throw new EnterpriseReadinessReportValidationError(
@@ -541,6 +594,7 @@ export async function reportEnterpriseReadiness(
         signingReadinessReports,
         rbacPolicyValidationReports,
         releaseProvenanceReadinessReports,
+        sbomValidationReports,
         blockingFindings,
         true,
       ),
@@ -556,6 +610,7 @@ export async function reportEnterpriseReadiness(
     signingReadinessReports,
     rbacPolicyValidationReports,
     releaseProvenanceReadinessReports,
+    sbomValidationReports,
     buildFindings(
       benchmarkGovernance,
       releaseSurface,
@@ -565,6 +620,7 @@ export async function reportEnterpriseReadiness(
       signingReadinessReports,
       rbacPolicyValidationReports,
       releaseProvenanceReadinessReports,
+      sbomValidationReports,
     ),
   )
   const outputPath = resolveRepoPath(root, options.output ?? '')
@@ -588,6 +644,7 @@ function buildReport(
   signingReadinessReports: LoadedSource[],
   rbacPolicyValidationReports: LoadedSource[],
   releaseProvenanceReadinessReports: LoadedSource[],
+  sbomValidationReports: LoadedSource[],
   findings: EnterpriseReadinessFinding[],
   blocked = false,
 ): EnterpriseReadinessReport {
@@ -603,6 +660,7 @@ function buildReport(
   const releaseProvenanceReadinessRecords = releaseProvenanceReadinessReports
     .map((entry) => entry.record)
     .filter(isJsonRecord)
+  const sbomValidationRecords = sbomValidationReports.map((entry) => entry.record).filter(isJsonRecord)
   const releaseStatus = releaseReadinessStatus(releaseRecord)
   const benchmarkStatus = benchmarkReadinessStatus(benchmarkRecord)
   const benchmarkDigestSummary = asRecord(benchmarkRecord?.sourceDigestVerificationSummary)
@@ -656,6 +714,7 @@ function buildReport(
     sourceReleaseProvenanceReadinessReports: releaseProvenanceReadinessReports.map((source) =>
       releaseProvenanceReadinessSummary(source),
     ),
+    sourceSbomValidationReports: sbomValidationReports.map((source) => sbomValidationSummary(source)),
     releaseSurfaceReadiness: {
       status: releaseStatus,
       packageAllowlistPresent: true,
@@ -717,6 +776,48 @@ function buildReport(
         0,
       ),
       gaps: releaseProvenanceReadinessGaps(releaseProvenanceReadinessRecords),
+    },
+    sbomValidationReadiness: {
+      status: sbomValidationRecords.length > 0 ? 'structural-validation-recorded' : 'gap',
+      sourceCount: sbomValidationRecords.length,
+      sourceStatuses: uniqueStrings(sbomValidationRecords.map((record) => stringValue(record.status))),
+      sbomValidationStatuses: uniqueStrings(
+        sbomValidationRecords.map((record) => stringValue(record.sbomValidationStatus)),
+      ),
+      sbomFormats: uniqueStrings(
+        sbomValidationRecords.map((record) => stringValue(asRecord(record.sourceSbomArtifact)?.sbomFormat)),
+      ),
+      packageIdentityMatchedCount: sbomValidationRecords.filter(
+        (record) => stringValue(asRecord(record.packageIdentityAlignment)?.alignmentStatus) === 'matched',
+      ).length,
+      componentCount: sbomValidationRecords.reduce(
+        (total, record) => total + (numberValue(asRecord(record.componentCoverageSummary)?.componentCount) ?? 0),
+        0,
+      ),
+      sbomByteDigestPresentCount: sbomValidationRecords.filter((record) =>
+        Boolean(stringValue(asRecord(record.digestSummary)?.sbomSha256)),
+      ).length,
+      sourceArtifactDigestCount: sbomValidationRecords.reduce(
+        (total, record) => total + (arrayLength(asRecord(record.digestSummary)?.sourceArtifactDigests) ?? 0),
+        0,
+      ),
+      findingCount: sbomValidationRecords.reduce(
+        (total, record) => total + (arrayLength(record.validationFindings) ?? 0),
+        0,
+      ),
+      downstreamActionCount: sbomValidationRecords.reduce(
+        (total, record) => total + (arrayLength(record.downstreamActionPlan) ?? 0),
+        0,
+      ),
+      sbomGeneratedByDevViewCount: sbomValidationRecords.filter((record) => booleanValue(record.sbomGeneratedByDevView))
+        .length,
+      sbomGeneratedCount: sbomValidationRecords.filter((record) => booleanValue(record.sbomGenerated)).length,
+      sbomAttestedCount: sbomValidationRecords.filter((record) => booleanValue(record.sbomAttested)).length,
+      packageSignedCount: sbomValidationRecords.filter((record) => booleanValue(record.packageSigned)).length,
+      packageSigningPresentCount: sbomValidationRecords.filter((record) => booleanValue(record.packageSigningPresent))
+        .length,
+      provenanceAttestedCount: sbomValidationRecords.filter((record) => booleanValue(record.provenanceAttested)).length,
+      gaps: sbomValidationGaps(sbomValidationRecords),
     },
     extensionExecutionReadiness: {
       status: 'partial',
@@ -932,6 +1033,7 @@ function validateSources(
   signingReadinessReports: LoadedSource[],
   rbacPolicyValidationReports: LoadedSource[],
   releaseProvenanceReadinessReports: LoadedSource[],
+  sbomValidationReports: LoadedSource[],
 ): EnterpriseReadinessFinding[] {
   const findings: EnterpriseReadinessFinding[] = []
   for (const source of [
@@ -943,6 +1045,7 @@ function validateSources(
     ...signingReadinessReports,
     ...rbacPolicyValidationReports,
     ...releaseProvenanceReadinessReports,
+    ...sbomValidationReports,
   ].filter((entry): entry is LoadedSource => Boolean(entry))) {
     if (source.readError) {
       findings.push(blockingFinding('ENTERPRISE_READINESS_SOURCE_READ_FAILED', source.readError, source.relativePath))
@@ -985,8 +1088,10 @@ function validateSources(
       validateSigningReadinessSource(source, record, findings)
     } else if (source.sourceKind === 'rbac-policy-validation-report') {
       validateRbacPolicyValidationSource(source, record, findings)
-    } else {
+    } else if (source.sourceKind === 'release-provenance-readiness-report') {
       validateReleaseProvenanceReadinessSource(source, record, findings)
+    } else {
+      validateSbomValidationSource(source, record, findings)
     }
     for (const hit of collectUnsafeAuthorityHits(record)) {
       findings.push({
@@ -1010,6 +1115,7 @@ function buildFindings(
   signingReadinessReports: LoadedSource[],
   rbacPolicyValidationReports: LoadedSource[],
   releaseProvenanceReadinessReports: LoadedSource[],
+  sbomValidationReports: LoadedSource[],
 ): EnterpriseReadinessFinding[] {
   const findings: EnterpriseReadinessFinding[] = []
   const benchmarkRecord = benchmarkGovernance?.record ?? null
@@ -1024,6 +1130,7 @@ function buildFindings(
   const releaseProvenanceReadinessRecords = releaseProvenanceReadinessReports
     .map((entry) => entry.record)
     .filter(isJsonRecord)
+  const sbomValidationRecords = sbomValidationReports.map((entry) => entry.record).filter(isJsonRecord)
 
   if (!releaseSurface) {
     findings.push({
@@ -1177,6 +1284,23 @@ function buildFindings(
       message:
         'Release provenance readiness source is recorded as report-only readiness, not as SBOM, package signing, or provenance attestation.',
       path: releaseProvenanceReadinessReports[0]?.relativePath,
+    })
+  }
+
+  if (sbomValidationRecords.length === 0) {
+    findings.push({
+      severity: 'gap',
+      code: 'ENTERPRISE_SBOM_VALIDATION_NOT_SUPPLIED',
+      message:
+        'SBOM validation report was not supplied; static SBOM source facts have not been structurally validated.',
+    })
+  } else {
+    findings.push({
+      severity: 'satisfied',
+      code: 'ENTERPRISE_SBOM_VALIDATION_RECORDED',
+      message:
+        'Static wrapped SBOM validation source is recorded as structural source-fact validation, not as SBOM generation or attestation.',
+      path: sbomValidationReports[0]?.relativePath,
     })
   }
 
@@ -1442,6 +1566,32 @@ function validateReleaseProvenanceReadinessSource(
   }
 }
 
+function validateSbomValidationSource(
+  source: LoadedSource,
+  record: JsonRecord,
+  findings: EnterpriseReadinessFinding[],
+): void {
+  if (record.artifactRole !== SBOM_VALIDATION_ROLE || record.status !== SBOM_VALIDATION_STATUS) {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_SBOM_VALIDATION_SOURCE_ROLE_STATUS_INVALID',
+        `${source.relativePath} must be ${SBOM_VALIDATION_ROLE} with passed status.`,
+        source.relativePath,
+      ),
+    )
+  }
+  for (const hit of collectTrueFieldHits(record, releaseProvenanceAuthorityFields)) {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_SBOM_VALIDATION_AUTHORITY_CLAIM_UNSUPPORTED',
+        `${source.relativePath} claims SBOM/signing/provenance authority field ${hit.field}: true; enterprise v1 only accepts structural SBOM validation source facts.`,
+        source.relativePath,
+        hit.field,
+      ),
+    )
+  }
+}
+
 async function loadSource(
   root: string,
   requestedPath: string,
@@ -1531,6 +1681,7 @@ function renderMarkdown(report: EnterpriseReadinessReport): string {
     `- signingReadinessReports: ${report.rbacAndSigningReadiness.signingReadinessReportCount}`,
     `- rbacPolicyValidationReports: ${report.rbacAndSigningReadiness.rbacPolicyValidationReportCount}`,
     `- releaseProvenanceReadinessReports: ${report.releaseProvenanceReadiness.sourceCount}`,
+    `- sbomValidationReports: ${report.sbomValidationReadiness.sourceCount}`,
     '',
     '## Findings',
     ...report.enterpriseReadinessFindings.map((entry) => `- [${entry.severity}] ${entry.code}: ${entry.message}`),
@@ -1614,6 +1765,28 @@ function releaseProvenanceReadinessGaps(records: JsonRecord[]): string[] {
   ) {
     gaps.push('Actual provenance attestation remains missing.')
   }
+  return gaps
+}
+
+function sbomValidationGaps(records: JsonRecord[]): string[] {
+  if (records.length === 0) {
+    return ['SBOM validation report is not supplied.']
+  }
+  const gaps = [
+    'SBOM validation is structural source-fact validation only and does not generate, attest, or sign an SBOM.',
+  ]
+  if (
+    !records.some((record) => stringValue(asRecord(record.packageIdentityAlignment)?.alignmentStatus) === 'matched')
+  ) {
+    gaps.push('No SBOM validation source reports matched package identity.')
+  }
+  if (!records.some((record) => Boolean(stringValue(asRecord(record.digestSummary)?.sbomSha256)))) {
+    gaps.push('No SBOM validation source records an SBOM byte digest.')
+  }
+  if (!records.some((record) => numberValue(asRecord(record.componentCoverageSummary)?.componentCount))) {
+    gaps.push('No SBOM validation source reports component coverage.')
+  }
+  gaps.push('SBOM attestation, package signing, and provenance attestation remain missing.')
   return gaps
 }
 
@@ -1843,6 +2016,36 @@ function releaseProvenanceReadinessSummary(
   }
 }
 
+function sbomValidationSummary(source: LoadedSource): EnterpriseReadinessReport['sourceSbomValidationReports'][number] {
+  const record = source.record ?? {}
+  const sourceSbom = asRecord(record.sourceSbomArtifact)
+  const alignment = asRecord(record.packageIdentityAlignment)
+  const coverage = asRecord(record.componentCoverageSummary)
+  const digest = asRecord(record.digestSummary)
+  return {
+    supplied: true,
+    path: source.relativePath,
+    artifactRole: stringValue(record.artifactRole),
+    status: stringValue(record.status),
+    sbomValidationStatus: stringValue(record.sbomValidationStatus),
+    sbomFormat: stringValue(sourceSbom?.sbomFormat),
+    packageName: stringValue(sourceSbom?.packageName),
+    packageVersion: stringValue(sourceSbom?.packageVersion),
+    componentCount: numberValue(coverage?.componentCount),
+    packageIdentityAlignmentStatus: stringValue(alignment?.alignmentStatus),
+    sbomSha256Present: Boolean(stringValue(digest?.sbomSha256)),
+    sourceArtifactDigestCount: arrayLength(digest?.sourceArtifactDigests),
+    findingCount: arrayLength(record.validationFindings),
+    downstreamActionCount: arrayLength(record.downstreamActionPlan),
+    sbomGeneratedByDevView: booleanOrNull(record.sbomGeneratedByDevView),
+    sbomGenerated: booleanOrNull(record.sbomGenerated),
+    sbomAttested: booleanOrNull(record.sbomAttested),
+    packageSigned: booleanOrNull(record.packageSigned),
+    packageSigningPresent: booleanOrNull(record.packageSigningPresent),
+    provenanceAttested: booleanOrNull(record.provenanceAttested),
+  }
+}
+
 function payloadDigestVerifiedCount(records: JsonRecord[]): number {
   return records.filter((record) => booleanValue(asRecord(record.payloadVerification)?.digestMatches)).length
 }
@@ -1881,6 +2084,9 @@ function downstreamActionPlan(findings: EnterpriseReadinessFinding[]): string[] 
   }
   if (openFindings.some((entry) => entry.code.includes('RELEASE_PROVENANCE'))) {
     actions.add('Attach release provenance readiness and plan real SBOM/signing/provenance only behind governance.')
+  }
+  if (openFindings.some((entry) => entry.code.includes('SBOM_VALIDATION'))) {
+    actions.add('Attach structural SBOM validation before release SBOM/provenance review.')
   }
   if (openFindings.some((entry) => entry.code.includes('RBAC_POLICY_VALIDATION'))) {
     actions.add('Attach RBAC policy validation before planning RBAC enforcement or signed policy rollout.')

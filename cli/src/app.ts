@@ -262,6 +262,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     providerNetworkPolicyReport: undefined as string | undefined,
     sbom: undefined as string | undefined,
     packageJson: undefined as string | undefined,
+    sbomValidation: undefined as string | undefined,
     rbacReadiness: undefined as string | undefined,
     rbacPolicyValidation: undefined as string | undefined,
     releaseProvenanceReadiness: undefined as string | undefined,
@@ -1419,6 +1420,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--package-json requires a file path.' }
       }
       options.packageJson = value
+      index += 1
+    } else if (arg === '--sbom-validation') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--sbom-validation requires one or more file paths.' }
+      }
+      options.sbomValidation = options.sbomValidation ? `${options.sbomValidation},${value}` : value
       index += 1
     } else if (arg === '--rbac-readiness') {
       const value = argv[index + 1]

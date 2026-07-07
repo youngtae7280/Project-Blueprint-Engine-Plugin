@@ -34,6 +34,7 @@ export async function securityReportEnterpriseReadinessCommand(context: CommandC
       signingReadiness: context.options.signingReadiness,
       rbacPolicyValidation: context.options.rbacPolicyValidation,
       releaseProvenanceReadiness: context.options.releaseProvenanceReadiness,
+      sbomValidation: context.options.sbomValidation,
       output: context.options.output,
       markdown: context.options.markdown,
     })

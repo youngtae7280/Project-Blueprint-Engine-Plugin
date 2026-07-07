@@ -444,6 +444,8 @@ Options:
   --sbom <file>        Wrapped static SBOM source fact for security validate-sbom-artifact.
   --package-json <file>
                        Package metadata source for security validate-sbom-artifact; defaults to the plugin package.json.
+  --sbom-validation <file>
+                       SBOM validation report for security report-enterprise-readiness; repeat or comma-separate for multiples.
   --authorize-graph-source-mutation
                        Required explicit authorization flag for graph read-model apply-guarded-graph-update.
   --policy <file>      Policy boundary file for graph read-model report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, record-evidence-decision, create-accepted-evidence-record, report-equivalence-proof-readiness, record-equivalence-proof, report-scope-ci-enforcement-readiness, security report-provider-network-policy, or security validate-rbac-policy.
