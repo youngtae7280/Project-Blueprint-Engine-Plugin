@@ -213,10 +213,17 @@ devview graph read-model report-runtime-evidence-satisfaction-readiness \
   --required-evidence-id <required-evidence-id> \
   --output <runtime-satisfaction-readiness.json> \
   --json
+
+devview graph read-model record-runtime-evidence-satisfaction \
+  --runtime-evidence-satisfaction-readiness <runtime-satisfaction-readiness.json> \
+  --source-evidence <source-evidence-artifact> \
+  --output <runtime-satisfaction-record.json> \
+  --json
 ```
 
 Accepted Evidence, runtime Evidence satisfaction, equivalence proof, and enforcement are separate states. These commands
-do not infer one state from another.
+do not infer one state from another. Runtime Evidence satisfaction can be recorded only from a ready binding preview
+plus matching source Evidence revalidation; it still does not prove equivalence or enable enforcement.
 
 ### Equivalence And Scope/CI Readiness
 

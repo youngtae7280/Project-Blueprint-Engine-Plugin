@@ -5,6 +5,7 @@ import { createApprovedProposalStateFile } from '../core/approved-proposal-state
 import { generateAiRequestAnalyzerPackFile } from '../core/ai-request-analyzer-pack.js'
 import { checkGraphDeltaApplyReadinessFile } from '../core/graph-delta-apply-readiness.js'
 import { createAcceptedEvidenceRecordFile } from '../core/accepted-evidence-record.js'
+import { recordRuntimeEvidenceSatisfactionFile } from '../core/runtime-evidence-satisfaction-record.js'
 import { reportRuntimeEvidenceSatisfactionReadinessFile } from '../core/runtime-evidence-satisfaction-readiness.js'
 import { recordEvidenceDecisionFile } from '../core/evidence-decision-record.js'
 import { reportEvidenceAcceptanceReadinessFile } from '../core/evidence-acceptance-readiness.js'
@@ -1627,6 +1628,63 @@ export async function graphReadModelReportRuntimeEvidenceSatisfactionReadinessCo
           message,
           suggestedFix:
             'Provide a valid Accepted Evidence Record, Instruction Pack, required evidence id, optional provenance artifacts with safe flags, and dedicated readiness output paths. This command never satisfies runtime Evidence.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function graphReadModelRecordRuntimeEvidenceSatisfactionCommand(
+  context: CommandContext,
+): Promise<CommandResult> {
+  if (!context.options.runtimeEvidenceSatisfactionReadiness) {
+    return invalidCommand(
+      'graph read-model record-runtime-evidence-satisfaction requires --runtime-evidence-satisfaction-readiness <file>.',
+    )
+  }
+  if (!context.options.sourceEvidence) {
+    return invalidCommand('graph read-model record-runtime-evidence-satisfaction requires --source-evidence <file>.')
+  }
+  if (!context.options.output) {
+    return invalidCommand('graph read-model record-runtime-evidence-satisfaction requires --output <file>.')
+  }
+
+  try {
+    const result = await recordRuntimeEvidenceSatisfactionFile(context.options.root, {
+      runtimeEvidenceSatisfactionReadiness: context.options.runtimeEvidenceSatisfactionReadiness,
+      sourceEvidence: context.options.sourceEvidence,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph read-model record-runtime-evidence-satisfaction',
+      exitCode: ExitCode.Success,
+      message:
+        'Runtime Evidence satisfaction record created after deterministic readiness and source Evidence revalidation.',
+      issues: [],
+      data: {
+        ...result.record,
+        ...(result.outputPath ? { outputPath: result.outputPath } : {}),
+        ...(result.markdownReport ? { markdownReport: result.markdownReport } : {}),
+        next: 'Use this actual runtime Evidence satisfaction record as input to future equivalence proof readiness/proof commands. This command did not accept Evidence, prove equivalence, enforce scope, configure CI, apply graph deltas, mutate graph-source, execute extensions, call providers, or automate approval.',
+      },
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph read-model record-runtime-evidence-satisfaction',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Runtime Evidence satisfaction record blocked.',
+      issues: [
+        issue({
+          validator: 'RuntimeEvidenceSatisfactionRecord',
+          code: 'RUNTIME_EVIDENCE_SATISFACTION_RECORD_BLOCKED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide a ready Runtime Evidence Satisfaction readiness artifact, the matching source Evidence artifact, and dedicated output paths. This command records runtime satisfaction only for one deterministically matched obligation.',
         }),
       ],
     }
