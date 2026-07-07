@@ -18,6 +18,10 @@ import {
   ProvenanceAttestationValidationError,
   validateProvenanceAttestation,
 } from '../core/provenance-attestation-validation.js'
+import {
+  ProvenanceVerificationReadinessReportValidationError,
+  reportProvenanceVerificationReadiness,
+} from '../core/provenance-verification-readiness-report.js'
 import { RbacPolicyValidationError, validateRbacPolicy } from '../core/rbac-policy-validation.js'
 import { RbacReadinessReportValidationError, reportRbacReadiness } from '../core/rbac-readiness-report.js'
 import { RecordEnvelopePreviewValidationError, previewRecordEnvelope } from '../core/record-envelope-preview.js'
@@ -484,6 +488,74 @@ export async function securityValidateProvenanceAttestationCommand(context: Comm
           message,
           suggestedFix:
             'Provide --attestation and --output and write provenance attestation validation outputs outside source/control artifacts and source inputs.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function securityReportProvenanceVerificationReadinessCommand(
+  context: CommandContext,
+): Promise<CommandResult> {
+  try {
+    const report = await reportProvenanceVerificationReadiness(context.options.root, {
+      provenanceAttestationValidation: context.options.provenanceAttestationValidation,
+      signingReadiness: context.options.signingReadiness,
+      rbacPolicyValidation: context.options.rbacPolicyValidation,
+      recordEnvelopeVerification: context.options.recordEnvelopeVerification,
+      providerNetworkPolicyReport: context.options.providerNetworkPolicyReport,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+
+    return {
+      ok: true,
+      command: 'security report-provenance-verification-readiness',
+      exitCode: ExitCode.Success,
+      message:
+        'Provenance verification readiness reported without SLSA/in-toto verification, signing, keys, RBAC enforcement, or CI activation.',
+      issues: [],
+      data: { ...report },
+    }
+  } catch (error) {
+    if (error instanceof ProvenanceVerificationReadinessReportValidationError) {
+      const report = error.report
+      const blockers = report.provenanceVerificationFindings.filter((finding) => finding.severity === 'blocker')
+      return {
+        ok: false,
+        command: 'security report-provenance-verification-readiness',
+        exitCode: ExitCode.ValidationFailed,
+        message: 'Provenance verification readiness reporting is blocked before any output write.',
+        issues: blockers.map((finding) =>
+          issue({
+            validator: 'ProvenanceVerificationReadiness',
+            code: finding.code,
+            severity: 'error',
+            message: finding.message,
+            file: finding.path,
+            reason: finding.field ? `Field: ${finding.field}` : undefined,
+            suggestedFix:
+              'Provide exact report-only provenance, signing, RBAC, envelope, and provider/network source facts with no signing, verification, key, RBAC, provider/network, CI, or lifecycle authority claims.',
+          }),
+        ),
+        data: { ...report },
+      }
+    }
+
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'security report-provenance-verification-readiness',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Provenance verification readiness reporting could not run.',
+      issues: [
+        issue({
+          validator: 'ProvenanceVerificationReadiness',
+          code: 'PROVENANCE_VERIFICATION_READINESS_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide --provenance-attestation-validation and --output and write provenance verification readiness outputs outside source/control artifacts and source inputs.',
         }),
       ],
     }

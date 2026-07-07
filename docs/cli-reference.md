@@ -354,6 +354,30 @@ is `devview-provenance-attestation-validation-report` with status `devview-prove
 provenance attestation, package signing, SBOM attestation, cryptographic verification, key/RBAC, provider/network, CI,
 hook, graph, lifecycle, approval, and user-automation authority flags remain false.
 
+### Provenance Verification Readiness
+
+```bash
+devview security report-provenance-verification-readiness \
+  --provenance-attestation-validation <provenance-attestation-validation.json> \
+  --signing-readiness <signing-readiness.json> \
+  --rbac-policy-validation <rbac-policy-validation.json> \
+  --record-envelope-verification <record-envelope-verification.json> \
+  --provider-network-policy-report <provider-network-policy-report.json> \
+  --output <provenance-verification-readiness.json> \
+  --markdown <provenance-verification-readiness.md> \
+  --json
+```
+
+Reports prerequisites for future signed provenance attestation verification from static source facts. The provenance
+attestation validation source is required and must keep `signatureValidationStatus: not-performed-source-fact-only`.
+Optional signing readiness, RBAC policy validation, unsigned envelope verification, and provider/network default-deny
+reports are summarized as prerequisites. The report does not perform SLSA/in-toto verification, cryptographic signature
+verification, signing, key generation/storage, RBAC enforcement, package publishing, package creation, SBOM
+generation/attestation, provider/network calls, CI/branch mutation, hooks, enterprise gates, or approval automation. The
+report role is `devview-provenance-verification-readiness-report` with status
+`devview-provenance-verification-readiness-reported`; real verification remains future-only until key trust, signature
+policy, RBAC, and CI governance are modeled.
+
 ### Provider/Network Default-Deny Policy
 
 ```bash

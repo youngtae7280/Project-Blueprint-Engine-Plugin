@@ -129,6 +129,8 @@ Commands:
                        Record a preexisting package artifact digest without running npm pack, signing, or attesting
   security validate-provenance-attestation
                        Validate a wrapped static provenance attestation source fact without generating, signing, or verifying it
+  security report-provenance-verification-readiness
+                       Report prerequisites for future signed provenance verification without performing verification
   security validate-rbac-policy
                        Validate declarative RBAC role assignment policy without enforcing RBAC
   security report-rbac-readiness
@@ -440,11 +442,11 @@ Options:
   --record-envelope-preview <file>
                        Unsigned record envelope preview for security report-enterprise-readiness, report-signing-readiness, or verify-record-envelope; repeat or comma-separate for multiples.
   --record-envelope-verification <file>
-                       Record envelope verification report for security report-enterprise-readiness or report-signing-readiness; repeat or comma-separate for multiples.
+                       Record envelope verification report for security report-enterprise-readiness, report-signing-readiness, or report-provenance-verification-readiness; repeat or comma-separate for multiples.
   --signing-readiness <file>
-                       Signing/key governance readiness report for security report-enterprise-readiness or report-release-provenance; repeat or comma-separate for multiples.
+                       Signing/key governance readiness report for security report-enterprise-readiness, report-release-provenance, or report-provenance-verification-readiness; repeat or comma-separate for multiples.
   --rbac-policy-validation <file>
-                       RBAC policy validation report for security report-enterprise-readiness or report-release-provenance; repeat or comma-separate for multiples.
+                       RBAC policy validation report for security report-enterprise-readiness, report-release-provenance, or report-provenance-verification-readiness; repeat or comma-separate for multiples.
   --release-provenance-readiness <file>
                        Release provenance/SBOM readiness report for security report-enterprise-readiness; repeat or comma-separate for multiples.
   --sbom <file>        Wrapped static SBOM source fact for security validate-sbom-artifact.
@@ -462,7 +464,7 @@ Options:
   --package-artifact-digest <file>
                        Package artifact digest record for security report-enterprise-readiness or validate-provenance-attestation; repeat or comma-separate for multiples where supported.
   --provenance-attestation-validation <file>
-                       Provenance attestation validation report for security report-enterprise-readiness; repeat or comma-separate for multiples.
+                       Provenance attestation validation report for security report-enterprise-readiness or report-provenance-verification-readiness; repeat or comma-separate for multiples where supported.
   --source-ref <value>
                        Explicit source ref label for security record-package-provenance-inputs; metadata only, not verified.
   --build-command <value>

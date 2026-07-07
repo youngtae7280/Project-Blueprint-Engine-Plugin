@@ -105,6 +105,7 @@ import {
   securityRecordPackageProvenanceInputsCommand,
   securityReportEnterpriseReadinessCommand,
   securityReportProviderNetworkPolicyCommand,
+  securityReportProvenanceVerificationReadinessCommand,
   securityReportRbacReadinessCommand,
   securityReportReleaseProvenanceCommand,
   securityReportSigningReadinessCommand,
@@ -201,6 +202,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'security' && subcommand === 'validate-provenance-attestation') {
     return securityValidateProvenanceAttestationCommand(context)
+  }
+  if (command === 'security' && subcommand === 'report-provenance-verification-readiness') {
+    return securityReportProvenanceVerificationReadinessCommand(context)
   }
   if (command === 'security' && subcommand === 'validate-rbac-policy') {
     return securityValidateRbacPolicyCommand(context)
