@@ -63,6 +63,8 @@ export interface LegacyArtifactAuditReport {
   findingsByClassification: Record<LegacyArtifactClassification, number>
   findings: LegacyArtifactFinding[]
   publicSurfacePolicy: string
+  externalCompatibilityPolicy: string
+  releaseSurfacePolicy: string
   cleanupMode: 'dry-run-no-file-mutation'
   filesMutated: false
   graphSourceMutated: false
@@ -104,6 +106,10 @@ export function reportLegacyArtifacts(
     findings,
     publicSurfacePolicy:
       'Public docs and examples should use DevView terminology. Legacy tree-native names are migration inputs or internal-hidden compatibility until retired.',
+    externalCompatibilityPolicy:
+      'Pre-DevView external repository compatibility is not a product constraint; production compatibility starts at the first DevView production baseline.',
+    releaseSurfacePolicy:
+      'Internal archives, migration fixtures, tests, source-only internals, outputs, and work directories must stay out of package and plugin release surfaces.',
     cleanupMode: 'dry-run-no-file-mutation',
     filesMutated: false,
     graphSourceMutated: false,

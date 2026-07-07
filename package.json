@@ -7,11 +7,26 @@
   "bin": {
     "devview": "./dist/cli/index.js"
   },
+  "files": [
+    ".codex-plugin/plugin.json",
+    "AGENTS.md",
+    "CHANGELOG.md",
+    "README.md",
+    "RELEASE.md",
+    "docs/index.md",
+    "docs/install.md",
+    "docs/cli-reference.md",
+    "docs/troubleshooting.md",
+    "docs/concept/README.md",
+    "docs/concept/devview-terminology.md",
+    "skills/**"
+  ],
   "scripts": {
     "clean:dist": "node scripts/clean-dist.js",
     "build:cli": "npm run clean:dist && tsc -p tsconfig.cli.json",
     "devview": "node dist/cli/index.js",
-    "validate:devview": "npm run build:cli && node dist/cli/index.js validate",
+    "validate:devview": "npm run build:cli && node dist/cli/index.js validate && npm run check:release-surface",
+    "check:release-surface": "node scripts/check-devview-release-surface.js --pack-dry-run",
     "validate:devview:legacy-tree": "node scripts/validate-devview-legacy-tree-system.js",
     "validate:devview:legacy-operation-chain": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/invoke-devview-legacy-v0.ps1 -Command operation-chain",
     "validate:devview:legacy-dogfood": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/invoke-devview-legacy-v0.ps1 -Command evaluate-dogfood",

@@ -226,6 +226,16 @@ Reports remaining legacy names and migration inputs without changing files. Find
 `canonical-devview`, `needs-devview-rename`, `migration-fixture-only`, `delete-candidate`, or
 `internal-hidden-compatibility`.
 
+### Release Surface Validation
+
+```bash
+npm run check:release-surface
+```
+
+Checks the local package dry-run file list and text contents before release packaging. The check is local-only and fails
+if internal archives, tests, output folders, work folders, source-only internals, or retired vocabulary are included in
+the package surface.
+
 ### Legacy Cleanup Dry Run
 
 ```bash
