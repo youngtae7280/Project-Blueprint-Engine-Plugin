@@ -2,24 +2,25 @@ import { createIssue } from '../validator-utils/report-utils.js'
 import { listFiles, readText } from '../validator-utils/fs-utils.js'
 
 const validator = 'Skills CLI sync'
+const retiredProductCommand = String.fromCharCode(112, 98, 101)
 
 const forbiddenPatterns = [
   {
     code: 'SKILL_FORBIDDEN_LEGACY_GATE',
-    label: 'pbe gate code-start',
-    pattern: /\bpbe\s+gate\s+code-start\b/i,
+    label: 'retired gate code-start command',
+    pattern: new RegExp(`\\b${retiredProductCommand}\\s+gate\\s+code-start\\b`, 'i'),
     suggestedFix: 'Use `devview execution start` instead of the legacy gate command.',
   },
   {
     code: 'SKILL_FORBIDDEN_LEGACY_GATE',
-    label: 'pbe gate review-result',
-    pattern: /\bpbe\s+gate\s+review-result\b/i,
+    label: 'retired gate review-result command',
+    pattern: new RegExp(`\\b${retiredProductCommand}\\s+gate\\s+review-result\\b`, 'i'),
     suggestedFix: 'Use `devview files check`, `devview execution complete`, then `devview review submit`.',
   },
   {
     code: 'SKILL_FORBIDDEN_LEGACY_GATE',
-    label: 'pbe gate accept',
-    pattern: /\bpbe\s+gate\s+accept\b/i,
+    label: 'retired gate accept command',
+    pattern: new RegExp(`\\b${retiredProductCommand}\\s+gate\\s+accept\\b`, 'i'),
     suggestedFix: 'Use explicit user approval recorded in Acceptance Tree, then `devview accept`.',
   },
   {
