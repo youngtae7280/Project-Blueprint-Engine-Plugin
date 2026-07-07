@@ -8,6 +8,10 @@ import {
   ExtensionAdapterCompatibilityValidationError,
   validateExtensionAdapterCompatibility,
 } from '../core/extension-adapter-compatibility.js'
+import {
+  NativeRetrofitProfileValidationError,
+  validateNativeRetrofitProfile,
+} from '../core/native-retrofit-profile-validation.js'
 import type { CommandResult } from '../core/types.js'
 import { ExitCode, issue } from '../core/types.js'
 import type { CommandContext } from './shared.js'
@@ -252,6 +256,70 @@ export async function extensionsValidateAdaptersCommand(context: CommandContext)
           message,
           suggestedFix:
             'Write adapter compatibility output to a dedicated report path outside source/control artifacts and rerun the command.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function extensionsValidateNativeRetrofitProfileCommand(context: CommandContext): Promise<CommandResult> {
+  try {
+    const report = await validateNativeRetrofitProfile(context.options.root, {
+      projectProfile: context.options.projectProfile,
+      extensionProfileCatalog: context.options.extensionProfileCatalog,
+      extensionAdapterCompatibilityReport: context.options.extensionAdapterCompatibilityReport,
+      extensionContextPlan: context.options.extensionContextPlan,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+
+    return {
+      ok: true,
+      command: 'extensions validate-native-retrofit-profile',
+      exitCode: ExitCode.Success,
+      message: 'Native/Retrofit profile validation reported without executing extensions or external tooling.',
+      issues: [],
+      data: { ...report },
+    }
+  } catch (error) {
+    if (error instanceof NativeRetrofitProfileValidationError) {
+      const report = error.report
+      const errorFindings = report.validationFindings.filter((finding) => finding.severity === 'error')
+      return {
+        ok: false,
+        command: 'extensions validate-native-retrofit-profile',
+        exitCode: ExitCode.ValidationFailed,
+        message: 'Native/Retrofit profile validation is blocked before any execution.',
+        issues: errorFindings.map((finding) =>
+          issue({
+            validator: 'NativeRetrofitProfileValidation',
+            code: finding.code,
+            severity: finding.severity,
+            message: finding.message,
+            file: finding.path,
+            reason: finding.field ? `Field: ${finding.field}` : undefined,
+            suggestedFix:
+              'Provide a configured Project Profile, compiled extension catalog, validated adapter compatibility report, and optional generated context plan.',
+          }),
+        ),
+        data: { ...report },
+      }
+    }
+
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'extensions validate-native-retrofit-profile',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Native/Retrofit profile validation could not run.',
+      issues: [
+        issue({
+          validator: 'NativeRetrofitProfileValidation',
+          code: 'NATIVE_RETROFIT_PROFILE_VALIDATION_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Write Native/Retrofit profile validation output to a dedicated report path outside source/control artifacts and rerun the command.',
         }),
       ],
     }

@@ -107,6 +107,25 @@ compatible, missing, future-only, and not-applicable mappings, but it does not e
 or run graph providers, call networks, mutate View Tree or Context Pack artifacts, mutate the Maintainability Graph,
 satisfy Evidence, prove equivalence, enforce scope/CI, activate hooks, or automate approval.
 
+### Native/Retrofit Profile Validation
+
+```bash
+devview extensions validate-native-retrofit-profile \
+  --project-profile <project-profile.json> \
+  --extension-profile-catalog <extension-profile-catalog.json> \
+  --extension-adapter-compatibility-report <extension-adapter-compatibility.json> \
+  --extension-context-plan <extension-context-plan.json> \
+  --output <native-retrofit-profile-validation.json> \
+  --markdown <native-retrofit-profile-validation.md> \
+  --json
+```
+
+Validates whether the Project Profile and extension source facts express native, retrofit, or hybrid project mode,
+stack/domain/platform hints, source-boundary hints, adapter and policy coverage, protocol-only graph ingestion
+candidates, native boundary hints, and retrofit parity hints. This command is report-only: it does not create fixtures,
+run external tools, execute extensions, mutate graph-source, satisfy Evidence, prove equivalence, enforce scope/CI,
+activate hooks, or automate approval.
+
 ### Work Journal
 
 ```bash

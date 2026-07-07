@@ -88,3 +88,21 @@ Adapter compatibility validation checks whether declared Evidence Adapter and Po
 later runtime Evidence, proof, and Scope/CI lifecycle validation. It is still report-only: adapters and policies are not
 executed, Evidence is not satisfied, equivalence is not proven, scope is not enforced, graph ingestion remains
 protocol-only, and no provider, network, shell, hook, graph mutation, approval, or user-acceptance authority is granted.
+
+## Native/Retrofit Profile Validation
+
+```bash
+devview extensions validate-native-retrofit-profile \
+  --project-profile .devview/project-profile.json \
+  --extension-profile-catalog .tmp/devview-extension-profile-catalog.json \
+  --extension-adapter-compatibility-report .tmp/devview-extension-adapter-compatibility.json \
+  --extension-context-plan .tmp/devview-extension-context-plan.json \
+  --output .tmp/devview-native-retrofit-profile-validation.json \
+  --markdown .tmp/devview-native-retrofit-profile-validation.md \
+  --json
+```
+
+Native/Retrofit profile validation checks whether Project Profile mode, stack/domain/platform, source-boundary,
+adapter, policy, graph-ingestion, native-boundary, and retrofit-parity hints are present enough to plan future
+project-specific fixtures and benchmark coverage. It does not create those fixtures, execute extensions, run external
+tools, mutate graph-source, satisfy Evidence, prove equivalence, enforce scope/CI, activate hooks, or automate approval.
