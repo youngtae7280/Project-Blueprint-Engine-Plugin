@@ -28,6 +28,7 @@ export interface DevViewBaselineReportOptions {
   scopeCiEnforcementRecord?: string
   guardedGraphUpdateBoundaryRecord?: string
   guardedGraphUpdateApplyPlan?: string
+  guardedGraphUpdateApplyReport?: string
   output?: string
   markdown?: string
 }
@@ -89,6 +90,7 @@ export interface DevViewCoreBaselineFreezeReport {
   sourceScopeCiEnforcementRecord: string | null
   sourceGuardedGraphUpdateBoundaryRecord: string | null
   sourceGuardedGraphUpdateApplyPlan: string | null
+  sourceGuardedGraphUpdateApplyReport: string | null
   sourceArtifacts: DevViewBaselineSourceSummary[]
   classificationTaxonomy: Array<{
     classification: BaselineClassification
@@ -257,6 +259,12 @@ const OPTIONAL_SOURCE_DEFS = [
     label: 'Guarded Graph Update apply plan',
     optionKey: 'guardedGraphUpdateApplyPlan',
     expectedRole: 'devview-guarded-graph-update-apply-plan',
+  },
+  {
+    sourceId: 'guarded-graph-update-apply-report',
+    label: 'Guarded Graph Update apply report',
+    optionKey: 'guardedGraphUpdateApplyReport',
+    expectedRole: 'devview-guarded-graph-update-apply-report',
   },
 ] as const
 
@@ -427,6 +435,10 @@ function validateRoleStatus(source: LoadedSource, findings: DevViewBaselineFindi
 function validateExactOptionalSourceShape(source: LoadedSource, findings: DevViewBaselineFinding[]): void {
   const record = source.record
   if (!record) return
+  if (source.sourceId === 'guarded-graph-update-apply-report') {
+    validateGuardedGraphUpdateApplyReportSourceShape(source, record, findings)
+    return
+  }
   if (source.sourceId !== 'guarded-graph-update-apply-plan') return
   const role = stringValue(record.artifactRole)
   const status = stringValue(record.status)
@@ -468,6 +480,88 @@ function validateExactOptionalSourceShape(source: LoadedSource, findings: DevVie
     if (field in record && record[field] !== false) {
       findings.push({
         code: 'DEVVIEW_BASELINE_GUARDED_APPLY_PLAN_UNSAFE_FLAG',
+        severity: 'error',
+        field: `${source.sourceId}.${field}`,
+        message: `${source.label} must keep ${field}:false.`,
+        expected: false,
+        actual: record[field],
+      })
+    }
+  }
+}
+
+function validateGuardedGraphUpdateApplyReportSourceShape(
+  source: LoadedSource,
+  record: JsonRecord,
+  findings: DevViewBaselineFinding[],
+): void {
+  const role = stringValue(record.artifactRole)
+  const status = stringValue(record.status)
+  const knownStatuses = [
+    'devview-guarded-graph-update-applied',
+    'devview-guarded-graph-update-apply-blocked',
+    'devview-guarded-graph-update-apply-rolled-back',
+  ]
+  if (role !== 'devview-guarded-graph-update-apply-report' || !knownStatuses.includes(status)) {
+    findings.push({
+      code: 'DEVVIEW_BASELINE_GUARDED_APPLY_REPORT_ROLE_STATUS_INVALID',
+      severity: 'error',
+      field: `${source.sourceId}.status`,
+      message: `${source.label} must use the DevView guarded graph update apply report role and a known apply status.`,
+      expected: 'devview-guarded-graph-update-apply-report with applied, blocked, or rolled-back status',
+      actual: { artifactRole: role, status },
+    })
+  }
+  const success = status === 'devview-guarded-graph-update-applied'
+  if (success) {
+    for (const field of ['graphDeltaApplied', 'graphSourceMutated', 'filesMutated']) {
+      if (record[field] !== true) {
+        findings.push({
+          code: 'DEVVIEW_BASELINE_GUARDED_APPLY_REPORT_SUCCESS_FLAG_INVALID',
+          severity: 'error',
+          field: `${source.sourceId}.${field}`,
+          message: `${source.label} success source fact must carry ${field}:true.`,
+          expected: true,
+          actual: record[field],
+        })
+      }
+    }
+  } else {
+    for (const field of ['graphDeltaApplied', 'graphSourceMutated', 'filesMutated']) {
+      if (field in record && record[field] !== false) {
+        findings.push({
+          code: 'DEVVIEW_BASELINE_GUARDED_APPLY_REPORT_BLOCKED_FLAG_INVALID',
+          severity: 'error',
+          field: `${source.sourceId}.${field}`,
+          message: `${source.label} blocked/rolled-back source fact must keep ${field}:false.`,
+          expected: false,
+          actual: record[field],
+        })
+      }
+    }
+  }
+  for (const field of [
+    'providerInvoked',
+    'networkCallMade',
+    'hooksActivated',
+    'branchProtectionChanged',
+    'branchProtectionMutated',
+    'requiredChecksConfigured',
+    'requiredChecksMutated',
+    'externalCiMutated',
+    'diffRejectionEnabled',
+    'diffRejectionActivated',
+    'approvalAutomationEnabled',
+    'userAcceptanceAutomated',
+    'runtimeEvidenceSatisfied',
+    'evidenceAccepted',
+    'equivalenceProven',
+    'scopeEnforced',
+    'ciEnforcementEnabled',
+  ]) {
+    if (field in record && record[field] !== false) {
+      findings.push({
+        code: 'DEVVIEW_BASELINE_GUARDED_APPLY_REPORT_UNSAFE_EXTERNAL_FLAG',
         severity: 'error',
         field: `${source.sourceId}.${field}`,
         message: `${source.label} must keep ${field}:false.`,
@@ -521,6 +615,9 @@ function validateUnsafeAuthoritySignals(source: LoadedSource, findings: DevViewB
       isGuardedGraphUpdateBoundarySourceFactAllowed(record),
     allowTopLevelApplyPlanOnly:
       source.sourceId === 'guarded-graph-update-apply-plan' && isGuardedGraphUpdateApplyPlanSourceFactAllowed(record),
+    allowTopLevelGuardedApplyReportMutation:
+      source.sourceId === 'guarded-graph-update-apply-report' &&
+      isGuardedGraphUpdateApplyReportSourceFactAllowed(record),
   })
   for (const entry of unsafe) {
     findings.push({
@@ -614,6 +711,41 @@ function isGuardedGraphUpdateApplyPlanSourceFactAllowed(record: JsonRecord): boo
   )
 }
 
+function isGuardedGraphUpdateApplyReportSourceFactAllowed(record: JsonRecord): boolean {
+  const success = record.status === 'devview-guarded-graph-update-applied'
+  const blockedOrRolledBack =
+    record.status === 'devview-guarded-graph-update-apply-blocked' ||
+    record.status === 'devview-guarded-graph-update-apply-rolled-back'
+  const expectedMutationState = success
+    ? record.graphDeltaApplied === true && record.graphSourceMutated === true && record.filesMutated === true
+    : blockedOrRolledBack &&
+      record.graphDeltaApplied === false &&
+      record.graphSourceMutated === false &&
+      record.filesMutated === false
+  return (
+    record.artifactRole === 'devview-guarded-graph-update-apply-report' &&
+    (success || blockedOrRolledBack) &&
+    expectedMutationState &&
+    record.providerInvoked === false &&
+    record.networkCallMade === false &&
+    record.hooksActivated === false &&
+    record.branchProtectionChanged === false &&
+    record.branchProtectionMutated === false &&
+    record.requiredChecksConfigured === false &&
+    record.requiredChecksMutated === false &&
+    record.externalCiMutated === false &&
+    record.diffRejectionEnabled === false &&
+    record.diffRejectionActivated === false &&
+    record.approvalAutomationEnabled === false &&
+    record.userAcceptanceAutomated === false &&
+    record.runtimeEvidenceSatisfied === false &&
+    record.evidenceAccepted === false &&
+    record.equivalenceProven === false &&
+    record.scopeEnforced === false &&
+    record.ciEnforcementEnabled === false
+  )
+}
+
 function buildReport(
   root: string,
   sources: LoadedSource[],
@@ -653,6 +785,7 @@ function buildReport(
     sourceScopeCiEnforcementRecord: sourcePath('scope-ci-enforcement-record'),
     sourceGuardedGraphUpdateBoundaryRecord: sourcePath('guarded-graph-update-boundary-record'),
     sourceGuardedGraphUpdateApplyPlan: sourcePath('guarded-graph-update-apply-plan'),
+    sourceGuardedGraphUpdateApplyReport: sourcePath('guarded-graph-update-apply-report'),
     sourceArtifacts: sources.map((source) => summarizeSource(root, source)),
     classificationTaxonomy: buildClassificationTaxonomy(),
     baselineLanes: buildBaselineLanes(finalHandoff.record ?? {}, roadmapAudit.record ?? {}),
@@ -758,6 +891,10 @@ function classifyStatus(sourceId: string, status: string): BaselineClassificatio
   if (sourceId === 'guarded-graph-update-apply-plan') {
     return normalized.includes('blocked') ? 'blocked' : normalized.includes('ready') ? 'advisory' : 'advisory'
   }
+  if (sourceId === 'guarded-graph-update-apply-report') {
+    if (normalized.includes('rolled-back') || normalized.includes('blocked')) return 'blocked'
+    return normalized.includes('applied') ? 'completed' : 'advisory'
+  }
   if (sourceId === 'graph-delta-apply-report') {
     return normalized.includes('applied') ? 'advisory' : 'blocked'
   }
@@ -769,6 +906,24 @@ function classifyStatus(sourceId: string, status: string): BaselineClassificatio
 function buildSourceFactSummary(source: LoadedSource): JsonRecord | null {
   const record = source.record
   if (!record) return null
+  if (source.sourceId === 'guarded-graph-update-apply-report') {
+    const operationSummary = asRecord(record.operationApplicationSummary)
+    return {
+      applyStatus: stringValue(record.applyStatus) || null,
+      sourceGraphUpdateApplied: record.status === 'devview-guarded-graph-update-applied',
+      sourceGraphUpdateRolledBack: record.status === 'devview-guarded-graph-update-apply-rolled-back',
+      sourceGraphDeltaApplied: record.graphDeltaApplied === true,
+      sourceGraphSourceMutated: record.graphSourceMutated === true,
+      sourceFilesMutated: record.filesMutated === true,
+      mutatedFilePaths: arrayStrings(record.mutatedFilePaths),
+      graphSourceOriginalHash: stringValue(record.graphSourceOriginalHash) || null,
+      graphSourceMutatedHash: stringValue(record.graphSourceMutatedHash) || null,
+      operationCount:
+        numberValue(record.concreteOperationCount) ?? numberValue(operationSummary?.operationCount) ?? null,
+      rollbackAttempted: record.rollbackAttempted === true,
+      rollbackStatus: stringValue(record.rollbackStatus) || null,
+    }
+  }
   if (source.sourceId !== 'guarded-graph-update-apply-plan') return null
   const operationSummary = asRecord(record.operationSummary)
   return {
@@ -1077,6 +1232,7 @@ function collectUnsafeAuthoritySignals(
     allowTopLevelScopeCiEnforcement?: boolean
     allowTopLevelGuardedUpdateReady?: boolean
     allowTopLevelApplyPlanOnly?: boolean
+    allowTopLevelGuardedApplyReportMutation?: boolean
   } = {},
 ): Array<{ path: string }> {
   const findings: Array<{ path: string }> = []
@@ -1099,7 +1255,11 @@ function collectUnsafeAuthoritySignals(
           (nextPath === 'scopeEnforced' || nextPath === 'ciEnforcementEnabled')
         ) &&
         !(options.allowTopLevelGuardedUpdateReady && nextPath === 'guardedUpdateReady') &&
-        !(options.allowTopLevelApplyPlanOnly && nextPath === 'applyPlanOnly')
+        !(options.allowTopLevelApplyPlanOnly && nextPath === 'applyPlanOnly') &&
+        !(
+          options.allowTopLevelGuardedApplyReportMutation &&
+          (nextPath === 'graphDeltaApplied' || nextPath === 'graphSourceMutated' || nextPath === 'filesMutated')
+        )
       ) {
         findings.push({ path: nextPath })
       }

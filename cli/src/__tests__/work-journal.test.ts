@@ -363,6 +363,129 @@ describe('DevView Work Journal renderer', () => {
     )
   })
 
+  it('summarizes actual Guarded Graph Update apply reports compactly without journal mutation authority', async () => {
+    const workspace = createWorkspace()
+    writeWorkJournalSources(workspace)
+    writeJson(join(workspace, 'generated/guarded-apply-report.json'), guardedGraphUpdateApplyReport())
+
+    const result = await runDevViewCli(
+      workJournalArgs(undefined, undefined, undefined, [
+        '--guarded-graph-update-apply-report',
+        'generated/guarded-apply-report.json',
+      ]),
+      { cwd: workspace, pluginRoot },
+    )
+    const data = JSON.parse(readFileSync(join(workspace, '.devview/generated/work-journal/index.data.json'), 'utf8'))
+    const run = JSON.parse(
+      readFileSync(join(workspace, '.devview/generated/work-journal/runs/todo-add/run.json'), 'utf8'),
+    )
+    const html = readFileSync(join(workspace, '.devview/generated/work-journal/index.html'), 'utf8')
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(run.authoritySummary.guardedUpdate).toEqual(
+      expect.objectContaining({
+        applyReportStatus: 'devview-guarded-graph-update-applied',
+        applyStatus: 'applied-graph-source-mutated',
+        sourceGraphUpdateApplied: true,
+        sourceGraphUpdateRolledBack: false,
+        mutatedFilePaths: ['.tmp/guarded-graph-update-apply/graph-source.json'],
+        graphSourceMutatedHash: 'sha256:mutated-graph',
+        rollbackStatus: 'not-needed',
+        displayState: 'actual-graph-update-applied',
+      }),
+    )
+    expect(run.authoritySummary.guardedUpdate.operationSummary).toEqual(
+      expect.objectContaining({
+        operationCount: 1,
+        targetKinds: ['node'],
+        fieldPaths: ['status'],
+      }),
+    )
+    expect(run.flow.find((step: { stepId: string }) => step.stepId === 'guarded-update')).toEqual(
+      expect.objectContaining({
+        sourceId: 'guarded-graph-update-apply-report',
+        authority: 'actual-record',
+        status: 'devview-guarded-graph-update-applied',
+      }),
+    )
+    expect(data.safetyFlags.graphSourceMutated).toBe(false)
+    expect(data.safetyFlags.graphDeltaApplied).toBe(false)
+    expect(data.safetyFlags.providerInvoked).toBe(false)
+    expect(data.safetyFlags.networkCallMade).toBe(false)
+    expect(html).toContain('actual-graph-update-applied')
+    expect(html).toContain('Source artifacts and provenance')
+  })
+
+  it('represents rolled-back Guarded Graph Update apply reports as not currently applied', async () => {
+    const workspace = createWorkspace()
+    writeWorkJournalSources(workspace)
+    writeJson(
+      join(workspace, 'generated/guarded-apply-report.json'),
+      guardedGraphUpdateApplyReport('devview-guarded-graph-update-apply-rolled-back'),
+    )
+
+    const result = await runDevViewCli(
+      workJournalArgs(undefined, undefined, undefined, [
+        '--guarded-graph-update-apply-report',
+        'generated/guarded-apply-report.json',
+      ]),
+      { cwd: workspace, pluginRoot },
+    )
+    const run = JSON.parse(
+      readFileSync(join(workspace, '.devview/generated/work-journal/runs/todo-add/run.json'), 'utf8'),
+    )
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(run.authoritySummary.guardedUpdate).toEqual(
+      expect.objectContaining({
+        applyReportStatus: 'devview-guarded-graph-update-apply-rolled-back',
+        sourceGraphUpdateApplied: false,
+        sourceGraphUpdateRolledBack: true,
+        rollbackStatus: 'restored-from-backup',
+        displayState: 'actual-graph-update-rolled-back',
+      }),
+    )
+    expect(run.flow.find((step: { stepId: string }) => step.stepId === 'guarded-update')).toEqual(
+      expect.objectContaining({
+        sourceId: 'guarded-graph-update-apply-report',
+        authority: 'blocked',
+        status: 'devview-guarded-graph-update-apply-rolled-back',
+      }),
+    )
+  })
+
+  it('blocks wrong Guarded Graph Update apply report role/status with graph mutation facts before writing outputs', async () => {
+    const workspace = createWorkspace()
+    writeWorkJournalSources(workspace)
+    writeJson(join(workspace, 'generated/not-guarded-apply-report.json'), {
+      artifactRole: 'devview-guarded-graph-update-apply-plan',
+      status: 'devview-guarded-graph-update-apply-plan-ready',
+      graphDeltaApplied: true,
+      graphSourceMutated: true,
+      filesMutated: true,
+      providerInvoked: false,
+      networkCallMade: false,
+      hooksActivated: false,
+      approvalAutomationEnabled: false,
+      userAcceptanceAutomated: false,
+    })
+
+    const result = await runDevViewCli(
+      workJournalArgs('.tmp/journal.html', '.tmp/journal.data.json', '.tmp/run.json', [
+        '--guarded-graph-update-apply-report',
+        'generated/not-guarded-apply-report.json',
+      ]),
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues[0].message).toContain('unsupported role/status')
+    expect(existsSync(join(workspace, '.tmp/journal.html'))).toBe(false)
+    expect(existsSync(join(workspace, '.tmp/journal.data.json'))).toBe(false)
+    expect(existsSync(join(workspace, '.tmp/run.json'))).toBe(false)
+  })
+
   it('preserves previous Work Journal runs and replaces the current run deterministically', async () => {
     const workspace = createWorkspace()
     writeWorkJournalSources(workspace)
@@ -917,6 +1040,56 @@ function guardedGraphUpdateApplyPlan(
     scopeEnforced: false,
     ciEnforcementEnabled: false,
     filesMutated: false,
+  }
+}
+
+function guardedGraphUpdateApplyReport(
+  status:
+    | 'devview-guarded-graph-update-applied'
+    | 'devview-guarded-graph-update-apply-blocked'
+    | 'devview-guarded-graph-update-apply-rolled-back' = 'devview-guarded-graph-update-applied',
+): Record<string, unknown> {
+  const applied = status === 'devview-guarded-graph-update-applied'
+  const rolledBack = status === 'devview-guarded-graph-update-apply-rolled-back'
+  return {
+    artifactRole: 'devview-guarded-graph-update-apply-report',
+    status,
+    applyStatus: applied
+      ? 'applied-graph-source-mutated'
+      : rolledBack
+        ? 'rolled-back-post-apply-verification-failed'
+        : 'blocked-apply-plan-not-ready',
+    graphSourceOriginalHash: 'sha256:graph-source',
+    graphSourceMutatedHash: applied ? 'sha256:mutated-graph' : null,
+    graphDeltaApplied: applied,
+    graphSourceMutated: applied,
+    filesMutated: applied,
+    mutatedFilePaths: applied ? ['.tmp/guarded-graph-update-apply/graph-source.json'] : [],
+    concreteOperationCount: 1,
+    operationApplicationSummary: {
+      operationCount: 1,
+      targetKinds: ['node'],
+      fieldPaths: ['status'],
+    },
+    rollbackAttempted: rolledBack,
+    rollbackStatus: rolledBack ? 'restored-from-backup' : 'not-needed',
+    providerInvoked: false,
+    networkCallMade: false,
+    hooksActivated: false,
+    branchProtectionChanged: false,
+    branchProtectionMutated: false,
+    requiredChecksConfigured: false,
+    requiredChecksMutated: false,
+    externalCiMutated: false,
+    diffRejectionEnabled: false,
+    diffRejectionActivated: false,
+    approvalAutomationEnabled: false,
+    userAcceptanceAutomated: false,
+    runtimeEvidenceSatisfied: false,
+    evidenceAccepted: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
   }
 }
 

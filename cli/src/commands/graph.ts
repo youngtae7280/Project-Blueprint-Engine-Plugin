@@ -3965,6 +3965,7 @@ export async function graphReadModelReportDevViewBaselineCommand(context: Comman
       scopeCiEnforcementRecord: context.options.scopeCiEnforcementRecord,
       guardedGraphUpdateBoundaryRecord: context.options.guardedGraphUpdateBoundaryRecord,
       guardedGraphUpdateApplyPlan: context.options.guardedGraphUpdateApplyPlan,
+      guardedGraphUpdateApplyReport: context.options.guardedGraphUpdateApplyReport,
       output: context.options.output,
       markdown: context.options.markdown,
     })

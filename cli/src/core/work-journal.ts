@@ -50,6 +50,7 @@ export interface WorkJournalRenderOptions {
   scopeCiEnforcementRecord?: string
   guardedGraphUpdateBoundaryRecord?: string
   guardedGraphUpdateApplyPlan?: string
+  guardedGraphUpdateApplyReport?: string
   proposal?: string
   applyReport?: string
   output?: string
@@ -123,8 +124,17 @@ export interface WorkJournalAuthoritySummary {
     operationSummary: JsonRecord | null
     planComparisonStatus: string | null
     applyReportStatus: string | null
+    applyStatus: string | null
+    sourceGraphUpdateApplied: boolean
+    sourceGraphUpdateRolledBack: boolean
+    mutatedFilePaths: string[]
+    graphSourceMutatedHash: string | null
+    rollbackStatus: string | null
     nextAction: string
     displayState:
+      | 'actual-graph-update-applied'
+      | 'actual-graph-update-rolled-back'
+      | 'actual-graph-update-blocked'
       | 'apply-plan-ready'
       | 'apply-plan-blocked'
       | 'actual-boundary-ready-apply-deferred'
@@ -238,6 +248,11 @@ const SOURCE_DEFS = [
     sourceId: 'guarded-graph-update-apply-plan',
     label: 'Guarded Graph Update apply plan',
     optionKey: 'guardedGraphUpdateApplyPlan',
+  },
+  {
+    sourceId: 'guarded-graph-update-apply-report',
+    label: 'Guarded Graph Update apply report',
+    optionKey: 'guardedGraphUpdateApplyReport',
   },
   { sourceId: 'guarded-update', label: 'Graph Delta apply status', optionKey: 'applyReport' },
 ] as const
@@ -508,6 +523,51 @@ function validateSourceRecordShape(source: LoadedArtifact): void {
       'filesMutated',
     ])
   }
+  if (source.sourceId === 'guarded-graph-update-apply-report') {
+    const knownStatuses = [
+      'devview-guarded-graph-update-applied',
+      'devview-guarded-graph-update-apply-blocked',
+      'devview-guarded-graph-update-apply-rolled-back',
+    ]
+    if (
+      record.artifactRole !== 'devview-guarded-graph-update-apply-report' ||
+      !knownStatuses.includes(stringValue(record.status))
+    ) {
+      throw new Error('Work Journal Guarded Graph Update apply report source has an unsupported role/status.')
+    }
+    const applied = record.status === 'devview-guarded-graph-update-applied'
+    if (applied) {
+      if (record.graphDeltaApplied !== true || record.graphSourceMutated !== true || record.filesMutated !== true) {
+        throw new Error(
+          'Work Journal Guarded Graph Update apply report source must carry graph/apply/files mutation true facts when applied.',
+        )
+      }
+    } else {
+      requireFalseFields(source.label, record, ['graphDeltaApplied', 'graphSourceMutated', 'filesMutated'])
+    }
+    requireFalseFields(source.label, record, [
+      'runtimeEvidenceSatisfied',
+      'evidenceAccepted',
+      'equivalenceProven',
+      'scopeEnforced',
+      'ciEnforcementEnabled',
+      'requiredChecksConfigured',
+      'branchProtectionChanged',
+      'branchProtectionMutated',
+      'requiredChecksMutated',
+      'externalCiMutated',
+      'diffRejectionEnabled',
+      'diffRejectionActivated',
+      'hooksActivated',
+      'approvalAutomationEnabled',
+      'userAcceptanceAutomated',
+      'providerInvoked',
+      'networkCallMade',
+      'extensionExecutionAllowed',
+      'extensionsExecuted',
+      'shellCommandsExecuted',
+    ])
+  }
 }
 
 function allowedAuthorityPathsForSource(source: LoadedArtifact): Set<string> {
@@ -516,6 +576,9 @@ function allowedAuthorityPathsForSource(source: LoadedArtifact): Set<string> {
   if (source.sourceId === 'scope-ci-enforcement-record') return new Set(['scopeEnforced', 'ciEnforcementEnabled'])
   if (source.sourceId === 'guarded-graph-update-boundary-record') return new Set(['guardedUpdateReady'])
   if (source.sourceId === 'guarded-graph-update-apply-plan') return new Set(['applyPlanOnly'])
+  if (source.sourceId === 'guarded-graph-update-apply-report') {
+    return new Set(['graphDeltaApplied', 'graphSourceMutated', 'filesMutated'])
+  }
   return new Set()
 }
 
@@ -674,6 +737,10 @@ function classifyArtifact(sourceId: string, status: string): WorkJournalArtifact
   if (sourceId === 'guarded-graph-update-apply-plan') {
     return normalized.includes('blocked') ? 'blocked' : normalized.includes('ready') ? 'advisory' : 'advisory'
   }
+  if (sourceId === 'guarded-graph-update-apply-report') {
+    if (normalized.includes('rolled-back') || normalized.includes('blocked')) return 'blocked'
+    return normalized.includes('applied') ? 'completed' : 'advisory'
+  }
   if (sourceId === 'runtime-evidence-satisfaction-readiness')
     return normalized.includes('ready') ? 'advisory' : 'blocked'
   if (sourceId === 'equivalence-proof-readiness' || sourceId === 'scope-ci')
@@ -748,9 +815,10 @@ function buildFlow(artifacts: WorkJournalArtifactSummary[]): WorkJournalFlowStep
     {
       stepId: 'guarded-update',
       label: 'Guarded Update',
-      summary: 'Apply plan preview when present; otherwise boundary or blocked graph update status.',
+      summary: 'Actual guarded apply report when present; otherwise apply plan preview or boundary state.',
       sourceId: 'guarded-update',
-      actualSourceId: 'guarded-graph-update-boundary-record',
+      actualSourceId: 'guarded-graph-update-apply-report',
+      readinessSourceId: 'guarded-graph-update-boundary-record',
       planSourceId: 'guarded-graph-update-apply-plan',
     },
     {
@@ -763,9 +831,10 @@ function buildFlow(artifacts: WorkJournalArtifactSummary[]): WorkJournalFlowStep
     },
   ]
   return stages.map((stage) => {
-    const actual = stage.actualSourceId
-      ? artifacts.find((entry) => entry.sourceId === stage.actualSourceId && entry.classification === 'completed')
+    const actualCandidate = stage.actualSourceId
+      ? artifacts.find((entry) => entry.sourceId === stage.actualSourceId)
       : undefined
+    const actual = actualCandidate?.classification === 'not-provided' ? undefined : actualCandidate
     const readiness = stage.readinessSourceId
       ? artifacts.find((entry) => entry.sourceId === stage.readinessSourceId)
       : undefined
@@ -773,7 +842,7 @@ function buildFlow(artifacts: WorkJournalArtifactSummary[]): WorkJournalFlowStep
       ? artifacts.find((entry) => entry.sourceId === stage.planSourceId)
       : undefined
     const plan = planCandidate?.classification === 'not-provided' ? undefined : planCandidate
-    const artifact = plan ?? actual ?? readiness ?? artifacts.find((entry) => entry.sourceId === stage.sourceId)
+    const artifact = actual ?? plan ?? readiness ?? artifacts.find((entry) => entry.sourceId === stage.sourceId)
     const classification = artifact?.classification ?? 'not-provided'
     return {
       stepId: stage.stepId,
@@ -781,19 +850,23 @@ function buildFlow(artifacts: WorkJournalArtifactSummary[]): WorkJournalFlowStep
       summary: stage.summary,
       sourceId: artifact?.sourceId ?? stage.sourceId,
       status: artifact?.status ?? classification,
-      authority: plan
-        ? classification === 'blocked'
+      authority: actual
+        ? actual.classification === 'blocked'
           ? 'blocked'
-          : 'preview-only'
-        : actual
-          ? 'actual-record'
+          : 'actual-record'
+        : plan
+          ? classification === 'blocked'
+            ? 'blocked'
+            : 'preview-only'
           : classification === 'blocked'
             ? 'blocked'
             : classification === 'not-provided'
               ? 'not-provided'
-              : stage.sourceId === 'baseline'
-                ? 'source-summary-only'
-                : 'preview-only',
+              : artifact?.sourceId === 'guarded-graph-update-boundary-record'
+                ? 'actual-record'
+                : stage.sourceId === 'baseline'
+                  ? 'source-summary-only'
+                  : 'preview-only',
     }
   })
 }
@@ -867,7 +940,9 @@ function buildAuthoritySummary(artifacts: WorkJournalArtifactSummary[]): WorkJou
   const scopeCiRecord = artifacts.find((artifact) => artifact.sourceId === 'scope-ci-enforcement-record')
   const guardedBoundary = artifacts.find((artifact) => artifact.sourceId === 'guarded-graph-update-boundary-record')
   const guardedApplyPlan = artifacts.find((artifact) => artifact.sourceId === 'guarded-graph-update-apply-plan')
+  const guardedApplyReport = artifacts.find((artifact) => artifact.sourceId === 'guarded-graph-update-apply-report')
   const applyReport = artifacts.find((artifact) => artifact.sourceId === 'guarded-update')
+  const guardedApplySourceFacts = asRecord(guardedApplyReport?.sourceFactSummary)
   return {
     runtimeEvidence: {
       readinessStatus: runtimeReadiness?.status ?? null,
@@ -910,31 +985,52 @@ function buildAuthoritySummary(artifacts: WorkJournalArtifactSummary[]): WorkJou
       boundaryRecordStatus: guardedBoundary?.status ?? null,
       applyPlanStatus: stringValue(guardedApplyPlan?.sourceFactSummary?.applyPlanStatus) || null,
       applyPlanArtifactStatus: guardedApplyPlan?.status ?? null,
-      operationSummary: asRecord(guardedApplyPlan?.sourceFactSummary?.operationSummary) ?? null,
+      operationSummary:
+        asRecord(guardedApplySourceFacts?.operationSummary) ??
+        asRecord(guardedApplyPlan?.sourceFactSummary?.operationSummary) ??
+        null,
       planComparisonStatus: stringValue(guardedApplyPlan?.sourceFactSummary?.planComparisonStatus) || null,
-      applyReportStatus: applyReport?.status ?? null,
+      applyReportStatus: guardedApplyReport?.status ?? applyReport?.status ?? null,
+      applyStatus: stringValue(guardedApplySourceFacts?.applyStatus) || null,
+      sourceGraphUpdateApplied: guardedApplySourceFacts?.sourceGraphUpdateApplied === true,
+      sourceGraphUpdateRolledBack: guardedApplySourceFacts?.sourceGraphUpdateRolledBack === true,
+      mutatedFilePaths: arrayStrings(guardedApplySourceFacts?.mutatedFilePaths),
+      graphSourceMutatedHash: stringValue(guardedApplySourceFacts?.graphSourceMutatedHash) || null,
+      rollbackStatus: stringValue(guardedApplySourceFacts?.rollbackStatus) || null,
       nextAction:
-        guardedApplyPlan?.classification === 'advisory'
-          ? 'Review apply plan and authorize a future explicit policy-gated apply; graph-source has not been updated.'
-          : guardedApplyPlan?.classification === 'blocked'
-            ? 'Resolve apply plan blockers before any guarded graph update apply.'
-            : guardedBoundary?.classification === 'completed'
-              ? 'Plan explicit guarded apply; graph-source has not been updated.'
-              : applyReport?.classification === 'blocked'
-                ? 'Resolve blocked graph update/apply status before planning guarded apply.'
-                : 'Create a guarded graph update boundary record before any apply command.',
+        guardedApplyReport?.classification === 'completed'
+          ? 'Review the actual guarded apply report and post-apply validation; no further mutation is performed by this journal.'
+          : guardedApplyReport?.status === 'devview-guarded-graph-update-apply-rolled-back'
+            ? 'Inspect rollback status and regenerate a fresh apply plan before retrying.'
+            : guardedApplyReport?.classification === 'blocked'
+              ? 'Resolve the guarded apply blocker before retrying.'
+              : guardedApplyPlan?.classification === 'advisory'
+                ? 'Review apply plan and authorize a future explicit policy-gated apply; graph-source has not been updated.'
+                : guardedApplyPlan?.classification === 'blocked'
+                  ? 'Resolve apply plan blockers before any guarded graph update apply.'
+                  : guardedBoundary?.classification === 'completed'
+                    ? 'Plan explicit guarded apply; graph-source has not been updated.'
+                    : applyReport?.classification === 'blocked'
+                      ? 'Resolve blocked graph update/apply status before planning guarded apply.'
+                      : 'Create a guarded graph update boundary record before any apply command.',
       displayState:
-        guardedApplyPlan?.classification === 'advisory'
-          ? 'apply-plan-ready'
-          : guardedApplyPlan?.classification === 'blocked'
-            ? 'apply-plan-blocked'
-            : guardedBoundary?.classification === 'completed'
-              ? 'actual-boundary-ready-apply-deferred'
-              : applyReport?.classification === 'blocked'
-                ? 'blocked'
-                : applyReport?.classification === 'advisory'
-                  ? 'preview-only-deferred'
-                  : 'not-provided',
+        guardedApplyReport?.classification === 'completed'
+          ? 'actual-graph-update-applied'
+          : guardedApplyReport?.status === 'devview-guarded-graph-update-apply-rolled-back'
+            ? 'actual-graph-update-rolled-back'
+            : guardedApplyReport?.classification === 'blocked'
+              ? 'actual-graph-update-blocked'
+              : guardedApplyPlan?.classification === 'advisory'
+                ? 'apply-plan-ready'
+                : guardedApplyPlan?.classification === 'blocked'
+                  ? 'apply-plan-blocked'
+                  : guardedBoundary?.classification === 'completed'
+                    ? 'actual-boundary-ready-apply-deferred'
+                    : applyReport?.classification === 'blocked'
+                      ? 'blocked'
+                      : applyReport?.classification === 'advisory'
+                        ? 'preview-only-deferred'
+                        : 'not-provided',
     },
     journalAuthorityFlags: {
       runtimeEvidenceSatisfied: false,
@@ -949,6 +1045,33 @@ function buildAuthoritySummary(artifacts: WorkJournalArtifactSummary[]): WorkJou
 function buildSourceFactSummary(source: LoadedArtifact): JsonRecord | null {
   const record = source.record
   if (!record) return null
+  if (source.sourceId === 'guarded-graph-update-apply-report') {
+    const operationSummary = asRecord(record.operationApplicationSummary)
+    return {
+      applyStatus: stringValue(record.applyStatus) || null,
+      sourceGraphUpdateApplied: record.status === 'devview-guarded-graph-update-applied',
+      sourceGraphUpdateRolledBack: record.status === 'devview-guarded-graph-update-apply-rolled-back',
+      sourceGraphDeltaApplied: record.graphDeltaApplied === true,
+      sourceGraphSourceMutated: record.graphSourceMutated === true,
+      sourceFilesMutated: record.filesMutated === true,
+      mutatedFilePaths: arrayStrings(record.mutatedFilePaths),
+      graphSourceOriginalHash: stringValue(record.graphSourceOriginalHash) || null,
+      graphSourceMutatedHash: stringValue(record.graphSourceMutatedHash) || null,
+      rollbackAttempted: record.rollbackAttempted === true,
+      rollbackStatus: stringValue(record.rollbackStatus) || null,
+      operationSummary: operationSummary
+        ? {
+            operationCount: numberValue(operationSummary.operationCount) ?? numberValue(record.concreteOperationCount),
+            targetKinds: arrayStrings(operationSummary.targetKinds),
+            fieldPaths: arrayStrings(operationSummary.fieldPaths),
+          }
+        : {
+            operationCount: numberValue(record.concreteOperationCount),
+            targetKinds: [],
+            fieldPaths: [],
+          },
+    }
+  }
   if (source.sourceId !== 'guarded-graph-update-apply-plan') return null
   const operationSummary = asRecord(record.operationSummary)
   return {
@@ -1511,7 +1634,7 @@ function renderWorkJournalHtml(journal: WorkJournalDataPreview): string {
       if (stepId === 'runtime-evidence') return ['runtime-evidence-satisfaction-readiness', 'runtime-evidence-satisfaction-record'];
       if (stepId === 'equivalence-proof') return ['equivalence-proof-readiness', 'equivalence-proof-record'];
       if (stepId === 'scope-ci') return ['scope-ci', 'scope-ci-enforcement-record'];
-      if (stepId === 'guarded-update') return ['guarded-graph-update-apply-plan', 'guarded-graph-update-boundary-record', 'guarded-update', 'graph-delta'];
+      if (stepId === 'guarded-update') return ['guarded-graph-update-apply-report', 'guarded-graph-update-apply-plan', 'guarded-graph-update-boundary-record', 'guarded-update', 'graph-delta'];
       return [];
     }
     render();

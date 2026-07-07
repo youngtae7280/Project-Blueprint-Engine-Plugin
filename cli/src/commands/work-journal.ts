@@ -39,6 +39,7 @@ export async function workJournalRenderCommand(context: CommandContext): Promise
       scopeCiEnforcementRecord: context.options.scopeCiEnforcementRecord,
       guardedGraphUpdateBoundaryRecord: context.options.guardedGraphUpdateBoundaryRecord,
       guardedGraphUpdateApplyPlan: context.options.guardedGraphUpdateApplyPlan,
+      guardedGraphUpdateApplyReport: context.options.guardedGraphUpdateApplyReport,
       proposal: context.options.proposal,
       applyReport: context.options.applyReport,
       output: context.options.output,

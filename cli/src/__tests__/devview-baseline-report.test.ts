@@ -49,6 +49,7 @@ describe('DevView core baseline freeze report CLI', () => {
     expect(payload.sourceScopeCiEnforcementRecord).toBe('generated/scope-ci-record.json')
     expect(payload.sourceGuardedGraphUpdateBoundaryRecord).toBe('generated/guarded-boundary-record.json')
     expect(payload.sourceGuardedGraphUpdateApplyPlan).toBe('generated/guarded-apply-plan.json')
+    expect(payload.sourceGuardedGraphUpdateApplyReport).toBe('generated/guarded-apply-report.json')
     expect(
       payload.sourceArtifacts.map((entry: { sourceId: string; classification: string }) => [
         entry.sourceId,
@@ -67,6 +68,7 @@ describe('DevView core baseline freeze report CLI', () => {
         ['scope-ci-enforcement-record', 'completed'],
         ['guarded-graph-update-boundary-record', 'completed'],
         ['guarded-graph-update-apply-plan', 'advisory'],
+        ['guarded-graph-update-apply-report', 'completed'],
       ]),
     )
     expect(
@@ -120,7 +122,7 @@ describe('DevView core baseline freeze report CLI', () => {
     )
     expect(
       payload.sourceArtifacts.filter((entry: { readStatus: string }) => entry.readStatus === 'missing-optional'),
-    ).toHaveLength(16)
+    ).toHaveLength(17)
     expectSafetyFalse(payload.safetyInvariantSummary)
   })
 
@@ -146,6 +148,113 @@ describe('DevView core baseline freeze report CLI', () => {
     expect(applyPlan.sourceFactSummary.applyPlanStatus).toBe('blocked-no-concrete-operations')
     expect(payload.safetyInvariantSummary.graphDeltaApplied).toBe(false)
     expect(payload.safetyInvariantSummary.graphSourceMutated).toBe(false)
+  })
+
+  it('accepts successful Guarded Graph Update apply reports as source facts without baseline mutation authority', async () => {
+    const workspace = createWorkspace()
+    writeBaselineInputs(workspace)
+    writeJson(join(workspace, 'generated/guarded-apply-report.json'), guardedGraphUpdateApplyReport())
+
+    const result = await runDevViewCli(
+      [
+        ...baseArgs(),
+        '--guarded-graph-update-apply-report',
+        'generated/guarded-apply-report.json',
+        '--output',
+        '.tmp/baseline.json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+    const applyReport = payload.sourceArtifacts.find(
+      (entry: { sourceId: string }) => entry.sourceId === 'guarded-graph-update-apply-report',
+    )
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(applyReport.classification).toBe('completed')
+    expect(applyReport.sourceFactSummary).toEqual(
+      expect.objectContaining({
+        applyStatus: 'applied-graph-source-mutated',
+        sourceGraphUpdateApplied: true,
+        sourceGraphDeltaApplied: true,
+        sourceGraphSourceMutated: true,
+        sourceFilesMutated: true,
+        mutatedFilePaths: ['.tmp/guarded-graph-update-apply/graph-source.json'],
+        graphSourceMutatedHash: 'sha256:mutated-graph',
+        operationCount: 1,
+        rollbackAttempted: false,
+      }),
+    )
+    expectSafetyFalse(payload.safetyInvariantSummary)
+  })
+
+  it('summarizes rolled-back Guarded Graph Update apply reports as blocked source facts', async () => {
+    const workspace = createWorkspace()
+    writeBaselineInputs(workspace)
+    writeJson(
+      join(workspace, 'generated/guarded-apply-report.json'),
+      guardedGraphUpdateApplyReport('devview-guarded-graph-update-apply-rolled-back'),
+    )
+
+    const result = await runDevViewCli(
+      [
+        ...baseArgs(),
+        '--guarded-graph-update-apply-report',
+        'generated/guarded-apply-report.json',
+        '--output',
+        '.tmp/baseline.json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+    const applyReport = payload.sourceArtifacts.find(
+      (entry: { sourceId: string }) => entry.sourceId === 'guarded-graph-update-apply-report',
+    )
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(applyReport.classification).toBe('blocked')
+    expect(applyReport.sourceFactSummary).toEqual(
+      expect.objectContaining({
+        sourceGraphUpdateApplied: false,
+        sourceGraphUpdateRolledBack: true,
+        sourceGraphDeltaApplied: false,
+        sourceGraphSourceMutated: false,
+        sourceFilesMutated: false,
+        rollbackAttempted: true,
+        rollbackStatus: 'restored-from-backup',
+      }),
+    )
+    expectSafetyFalse(payload.safetyInvariantSummary)
+  })
+
+  it('blocks wrong Guarded Graph Update apply report role/status with mutation true as zero-write', async () => {
+    const workspace = createWorkspace()
+    writeBaselineInputs(workspace)
+    writeJson(join(workspace, 'generated/not-guarded-apply-report.json'), {
+      artifactRole: 'devview-guarded-graph-update-apply-plan',
+      status: 'devview-guarded-graph-update-apply-plan-ready',
+      graphDeltaApplied: true,
+      graphSourceMutated: true,
+      filesMutated: true,
+      providerInvoked: false,
+      networkCallMade: false,
+    })
+
+    const result = await runDevViewCli(
+      [
+        ...baseArgs(),
+        '--guarded-graph-update-apply-report',
+        'generated/not-guarded-apply-report.json',
+        '--output',
+        '.tmp/baseline.json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues[0].message).toContain('GUARDED_APPLY_REPORT_ROLE_STATUS_INVALID')
+    expect(existsSync(join(workspace, '.tmp/baseline.json'))).toBe(false)
   })
 
   it('blocks unsafe output overwrite before writing', async () => {
@@ -387,6 +496,8 @@ function baseArgs(): string[] {
     'generated/guarded-boundary-record.json',
     '--guarded-graph-update-apply-plan',
     'generated/guarded-apply-plan.json',
+    '--guarded-graph-update-apply-report',
+    'generated/guarded-apply-report.json',
     '--json',
   ]
 }
@@ -517,6 +628,7 @@ function writeBaselineInputs(
   writeJson(join(workspace, 'generated/scope-ci-record.json'), scopeCiEnforcementRecord())
   writeJson(join(workspace, 'generated/guarded-boundary-record.json'), guardedGraphUpdateBoundaryRecord())
   writeJson(join(workspace, 'generated/guarded-apply-plan.json'), guardedGraphUpdateApplyPlan())
+  writeJson(join(workspace, 'generated/guarded-apply-report.json'), guardedGraphUpdateApplyReport())
   writeJson(join(workspace, 'generated/roadmap.json'), {
     artifactRole: 'devview-roadmap-completion-audit-preview',
     status: 'devview-roadmap-completion-audit-previewed',
@@ -682,6 +794,56 @@ function guardedGraphUpdateApplyPlan(
     providerInvoked: false,
     networkCallMade: false,
     hooksActivated: false,
+    approvalAutomationEnabled: false,
+    userAcceptanceAutomated: false,
+    runtimeEvidenceSatisfied: false,
+    evidenceAccepted: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+  }
+}
+
+function guardedGraphUpdateApplyReport(
+  status:
+    | 'devview-guarded-graph-update-applied'
+    | 'devview-guarded-graph-update-apply-blocked'
+    | 'devview-guarded-graph-update-apply-rolled-back' = 'devview-guarded-graph-update-applied',
+): Record<string, unknown> {
+  const applied = status === 'devview-guarded-graph-update-applied'
+  const rolledBack = status === 'devview-guarded-graph-update-apply-rolled-back'
+  return {
+    artifactRole: 'devview-guarded-graph-update-apply-report',
+    status,
+    applyStatus: applied
+      ? 'applied-graph-source-mutated'
+      : rolledBack
+        ? 'rolled-back-post-apply-verification-failed'
+        : 'blocked-apply-plan-not-ready',
+    graphSourceOriginalHash: 'sha256:graph-source',
+    graphSourceMutatedHash: applied ? 'sha256:mutated-graph' : null,
+    graphDeltaApplied: applied,
+    graphSourceMutated: applied,
+    filesMutated: applied,
+    mutatedFilePaths: applied ? ['.tmp/guarded-graph-update-apply/graph-source.json'] : [],
+    concreteOperationCount: 1,
+    operationApplicationSummary: {
+      operationCount: 1,
+      targetKinds: ['node'],
+      fieldPaths: ['status'],
+    },
+    rollbackAttempted: rolledBack,
+    rollbackStatus: rolledBack ? 'restored-from-backup' : 'not-needed',
+    providerInvoked: false,
+    networkCallMade: false,
+    hooksActivated: false,
+    branchProtectionChanged: false,
+    branchProtectionMutated: false,
+    requiredChecksConfigured: false,
+    requiredChecksMutated: false,
+    externalCiMutated: false,
+    diffRejectionEnabled: false,
+    diffRejectionActivated: false,
     approvalAutomationEnabled: false,
     userAcceptanceAutomated: false,
     runtimeEvidenceSatisfied: false,

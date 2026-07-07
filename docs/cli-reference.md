@@ -73,6 +73,7 @@ devview work-journal render \
   --proposal <graph-delta-proposal.json> \
   --guarded-graph-update-boundary-record <guarded-graph-update-boundary-record.json> \
   --guarded-graph-update-apply-plan <guarded-graph-update-apply-plan.json> \
+  --guarded-graph-update-apply-report <guarded-graph-update-apply-report.json> \
   --apply-report <apply-report.json> \
   --output .devview/generated/work-journal/index.html \
   --data-output .devview/generated/work-journal/index.data.json \
@@ -327,6 +328,7 @@ devview graph read-model report-devview-baseline \
   --scope-ci-enforcement-record <scope-ci-enforcement-record.json> \
   --guarded-graph-update-boundary-record <guarded-graph-update-boundary-record.json> \
   --guarded-graph-update-apply-plan <guarded-graph-update-apply-plan.json> \
+  --guarded-graph-update-apply-report <guarded-graph-update-apply-report.json> \
   --output <devview-baseline.json> \
   --markdown <devview-baseline.md> \
   --json

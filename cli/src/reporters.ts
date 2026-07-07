@@ -372,6 +372,8 @@ Options:
   --apply-plan <file>  Guarded Graph Update apply plan file for graph read-model apply-guarded-graph-update.
   --guarded-graph-update-apply-plan <file>
                        Guarded Graph Update apply plan file for graph read-model report-devview-baseline or work-journal render.
+  --guarded-graph-update-apply-report <file>
+                       Guarded Graph Update apply report file for graph read-model report-devview-baseline or work-journal render.
   --operator <id>      Explicit operator id for graph read-model apply-guarded-graph-update.
   --authorization-rationale <text>
                        Human-authored authorization rationale for graph read-model apply-guarded-graph-update.

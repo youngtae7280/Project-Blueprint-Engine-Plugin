@@ -219,6 +219,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     scopeCiEnforcementRecord: undefined as string | undefined,
     guardedGraphUpdateBoundaryRecord: undefined as string | undefined,
     guardedGraphUpdateApplyPlan: undefined as string | undefined,
+    guardedGraphUpdateApplyReport: undefined as string | undefined,
     hookHealth: undefined as string | undefined,
     userPromptAdvisory: undefined as string | undefined,
     preflightSession: undefined as string | undefined,
@@ -1076,6 +1077,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--guarded-graph-update-apply-plan requires a file path.' }
       }
       options.guardedGraphUpdateApplyPlan = value
+      index += 1
+    } else if (arg === '--guarded-graph-update-apply-report') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--guarded-graph-update-apply-report requires a file path.' }
+      }
+      options.guardedGraphUpdateApplyReport = value
       index += 1
     } else if (arg === '--hook-health') {
       const value = argv[index + 1]
