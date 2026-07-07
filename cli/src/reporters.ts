@@ -119,6 +119,8 @@ Commands:
                        Aggregate enterprise hardening readiness as a report-only assessment
   security report-provider-network-policy
                        Record provider/network default-deny policy posture without provider or network activity
+  security report-release-provenance
+                       Report package provenance, SBOM, and package signing readiness without creating release artifacts
   security validate-rbac-policy
                        Validate declarative RBAC role assignment policy without enforcing RBAC
   security report-rbac-readiness
@@ -425,14 +427,16 @@ Options:
   --actor-role <role>  Actor role claim for security preview-record-envelope; repeat or comma-separate for multiples.
   --rbac-readiness <file>
                        RBAC readiness source for security report-signing-readiness.
+  --enterprise-readiness <file>
+                       Enterprise readiness source for security report-provider-network-policy, report-signing-readiness, or report-release-provenance.
   --record-envelope-preview <file>
                        Unsigned record envelope preview for security report-enterprise-readiness, report-signing-readiness, or verify-record-envelope; repeat or comma-separate for multiples.
   --record-envelope-verification <file>
                        Record envelope verification report for security report-enterprise-readiness or report-signing-readiness; repeat or comma-separate for multiples.
   --signing-readiness <file>
-                       Signing/key governance readiness report for security report-enterprise-readiness; repeat or comma-separate for multiples.
+                       Signing/key governance readiness report for security report-enterprise-readiness or report-release-provenance; repeat or comma-separate for multiples.
   --rbac-policy-validation <file>
-                       RBAC policy validation report for security report-enterprise-readiness; repeat or comma-separate for multiples.
+                       RBAC policy validation report for security report-enterprise-readiness or report-release-provenance; repeat or comma-separate for multiples.
   --authorize-graph-source-mutation
                        Required explicit authorization flag for graph read-model apply-guarded-graph-update.
   --policy <file>      Policy boundary file for graph read-model report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, record-evidence-decision, create-accepted-evidence-record, report-equivalence-proof-readiness, record-equivalence-proof, report-scope-ci-enforcement-readiness, security report-provider-network-policy, or security validate-rbac-policy.

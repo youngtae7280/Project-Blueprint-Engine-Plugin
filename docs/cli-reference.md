@@ -229,6 +229,26 @@ The report still does not claim cryptographic signing, key management, RBAC enfo
 does not activate enterprise gates, execute extensions, call providers, make network calls, mutate graph-source,
 configure CI, activate hooks, or automate approval.
 
+### Release Provenance / SBOM Readiness
+
+```bash
+devview security report-release-provenance \
+  --enterprise-readiness <enterprise-readiness.json> \
+  --signing-readiness <signing-readiness.json> \
+  --rbac-policy-validation <rbac-policy-validation.json> \
+  --output <release-provenance-readiness.json> \
+  --markdown <release-provenance-readiness.md> \
+  --json
+```
+
+Summarizes package/release provenance and SBOM readiness as a report-only source fact. The command reads local package
+metadata, the `package.json` files allowlist, and the release-surface checker/script presence, but it does not run
+`npm pack`, publish packages, sign packages, generate SBOM files, create provenance attestations, call providers, or
+activate enterprise gates. Optional enterprise readiness, signing readiness, and RBAC policy validation reports are
+validated and summarized as source facts. SBOM generation, package signing, package signature verification, and SLSA/npm
+provenance remain future-only gaps until explicit release governance, key/trust policy, RBAC enforcement, and CI
+governance exist.
+
 ### Provider/Network Default-Deny Policy
 
 ```bash

@@ -104,6 +104,7 @@ import {
   securityReportEnterpriseReadinessCommand,
   securityReportProviderNetworkPolicyCommand,
   securityReportRbacReadinessCommand,
+  securityReportReleaseProvenanceCommand,
   securityReportSigningReadinessCommand,
   securityValidateRbacPolicyCommand,
   securityVerifyRecordEnvelopeCommand,
@@ -181,6 +182,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'security' && subcommand === 'report-provider-network-policy') {
     return securityReportProviderNetworkPolicyCommand(context)
+  }
+  if (command === 'security' && subcommand === 'report-release-provenance') {
+    return securityReportReleaseProvenanceCommand(context)
   }
   if (command === 'security' && subcommand === 'validate-rbac-policy') {
     return securityValidateRbacPolicyCommand(context)

@@ -13,6 +13,10 @@ import {
   RecordEnvelopeVerificationValidationError,
   verifyRecordEnvelope,
 } from '../core/record-envelope-verification.js'
+import {
+  ReleaseProvenanceReadinessReportValidationError,
+  reportReleaseProvenanceReadiness,
+} from '../core/release-provenance-readiness-report.js'
 import { SigningReadinessReportValidationError, reportSigningReadiness } from '../core/signing-readiness-report.js'
 import type { CommandResult } from '../core/types.js'
 import { ExitCode, issue } from '../core/types.js'
@@ -141,6 +145,69 @@ export async function securityReportProviderNetworkPolicyCommand(context: Comman
           message,
           suggestedFix:
             'Provide --output and write provider/network policy outputs outside source/control artifacts and source inputs.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function securityReportReleaseProvenanceCommand(context: CommandContext): Promise<CommandResult> {
+  try {
+    const report = await reportReleaseProvenanceReadiness(context.options.root, {
+      enterpriseReadiness: context.options.enterpriseReadiness,
+      signingReadiness: context.options.signingReadiness,
+      rbacPolicyValidation: context.options.rbacPolicyValidation,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+
+    return {
+      ok: true,
+      command: 'security report-release-provenance',
+      exitCode: ExitCode.Success,
+      message: 'Release provenance and SBOM readiness reported without signing, publishing, or SBOM generation.',
+      issues: [],
+      data: { ...report },
+    }
+  } catch (error) {
+    if (error instanceof ReleaseProvenanceReadinessReportValidationError) {
+      const report = error.report
+      const blockers = report.releaseProvenanceFindings.filter((finding) => finding.severity === 'blocker')
+      return {
+        ok: false,
+        command: 'security report-release-provenance',
+        exitCode: ExitCode.ValidationFailed,
+        message: 'Release provenance readiness reporting is blocked before any output write.',
+        issues: blockers.map((finding) =>
+          issue({
+            validator: 'ReleaseProvenanceReadiness',
+            code: finding.code,
+            severity: 'error',
+            message: finding.message,
+            file: finding.path,
+            reason: finding.field ? `Field: ${finding.field}` : undefined,
+            suggestedFix:
+              'Provide exact report-only source facts with no package signing, SBOM, provenance, RBAC, provider/network, or lifecycle authority claims.',
+          }),
+        ),
+        data: { ...report },
+      }
+    }
+
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'security report-release-provenance',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Release provenance readiness reporting could not run.',
+      issues: [
+        issue({
+          validator: 'ReleaseProvenanceReadiness',
+          code: 'RELEASE_PROVENANCE_READINESS_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide --output and write release provenance readiness outputs outside source/control artifacts and source inputs.',
         }),
       ],
     }
