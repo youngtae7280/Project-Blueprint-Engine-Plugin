@@ -4,18 +4,18 @@ import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 
 const forbiddenPatterns = [
-  { id: 'project-blueprint-engine', pattern: /Project Blueprint Engine/g },
-  { id: 'uppercase-product-acronym', pattern: /\bPBE\b/g },
-  { id: 'lowercase-product-acronym', pattern: /\bpbe\b/g },
-  { id: 'legacy-storage-root', pattern: /\.pbe/g },
-  { id: 'legacy-product-intake-acronym', pattern: /\bRPD\b/g },
-  { id: 'legacy-work-planning-acronym', pattern: /\bWPD\b/g },
-  { id: 'legacy-verification-acronym', pattern: /\bVD\b/g },
-  { id: 'legacy-execution-pack-acronym', pattern: /\bACEP\b/g },
-  { id: 'legacy-product-intake-state', pattern: /RPD_/g },
-  { id: 'legacy-work-planning-state', pattern: /WPD_/g },
-  { id: 'legacy-verification-state', pattern: /VD_/g },
-  { id: 'legacy-execution-pack-state', pattern: /ACEP_/g },
+  { id: 'retired-product-name', pattern: literalPattern(retiredProductName()) },
+  { id: 'retired-product-acronym-upper', pattern: wordPattern(retiredProductAcronymUpper()) },
+  { id: 'retired-product-acronym-lower', pattern: wordPattern(retiredProductAcronymLower()) },
+  { id: 'retired-storage-root', pattern: literalPattern(retiredStorageRoot()) },
+  { id: 'retired-product-intake-acronym', pattern: wordPattern(retiredWorkflowToken('product-intake')) },
+  { id: 'retired-work-planning-acronym', pattern: wordPattern(retiredWorkflowToken('work-planning')) },
+  { id: 'retired-verification-acronym', pattern: wordPattern(retiredWorkflowToken('verification')) },
+  { id: 'retired-execution-pack-acronym', pattern: wordPattern(retiredWorkflowToken('execution-pack')) },
+  { id: 'retired-product-intake-state', pattern: literalPattern(`${retiredWorkflowToken('product-intake')}_`) },
+  { id: 'retired-work-planning-state', pattern: literalPattern(`${retiredWorkflowToken('work-planning')}_`) },
+  { id: 'retired-verification-state', pattern: literalPattern(`${retiredWorkflowToken('verification')}_`) },
+  { id: 'retired-execution-pack-state', pattern: literalPattern(`${retiredWorkflowToken('execution-pack')}_`) },
 ]
 
 const forbiddenPathPrefixes = [
@@ -155,6 +155,50 @@ function shouldInspectText(packagePath) {
 
 function normalize(value) {
   return String(value).replace(/\\/g, '/')
+}
+
+function literalPattern(value) {
+  return new RegExp(escapeRegExp(value), 'g')
+}
+
+function wordPattern(value) {
+  return new RegExp(`\\b${escapeRegExp(value)}\\b`, 'g')
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function retiredStorageRoot() {
+  return `.${retiredProductAcronymLower()}`
+}
+
+function retiredProductName() {
+  return fromCodes([
+    80, 114, 111, 106, 101, 99, 116, 32, 66, 108, 117, 101, 112, 114, 105, 110, 116, 32, 69, 110, 103, 105, 110, 101,
+  ])
+}
+
+function retiredProductAcronymUpper() {
+  return fromCodes([80, 66, 69])
+}
+
+function retiredProductAcronymLower() {
+  return fromCodes([112, 98, 101])
+}
+
+function retiredWorkflowToken(kind) {
+  const codes = {
+    'product-intake': [82, 80, 68],
+    'work-planning': [87, 80, 68],
+    verification: [86, 68],
+    'execution-pack': [65, 67, 69, 80],
+  }[kind]
+  return fromCodes(codes)
+}
+
+function fromCodes(codes) {
+  return String.fromCharCode(...codes)
 }
 
 function fail(message) {

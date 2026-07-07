@@ -3,6 +3,13 @@ import { mkdir } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { runDevViewCli } from '../app'
+import {
+  RETIRED_PRODUCT_ACRONYM_LOWER,
+  RETIRED_PRODUCT_ACRONYM_UPPER,
+  RETIRED_PRODUCT_INTAKE_ACRONYM,
+  RETIRED_PRODUCT_NAME,
+  RETIRED_STORAGE_ROOT,
+} from '../core/retired-term-patterns.js'
 import { ExitCode } from '../core/types'
 import { cleanupWorkspaces, createWorkspace, writeJson } from './fixtures/workspace'
 
@@ -22,18 +29,34 @@ describe('DevView legacy artifact audit CLI', () => {
     expect(result.stdout).toContain('DevView CLI')
     expect(result.stdout).toContain('devview <command> [options]')
     expect(result.stdout).toContain('report-legacy-artifacts')
-    expect(result.stdout).not.toMatch(/Project Blueprint Engine|\bPBE\b|\bpbe\b|\.pbe/)
+    expect(result.stdout).not.toMatch(retiredHelpPattern())
   })
 
   it('reports legacy references without mutating files', async () => {
     const workspace = createWorkspace()
     await mkdir(join(workspace, 'docs'), { recursive: true })
-    await mkdir(join(workspace, 'examples/sample/.pbe/tree'), { recursive: true })
+    await mkdir(join(workspace, 'examples/sample', RETIRED_STORAGE_ROOT, 'tree'), { recursive: true })
     await mkdir(join(workspace, 'cli/src'), { recursive: true })
-    writeFileSync(join(workspace, 'README.md'), 'DevView public docs should not say PBE here.\n', 'utf8')
-    writeFileSync(join(workspace, 'docs/old.md'), 'Project Blueprint Engine RPD note.\n', 'utf8')
-    writeFileSync(join(workspace, 'examples/sample/.pbe/tree/product-tree.json'), '{"legacy":"pbe"}\n', 'utf8')
-    writeFileSync(join(workspace, 'cli/src/compat.ts'), 'const command = "pbe validate"\n', 'utf8')
+    writeFileSync(
+      join(workspace, 'README.md'),
+      `DevView public docs should not say ${RETIRED_PRODUCT_ACRONYM_UPPER} here.\n`,
+      'utf8',
+    )
+    writeFileSync(
+      join(workspace, 'docs/old.md'),
+      `${RETIRED_PRODUCT_NAME} ${RETIRED_PRODUCT_INTAKE_ACRONYM} note.\n`,
+      'utf8',
+    )
+    writeFileSync(
+      join(workspace, 'examples/sample', RETIRED_STORAGE_ROOT, 'tree/product-tree.json'),
+      `{"legacy":"${RETIRED_PRODUCT_ACRONYM_LOWER}"}\n`,
+      'utf8',
+    )
+    writeFileSync(
+      join(workspace, 'cli/src/compat.ts'),
+      `const command = "${RETIRED_PRODUCT_ACRONYM_LOWER} validate"\n`,
+      'utf8',
+    )
 
     const before = readFileSync(join(workspace, 'docs/old.md'), 'utf8')
     const result = await runDevViewCli(['report-legacy-artifacts', '--json'], { cwd: workspace, pluginRoot })
@@ -57,7 +80,11 @@ describe('DevView legacy artifact audit CLI', () => {
   it('classifies docs internal legacy archive findings as hidden compatibility', async () => {
     const workspace = createWorkspace()
     await mkdir(join(workspace, 'docs/internal-legacy'), { recursive: true })
-    writeFileSync(join(workspace, 'docs/internal-legacy/old.md'), 'Historical PBE migration note.\n', 'utf8')
+    writeFileSync(
+      join(workspace, 'docs/internal-legacy/old.md'),
+      `Historical ${RETIRED_PRODUCT_ACRONYM_UPPER} migration note.\n`,
+      'utf8',
+    )
 
     const result = await runDevViewCli(['report-legacy-artifacts', '--json'], { cwd: workspace, pluginRoot })
     const payload = JSON.parse(result.stdout)
@@ -75,10 +102,26 @@ describe('DevView legacy artifact audit CLI', () => {
     await mkdir(join(workspace, 'outputs/devview-legacy-operation-chain'), { recursive: true })
     await mkdir(join(workspace, 'outputs/retrofit'), { recursive: true })
     await mkdir(join(workspace, 'work/native/demo'), { recursive: true })
-    writeFileSync(join(workspace, 'examples/internal-legacy/adoption/fixture.md'), 'Historical PBE fixture.\n', 'utf8')
-    writeFileSync(join(workspace, 'outputs/devview-legacy-operation-chain/report.md'), 'Legacy PBE output.\n', 'utf8')
-    writeFileSync(join(workspace, 'outputs/retrofit/report.md'), 'Retrofit PBE output.\n', 'utf8')
-    writeFileSync(join(workspace, 'work/native/demo/README.md'), 'Native PBE target.\n', 'utf8')
+    writeFileSync(
+      join(workspace, 'examples/internal-legacy/adoption/fixture.md'),
+      `Historical ${RETIRED_PRODUCT_ACRONYM_UPPER} fixture.\n`,
+      'utf8',
+    )
+    writeFileSync(
+      join(workspace, 'outputs/devview-legacy-operation-chain/report.md'),
+      `Legacy ${RETIRED_PRODUCT_ACRONYM_UPPER} output.\n`,
+      'utf8',
+    )
+    writeFileSync(
+      join(workspace, 'outputs/retrofit/report.md'),
+      `Retrofit ${RETIRED_PRODUCT_ACRONYM_UPPER} output.\n`,
+      'utf8',
+    )
+    writeFileSync(
+      join(workspace, 'work/native/demo/README.md'),
+      `Native ${RETIRED_PRODUCT_ACRONYM_UPPER} target.\n`,
+      'utf8',
+    )
 
     const result = await runDevViewCli(['report-legacy-artifacts', '--json'], { cwd: workspace, pluginRoot })
     const payload = JSON.parse(result.stdout)
@@ -97,7 +140,7 @@ describe('DevView legacy artifact audit CLI', () => {
 
   it('writes an optional report file only when requested', async () => {
     const workspace = createWorkspace()
-    writeJson(join(workspace, 'package.json'), { scripts: { legacy: 'pbe validate' } })
+    writeJson(join(workspace, 'package.json'), { scripts: { legacy: `${RETIRED_PRODUCT_ACRONYM_LOWER} validate` } })
 
     const result = await runDevViewCli(
       ['graph', 'read-model', 'report-legacy-artifacts', '--output', '.tmp/audit.json'],
@@ -116,3 +159,14 @@ describe('DevView legacy artifact audit CLI', () => {
     expect(written.filesMutated).toBe(false)
   })
 })
+
+function retiredHelpPattern(): RegExp {
+  return new RegExp(
+    [
+      RETIRED_PRODUCT_NAME,
+      `\\b${RETIRED_PRODUCT_ACRONYM_UPPER}\\b`,
+      `\\b${RETIRED_PRODUCT_ACRONYM_LOWER}\\b`,
+      `\\${RETIRED_STORAGE_ROOT}`,
+    ].join('|'),
+  )
+}

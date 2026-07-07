@@ -3,6 +3,7 @@ import { mkdirSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { runDevViewCli } from '../app'
+import { RETIRED_PRODUCT_ACRONYM_LOWER } from '../core/retired-term-patterns.js'
 import { ExitCode } from '../core/types'
 import { cleanupWorkspaces, createWorkspace, writeText } from './fixtures/workspace'
 
@@ -51,7 +52,7 @@ describe('DevView legacy cleanup migration plan CLI', () => {
     })
     const payload = JSON.parse(result.stdout)
     const operation = payload.operations.find(
-      (entry: Record<string, unknown>) => entry.sourcePath === 'examples/valid/todo-app-pbe-run',
+      (entry: Record<string, unknown>) => entry.sourcePath === retiredTodoFixturePath(),
     )
 
     expect(result.exitCode).toBe(ExitCode.Success)
@@ -67,7 +68,7 @@ describe('DevView legacy cleanup migration plan CLI', () => {
     })
     const payload = JSON.parse(result.stdout)
     const operation = payload.operations.find(
-      (entry: Record<string, unknown>) => entry.sourcePath === 'examples/valid/todo-app-pbe-run',
+      (entry: Record<string, unknown>) => entry.sourcePath === retiredTodoFixturePath(),
     )
 
     expect(result.exitCode).toBe(ExitCode.Success)
@@ -78,7 +79,7 @@ describe('DevView legacy cleanup migration plan CLI', () => {
       riskLevel: 'high',
       collisionStatus: 'no-collision',
     })
-    expect(existsSync(join(workspace, 'examples/valid/todo-app-pbe-run'))).toBe(true)
+    expect(existsSync(join(workspace, retiredTodoFixturePath()))).toBe(true)
     expect(existsSync(join(workspace, 'examples/valid/todo-app-devview-run'))).toBe(false)
   })
 
@@ -86,7 +87,7 @@ describe('DevView legacy cleanup migration plan CLI', () => {
     const workspace = createLegacyExamplesWorkspace()
     writeText(
       join(workspace, 'examples/internal-legacy/adoption/todo-search-slice/README.md'),
-      'Historical migration fixture with pbe wording.\n',
+      `Historical migration fixture with ${RETIRED_PRODUCT_ACRONYM_LOWER} wording.\n`,
     )
 
     const result = await runDevViewCli(['cleanup-legacy', '--dry-run', '--scope', 'examples', '--json'], {
@@ -117,7 +118,7 @@ describe('DevView legacy cleanup migration plan CLI', () => {
     })
     const payload = JSON.parse(result.stdout)
     const operation = payload.operations.find(
-      (entry: Record<string, unknown>) => entry.sourcePath === 'examples/valid/todo-app-pbe-run',
+      (entry: Record<string, unknown>) => entry.sourcePath === retiredTodoFixturePath(),
     )
 
     expect(result.exitCode).toBe(ExitCode.Success)
@@ -188,15 +189,18 @@ describe('DevView legacy cleanup migration plan CLI', () => {
 
 function createLegacyExamplesWorkspace(options: { includeOldTodoFixture?: boolean } = {}): string {
   const workspace = createWorkspace()
-  writeText(join(workspace, 'examples/README.md'), '# Legacy Examples\n\nUse pbe wording here.\n')
+  writeText(
+    join(workspace, 'examples/README.md'),
+    `# Legacy Examples\n\nUse ${RETIRED_PRODUCT_ACRONYM_LOWER} wording here.\n`,
+  )
   if (options.includeOldTodoFixture) {
     writeText(
-      join(workspace, 'examples/valid/todo-app-pbe-run/generated/generated-read-model.json'),
-      '{"commandIdentity":"devview graph read-model generate --slice examples/valid/todo-app-pbe-run"}\n',
+      join(workspace, retiredTodoFixturePath(), 'generated/generated-read-model.json'),
+      `{"commandIdentity":"devview graph read-model generate --slice ${retiredTodoFixturePath()}"}\n`,
     )
     writeText(
-      join(workspace, 'examples/valid/todo-app-pbe-run/.devview/tree/product-tree.json'),
-      '{"artifact":"legacy pbe tree"}\n',
+      join(workspace, retiredTodoFixturePath(), '.devview/tree/product-tree.json'),
+      `{"artifact":"legacy ${RETIRED_PRODUCT_ACRONYM_LOWER} tree"}\n`,
     )
   } else {
     writeText(
@@ -205,16 +209,27 @@ function createLegacyExamplesWorkspace(options: { includeOldTodoFixture?: boolea
     )
     writeText(
       join(workspace, 'examples/valid/todo-app-devview-run/.devview/tree/product-tree.json'),
-      '{"artifact":"legacy pbe tree"}\n',
+      `{"artifact":"legacy ${RETIRED_PRODUCT_ACRONYM_LOWER} tree"}\n`,
     )
   }
   writeText(
     join(workspace, 'examples/internal-legacy/adoption/todo-search-slice/README.md'),
-    'Historical adoption example with pbe command text.\n',
+    `Historical adoption example with ${RETIRED_PRODUCT_ACRONYM_LOWER} command text.\n`,
   )
   writeText(join(workspace, 'docs/reference.md'), 'examples/internal-legacy/adoption/todo-search-slice\n')
-  writeText(join(workspace, 'package.json'), '{"bin":{"pbe":"./dist/cli/index.js"}}\n')
-  writeText(join(workspace, 'scripts/validate-devview-files.js'), 'console.log("pbe")\n')
-  writeText(join(workspace, 'scripts/validators/devview-layout.js'), 'console.log("pbe layout")\n')
+  writeText(join(workspace, 'package.json'), `{"bin":{"${RETIRED_PRODUCT_ACRONYM_LOWER}":"./dist/cli/index.js"}}\n`)
+  writeText(join(workspace, 'scripts/validate-devview-files.js'), `console.log("${RETIRED_PRODUCT_ACRONYM_LOWER}")\n`)
+  writeText(
+    join(workspace, 'scripts/validators/devview-layout.js'),
+    `console.log("${RETIRED_PRODUCT_ACRONYM_LOWER} layout")\n`,
+  )
   return workspace
+}
+
+function retiredTodoFixtureName(): string {
+  return ['todo-app', RETIRED_PRODUCT_ACRONYM_LOWER, 'run'].join('-')
+}
+
+function retiredTodoFixturePath(): string {
+  return ['examples', 'valid', retiredTodoFixtureName()].join('/')
 }

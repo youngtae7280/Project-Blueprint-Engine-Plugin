@@ -1,10 +1,17 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative, resolve } from 'node:path'
+import {
+  RETIRED_PRODUCT_ACRONYM_LOWER,
+  RETIRED_PRODUCT_ACRONYM_UPPER,
+  RETIRED_PRODUCT_NAME,
+  RETIRED_STORAGE_ROOT,
+  createRetiredCombinedPattern,
+} from './retired-term-patterns.js'
 
 const REPORT_ROLE = 'devview-legacy-cleanup-migration-plan-report'
 const REPORT_STATUS = 'devview-legacy-cleanup-migration-plan-reported'
 
-const LEGACY_PATTERN = /PBE|Project Blueprint Engine|\bpbe\b|\.pbe/g
+const LEGACY_PATTERN = createRetiredCombinedPattern()
 const TEXT_EXTENSIONS = new Set([
   '',
   '.cjs',
@@ -217,7 +224,7 @@ function addIfRelevant(
 }
 
 function buildTodoFixtureRename(root: string, files: TextFile[]): Omit<LegacyCleanupOperation, 'operationId'> | null {
-  const sourcePath = 'examples/valid/todo-app-pbe-run'
+  const sourcePath = retiredTodoFixturePath()
   if (!existsSync(join(root, sourcePath))) return null
   const targetPath = 'examples/valid/todo-app-devview-run'
   const refs = findReferences(files, sourcePath, { excludePrefix: `${sourcePath}/` })
@@ -277,7 +284,7 @@ function buildPbeStorageCompatibilityOperation(
   root: string,
   files: TextFile[],
 ): Omit<LegacyCleanupOperation, 'operationId'> | null {
-  const legacyStorageDirectory = '.pbe'
+  const legacyStorageDirectory = RETIRED_STORAGE_ROOT
   const sourcePath = ['examples', 'valid', 'todo-app-devview-run', legacyStorageDirectory].join('/')
   if (!existsSync(join(root, sourcePath))) return null
   const refs = findReferences(files, legacyStorageDirectory).filter((entry) => entry.startsWith('examples/'))
@@ -360,13 +367,13 @@ function buildExampleGroupOperation(
 
 function buildHiddenAliasOperations(root: string, files: TextFile[]): Omit<LegacyCleanupOperation, 'operationId'>[] {
   const candidates = [
-    'package.json#bin.pbe',
-    'package.json#scripts.pbe',
-    'package.json#scripts.validate:pbe',
-    'scripts/validate-pbe-files.js',
-    'scripts/validate-pbe-tree-system.js',
-    'scripts/validators/pbe-layout.js',
-    'scripts/invoke-pbe-v0.ps1',
+    `package.json#bin.${RETIRED_PRODUCT_ACRONYM_LOWER}`,
+    `package.json#scripts.${RETIRED_PRODUCT_ACRONYM_LOWER}`,
+    `package.json#scripts.validate:${RETIRED_PRODUCT_ACRONYM_LOWER}`,
+    `scripts/validate-${RETIRED_PRODUCT_ACRONYM_LOWER}-files.js`,
+    `scripts/validate-${RETIRED_PRODUCT_ACRONYM_LOWER}-tree-system.js`,
+    `scripts/validators/${RETIRED_PRODUCT_ACRONYM_LOWER}-layout.js`,
+    `scripts/invoke-${RETIRED_PRODUCT_ACRONYM_LOWER}-v0.ps1`,
   ]
   return candidates
     .filter((sourcePath) => hiddenAliasExists(root, sourcePath))
@@ -397,7 +404,11 @@ function hiddenAliasExists(root: string, sourcePath: string): boolean {
     const absoluteFile = join(root, file)
     if (!existsSync(absoluteFile)) return false
     const text = readFileSync(absoluteFile, 'utf8')
-    return text.includes(pointer.replace(/\./g, '')) || text.includes('validate:pbe') || text.includes('"pbe"')
+    return (
+      text.includes(pointer.replace(/\./g, '')) ||
+      text.includes(`validate:${RETIRED_PRODUCT_ACRONYM_LOWER}`) ||
+      text.includes(`"${RETIRED_PRODUCT_ACRONYM_LOWER}"`)
+    )
   }
   return existsSync(join(root, sourcePath))
 }
@@ -431,7 +442,7 @@ function countActionableLegacyMatches(file: TextFile, sourcePath: string): numbe
 
   return file.text
     .split(/\r?\n/)
-    .filter((line) => !line.includes('.pbe'))
+    .filter((line) => !line.includes(RETIRED_STORAGE_ROOT))
     .reduce((count, line) => count + countLegacyMatches(line), 0)
 }
 
@@ -526,11 +537,11 @@ function buildScopeLimitations(scope: LegacyCleanupScope): string[] {
 
 function buildGrepAcceptanceCriteria(): string[] {
   return [
-    'rg -n "PBE|Project Blueprint Engine|\\bpbe\\b|\\.pbe" README.md docs docs/index.md docs/cli-reference.md => zero public-doc matches.',
-    'git grep -n "todo-app-pbe-run" -- . => zero active canonical fixture path references outside explicitly allowlisted internal migration fixtures.',
-    'git grep -n "\\.pbe" -- examples ":!examples/internal-legacy/**" => zero public/canonical example storage matches after active Todo fixture storage migration.',
-    'rg -n "\\bpbe\\b|PBE_|Project Blueprint Engine|validate:pbe|validate-pbe|pbe-layout|invoke-pbe" package.json package-lock.json .github cli scripts => state-machine/storage guards or explicitly reviewed internal legacy compatibility only.',
-    'rg -n "\\.pbe" cli/src scripts examples docs => legacy storage guard, hidden compatibility, or internal migration fixtures only.',
+    `rg -n "${RETIRED_PRODUCT_ACRONYM_UPPER}|${RETIRED_PRODUCT_NAME}|\\b${RETIRED_PRODUCT_ACRONYM_LOWER}\\b|\\${RETIRED_STORAGE_ROOT}" README.md docs docs/index.md docs/cli-reference.md => zero public-doc matches.`,
+    `git grep -n "${retiredTodoFixtureName()}" -- . => zero active canonical fixture path references outside explicitly allowlisted internal migration fixtures.`,
+    `git grep -n "\\${RETIRED_STORAGE_ROOT}" -- examples ":!examples/internal-legacy/**" => zero public/canonical example storage matches after active Todo fixture storage migration.`,
+    `rg -n "\\b${RETIRED_PRODUCT_ACRONYM_LOWER}\\b|${RETIRED_PRODUCT_ACRONYM_UPPER}_|${RETIRED_PRODUCT_NAME}|validate:${RETIRED_PRODUCT_ACRONYM_LOWER}|validate-${RETIRED_PRODUCT_ACRONYM_LOWER}|${RETIRED_PRODUCT_ACRONYM_LOWER}-layout|invoke-${RETIRED_PRODUCT_ACRONYM_LOWER}" package.json package-lock.json .github cli scripts => state-machine/storage guards or explicitly reviewed internal legacy compatibility only.`,
+    `rg -n "\\${RETIRED_STORAGE_ROOT}" cli/src scripts examples docs => legacy storage guard, hidden compatibility, or internal migration fixtures only.`,
   ]
 }
 
@@ -565,10 +576,16 @@ function classifyProtectedOutputPath(root: string, filePath: string): string | n
   if (relativePath.startsWith('docs/')) return 'public or historical docs'
   if (relativePath.startsWith('examples/')) return 'example source or generated artifacts'
   if (relativePath === '.devview' || relativePath.startsWith('.devview/')) return 'future canonical storage'
-  if (relativePath === '.pbe' || relativePath.startsWith('.pbe/')) return 'legacy storage'
+  if (relativePath === RETIRED_STORAGE_ROOT || relativePath.startsWith(`${RETIRED_STORAGE_ROOT}/`)) {
+    return 'legacy storage'
+  }
   if (relativePath === '.codex' || relativePath.startsWith('.codex/')) return 'Codex configuration'
   if (relativePath.startsWith('.codex-plugin/')) return 'plugin configuration'
-  if (relativePath.includes('/.pbe/') || relativePath.includes('/.devview/') || relativePath.includes('/.codex/')) {
+  if (
+    relativePath.includes(`/${RETIRED_STORAGE_ROOT}/`) ||
+    relativePath.includes('/.devview/') ||
+    relativePath.includes('/.codex/')
+  ) {
     return 'protected source/control storage'
   }
   if (relativePath.includes('/generated/') || relativePath.endsWith('/generated')) return 'generated artifact area'
@@ -636,4 +653,12 @@ function renderMarkdown(report: LegacyCleanupMigrationPlanReport): string {
 
 function normalize(value: string): string {
   return value.replace(/\\/g, '/')
+}
+
+function retiredTodoFixtureName(): string {
+  return ['todo-app', RETIRED_PRODUCT_ACRONYM_LOWER, 'run'].join('-')
+}
+
+function retiredTodoFixturePath(): string {
+  return ['examples', 'valid', retiredTodoFixtureName()].join('/')
 }

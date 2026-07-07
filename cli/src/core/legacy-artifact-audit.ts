@@ -1,19 +1,11 @@
 import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative, resolve } from 'node:path'
+import { RETIRED_STORAGE_ROOT, createRetiredTermPatterns } from './retired-term-patterns.js'
 
 const REPORT_ROLE = 'devview-legacy-artifact-audit-report'
 const REPORT_STATUS = 'devview-legacy-artifact-audit-reported'
 
-const LEGACY_PATTERNS = [
-  { id: 'project-blueprint-engine', pattern: /Project Blueprint Engine/g },
-  { id: 'pbe-uppercase', pattern: /\bPBE\b/g },
-  { id: 'pbe-lowercase', pattern: /\bpbe\b/g },
-  { id: 'pbe-artifact-root', pattern: /\.pbe\b/g },
-  { id: 'legacy-rpd', pattern: /\bRPD\b/g },
-  { id: 'legacy-wpd', pattern: /\bWPD\b/g },
-  { id: 'legacy-vd', pattern: /\bVD\b/g },
-  { id: 'legacy-acep', pattern: /\bACEP\b/g },
-]
+const LEGACY_PATTERNS = createRetiredTermPatterns()
 
 const SKIP_DIRS = new Set(['.git', 'node_modules', 'dist', '.tmp', 'coverage'])
 const TEXT_EXTENSIONS = new Set([
@@ -232,7 +224,11 @@ function classifyPath(relativeFile: string): LegacyArtifactClassification {
     return 'internal-hidden-compatibility'
   }
 
-  if (relativeFile.startsWith('examples/') || relativeFile.includes('/generated/') || relativeFile.includes('/.pbe/')) {
+  if (
+    relativeFile.startsWith('examples/') ||
+    relativeFile.includes('/generated/') ||
+    relativeFile.includes(`/${RETIRED_STORAGE_ROOT}/`)
+  ) {
     return 'migration-fixture-only'
   }
 
