@@ -54,7 +54,7 @@ These artifacts are evidence snapshots only. They do not implement a full Todo a
 | Cycle/Node Contract boundary           | present           | `cycle-contract.md` and `node-execution-contracts/wt-search-001.md` bound the expanded scope to title + note/content.                                             |
 | Change/Impact visibility               | present           | `change-tree.json` and `impact-tree.json` classify decision resolved, runtime fixture Evidence refreshed, and renewed Acceptance approved with retained warnings. |
 | Evidence freshness after note feedback | present / warning | `EV-SEARCH-NOTE-TEST` is present/fresh from the bounded Vitest fixture; UI screenshot/generated graph exceptions remain visible.                                  |
-| Compatibility mismatch                 | present           | Supplemental compatibility slice demonstrates a real ACEP task-card-only mismatch; selected Todo slice remains not-applicable.                                    |
+| Compatibility mismatch                 | present           | Supplemental compatibility slice demonstrates a real Execution pack task-card-only mismatch; selected Todo slice remains not-applicable.                          |
 | AI self-report exclusion               | present           | All strengthened evidence points to files and explicit exceptions, not AI self-report.                                                                            |
 | Renewed Acceptance approval            | present           | User approved renewed Acceptance in the parent orchestration chat on 2026-06-24 with warnings retained.                                                           |
 
@@ -70,7 +70,7 @@ These artifacts are evidence snapshots only. They do not implement a full Todo a
 - Bounded fixture Evidence is representative demo evidence, not full Todo app implementation.
 - UI screenshot/manual visual evidence for no-result empty state remains partial.
 - Generated Maintainability Graph/read-model output is missing.
-- ACEP task-card public-doc cleanup remains deferred.
+- Execution pack task-card public-doc cleanup remains deferred.
 
 ## Approval Action
 

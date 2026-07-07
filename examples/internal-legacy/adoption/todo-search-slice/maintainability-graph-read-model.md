@@ -79,7 +79,7 @@ examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.md
 | `check`         | `TT-SEARCH-001`, `TT-SEARCH-002`, `TT-SEARCH-003`, `TT-SEARCH-004`                                        | present | Test Tree nodes are represented as Checks.                                                  |
 | `evidence`      | `EV-SEARCH-TEST`, `EV-SEARCH-REVIEW`, `EV-SEARCH-NOTE-TEST`                                               | present | Evidence freshness is explicit; historical/visual Evidence remains partial or stale.        |
 | `change`        | `CH-001`                                                                                                  | present | User-confirmed product meaning feedback.                                                    |
-| `finding`       | `IM-SEARCH-001`, `FIND-*`, `CCN-ACEP-TASK-CARD-AUTHORITY-001`                                             | present | Impact, warnings, and compatibility caveats are visible findings/control candidates.        |
+| `finding`       | `IM-SEARCH-001`, `FIND-*`, `CCN-EXECUTION-PACK-TASK-CARD-AUTHORITY-001`                                   | present | Impact, warnings, and compatibility caveats are visible findings/control candidates.        |
 | `decision`      | `PP-001`, `AT-ROOT`, `DEC-SCOPED-PILOT-EXECUTION`                                                         | present | User confirmation, renewed Acceptance, and scoped pilot execution approval remain bounded.  |
 | `document`      | `CYCLE-TODO-SEARCH`, `NEC-WT-SEARCH-001`, `AB-TODO-SEARCH`, `DOC-*`                                       | present | Contracts, briefs, parity check, and package docs are review records, not source authority. |
 | `view-instance` | `VIEW-TODO-SEARCH-CORE-VIEWS`                                                                             | present | Manual 7 Core View projection manifest.                                                     |
@@ -163,13 +163,13 @@ Examples:
 | Bounded fixture Evidence, not full Todo app runtime    | acceptable warning for limited pilot                                    |
 | UI screenshot/manual visual evidence remains partial   | acceptable warning for limited pilot                                    |
 | Generated graph builder or CLI-backed output is absent | later implementation requirement for full promotion or CI repeatability |
-| ACEP task-card public-doc cleanup deferred             | deferred cleanup                                                        |
+| Execution pack task-card public-doc cleanup deferred   | deferred cleanup                                                        |
 
 ## Remaining Gaps
 
 - No generated graph builder or CLI-backed read-model output exists.
 - UI screenshot/manual visual evidence remains partial.
-- ACEP task-card public-doc cleanup remains deferred.
+- Execution pack task-card public-doc cleanup remains deferred.
 - Actual scoped limited pilot transition execution remains a separate task.
 
 ## Limited Pilot Readiness Judgment

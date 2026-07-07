@@ -8,8 +8,8 @@ This is a concept-level Control Node candidate, not a runtime Control Node imple
 
 | Field            | Value                                                         |
 | ---------------- | ------------------------------------------------------------- |
-| ID               | `CCN-ACEP-TASK-CARD-AUTHORITY-001`                            |
-| Title            | ACEP task-card-only authority wording                         |
+| ID               | `CCN-EXECUTION-PACK-TASK-CARD-AUTHORITY-001`                  |
+| Title            | Execution pack task-card-only authority wording               |
 | Family           | Compatibility Control Node                                    |
 | Lifecycle status | `Active`                                                      |
 | Source status    | Demo-support control record candidate, not operational source |

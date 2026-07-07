@@ -540,11 +540,11 @@
       "viewRoles": { "evidence-acceptance-view": ["output"] }
     },
     {
-      "id": "CCN-ACEP-TASK-CARD-AUTHORITY-001",
+      "id": "CCN-EXECUTION-PACK-TASK-CARD-AUTHORITY-001",
       "nodeKind": "finding",
       "legacyGraphType": "compatibility_warning",
       "sourceArtifact": "../compatibility-mismatch-slice/compatibility-control-node.md",
-      "title": "ACEP task-card-only authority wording",
+      "title": "Execution pack task-card-only authority wording",
       "status": "active_deferred_cleanup",
       "confidence": "inferred",
       "freshnessStatus": "fresh",
@@ -602,11 +602,11 @@
       }
     },
     {
-      "id": "FIND-ACEP-CLEANUP-DEFERRED",
+      "id": "FIND-EXECUTION-PACK-CLEANUP-DEFERRED",
       "nodeKind": "finding",
       "legacyGraphType": "retained_warning",
       "sourceArtifact": "../compatibility-mismatch-slice/compatibility-control-node.md",
-      "title": "ACEP task-card public-doc cleanup remains deferred",
+      "title": "Execution pack task-card public-doc cleanup remains deferred",
       "status": "deferred_cleanup",
       "confidence": "inferred",
       "freshnessStatus": "fresh",
@@ -1273,9 +1273,9 @@
       "source": "parity-check.md"
     },
     {
-      "id": "E-FIND-ACEP-REPORTS-ON-CCN",
-      "from": "FIND-ACEP-CLEANUP-DEFERRED",
-      "to": "CCN-ACEP-TASK-CARD-AUTHORITY-001",
+      "id": "E-FIND-EXECUTION-PACK-REPORTS-ON-CCN",
+      "from": "FIND-EXECUTION-PACK-CLEANUP-DEFERRED",
+      "to": "CCN-EXECUTION-PACK-TASK-CARD-AUTHORITY-001",
       "edgeType": "reports-on",
       "legacyRelationship": "warningReportsCompatibilityCleanup",
       "confidence": "inferred",
@@ -1285,7 +1285,7 @@
     },
     {
       "id": "E-CCN-REPORTS-ON-PACKAGE",
-      "from": "CCN-ACEP-TASK-CARD-AUTHORITY-001",
+      "from": "CCN-EXECUTION-PACK-TASK-CARD-AUTHORITY-001",
       "to": "DOC-LIMITED-PILOT-PACKAGE",
       "edgeType": "reports-on",
       "legacyRelationship": "readinessWarning",
@@ -1485,8 +1485,8 @@
         "EV-SEARCH-REVIEW",
         "EV-SEARCH-NOTE-TEST",
         "AT-ROOT",
-        "CCN-ACEP-TASK-CARD-AUTHORITY-001",
-        "FIND-ACEP-CLEANUP-DEFERRED"
+        "CCN-EXECUTION-PACK-TASK-CARD-AUTHORITY-001",
+        "FIND-EXECUTION-PACK-CLEANUP-DEFERRED"
       ],
       "includedEdgeIds": [
         "E-PP-APPROVES-CH",
@@ -1497,7 +1497,7 @@
         "E-CH-REQUIRES-EV-NOTE",
         "E-IM-REPORTS-ON-CH",
         "E-IM-REPORTS-ON-EV-REVIEW",
-        "E-FIND-ACEP-REPORTS-ON-CCN"
+        "E-FIND-EXECUTION-PACK-REPORTS-ON-CCN"
       ],
       "viewScopedTags": ["target", "context", "stale", "output"],
       "boundaryNotes": "Shows PP-001 change/impact history and retained compatibility cleanup warning."
@@ -1543,7 +1543,7 @@
         "FIND-BOUNDED-FIXTURE",
         "FIND-PARTIAL-UI",
         "FIND-GENERATED-BUILDER-MISSING",
-        "FIND-ACEP-CLEANUP-DEFERRED",
+        "FIND-EXECUTION-PACK-CLEANUP-DEFERRED",
         "DEC-SCOPED-PILOT-EXECUTION",
         "DOC-LIMITED-PILOT-TRANSITION-RECORD"
       ],
@@ -1618,7 +1618,7 @@
         "FIND-BOUNDED-FIXTURE",
         "FIND-PARTIAL-UI",
         "FIND-GENERATED-BUILDER-MISSING",
-        "FIND-ACEP-CLEANUP-DEFERRED"
+        "FIND-EXECUTION-PACK-CLEANUP-DEFERRED"
       ]
     },
     {
@@ -1655,9 +1655,9 @@
       "statusAfterRefresh": "manual_node_edge_tag_parity_present_for_limited_pilot_review"
     },
     {
-      "id": "RW-ACEP-CLEANUP",
-      "findingNodeId": "FIND-ACEP-CLEANUP-DEFERRED",
-      "summary": "ACEP task-card public-doc cleanup remains deferred.",
+      "id": "RW-EXECUTION-PACK-CLEANUP",
+      "findingNodeId": "FIND-EXECUTION-PACK-CLEANUP-DEFERRED",
+      "summary": "Execution pack task-card public-doc cleanup remains deferred.",
       "classification": "deferred cleanup",
       "statusAfterRefresh": "retained"
     }
@@ -1675,7 +1675,7 @@
     },
     {
       "id": "GAP-PUBLIC-DOC-CLEANUP",
-      "summary": "ACEP task-card public-doc cleanup remains deferred.",
+      "summary": "Execution pack task-card public-doc cleanup remains deferred.",
       "treatment": "Carry as deferred cleanup and compatibility warning."
     },
     {
@@ -1702,7 +1702,7 @@
     "remainingDecisions": [
       "Whether the user approves limited pilot promotion decision after the Graph-first refresh.",
       "Whether full promotion requires an actual generated graph builder or CLI-backed read-model output.",
-      "Whether ACEP task-card public-doc cleanup must happen before any source transition.",
+      "Whether Execution pack task-card public-doc cleanup must happen before any source transition.",
       "Whether bounded fixture Evidence is enough for the limited pilot scope."
     ],
     "nonPromotionStatement": "Approval is bounded to the Todo Search selected-slice transition record and does not promote Maintainability Graph or change source authority."

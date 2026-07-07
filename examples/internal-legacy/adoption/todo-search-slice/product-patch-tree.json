@@ -37,7 +37,7 @@
         "Bounded fixture Evidence is representative demo evidence, not full Todo app implementation.",
         "UI screenshot/manual visual evidence for no-result empty state remains partial.",
         "Generated Maintainability Graph/read-model output is missing.",
-        "ACEP task-card public-doc cleanup remains deferred."
+        "Execution pack task-card public-doc cleanup remains deferred."
       ]
     }
   ]

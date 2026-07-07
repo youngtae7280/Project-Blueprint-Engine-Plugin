@@ -51,9 +51,9 @@ candidate instead of being silently ignored.
 
 ## Evidence Status
 
-| Check                                                             | Evidence                                                     | Status         |
-| ----------------------------------------------------------------- | ------------------------------------------------------------ | -------------- |
-| Selected slice contains a real ACEP/task-card/blueprint mismatch. | No such selected-slice files found.                          | not-applicable |
-| Legacy terms remain mapped through policy.                        | `legacy-compatibility-map.md` and this review.               | present        |
-| Compatibility mismatch is not faked.                              | This review records no real mismatch found.                  | present        |
-| Supplemental compatibility stress may still be needed.            | No actual mismatch path is exercised by this selected slice. | partial        |
+| Check                                                                       | Evidence                                                     | Status         |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------ | -------------- |
+| Selected slice contains a real Execution pack/task-card/blueprint mismatch. | No such selected-slice files found.                          | not-applicable |
+| Legacy terms remain mapped through policy.                                  | `legacy-compatibility-map.md` and this review.               | present        |
+| Compatibility mismatch is not faked.                                        | This review records no real mismatch found.                  | present        |
+| Supplemental compatibility stress may still be needed.                      | No actual mismatch path is exercised by this selected slice. | partial        |

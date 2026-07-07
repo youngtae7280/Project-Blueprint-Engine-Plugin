@@ -242,10 +242,10 @@
       "summary": "Generated read-model output and scoped validator-backed Evidence now exist for the bounded Todo Search slice; CI/full promotion repeatability remains later."
     },
     {
-      "id": "RW-ACEP-CLEANUP",
-      "findingNodeId": "FIND-ACEP-CLEANUP-DEFERRED",
+      "id": "RW-EXECUTION-PACK-CLEANUP",
+      "findingNodeId": "FIND-EXECUTION-PACK-CLEANUP-DEFERRED",
       "status": "deferred-cleanup",
-      "summary": "ACEP task-card public-doc cleanup remains deferred."
+      "summary": "Execution pack task-card public-doc cleanup remains deferred."
     }
   ],
   "fallbackReferenceStatus": [
@@ -321,10 +321,10 @@
         "summary": "Generated read-model output and scoped validator-backed Evidence now exist for the bounded Todo Search slice; CI/full promotion repeatability remains later."
       },
       {
-        "id": "RW-ACEP-CLEANUP",
-        "findingNodeId": "FIND-ACEP-CLEANUP-DEFERRED",
+        "id": "RW-EXECUTION-PACK-CLEANUP",
+        "findingNodeId": "FIND-EXECUTION-PACK-CLEANUP-DEFERRED",
         "status": "deferred-cleanup",
-        "summary": "ACEP task-card public-doc cleanup remains deferred."
+        "summary": "Execution pack task-card public-doc cleanup remains deferred."
       }
     ],
     "fallbackReferenceSummary": { "count": 8, "missingCount": 0 },

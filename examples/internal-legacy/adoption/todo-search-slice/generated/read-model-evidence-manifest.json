@@ -130,18 +130,18 @@
       "summary": "Generated read-model output and scoped validator-backed Evidence now exist for the bounded Todo Search slice; CI/full promotion repeatability remains later."
     },
     {
-      "id": "RW-ACEP-CLEANUP",
-      "findingNodeId": "FIND-ACEP-CLEANUP-DEFERRED",
+      "id": "RW-EXECUTION-PACK-CLEANUP",
+      "findingNodeId": "FIND-EXECUTION-PACK-CLEANUP-DEFERRED",
       "status": "deferred-cleanup",
-      "summary": "ACEP task-card public-doc cleanup remains deferred."
+      "summary": "Execution pack task-card public-doc cleanup remains deferred."
     }
   ],
   "compatibilityWarnings": [
     {
-      "id": "CCN-ACEP-TASK-CARD-AUTHORITY-001",
+      "id": "CCN-EXECUTION-PACK-TASK-CARD-AUTHORITY-001",
       "source": "examples/internal-legacy/adoption/compatibility-mismatch-slice",
       "role": "supplemental warning only",
-      "summary": "Legacy ACEP/task-card wording remains a compatibility warning, not pilot source scope."
+      "summary": "Legacy Execution pack/task-card wording remains a compatibility warning, not pilot source scope."
     }
   ],
   "sourceAuthorityBoundary": "Tree-native selected-slice artifacts remain current operational source.",

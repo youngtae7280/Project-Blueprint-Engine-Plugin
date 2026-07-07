@@ -61,7 +61,7 @@ Aggregate-pass is not user acceptance, source-authority expansion, CI enforcemen
     state.
   - RW-GENERATED-BUILDER: generated-present-for-bounded-slice - Generated read-model output and scoped validator-backed
     Evidence now exist for the bounded Todo Search slice; CI/full promotion repeatability remains later.
-  - RW-ACEP-CLEANUP: deferred-cleanup - ACEP task-card public-doc cleanup remains deferred.
+  - RW-EXECUTION-PACK-CLEANUP: deferred-cleanup - Execution pack task-card public-doc cleanup remains deferred.
 - Notes:
   - Per-slice validation report is interpreted as an independent Evidence unit.
   - Validation uses the target slice profile, generated artifacts, and declared source inputs only. It must not depend

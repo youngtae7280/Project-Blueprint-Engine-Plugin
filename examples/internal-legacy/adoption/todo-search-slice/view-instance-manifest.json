@@ -165,8 +165,8 @@
         "EV-SEARCH-REVIEW",
         "EV-SEARCH-NOTE-TEST",
         "AT-ROOT",
-        "CCN-ACEP-TASK-CARD-AUTHORITY-001",
-        "FIND-ACEP-CLEANUP-DEFERRED"
+        "CCN-EXECUTION-PACK-TASK-CARD-AUTHORITY-001",
+        "FIND-EXECUTION-PACK-CLEANUP-DEFERRED"
       ],
       "includedEdgeIds": [
         "E-PP-APPROVES-CH",
@@ -177,7 +177,7 @@
         "E-CH-REQUIRES-EV-NOTE",
         "E-IM-REPORTS-ON-CH",
         "E-IM-REPORTS-ON-EV-REVIEW",
-        "E-FIND-ACEP-REPORTS-ON-CCN"
+        "E-FIND-EXECUTION-PACK-REPORTS-ON-CCN"
       ],
       "viewScopedTags": {
         "PP-001": ["target"],
@@ -185,8 +185,8 @@
         "IM-SEARCH-001": ["output"],
         "EV-SEARCH-TEST": ["stale"],
         "EV-SEARCH-REVIEW": ["stale"],
-        "CCN-ACEP-TASK-CARD-AUTHORITY-001": ["context"],
-        "FIND-ACEP-CLEANUP-DEFERRED": ["stale"]
+        "CCN-EXECUTION-PACK-TASK-CARD-AUTHORITY-001": ["context"],
+        "FIND-EXECUTION-PACK-CLEANUP-DEFERRED": ["stale"]
       },
       "coverageStatus": "present",
       "boundaryNotes": "Impact is demonstrated as a manual control/readiness view; no public-doc cleanup is performed."
@@ -240,7 +240,7 @@
         "FIND-BOUNDED-FIXTURE",
         "FIND-PARTIAL-UI",
         "FIND-GENERATED-BUILDER-MISSING",
-        "FIND-ACEP-CLEANUP-DEFERRED",
+        "FIND-EXECUTION-PACK-CLEANUP-DEFERRED",
         "DEC-SCOPED-PILOT-EXECUTION",
         "DOC-LIMITED-PILOT-TRANSITION-RECORD"
       ],

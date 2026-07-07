@@ -2,7 +2,7 @@
 
 Status: supplemental demo-support evidence snapshot
 
-This document applies the Legacy Compatibility Map and related concept policies to the ACEP task-card-only wording
+This document applies the Legacy Compatibility Map and related concept policies to the Execution pack task-card-only wording
 mismatch.
 
 ## Applied Policy Sources
@@ -29,7 +29,7 @@ mismatch.
 Read the older wording as:
 
 ```text
-ACEP task-card wording = compatibility view / older package surface
+Execution pack task-card wording = compatibility view / older package surface
 current execution boundary = Cycle Contract + Node Execution Contract
 ```
 
@@ -54,6 +54,6 @@ candidate only.
 | -------------------------------- | -------------- | ---------------------------------------------------------------------------------------- |
 | Real mismatch source exists.     | demonstrated   | `docs/source-of-truth-matrix.md` and supporting docs contain task-card-centered wording. |
 | Canonical interpretation exists. | demonstrated   | Legacy Compatibility Map and Execution Contract policy define the current reading.       |
-| Control boundary is identified.  | demonstrated   | `CCN-ACEP-TASK-CARD-AUTHORITY-001` records a candidate.                                  |
+| Control boundary is identified.  | demonstrated   | `CCN-EXECUTION-PACK-TASK-CARD-AUTHORITY-001` records a candidate.                        |
 | Cleanup is complete.             | deferred       | Cleanup is intentionally out of scope for this supplemental evidence slice.              |
 | Source authority changes.        | not-applicable | No source authority change is performed or implied.                                      |

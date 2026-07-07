@@ -43,7 +43,7 @@ builder implementation.
 | Are confidence and freshness/status separated?                                          | yes    | Nodes and edges use separate `confidence` and `freshnessStatus` fields; `stale` is never a confidence value.                                             |
 | Are all 7 Core Views represented?                                                       | yes    | `coreViewCoverage` and `view-instance-manifest.json` cover Intent, Behavior, Structure, Scope/Execution, Impact, Verification, and Evidence/Acceptance.  |
 | Does Scope / Execution View expose Cycle/Node Contract boundaries?                      | yes    | `CYCLE-TODO-SEARCH`, `NEC-WT-SEARCH-001`, required Evidence, and non-scope guard behavior are included.                                                  |
-| Are missing/partial/deferred warnings retained?                                         | yes    | Partial UI Evidence, bounded fixture warning, generated-builder absence, and ACEP cleanup deferral remain visible.                                       |
+| Are missing/partial/deferred warnings retained?                                         | yes    | Partial UI Evidence, bounded fixture warning, generated-builder absence, and Execution pack cleanup deferral remain visible.                             |
 | Does the artifact avoid source authority change?                                        | yes    | Metadata states tree-native artifacts remain source and no promotion/generator/schema/runtime is implemented.                                            |
 | Has limited pilot approval been recorded after refresh?                                 | yes    | The user approved the bounded Todo Search limited pilot option; `limited-pilot-transition-record.md` records it without source authority change.         |
 | Is full promotion ready?                                                                | no     | Full promotion still has generated-builder/repeatability, broader parity, and cleanup judgment questions.                                                |
@@ -97,13 +97,13 @@ Remaining limitation:
 
 ## Retained Warnings
 
-| Item                                 | Status      | Treatment                                                                  |
-| ------------------------------------ | ----------- | -------------------------------------------------------------------------- |
-| Full Todo app runtime implementation | partial     | Acceptable warning for limited pilot; full promotion may require more.     |
-| UI screenshot/manual visual evidence | partial     | Acceptable warning unless full UI/product parity is in scope.              |
-| Generated graph builder / CLI output | missing     | Later implementation requirement for repeatability or full promotion.      |
-| ACEP task-card public-doc cleanup    | deferred    | Deferred cleanup; user must accept or require cleanup before promotion.    |
-| Limited pilot transition execution   | not started | Approval is recorded, but actual scoped execution remains a separate task. |
+| Item                                        | Status      | Treatment                                                                  |
+| ------------------------------------------- | ----------- | -------------------------------------------------------------------------- |
+| Full Todo app runtime implementation        | partial     | Acceptable warning for limited pilot; full promotion may require more.     |
+| UI screenshot/manual visual evidence        | partial     | Acceptable warning unless full UI/product parity is in scope.              |
+| Generated graph builder / CLI output        | missing     | Later implementation requirement for repeatability or full promotion.      |
+| Execution pack task-card public-doc cleanup | deferred    | Deferred cleanup; user must accept or require cleanup before promotion.    |
+| Limited pilot transition execution          | not started | Approval is recorded, but actual scoped execution remains a separate task. |
 
 ## Non-Promotion Statement
 

@@ -12,7 +12,7 @@ through Legacy Compatibility Map and Control Node policy.
 
 ## Result Summary
 
-The supplemental slice found a real ACEP task-card-only authority risk in public docs:
+The supplemental slice found a real Execution pack task-card-only authority risk in public docs:
 
 - `docs/source-of-truth-matrix.md` maps ACEP to executable task cards.
 - `docs/acep.md` and `docs/parallel-execution.md` contain supporting task-card-centered wording.
@@ -27,7 +27,7 @@ The mismatch is bounded as a Compatibility Control Node candidate and public-doc
 | -------------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------- |
 | Real mismatch source exists.           | present         | Primary and supporting public-doc wording is observable.                                                   |
 | Canonical interpretation exists.       | present         | Current policy maps ACEP to Cycle/Node Execution Contract packaging and task cards to compatibility views. |
-| Control Node boundary is reviewable.   | present         | `compatibility-control-node.md` records candidate `CCN-ACEP-TASK-CARD-AUTHORITY-001`.                      |
+| Control Node boundary is reviewable.   | present         | `compatibility-control-node.md` records candidate `CCN-EXECUTION-PACK-TASK-CARD-AUTHORITY-001`.            |
 | Cleanup status is visible.             | deferred        | Public-doc cleanup is intentionally not performed in this task.                                            |
 | AI self-report exclusion is preserved. | present         | This brief points to source files, policy files, and explicit exceptions rather than AI assertion.         |
 | Source authority is unchanged.         | present         | The slice records evidence only and does not promote Maintainability Graph.                                |

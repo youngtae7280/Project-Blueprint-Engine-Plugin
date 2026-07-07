@@ -77,9 +77,9 @@ View membership is separated from `viewScopedTags` through `includedInViewIds` a
   state.
 - RW-GENERATED-BUILDER: generated-present-for-bounded-slice - Generated read-model output and scoped validator-backed
   Evidence now exist for the bounded Todo Search slice; CI/full promotion repeatability remains later.
-- RW-ACEP-CLEANUP: deferred-cleanup - ACEP task-card public-doc cleanup remains deferred.
+- RW-EXECUTION-PACK-CLEANUP: deferred-cleanup - Execution pack task-card public-doc cleanup remains deferred.
 
 ## Compatibility Warning Carry-Forward
 
-- CCN-ACEP-TASK-CARD-AUTHORITY-001: Legacy ACEP/task-card wording remains a compatibility warning, not pilot source
+- CCN-EXECUTION-PACK-TASK-CARD-AUTHORITY-001: Legacy Execution pack/task-card wording remains a compatibility warning, not pilot source
   scope.

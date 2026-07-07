@@ -50,7 +50,7 @@
       "retainedWarnings": [
         "bounded fixture Evidence is not a full Todo application implementation",
         "partial UI screenshot/manual visual Evidence remains partial",
-        "ACEP task-card public-doc cleanup remains deferred"
+        "Execution pack task-card public-doc cleanup remains deferred"
       ],
       "fallbackReferences": [
         "tree-native selected-slice artifacts",

@@ -54,7 +54,7 @@
     {
       "id": "acep-public-doc-cleanup",
       "status": "deferred-cleanup",
-      "summary": "ACEP task-card public-doc cleanup remains deferred."
+      "summary": "Execution pack task-card public-doc cleanup remains deferred."
     }
   ],
   "fallbackTriggers": [
