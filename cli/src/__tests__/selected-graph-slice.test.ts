@@ -19,6 +19,20 @@ describe('Selected graph slice generator core', () => {
     })
 
     expect(result.status).toBe('selected-graph-slice-generated')
+    expect(result.viewTreeArtifactRole).toBe('devview-view-tree-preview')
+    expect(result.viewTreeStatus).toBe('devview-view-tree-preview-generated')
+    expect(result.viewTreeKind).toBe('maintainability-graph-derived-task-view-tree')
+    expect(result.viewTreeProjectionSource).toBe('maintainability-graph-derived-selected-graph-slice')
+    expect(result.sourceMaintainabilityGraph).toBe('graph-source.json')
+    expect(result.contextPackBoundary).toMatchObject({
+      contextPackRole: 'bounded-subgraph-package-around-view-tree',
+      contextPackGenerated: false,
+      instructionPackGenerated: false,
+      runtimeEvidenceSatisfied: false,
+      equivalenceProven: false,
+      scopeEnforced: false,
+      ciEnforcementEnabled: false,
+    })
     expect(result.selectedGraphSliceStatus).toBe('generated')
     expect(result.graphTraversalExecuted).toBe(true)
     expect(result.selectedGraphSliceGenerated).toBe(true)
@@ -48,6 +62,8 @@ describe('Selected graph slice generator core', () => {
     )
 
     expect(result.status).toBe('selected-graph-slice-blocked')
+    expect(result.viewTreeArtifactRole).toBe('devview-view-tree-preview')
+    expect(result.viewTreeStatus).toBe('devview-view-tree-preview-blocked')
     expect(result.selectedGraphSliceStatus).toBe('blocked')
     expect(result.graphTraversalExecuted).toBe(false)
     expect(result.selectedGraphSliceGenerated).toBe(false)
@@ -124,12 +140,16 @@ describe('Selected graph slice CLI', () => {
     expect(payload.ok).toBe(true)
     expect(payload.command).toBe('graph read-model select-slice')
     expect(payload.outputPath).toBe(outputPath.replaceAll('\\', '/'))
+    expect(payload.viewTreeArtifactRole).toBe('devview-view-tree-preview')
+    expect(payload.viewTreeStatus).toBe('devview-view-tree-preview-generated')
     expect(payload.selectedGraphSliceGenerated).toBe(true)
     expect(payload.graphTraversalExecuted).toBe(true)
     expect(payload.contractInputGenerated).toBe(false)
     expect(payload.instructionPackGenerated).toBe(false)
     expect(payload.graphSourceMutated).toBe(false)
     expect(written.artifactRole).toBe('selected-graph-slice')
+    expect(written.viewTreeArtifactRole).toBe('devview-view-tree-preview')
+    expect(written.contextPackBoundary.runtimeEvidenceSatisfied).toBe(false)
     expect(written.writtenOutputPath).toBe(outputPath.replaceAll('\\', '/'))
     expect(existsSync(join(workspace, 'graph-source.json'))).toBe(true)
     expect(readFileSync(join(workspace, 'graph-source.json'), 'utf8')).toBe(graphSourceBefore)

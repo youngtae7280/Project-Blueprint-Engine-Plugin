@@ -220,9 +220,9 @@ Commands:
   graph read-model plan-traversal
                        Generate a deterministic Graph Traversal Plan without selected slice output
   graph read-model select-slice
-                       Generate a deterministic Selected Graph Slice without contract input output
+                       Generate a deterministic View Tree preview without contract input output
   graph read-model generate-contract-input
-                       Generate deterministic Contract Compiler Input from a Selected Graph Slice
+                       Generate deterministic Contract Compiler Input from a View Tree preview
   graph read-model generate-instruction-pack
                        Generate deterministic Instruction Pack from Contract Compiler Input without execution
   graph read-model report-project-memory-extension-gaps
@@ -371,7 +371,7 @@ Options:
   --traversal-plan <file>
                        Graph Traversal Plan file for graph read-model select-slice.
   --selected-slice <file>
-                       Selected Graph Slice file for graph read-model generate-contract-input.
+                       View Tree preview file for graph read-model generate-contract-input.
   --contract-input <file>
                        Contract Compiler Input file for graph read-model generate-instruction-pack.
   --scaffold <file>    Hook script scaffold preview for graph read-model generate-hook-script-templates.

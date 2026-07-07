@@ -41,6 +41,10 @@ export interface ContractCompilerInputResult {
   generatorName: typeof GENERATOR_NAME
   generationScope: 'selected-slice-to-contract-input-no-instruction-pack'
   sourceSelectedGraphSlice: string
+  sourceViewTree: string
+  sourceViewTreeArtifactRole: string
+  sourceViewTreeStatus: string
+  sourceMaintainabilityGraph: string
   sourceTraversalPlan: string
   sourceGraphAwareValidation: string
   sourceRequestIrCandidate: string | null
@@ -84,6 +88,7 @@ export interface ContractCompilerInputResult {
     backendInstructionPackGenerated: false
   }
   mappingTrace: JsonRecord[]
+  contextPackBoundary: JsonRecord
   validationFindings: ContractInputGeneratorFinding[]
   contractCompilerReadinessStatus: 'ready' | 'not-ready' | 'review-required' | 'blocked'
   requiresClarification: boolean
@@ -162,9 +167,13 @@ export function generateContractCompilerInput(
   }
 
   const sourceSelectedGraphSlice = context.selectedSlicePath ?? '<in-memory>'
+  const sourceViewTree = sourceSelectedGraphSlice
+  const sourceViewTreeArtifactRole = stringValue(slice?.viewTreeArtifactRole) || 'devview-view-tree-preview'
+  const sourceViewTreeStatus = stringValue(slice?.viewTreeStatus) || 'devview-view-tree-preview-unverified'
   const sourceTraversalPlan = stringValue(slice?.sourceTraversalPlan)
   const sourceGraphAwareValidation = stringValue(slice?.sourceGraphAwareValidation)
   const graphSourcePath = stringValue(slice?.graphSourcePath)
+  const sourceMaintainabilityGraph = stringValue(slice?.sourceMaintainabilityGraph) || graphSourcePath
   const generatedReadModelPath = stringValue(slice?.generatedReadModelPath)
   const sourceRequestIrCandidate = stringValue(graphAwareValidation?.candidatePath) || null
   const fixtureRoot = inferFixtureRoot(sourceSelectedGraphSlice, graphSourcePath)
@@ -252,6 +261,10 @@ export function generateContractCompilerInput(
   }))
   const graphSnapshot = buildGraphSnapshot({
     sourceSelectedGraphSlice,
+    sourceViewTree,
+    sourceViewTreeArtifactRole,
+    sourceViewTreeStatus,
+    sourceMaintainabilityGraph,
     sourceTraversalPlan,
     sourceGraphAwareValidation,
     sourceRequestIrCandidate,
@@ -276,6 +289,13 @@ export function generateContractCompilerInput(
     boundary:
       'This selected-slice frontend input may feed a future contract mapper, but it does not generate instruction packs.',
   }
+  const contextPackBoundary = buildContextPackBoundary({
+    sourceViewTree,
+    sourceViewTreeArtifactRole,
+    sourceViewTreeStatus,
+    sourceMaintainabilityGraph,
+    generatedReadModelPath,
+  })
   const missingRequiredInputGroups = REQUIRED_INPUT_GROUPS.filter((group) => {
     const value = {
       humanRequest,
@@ -306,6 +326,10 @@ export function generateContractCompilerInput(
     generatorName: GENERATOR_NAME,
     generationScope: 'selected-slice-to-contract-input-no-instruction-pack',
     sourceSelectedGraphSlice,
+    sourceViewTree,
+    sourceViewTreeArtifactRole,
+    sourceViewTreeStatus,
+    sourceMaintainabilityGraph,
     sourceTraversalPlan,
     sourceGraphAwareValidation,
     sourceRequestIrCandidate,
@@ -349,6 +373,7 @@ export function generateContractCompilerInput(
       backendInstructionPackGenerated: false,
     },
     mappingTrace,
+    contextPackBoundary,
     validationFindings: findings,
     contractCompilerReadinessStatus: blocked ? 'blocked' : 'ready',
     requiresClarification: blocked,
@@ -577,6 +602,36 @@ function buildPolicySnapshot(forbiddenScope: JsonRecord[]): JsonRecord {
   }
 }
 
+function buildContextPackBoundary(input: {
+  sourceViewTree: string
+  sourceViewTreeArtifactRole: string
+  sourceViewTreeStatus: string
+  sourceMaintainabilityGraph: string
+  generatedReadModelPath: string
+}): JsonRecord {
+  return {
+    artifactRole: 'devview-context-pack-boundary-preview',
+    status: 'devview-context-pack-boundary-previewed',
+    contextPackRole: 'bounded-subgraph-package-around-view-tree',
+    contextPackSource: 'view-tree-selected-nodes-and-edges',
+    sourceViewTree: input.sourceViewTree,
+    sourceViewTreeArtifactRole: input.sourceViewTreeArtifactRole,
+    sourceViewTreeStatus: input.sourceViewTreeStatus,
+    sourceMaintainabilityGraph: input.sourceMaintainabilityGraph,
+    sourceMaintainabilityGraphReadModel: input.generatedReadModelPath,
+    contextPackGenerated: false,
+    instructionPackGenerated: false,
+    graphSourceMutated: false,
+    graphDeltaApplied: false,
+    runtimeEvidenceSatisfied: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+    boundary:
+      'This boundary records Context Pack provenance only: a bounded subgraph package around a graph-derived View Tree. It is not approval, runtime Evidence satisfaction, equivalence proof, enforcement, or graph mutation authority.',
+  }
+}
+
 function buildForbiddenScope(
   graphAwareValidation: JsonRecord | null,
   requestIrCandidate: JsonRecord | null,
@@ -740,6 +795,10 @@ function buildRiskSources(
 
 function buildGraphSnapshot(input: {
   sourceSelectedGraphSlice: string
+  sourceViewTree: string
+  sourceViewTreeArtifactRole: string
+  sourceViewTreeStatus: string
+  sourceMaintainabilityGraph: string
   sourceTraversalPlan: string
   sourceGraphAwareValidation: string
   sourceRequestIrCandidate: string | null
@@ -754,9 +813,15 @@ function buildGraphSnapshot(input: {
     id: 'graph-snapshot-selected-graph-slice-runtime-evidence-only',
     artifacts: [
       {
+        id: 'devview-view-tree',
+        path: input.sourceViewTree,
+        role: input.sourceViewTreeArtifactRole,
+        status: input.sourceViewTreeStatus,
+      },
+      {
         id: 'selected-graph-slice',
         path: input.sourceSelectedGraphSlice,
-        role: 'selected graph slice input',
+        role: 'selected graph slice compatibility input',
       },
       {
         id: 'graph-traversal-plan',
@@ -779,8 +844,8 @@ function buildGraphSnapshot(input: {
         : []),
       {
         id: 'todo-app-graph-source',
-        path: input.graphSourcePath,
-        role: 'graph source authority',
+        path: input.sourceMaintainabilityGraph || input.graphSourcePath,
+        role: 'Maintainability Graph source authority',
       },
       {
         id: 'todo-app-generated-read-model',

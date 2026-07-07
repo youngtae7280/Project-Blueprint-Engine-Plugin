@@ -202,9 +202,15 @@
       "id": "graph-snapshot-selected-graph-slice-runtime-evidence-only",
       "artifacts": [
         {
+          "id": "devview-view-tree",
+          "path": "examples/valid/todo-app-devview-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json",
+          "role": "devview-view-tree-preview",
+          "status": "devview-view-tree-preview-generated"
+        },
+        {
           "id": "selected-graph-slice",
           "path": "examples/valid/todo-app-devview-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json",
-          "role": "selected graph slice input"
+          "role": "selected graph slice compatibility input"
         },
         {
           "id": "graph-traversal-plan",
@@ -224,7 +230,7 @@
         {
           "id": "todo-app-graph-source",
           "path": "examples/valid/todo-app-devview-run/graph-source.json",
-          "role": "graph source authority"
+          "role": "Maintainability Graph source authority"
         },
         {
           "id": "todo-app-generated-read-model",

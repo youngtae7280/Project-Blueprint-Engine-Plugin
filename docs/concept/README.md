@@ -26,7 +26,7 @@ Maintainability Graph
 The current safe MVP has deterministic local surfaces for:
 
 - request intake and candidate validation;
-- View Tree and Context Pack generation;
+- View Tree preview and Context Pack generation;
 - Instruction Pack preview;
 - advisory UserPromptSubmit and Stop/Post Run reports;
 - changed-file collection and non-enforcing scope checks;

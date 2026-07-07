@@ -23,6 +23,20 @@ export interface ContextPackIncludedFile {
 }
 
 export interface ContextPack {
+  schemaVersion: 1
+  artifactRole: 'devview-context-pack-preview'
+  status: 'devview-context-pack-preview-generated'
+  contextPackRole: 'bounded-subgraph-package-around-view-tree'
+  sourceMaintainabilityGraph: 'devview-repo-knowledge-surface'
+  sourceViewTree: 'context-recommendation-view-tree'
+  sourceViewTreeArtifactRole: 'devview-view-tree-preview'
+  contextPackGenerated: true
+  graphSourceMutated: false
+  graphDeltaApplied: false
+  runtimeEvidenceSatisfied: false
+  equivalenceProven: false
+  scopeEnforced: false
+  ciEnforcementEnabled: false
   recommendation: ContextRecommendation
   includedFiles: ContextPackIncludedFile[]
   suggestedGateAssessment: SuggestedGateAssessment
@@ -62,6 +76,20 @@ export function createContextPack(input: ContextPackInput): ContextPack {
   }
 
   return {
+    schemaVersion: 1,
+    artifactRole: 'devview-context-pack-preview',
+    status: 'devview-context-pack-preview-generated',
+    contextPackRole: 'bounded-subgraph-package-around-view-tree',
+    sourceMaintainabilityGraph: 'devview-repo-knowledge-surface',
+    sourceViewTree: 'context-recommendation-view-tree',
+    sourceViewTreeArtifactRole: 'devview-view-tree-preview',
+    contextPackGenerated: true,
+    graphSourceMutated: false,
+    graphDeltaApplied: false,
+    runtimeEvidenceSatisfied: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
     recommendation,
     includedFiles,
     suggestedGateAssessment,

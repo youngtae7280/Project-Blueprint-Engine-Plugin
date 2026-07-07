@@ -3,6 +3,8 @@ import { readJsonSafe, relativePath, writeJsonAtomic } from './fs.js'
 import type { IssueSeverity } from './types.js'
 
 const SELECTOR_NAME = 'SelectedGraphSliceGenerator'
+const VIEW_TREE_ARTIFACT_ROLE = 'devview-view-tree-preview'
+const VIEW_TREE_KIND = 'maintainability-graph-derived-task-view-tree'
 
 type JsonRecord = Record<string, unknown>
 
@@ -68,6 +70,26 @@ export interface SelectedGraphSliceResult {
   schemaVersion: 1
   artifactRole: 'selected-graph-slice'
   status: 'selected-graph-slice-generated' | 'selected-graph-slice-blocked' | 'selected-graph-slice-incomplete'
+  viewTreeArtifactRole: typeof VIEW_TREE_ARTIFACT_ROLE
+  viewTreeStatus:
+    | 'devview-view-tree-preview-generated'
+    | 'devview-view-tree-preview-blocked'
+    | 'devview-view-tree-preview-incomplete'
+  viewTreeId: string
+  viewTreeKind: typeof VIEW_TREE_KIND
+  viewTreeProjectionSource: 'maintainability-graph-derived-selected-graph-slice'
+  sourceMaintainabilityGraph: string
+  sourceMaintainabilityGraphReadModel: string
+  contextPackBoundary: {
+    contextPackRole: 'bounded-subgraph-package-around-view-tree'
+    contextPackGenerated: false
+    contextPackSource: 'view-tree-selected-nodes-and-edges'
+    instructionPackGenerated: false
+    runtimeEvidenceSatisfied: false
+    equivalenceProven: false
+    scopeEnforced: false
+    ciEnforcementEnabled: false
+  }
   selectorName: typeof SELECTOR_NAME
   selectionScope: 'deterministic-selected-slice-no-contract-input'
   sourceTraversalPlan: string
@@ -409,12 +431,34 @@ export function generateSelectedGraphSlice(
     : incomplete
       ? 'selected-graph-slice-incomplete'
       : 'selected-graph-slice-generated'
+  const viewTreeStatus = blocked
+    ? 'devview-view-tree-preview-blocked'
+    : incomplete
+      ? 'devview-view-tree-preview-incomplete'
+      : 'devview-view-tree-preview-generated'
   const sliceCompletenessStatus = blocked ? 'blocked' : incomplete ? 'incomplete' : 'complete'
 
   return {
     schemaVersion: 1,
     artifactRole: 'selected-graph-slice',
     status,
+    viewTreeArtifactRole: VIEW_TREE_ARTIFACT_ROLE,
+    viewTreeStatus,
+    viewTreeId: 'devview-view-tree-add-todo-runtime-evidence-only',
+    viewTreeKind: VIEW_TREE_KIND,
+    viewTreeProjectionSource: 'maintainability-graph-derived-selected-graph-slice',
+    sourceMaintainabilityGraph: graphSourcePath,
+    sourceMaintainabilityGraphReadModel: generatedReadModelPath,
+    contextPackBoundary: {
+      contextPackRole: 'bounded-subgraph-package-around-view-tree',
+      contextPackGenerated: false,
+      contextPackSource: 'view-tree-selected-nodes-and-edges',
+      instructionPackGenerated: false,
+      runtimeEvidenceSatisfied: false,
+      equivalenceProven: false,
+      scopeEnforced: false,
+      ciEnforcementEnabled: false,
+    },
     selectorName: SELECTOR_NAME,
     selectionScope: 'deterministic-selected-slice-no-contract-input',
     sourceTraversalPlan: paths.traversalPlanPath ?? '<in-memory>',

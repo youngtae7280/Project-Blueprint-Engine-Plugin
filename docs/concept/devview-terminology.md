@@ -28,10 +28,17 @@ The View Tree is not legacy tree-native storage. It is a graph-derived view for 
 View Tree can narrow context, but it does not replace the Maintainability Graph and does not grant authority to mutate
 it.
 
+The current CLI transition surface is `graph read-model select-slice`. Its stored compatibility artifact role remains
+`selected-graph-slice`, but generated artifacts now carry `viewTreeArtifactRole: devview-view-tree-preview` and should
+be treated as View Tree previews.
+
 ## Context Pack
 
 A Context Pack is a bounded subgraph package around the View Tree. It contains the selected goal, scope, relevant graph
 records, constraints, forbidden scope, evidence requirements, and stop conditions needed by a worker or Codex session.
+
+The current Context Pack surfaces are preview-only. They may package repository guidance or graph-derived View Tree
+provenance, but they do not execute work and do not create approval or enforcement authority.
 
 Context Packs are reviewable inputs. They are not approval, runtime Evidence satisfaction, equivalence proof, scope
 enforcement, or graph mutation permission.

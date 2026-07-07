@@ -29,6 +29,27 @@ describe('Contract compiler input generator core', () => {
     expect(result.equivalenceProven).toBe(false)
     expect(result.runtimeEvidenceSatisfied).toBe(false)
     expect(result.scopeEnforced).toBe(false)
+    expect(result.sourceViewTree).toBe('selected-graph-slice.json')
+    expect(result.sourceViewTreeArtifactRole).toBe('devview-view-tree-preview')
+    expect(result.sourceViewTreeStatus).toBe('devview-view-tree-preview-generated')
+    expect(result.sourceMaintainabilityGraph).toBe('examples/valid/todo-app-devview-run/graph-source.json')
+    expect(result.contextPackBoundary).toMatchObject({
+      artifactRole: 'devview-context-pack-boundary-preview',
+      contextPackRole: 'bounded-subgraph-package-around-view-tree',
+      contextPackGenerated: false,
+      instructionPackGenerated: false,
+      runtimeEvidenceSatisfied: false,
+      equivalenceProven: false,
+      scopeEnforced: false,
+      ciEnforcementEnabled: false,
+    })
+    expect(result.graphSnapshot.artifacts as unknown[]).toContainEqual(
+      expect.objectContaining({
+        id: 'devview-view-tree',
+        role: 'devview-view-tree-preview',
+        status: 'devview-view-tree-preview-generated',
+      }),
+    )
     expect(result.targetScopeCandidates.map((entry) => entry.id)).toEqual([
       'scope-ch-001',
       'scope-wt-1',
@@ -203,6 +224,9 @@ function validSelectedSlice(): Record<string, unknown> {
     schemaVersion: 1,
     artifactRole: 'selected-graph-slice',
     status: 'selected-graph-slice-generated',
+    viewTreeArtifactRole: 'devview-view-tree-preview',
+    viewTreeStatus: 'devview-view-tree-preview-generated',
+    sourceMaintainabilityGraph: 'examples/valid/todo-app-devview-run/graph-source.json',
     sourceTraversalPlan: 'graph-traversal-plan.json',
     sourceGraphAwareValidation: 'request-ir-graph-validation.json',
     graphSourcePath: 'examples/valid/todo-app-devview-run/graph-source.json',

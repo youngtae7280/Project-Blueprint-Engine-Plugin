@@ -2428,8 +2428,8 @@ export async function graphReadModelSelectSliceCommand(context: CommandContext):
       command: 'graph read-model select-slice',
       exitCode: blocked ? ExitCode.ValidationFailed : ExitCode.Success,
       message: blocked
-        ? 'Selected graph slice generation did not produce a generated selected slice.'
-        : 'Selected graph slice generated without contract input or instruction pack output.',
+        ? 'View Tree preview generation did not produce a generated graph-derived view.'
+        : 'View Tree preview generated without contract input or instruction pack output.',
       issues: blocked
         ? (errorFindings.length > 0 ? errorFindings : slice.result.validationFindings).map((finding) =>
             issue({
@@ -2440,7 +2440,7 @@ export async function graphReadModelSelectSliceCommand(context: CommandContext):
               reason: finding.field ? `Field: ${finding.field}` : undefined,
               suggestedFix:
                 finding.suggestedFix ??
-                'Fix the traversal plan or graph/read-model authority before selecting a graph slice.',
+                'Fix the traversal plan or graph/read-model authority before generating a View Tree preview.',
             }),
           )
         : [],
@@ -2458,7 +2458,7 @@ export async function graphReadModelSelectSliceCommand(context: CommandContext):
       ok: false,
       command: 'graph read-model select-slice',
       exitCode: ExitCode.ValidationFailed,
-      message: 'Selected graph slice generation could not run.',
+      message: 'View Tree preview generation could not run.',
       issues: [
         issue({
           validator: 'SelectedGraphSliceGenerator',
@@ -2466,7 +2466,7 @@ export async function graphReadModelSelectSliceCommand(context: CommandContext):
           severity: 'error',
           message,
           suggestedFix:
-            'Provide a readable ready Graph Traversal Plan artifact. Slice selection does not generate contract input or instruction packs.',
+            'Provide a readable ready Graph Traversal Plan artifact. View Tree preview generation does not generate contract input or instruction packs.',
         }),
       ],
     }
@@ -2502,7 +2502,7 @@ export async function graphReadModelGenerateContractInputCommand(context: Comman
               reason: finding.field ? `Field: ${finding.field}` : undefined,
               suggestedFix:
                 finding.suggestedFix ??
-                'Fix the selected graph slice prerequisites before mapping Contract Compiler Input.',
+                'Fix the View Tree preview prerequisites before mapping Contract Compiler Input.',
             }),
           )
         : [],
