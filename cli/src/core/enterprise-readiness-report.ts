@@ -24,6 +24,9 @@ const RELEASE_SURFACE_STATUSES = [
 ] as const
 const PROVIDER_NETWORK_POLICY_ROLE = 'devview-provider-network-default-deny-policy-report'
 const PROVIDER_NETWORK_POLICY_STATUS = 'devview-provider-network-default-deny-policy-recorded'
+const PROVIDER_ACTIVATION_AUTHORIZATION_READINESS_ROLE = 'devview-provider-activation-authorization-readiness-report'
+const PROVIDER_ACTIVATION_AUTHORIZATION_READINESS_STATUS =
+  'devview-provider-activation-authorization-readiness-reported'
 const RECORD_ENVELOPE_PREVIEW_ROLE = 'devview-record-envelope-preview'
 const RECORD_ENVELOPE_PREVIEW_STATUS = 'devview-record-envelope-previewed'
 const RECORD_ENVELOPE_PREVIEW_SIGNATURE_MODE = 'unsigned-deterministic-preview'
@@ -157,10 +160,38 @@ const ciBranchActivationAuthorityFields = [
   ...releaseProvenanceAuthorityFields,
 ]
 
+const providerActivationAuthorizationAuthorityFields = [
+  'providerGrantPresent',
+  'providerGrantVerified',
+  'providerAllowlistActive',
+  'networkAllowlistActive',
+  'explicitAllowSupported',
+  'providerCredentialsRead',
+  'providerCredentialsStored',
+  'signedPolicyPresent',
+  'signedPolicyVerified',
+  'signedPolicyArtifactPresent',
+  ...signingReadinessAuthorityFields,
+  ...releaseProvenanceAuthorityFields,
+]
+
+const providerActivationAuthorizationAllowlistFields = [
+  'providerAllowlist',
+  'networkAllowlist',
+  'apiAllowlist',
+  'allowedProviders',
+  'allowedNetworkHosts',
+  'allowedApiEndpoints',
+  'providerGrants',
+  'networkGrants',
+  'apiGrants',
+]
+
 export interface EnterpriseReadinessReportOptions {
   benchmarkGovernanceVerification?: string
   releaseSurfaceValidation?: string
   providerNetworkPolicyReport?: string
+  providerActivationAuthorizationReadiness?: string
   recordEnvelopePreview?: string
   recordEnvelopeVerification?: string
   signingReadiness?: string
@@ -223,6 +254,33 @@ export interface EnterpriseReadinessReport {
     futureAllowRequirementCount: number | null
     blockedCapabilityCount: number | null
   }
+  sourceProviderActivationAuthorizationReadinessReports: Array<{
+    supplied: true
+    path: string
+    artifactRole: string | null
+    status: string | null
+    authorizationReadinessStatus: string | null
+    providerDefaultDenyLinked: boolean | null
+    defaultProviderPolicy: string | null
+    defaultNetworkPolicy: string | null
+    providerGrantPresent: boolean | null
+    providerGrantVerified: boolean | null
+    providerAllowlistActive: boolean | null
+    networkAllowlistActive: boolean | null
+    explicitAllowSupported: boolean | null
+    providerInvoked: boolean | null
+    networkCallMade: boolean | null
+    apiCallMade: boolean | null
+    signedPolicyPresent: boolean | null
+    cryptographicSignatureVerified: boolean | null
+    keyRegistryPresent: boolean | null
+    trustRootPresent: boolean | null
+    rbacEnforced: boolean | null
+    permissionVerified: boolean | null
+    futureProviderGrantRequirementCount: number | null
+    findingCount: number | null
+    downstreamActionCount: number | null
+  }>
   sourceRecordEnvelopePreviews: Array<{
     supplied: true
     path: string
@@ -751,6 +809,28 @@ export interface EnterpriseReadinessReport {
     networkAllowlistEmpty: boolean | null
     futureAllowRequirementCount: number | null
     blockedCapabilityCount: number | null
+    providerActivationAuthorizationReadinessSourceCount: number
+    providerActivationAuthorizationReadinessSourceStatuses: string[]
+    providerAuthorizationReadinessStatuses: string[]
+    providerDefaultDenyLinkedCount: number
+    providerGrantPresentCount: number
+    providerGrantVerifiedCount: number
+    providerAllowlistActiveCount: number
+    networkAllowlistActiveCount: number
+    explicitAllowSupportedCount: number
+    providerInvokedCount: number
+    networkCallMadeCount: number
+    apiCallMadeCount: number
+    signedPolicyPresentCount: number
+    signedPolicyVerifiedCount: number
+    cryptographicSignatureVerifiedCount: number
+    keyRegistryPresentCount: number
+    trustRootPresentCount: number
+    rbacEnforcedCount: number
+    permissionVerifiedCount: number
+    futureProviderGrantRequirementCount: number
+    providerActivationAuthorizationFindingCount: number
+    providerActivationAuthorizationDownstreamActionCount: number
     gaps: string[]
   }
   scopeCiGovernanceReadiness: {
@@ -921,6 +1001,7 @@ interface LoadedSource {
     | 'benchmark-governance-verification'
     | 'release-surface-validation'
     | 'provider-network-policy-report'
+    | 'provider-activation-authorization-readiness-report'
     | 'record-envelope-preview'
     | 'record-envelope-verification'
     | 'signing-readiness-report'
@@ -955,6 +1036,7 @@ export async function reportEnterpriseReadiness(
   validateRequiredOptions(options)
   const recordEnvelopePreviewPaths = parseList(options.recordEnvelopePreview)
   const recordEnvelopeVerificationPaths = parseList(options.recordEnvelopeVerification)
+  const providerActivationAuthorizationReadinessPaths = parseList(options.providerActivationAuthorizationReadiness)
   const signingReadinessPaths = parseList(options.signingReadiness)
   const rbacPolicyValidationPaths = parseList(options.rbacPolicyValidation)
   const releaseProvenanceReadinessPaths = parseList(options.releaseProvenanceReadiness)
@@ -971,6 +1053,7 @@ export async function reportEnterpriseReadiness(
     options.benchmarkGovernanceVerification,
     options.releaseSurfaceValidation,
     options.providerNetworkPolicyReport,
+    ...providerActivationAuthorizationReadinessPaths,
     ...recordEnvelopePreviewPaths,
     ...recordEnvelopeVerificationPaths,
     ...signingReadinessPaths,
@@ -1001,6 +1084,11 @@ export async function reportEnterpriseReadiness(
   const providerNetworkPolicy = options.providerNetworkPolicyReport
     ? await loadSource(root, options.providerNetworkPolicyReport, 'provider-network-policy-report')
     : null
+  const providerActivationAuthorizationReadinessReports = await Promise.all(
+    providerActivationAuthorizationReadinessPaths.map((entry) =>
+      loadSource(root, entry, 'provider-activation-authorization-readiness-report'),
+    ),
+  )
   const recordEnvelopePreviews = await Promise.all(
     recordEnvelopePreviewPaths.map((entry) => loadSource(root, entry, 'record-envelope-preview')),
   )
@@ -1053,6 +1141,7 @@ export async function reportEnterpriseReadiness(
     benchmarkGovernance,
     releaseSurface,
     providerNetworkPolicy,
+    providerActivationAuthorizationReadinessReports,
     recordEnvelopePreviews,
     recordEnvelopeVerifications,
     signingReadinessReports,
@@ -1074,6 +1163,7 @@ export async function reportEnterpriseReadiness(
         benchmarkGovernance,
         releaseSurface,
         providerNetworkPolicy,
+        providerActivationAuthorizationReadinessReports,
         recordEnvelopePreviews,
         recordEnvelopeVerifications,
         signingReadinessReports,
@@ -1098,6 +1188,7 @@ export async function reportEnterpriseReadiness(
     benchmarkGovernance,
     releaseSurface,
     providerNetworkPolicy,
+    providerActivationAuthorizationReadinessReports,
     recordEnvelopePreviews,
     recordEnvelopeVerifications,
     signingReadinessReports,
@@ -1116,6 +1207,7 @@ export async function reportEnterpriseReadiness(
       benchmarkGovernance,
       releaseSurface,
       providerNetworkPolicy,
+      providerActivationAuthorizationReadinessReports,
       recordEnvelopePreviews,
       recordEnvelopeVerifications,
       signingReadinessReports,
@@ -1148,6 +1240,7 @@ function buildReport(
   benchmarkGovernance: LoadedSource | null,
   releaseSurface: LoadedSource | null,
   providerNetworkPolicy: LoadedSource | null,
+  providerActivationAuthorizationReadinessReports: LoadedSource[],
   recordEnvelopePreviews: LoadedSource[],
   recordEnvelopeVerifications: LoadedSource[],
   signingReadinessReports: LoadedSource[],
@@ -1168,6 +1261,9 @@ function buildReport(
   const benchmarkRecord = benchmarkGovernance?.record ?? null
   const releaseRecord = releaseSurface?.record ?? null
   const providerNetworkRecord = providerNetworkPolicy?.record ?? null
+  const providerActivationAuthorizationReadinessRecords = providerActivationAuthorizationReadinessReports
+    .map((entry) => entry.record)
+    .filter(isJsonRecord)
   const recordEnvelopeRecords = recordEnvelopePreviews.map((entry) => entry.record).filter(isJsonRecord)
   const recordEnvelopeVerificationRecords = recordEnvelopeVerifications
     .map((entry) => entry.record)
@@ -1244,6 +1340,9 @@ function buildReport(
       futureAllowRequirementCount: arrayLength(providerNetworkRecord?.futureAllowPolicyRequirements),
       blockedCapabilityCount: arrayLength(providerNetworkRecord?.blockedCapabilities),
     },
+    sourceProviderActivationAuthorizationReadinessReports: providerActivationAuthorizationReadinessReports.map(
+      (source) => providerActivationAuthorizationReadinessSummary(source),
+    ),
     sourceRecordEnvelopePreviews: recordEnvelopePreviews.map((source) => recordEnvelopeSummary(source)),
     sourceRecordEnvelopeVerifications: recordEnvelopeVerifications.map((source) =>
       recordEnvelopeVerificationSummary(source),
@@ -1649,7 +1748,102 @@ function buildReport(
       networkAllowlistEmpty: providerNetworkRecord ? arrayLength(providerNetworkRecord.networkAllowlist) === 0 : null,
       futureAllowRequirementCount: arrayLength(providerNetworkRecord?.futureAllowPolicyRequirements),
       blockedCapabilityCount: arrayLength(providerNetworkRecord?.blockedCapabilities),
-      gaps: providerNetworkPolicyGaps(providerNetworkRecord),
+      providerActivationAuthorizationReadinessSourceCount: providerActivationAuthorizationReadinessRecords.length,
+      providerActivationAuthorizationReadinessSourceStatuses: uniqueStrings(
+        providerActivationAuthorizationReadinessRecords.map((record) => stringValue(record.status)),
+      ),
+      providerAuthorizationReadinessStatuses: uniqueStrings(
+        providerActivationAuthorizationReadinessRecords.map((record) =>
+          stringValue(record.authorizationReadinessStatus),
+        ),
+      ),
+      providerDefaultDenyLinkedCount: providerActivationAuthorizationReadinessRecords.filter((record) =>
+        booleanValue(asRecord(record.sourceProviderNetworkPolicy)?.supplied),
+      ).length,
+      providerGrantPresentCount: providerActivationAuthorizationReadinessRecords.filter(
+        (record) =>
+          booleanValue(asRecord(record.providerAuthorizationBoundary)?.providerGrantPresent) ||
+          booleanValue(record.providerGrantPresent),
+      ).length,
+      providerGrantVerifiedCount: providerActivationAuthorizationReadinessRecords.filter(
+        (record) =>
+          booleanValue(asRecord(record.providerAuthorizationBoundary)?.providerGrantVerified) ||
+          booleanValue(record.providerGrantVerified),
+      ).length,
+      providerAllowlistActiveCount: providerActivationAuthorizationReadinessRecords.filter(
+        (record) =>
+          booleanValue(asRecord(record.providerAuthorizationBoundary)?.providerAllowlistActive) ||
+          booleanValue(record.providerAllowlistActive),
+      ).length,
+      networkAllowlistActiveCount: providerActivationAuthorizationReadinessRecords.filter(
+        (record) =>
+          booleanValue(asRecord(record.providerAuthorizationBoundary)?.networkAllowlistActive) ||
+          booleanValue(record.networkAllowlistActive),
+      ).length,
+      explicitAllowSupportedCount: providerActivationAuthorizationReadinessRecords.filter(
+        (record) =>
+          booleanValue(asRecord(record.providerAuthorizationBoundary)?.explicitAllowSupported) ||
+          booleanValue(asRecord(record.sourceProviderNetworkPolicy)?.explicitAllowSupported) ||
+          booleanValue(record.explicitAllowSupported),
+      ).length,
+      providerInvokedCount: providerActivationAuthorizationReadinessRecords.filter(
+        (record) =>
+          booleanValue(asRecord(record.providerAuthorizationBoundary)?.providerInvoked) ||
+          booleanValue(record.providerInvoked),
+      ).length,
+      networkCallMadeCount: providerActivationAuthorizationReadinessRecords.filter(
+        (record) =>
+          booleanValue(asRecord(record.providerAuthorizationBoundary)?.networkCallMade) ||
+          booleanValue(record.networkCallMade),
+      ).length,
+      apiCallMadeCount: providerActivationAuthorizationReadinessRecords.filter(
+        (record) =>
+          booleanValue(asRecord(record.providerAuthorizationBoundary)?.apiCallMade) || booleanValue(record.apiCallMade),
+      ).length,
+      signedPolicyPresentCount: providerActivationAuthorizationReadinessRecords.filter(
+        (record) =>
+          booleanValue(asRecord(record.signedPolicyPrerequisites)?.signedPolicyPresent) ||
+          booleanValue(record.signedPolicyPresent),
+      ).length,
+      signedPolicyVerifiedCount: providerActivationAuthorizationReadinessRecords.filter(
+        (record) =>
+          booleanValue(asRecord(record.signedPolicyPrerequisites)?.signedPolicyVerified) ||
+          booleanValue(record.signedPolicyVerified),
+      ).length,
+      cryptographicSignatureVerifiedCount: providerActivationAuthorizationReadinessRecords.filter(
+        (record) =>
+          booleanValue(asRecord(record.signedPolicyPrerequisites)?.cryptographicSignatureVerified) ||
+          booleanValue(record.cryptographicSignatureVerified),
+      ).length,
+      keyRegistryPresentCount: providerActivationAuthorizationReadinessRecords.filter((record) =>
+        booleanValue(asRecord(record.signedPolicyPrerequisites)?.keyRegistryPresent),
+      ).length,
+      trustRootPresentCount: providerActivationAuthorizationReadinessRecords.filter((record) =>
+        booleanValue(asRecord(record.signedPolicyPrerequisites)?.trustRootPresent),
+      ).length,
+      rbacEnforcedCount: providerActivationAuthorizationReadinessRecords.filter(
+        (record) =>
+          booleanValue(asRecord(record.actorAuthorizationPrerequisites)?.rbacEnforced) ||
+          booleanValue(record.rbacEnforced),
+      ).length,
+      permissionVerifiedCount: providerActivationAuthorizationReadinessRecords.filter(
+        (record) =>
+          booleanValue(asRecord(record.actorAuthorizationPrerequisites)?.permissionVerified) ||
+          booleanValue(record.permissionVerified),
+      ).length,
+      futureProviderGrantRequirementCount: providerActivationAuthorizationReadinessRecords.reduce(
+        (total, record) => total + (arrayLength(record.futureProviderGrantRequirements) ?? 0),
+        0,
+      ),
+      providerActivationAuthorizationFindingCount: providerActivationAuthorizationReadinessRecords.reduce(
+        (total, record) => total + (arrayLength(record.authorizationFindings) ?? 0),
+        0,
+      ),
+      providerActivationAuthorizationDownstreamActionCount: providerActivationAuthorizationReadinessRecords.reduce(
+        (total, record) => total + (arrayLength(record.downstreamActionPlan) ?? 0),
+        0,
+      ),
+      gaps: providerNetworkPolicyGaps(providerNetworkRecord, providerActivationAuthorizationReadinessRecords),
     },
     scopeCiGovernanceReadiness: {
       status:
@@ -2192,6 +2386,7 @@ function validateSources(
   benchmarkGovernance: LoadedSource | null,
   releaseSurface: LoadedSource | null,
   providerNetworkPolicy: LoadedSource | null,
+  providerActivationAuthorizationReadinessReports: LoadedSource[],
   recordEnvelopePreviews: LoadedSource[],
   recordEnvelopeVerifications: LoadedSource[],
   signingReadinessReports: LoadedSource[],
@@ -2212,6 +2407,7 @@ function validateSources(
     benchmarkGovernance,
     releaseSurface,
     providerNetworkPolicy,
+    ...providerActivationAuthorizationReadinessReports,
     ...recordEnvelopePreviews,
     ...recordEnvelopeVerifications,
     ...signingReadinessReports,
@@ -2260,6 +2456,8 @@ function validateSources(
       }
     } else if (source.sourceKind === 'provider-network-policy-report') {
       validateProviderNetworkPolicySource(source, record, findings)
+    } else if (source.sourceKind === 'provider-activation-authorization-readiness-report') {
+      validateProviderActivationAuthorizationReadinessSource(source, record, findings)
     } else if (source.sourceKind === 'record-envelope-preview') {
       validateRecordEnvelopePreviewSource(source, record, findings)
     } else if (source.sourceKind === 'record-envelope-verification') {
@@ -2306,6 +2504,7 @@ function buildFindings(
   benchmarkGovernance: LoadedSource | null,
   releaseSurface: LoadedSource | null,
   providerNetworkPolicy: LoadedSource | null,
+  providerActivationAuthorizationReadinessReports: LoadedSource[],
   recordEnvelopePreviews: LoadedSource[],
   recordEnvelopeVerifications: LoadedSource[],
   signingReadinessReports: LoadedSource[],
@@ -2325,6 +2524,9 @@ function buildFindings(
   const benchmarkRecord = benchmarkGovernance?.record ?? null
   const releaseRecord = releaseSurface?.record ?? null
   const providerNetworkRecord = providerNetworkPolicy?.record ?? null
+  const providerActivationAuthorizationReadinessRecords = providerActivationAuthorizationReadinessReports
+    .map((entry) => entry.record)
+    .filter(isJsonRecord)
   const recordEnvelopeRecords = recordEnvelopePreviews.map((entry) => entry.record).filter(isJsonRecord)
   const recordEnvelopeVerificationRecords = recordEnvelopeVerifications
     .map((entry) => entry.record)
@@ -2426,6 +2628,23 @@ function buildFindings(
         field: 'futureAllowPolicyRequirements',
       })
     }
+  }
+
+  if (providerActivationAuthorizationReadinessRecords.length === 0) {
+    findings.push({
+      severity: 'gap',
+      code: 'ENTERPRISE_PROVIDER_ACTIVATION_AUTHORIZATION_READINESS_NOT_SUPPLIED',
+      message:
+        'Provider activation authorization readiness report was not supplied; provider grant/signed policy/RBAC prerequisite visibility is not source-governed.',
+    })
+  } else {
+    findings.push({
+      severity: 'satisfied',
+      code: 'ENTERPRISE_PROVIDER_ACTIVATION_AUTHORIZATION_READINESS_RECORDED',
+      message:
+        'Provider activation authorization readiness source is recorded as prerequisite visibility, not as provider authorization, provider grant, allowlist activation, provider/API calls, signing, or RBAC enforcement.',
+      path: providerActivationAuthorizationReadinessReports[0]?.relativePath,
+    })
   }
 
   if (recordEnvelopeRecords.length === 0) {
@@ -2748,6 +2967,56 @@ function validateProviderNetworkPolicySource(
         ),
       )
     }
+  }
+}
+
+function validateProviderActivationAuthorizationReadinessSource(
+  source: LoadedSource,
+  record: JsonRecord,
+  findings: EnterpriseReadinessFinding[],
+): void {
+  if (
+    record.artifactRole !== PROVIDER_ACTIVATION_AUTHORIZATION_READINESS_ROLE ||
+    record.status !== PROVIDER_ACTIVATION_AUTHORIZATION_READINESS_STATUS
+  ) {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_PROVIDER_ACTIVATION_AUTHORIZATION_SOURCE_ROLE_STATUS_INVALID',
+        `${source.relativePath} must be ${PROVIDER_ACTIVATION_AUTHORIZATION_READINESS_ROLE} with reported status.`,
+        source.relativePath,
+      ),
+    )
+  }
+  const providerBoundary = asRecord(record.providerAuthorizationBoundary)
+  if (providerBoundary?.defaultProviderPolicy !== 'deny' || providerBoundary?.defaultNetworkPolicy !== 'deny') {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_PROVIDER_ACTIVATION_AUTHORIZATION_DEFAULT_DENY_REQUIRED',
+        `${source.relativePath} must keep provider activation authorization defaults deny.`,
+        source.relativePath,
+        'providerAuthorizationBoundary',
+      ),
+    )
+  }
+  for (const hit of collectTrueFieldHits(record, providerActivationAuthorizationAuthorityFields)) {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_PROVIDER_ACTIVATION_AUTHORIZATION_AUTHORITY_CLAIM_UNSUPPORTED',
+        `${source.relativePath} claims provider activation authorization field ${hit.field}: true; enterprise v1 only accepts prerequisite visibility facts.`,
+        source.relativePath,
+        hit.field,
+      ),
+    )
+  }
+  for (const hit of collectNonEmptyFieldHits(record, providerActivationAuthorizationAllowlistFields)) {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_PROVIDER_ACTIVATION_AUTHORIZATION_ALLOWLIST_UNSUPPORTED',
+        `${source.relativePath} has non-empty ${hit.field}; provider/network/API grants remain future-only.`,
+        source.relativePath,
+        hit.field,
+      ),
+    )
   }
 }
 
@@ -3369,6 +3638,7 @@ function renderMarkdown(report: EnterpriseReadinessReport): string {
     `- benchmarkGovernance: ${report.benchmarkGovernanceReadiness.status}`,
     `- releaseSurface: ${report.releaseSurfaceReadiness.status}`,
     `- providerNetworkPolicy: ${report.providerNetworkPolicyReadiness.status}`,
+    `- providerActivationAuthorizationReadinessReports: ${report.providerNetworkPolicyReadiness.providerActivationAuthorizationReadinessSourceCount}`,
     `- rbacAndSigning: ${report.rbacAndSigningReadiness.status}`,
     `- recordEnvelopePreviews: ${report.auditAndTamperEvidenceReadiness.envelopePreviewCount}`,
     `- recordEnvelopeVerifications: ${report.auditAndTamperEvidenceReadiness.envelopeVerificationCount}`,
@@ -3433,12 +3703,25 @@ function benchmarkGovernanceGaps(record: JsonRecord | null): string[] {
   return gaps
 }
 
-function providerNetworkPolicyGaps(record: JsonRecord | null): string[] {
-  if (!record) return ['Provider/network default-deny policy report is not supplied.']
-  return [
+function providerNetworkPolicyGaps(
+  record: JsonRecord | null,
+  providerActivationAuthorizationRecords: JsonRecord[],
+): string[] {
+  const gaps: string[] = []
+  if (!record) gaps.push('Provider/network default-deny policy report is not supplied.')
+  if (providerActivationAuthorizationRecords.length === 0) {
+    gaps.push('Provider activation authorization readiness report is not supplied.')
+  } else {
+    gaps.push(
+      'Provider activation authorization readiness is prerequisite visibility only and does not grant provider/API authority.',
+    )
+  }
+  gaps.push(
     'Provider/network audit enforcement is not activated.',
     'Signed policy, RBAC, sandboxing, and provider isolation remain future requirements before any allow policy.',
-  ]
+    'Provider grants, provider/network allowlists, provider/API calls, key trust, and RBAC enforcement remain absent.',
+  )
+  return gaps
 }
 
 function releaseProvenanceReadinessGaps(records: JsonRecord[]): string[] {
@@ -3787,6 +4070,43 @@ function auditAndTamperEvidenceGaps(
     gaps.unshift('Record envelope verification is unsigned deterministic digest verification only.')
   }
   return gaps
+}
+
+function providerActivationAuthorizationReadinessSummary(
+  source: LoadedSource,
+): EnterpriseReadinessReport['sourceProviderActivationAuthorizationReadinessReports'][number] {
+  const record = source.record ?? {}
+  const providerBoundary = asRecord(record.providerAuthorizationBoundary)
+  const providerSource = asRecord(record.sourceProviderNetworkPolicy)
+  const signedPolicy = asRecord(record.signedPolicyPrerequisites)
+  const actor = asRecord(record.actorAuthorizationPrerequisites)
+  return {
+    supplied: true,
+    path: source.relativePath,
+    artifactRole: stringValue(record.artifactRole),
+    status: stringValue(record.status),
+    authorizationReadinessStatus: stringValue(record.authorizationReadinessStatus),
+    providerDefaultDenyLinked: booleanOrNull(providerSource?.supplied),
+    defaultProviderPolicy: stringValue(providerBoundary?.defaultProviderPolicy),
+    defaultNetworkPolicy: stringValue(providerBoundary?.defaultNetworkPolicy),
+    providerGrantPresent: booleanOrNull(providerBoundary?.providerGrantPresent),
+    providerGrantVerified: booleanOrNull(providerBoundary?.providerGrantVerified),
+    providerAllowlistActive: booleanOrNull(providerBoundary?.providerAllowlistActive),
+    networkAllowlistActive: booleanOrNull(providerBoundary?.networkAllowlistActive),
+    explicitAllowSupported: booleanOrNull(providerBoundary?.explicitAllowSupported),
+    providerInvoked: booleanOrNull(providerBoundary?.providerInvoked),
+    networkCallMade: booleanOrNull(providerBoundary?.networkCallMade),
+    apiCallMade: booleanOrNull(providerBoundary?.apiCallMade),
+    signedPolicyPresent: booleanOrNull(signedPolicy?.signedPolicyPresent),
+    cryptographicSignatureVerified: booleanOrNull(signedPolicy?.cryptographicSignatureVerified),
+    keyRegistryPresent: booleanOrNull(signedPolicy?.keyRegistryPresent),
+    trustRootPresent: booleanOrNull(signedPolicy?.trustRootPresent),
+    rbacEnforced: booleanOrNull(actor?.rbacEnforced),
+    permissionVerified: booleanOrNull(actor?.permissionVerified),
+    futureProviderGrantRequirementCount: arrayLength(record.futureProviderGrantRequirements),
+    findingCount: arrayLength(record.authorizationFindings),
+    downstreamActionCount: arrayLength(record.downstreamActionPlan),
+  }
 }
 
 function recordEnvelopeSummary(
@@ -4345,6 +4665,9 @@ function downstreamActionPlan(findings: EnterpriseReadinessFinding[]): string[] 
   if (openFindings.some((entry) => entry.code.includes('PROVIDER_NETWORK'))) {
     actions.add('Attach a provider/network default-deny policy report before enterprise release review.')
   }
+  if (openFindings.some((entry) => entry.code.includes('PROVIDER_ACTIVATION_AUTHORIZATION'))) {
+    actions.add('Attach provider activation authorization readiness before planning provider grant policy validation.')
+  }
   if (openFindings.some((entry) => entry.code.includes('RELEASE_PROVENANCE'))) {
     actions.add('Attach release provenance readiness and plan real SBOM/signing/provenance only behind governance.')
   }
@@ -4435,6 +4758,37 @@ function collectTrueFieldHits(
     hits.push(...collectTrueFieldHits(entry, fieldNames, nextPath, seen))
   }
   return hits
+}
+
+function collectNonEmptyFieldHits(
+  value: unknown,
+  fieldNames: string[],
+  pathParts: string[] = [],
+  seen = new Set<unknown>(),
+): Array<{ field: string }> {
+  if (typeof value !== 'object' || value === null || seen.has(value)) return []
+  seen.add(value)
+  if (Array.isArray(value)) {
+    return value.flatMap((entry, index) =>
+      collectNonEmptyFieldHits(entry, fieldNames, [...pathParts, String(index)], seen),
+    )
+  }
+  const record = value as JsonRecord
+  const hits: Array<{ field: string }> = []
+  for (const [key, entry] of Object.entries(record)) {
+    const nextPath = [...pathParts, key]
+    if (fieldNames.includes(key) && hasValue(entry)) {
+      hits.push({ field: nextPath.join('.') })
+    }
+    hits.push(...collectNonEmptyFieldHits(entry, fieldNames, nextPath, seen))
+  }
+  return hits
+}
+
+function hasValue(value: unknown): boolean {
+  if (Array.isArray(value)) return value.length > 0
+  if (isJsonRecord(value)) return Object.keys(value).length > 0
+  return value !== null && value !== undefined && value !== false && value !== ''
 }
 
 function isSourceAuthorityShapedPath(filePath: string): boolean {

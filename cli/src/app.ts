@@ -260,6 +260,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     benchmarkGovernanceVerification: undefined as string | undefined,
     releaseSurfaceValidation: undefined as string | undefined,
     providerNetworkPolicyReport: undefined as string | undefined,
+    providerActivationAuthorizationReadiness: undefined as string | undefined,
     sbom: undefined as string | undefined,
     attestation: undefined as string | undefined,
     packageArtifact: undefined as string | undefined,
@@ -1420,6 +1421,15 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--provider-network-policy-report requires a file path.' }
       }
       options.providerNetworkPolicyReport = value
+      index += 1
+    } else if (arg === '--provider-activation-authorization-readiness') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--provider-activation-authorization-readiness requires one or more file paths.' }
+      }
+      options.providerActivationAuthorizationReadiness = options.providerActivationAuthorizationReadiness
+        ? `${options.providerActivationAuthorizationReadiness},${value}`
+        : value
       index += 1
     } else if (arg === '--sbom') {
       const value = argv[index + 1]

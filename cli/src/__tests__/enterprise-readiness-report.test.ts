@@ -108,6 +108,241 @@ describe('security report-enterprise-readiness CLI', () => {
     expectSafetyFalse(payload)
   })
 
+  it('summarizes provider activation authorization readiness without treating it as provider authority', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, '.tmp/provider-network-policy-report.json'), providerNetworkPolicyReport())
+    writeJson(
+      join(workspace, '.tmp/provider-activation-authorization-readiness.json'),
+      providerActivationAuthorizationReadinessReport(),
+    )
+
+    const result = await runDevViewCli(
+      [
+        'security',
+        'report-enterprise-readiness',
+        '--provider-network-policy-report',
+        '.tmp/provider-network-policy-report.json',
+        '--provider-activation-authorization-readiness',
+        '.tmp/provider-activation-authorization-readiness.json',
+        '--output',
+        '.tmp/enterprise-readiness.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.readinessLevel).toBe('not-ready')
+    expect(payload.sourceProviderActivationAuthorizationReadinessReports).toHaveLength(1)
+    expect(payload.sourceProviderActivationAuthorizationReadinessReports[0]).toEqual(
+      expect.objectContaining({
+        path: '.tmp/provider-activation-authorization-readiness.json',
+        artifactRole: 'devview-provider-activation-authorization-readiness-report',
+        status: 'devview-provider-activation-authorization-readiness-reported',
+        authorizationReadinessStatus: 'not-ready-provider-grant-signed-policy-rbac-missing',
+        providerDefaultDenyLinked: true,
+        defaultProviderPolicy: 'deny',
+        defaultNetworkPolicy: 'deny',
+        providerGrantPresent: false,
+        providerGrantVerified: false,
+        providerAllowlistActive: false,
+        networkAllowlistActive: false,
+        explicitAllowSupported: false,
+        providerInvoked: false,
+        networkCallMade: false,
+        apiCallMade: false,
+        signedPolicyPresent: false,
+        cryptographicSignatureVerified: false,
+        keyRegistryPresent: false,
+        trustRootPresent: false,
+        rbacEnforced: false,
+        permissionVerified: false,
+        futureProviderGrantRequirementCount: 8,
+        findingCount: 2,
+        downstreamActionCount: 2,
+      }),
+    )
+    expect(payload.providerNetworkPolicyReadiness.providerActivationAuthorizationReadinessSourceCount).toBe(1)
+    expect(payload.providerNetworkPolicyReadiness.providerActivationAuthorizationReadinessSourceStatuses).toEqual([
+      'devview-provider-activation-authorization-readiness-reported',
+    ])
+    expect(payload.providerNetworkPolicyReadiness.providerAuthorizationReadinessStatuses).toEqual([
+      'not-ready-provider-grant-signed-policy-rbac-missing',
+    ])
+    expect(payload.providerNetworkPolicyReadiness.providerDefaultDenyLinkedCount).toBe(1)
+    expect(payload.providerNetworkPolicyReadiness.providerGrantPresentCount).toBe(0)
+    expect(payload.providerNetworkPolicyReadiness.providerGrantVerifiedCount).toBe(0)
+    expect(payload.providerNetworkPolicyReadiness.providerAllowlistActiveCount).toBe(0)
+    expect(payload.providerNetworkPolicyReadiness.networkAllowlistActiveCount).toBe(0)
+    expect(payload.providerNetworkPolicyReadiness.explicitAllowSupportedCount).toBe(0)
+    expect(payload.providerNetworkPolicyReadiness.providerInvokedCount).toBe(0)
+    expect(payload.providerNetworkPolicyReadiness.networkCallMadeCount).toBe(0)
+    expect(payload.providerNetworkPolicyReadiness.apiCallMadeCount).toBe(0)
+    expect(payload.providerNetworkPolicyReadiness.signedPolicyPresentCount).toBe(0)
+    expect(payload.providerNetworkPolicyReadiness.signedPolicyVerifiedCount).toBe(0)
+    expect(payload.providerNetworkPolicyReadiness.cryptographicSignatureVerifiedCount).toBe(0)
+    expect(payload.providerNetworkPolicyReadiness.keyRegistryPresentCount).toBe(0)
+    expect(payload.providerNetworkPolicyReadiness.trustRootPresentCount).toBe(0)
+    expect(payload.providerNetworkPolicyReadiness.rbacEnforcedCount).toBe(0)
+    expect(payload.providerNetworkPolicyReadiness.permissionVerifiedCount).toBe(0)
+    expect(payload.providerNetworkPolicyReadiness.futureProviderGrantRequirementCount).toBe(8)
+    expect(payload.providerNetworkPolicyReadiness.providerActivationAuthorizationFindingCount).toBe(2)
+    expect(payload.providerNetworkPolicyReadiness.providerActivationAuthorizationDownstreamActionCount).toBe(2)
+    expect(payload.enterpriseReadinessFindings.map((entry: { code: string }) => entry.code)).toEqual(
+      expect.arrayContaining([
+        'ENTERPRISE_PROVIDER_ACTIVATION_AUTHORIZATION_READINESS_RECORDED',
+        'ENTERPRISE_PROVIDER_NETWORK_POLICY_DEFAULT_DENY_RECORDED',
+        'ENTERPRISE_RBAC_SIGNING_MISSING',
+      ]),
+    )
+    expect(payload.enterpriseReadinessFindings.map((entry: { code: string }) => entry.code)).not.toContain(
+      'ENTERPRISE_PROVIDER_ACTIVATION_AUTHORIZATION_READINESS_NOT_SUPPLIED',
+    )
+    expectSafetyFalse(payload)
+  })
+
+  it('blocks invalid or authority-claiming provider activation authorization readiness sources with zero writes', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, '.tmp/wrong-provider-activation-authorization-readiness.json'), {
+      ...providerActivationAuthorizationReadinessReport(),
+      status: 'wrong',
+    })
+    writeJson(join(workspace, '.tmp/provider-grant-activation-authorization-readiness.json'), {
+      ...providerActivationAuthorizationReadinessReport(),
+      providerAuthorizationBoundary: {
+        ...(providerActivationAuthorizationReadinessReport().providerAuthorizationBoundary as Record<string, unknown>),
+        providerGrantPresent: true,
+      },
+    })
+    writeJson(join(workspace, '.tmp/allowlist-activation-authorization-readiness.json'), {
+      ...providerActivationAuthorizationReadinessReport(),
+      providerAuthorizationBoundary: {
+        ...(providerActivationAuthorizationReadinessReport().providerAuthorizationBoundary as Record<string, unknown>),
+        providerAllowlistActive: true,
+      },
+    })
+    writeJson(join(workspace, '.tmp/provider-call-activation-authorization-readiness.json'), {
+      ...providerActivationAuthorizationReadinessReport(),
+      providerInvoked: true,
+    })
+    writeJson(join(workspace, '.tmp/rbac-activation-authorization-readiness.json'), {
+      ...providerActivationAuthorizationReadinessReport(),
+      actorAuthorizationPrerequisites: {
+        ...(providerActivationAuthorizationReadinessReport().actorAuthorizationPrerequisites as Record<
+          string,
+          unknown
+        >),
+        rbacEnforced: true,
+      },
+    })
+    writeJson(join(workspace, '.tmp/signing-activation-authorization-readiness.json'), {
+      ...providerActivationAuthorizationReadinessReport(),
+      signedPolicyPrerequisites: {
+        ...(providerActivationAuthorizationReadinessReport().signedPolicyPrerequisites as Record<string, unknown>),
+        cryptographicSignatureVerified: true,
+      },
+    })
+    writeJson(join(workspace, '.tmp/key-activation-authorization-readiness.json'), {
+      ...providerActivationAuthorizationReadinessReport(),
+      signedPolicyPrerequisites: {
+        ...(providerActivationAuthorizationReadinessReport().signedPolicyPrerequisites as Record<string, unknown>),
+        keyRegistryPresent: true,
+      },
+    })
+    writeJson(join(workspace, '.tmp/branch-activation-authorization-readiness.json'), {
+      ...providerActivationAuthorizationReadinessReport(),
+      branchProtectionMutated: true,
+    })
+    writeJson(join(workspace, '.tmp/grants-activation-authorization-readiness.json'), {
+      ...providerActivationAuthorizationReadinessReport(),
+      providerGrants: [{ provider: 'github' }],
+    })
+
+    const wrong = await runEnterpriseWithProviderActivationAuthorizationReadiness(
+      workspace,
+      '.tmp/wrong-provider-activation-authorization-readiness.json',
+      '.tmp/wrong-provider-activation-authorization-enterprise.json',
+    )
+    const providerGrant = await runEnterpriseWithProviderActivationAuthorizationReadiness(
+      workspace,
+      '.tmp/provider-grant-activation-authorization-readiness.json',
+      '.tmp/provider-grant-activation-authorization-enterprise.json',
+    )
+    const allowlist = await runEnterpriseWithProviderActivationAuthorizationReadiness(
+      workspace,
+      '.tmp/allowlist-activation-authorization-readiness.json',
+      '.tmp/allowlist-activation-authorization-enterprise.json',
+    )
+    const providerCall = await runEnterpriseWithProviderActivationAuthorizationReadiness(
+      workspace,
+      '.tmp/provider-call-activation-authorization-readiness.json',
+      '.tmp/provider-call-activation-authorization-enterprise.json',
+    )
+    const rbac = await runEnterpriseWithProviderActivationAuthorizationReadiness(
+      workspace,
+      '.tmp/rbac-activation-authorization-readiness.json',
+      '.tmp/rbac-activation-authorization-enterprise.json',
+    )
+    const signing = await runEnterpriseWithProviderActivationAuthorizationReadiness(
+      workspace,
+      '.tmp/signing-activation-authorization-readiness.json',
+      '.tmp/signing-activation-authorization-enterprise.json',
+    )
+    const key = await runEnterpriseWithProviderActivationAuthorizationReadiness(
+      workspace,
+      '.tmp/key-activation-authorization-readiness.json',
+      '.tmp/key-activation-authorization-enterprise.json',
+    )
+    const branch = await runEnterpriseWithProviderActivationAuthorizationReadiness(
+      workspace,
+      '.tmp/branch-activation-authorization-readiness.json',
+      '.tmp/branch-activation-authorization-enterprise.json',
+    )
+    const grants = await runEnterpriseWithProviderActivationAuthorizationReadiness(
+      workspace,
+      '.tmp/grants-activation-authorization-readiness.json',
+      '.tmp/grants-activation-authorization-enterprise.json',
+    )
+
+    expect(wrong.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(wrong.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_PROVIDER_ACTIVATION_AUTHORIZATION_SOURCE_ROLE_STATUS_INVALID',
+    )
+    expect(existsSync(join(workspace, '.tmp/wrong-provider-activation-authorization-enterprise.json'))).toBe(false)
+
+    for (const [result, output] of [
+      [providerGrant, '.tmp/provider-grant-activation-authorization-enterprise.json'],
+      [allowlist, '.tmp/allowlist-activation-authorization-enterprise.json'],
+      [rbac, '.tmp/rbac-activation-authorization-enterprise.json'],
+      [signing, '.tmp/signing-activation-authorization-enterprise.json'],
+      [key, '.tmp/key-activation-authorization-enterprise.json'],
+    ] as const) {
+      expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+      expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+        'ENTERPRISE_READINESS_PROVIDER_ACTIVATION_AUTHORIZATION_AUTHORITY_CLAIM_UNSUPPORTED',
+      )
+      expect(existsSync(join(workspace, output))).toBe(false)
+    }
+
+    for (const [result, output] of [
+      [providerCall, '.tmp/provider-call-activation-authorization-enterprise.json'],
+      [branch, '.tmp/branch-activation-authorization-enterprise.json'],
+    ] as const) {
+      expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+      expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+        'ENTERPRISE_READINESS_UNSAFE_SOURCE_AUTHORITY_FLAG',
+      )
+      expect(existsSync(join(workspace, output))).toBe(false)
+    }
+
+    expect(grants.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(grants.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_PROVIDER_ACTIVATION_AUTHORIZATION_ALLOWLIST_UNSUPPORTED',
+    )
+    expect(existsSync(join(workspace, '.tmp/grants-activation-authorization-enterprise.json'))).toBe(false)
+  })
+
   it('summarizes unsigned record envelope preview as audit/tamper source fact without enterprise-ready claims', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, '.tmp/benchmark-governance.json'), benchmarkGovernanceReport())
@@ -2782,6 +3017,160 @@ function providerNetworkPolicyReport(overrides: Record<string, unknown> = {}): R
   }
 }
 
+function providerActivationAuthorizationReadinessReport(
+  overrides: Record<string, unknown> = {},
+): Record<string, unknown> {
+  return {
+    schemaVersion: 1,
+    artifactRole: 'devview-provider-activation-authorization-readiness-report',
+    status: 'devview-provider-activation-authorization-readiness-reported',
+    readinessScope: 'provider-activation-authorization-readiness-report-only',
+    sourceFactsOnly: true,
+    reportOnly: true,
+    authorizationReadinessStatus: 'not-ready-provider-grant-signed-policy-rbac-missing',
+    sourceProviderNetworkPolicy: {
+      supplied: true,
+      path: '.tmp/provider-network-policy-report.json',
+      artifactRole: 'devview-provider-network-default-deny-policy-report',
+      status: 'devview-provider-network-default-deny-policy-recorded',
+      defaultProviderPolicy: 'deny',
+      defaultNetworkPolicy: 'deny',
+      providerAllowlistCount: 0,
+      networkAllowlistCount: 0,
+      explicitAllowSupported: false,
+    },
+    providerAuthorizationBoundary: {
+      defaultProviderPolicy: 'deny',
+      defaultNetworkPolicy: 'deny',
+      providerGrantPresent: false,
+      providerGrantVerified: false,
+      providerAllowlistActive: false,
+      networkAllowlistActive: false,
+      explicitAllowSupported: false,
+      providerInvoked: false,
+      networkCallMade: false,
+      apiCallMade: false,
+      providerCredentialsRead: false,
+      providerCredentialsStored: false,
+    },
+    futureProviderGrantRequirements: [
+      'future grant artifact role devview-provider-activation-grant-policy',
+      'signed policy and signed record envelope',
+      'actor identity with RBAC role verification',
+      'explicit provider/project/repository/branch/check scope',
+      'explicit API operation allow scope',
+      'TTL, expiry, and revocation metadata',
+      'audit review record',
+      'provider sandbox/isolation and no-network default',
+    ],
+    actorAuthorizationPrerequisites: {
+      requiredRoles: ['security-admin', 'maintainer', 'auditor', 'provider-network-policy-maintainer'],
+      futurePermissions: [
+        'provider-network.policy.allow',
+        'provider-network.grant.review',
+        'ci-branch.activation.authorize',
+        'audit.verify',
+      ],
+      rbacPolicyValidationLinked: false,
+      rbacEnforced: false,
+      permissionVerified: false,
+    },
+    signedPolicyPrerequisites: {
+      signingReadinessLinked: false,
+      signedPolicyPresent: false,
+      signedPolicyVerified: false,
+      cryptographicSignatureVerified: false,
+      keyRegistryPresent: false,
+      trustRootPresent: false,
+    },
+    providerIsolationReadiness: {
+      providerNetworkPolicyLinked: true,
+      noNetworkDefaultRecorded: true,
+      providerIsolationPolicyPresent: false,
+      providerSandboxPolicyPresent: false,
+      providerCredentialsRead: false,
+      providerCredentialsStored: false,
+    },
+    sourceArtifactDigests: [
+      {
+        path: '.tmp/provider-network-policy-report.json',
+        sourceKind: 'provider-network-policy-report',
+        artifactRole: 'devview-provider-network-default-deny-policy-report',
+        status: 'devview-provider-network-default-deny-policy-recorded',
+        sha256: 'a'.repeat(64),
+        byteLength: 123,
+      },
+    ],
+    authorizationFindings: [
+      {
+        severity: 'gap',
+        code: 'PROVIDER_ACTIVATION_AUTHORIZATION_PROVIDER_GRANT_NOT_PRESENT',
+        message: 'Provider grant is not present.',
+      },
+      {
+        severity: 'gap',
+        code: 'PROVIDER_ACTIVATION_AUTHORIZATION_SIGNED_POLICY_NOT_PRESENT',
+        message: 'Signed provider activation policy is not present.',
+      },
+    ],
+    downstreamActionPlan: [
+      'Integrate provider activation authorization readiness into enterprise readiness as a source fact.',
+      'Define provider grant policy validation before any provider/API activation request artifact.',
+    ],
+    enterpriseGateActivated: false,
+    providerInvoked: false,
+    networkCallMade: false,
+    apiCallMade: false,
+    providerAllowlistActive: false,
+    networkAllowlistActive: false,
+    providerGrantPresent: false,
+    providerGrantVerified: false,
+    providerCredentialsRead: false,
+    providerCredentialsStored: false,
+    githubMutated: false,
+    githubWorkflowMutated: false,
+    branchProtectionChanged: false,
+    branchProtectionMutated: false,
+    requiredChecksConfigured: false,
+    requiredChecksMutated: false,
+    externalCiMutated: false,
+    hooksActivated: false,
+    rbacEnforced: false,
+    permissionVerified: false,
+    rbacPermissionVerified: false,
+    cryptographicSignaturePresent: false,
+    cryptographicSignatureVerified: false,
+    keyGenerated: false,
+    privateKeyStored: false,
+    keyRegistryCreated: false,
+    trustRootCreated: false,
+    shellCommandsExecuted: false,
+    extensionExecutionAllowed: false,
+    extensionsExecuted: false,
+    packagePublished: false,
+    packageArtifactGeneratedByDevView: false,
+    packageArtifactGenerated: false,
+    packageTarballGenerated: false,
+    packageSigned: false,
+    sbomGeneratedByDevView: false,
+    sbomGenerated: false,
+    sbomAttested: false,
+    provenanceAttestationGenerated: false,
+    provenanceAttestationVerified: false,
+    provenanceAttested: false,
+    graphSourceMutated: false,
+    graphDeltaApplied: false,
+    runtimeEvidenceSatisfied: false,
+    evidenceAccepted: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+    approvalAutomationEnabled: false,
+    userAcceptanceAutomated: false,
+    ...overrides,
+  }
+}
+
 function recordEnvelopePreview(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
     schemaVersion: 1,
@@ -4570,6 +4959,25 @@ function runEnterpriseWithProvider(workspace: string, providerReport: string, ou
       'report-enterprise-readiness',
       '--provider-network-policy-report',
       providerReport,
+      '--output',
+      output,
+      '--json',
+    ],
+    { cwd: workspace, pluginRoot },
+  )
+}
+
+function runEnterpriseWithProviderActivationAuthorizationReadiness(
+  workspace: string,
+  providerActivationAuthorizationReadiness: string,
+  output: string,
+) {
+  return runDevViewCli(
+    [
+      'security',
+      'report-enterprise-readiness',
+      '--provider-activation-authorization-readiness',
+      providerActivationAuthorizationReadiness,
       '--output',
       output,
       '--json',

@@ -451,6 +451,8 @@ Options:
                        Enterprise readiness source for security report-provider-network-policy, report-provider-activation-authorization-readiness, report-signing-readiness, or report-release-provenance.
   --provider-network-policy-report <file>
                        Provider/network default-deny policy report for security report-enterprise-readiness, report-provider-activation-authorization-readiness, report-provenance-verification-readiness, report-ci-branch-governance-readiness, validate-ci-branch-policy, plan-ci-branch-activation, or report-ci-branch-activation-authority-readiness.
+  --provider-activation-authorization-readiness <file>
+                       Provider activation authorization readiness report for security report-enterprise-readiness; repeat or comma-separate for multiples where supported.
   --release-surface-validation <file>
                        Release surface validation report for security report-ci-branch-governance-readiness, record-package-provenance-inputs, record-package-artifact-digest, or plan-ci-branch-activation.
   --record-envelope-preview <file>

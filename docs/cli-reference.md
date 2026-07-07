@@ -207,6 +207,7 @@ devview security report-enterprise-readiness \
   --benchmark-governance-verification <benchmark-governance-verification.json> \
   --release-surface-validation <release-surface-validation.json> \
   --provider-network-policy-report <provider-network-policy-report.json> \
+  --provider-activation-authorization-readiness <provider-activation-authorization-readiness.json> \
   --record-envelope-preview <record-envelope-preview.json> \
   --record-envelope-verification <record-envelope-verification.json> \
   --signing-readiness <signing-readiness.json> \
@@ -227,16 +228,17 @@ devview security report-enterprise-readiness \
 ```
 
 Aggregates enterprise hardening posture into a report-only readiness assessment. The report carries benchmark governance
-release-surface validation, provider/network default-deny policy reports, unsigned record envelope previews, record
-envelope verification reports, signing/key governance readiness reports, RBAC policy validation reports, and release
-provenance/SBOM readiness reports, structural SBOM validation reports, package provenance inputs records, package
-artifact digest records, provenance attestation validation reports, provenance verification readiness reports, and
-CI/branch governance readiness, CI/branch policy validation, CI/branch activation plan, and CI/branch activation
-authority readiness reports as source facts, then lists remaining enterprise gaps for extension execution policy,
-guarded graph update governance, Scope/CI activation governance, RBAC, signing, audit, release provenance, and
-tamper-evidence. `--record-envelope-preview`, `--record-envelope-verification`, `--signing-readiness`,
-`--rbac-policy-validation`, `--release-provenance-readiness`, `--sbom-validation`, `--package-provenance-inputs`,
-`--package-artifact-digest`, `--provenance-attestation-validation`, and `--provenance-verification-readiness`, and
+release-surface validation, provider/network default-deny policy reports, provider activation authorization readiness
+reports, unsigned record envelope previews, record envelope verification reports, signing/key governance readiness
+reports, RBAC policy validation reports, and release provenance/SBOM readiness reports, structural SBOM validation
+reports, package provenance inputs records, package artifact digest records, provenance attestation validation reports,
+provenance verification readiness reports, and CI/branch governance readiness, CI/branch policy validation, CI/branch
+activation plan, and CI/branch activation authority readiness reports as source facts, then lists remaining enterprise
+gaps for extension execution policy, guarded graph update governance, Scope/CI activation governance, RBAC, signing,
+audit, release provenance, and tamper-evidence. `--record-envelope-preview`, `--record-envelope-verification`,
+`--signing-readiness`, `--provider-activation-authorization-readiness`, `--rbac-policy-validation`,
+`--release-provenance-readiness`, `--sbom-validation`, `--package-provenance-inputs`, `--package-artifact-digest`,
+`--provenance-attestation-validation`, and `--provenance-verification-readiness`, and
 `--ci-branch-governance-readiness`, `--ci-branch-policy-validation`, `--ci-branch-activation-plan`, and
 `--ci-branch-activation-authority-readiness` may be repeated or comma-separated. Envelope previews record unsigned
 payload/source digest intent; envelope verification reports show those digests were independently recomputed; signing
@@ -252,12 +254,14 @@ inventory, candidate checks, and missing required-checks/branch-protection/provi
 policy validation reports summarize report-only desired required-checks and branch-protection policy validation without
 configuration or mutation; CI/branch activation plan reports summarize future-only activation sequencing without
 external activation; CI/branch activation authority readiness reports summarize missing signed policy, provider grant,
-and RBAC authority prerequisites without granting authority. The report still does not claim package generation, SBOM
-generation, SBOM attestation, vulnerability/license approval, package signing, provenance attestation generation,
-provenance attestation verification, cryptographic signing, key management, RBAC enforcement, permission verification,
-external CI activation, required check configuration, branch protection mutation, or hook activation. It does not
-activate enterprise gates, execute extensions, call providers, make network calls, mutate graph-source, configure CI,
-activate hooks, or automate approval.
+and RBAC authority prerequisites without granting authority; provider activation authorization readiness reports
+summarize missing provider grant, allowlist activation, signed policy, key trust, and RBAC prerequisites without
+provider authorization or provider/API activation. The report still does not claim package generation, SBOM generation,
+SBOM attestation, vulnerability/license approval, package signing, provenance attestation generation, provenance
+attestation verification, cryptographic signing, key management, RBAC enforcement, permission verification, external CI
+activation, required check configuration, branch protection mutation, or hook activation. It does not activate
+enterprise gates, execute extensions, call providers, make network calls, mutate graph-source, configure CI, activate
+hooks, or automate approval.
 
 ### Release Provenance / SBOM Readiness
 
