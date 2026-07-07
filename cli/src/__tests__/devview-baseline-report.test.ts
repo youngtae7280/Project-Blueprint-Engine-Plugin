@@ -43,6 +43,7 @@ describe('DevView core baseline freeze report CLI', () => {
     expect(payload.sourceExtensionReadiness).toBe('generated/extension-readiness.json')
     expect(payload.sourceExtensionProfileCatalog).toBe('generated/extension-profile-catalog.json')
     expect(payload.sourceExtensionContextPlan).toBe('generated/extension-context-plan.json')
+    expect(payload.sourceExtensionAdapterCompatibilityReport).toBe('generated/extension-adapter-compatibility.json')
     expect(payload.sourceEvidenceDecision).toBe('generated/evidence-decision.json')
     expect(payload.sourceAcceptedEvidence).toBe('generated/accepted-evidence.json')
     expect(payload.sourceRuntimeEvidenceSatisfactionReadiness).toBe(
@@ -64,6 +65,7 @@ describe('DevView core baseline freeze report CLI', () => {
         ['extension-readiness', 'advisory'],
         ['extension-profile-catalog', 'advisory'],
         ['extension-context-plan', 'advisory'],
+        ['extension-adapter-compatibility-report', 'advisory'],
         ['evidence-decision', 'completed'],
         ['accepted-evidence', 'completed'],
         ['runtime-evidence-satisfaction-readiness', 'blocked'],
@@ -120,6 +122,31 @@ describe('DevView core baseline freeze report CLI', () => {
     )
     expect(
       payload.sourceArtifacts.find(
+        (entry: { sourceId: string }) => entry.sourceId === 'extension-adapter-compatibility-report',
+      ).sourceFactSummary,
+    ).toEqual(
+      expect.objectContaining({
+        adapterCompatibilityStatus: 'validated-report-only-compatibility',
+        compatibilityScope: 'extension-adapter-compatibility-report-only',
+        evidenceAdapterCompatibilityStatus: 'compatible',
+        evidenceAdapterCount: 1,
+        policyExtensionCompatibilityStatus: 'compatible',
+        policyExtensionCount: 1,
+        proofLifecycleCompatibilityStatus: 'compatible',
+        readinessSourceComparisonCount: 3,
+        graphIngestionCandidateCount: 1,
+        nativeRetrofitHintStatus: 'profile-mode-declared',
+        downstreamActionCount: 3,
+        adapterExecuted: false,
+        policyEnforced: false,
+        runtimeEvidenceSatisfied: false,
+        equivalenceProven: false,
+        scopeEnforced: false,
+        ciEnforcementEnabled: false,
+      }),
+    )
+    expect(
+      payload.sourceArtifacts.find(
         (entry: { sourceId: string }) => entry.sourceId === 'guarded-graph-update-apply-plan',
       ).sourceFactSummary,
     ).toEqual(
@@ -169,7 +196,7 @@ describe('DevView core baseline freeze report CLI', () => {
     )
     expect(
       payload.sourceArtifacts.filter((entry: { readStatus: string }) => entry.readStatus === 'missing-optional'),
-    ).toHaveLength(19)
+    ).toHaveLength(20)
     expectSafetyFalse(payload.safetyInvariantSummary)
   })
 
@@ -231,6 +258,40 @@ describe('DevView core baseline freeze report CLI', () => {
 
     expect(result.exitCode).toBe(ExitCode.ValidationFailed)
     expect(payload.issues[0].message).toContain('EXTENSION_CONTEXT_PLAN_ROLE_STATUS_INVALID')
+    expect(existsSync(join(workspace, '.tmp/baseline.json'))).toBe(false)
+  })
+
+  it('blocks wrong extension adapter compatibility report role/status with authority flags as zero-write', async () => {
+    const workspace = createWorkspace()
+    writeBaselineInputs(workspace)
+    writeJson(join(workspace, 'generated/not-extension-adapter-compatibility.json'), {
+      artifactRole: 'devview-extension-context-plan',
+      status: 'devview-extension-context-plan-generated',
+      adapterExecuted: true,
+      policyEnforced: true,
+      providerInvoked: true,
+      networkCallMade: true,
+      shellCommandsExecuted: true,
+      runtimeEvidenceSatisfied: true,
+      equivalenceProven: true,
+      scopeEnforced: true,
+      graphSourceMutated: true,
+    })
+
+    const result = await runDevViewCli(
+      [
+        ...baseArgs(),
+        '--extension-adapter-compatibility-report',
+        'generated/not-extension-adapter-compatibility.json',
+        '--output',
+        '.tmp/baseline.json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues[0].message).toContain('EXTENSION_ADAPTER_COMPATIBILITY_ROLE_STATUS_INVALID')
     expect(existsSync(join(workspace, '.tmp/baseline.json'))).toBe(false)
   })
 
@@ -582,6 +643,8 @@ function baseArgs(): string[] {
     'generated/extension-profile-catalog.json',
     '--extension-context-plan',
     'generated/extension-context-plan.json',
+    '--extension-adapter-compatibility-report',
+    'generated/extension-adapter-compatibility.json',
     '--apply-readiness',
     'generated/apply-readiness.json',
     '--approved-apply-dry-run',
@@ -669,6 +732,7 @@ function writeBaselineInputs(
   })
   writeJson(join(workspace, 'generated/extension-profile-catalog.json'), extensionProfileCatalog())
   writeJson(join(workspace, 'generated/extension-context-plan.json'), extensionContextPlan())
+  writeJson(join(workspace, 'generated/extension-adapter-compatibility.json'), extensionAdapterCompatibilityReport())
   writeJson(join(workspace, 'generated/apply-readiness.json'), readiness('devview-graph-delta-apply-readiness-preview'))
   writeJson(join(workspace, 'generated/approved-apply-dry-run.json'), {
     artifactRole: 'devview-approved-apply-dry-run-report',
@@ -932,6 +996,113 @@ function extensionContextPlan(
     ],
     extensionExecutionAllowed: false,
     extensionsExecuted: false,
+    providerInvoked: false,
+    networkCallMade: false,
+    shellCommandsExecuted: false,
+    filesMutated: false,
+    graphSourceMutated: false,
+    graphDeltaApplied: false,
+    runtimeEvidenceSatisfied: false,
+    evidenceAccepted: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+    hooksActivated: false,
+    branchProtectionChanged: false,
+    branchProtectionMutated: false,
+    requiredChecksConfigured: false,
+    requiredChecksMutated: false,
+    externalCiMutated: false,
+    diffRejectionEnabled: false,
+    diffRejectionActivated: false,
+    approvalAutomationEnabled: false,
+    userAcceptanceAutomated: false,
+    traversalAuthorityGranted: false,
+    viewTreeMutated: false,
+    contextPackMutated: false,
+  }
+}
+
+function extensionAdapterCompatibilityReport(
+  status:
+    | 'devview-extension-adapter-compatibility-validated'
+    | 'devview-extension-adapter-compatibility-blocked' = 'devview-extension-adapter-compatibility-validated',
+): Record<string, unknown> {
+  return {
+    artifactRole: 'devview-extension-adapter-compatibility-report',
+    status,
+    compatibilityScope: 'extension-adapter-compatibility-report-only',
+    adapterCompatibilityStatus:
+      status === 'devview-extension-adapter-compatibility-validated'
+        ? 'validated-report-only-compatibility'
+        : 'blocked-source-chain-mismatch',
+    sourceExtensionProfileCatalog: 'generated/extension-profile-catalog.json',
+    sourceExtensionContextPlan: 'generated/extension-context-plan.json',
+    evidenceAdapterCompatibility: {
+      compatibilityStatus: 'compatible',
+      extensionIds: ['todo-evidence-adapter'],
+      sourceReadinessStatus: 'devview-runtime-evidence-satisfaction-readiness-blocked',
+      requiredMappingId: 'required-evidence-1',
+      adapterExecuted: false,
+      runtimeEvidenceSatisfied: false,
+      equivalenceProven: false,
+      scopeEnforced: false,
+      ciEnforcementEnabled: false,
+      authorityStatus: 'source-fact-only-not-lifecycle-authority',
+    },
+    policyExtensionCompatibility: {
+      compatibilityStatus: 'compatible',
+      extensionIds: ['todo-policy-extension'],
+      sourceReadinessStatus: 'devview-scope-ci-enforcement-readiness-blocked',
+      requiredMappingId: 'scope-ci-policy',
+      policyEnforced: false,
+      runtimeEvidenceSatisfied: false,
+      equivalenceProven: false,
+      scopeEnforced: false,
+      ciEnforcementEnabled: false,
+      authorityStatus: 'source-fact-only-not-lifecycle-authority',
+    },
+    proofLifecycleCompatibility: {
+      compatibilityStatus: 'compatible',
+      extensionIds: ['todo-evidence-adapter'],
+      sourceReadinessStatus: 'devview-equivalence-proof-readiness-blocked',
+      requiredMappingId: 'equivalence-proof',
+      runtimeEvidenceSatisfied: false,
+      equivalenceProven: false,
+      scopeEnforced: false,
+      ciEnforcementEnabled: false,
+      authorityStatus: 'source-fact-only-not-lifecycle-authority',
+    },
+    readinessSourceComparisons: {
+      runtimeEvidence: { comparisonStatus: 'source-summarized-only' },
+      equivalenceProof: { comparisonStatus: 'source-summarized-only' },
+      scopeCi: { comparisonStatus: 'source-summarized-only' },
+    },
+    graphIngestionPlanningContext: {
+      candidateCount: 1,
+      graphifyCandidateCount: 1,
+      protocolStatus: 'protocol-only-not-executed',
+      providerInvoked: false,
+      networkCallMade: false,
+      shellCommandsExecuted: false,
+      executionAllowed: false,
+    },
+    nativeRetrofitAdapterHints: {
+      mode: 'native',
+      hintStatus: 'profile-mode-declared',
+      nativeSignals: ['native'],
+      retrofitSignals: [],
+      adapterRelevanceStatus: 'native-retrofit-adapter-hints-available',
+    },
+    downstreamActionPlan: [
+      { actionId: 'connect-evidence-adapter-validation' },
+      { actionId: 'connect-policy-extension-validation' },
+      { actionId: 'plan-native-retrofit-evidence-adapters' },
+    ],
+    extensionExecutionAllowed: false,
+    extensionsExecuted: false,
+    adapterExecuted: false,
+    policyEnforced: false,
     providerInvoked: false,
     networkCallMade: false,
     shellCommandsExecuted: false,

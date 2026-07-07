@@ -121,6 +121,7 @@ devview work-journal render \
   --extension-readiness <extension-readiness.json> \
   --extension-profile-catalog <extension-profile-catalog.json> \
   --extension-context-plan <extension-context-plan.json> \
+  --extension-adapter-compatibility-report <extension-adapter-compatibility.json> \
   --runtime-evidence-satisfaction-readiness <runtime-readiness.json> \
   --runtime-evidence-satisfaction-record <runtime-satisfaction-record.json> \
   --equivalence-proof-readiness <equivalence-readiness.json> \
@@ -378,6 +379,7 @@ devview graph read-model report-devview-baseline \
   --extension-readiness <extension-readiness.json> \
   --extension-profile-catalog <extension-profile-catalog.json> \
   --extension-context-plan <extension-context-plan.json> \
+  --extension-adapter-compatibility-report <extension-adapter-compatibility.json> \
   --approved-apply-dry-run <approved-apply-dry-run.json> \
   --apply-report <graph-delta-apply-report.json> \
   --evidence-decision <evidence-decision-record.json> \

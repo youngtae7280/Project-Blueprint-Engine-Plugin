@@ -373,6 +373,8 @@ Options:
                        Project-specific extension profile catalog for extensions plan-context, extensions validate-adapters, graph read-model report-devview-baseline, or work-journal render.
   --extension-context-plan <file>
                        Project-specific extension context plan for extensions validate-adapters, graph read-model report-devview-baseline, or work-journal render.
+  --extension-adapter-compatibility-report <file>
+                       Project-specific extension adapter compatibility report for graph read-model report-devview-baseline or work-journal render.
   --scope-ci-enforcement-readiness <file>
                        Scope/CI Enforcement readiness file for graph read-model record-scope-ci-enforcement or report-devview-baseline.
   --scope-ci-enforcement-record <file>

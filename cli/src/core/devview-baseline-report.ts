@@ -17,6 +17,7 @@ export interface DevViewBaselineReportOptions {
   extensionReadiness?: string
   extensionProfileCatalog?: string
   extensionContextPlan?: string
+  extensionAdapterCompatibilityReport?: string
   applyReadiness?: string
   approvedApplyDryRun?: string
   applyReport?: string
@@ -81,6 +82,7 @@ export interface DevViewCoreBaselineFreezeReport {
   sourceExtensionReadiness: string | null
   sourceExtensionProfileCatalog: string | null
   sourceExtensionContextPlan: string | null
+  sourceExtensionAdapterCompatibilityReport: string | null
   sourceApplyReadiness: string | null
   sourceApprovedApplyDryRun: string | null
   sourceGraphDeltaApplyReport: string | null
@@ -197,6 +199,12 @@ const OPTIONAL_SOURCE_DEFS = [
     label: 'Project-specific extension context plan',
     optionKey: 'extensionContextPlan',
     expectedRole: 'devview-extension-context-plan',
+  },
+  {
+    sourceId: 'extension-adapter-compatibility-report',
+    label: 'Project-specific extension adapter compatibility report',
+    optionKey: 'extensionAdapterCompatibilityReport',
+    expectedRole: 'devview-extension-adapter-compatibility-report',
   },
   {
     sourceId: 'graph-delta-apply-readiness',
@@ -459,6 +467,10 @@ function validateExactOptionalSourceShape(source: LoadedSource, findings: DevVie
     validateExtensionContextPlanSourceShape(source, record, findings)
     return
   }
+  if (source.sourceId === 'extension-adapter-compatibility-report') {
+    validateExtensionAdapterCompatibilityReportSourceShape(source, record, findings)
+    return
+  }
   if (source.sourceId === 'guarded-graph-update-apply-report') {
     validateGuardedGraphUpdateApplyReportSourceShape(source, record, findings)
     return
@@ -619,6 +631,70 @@ function validateExtensionContextPlanSourceShape(
     if (field in record && record[field] !== false) {
       findings.push({
         code: 'DEVVIEW_BASELINE_EXTENSION_CONTEXT_PLAN_UNSAFE_FLAG',
+        severity: 'error',
+        field: `${source.sourceId}.${field}`,
+        message: `${source.label} must keep ${field}:false.`,
+        expected: false,
+        actual: record[field],
+      })
+    }
+  }
+}
+
+function validateExtensionAdapterCompatibilityReportSourceShape(
+  source: LoadedSource,
+  record: JsonRecord,
+  findings: DevViewBaselineFinding[],
+): void {
+  const role = stringValue(record.artifactRole)
+  const status = stringValue(record.status)
+  const knownStatuses = [
+    'devview-extension-adapter-compatibility-validated',
+    'devview-extension-adapter-compatibility-blocked',
+  ]
+  if (role !== 'devview-extension-adapter-compatibility-report' || !knownStatuses.includes(status)) {
+    findings.push({
+      code: 'DEVVIEW_BASELINE_EXTENSION_ADAPTER_COMPATIBILITY_ROLE_STATUS_INVALID',
+      severity: 'error',
+      field: `${source.sourceId}.status`,
+      message: `${source.label} must use the DevView extension adapter compatibility report role and a known report status.`,
+      expected: 'devview-extension-adapter-compatibility-report with validated or blocked status',
+      actual: { artifactRole: role, status },
+    })
+  }
+  for (const field of [
+    'extensionExecutionAllowed',
+    'extensionsExecuted',
+    'adapterExecuted',
+    'policyEnforced',
+    'providerInvoked',
+    'networkCallMade',
+    'shellCommandsExecuted',
+    'filesMutated',
+    'graphSourceMutated',
+    'graphDeltaApplied',
+    'runtimeEvidenceSatisfied',
+    'evidenceAccepted',
+    'equivalenceProven',
+    'scopeEnforced',
+    'ciEnforcementEnabled',
+    'hooksActivated',
+    'branchProtectionChanged',
+    'branchProtectionMutated',
+    'requiredChecksConfigured',
+    'requiredChecksMutated',
+    'externalCiMutated',
+    'diffRejectionEnabled',
+    'diffRejectionActivated',
+    'approvalAutomationEnabled',
+    'userAcceptanceAutomated',
+    'traversalAuthorityGranted',
+    'contextPackMutated',
+    'viewTreeMutated',
+  ]) {
+    if (field in record && record[field] !== false) {
+      findings.push({
+        code: 'DEVVIEW_BASELINE_EXTENSION_ADAPTER_COMPATIBILITY_UNSAFE_FLAG',
         severity: 'error',
         field: `${source.sourceId}.${field}`,
         message: `${source.label} must keep ${field}:false.`,
@@ -913,6 +989,7 @@ function buildReport(
     sourceExtensionReadiness: sourcePath('extension-readiness'),
     sourceExtensionProfileCatalog: sourcePath('extension-profile-catalog'),
     sourceExtensionContextPlan: sourcePath('extension-context-plan'),
+    sourceExtensionAdapterCompatibilityReport: sourcePath('extension-adapter-compatibility-report'),
     sourceApplyReadiness: sourcePath('graph-delta-apply-readiness'),
     sourceApprovedApplyDryRun: sourcePath('approved-apply-dry-run'),
     sourceGraphDeltaApplyReport: sourcePath('graph-delta-apply-report'),
@@ -1042,6 +1119,9 @@ function classifyStatus(sourceId: string, status: string): BaselineClassificatio
   if (sourceId === 'extension-context-plan') {
     return normalized.includes('blocked') ? 'blocked' : normalized.includes('generated') ? 'advisory' : 'advisory'
   }
+  if (sourceId === 'extension-adapter-compatibility-report') {
+    return normalized.includes('blocked') ? 'blocked' : normalized.includes('validated') ? 'advisory' : 'advisory'
+  }
   if (sourceId === 'graph-delta-apply-report') {
     return normalized.includes('applied') ? 'advisory' : 'blocked'
   }
@@ -1123,6 +1203,40 @@ function buildSourceFactSummary(source: LoadedSource): JsonRecord | null {
       traversalAuthorityGranted: record.traversalAuthorityGranted === true,
       viewTreeMutated: record.viewTreeMutated === true,
       contextPackMutated: record.contextPackMutated === true,
+    }
+  }
+  if (source.sourceId === 'extension-adapter-compatibility-report') {
+    const evidenceAdapterCompatibility = asRecord(record.evidenceAdapterCompatibility)
+    const policyExtensionCompatibility = asRecord(record.policyExtensionCompatibility)
+    const proofLifecycleCompatibility = asRecord(record.proofLifecycleCompatibility)
+    const readinessSourceComparisons = asRecord(record.readinessSourceComparisons)
+    const graphIngestionPlanningContext = asRecord(record.graphIngestionPlanningContext)
+    const nativeRetrofitAdapterHints = asRecord(record.nativeRetrofitAdapterHints)
+    return {
+      adapterCompatibilityStatus: stringValue(record.adapterCompatibilityStatus) || null,
+      compatibilityScope: stringValue(record.compatibilityScope) || null,
+      evidenceAdapterCompatibilityStatus: stringValue(evidenceAdapterCompatibility?.compatibilityStatus) || null,
+      evidenceAdapterCount: arrayStrings(evidenceAdapterCompatibility?.extensionIds).length,
+      policyExtensionCompatibilityStatus: stringValue(policyExtensionCompatibility?.compatibilityStatus) || null,
+      policyExtensionCount: arrayStrings(policyExtensionCompatibility?.extensionIds).length,
+      proofLifecycleCompatibilityStatus: stringValue(proofLifecycleCompatibility?.compatibilityStatus) || null,
+      proofLifecycleExtensionCount: arrayStrings(proofLifecycleCompatibility?.extensionIds).length,
+      readinessSourceComparisonCount: readinessSourceComparisons ? Object.keys(readinessSourceComparisons).length : 0,
+      graphIngestionCandidateCount: numberValue(graphIngestionPlanningContext?.candidateCount),
+      graphifyCandidateCount: numberValue(graphIngestionPlanningContext?.graphifyCandidateCount),
+      nativeRetrofitHintStatus: stringValue(nativeRetrofitAdapterHints?.hintStatus) || null,
+      nativeRetrofitMode: stringValue(nativeRetrofitAdapterHints?.mode) || null,
+      downstreamActionCount: arrayRecords(record.downstreamActionPlan).length,
+      extensionExecutionAllowed: record.extensionExecutionAllowed === true,
+      providerInvoked: record.providerInvoked === true,
+      networkCallMade: record.networkCallMade === true,
+      shellCommandsExecuted: record.shellCommandsExecuted === true,
+      adapterExecuted: record.adapterExecuted === true,
+      policyEnforced: record.policyEnforced === true,
+      runtimeEvidenceSatisfied: record.runtimeEvidenceSatisfied === true,
+      equivalenceProven: record.equivalenceProven === true,
+      scopeEnforced: record.scopeEnforced === true,
+      ciEnforcementEnabled: record.ciEnforcementEnabled === true,
     }
   }
   if (source.sourceId === 'guarded-graph-update-apply-report') {
