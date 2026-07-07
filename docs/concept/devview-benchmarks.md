@@ -16,6 +16,16 @@ devview benchmark evaluate-result \
   --json
 ```
 
+Multiple stored evaluation reports can then be grouped into a report-only comparison matrix:
+
+```bash
+devview benchmark summarize-comparison \
+  --evaluations .tmp/benchmark-fixtures/native-devview.json,.tmp/benchmark-fixtures/native-codex-only.json \
+  --output .tmp/benchmark-fixtures/comparison-summary.json \
+  --markdown .tmp/benchmark-fixtures/comparison-summary.md \
+  --json
+```
+
 ## Comparison Arms
 
 Benchmark specs can model these arms:
@@ -43,6 +53,16 @@ The default evaluator uses a 100-point rubric:
 
 Golden answers may override weights, but scoring still uses explicit stored fields only. Unsafe execution or authority
 flags block the evaluator before output is written.
+
+## Comparison Summary
+
+The aggregate comparison report groups scored evaluation reports by suite, task, project mode, and comparison group.
+Each task row carries the four arm columns, missing-arm lists, pass/fail state, hard-failure counts, dimension scores,
+and score deltas such as DevView versus Codex-only or Graphify versus Codex-only. The summary also carries compact
+averages for Work Journal usefulness, Evidence quality, and scope accuracy.
+
+Like the evaluator, the summary consumes stored JSON reports only. It does not perform live benchmark-task, Graphify,
+native/retrofit build/test, extension-code, provider, hook, graph-update, or lifecycle-authority activity.
 
 ## Static Fixture Skeletons
 

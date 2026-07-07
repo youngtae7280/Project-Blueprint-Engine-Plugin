@@ -241,6 +241,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     task: undefined as string | undefined,
     goldenAnswer: undefined as string | undefined,
     candidateResult: undefined as string | undefined,
+    evaluations: undefined as string | undefined,
     base: undefined as string | undefined,
     head: undefined as string | undefined,
     scope: undefined as string | undefined,
@@ -1240,6 +1241,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--candidate-result requires a file path.' }
       }
       options.candidateResult = value
+      index += 1
+    } else if (arg === '--evaluations') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--evaluations requires one or more file paths.' }
+      }
+      options.evaluations = options.evaluations ? `${options.evaluations},${value}` : value
       index += 1
     } else if (arg === '--base') {
       const value = argv[index + 1]

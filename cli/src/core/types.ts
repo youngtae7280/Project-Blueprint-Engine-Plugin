@@ -199,6 +199,7 @@ export interface CliOptions {
   task?: string
   goldenAnswer?: string
   candidateResult?: string
+  evaluations?: string
   base?: string
   head?: string
   scope?: string

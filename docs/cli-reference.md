@@ -140,9 +140,25 @@ devview benchmark evaluate-result \
 ```
 
 Scores a stored candidate result against a golden answer for `codex-only`, `codex-graphify`, `codex-devview`, or
-`codex-graphify-devview` comparison arms. The evaluator is report-only: it does not execute Codex, install or run
-Graphify, run native/retrofit builds or tests, execute extensions, call providers, make network calls, mutate
-graph-source, satisfy Evidence, prove equivalence, enforce scope/CI, activate hooks, or automate approval.
+`codex-graphify-devview` comparison arms. The evaluator is report-only: it does not perform live Codex, Graphify,
+native/retrofit build/test, extension-code, provider, network, graph-source, Evidence, proof, scope/CI, hook, or
+approval activity.
+
+### Benchmark Comparison Summary
+
+```bash
+devview benchmark summarize-comparison \
+  --evaluations <evaluation-a.json,evaluation-b.json> \
+  --output <benchmark-comparison-summary.json> \
+  --markdown <benchmark-comparison-summary.md> \
+  --json
+```
+
+Summarizes scored benchmark evaluation reports into task/arm comparison matrices. The summary groups reports by suite,
+task, project mode, and arm comparison group, then carries forward per-arm scores, missing arms, pass/fail state,
+dimension summaries, and deltas such as DevView versus Codex-only or Graphify versus Codex-only. This command is also
+report-only: it consumes stored evaluation reports and does not perform live benchmark-task, Graphify, native/retrofit
+build/test, extension-code, provider, network, graph-source, lifecycle-authority, hook, or approval activity.
 
 ### Work Journal
 
