@@ -263,6 +263,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     rbacReadiness: undefined as string | undefined,
     recordEnvelopePreview: undefined as string | undefined,
     recordEnvelopeVerification: undefined as string | undefined,
+    signingReadiness: undefined as string | undefined,
     enterpriseReadiness: undefined as string | undefined,
     graphifyExport: undefined as string | undefined,
     mapping: undefined as string | undefined,
@@ -1425,6 +1426,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
       options.recordEnvelopeVerification = options.recordEnvelopeVerification
         ? `${options.recordEnvelopeVerification},${value}`
         : value
+      index += 1
+    } else if (arg === '--signing-readiness') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--signing-readiness requires one or more file paths.' }
+      }
+      options.signingReadiness = options.signingReadiness ? `${options.signingReadiness},${value}` : value
       index += 1
     } else if (arg === '--enterprise-readiness') {
       const value = argv[index + 1]

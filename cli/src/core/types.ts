@@ -221,6 +221,7 @@ export interface CliOptions {
   rbacReadiness?: string
   recordEnvelopePreview?: string
   recordEnvelopeVerification?: string
+  signingReadiness?: string
   enterpriseReadiness?: string
   graphifyExport?: string
   mapping?: string

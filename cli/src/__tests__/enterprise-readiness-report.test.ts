@@ -300,6 +300,147 @@ describe('security report-enterprise-readiness CLI', () => {
     expectSafetyFalse(payload)
   })
 
+  it('summarizes signing/key governance readiness as a source fact without enterprise-ready claims', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, '.tmp/signing-readiness.json'), signingReadinessReport())
+
+    const result = await runDevViewCli(
+      [
+        'security',
+        'report-enterprise-readiness',
+        '--signing-readiness',
+        '.tmp/signing-readiness.json',
+        '--output',
+        '.tmp/enterprise-readiness.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.readinessLevel).toBe('not-ready')
+    expect(payload.sourceSigningReadinessReports).toHaveLength(1)
+    expect(payload.sourceSigningReadinessReports[0]).toEqual(
+      expect.objectContaining({
+        path: '.tmp/signing-readiness.json',
+        artifactRole: 'devview-signing-readiness-report',
+        status: 'devview-signing-readiness-reported',
+        signingReadinessStatus: 'not-ready-policy-and-key-governance-missing',
+        envelopePreviewCount: 1,
+        envelopeVerificationCount: 1,
+        payloadDigestVerifiedCount: 1,
+        sourceDigestVerifiedCount: 1,
+        signedEnvelopeCount: 0,
+        keyGovernanceStatus: 'not-ready',
+        keyRegistryPresent: false,
+        trustRootPresent: false,
+        privateKeyStoragePresent: false,
+        noPrivateKeyStorageInRepo: true,
+        signaturePolicyStatus: 'not-ready',
+        detachedSignaturePolicyPresent: false,
+        signatureFormatPolicyPresent: false,
+        rbacActorModelPresent: true,
+        rbacPermissionMatrixPresent: true,
+        rbacRoleAssignmentRegistryPresent: false,
+        rbacEnforced: false,
+        permissionVerificationEnforced: false,
+        futureSignedEnvelopeRequirementCount: 2,
+      }),
+    )
+    expect(payload.rbacAndSigningReadiness.signingReadinessReportPresent).toBe(true)
+    expect(payload.rbacAndSigningReadiness.signingReadinessReportCount).toBe(1)
+    expect(payload.rbacAndSigningReadiness.signingReadinessStatus).toBe('not-ready-policy-and-key-governance-missing')
+    expect(payload.rbacAndSigningReadiness.keyRegistryPresentCount).toBe(0)
+    expect(payload.rbacAndSigningReadiness.trustRootPresentCount).toBe(0)
+    expect(payload.rbacAndSigningReadiness.privateKeyStoragePresentCount).toBe(0)
+    expect(payload.rbacAndSigningReadiness.noPrivateKeyStorageInRepoCount).toBe(1)
+    expect(payload.rbacAndSigningReadiness.signaturePolicyPresentCount).toBe(0)
+    expect(payload.rbacAndSigningReadiness.rbacPrerequisiteActorModelPresentCount).toBe(1)
+    expect(payload.rbacAndSigningReadiness.rbacPrerequisitePermissionMatrixPresentCount).toBe(1)
+    expect(payload.rbacAndSigningReadiness.rbacRoleAssignmentRegistryPresentCount).toBe(0)
+    expect(payload.rbacAndSigningReadiness.futureSignedEnvelopeRequirementCount).toBe(2)
+    expect(payload.rbacAndSigningReadiness.signedRecordEnvelopePresent).toBe(false)
+    expect(payload.enterpriseReadinessFindings.map((entry: { code: string }) => entry.code)).toEqual(
+      expect.arrayContaining(['ENTERPRISE_SIGNING_READINESS_RECORDED', 'ENTERPRISE_RBAC_SIGNING_MISSING']),
+    )
+    expectSafetyFalse(payload)
+  })
+
+  it('blocks invalid or authority-claiming signing readiness sources with zero writes', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, '.tmp/wrong-signing-readiness.json'), {
+      ...signingReadinessReport(),
+      status: 'wrong',
+    })
+    writeJson(join(workspace, '.tmp/signed-signing-readiness.json'), {
+      ...signingReadinessReport(),
+      cryptographicSignaturePresent: true,
+    })
+    writeJson(join(workspace, '.tmp/key-signing-readiness.json'), {
+      ...signingReadinessReport(),
+      keyGenerated: true,
+    })
+    writeJson(join(workspace, '.tmp/rbac-signing-readiness.json'), {
+      ...signingReadinessReport(),
+      rbacEnforced: true,
+    })
+    writeJson(join(workspace, '.tmp/unsafe-signing-readiness.json'), {
+      ...signingReadinessReport(),
+      networkCallMade: true,
+    })
+
+    const wrong = await runEnterpriseWithSigningReadiness(
+      workspace,
+      '.tmp/wrong-signing-readiness.json',
+      '.tmp/wrong-signing-enterprise.json',
+    )
+    const signed = await runEnterpriseWithSigningReadiness(
+      workspace,
+      '.tmp/signed-signing-readiness.json',
+      '.tmp/signed-signing-enterprise.json',
+    )
+    const key = await runEnterpriseWithSigningReadiness(
+      workspace,
+      '.tmp/key-signing-readiness.json',
+      '.tmp/key-signing-enterprise.json',
+    )
+    const rbac = await runEnterpriseWithSigningReadiness(
+      workspace,
+      '.tmp/rbac-signing-readiness.json',
+      '.tmp/rbac-signing-enterprise.json',
+    )
+    const unsafe = await runEnterpriseWithSigningReadiness(
+      workspace,
+      '.tmp/unsafe-signing-readiness.json',
+      '.tmp/unsafe-signing-enterprise.json',
+    )
+
+    expect(wrong.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(wrong.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_SIGNING_READINESS_SOURCE_ROLE_STATUS_INVALID',
+    )
+    expect(existsSync(join(workspace, '.tmp/wrong-signing-enterprise.json'))).toBe(false)
+
+    for (const [result, output] of [
+      [signed, '.tmp/signed-signing-enterprise.json'],
+      [key, '.tmp/key-signing-enterprise.json'],
+      [rbac, '.tmp/rbac-signing-enterprise.json'],
+    ] as const) {
+      expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+      expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+        'ENTERPRISE_READINESS_SIGNING_READINESS_AUTHORITY_CLAIM_UNSUPPORTED',
+      )
+      expect(existsSync(join(workspace, output))).toBe(false)
+    }
+
+    expect(unsafe.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(unsafe.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_UNSAFE_SOURCE_AUTHORITY_FLAG',
+    )
+    expect(existsSync(join(workspace, '.tmp/unsafe-signing-enterprise.json'))).toBe(false)
+  })
+
   it('records not-supplied areas cleanly while keeping report-only safety flags false', async () => {
     const workspace = createWorkspace()
 
@@ -582,6 +723,7 @@ describe('security report-enterprise-readiness CLI', () => {
     writeJson(join(workspace, '.tmp/benchmark-governance.json'), benchmarkGovernanceReport())
     writeJson(join(workspace, '.tmp/record-envelope-preview.json'), recordEnvelopePreview())
     writeJson(join(workspace, '.tmp/record-envelope-verification.json'), recordEnvelopeVerification())
+    writeJson(join(workspace, '.tmp/signing-readiness.json'), signingReadinessReport())
     const cases = [
       { output: '.tmp/benchmark-governance.json', expected: 'would overwrite a source input' },
       {
@@ -592,6 +734,11 @@ describe('security report-enterprise-readiness CLI', () => {
       {
         sourceArgs: ['--record-envelope-verification', '.tmp/record-envelope-verification.json'],
         output: '.tmp/record-envelope-verification.json',
+        expected: 'would overwrite a source input',
+      },
+      {
+        sourceArgs: ['--signing-readiness', '.tmp/signing-readiness.json'],
+        output: '.tmp/signing-readiness.json',
         expected: 'would overwrite a source input',
       },
       { output: '.tmp/enterprise.json', markdown: '.tmp/enterprise.json', expected: 'must be different' },
@@ -917,6 +1064,77 @@ function recordEnvelopeVerification(overrides: Record<string, unknown> = {}): Re
   }
 }
 
+function signingReadinessReport(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    schemaVersion: 1,
+    artifactRole: 'devview-signing-readiness-report',
+    status: 'devview-signing-readiness-reported',
+    readinessScope: 'signing-key-governance-readiness-report-only',
+    sourceFactsOnly: true,
+    reportOnly: true,
+    signingReadinessStatus: 'not-ready-policy-and-key-governance-missing',
+    sourceRecordEnvelopePreviews: [],
+    sourceRecordEnvelopeVerifications: [],
+    envelopePrerequisiteSummary: {
+      previewCount: 1,
+      verificationCount: 1,
+      payloadDigestVerifiedCount: 1,
+      sourceDigestVerifiedCount: 1,
+      previousChainVerifiedCount: 0,
+      signedEnvelopeCount: 0,
+      cryptographicSignatureVerifiedCount: 0,
+      rbacPermissionVerifiedCount: 0,
+    },
+    keyGovernanceReadiness: {
+      status: 'not-ready',
+      keyRegistryPresent: false,
+      trustRootPresent: false,
+      privateKeyStoragePresent: false,
+      noPrivateKeyStorageInRepo: true,
+      rotationMetadataPresent: false,
+      revocationMetadataPresent: false,
+      keyOwnerRolePolicyPresent: false,
+      gaps: [],
+    },
+    signaturePolicyReadiness: {
+      status: 'not-ready',
+      detachedSignaturePolicyRequired: true,
+      detachedSignaturePolicyPresent: false,
+      allowedAlgorithmsFutureCandidates: ['Ed25519'],
+      timestampPolicy: 'explicit-input-only-no-generated-timestamps',
+      payloadDigestPolicy: 'raw-json-bytes-sha256-source-facts',
+      canonicalizationPolicy: 'raw-byte-digest-now-canonical-json-policy-required-before-real-signing',
+      signatureFormatPolicyPresent: false,
+      gaps: [],
+    },
+    rbacPrerequisiteSummary: {
+      actorModelPresent: true,
+      permissionMatrixPresent: true,
+      artifactPermissionMappingPresent: true,
+      roleAssignmentRegistryPresent: false,
+      rbacEnforced: false,
+      permissionVerificationEnforced: false,
+      gaps: [],
+    },
+    futureSignedEnvelopeRequirements: ['detached signature fields', 'key registry reference'],
+    signingReadinessFindings: [],
+    downstreamActionPlan: [],
+    cryptographicSigningImplemented: false,
+    cryptographicSignaturePresent: false,
+    cryptographicSignatureVerified: false,
+    keyGenerated: false,
+    privateKeyStored: false,
+    keyManagementImplemented: false,
+    keyRegistryCreated: false,
+    trustRootCreated: false,
+    rbacEnforced: false,
+    permissionVerified: false,
+    rbacPermissionVerified: false,
+    ...safetyFlags(),
+    ...overrides,
+  }
+}
+
 function safetyFlags(): Record<string, unknown> {
   return {
     benchmarkExecuted: false,
@@ -1023,6 +1241,13 @@ function runEnterpriseWithEnvelopeVerification(workspace: string, envelopeVerifi
       output,
       '--json',
     ],
+    { cwd: workspace, pluginRoot },
+  )
+}
+
+function runEnterpriseWithSigningReadiness(workspace: string, signingReadiness: string, output: string) {
+  return runDevViewCli(
+    ['security', 'report-enterprise-readiness', '--signing-readiness', signingReadiness, '--output', output, '--json'],
     { cwd: workspace, pluginRoot },
   )
 }
