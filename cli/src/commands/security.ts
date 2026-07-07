@@ -12,6 +12,7 @@ import {
   RecordEnvelopeVerificationValidationError,
   verifyRecordEnvelope,
 } from '../core/record-envelope-verification.js'
+import { SigningReadinessReportValidationError, reportSigningReadiness } from '../core/signing-readiness-report.js'
 import type { CommandResult } from '../core/types.js'
 import { ExitCode, issue } from '../core/types.js'
 import type { CommandContext } from './shared.js'
@@ -332,6 +333,70 @@ export async function securityVerifyRecordEnvelopeCommand(context: CommandContex
           message,
           suggestedFix:
             'Provide --record-envelope-preview, --payload, and --output outside source/control artifacts and source inputs.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function securityReportSigningReadinessCommand(context: CommandContext): Promise<CommandResult> {
+  try {
+    const report = await reportSigningReadiness(context.options.root, {
+      rbacReadiness: context.options.rbacReadiness,
+      recordEnvelopePreview: context.options.recordEnvelopePreview,
+      recordEnvelopeVerification: context.options.recordEnvelopeVerification,
+      enterpriseReadiness: context.options.enterpriseReadiness,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+
+    return {
+      ok: true,
+      command: 'security report-signing-readiness',
+      exitCode: ExitCode.Success,
+      message: 'Signing and key governance readiness recorded as a report-only artifact.',
+      issues: [],
+      data: { ...report },
+    }
+  } catch (error) {
+    if (error instanceof SigningReadinessReportValidationError) {
+      const report = error.report
+      const blockers = report.signingReadinessFindings.filter((finding) => finding.severity === 'blocker')
+      return {
+        ok: false,
+        command: 'security report-signing-readiness',
+        exitCode: ExitCode.ValidationFailed,
+        message: 'Signing readiness reporting is blocked before any signing, key management, or RBAC enforcement.',
+        issues: blockers.map((finding) =>
+          issue({
+            validator: 'SigningReadiness',
+            code: finding.code,
+            severity: 'error',
+            message: finding.message,
+            file: finding.path,
+            reason: finding.field ? `Field: ${finding.field}` : undefined,
+            suggestedFix:
+              'Provide exact report-only RBAC, envelope preview, envelope verification, and enterprise readiness sources with signing, key, RBAC, provider, graph, CI, hook, and approval authority flags false.',
+          }),
+        ),
+        data: { ...report },
+      }
+    }
+
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'security report-signing-readiness',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Signing readiness reporting could not run.',
+      issues: [
+        issue({
+          validator: 'SigningReadiness',
+          code: 'SIGNING_READINESS_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide --output and write signing readiness outputs outside source/control artifacts and source inputs.',
         }),
       ],
     }

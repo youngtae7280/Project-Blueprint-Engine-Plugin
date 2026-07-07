@@ -121,6 +121,8 @@ Commands:
                        Record provider/network default-deny policy posture without provider or network activity
   security report-rbac-readiness
                        Record RBAC actor identity readiness without signing or enforcement
+  security report-signing-readiness
+                       Record signing/key governance readiness without signing, keys, or enforcement
   security preview-record-envelope
                         Preview unsigned record envelope hashes without signing or RBAC enforcement
   security verify-record-envelope
@@ -419,10 +421,12 @@ Options:
   --actor-id <id>      Explicit actor id for security preview-record-envelope.
   --actor-type <type>  Actor type for security preview-record-envelope: human, automation, service, or extension-author.
   --actor-role <role>  Actor role claim for security preview-record-envelope; repeat or comma-separate for multiples.
+  --rbac-readiness <file>
+                       RBAC readiness source for security report-signing-readiness.
   --record-envelope-preview <file>
-                       Unsigned record envelope preview for security report-enterprise-readiness or verify-record-envelope; repeat or comma-separate for multiples.
+                       Unsigned record envelope preview for security report-enterprise-readiness, report-signing-readiness, or verify-record-envelope; repeat or comma-separate for multiples.
   --record-envelope-verification <file>
-                       Record envelope verification report for security report-enterprise-readiness; repeat or comma-separate for multiples.
+                       Record envelope verification report for security report-enterprise-readiness or report-signing-readiness; repeat or comma-separate for multiples.
   --authorize-graph-source-mutation
                        Required explicit authorization flag for graph read-model apply-guarded-graph-update.
   --policy <file>      Policy boundary file for graph read-model report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, record-evidence-decision, create-accepted-evidence-record, report-equivalence-proof-readiness, record-equivalence-proof, report-scope-ci-enforcement-readiness, or security report-provider-network-policy.

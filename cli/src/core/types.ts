@@ -218,6 +218,7 @@ export interface CliOptions {
   benchmarkGovernanceVerification?: string
   releaseSurfaceValidation?: string
   providerNetworkPolicyReport?: string
+  rbacReadiness?: string
   recordEnvelopePreview?: string
   recordEnvelopeVerification?: string
   enterpriseReadiness?: string

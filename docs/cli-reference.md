@@ -263,6 +263,26 @@ only. The command does not perform cryptographic signing, generate or store keys
 network/API calls, execute extensions, mutate graph-source, create lifecycle authority records, configure CI, activate
 hooks, or automate approval.
 
+### Signing / Key Governance Readiness
+
+```bash
+devview security report-signing-readiness \
+  --rbac-readiness <rbac-readiness.json> \
+  --record-envelope-preview <record-envelope-preview.json> \
+  --record-envelope-verification <record-envelope-verification.json> \
+  --enterprise-readiness <enterprise-readiness.json> \
+  --output <signing-readiness.json> \
+  --markdown <signing-readiness.md> \
+  --json
+```
+
+Records signing and key governance readiness as a report-only source fact before real cryptographic signatures, key
+registries, trust roots, or RBAC enforcement exist. Optional RBAC readiness, unsigned envelope previews, envelope
+verification reports, and enterprise readiness reports are validated by exact role/status and summarized. Envelope
+preview and verification inputs may be repeated or comma-separated. The report keeps signing, key generation/storage,
+key management, RBAC enforcement, permission verification, provider/network/API calls, extension/shell execution, graph
+mutation/apply, lifecycle authority, CI/hooks, enterprise gates, and approval automation false.
+
 ### Unsigned Record Envelope Preview
 
 ```bash

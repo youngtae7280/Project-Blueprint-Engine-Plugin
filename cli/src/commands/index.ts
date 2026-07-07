@@ -104,6 +104,7 @@ import {
   securityReportEnterpriseReadinessCommand,
   securityReportProviderNetworkPolicyCommand,
   securityReportRbacReadinessCommand,
+  securityReportSigningReadinessCommand,
   securityVerifyRecordEnvelopeCommand,
 } from './security.js'
 import {
@@ -182,6 +183,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'security' && subcommand === 'report-rbac-readiness') {
     return securityReportRbacReadinessCommand(context)
+  }
+  if (command === 'security' && subcommand === 'report-signing-readiness') {
+    return securityReportSigningReadinessCommand(context)
   }
   if (command === 'security' && subcommand === 'preview-record-envelope') {
     return securityPreviewRecordEnvelopeCommand(context)
