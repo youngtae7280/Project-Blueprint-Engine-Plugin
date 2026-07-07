@@ -133,6 +133,8 @@ Commands:
                        Report prerequisites for future signed provenance verification without performing verification
   security report-ci-branch-governance-readiness
                        Report CI/branch protection governance readiness without CI provider calls or branch mutation
+  security validate-ci-branch-policy
+                       Validate declarative CI/branch policy without configuring required checks or branch protection
   security validate-rbac-policy
                        Validate declarative RBAC role assignment policy without enforcing RBAC
   security report-rbac-readiness
@@ -470,7 +472,7 @@ Options:
   --provenance-verification-readiness <file>
                        Provenance verification readiness report for security report-enterprise-readiness or report-ci-branch-governance-readiness; repeat or comma-separate for multiples where supported.
   --ci-branch-governance-readiness <file>
-                       CI/branch governance readiness report for security report-enterprise-readiness; repeat or comma-separate for multiples where supported.
+                       CI/branch governance readiness report for security report-enterprise-readiness or validate-ci-branch-policy; repeat or comma-separate for multiples where supported.
   --workflow <file>    Explicit local workflow file for security report-ci-branch-governance-readiness; repeat or comma-separate for multiples.
   --source-ref <value>
                        Explicit source ref label for security record-package-provenance-inputs; metadata only, not verified.
@@ -478,7 +480,7 @@ Options:
                        Explicit build command label for security record-package-provenance-inputs; metadata only, never executed.
   --authorize-graph-source-mutation
                        Required explicit authorization flag for graph read-model apply-guarded-graph-update.
-  --policy <file>      Policy boundary file for graph read-model report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, record-evidence-decision, create-accepted-evidence-record, report-equivalence-proof-readiness, record-equivalence-proof, report-scope-ci-enforcement-readiness, security report-provider-network-policy, or security validate-rbac-policy.
+  --policy <file>      Policy boundary file for graph read-model report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, record-evidence-decision, create-accepted-evidence-record, report-equivalence-proof-readiness, record-equivalence-proof, report-scope-ci-enforcement-readiness, security report-provider-network-policy, security validate-rbac-policy, or security validate-ci-branch-policy.
   --readiness <file>   Optional Evidence Acceptance readiness provenance for graph read-model record-evidence-decision or create-accepted-evidence-record.
   --source-evidence <file>
                        Single candidate/source Evidence artifact for graph read-model record-evidence-decision, create-accepted-evidence-record, report-runtime-evidence-satisfaction-readiness, or record-runtime-evidence-satisfaction.

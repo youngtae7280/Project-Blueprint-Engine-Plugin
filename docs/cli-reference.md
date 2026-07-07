@@ -410,6 +410,33 @@ Scope/CI, provider/network, RBAC, signing, provenance verification, and release-
 `devview-ci-branch-governance-readiness-report` with status `devview-ci-branch-governance-readiness-reported`; required
 checks and branch protection remain future-only policy and activation work.
 
+### CI / Branch Policy Validation
+
+```bash
+devview security validate-ci-branch-policy \
+  --policy <ci-branch-policy.json> \
+  --ci-branch-governance-readiness <ci-branch-governance-readiness.json> \
+  --provider-network-policy-report <provider-network-policy-report.json> \
+  --rbac-policy-validation <rbac-policy-validation.json> \
+  --signing-readiness <signing-readiness.json> \
+  --provenance-verification-readiness <provenance-verification-readiness.json> \
+  --output <ci-branch-policy-validation.json> \
+  --markdown <ci-branch-policy-validation.md> \
+  --json
+```
+
+Validates a declarative `devview-ci-branch-policy` source fact before any external CI/branch mutation. The policy must
+use default-deny external CI and branch mutation posture, `activationMode: report-only-no-mutation`, and false
+required-check, branch-protection, hook, provider/network/API, RBAC, signing/key, provenance, approval, and enterprise
+gate authority flags. Optional CI/branch governance readiness, provider/network, RBAC, signing, and provenance
+verification readiness reports are summarized as source facts. If CI/branch governance readiness is supplied, declared
+future required checks are compared with workflow inventory candidate checks. Unmapped safe checks produce deterministic
+readiness findings, while default-allow, non-empty allowlists, executable/provider/network instructions, key/signature
+material, or authority claims block with zero-write behavior. The output role is
+`devview-ci-branch-policy-validation-report` with status `devview-ci-branch-policy-validation-passed`; this is not
+required-check configuration, branch protection mutation, CI provider activation, RBAC enforcement, signing, or an
+enterprise gate.
+
 ### Provider/Network Default-Deny Policy
 
 ```bash

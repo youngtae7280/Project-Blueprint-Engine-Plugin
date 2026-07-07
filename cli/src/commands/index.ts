@@ -110,6 +110,7 @@ import {
   securityReportRbacReadinessCommand,
   securityReportReleaseProvenanceCommand,
   securityReportSigningReadinessCommand,
+  securityValidateCiBranchPolicyCommand,
   securityValidateProvenanceAttestationCommand,
   securityValidateSbomArtifactCommand,
   securityValidateRbacPolicyCommand,
@@ -209,6 +210,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'security' && subcommand === 'report-ci-branch-governance-readiness') {
     return securityReportCiBranchGovernanceReadinessCommand(context)
+  }
+  if (command === 'security' && subcommand === 'validate-ci-branch-policy') {
+    return securityValidateCiBranchPolicyCommand(context)
   }
   if (command === 'security' && subcommand === 'validate-rbac-policy') {
     return securityValidateRbacPolicyCommand(context)
