@@ -17,6 +17,7 @@ import {
   ReleaseProvenanceReadinessReportValidationError,
   reportReleaseProvenanceReadiness,
 } from '../core/release-provenance-readiness-report.js'
+import { SbomArtifactValidationError, validateSbomArtifact } from '../core/sbom-artifact-validation.js'
 import { SigningReadinessReportValidationError, reportSigningReadiness } from '../core/signing-readiness-report.js'
 import type { CommandResult } from '../core/types.js'
 import { ExitCode, issue } from '../core/types.js'
@@ -209,6 +210,70 @@ export async function securityReportReleaseProvenanceCommand(context: CommandCon
           message,
           suggestedFix:
             'Provide --output and write release provenance readiness outputs outside source/control artifacts and source inputs.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function securityValidateSbomArtifactCommand(context: CommandContext): Promise<CommandResult> {
+  try {
+    const report = await validateSbomArtifact(context.options.root, {
+      sbom: context.options.sbom,
+      releaseProvenanceReadiness: context.options.releaseProvenanceReadiness,
+      releaseSurfaceValidation: context.options.releaseSurfaceValidation,
+      packageJson: context.options.packageJson,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+
+    return {
+      ok: true,
+      command: 'security validate-sbom-artifact',
+      exitCode: ExitCode.Success,
+      message: 'Preexisting SBOM artifact validated as a report-only source fact.',
+      issues: [],
+      data: { ...report },
+    }
+  } catch (error) {
+    if (error instanceof SbomArtifactValidationError) {
+      const report = error.report
+      const blockers = report.validationFindings.filter((finding) => finding.severity === 'blocker')
+      return {
+        ok: false,
+        command: 'security validate-sbom-artifact',
+        exitCode: ExitCode.ValidationFailed,
+        message: 'SBOM artifact validation is blocked before any output write.',
+        issues: blockers.map((finding) =>
+          issue({
+            validator: 'SbomArtifactValidation',
+            code: finding.code,
+            severity: 'error',
+            message: finding.message,
+            file: finding.path,
+            reason: finding.field ? `Field: ${finding.field}` : undefined,
+            suggestedFix:
+              'Provide a wrapped static SBOM source fact with matching package identity, exact source roles/statuses, and no signing, provenance, provider/network, or lifecycle authority claims.',
+          }),
+        ),
+        data: { ...report },
+      }
+    }
+
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'security validate-sbom-artifact',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'SBOM artifact validation could not run.',
+      issues: [
+        issue({
+          validator: 'SbomArtifactValidation',
+          code: 'SBOM_VALIDATION_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide --sbom and --output and write SBOM validation outputs outside source/control artifacts and source inputs.',
         }),
       ],
     }

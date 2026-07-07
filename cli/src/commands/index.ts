@@ -106,6 +106,7 @@ import {
   securityReportRbacReadinessCommand,
   securityReportReleaseProvenanceCommand,
   securityReportSigningReadinessCommand,
+  securityValidateSbomArtifactCommand,
   securityValidateRbacPolicyCommand,
   securityVerifyRecordEnvelopeCommand,
 } from './security.js'
@@ -185,6 +186,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'security' && subcommand === 'report-release-provenance') {
     return securityReportReleaseProvenanceCommand(context)
+  }
+  if (command === 'security' && subcommand === 'validate-sbom-artifact') {
+    return securityValidateSbomArtifactCommand(context)
   }
   if (command === 'security' && subcommand === 'validate-rbac-policy') {
     return securityValidateRbacPolicyCommand(context)

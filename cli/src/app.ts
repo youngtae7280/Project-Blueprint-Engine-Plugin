@@ -260,6 +260,8 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     benchmarkGovernanceVerification: undefined as string | undefined,
     releaseSurfaceValidation: undefined as string | undefined,
     providerNetworkPolicyReport: undefined as string | undefined,
+    sbom: undefined as string | undefined,
+    packageJson: undefined as string | undefined,
     rbacReadiness: undefined as string | undefined,
     rbacPolicyValidation: undefined as string | undefined,
     releaseProvenanceReadiness: undefined as string | undefined,
@@ -1403,6 +1405,20 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--provider-network-policy-report requires a file path.' }
       }
       options.providerNetworkPolicyReport = value
+      index += 1
+    } else if (arg === '--sbom') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--sbom requires a file path.' }
+      }
+      options.sbom = value
+      index += 1
+    } else if (arg === '--package-json') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--package-json requires a file path.' }
+      }
+      options.packageJson = value
       index += 1
     } else if (arg === '--rbac-readiness') {
       const value = argv[index + 1]

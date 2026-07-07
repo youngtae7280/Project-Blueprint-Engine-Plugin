@@ -252,6 +252,27 @@ validated and summarized as source facts. SBOM generation, package signing, pack
 provenance remain future-only gaps until explicit release governance, key/trust policy, RBAC enforcement, and CI
 governance exist.
 
+### Preexisting SBOM Artifact Validation
+
+```bash
+devview security validate-sbom-artifact \
+  --sbom <sbom-artifact.json> \
+  --release-provenance-readiness <release-provenance-readiness.json> \
+  --release-surface-validation <release-surface-validation.json> \
+  --package-json <package.json> \
+  --output <sbom-validation-report.json> \
+  --markdown <sbom-validation-report.md> \
+  --json
+```
+
+Validates a wrapped, preexisting SBOM source fact without generating an SBOM. The SBOM input must use
+`artifactRole: devview-sbom-artifact`, `status: devview-sbom-artifact-supplied`,
+`sbomScope: package-sbom-source-fact-only`, and a supported `sbomFormat` of `spdx-json`, `cyclonedx-json`, or
+`devview-minimal-sbom-v1`. The command records byte digests, package identity alignment, component summary, optional
+release provenance readiness, and optional release-surface validation facts. It does not accept raw SPDX/CycloneDX in
+v1, run SBOM generators, run `npm pack`, publish packages, sign packages, create provenance attestations, call
+providers, make network calls, enforce RBAC, or activate enterprise gates.
+
 ### Provider/Network Default-Deny Policy
 
 ```bash
