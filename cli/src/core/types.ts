@@ -67,6 +67,8 @@ export interface CliOptions {
   files?: string[]
   stage?: CliStageOption
   summary?: string
+  title?: string
+  runId?: string
   source?: string
   change?: string
   patch?: string
@@ -90,6 +92,7 @@ export interface CliOptions {
   manual?: string
   output?: string
   dataOutput?: string
+  runOutput?: string
   markdown?: string
   request?: string
   prompt?: string
@@ -159,6 +162,7 @@ export interface CliOptions {
   boundary?: string
   intake?: string
   frontendChain?: string
+  baseline?: string
   roadmapAudit?: string
   finalHandoff?: string
   hookActivationChain?: string

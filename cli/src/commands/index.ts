@@ -94,6 +94,7 @@ import { uiApproveCommand } from './ui.js'
 import { validateCommand } from './validate.js'
 import { verificationDesignCheckCommand, verificationDesignCloseCommand } from './verification-design.js'
 import { workPlanningCheckCommand, workPlanningCloseCommand } from './work-planning.js'
+import { workJournalRenderCommand } from './work-journal.js'
 
 export async function runCommand(positionals: string[], context: CommandContext): Promise<CommandResult> {
   const [command, subcommand] = positionals
@@ -117,6 +118,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'extensions' && subcommand === 'report-readiness') {
     return extensionsReportReadinessCommand(context)
+  }
+  if (command === 'work-journal' && subcommand === 'render') {
+    return workJournalRenderCommand(context)
   }
   if (command === 'gate') {
     if (subcommand === 'assess') {

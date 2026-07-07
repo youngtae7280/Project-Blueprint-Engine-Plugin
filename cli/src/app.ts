@@ -109,6 +109,8 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     files: [] as string[],
     stage: undefined as CliStageOption | undefined,
     summary: undefined as string | undefined,
+    title: undefined as string | undefined,
+    runId: undefined as string | undefined,
     source: undefined as string | undefined,
     change: undefined as string | undefined,
     patch: undefined as string | undefined,
@@ -132,6 +134,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     manual: undefined as string | undefined,
     output: undefined as string | undefined,
     dataOutput: undefined as string | undefined,
+    runOutput: undefined as string | undefined,
     markdown: undefined as string | undefined,
     request: undefined as string | undefined,
     prompt: undefined as string | undefined,
@@ -201,6 +204,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     boundary: undefined as string | undefined,
     intake: undefined as string | undefined,
     frontendChain: undefined as string | undefined,
+    baseline: undefined as string | undefined,
     roadmapAudit: undefined as string | undefined,
     finalHandoff: undefined as string | undefined,
     hookActivationChain: undefined as string | undefined,
@@ -302,6 +306,20 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--summary requires text.' }
       }
       options.summary = value
+      index += 1
+    } else if (arg === '--title') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--title requires text.' }
+      }
+      options.title = value
+      index += 1
+    } else if (arg === '--run-id') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--run-id requires a stable run id.' }
+      }
+      options.runId = value
       index += 1
     } else if (arg === '--source') {
       const value = argv[index + 1]
@@ -463,6 +481,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--data-output requires a file path.' }
       }
       options.dataOutput = value
+      index += 1
+    } else if (arg === '--run-output') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--run-output requires a file path.' }
+      }
+      options.runOutput = value
       index += 1
     } else if (arg === '--markdown') {
       const value = argv[index + 1]
@@ -943,6 +968,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--frontend-chain requires a file path.' }
       }
       options.frontendChain = value
+      index += 1
+    } else if (arg === '--baseline') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--baseline requires a file path.' }
+      }
+      options.baseline = value
       index += 1
     } else if (arg === '--roadmap-audit') {
       const value = argv[index + 1]

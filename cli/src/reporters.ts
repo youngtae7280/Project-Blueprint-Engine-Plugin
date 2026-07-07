@@ -101,6 +101,7 @@ Commands:
   cleanup-legacy       Plan legacy example migration/delete/compatibility operations; requires --dry-run
   extensions report-readiness
                        Report Project Profile and Extension Manifest readiness without executing extension code
+  work-journal render  Render static cumulative DevView Work Journal HTML/data without execution or authority
   init                 Internal compatibility initializer for legacy migration inputs
   status               Internal compatibility status for legacy migration inputs
   gate <stage>         Check whether a stage can be entered, including review-result

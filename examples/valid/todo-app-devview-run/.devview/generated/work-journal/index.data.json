@@ -1,0 +1,293 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-work-journal-data-preview",
+  "htmlArtifactRole": "devview-work-journal-html-preview",
+  "status": "devview-work-journal-data-generated",
+  "journalScope": "cumulative-static-work-journal-preview",
+  "currentRunId": "todo-add-runtime-evidence",
+  "runs": [
+    {
+      "runId": "todo-add-runtime-evidence",
+      "title": "Todo Add Runtime Evidence Calibration",
+      "status": "blocked",
+      "nextAction": "Review blocked stage: Runtime Evidence satisfaction readiness.",
+      "blockedReason": "Runtime Evidence satisfaction readiness is devview-runtime-evidence-satisfaction-readiness-blocked.",
+      "flow": [
+        {
+          "stepId": "maintainability-graph",
+          "label": "Maintainability Graph",
+          "summary": "Source model for project structure and change context.",
+          "sourceId": "maintainability-graph",
+          "status": "confirmed-graph-source-backed",
+          "authority": "preview-only"
+        },
+        {
+          "stepId": "view-tree",
+          "label": "View Tree",
+          "summary": "Task-shaped projection from the Maintainability Graph.",
+          "sourceId": "view-tree",
+          "status": "selected-graph-slice-generated",
+          "authority": "preview-only"
+        },
+        {
+          "stepId": "context-pack",
+          "label": "Context Pack",
+          "summary": "Bounded subgraph package with scope and constraints.",
+          "sourceId": "context-pack",
+          "status": "contract-compiler-input-generated",
+          "authority": "preview-only"
+        },
+        {
+          "stepId": "instruction-pack",
+          "label": "Instruction Pack",
+          "summary": "AI/Codex-facing instruction artifact.",
+          "sourceId": "instruction-pack",
+          "status": "instruction-pack-generated",
+          "authority": "preview-only"
+        },
+        {
+          "stepId": "extension-readiness",
+          "label": "Project Extensions",
+          "summary": "Project profile and extension manifest readiness.",
+          "sourceId": "extension-readiness",
+          "status": "devview-extension-readiness-ready",
+          "authority": "preview-only"
+        },
+        {
+          "stepId": "runtime-evidence-satisfaction",
+          "label": "Runtime Evidence",
+          "summary": "Runtime obligation binding readiness or future satisfaction.",
+          "sourceId": "runtime-evidence-satisfaction",
+          "status": "devview-runtime-evidence-satisfaction-readiness-blocked",
+          "authority": "blocked"
+        },
+        {
+          "stepId": "equivalence-proof",
+          "label": "Equivalence Proof",
+          "summary": "Proof/readiness state for semantic equivalence.",
+          "sourceId": "equivalence-proof",
+          "status": "devview-equivalence-proof-readiness-blocked",
+          "authority": "blocked"
+        },
+        {
+          "stepId": "graph-delta",
+          "label": "Graph Delta",
+          "summary": "Proposed Maintainability Graph update.",
+          "sourceId": "graph-delta",
+          "status": "generated-proposal-only-preview",
+          "authority": "preview-only"
+        },
+        {
+          "stepId": "guarded-update",
+          "label": "Guarded Update",
+          "summary": "Apply/blocked graph update status.",
+          "sourceId": "guarded-update",
+          "status": "devview-graph-delta-apply-blocked",
+          "authority": "blocked"
+        },
+        {
+          "stepId": "scope-ci",
+          "label": "Scope/CI",
+          "summary": "Scope and CI enforcement readiness state.",
+          "sourceId": "scope-ci",
+          "status": "devview-scope-ci-enforcement-readiness-blocked",
+          "authority": "blocked"
+        }
+      ],
+      "artifacts": [
+        {
+          "sourceId": "baseline",
+          "label": "DevView baseline freeze",
+          "path": "examples/valid/todo-app-devview-run/generated/devview-core-baseline-freeze.runtime-evidence-only.preview.json",
+          "artifactRole": "devview-core-baseline-freeze-report",
+          "status": "devview-core-baseline-freeze-report-generated",
+          "authorityStatus": "source-summary-only-no-new-authority",
+          "classification": "completed"
+        },
+        {
+          "sourceId": "maintainability-graph",
+          "label": "Maintainability Graph",
+          "path": "examples/valid/todo-app-devview-run/graph-source.json",
+          "artifactRole": "structure-only-graph-source",
+          "status": "confirmed-graph-source-backed",
+          "authorityStatus": "source-summary-only-no-new-authority",
+          "classification": "advisory"
+        },
+        {
+          "sourceId": "view-tree",
+          "label": "View Tree",
+          "path": "examples/valid/todo-app-devview-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json",
+          "artifactRole": "selected-graph-slice",
+          "status": "selected-graph-slice-generated",
+          "authorityStatus": "source-summary-only-no-new-authority",
+          "classification": "advisory"
+        },
+        {
+          "sourceId": "context-pack",
+          "label": "Context Pack / Contract Input",
+          "path": "examples/valid/todo-app-devview-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json",
+          "artifactRole": "contract-compiler-input",
+          "status": "contract-compiler-input-generated",
+          "authorityStatus": "source-summary-only-no-new-authority",
+          "classification": "advisory"
+        },
+        {
+          "sourceId": "instruction-pack",
+          "label": "Instruction Pack",
+          "path": "examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json",
+          "artifactRole": "instruction-pack",
+          "status": "instruction-pack-generated",
+          "authorityStatus": "source-summary-only-no-new-authority",
+          "classification": "advisory"
+        },
+        {
+          "sourceId": "extension-readiness",
+          "label": "Extension readiness",
+          "path": "examples/valid/todo-app-devview-run/generated/devview-extension-readiness.runtime-evidence-only.preview.json",
+          "artifactRole": "devview-extension-readiness-report",
+          "status": "devview-extension-readiness-ready",
+          "authorityStatus": "source-summary-only-no-new-authority",
+          "classification": "advisory"
+        },
+        {
+          "sourceId": "runtime-evidence-satisfaction",
+          "label": "Runtime Evidence satisfaction readiness",
+          "path": "examples/valid/todo-app-devview-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json",
+          "artifactRole": "devview-runtime-evidence-satisfaction-readiness-preview",
+          "status": "devview-runtime-evidence-satisfaction-readiness-blocked",
+          "authorityStatus": "source-summary-only-no-new-authority",
+          "classification": "blocked"
+        },
+        {
+          "sourceId": "equivalence-proof",
+          "label": "Equivalence proof readiness",
+          "path": "examples/valid/todo-app-devview-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json",
+          "artifactRole": "devview-equivalence-proof-readiness-preview",
+          "status": "devview-equivalence-proof-readiness-blocked",
+          "authorityStatus": "source-summary-only-no-new-authority",
+          "classification": "blocked"
+        },
+        {
+          "sourceId": "scope-ci",
+          "label": "Scope/CI readiness",
+          "path": "examples/valid/todo-app-devview-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.json",
+          "artifactRole": "devview-scope-ci-enforcement-readiness-preview",
+          "status": "devview-scope-ci-enforcement-readiness-blocked",
+          "authorityStatus": "source-summary-only-no-new-authority",
+          "classification": "blocked"
+        },
+        {
+          "sourceId": "graph-delta",
+          "label": "Graph Delta proposal",
+          "path": "examples/valid/todo-app-devview-run/generated/graph-delta-proposal.add-todo-runtime-evidence-only.preview.json",
+          "artifactRole": "graph-delta-proposal-only-preview",
+          "status": "generated-proposal-only-preview",
+          "authorityStatus": "source-summary-only-no-new-authority",
+          "classification": "advisory"
+        },
+        {
+          "sourceId": "guarded-update",
+          "label": "Guarded graph update status",
+          "path": "examples/valid/todo-app-devview-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json",
+          "artifactRole": "devview-graph-delta-apply-report",
+          "status": "devview-graph-delta-apply-blocked",
+          "authorityStatus": "source-summary-only-no-new-authority",
+          "classification": "blocked"
+        }
+      ],
+      "auditProvenance": [
+        {
+          "sourceId": "baseline",
+          "path": "examples/valid/todo-app-devview-run/generated/devview-core-baseline-freeze.runtime-evidence-only.preview.json",
+          "artifactRole": "devview-core-baseline-freeze-report",
+          "status": "devview-core-baseline-freeze-report-generated"
+        },
+        {
+          "sourceId": "maintainability-graph",
+          "path": "examples/valid/todo-app-devview-run/graph-source.json",
+          "artifactRole": "structure-only-graph-source",
+          "status": "confirmed-graph-source-backed"
+        },
+        {
+          "sourceId": "view-tree",
+          "path": "examples/valid/todo-app-devview-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json",
+          "artifactRole": "selected-graph-slice",
+          "status": "selected-graph-slice-generated"
+        },
+        {
+          "sourceId": "context-pack",
+          "path": "examples/valid/todo-app-devview-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json",
+          "artifactRole": "contract-compiler-input",
+          "status": "contract-compiler-input-generated"
+        },
+        {
+          "sourceId": "instruction-pack",
+          "path": "examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json",
+          "artifactRole": "instruction-pack",
+          "status": "instruction-pack-generated"
+        },
+        {
+          "sourceId": "extension-readiness",
+          "path": "examples/valid/todo-app-devview-run/generated/devview-extension-readiness.runtime-evidence-only.preview.json",
+          "artifactRole": "devview-extension-readiness-report",
+          "status": "devview-extension-readiness-ready"
+        },
+        {
+          "sourceId": "runtime-evidence-satisfaction",
+          "path": "examples/valid/todo-app-devview-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json",
+          "artifactRole": "devview-runtime-evidence-satisfaction-readiness-preview",
+          "status": "devview-runtime-evidence-satisfaction-readiness-blocked"
+        },
+        {
+          "sourceId": "equivalence-proof",
+          "path": "examples/valid/todo-app-devview-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json",
+          "artifactRole": "devview-equivalence-proof-readiness-preview",
+          "status": "devview-equivalence-proof-readiness-blocked"
+        },
+        {
+          "sourceId": "scope-ci",
+          "path": "examples/valid/todo-app-devview-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.json",
+          "artifactRole": "devview-scope-ci-enforcement-readiness-preview",
+          "status": "devview-scope-ci-enforcement-readiness-blocked"
+        },
+        {
+          "sourceId": "graph-delta",
+          "path": "examples/valid/todo-app-devview-run/generated/graph-delta-proposal.add-todo-runtime-evidence-only.preview.json",
+          "artifactRole": "graph-delta-proposal-only-preview",
+          "status": "generated-proposal-only-preview"
+        },
+        {
+          "sourceId": "guarded-update",
+          "path": "examples/valid/todo-app-devview-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json",
+          "artifactRole": "devview-graph-delta-apply-report",
+          "status": "devview-graph-delta-apply-blocked"
+        }
+      ]
+    }
+  ],
+  "safetyFlags": {
+    "staticHtmlOnly": true,
+    "providerInvoked": false,
+    "networkCallMade": false,
+    "extensionExecutionAllowed": false,
+    "extensionsExecuted": false,
+    "shellCommandsExecuted": false,
+    "filesMutatedOutsideExplicitOutputs": false,
+    "graphSourceMutated": false,
+    "graphDeltaApplied": false,
+    "runtimeEvidenceSatisfied": false,
+    "evidenceAccepted": false,
+    "equivalenceProven": false,
+    "scopeEnforced": false,
+    "ciEnforcementEnabled": false,
+    "approvalAutomationEnabled": false,
+    "userAcceptanceAutomated": false,
+    "nonEnforcing": true
+  },
+  "outputPaths": {
+    "htmlOutputPath": "examples/valid/todo-app-devview-run/.devview/generated/work-journal/index.html",
+    "dataOutputPath": "examples/valid/todo-app-devview-run/.devview/generated/work-journal/index.data.json",
+    "runOutputPath": "examples/valid/todo-app-devview-run/.devview/generated/work-journal/runs/todo-add-runtime-evidence/run.json"
+  },
+  "nonExecutionBoundary": "This DevView Work Journal is a static visualization/report artifact. It does not execute extension code, call providers or networks, mutate graph-source, apply graph deltas, satisfy runtime Evidence, accept Evidence, prove equivalence, enforce scope, configure CI, activate hooks, automate approval, or replace user acceptance."
+}

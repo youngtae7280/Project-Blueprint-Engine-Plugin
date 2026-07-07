@@ -52,6 +52,33 @@ Discovers Project Profile and Extension Manifest declarations. It validates capa
 execute extension code, call providers, make network calls, mutate the Maintainability Graph, satisfy runtime Evidence,
 prove equivalence, or enforce scope/CI.
 
+### Work Journal
+
+```bash
+devview work-journal render \
+  --run-id <stable-run-id> \
+  --title "Human readable work title" \
+  --baseline <baseline-freeze.json> \
+  --graph-source <maintainability-graph.json> \
+  --view-tree <view-tree.json> \
+  --contract-input <context-pack.json> \
+  --instruction-pack <instruction-pack.json> \
+  --extension-readiness <extension-readiness.json> \
+  --runtime-evidence-satisfaction-readiness <runtime-readiness.json> \
+  --equivalence-proof-readiness <equivalence-readiness.json> \
+  --scope-ci-enforcement-readiness <scope-ci-readiness.json> \
+  --proposal <graph-delta-proposal.json> \
+  --apply-report <apply-report.json> \
+  --output .devview/generated/work-journal/index.html \
+  --data-output .devview/generated/work-journal/index.data.json \
+  --run-output .devview/generated/work-journal/runs/<stable-run-id>/run.json \
+  --json
+```
+
+Renders a cumulative static Work Journal preview and per-run data snapshot. The journal is report-only: it summarizes
+DevView flow, artifacts, blocked reasons, and provenance without executing extensions, calling providers, mutating the
+Maintainability Graph, satisfying runtime Evidence, proving equivalence, or enforcing scope/CI.
+
 ### UserPromptSubmit Advisory
 
 ```bash
