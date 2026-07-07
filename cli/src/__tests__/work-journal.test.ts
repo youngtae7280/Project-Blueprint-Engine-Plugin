@@ -55,6 +55,8 @@ describe('DevView Work Journal renderer', () => {
     expect(run.authoritySummary.runtimeEvidence.displayState).toBe('preview-only-blocked')
     expect(run.authoritySummary.equivalenceProof.displayState).toBe('preview-only-blocked')
     expect(run.authoritySummary.scopeCi.displayState).toBe('preview-only-blocked')
+    expect(run.authoritySummary.guardedUpdate.displayState).toBe('blocked')
+    expect(run.authoritySummary.guardedUpdate.nextAction).toContain('Resolve blocked graph update')
     expect(run.authoritySummary.journalAuthorityFlags.runtimeEvidenceSatisfied).toBe(false)
     expect(run.authoritySummary.journalAuthorityFlags.equivalenceProven).toBe(false)
     expect(run.flow.map((step: { label: string }) => step.label)).toEqual([
@@ -84,6 +86,7 @@ describe('DevView Work Journal renderer', () => {
         'scope-ci',
         'scope-ci-enforcement-record',
         'graph-delta',
+        'guarded-graph-update-boundary-record',
         'guarded-update',
       ]),
     )
@@ -113,6 +116,7 @@ describe('DevView Work Journal renderer', () => {
     expect(html).toContain('Source artifacts and provenance')
     expect(html).toContain('Run JSON')
     expect(html).toContain('static visualization/report artifact')
+    expect(html).toContain('Guarded Update')
   })
 
   it('summarizes actual runtime and equivalence records as source facts without promoting journal authority', async () => {
@@ -224,6 +228,49 @@ describe('DevView Work Journal renderer', () => {
     expect(data.safetyFlags.networkCallMade).toBe(false)
     expect(html).toContain('actual-record-scope-ci')
     expect(html).toContain('Source artifacts and provenance')
+    expect(html).toContain('Run JSON')
+  })
+
+  it('summarizes Guarded Graph Update boundary records as deferred source facts', async () => {
+    const workspace = createWorkspace()
+    writeWorkJournalSources(workspace)
+    writeJson(join(workspace, 'generated/guarded-boundary-record.json'), guardedGraphUpdateBoundaryRecord())
+
+    const result = await runDevViewCli(
+      workJournalArgs(undefined, undefined, undefined, [
+        '--guarded-graph-update-boundary-record',
+        'generated/guarded-boundary-record.json',
+      ]),
+      { cwd: workspace, pluginRoot },
+    )
+    const data = JSON.parse(readFileSync(join(workspace, '.devview/generated/work-journal/index.data.json'), 'utf8'))
+    const run = JSON.parse(
+      readFileSync(join(workspace, '.devview/generated/work-journal/runs/todo-add/run.json'), 'utf8'),
+    )
+    const html = readFileSync(join(workspace, '.devview/generated/work-journal/index.html'), 'utf8')
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(run.authoritySummary.guardedUpdate).toEqual(
+      expect.objectContaining({
+        boundaryRecordStatus: 'devview-guarded-graph-update-boundary-ready',
+        applyReportStatus: 'devview-graph-delta-apply-blocked',
+        displayState: 'actual-boundary-ready-apply-deferred',
+      }),
+    )
+    expect(run.authoritySummary.guardedUpdate.nextAction).toContain('Plan explicit guarded apply')
+    expect(run.flow.find((step: { stepId: string }) => step.stepId === 'guarded-update')).toEqual(
+      expect.objectContaining({
+        sourceId: 'guarded-graph-update-boundary-record',
+        authority: 'actual-record',
+        status: 'devview-guarded-graph-update-boundary-ready',
+      }),
+    )
+    expect(data.safetyFlags.graphSourceMutated).toBe(false)
+    expect(data.safetyFlags.graphDeltaApplied).toBe(false)
+    expect(data.safetyFlags.providerInvoked).toBe(false)
+    expect(data.safetyFlags.networkCallMade).toBe(false)
+    expect(html).toContain('actual-boundary-ready-apply-deferred')
+    expect(html).toContain('Guarded Update')
     expect(html).toContain('Run JSON')
   })
 
@@ -419,6 +466,35 @@ describe('DevView Work Journal renderer', () => {
       workJournalArgs('.tmp/journal.html', '.tmp/journal.data.json', '.tmp/run.json', [
         '--scope-ci-enforcement-record',
         'generated/not-scope-ci-record.json',
+      ]),
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues[0].message).toContain('unsupported role/status')
+    expect(existsSync(join(workspace, '.tmp/journal.html'))).toBe(false)
+    expect(existsSync(join(workspace, '.tmp/journal.data.json'))).toBe(false)
+    expect(existsSync(join(workspace, '.tmp/run.json'))).toBe(false)
+  })
+
+  it('blocks wrong Guarded Graph Update boundary role/status with guarded ready true before writing outputs', async () => {
+    const workspace = createWorkspace()
+    writeWorkJournalSources(workspace)
+    writeJson(join(workspace, 'generated/not-guarded-boundary.json'), {
+      artifactRole: 'devview-graph-delta-apply-report',
+      status: 'devview-graph-delta-apply-blocked',
+      guardedUpdateReady: true,
+      graphSourceMutated: false,
+      graphDeltaApplied: false,
+      providerInvoked: false,
+      networkCallMade: false,
+    })
+
+    const result = await runDevViewCli(
+      workJournalArgs('.tmp/journal.html', '.tmp/journal.data.json', '.tmp/run.json', [
+        '--guarded-graph-update-boundary-record',
+        'generated/not-guarded-boundary.json',
       ]),
       { cwd: workspace, pluginRoot },
     )
@@ -642,6 +718,40 @@ function writeActualAuthorityRecords(workspace: string): void {
     shellCommandsExecuted: false,
     filesMutated: false,
   })
+}
+
+function guardedGraphUpdateBoundaryRecord(): Record<string, unknown> {
+  return {
+    artifactRole: 'devview-guarded-graph-update-boundary-record',
+    status: 'devview-guarded-graph-update-boundary-ready',
+    guardedGraphUpdateBoundaryState: 'ready-for-future-guarded-graph-update-apply-command-no-mutation',
+    guardedUpdateReady: true,
+    applyCommandEnabled: false,
+    applyDeferred: true,
+    graphSourceMutated: false,
+    graphDeltaApplied: false,
+    runtimeEvidenceSatisfied: false,
+    evidenceAccepted: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+    requiredChecksConfigured: false,
+    branchProtectionChanged: false,
+    branchProtectionMutated: false,
+    requiredChecksMutated: false,
+    externalCiMutated: false,
+    diffRejectionEnabled: false,
+    diffRejectionActivated: false,
+    hooksActivated: false,
+    approvalAutomationEnabled: false,
+    userAcceptanceAutomated: false,
+    providerInvoked: false,
+    networkCallMade: false,
+    extensionExecutionAllowed: false,
+    extensionsExecuted: false,
+    shellCommandsExecuted: false,
+    filesMutated: false,
+  }
 }
 
 function previousJournalData(): unknown {

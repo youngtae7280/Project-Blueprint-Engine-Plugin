@@ -213,6 +213,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     extensionReadiness: undefined as string | undefined,
     scopeCiEnforcementReadiness: undefined as string | undefined,
     scopeCiEnforcementRecord: undefined as string | undefined,
+    guardedGraphUpdateBoundaryRecord: undefined as string | undefined,
     hookHealth: undefined as string | undefined,
     userPromptAdvisory: undefined as string | undefined,
     preflightSession: undefined as string | undefined,
@@ -1033,6 +1034,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--scope-ci-enforcement-record requires a file path.' }
       }
       options.scopeCiEnforcementRecord = value
+      index += 1
+    } else if (arg === '--guarded-graph-update-boundary-record') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--guarded-graph-update-boundary-record requires a file path.' }
+      }
+      options.guardedGraphUpdateBoundaryRecord = value
       index += 1
     } else if (arg === '--hook-health') {
       const value = argv[index + 1]

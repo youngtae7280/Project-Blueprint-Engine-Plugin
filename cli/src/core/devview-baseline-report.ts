@@ -26,6 +26,7 @@ export interface DevViewBaselineReportOptions {
   equivalenceProofReadiness?: string
   scopeCiEnforcementReadiness?: string
   scopeCiEnforcementRecord?: string
+  guardedGraphUpdateBoundaryRecord?: string
   output?: string
   markdown?: string
 }
@@ -84,6 +85,7 @@ export interface DevViewCoreBaselineFreezeReport {
   sourceEquivalenceProofReadiness: string | null
   sourceScopeCiEnforcementReadiness: string | null
   sourceScopeCiEnforcementRecord: string | null
+  sourceGuardedGraphUpdateBoundaryRecord: string | null
   sourceArtifacts: DevViewBaselineSourceSummary[]
   classificationTaxonomy: Array<{
     classification: BaselineClassification
@@ -240,6 +242,12 @@ const OPTIONAL_SOURCE_DEFS = [
     label: 'Scope/CI enforcement record',
     optionKey: 'scopeCiEnforcementRecord',
     expectedRole: 'devview-scope-ci-enforcement-record',
+  },
+  {
+    sourceId: 'guarded-graph-update-boundary-record',
+    label: 'Guarded Graph Update boundary record',
+    optionKey: 'guardedGraphUpdateBoundaryRecord',
+    expectedRole: 'devview-guarded-graph-update-boundary-record',
   },
 ] as const
 
@@ -444,6 +452,9 @@ function validateUnsafeAuthoritySignals(source: LoadedSource, findings: DevViewB
       source.sourceId === 'accepted-evidence' && isAcceptedEvidenceSourceFactAllowed(record),
     allowTopLevelScopeCiEnforcement:
       source.sourceId === 'scope-ci-enforcement-record' && isScopeCiEnforcementSourceFactAllowed(record),
+    allowTopLevelGuardedUpdateReady:
+      source.sourceId === 'guarded-graph-update-boundary-record' &&
+      isGuardedGraphUpdateBoundarySourceFactAllowed(record),
   })
   for (const entry of unsafe) {
     findings.push({
@@ -502,6 +513,24 @@ function isScopeCiEnforcementSourceFactAllowed(record: JsonRecord): boolean {
   )
 }
 
+function isGuardedGraphUpdateBoundarySourceFactAllowed(record: JsonRecord): boolean {
+  return (
+    record.artifactRole === 'devview-guarded-graph-update-boundary-record' &&
+    record.status === 'devview-guarded-graph-update-boundary-ready' &&
+    record.guardedGraphUpdateBoundaryState === 'ready-for-future-guarded-graph-update-apply-command-no-mutation' &&
+    record.guardedUpdateReady === true &&
+    record.applyCommandEnabled === false &&
+    record.applyDeferred === true &&
+    record.graphSourceMutated === false &&
+    record.graphDeltaApplied === false &&
+    record.providerInvoked === false &&
+    record.networkCallMade === false &&
+    record.hooksActivated === false &&
+    record.approvalAutomationEnabled === false &&
+    record.userAcceptanceAutomated === false
+  )
+}
+
 function buildReport(
   root: string,
   sources: LoadedSource[],
@@ -539,6 +568,7 @@ function buildReport(
     sourceEquivalenceProofReadiness: sourcePath('equivalence-proof-readiness'),
     sourceScopeCiEnforcementReadiness: sourcePath('scope-ci-enforcement-readiness'),
     sourceScopeCiEnforcementRecord: sourcePath('scope-ci-enforcement-record'),
+    sourceGuardedGraphUpdateBoundaryRecord: sourcePath('guarded-graph-update-boundary-record'),
     sourceArtifacts: sources.map((source) => summarizeSource(root, source)),
     classificationTaxonomy: buildClassificationTaxonomy(),
     baselineLanes: buildBaselineLanes(finalHandoff.record ?? {}, roadmapAudit.record ?? {}),
@@ -631,6 +661,12 @@ function classifyStatus(sourceId: string, status: string): BaselineClassificatio
   if (sourceId === 'evidence-decision' && normalized === 'devview-evidence-decision-recorded') return 'completed'
   if (sourceId === 'accepted-evidence' && normalized === 'devview-accepted-evidence-recorded') return 'completed'
   if (sourceId === 'scope-ci-enforcement-record' && normalized === 'devview-scope-ci-enforcement-recorded') {
+    return 'completed'
+  }
+  if (
+    sourceId === 'guarded-graph-update-boundary-record' &&
+    normalized === 'devview-guarded-graph-update-boundary-ready'
+  ) {
     return 'completed'
   }
   if (sourceId === 'graph-delta-apply-report') {
@@ -917,6 +953,7 @@ const UNSAFE_TRUE_FIELDS = new Set([
   'diffRejectionEnabled',
   'graphSourceMutationAllowed',
   'graphDeltaApplyEnabled',
+  'guardedUpdateReady',
   'mutationAllowed',
   'acceptanceAllowed',
   'equivalenceAllowed',
@@ -926,7 +963,11 @@ const UNSAFE_TRUE_FIELDS = new Set([
 
 function collectUnsafeAuthoritySignals(
   value: unknown,
-  options: { allowTopLevelAcceptedEvidence?: boolean; allowTopLevelScopeCiEnforcement?: boolean } = {},
+  options: {
+    allowTopLevelAcceptedEvidence?: boolean
+    allowTopLevelScopeCiEnforcement?: boolean
+    allowTopLevelGuardedUpdateReady?: boolean
+  } = {},
 ): Array<{ path: string }> {
   const findings: Array<{ path: string }> = []
   const visit = (entry: unknown, cursor: string, seen: Set<unknown>): void => {
@@ -946,7 +987,8 @@ function collectUnsafeAuthoritySignals(
         !(
           options.allowTopLevelScopeCiEnforcement &&
           (nextPath === 'scopeEnforced' || nextPath === 'ciEnforcementEnabled')
-        )
+        ) &&
+        !(options.allowTopLevelGuardedUpdateReady && nextPath === 'guardedUpdateReady')
       ) {
         findings.push({ path: nextPath })
       }

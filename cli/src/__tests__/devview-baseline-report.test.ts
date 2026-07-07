@@ -47,6 +47,7 @@ describe('DevView core baseline freeze report CLI', () => {
       'generated/runtime-evidence-satisfaction-readiness.json',
     )
     expect(payload.sourceScopeCiEnforcementRecord).toBe('generated/scope-ci-record.json')
+    expect(payload.sourceGuardedGraphUpdateBoundaryRecord).toBe('generated/guarded-boundary-record.json')
     expect(
       payload.sourceArtifacts.map((entry: { sourceId: string; classification: string }) => [
         entry.sourceId,
@@ -63,6 +64,7 @@ describe('DevView core baseline freeze report CLI', () => {
         ['equivalence-proof-readiness', 'blocked'],
         ['scope-ci-enforcement-readiness', 'blocked'],
         ['scope-ci-enforcement-record', 'completed'],
+        ['guarded-graph-update-boundary-record', 'completed'],
       ]),
     )
     expectSafetyFalse(payload.safetyInvariantSummary)
@@ -99,7 +101,7 @@ describe('DevView core baseline freeze report CLI', () => {
     )
     expect(
       payload.sourceArtifacts.filter((entry: { readStatus: string }) => entry.readStatus === 'missing-optional'),
-    ).toHaveLength(14)
+    ).toHaveLength(15)
     expectSafetyFalse(payload.safetyInvariantSummary)
   })
 
@@ -228,6 +230,28 @@ describe('DevView core baseline freeze report CLI', () => {
     expect(existsSync(join(workspace, '.tmp/baseline.json'))).toBe(false)
   })
 
+  it('blocks guardedUpdateReady true outside the exact Guarded Graph Update boundary record source shape', async () => {
+    const workspace = createWorkspace()
+    writeBaselineInputs(workspace)
+    writeJson(join(workspace, 'generated/guarded-boundary-record.json'), {
+      artifactRole: 'devview-graph-delta-apply-report',
+      status: 'devview-graph-delta-apply-blocked',
+      guardedUpdateReady: true,
+      graphDeltaApplied: false,
+      graphSourceMutated: false,
+    })
+
+    const result = await runDevViewCli([...baseArgs(), '--output', '.tmp/baseline.json'], {
+      cwd: workspace,
+      pluginRoot,
+    })
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues[0].message).toContain('guardedUpdateReady')
+    expect(existsSync(join(workspace, '.tmp/baseline.json'))).toBe(false)
+  })
+
   it('blocks new optional source overwrite before JSON output is written', async () => {
     const workspace = createWorkspace()
     writeBaselineInputs(workspace)
@@ -289,6 +313,8 @@ function baseArgs(): string[] {
     'generated/scope-ci-readiness.json',
     '--scope-ci-enforcement-record',
     'generated/scope-ci-record.json',
+    '--guarded-graph-update-boundary-record',
+    'generated/guarded-boundary-record.json',
     '--json',
   ]
 }
@@ -417,6 +443,7 @@ function writeBaselineInputs(
     readiness('devview-scope-ci-enforcement-readiness-preview'),
   )
   writeJson(join(workspace, 'generated/scope-ci-record.json'), scopeCiEnforcementRecord())
+  writeJson(join(workspace, 'generated/guarded-boundary-record.json'), guardedGraphUpdateBoundaryRecord())
   writeJson(join(workspace, 'generated/roadmap.json'), {
     artifactRole: 'devview-roadmap-completion-audit-preview',
     status: 'devview-roadmap-completion-audit-previewed',
@@ -506,6 +533,40 @@ function scopeCiEnforcementRecord(): Record<string, unknown> {
     hooksActivated: false,
     graphDeltaApplied: false,
     graphSourceMutated: false,
+    approvalAutomationEnabled: false,
+    userAcceptanceAutomated: false,
+    providerInvoked: false,
+    networkCallMade: false,
+    extensionExecutionAllowed: false,
+    extensionsExecuted: false,
+    shellCommandsExecuted: false,
+    filesMutated: false,
+  }
+}
+
+function guardedGraphUpdateBoundaryRecord(): Record<string, unknown> {
+  return {
+    artifactRole: 'devview-guarded-graph-update-boundary-record',
+    status: 'devview-guarded-graph-update-boundary-ready',
+    guardedGraphUpdateBoundaryState: 'ready-for-future-guarded-graph-update-apply-command-no-mutation',
+    guardedUpdateReady: true,
+    applyCommandEnabled: false,
+    applyDeferred: true,
+    graphDeltaApplied: false,
+    graphSourceMutated: false,
+    runtimeEvidenceSatisfied: false,
+    evidenceAccepted: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+    requiredChecksConfigured: false,
+    branchProtectionChanged: false,
+    branchProtectionMutated: false,
+    requiredChecksMutated: false,
+    externalCiMutated: false,
+    diffRejectionEnabled: false,
+    diffRejectionActivated: false,
+    hooksActivated: false,
     approvalAutomationEnabled: false,
     userAcceptanceAutomated: false,
     providerInvoked: false,

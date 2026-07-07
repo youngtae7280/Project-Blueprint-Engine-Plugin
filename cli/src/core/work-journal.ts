@@ -21,6 +21,7 @@ const unsafeAuthorityFields = [
   'ciEnforcementEnabled',
   'graphSourceMutated',
   'graphDeltaApplied',
+  'guardedUpdateReady',
   'approvalAutomationEnabled',
   'userAcceptanceAutomated',
   'providerInvoked',
@@ -46,6 +47,7 @@ export interface WorkJournalRenderOptions {
   equivalenceProofRecord?: string
   scopeCiEnforcementReadiness?: string
   scopeCiEnforcementRecord?: string
+  guardedGraphUpdateBoundaryRecord?: string
   proposal?: string
   applyReport?: string
   output?: string
@@ -110,6 +112,12 @@ export interface WorkJournalAuthoritySummary {
     actualRecordStatus: string | null
     activationStatus: 'actual-record-present' | 'future-not-provided'
     displayState: 'actual-record-scope-ci' | 'preview-only-ready' | 'preview-only-blocked' | 'not-provided'
+  }
+  guardedUpdate: {
+    boundaryRecordStatus: string | null
+    applyReportStatus: string | null
+    nextAction: string
+    displayState: 'actual-boundary-ready-apply-deferred' | 'blocked' | 'preview-only-deferred' | 'not-provided'
   }
   journalAuthorityFlags: {
     runtimeEvidenceSatisfied: false
@@ -208,7 +216,12 @@ const SOURCE_DEFS = [
     optionKey: 'scopeCiEnforcementRecord',
   },
   { sourceId: 'graph-delta', label: 'Graph Delta proposal', optionKey: 'proposal' },
-  { sourceId: 'guarded-update', label: 'Guarded graph update status', optionKey: 'applyReport' },
+  {
+    sourceId: 'guarded-graph-update-boundary-record',
+    label: 'Guarded Graph Update boundary record',
+    optionKey: 'guardedGraphUpdateBoundaryRecord',
+  },
+  { sourceId: 'guarded-update', label: 'Graph Delta apply status', optionKey: 'applyReport' },
 ] as const
 
 export async function renderWorkJournalFile(
@@ -394,12 +407,57 @@ function validateSourceRecordShape(source: LoadedArtifact): void {
       'filesMutated',
     ])
   }
+  if (source.sourceId === 'guarded-graph-update-boundary-record') {
+    if (
+      record.artifactRole !== 'devview-guarded-graph-update-boundary-record' ||
+      record.status !== 'devview-guarded-graph-update-boundary-ready'
+    ) {
+      throw new Error('Work Journal Guarded Graph Update boundary record source has an unsupported role/status.')
+    }
+    if (record.guardedGraphUpdateBoundaryState !== 'ready-for-future-guarded-graph-update-apply-command-no-mutation') {
+      throw new Error('Work Journal Guarded Graph Update boundary record source has an unsupported boundary state.')
+    }
+    if (record.guardedUpdateReady !== true) {
+      throw new Error('Work Journal Guarded Graph Update boundary record source must have guardedUpdateReady true.')
+    }
+    if (record.applyCommandEnabled !== false || record.applyDeferred !== true) {
+      throw new Error(
+        'Work Journal Guarded Graph Update boundary record source must keep applyCommandEnabled:false and applyDeferred:true.',
+      )
+    }
+    requireFalseFields(source.label, record, [
+      'graphSourceMutated',
+      'graphDeltaApplied',
+      'runtimeEvidenceSatisfied',
+      'evidenceAccepted',
+      'equivalenceProven',
+      'scopeEnforced',
+      'ciEnforcementEnabled',
+      'requiredChecksConfigured',
+      'branchProtectionChanged',
+      'branchProtectionMutated',
+      'requiredChecksMutated',
+      'externalCiMutated',
+      'diffRejectionEnabled',
+      'diffRejectionActivated',
+      'hooksActivated',
+      'approvalAutomationEnabled',
+      'userAcceptanceAutomated',
+      'providerInvoked',
+      'networkCallMade',
+      'extensionExecutionAllowed',
+      'extensionsExecuted',
+      'shellCommandsExecuted',
+      'filesMutated',
+    ])
+  }
 }
 
 function allowedAuthorityPathsForSource(source: LoadedArtifact): Set<string> {
   if (source.sourceId === 'runtime-evidence-satisfaction-record') return new Set(['runtimeEvidenceSatisfied'])
   if (source.sourceId === 'equivalence-proof-record') return new Set(['equivalenceProven'])
   if (source.sourceId === 'scope-ci-enforcement-record') return new Set(['scopeEnforced', 'ciEnforcementEnabled'])
+  if (source.sourceId === 'guarded-graph-update-boundary-record') return new Set(['guardedUpdateReady'])
   return new Set()
 }
 
@@ -550,6 +608,9 @@ function classifyArtifact(sourceId: string, status: string): WorkJournalArtifact
     sourceId === 'scope-ci-enforcement-record'
   )
     return normalized.includes('recorded') ? 'completed' : 'blocked'
+  if (sourceId === 'guarded-graph-update-boundary-record') {
+    return normalized.includes('ready') ? 'completed' : 'blocked'
+  }
   if (sourceId === 'runtime-evidence-satisfaction-readiness')
     return normalized.includes('ready') ? 'advisory' : 'blocked'
   if (sourceId === 'equivalence-proof-readiness' || sourceId === 'scope-ci')
@@ -623,8 +684,9 @@ function buildFlow(artifacts: WorkJournalArtifactSummary[]): WorkJournalFlowStep
     {
       stepId: 'guarded-update',
       label: 'Guarded Update',
-      summary: 'Apply/blocked graph update status.',
+      summary: 'Boundary record when present; otherwise apply/blocked graph update status.',
       sourceId: 'guarded-update',
+      actualSourceId: 'guarded-graph-update-boundary-record',
     },
     {
       stepId: 'scope-ci',
@@ -730,6 +792,8 @@ function buildAuthoritySummary(artifacts: WorkJournalArtifactSummary[]): WorkJou
   const equivalenceRecord = artifacts.find((artifact) => artifact.sourceId === 'equivalence-proof-record')
   const scopeCi = artifacts.find((artifact) => artifact.sourceId === 'scope-ci')
   const scopeCiRecord = artifacts.find((artifact) => artifact.sourceId === 'scope-ci-enforcement-record')
+  const guardedBoundary = artifacts.find((artifact) => artifact.sourceId === 'guarded-graph-update-boundary-record')
+  const applyReport = artifacts.find((artifact) => artifact.sourceId === 'guarded-update')
   return {
     runtimeEvidence: {
       readinessStatus: runtimeReadiness?.status ?? null,
@@ -766,6 +830,24 @@ function buildAuthoritySummary(artifacts: WorkJournalArtifactSummary[]): WorkJou
             ? 'preview-only-ready'
             : scopeCi?.classification === 'blocked'
               ? 'preview-only-blocked'
+              : 'not-provided',
+    },
+    guardedUpdate: {
+      boundaryRecordStatus: guardedBoundary?.status ?? null,
+      applyReportStatus: applyReport?.status ?? null,
+      nextAction:
+        guardedBoundary?.classification === 'completed'
+          ? 'Plan explicit guarded apply; graph-source has not been updated.'
+          : applyReport?.classification === 'blocked'
+            ? 'Resolve blocked graph update/apply status before planning guarded apply.'
+            : 'Create a guarded graph update boundary record before any apply command.',
+      displayState:
+        guardedBoundary?.classification === 'completed'
+          ? 'actual-boundary-ready-apply-deferred'
+          : applyReport?.classification === 'blocked'
+            ? 'blocked'
+            : applyReport?.classification === 'advisory'
+              ? 'preview-only-deferred'
               : 'not-provided',
     },
     journalAuthorityFlags: {
@@ -1258,6 +1340,7 @@ function renderWorkJournalHtml(journal: WorkJournalDataPreview): string {
         '<div class="summary-cell"><span>Runtime Evidence</span><strong>' + esc(runtime.displayState || 'not-provided') + '</strong></div>' +
         '<div class="summary-cell"><span>Equivalence</span><strong>' + esc(equivalence.displayState || 'not-provided') + '</strong></div>' +
         '<div class="summary-cell"><span>Scope</span><strong>' + esc(scope.status || 'not-provided') + '</strong></div>' +
+        '<div class="summary-cell"><span>Guarded Update</span><strong>' + esc((authority.guardedUpdate || {}).displayState || 'not-provided') + '</strong></div>' +
         '<div class="summary-cell"><span>Evidence required</span><strong>' + esc(fmt(evidence.required)) + '</strong></div>' +
         '<div class="summary-cell"><span>Evidence provided</span><strong>' + esc(fmt(evidence.provided)) + '</strong></div>' +
         '<div class="summary-cell"><span>Evidence missing</span><strong>' + esc(fmt(evidence.missing)) + '</strong></div>' +
@@ -1280,6 +1363,7 @@ function renderWorkJournalHtml(journal: WorkJournalDataPreview): string {
       const runtime = authority.runtimeEvidence || {};
       const equivalence = authority.equivalenceProof || {};
       const scopeCi = authority.scopeCi || {};
+      const guardedUpdate = authority.guardedUpdate || {};
       document.getElementById('decision-panel').innerHTML =
         '<h3>Selected Run Decision</h3><p>' + esc(run.decisionSummary || run.blockedReason || 'Ready for review.') + '</p>' +
         '<p class="reason"><strong>Next action:</strong> ' + esc(run.nextAction) + '</p>' +
@@ -1292,6 +1376,7 @@ function renderWorkJournalHtml(journal: WorkJournalDataPreview): string {
         authorityRow('Runtime Evidence', runtime.displayState, runtime.actualRecordStatus || runtime.readinessStatus) +
         authorityRow('Equivalence Proof', equivalence.displayState, equivalence.actualRecordStatus || equivalence.readinessStatus) +
         authorityRow('Scope/CI', scopeCi.displayState, scopeCi.actualRecordStatus || scopeCi.readinessStatus || scopeCi.activationStatus) +
+        authorityRow('Guarded Update', guardedUpdate.displayState, guardedUpdate.boundaryRecordStatus || guardedUpdate.applyReportStatus || guardedUpdate.nextAction) +
         '</div>';
     }
     function authorityRow(label, stateValue, status) {
@@ -1320,6 +1405,7 @@ function renderWorkJournalHtml(journal: WorkJournalDataPreview): string {
       if (stepId === 'runtime-evidence') return ['runtime-evidence-satisfaction-readiness', 'runtime-evidence-satisfaction-record'];
       if (stepId === 'equivalence-proof') return ['equivalence-proof-readiness', 'equivalence-proof-record'];
       if (stepId === 'scope-ci') return ['scope-ci', 'scope-ci-enforcement-record'];
+      if (stepId === 'guarded-update') return ['guarded-graph-update-boundary-record', 'guarded-update', 'graph-delta'];
       return [];
     }
     render();

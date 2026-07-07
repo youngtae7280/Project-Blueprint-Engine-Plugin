@@ -71,6 +71,7 @@ devview work-journal render \
   --scope-ci-enforcement-readiness <scope-ci-readiness.json> \
   --scope-ci-enforcement-record <scope-ci-enforcement-record.json> \
   --proposal <graph-delta-proposal.json> \
+  --guarded-graph-update-boundary-record <guarded-graph-update-boundary-record.json> \
   --apply-report <apply-report.json> \
   --output .devview/generated/work-journal/index.html \
   --data-output .devview/generated/work-journal/index.data.json \
@@ -83,8 +84,9 @@ DevView Work Journal data artifact, the command preserves prior runs and replace
 deterministically. The default HTML view is compact: run status, blocked/ready reason, next action, a pipeline strip,
 Evidence and scope counts, and preview-only versus actual-authority source state. Full provenance, raw run JSON, paths,
 hashes, and artifact lists stay behind inspector drill-down sections. The journal is report-only: it summarizes DevView
-flow and source facts without executing extensions, calling providers, mutating the Maintainability Graph, creating
-runtime Evidence satisfaction, creating an equivalence proof, mutating external CI, or changing branch protection.
+flow and source facts, including a deferred guarded-update boundary when provided, without executing extensions, calling
+providers, mutating the Maintainability Graph, applying a Graph Delta, creating runtime Evidence satisfaction, creating
+an equivalence proof, mutating external CI, or changing branch protection.
 
 ### UserPromptSubmit Advisory
 
@@ -291,6 +293,7 @@ devview graph read-model report-devview-baseline \
   --equivalence-proof-readiness <equivalence-readiness.json> \
   --scope-ci-enforcement-readiness <scope-ci-readiness.json> \
   --scope-ci-enforcement-record <scope-ci-enforcement-record.json> \
+  --guarded-graph-update-boundary-record <guarded-graph-update-boundary-record.json> \
   --output <devview-baseline.json> \
   --markdown <devview-baseline.md> \
   --json
