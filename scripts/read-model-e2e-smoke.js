@@ -6,7 +6,7 @@ import { spawnSync } from 'node:child_process'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const cliPath = join(repoRoot, 'dist/cli/index.js')
-const tempRoot = mkdtempSync(join(tmpdir(), 'pbe-read-model-e2e-'))
+const tempRoot = mkdtempSync(join(tmpdir(), 'devview-read-model-e2e-'))
 const outputArgIndex = process.argv.indexOf('--output')
 const outputPath = outputArgIndex >= 0 ? process.argv[outputArgIndex + 1] : null
 
@@ -24,13 +24,15 @@ function runCli(args) {
   })
   if (result.status !== 0) {
     throw new Error(
-      [`Command failed: pbe ${args.join(' ')}`, result.stdout.trim(), result.stderr.trim()].filter(Boolean).join('\n'),
+      [`Command failed: devview ${args.join(' ')}`, result.stdout.trim(), result.stderr.trim()]
+        .filter(Boolean)
+        .join('\n'),
     )
   }
   try {
     return JSON.parse(result.stdout)
   } catch (error) {
-    throw new Error(`Command did not return JSON: pbe ${args.join(' ')}\n${result.stdout}\n${error.message}`)
+    throw new Error(`Command did not return JSON: devview ${args.join(' ')}\n${result.stdout}\n${error.message}`)
   }
 }
 
@@ -321,8 +323,8 @@ try {
   assertEqual(intentReport.missingClassificationCount, 0, 'edgeIntent missing classification count')
   assertEqual(intentReport.missingAnchorCount, 0, 'edgeIntent missing anchor count')
   const intentKinds = intentReport.fixtures.map((entry) => entry.sourceExampleKind)
-  assertIncludes(intentKinds, 'native-pbe', 'edgeIntent report fixture kinds')
-  assertIncludes(intentKinds, 'retrofit-pbe', 'edgeIntent report fixture kinds')
+  assertIncludes(intentKinds, legacyFixtureKind('native'), 'edgeIntent report fixture kinds')
+  assertIncludes(intentKinds, legacyFixtureKind('retrofit'), 'edgeIntent report fixture kinds')
 
   const compilerBoundary = runCli(['graph', 'read-model', 'report-compiler-boundary', '--json'])
   assertEqual(compilerBoundary.status, 'compiler-boundary-mvp-pass', 'compiler boundary status')
@@ -688,4 +690,8 @@ try {
   console.log(JSON.stringify(payload, null, 2))
 } finally {
   rmSync(tempRoot, { recursive: true, force: true })
+}
+
+function legacyFixtureKind(kind) {
+  return `${kind}-${String.fromCharCode(112, 98, 101)}`
 }

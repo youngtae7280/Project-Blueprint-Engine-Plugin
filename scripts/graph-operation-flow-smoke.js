@@ -6,7 +6,7 @@ import { spawnSync } from 'node:child_process'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const cliPath = join(repoRoot, 'dist/cli/index.js')
-const tempRoot = mkdtempSync(join(tmpdir(), 'pbe-graph-operation-flow-'))
+const tempRoot = mkdtempSync(join(tmpdir(), 'devview-graph-operation-flow-'))
 const outputArgIndex = process.argv.indexOf('--output')
 const outputPath = outputArgIndex >= 0 ? process.argv[outputArgIndex + 1] : null
 
@@ -44,7 +44,7 @@ function runCli(args) {
   try {
     return JSON.parse(result.stdout)
   } catch (error) {
-    throw new Error(`Command did not return JSON: pbe ${args.join(' ')}\n${result.stdout}\n${error.message}`)
+    throw new Error(`Command did not return JSON: devview ${args.join(' ')}\n${result.stdout}\n${error.message}`)
   }
 }
 
@@ -64,8 +64,8 @@ try {
   const targetRepo = join(tempRoot, 'target')
   writeText(join(targetRepo, 'src/search.js'), 'export function matches() {\n  return false\n}\n')
   run('git', ['init'], targetRepo)
-  run('git', ['config', 'user.email', 'pbe@example.test'], targetRepo)
-  run('git', ['config', 'user.name', 'PBE Smoke'], targetRepo)
+  run('git', ['config', 'user.email', 'devview@example.test'], targetRepo)
+  run('git', ['config', 'user.name', 'DevView Smoke'], targetRepo)
   run('git', ['add', '.'], targetRepo)
   run('git', ['commit', '-m', 'baseline'], targetRepo)
 
@@ -253,7 +253,7 @@ try {
   assertEqual(node.state, 'implemented-local-smoke-pass', 'applied node state')
 
   const summary = {
-    status: 'pbe-graph-operation-flow-pass',
+    status: 'devview-graph-operation-flow-pass',
     tempWorkspace: outputPath ? tempRoot : 'removed-after-smoke',
     tempWorkspaceRetained: Boolean(outputPath),
     commands: [pack.command, delta.command, proposal.command, preview.command, applied.command],
@@ -262,7 +262,7 @@ try {
     boundaries: {
       previewDidNotMutateGraphSource: true,
       applyMutatedGraphSourceOnly: applied.boundaries.graphSourceWritten === true,
-      targetPatchAppliedByPbe: false,
+      targetPatchAppliedByDevView: false,
     },
   }
 
