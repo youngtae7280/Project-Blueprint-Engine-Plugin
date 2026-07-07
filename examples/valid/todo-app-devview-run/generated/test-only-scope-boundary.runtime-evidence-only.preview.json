@@ -18,15 +18,15 @@
       {
         "category": "test-files",
         "status": "candidate-only",
-        "paths": ["examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"],
+        "paths": ["examples/valid/todo-app-devview-run/.devview/tree/test-tree.json"],
         "reason": "The fixture is centered on add-todo behavior proof obligations."
       },
       {
         "category": "runtime-evidence-files",
         "status": "candidate-only",
         "paths": [
-          "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
-          "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt"
+          "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
+          "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt"
         ],
         "reason": "Evidence artifacts can describe proof status without changing production source."
       },
@@ -63,7 +63,7 @@
       },
       {
         "id": "forbidden-acceptance-state-mutation",
-        "paths": ["examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json"],
+        "paths": ["examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json"],
         "reason": "Test Evidence does not replace user acceptance."
       }
     ],

@@ -674,7 +674,7 @@ describe('read-model Evidence builder', () => {
     expect(report.commandPlan.sequentialDefault).toBe(true)
     expect(report.compatibility.acepRemainsExecutionPackagingPath).toBe(true)
     expect(report.compatibility.note).toContain('ACEP')
-    expect(report.limitations).toContain('does not mutate .pbe active state')
+    expect(report.limitations).toContain('does not mutate .devview active state')
   })
 
   it('keeps the Todo App graph-native execution contract report structure-only after the pilot retry', async () => {
@@ -696,7 +696,7 @@ describe('read-model Evidence builder', () => {
     expect(report.references.workNodeIds).toContain('WT-1')
     expect(report.verificationRequirements.testNodeIds).toContain('TT-1')
     expect(report.fileChangeGuardContract.sourceFiles).toContain(
-      'examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json',
+      'examples/valid/todo-app-devview-run/.devview/tree/product-tree.json',
     )
     expect(report.verificationRequirements.requiredCommands).toEqual([
       'graph read-model generate',
@@ -3535,7 +3535,7 @@ describe('read-model Evidence builder', () => {
     expect(generatedJson.nodes).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes)
     expect(generatedJson.edges).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.edges)
     expect(generatedJson.coreViewCoverage.map((entry) => entry.name)).toEqual(coreViews)
-    expect(generatedJson.sourceAuthorityBoundary).toContain('Canonical .pbe')
+    expect(generatedJson.sourceAuthorityBoundary).toContain('Canonical .devview')
     expect(generatedJson.nonPromotionStatement).toContain('does not change source authority')
     const tags = generatedJson.coreViewCoverage.flatMap((entry) => entry.viewScopedTags || [])
     expect(tags.every((tag) => allowedTags.has(tag))).toBe(true)

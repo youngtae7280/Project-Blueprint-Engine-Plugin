@@ -14,12 +14,12 @@ npm run validate
 - `cli/src/validators/*`: the active CLI validator layer used by `pbe validate`, stage gates, and transition commands.
 - `scripts/validate-pbe-files.js`: repository-level validation wrapper for plugin structure, compatibility artifacts,
   examples, and preserved checks.
-- `scripts/validate-pbe-tree-system.js`: v2 schema/template and optional `.pbe` tree artifact validator.
+- `scripts/validate-pbe-tree-system.js`: v2 schema/template and optional `.devview` tree artifact validator.
 - `scripts/validators/*`: legacy repository validation scripts used by `scripts/validate-pbe-files.js`.
 - `scripts/validator-utils/*`: shared file, JSON, markdown, and report helpers for legacy repository validators.
 - `scripts/validators/legacy-core.js`: compatibility validator preserved from the previous monolithic implementation.
 - `scripts/test-examples.js`: example regression runner for valid and invalid fixture workspaces.
-- `examples/valid/*`: closed golden `.pbe` fixture workspaces.
+- `examples/valid/*`: closed golden `.devview` fixture workspaces.
 - `examples/invalid/*`: invalid mutation fixtures with expected issue codes.
 
 ## Example Regression
@@ -34,7 +34,7 @@ The runner builds the CLI, materializes `examples/valid/todo-app-devview-run`, a
 stage-aware `pbe trace check` commands to pass. Invalid fixtures under `examples/invalid/*` are applied as focused
 mutations to the golden run; each command must fail with its configured `expectedIssueCode`. This keeps the current
 state machine, structured acceptance criteria, traceability closure, evidence freshness, and Change/Impact/Revision
-skeleton covered by concrete `.pbe` examples without adding new validator rules.
+skeleton covered by concrete `.devview` examples without adding new validator rules.
 
 ## Expected Report Shape
 

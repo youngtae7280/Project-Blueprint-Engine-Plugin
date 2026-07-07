@@ -40,7 +40,7 @@ promotion approval.
 | `examples/internal-legacy/read-model-aggregate/generated/read-model-slices.json` | Near aggregate output files                                                                 | Generated directory implies output, may be overwritten, mixes config/source metadata with churn artifacts      | Avoid                                              |
 | `examples/read-model-slices.json`                                                | Simple top-level examples registry                                                          | Less clearly tied to read-model aggregate path; may look like registry for all examples, not read-model slices | Acceptable fallback but less precise               |
 | `docs/concept/read-model-slices.md/json`                                         | Safe for design-only discussion                                                             | Documentation path is not ideal for future executable config; parser reading docs/concept would blur docs/code | Good for concept samples only, not execution input |
-| Future `.pbe/read-model-slices.json` or `.pbe/graph/registry.json`               | Closer to PBE runtime artifacts and future repo-level config                                | No repo root `.pbe` artifact exists here; could imply source authority or active runtime state too early       | Future-only after runtime artifact policy          |
+| Future `.devview/read-model-slices.json` or `.devview/graph/registry.json`       | Closer to PBE runtime artifacts and future repo-level config                                | No repo root `.devview` artifact exists here; could imply source authority or active runtime state too early   | Future-only after runtime artifact policy          |
 | CLI internal hardcoded profile list                                              | No new file; current behavior is stable                                                     | Does not scale; hides profile registry from review; makes `validate --all` less transparent                    | Short-term fallback only                           |
 
 ## Recommendation
@@ -57,7 +57,7 @@ Rationale:
   becoming a slice artifact.
 - It is outside `generated/`, so it is not confused with command output or artifact churn.
 - It is near the aggregate summary output, so readers can connect registry scope to aggregate Evidence.
-- It is repo-local and easy for future CLI code to read without implying `.pbe` source authority.
+- It is repo-local and easy for future CLI code to read without implying `.devview` source authority.
 - It can be introduced as a candidate fixture before parser support consumes it.
 
 Do not place the registry under `examples/internal-legacy/read-model-aggregate/generated/`. A registry is configuration/execution
@@ -106,7 +106,7 @@ Registry inclusion does not mean:
 - source authority changes
 - Maintainability Graph becomes source
 - Todo App DevView Run becomes parity-backed, pilot-marker-backed, CI-backed, or source-authority bearing
-- tree-native or canonical `.pbe` artifacts are retired
+- tree-native or canonical `.devview` artifacts are retired
 - user acceptance is replaced
 - full Graph-source promotion is approved
 

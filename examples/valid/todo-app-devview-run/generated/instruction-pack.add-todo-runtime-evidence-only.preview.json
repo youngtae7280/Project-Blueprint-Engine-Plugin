@@ -29,7 +29,7 @@
     "projectName": "Todo App",
     "sourceChangeId": "change-ch-001-contract-input-preview",
     "slice": "Add or strengthen evidence for the Todo App add button behavior without touching production source.",
-    "writeBoundary": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json, examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json, examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt"
+    "writeBoundary": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json, examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json, examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt"
   },
   "userConfirmedIntent": {
     "summary": "Add or strengthen evidence for the Todo App add button behavior without touching production source.",
@@ -49,7 +49,7 @@
     {
       "id": "allowed-scope-tt-1",
       "scopeKind": "test",
-      "paths": ["examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"],
+      "paths": ["examples/valid/todo-app-devview-run/.devview/tree/test-tree.json"],
       "sourceTargetScopeCandidate": "scope-tt-1",
       "sourceStatus": "derived-from-selected-graph-slice-check-or-evidence-context",
       "allowedUse": ["review-selected-check-or-evidence", "report-selected-evidence-status"],
@@ -59,8 +59,8 @@
       "id": "allowed-scope-ev-1",
       "scopeKind": "evidence",
       "paths": [
-        "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
-        "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt"
+        "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
+        "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt"
       ],
       "sourceTargetScopeCandidate": "scope-ev-1",
       "sourceStatus": "derived-from-selected-graph-slice-check-or-evidence-context",
@@ -88,7 +88,7 @@
     {
       "id": "forbidden-approval-or-acceptance-changes",
       "scopeKind": "product",
-      "paths": ["examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json"],
+      "paths": ["examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json"],
       "derivedFrom": ["request-ir-graph-aware-validation:scopeIntentResolution"],
       "sourceStatus": "derived-from-graph-aware-validation-context",
       "boundary": "forbidden scope is advisory contract-input context and not enforcement"
@@ -99,7 +99,7 @@
       "id": "required-evidence-tt-1",
       "sourceEvidenceId": "evidence-tt-1",
       "evidenceType": "selected_check_context",
-      "artifact": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+      "artifact": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
       "sourceStatus": "derived-from-selected-graph-slice",
       "runtimeEvidenceSatisfied": false,
       "acceptedEvidence": false
@@ -108,7 +108,7 @@
       "id": "required-evidence-ev-1",
       "sourceEvidenceId": "evidence-ev-1",
       "evidenceType": "selected_evidence_artifact",
-      "artifact": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+      "artifact": "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt",
       "sourceStatus": "derived-from-selected-graph-slice",
       "runtimeEvidenceSatisfied": false,
       "acceptedEvidence": false
@@ -172,7 +172,7 @@
     }
   ],
   "executionInstructions": [
-    "Stay within allowed scope only: examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json, examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json, examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt.",
+    "Stay within allowed scope only: examples/valid/todo-app-devview-run/.devview/tree/test-tree.json, examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json, examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt.",
     "Do not treat targetScopeCandidates or graph context as editable scope unless they also appear in allowedScope.",
     "Do not mutate graph-source, approval, acceptance, or production source files.",
     "If required evidence cannot be produced or linked inside allowed scope, stop and report the missing evidence.",
@@ -191,8 +191,8 @@
     "Do not enforce scope or CI."
   ],
   "verificationInstructions": [
-    "Review or produce candidate evidence for required-evidence-tt-1 at examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json; keep runtimeEvidenceSatisfied=false until explicit review.",
-    "Review or produce candidate evidence for required-evidence-ev-1 at examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt; keep runtimeEvidenceSatisfied=false until explicit review.",
+    "Review or produce candidate evidence for required-evidence-tt-1 at examples/valid/todo-app-devview-run/.devview/tree/test-tree.json; keep runtimeEvidenceSatisfied=false until explicit review.",
+    "Review or produce candidate evidence for required-evidence-ev-1 at examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt; keep runtimeEvidenceSatisfied=false until explicit review.",
     "Report selected evidence/check status for TT-1.",
     "Report selected evidence/check status for EV-1.",
     "Report that selected-slice contract input is not instruction pack generation, approval, runtime Evidence satisfaction, or enforcement."
@@ -233,27 +233,27 @@
         },
         {
           "id": "selected-node-source-artifact-1",
-          "path": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json",
+          "path": "examples/valid/todo-app-devview-run/.devview/control/change-tree.json",
           "role": "selected node source artifact"
         },
         {
           "id": "selected-node-source-artifact-2",
-          "path": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json",
+          "path": "examples/valid/todo-app-devview-run/.devview/tree/work-tree.json",
           "role": "selected node source artifact"
         },
         {
           "id": "selected-node-source-artifact-3",
-          "path": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+          "path": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
           "role": "selected node source artifact"
         },
         {
           "id": "selected-node-source-artifact-4",
-          "path": "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
+          "path": "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
           "role": "selected node source artifact"
         },
         {
           "id": "selected-node-source-artifact-5",
-          "path": "examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json",
+          "path": "examples/valid/todo-app-devview-run/.devview/control/impact-tree.json",
           "role": "selected node source artifact"
         }
       ]
@@ -262,7 +262,7 @@
       {
         "id": "scope-ch-001",
         "scopeKind": "product",
-        "paths": ["examples/valid/todo-app-devview-run/.pbe/control/change-tree.json"],
+        "paths": ["examples/valid/todo-app-devview-run/.devview/control/change-tree.json"],
         "derivedFrom": ["graph-source:node:CH-001"],
         "contractDerivedFrom": ["selected-slice:node:CH-001"],
         "confidence": "graph-backed-candidate",
@@ -272,7 +272,7 @@
       {
         "id": "scope-wt-1",
         "scopeKind": "workflow",
-        "paths": ["examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json"],
+        "paths": ["examples/valid/todo-app-devview-run/.devview/tree/work-tree.json"],
         "derivedFrom": ["graph-source:node:WT-1"],
         "contractDerivedFrom": ["selected-slice:node:WT-1"],
         "confidence": "graph-backed-candidate",
@@ -282,7 +282,7 @@
       {
         "id": "scope-tt-1",
         "scopeKind": "test",
-        "paths": ["examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"],
+        "paths": ["examples/valid/todo-app-devview-run/.devview/tree/test-tree.json"],
         "derivedFrom": ["graph-source:node:TT-1"],
         "contractDerivedFrom": ["selected-slice:node:TT-1"],
         "confidence": "graph-backed-candidate",
@@ -293,8 +293,8 @@
         "id": "scope-ev-1",
         "scopeKind": "evidence",
         "paths": [
-          "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
-          "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt"
+          "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
+          "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt"
         ],
         "derivedFrom": ["graph-source:node:EV-1"],
         "contractDerivedFrom": ["selected-slice:node:EV-1"],

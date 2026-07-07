@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
-import { defaultArtifacts } from '../core/project.js'
+import { defaultArtifacts, projectStorageRoot } from '../core/project.js'
 import { ensureDir, writeJsonAtomic, writeTextAtomic } from '../core/fs.js'
 import { PBE_STATE } from '../core/state-machine.js'
 import type { CommandResult } from '../core/types.js'
@@ -96,29 +96,34 @@ export async function initCommand(context: CommandContext): Promise<CommandResul
     return invalidCommand(`Invalid profile: ${String(profile)}`)
   }
 
+  const storageRoot = projectStorageRoot(context.options.root)
+  const resolveStorageTarget = (target: string): string =>
+    storageRoot === '.devview' ? target.replace(/^\.pbe\//, '.devview/') : target
   const created: string[] = []
   const skipped: string[] = []
   for (const dir of initDirs) {
-    await ensureDir(path.join(context.options.root, dir))
+    await ensureDir(path.join(context.options.root, resolveStorageTarget(dir)))
   }
 
   for (const target of jsonTemplateTargets) {
-    const outputPath = path.join(context.options.root, target.target)
+    const resolvedTarget = resolveStorageTarget(target.target)
+    const outputPath = path.join(context.options.root, resolvedTarget)
     if (existsSync(outputPath) && !context.options.force) {
-      skipped.push(target.target)
+      skipped.push(resolvedTarget)
       continue
     }
     const templatePath = path.join(context.env.pluginRoot, 'templates', target.template)
     const parsed = JSON.parse(readFileSync(templatePath, 'utf8')) as Record<string, unknown>
     const value = target.transform ? target.transform(parsed, context) : parsed
     await writeJsonAtomic(outputPath, value)
-    created.push(target.target)
+    created.push(resolvedTarget)
   }
 
   for (const target of textTemplateTargets) {
-    const outputPath = path.join(context.options.root, target.target)
+    const resolvedTarget = resolveStorageTarget(target.target)
+    const outputPath = path.join(context.options.root, resolvedTarget)
     if (existsSync(outputPath) && !context.options.force) {
-      skipped.push(target.target)
+      skipped.push(resolvedTarget)
       continue
     }
     let value = target.fallback(context)
@@ -129,7 +134,7 @@ export async function initCommand(context: CommandContext): Promise<CommandResul
       }
     }
     await writeTextAtomic(outputPath, value)
-    created.push(target.target)
+    created.push(resolvedTarget)
   }
 
   return {

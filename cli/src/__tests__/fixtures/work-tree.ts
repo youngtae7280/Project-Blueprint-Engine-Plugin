@@ -28,7 +28,7 @@ export function writeWorkTree(
         },
       ]
     : []
-  writeJson(join(workspace, '.pbe', 'tree', 'work-tree.json'), {
+  writeJson(join(workspace, '.devview', 'tree', 'work-tree.json'), {
     version: '0.2.0-tree-control',
     rootNodeId: 'WT-ROOT',
     nodes: [

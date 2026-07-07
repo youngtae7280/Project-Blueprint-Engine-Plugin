@@ -43,7 +43,7 @@ This means:
 - graph-source-backed generation exists;
 - generated read-model projection validates;
 - the slice participates in positive validate-all as a structure-only fixture;
-- canonical `.pbe` artifacts remain compatibility/fallback/reference;
+- canonical `.devview` artifacts remain compatibility/fallback/reference;
 - no parity backing, pilot marker backing, runtime fixture requirement, CI enforcement, branch protection, tree-native
   retirement, or user acceptance replacement is created.
 
@@ -54,8 +54,8 @@ Todo App has strong structure-only evidence:
 | Evidence surface              | Current signal                                                                                 |
 | ----------------------------- | ---------------------------------------------------------------------------------------------- |
 | Graph source                  | `examples/valid/todo-app-devview-run/graph-source.json`                                        |
-| Product / AC refs             | `PT-1`, `AC-PT-1-1` in `.pbe/tree/product-tree.json`                                           |
-| Work refs / expected files    | `WT-1`, `expectedFiles: ["src/todos.ts"]` in `.pbe/tree/work-tree.json`                        |
+| Product / AC refs             | `PT-1`, `AC-PT-1-1` in `.devview/tree/product-tree.json`                                       |
+| Work refs / expected files    | `WT-1`, `expectedFiles: ["src/todos.ts"]` in `.devview/tree/work-tree.json`                    |
 | Test refs                     | `TT-1` verifies `PT-1`, `WT-1`, and `AC-PT-1-1`                                                |
 | Evidence refs                 | `EV-1` links attached test output to `TT-1` and `AC-PT-1-1`                                    |
 | Acceptance artifact           | `ACCEPT-PT-1` records user acceptance for the fixture branch                                   |
@@ -126,20 +126,20 @@ A real Todo App limited source-authority pilot should require all of the followi
 
 Candidate future marker fields:
 
-| Field                        | Purpose                                                                     |
-| ---------------------------- | --------------------------------------------------------------------------- |
-| `version`                    | Marker format version.                                                      |
-| `status`                     | Expected value such as `todo-app-limited-pilot-prepared` or `active`.       |
-| `approvedScope`              | Exact Todo App profile/slice covered.                                       |
-| `nonScope`                   | Explicitly excluded repo-wide/source-authority/retirement behavior.         |
-| `sourceAuthorityMeaning`     | What the pilot can and cannot make authoritative.                           |
-| `requiredParityStatus`       | Required parity mode/status or approved waiver.                             |
-| `runtimeEvidenceRequirement` | Command, fixture, or attached-evidence requirement for behavior confidence. |
-| `fallbackReferences`         | Canonical `.pbe` and generated artifacts retained as fallback/reference.    |
-| `fallbackTriggers`           | Drift or missing-evidence conditions that disable the pilot.                |
-| `retainedWarnings`           | Warnings kept visible during pilot.                                         |
-| `userAcceptanceBoundary`     | Statement that user acceptance remains user-controlled.                     |
-| `nonPromotionStatement`      | Statement blocking repo-wide/source/CI/retirement promotion.                |
+| Field                        | Purpose                                                                      |
+| ---------------------------- | ---------------------------------------------------------------------------- |
+| `version`                    | Marker format version.                                                       |
+| `status`                     | Expected value such as `todo-app-limited-pilot-prepared` or `active`.        |
+| `approvedScope`              | Exact Todo App profile/slice covered.                                        |
+| `nonScope`                   | Explicitly excluded repo-wide/source-authority/retirement behavior.          |
+| `sourceAuthorityMeaning`     | What the pilot can and cannot make authoritative.                            |
+| `requiredParityStatus`       | Required parity mode/status or approved waiver.                              |
+| `runtimeEvidenceRequirement` | Command, fixture, or attached-evidence requirement for behavior confidence.  |
+| `fallbackReferences`         | Canonical `.devview` and generated artifacts retained as fallback/reference. |
+| `fallbackTriggers`           | Drift or missing-evidence conditions that disable the pilot.                 |
+| `retainedWarnings`           | Warnings kept visible during pilot.                                          |
+| `userAcceptanceBoundary`     | Statement that user acceptance remains user-controlled.                      |
+| `nonPromotionStatement`      | Statement blocking repo-wide/source/CI/retirement promotion.                 |
 
 These are future marker fields only. This step does not add the marker.
 

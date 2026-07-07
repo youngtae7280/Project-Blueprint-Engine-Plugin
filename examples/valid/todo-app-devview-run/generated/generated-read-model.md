@@ -11,28 +11,28 @@ Status: generated-present / evidence-only / source-authority-unchanged
 
 ## Boundary
 
-Canonical .pbe tree/control/execution/evidence artifacts remain current operational source for this structure-only
+Canonical .devview tree/control/execution/evidence artifacts remain current operational source for this structure-only
 fixture.
 
 Generated structure-only output is reviewable Evidence only. It does not change source authority, create a pilot marker,
-require parity, introduce CI enforcement, retire .pbe artifacts, or approve promotion.
+require parity, introduce CI enforcement, retire .devview artifacts, or approve promotion.
 
 ## Source Inputs
 
-- examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json: present
-- examples/valid/todo-app-devview-run/.pbe/tree/project-tree.json: present
-- examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json: present
-- examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json: present
-- examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json: present
-- examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json: present
-- examples/valid/todo-app-devview-run/.pbe/control/change-tree.json: present
-- examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json: present
-- examples/valid/todo-app-devview-run/.pbe/execution/cycle-tree.json: present
-- examples/valid/todo-app-devview-run/.pbe/execution/cycle-contract.md: present
-- examples/valid/todo-app-devview-run/.pbe/blueprint/work-graph.json: present
-- examples/valid/todo-app-devview-run/.pbe/blueprint/source-of-truth-matrix.md: present
-- examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt: present
-- examples/valid/todo-app-devview-run/.pbe/blueprint/pbe-state.json: present
+- examples/valid/todo-app-devview-run/.devview/tree/product-tree.json: present
+- examples/valid/todo-app-devview-run/.devview/tree/project-tree.json: present
+- examples/valid/todo-app-devview-run/.devview/tree/work-tree.json: present
+- examples/valid/todo-app-devview-run/.devview/tree/test-tree.json: present
+- examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json: present
+- examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json: present
+- examples/valid/todo-app-devview-run/.devview/control/change-tree.json: present
+- examples/valid/todo-app-devview-run/.devview/control/impact-tree.json: present
+- examples/valid/todo-app-devview-run/.devview/execution/cycle-tree.json: present
+- examples/valid/todo-app-devview-run/.devview/execution/cycle-contract.md: present
+- examples/valid/todo-app-devview-run/.devview/blueprint/work-graph.json: present
+- examples/valid/todo-app-devview-run/.devview/blueprint/source-of-truth-matrix.md: present
+- examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt: present
+- examples/valid/todo-app-devview-run/.devview/blueprint/pbe-state.json: present
 - examples/valid/todo-app-devview-run/graph-source.json: present
 
 ## Node / Edge / Tag Summary
@@ -65,7 +65,7 @@ View membership is separated from `viewScopedTags` through `includedInViewIds` a
 
 ## Retained Warnings
 
-- RW-STRUCTURE-ONLY: structure-only-limitation - This profile validates canonical .pbe structure only; no manual parity
+- RW-STRUCTURE-ONLY: structure-only-limitation - This profile validates canonical .devview structure only; no manual parity
   artifact, pilot marker, CI-backed Evidence, or source-authority pilot is required or claimed.
 - RW-NO-RUNTIME-FIXTURE: accepted-structure-only-limitation - The fixture contains attached test-output Evidence but no
   runnable app/runtime fixture is required for structure-only validation.

@@ -710,11 +710,14 @@ function isProtectedControlPath(root: string, filePath: string): boolean {
   const relative = relativePath(root, filePath)
   return (
     relative.startsWith('.pbe/') ||
+    relative.startsWith('.devview/') ||
     relative.startsWith('.codex/') ||
     relative.includes('/.pbe/') ||
+    relative.includes('/.devview/') ||
     relative.includes('/.codex/') ||
     /\.codex\/hooks/i.test(relative) ||
     /^\.pbe\/evidence\//i.test(relative) ||
+    /^\.devview\/evidence\//i.test(relative) ||
     /(^|\/)(graph-source|source-authority|project-memory)(\.|-)/i.test(relative)
   )
 }

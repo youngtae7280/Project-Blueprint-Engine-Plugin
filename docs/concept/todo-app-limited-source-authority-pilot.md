@@ -36,7 +36,7 @@ Current status:
 - read-model validation passes with 16 checks;
 - positive validate-all includes the Todo App profile;
 - Todo App remains `structure-only`;
-- canonical `.pbe` artifacts remain compatibility/fallback/reference;
+- canonical `.devview` artifacts remain compatibility/fallback/reference;
 - no parity backing, pilot marker backing, runtime fixture requirement, CI enforcement, tree-native retirement, or user
   acceptance replacement is created.
 
@@ -44,17 +44,17 @@ Current status:
 
 The current artifacts support structure-only confidence:
 
-| Evidence surface     | Current signal                                                                 |
-| -------------------- | ------------------------------------------------------------------------------ |
-| Graph source         | `examples/valid/todo-app-devview-run/graph-source.json`                        |
-| Projection contract  | `generated/graph-source-read-model-projection.json` passes                     |
-| Generated read-model | `generated/generated-read-model.json`, 22 nodes / 38 edges / 7 Core Views      |
-| Validation report    | `generated/read-model-validation-report.json`, `validation-pass`, 16 checks    |
-| Evidence manifest    | `generated/read-model-evidence-manifest.json`                                  |
-| Acceptance artifact  | `.pbe/control/acceptance-tree.json` contains accepted closure for the fixture  |
-| Transition status    | `graph-source-transition-status.json` records `confirmed-structure-only` role  |
-| Positive registry    | `read-model-slices.json` includes Todo App as `structure-only`                 |
-| E2E smoke            | `test:read-model:e2e` checks Todo App structure-only generation and projection |
+| Evidence surface     | Current signal                                                                    |
+| -------------------- | --------------------------------------------------------------------------------- |
+| Graph source         | `examples/valid/todo-app-devview-run/graph-source.json`                           |
+| Projection contract  | `generated/graph-source-read-model-projection.json` passes                        |
+| Generated read-model | `generated/generated-read-model.json`, 22 nodes / 38 edges / 7 Core Views         |
+| Validation report    | `generated/read-model-validation-report.json`, `validation-pass`, 16 checks       |
+| Evidence manifest    | `generated/read-model-evidence-manifest.json`                                     |
+| Acceptance artifact  | `.devview/control/acceptance-tree.json` contains accepted closure for the fixture |
+| Transition status    | `graph-source-transition-status.json` records `confirmed-structure-only` role     |
+| Positive registry    | `read-model-slices.json` includes Todo App as `structure-only`                    |
+| E2E smoke            | `test:read-model:e2e` checks Todo App structure-only generation and projection    |
 
 This is enough to keep Todo App in positive validate-all as a structure-only profile. It is not enough to make Todo App
 source-authority-bearing beyond that boundary.
@@ -152,11 +152,11 @@ It is source-backed only for structure projection Evidence. It is not:
 
 The following remain compatibility/fallback/reference for Todo App:
 
-- canonical `.pbe/tree/*` artifacts;
-- `.pbe/control/*` artifacts;
-- `.pbe/evidence/*` artifacts;
-- `.pbe/execution/*` artifacts;
-- `.pbe/blueprint/*` compatibility views;
+- canonical `.devview/tree/*` artifacts;
+- `.devview/control/*` artifacts;
+- `.devview/evidence/*` artifacts;
+- `.devview/execution/*` artifacts;
+- `.devview/blueprint/*` compatibility views;
 - generated read-model Evidence;
 - validation reports;
 - aggregate reports;

@@ -14,7 +14,7 @@
   "humanReviewPacketSurfaceStatus": "review-packet-cli-available",
   "humanReviewPacketCore": "cli/src/core/graph-delta-human-review-packet.ts",
   "existingGraphSource": "examples/valid/todo-app-devview-run/graph-source.json",
-  "existingChangeTree": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json",
+  "existingChangeTree": "examples/valid/todo-app-devview-run/.devview/control/change-tree.json",
   "boundaryState": {
     "proposalOnly": true,
     "candidateOnly": true,
@@ -47,7 +47,7 @@
         "authorityStatus": "structure-only-graph-source-context"
       },
       {
-        "artifact": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json",
+        "artifact": "examples/valid/todo-app-devview-run/.devview/control/change-tree.json",
         "field": "changes[].id",
         "authorityStatus": "tree-native-compatibility-reference"
       }

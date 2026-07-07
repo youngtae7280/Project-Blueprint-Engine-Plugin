@@ -90,7 +90,7 @@ It does not:
 - introduce CI enforcement, required checks, PR triggers, or branch protection
 - treat `aggregate-pass` as user approval
 - approve broader Graph-source promotion
-- retire tree-native or `.pbe` artifacts
+- retire tree-native or `.devview` artifacts
 - perform public-doc cleanup
 
 ## Current Result

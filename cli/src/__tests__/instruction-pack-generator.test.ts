@@ -28,8 +28,8 @@ describe('Instruction Pack generator core', () => {
     expect(result.ciEnforcementEnabled).toBe(false)
     expect(result.allowedScope.map((entry) => entry.id)).toEqual(['allowed-scope-tt-1', 'allowed-scope-ev-1'])
     const allowedScopePaths = result.allowedScope.flatMap((entry) => entry.paths as string[])
-    expect(allowedScopePaths).not.toContain('examples/valid/todo-app-devview-run/.pbe/control/change-tree.json')
-    expect(allowedScopePaths).not.toContain('examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json')
+    expect(allowedScopePaths).not.toContain('examples/valid/todo-app-devview-run/.devview/control/change-tree.json')
+    expect(allowedScopePaths).not.toContain('examples/valid/todo-app-devview-run/.devview/tree/work-tree.json')
     expect(result.forbiddenScope).toContainEqual(
       expect.objectContaining({
         id: 'forbidden-production-source-changes',
@@ -229,7 +229,7 @@ describe('Instruction Pack generator CLI', () => {
 
   it('blocks JSON output that would overwrite a required Evidence artifact', async () => {
     const workspace = createWorkspace()
-    const evidencePath = 'examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt'
+    const evidencePath = 'examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt'
     writeJson(join(workspace, 'contract-input.json'), validContractInput())
     writeTextFile(workspace, evidencePath, 'original evidence\n')
 
@@ -256,7 +256,7 @@ describe('Instruction Pack generator CLI', () => {
 
   it('blocks Markdown output that would overwrite an evidenceIndex artifact before writing JSON output', async () => {
     const workspace = createWorkspace()
-    const evidencePath = 'examples/valid/todo-app-devview-run/.pbe/evidence/test-results/evidence-index-only.txt'
+    const evidencePath = 'examples/valid/todo-app-devview-run/.devview/evidence/test-results/evidence-index-only.txt'
     const outputPath = join('.tmp', 'instruction-pack.json')
     const contractInput = validContractInput()
     const evidenceIndex = contractInput.evidenceIndex as { entries: Array<{ artifact: string }> }
@@ -290,7 +290,7 @@ describe('Instruction Pack generator CLI', () => {
 
   it('blocks output that would overwrite an allowedScope evidence path', async () => {
     const workspace = createWorkspace()
-    const evidenceTreePath = 'examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json'
+    const evidenceTreePath = 'examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json'
     writeJson(join(workspace, 'contract-input.json'), validContractInput())
     writeTextFile(workspace, evidenceTreePath, '{"original":true}\n')
 
@@ -317,7 +317,7 @@ describe('Instruction Pack generator CLI', () => {
 
   it('blocks output that would overwrite a selected targetScopeCandidate path', async () => {
     const workspace = createWorkspace()
-    const testTreePath = 'examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json'
+    const testTreePath = 'examples/valid/todo-app-devview-run/.devview/tree/test-tree.json'
     const contractInput = validContractInput()
     const allowedScope = contractInput.allowedScope as Array<{ paths: string[] }>
     allowedScope[0].paths = []
@@ -399,7 +399,7 @@ function validContractInput(): Record<string, unknown> {
       entries: [
         {
           id: 'evidence-ev-1',
-          artifact: 'examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt',
+          artifact: 'examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt',
         },
       ],
     },
@@ -407,26 +407,26 @@ function validContractInput(): Record<string, unknown> {
       {
         id: 'scope-ch-001',
         scopeKind: 'product',
-        paths: ['examples/valid/todo-app-devview-run/.pbe/control/change-tree.json'],
+        paths: ['examples/valid/todo-app-devview-run/.devview/control/change-tree.json'],
         contextOnly: true,
       },
       {
         id: 'scope-wt-1',
         scopeKind: 'workflow',
-        paths: ['examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json'],
+        paths: ['examples/valid/todo-app-devview-run/.devview/tree/work-tree.json'],
         contextOnly: true,
       },
       {
         id: 'scope-tt-1',
         scopeKind: 'test',
-        paths: ['examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json'],
+        paths: ['examples/valid/todo-app-devview-run/.devview/tree/test-tree.json'],
       },
       {
         id: 'scope-ev-1',
         scopeKind: 'evidence',
         paths: [
-          'examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json',
-          'examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt',
+          'examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json',
+          'examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt',
         ],
       },
     ],
@@ -434,14 +434,14 @@ function validContractInput(): Record<string, unknown> {
       {
         id: 'allowed-scope-tt-1',
         scopeKind: 'test',
-        paths: ['examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json'],
+        paths: ['examples/valid/todo-app-devview-run/.devview/tree/test-tree.json'],
       },
       {
         id: 'allowed-scope-ev-1',
         scopeKind: 'evidence',
         paths: [
-          'examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json',
-          'examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt',
+          'examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json',
+          'examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt',
         ],
       },
     ],
@@ -460,13 +460,13 @@ function validContractInput(): Record<string, unknown> {
       {
         id: 'forbidden-approval-or-acceptance-changes',
         scopeKind: 'product',
-        paths: ['examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json'],
+        paths: ['examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json'],
       },
     ],
     requiredEvidence: [
       {
         id: 'required-evidence-ev-1',
-        artifact: 'examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt',
+        artifact: 'examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt',
         runtimeEvidenceSatisfied: false,
       },
     ],

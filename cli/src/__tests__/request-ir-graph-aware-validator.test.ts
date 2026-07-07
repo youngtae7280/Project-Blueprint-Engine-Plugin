@@ -301,7 +301,7 @@ function validAuthority(): Record<string, unknown> {
           {
             id: 'CH-001',
             nodeKind: 'change',
-            sourceArtifact: 'examples/valid/todo-app-devview-run/.pbe/control/change-tree.json',
+            sourceArtifact: 'examples/valid/todo-app-devview-run/.devview/control/change-tree.json',
             title: 'Preserve completed add-todo behavior while future revisions are assessed.',
             status: 'impact_analyzed',
           },

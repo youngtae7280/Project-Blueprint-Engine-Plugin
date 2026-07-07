@@ -1,7 +1,7 @@
 {
   "version": "0.2.0-tree-control",
   "rootNodeId": "PT-ROOT",
-  "decisionQueueRef": ".pbe/control/decision-queue.json",
+  "decisionQueueRef": ".devview/control/decision-queue.json",
   "nodes": [
     {
       "id": "PT-ROOT",

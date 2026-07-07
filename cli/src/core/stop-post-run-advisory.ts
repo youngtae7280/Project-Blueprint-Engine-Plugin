@@ -975,8 +975,13 @@ function classifyReservedOutputPath(root: string, outputPath: string): string | 
   if (relative.startsWith('.codex/hooks/')) {
     return 'active Codex hook script path'
   }
-  if (relative === '.pbe' || relative.startsWith('.pbe/')) {
-    return 'PBE source/control/evidence path'
+  if (
+    relative === '.pbe' ||
+    relative.startsWith('.pbe/') ||
+    relative === '.devview' ||
+    relative.startsWith('.devview/')
+  ) {
+    return 'DevView source/control/evidence path'
   }
   return null
 }

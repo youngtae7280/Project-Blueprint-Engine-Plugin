@@ -1125,6 +1125,7 @@ function isProtectedGraphSourceTargetPath(root: string, filePath: string): boole
   const relative = relativePath(root, filePath)
   return (
     relative.startsWith('.pbe/') ||
+    relative.startsWith('.devview/') ||
     relative.startsWith('.codex/') ||
     relative.includes('/generated/') ||
     /(^|\/)(evidence|proposal|review|decision|hook|config)(-|\/|\.)/i.test(relative) ||
@@ -1136,6 +1137,7 @@ function isProtectedOutputPath(root: string, filePath: string): boolean {
   const relative = relativePath(root, filePath)
   return (
     relative.startsWith('.pbe/') ||
+    relative.startsWith('.devview/') ||
     relative === '.codex/config.json' ||
     relative.startsWith('.codex/hooks/') ||
     /(^|\/)graph-source\.json$/i.test(relative)
@@ -1169,6 +1171,7 @@ function looksLikePath(value: string): boolean {
     /[\\/]/.test(value) ||
     /\.(json|md|txt|html|yml|yaml)$/i.test(value) ||
     value.startsWith('.pbe/') ||
+    value.startsWith('.devview/') ||
     value.startsWith('.codex/')
   )
 }

@@ -22,7 +22,7 @@ export function writeEvidenceTree(
     extraEvidence?: Array<Record<string, unknown>>
   } = {},
 ): void {
-  writeJson(join(workspace, '.pbe', 'evidence', 'evidence-tree.json'), {
+  writeJson(join(workspace, '.devview', 'evidence', 'evidence-tree.json'), {
     version: '0.2.0-tree-control',
     evidence: [
       {
@@ -50,16 +50,16 @@ export function writeEvidenceTree(
 }
 
 export function writeVisualScreenshotEvidence(workspace: string): void {
-  const screenshotPath = join(workspace, '.pbe', 'evidence', 'screenshots', 'surface-1-default.png')
+  const screenshotPath = join(workspace, '.devview', 'evidence', 'screenshots', 'surface-1-default.png')
   writeText(screenshotPath, 'fake screenshot bytes')
-  writeJson(join(workspace, '.pbe', 'evidence', 'evidence-tree.json'), {
+  writeJson(join(workspace, '.devview', 'evidence', 'evidence-tree.json'), {
     version: '0.2.0-tree-control',
     evidence: [
       {
         id: 'EV-VISUAL-1',
         type: 'screenshot',
         status: 'current',
-        path: '.pbe/evidence/screenshots/surface-1-default.png',
+        path: '.devview/evidence/screenshots/surface-1-default.png',
         createdAt: '2026-06-12T12:00:00.000Z',
         provesNodeIds: ['TT-1'],
         evidenceForTestNodeIds: ['TT-1'],

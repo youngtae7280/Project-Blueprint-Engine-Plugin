@@ -204,7 +204,7 @@ export async function buildGraphExecutionContractReport(
     },
     limitations: [
       'report-only first implementation',
-      'does not mutate .pbe active state',
+      'does not mutate .devview active state',
       'does not create a required validation gate',
       'does not expand source authority',
       'does not replace user acceptance',

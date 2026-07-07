@@ -912,7 +912,7 @@ confirm that the validate-all-centered workflow records PR metadata, `pull_reque
 `validateAllStatus: aggregate-pass`, and Evidence boundaries. Todo Search remains the only scoped source-authority pilot.
 Todo App DevView Run remains structure-only. Invalid fixtures remain local-only and are not part of the positive aggregate
 path. The aggregate summary is Evidence-only over produced per-slice validation reports. This review does not change
-source authority, approve full Graph-source promotion, retire tree-native or `.pbe` artifacts, replace user acceptance,
+source authority, approve full Graph-source promotion, retire tree-native or `.devview` artifacts, replace user acceptance,
 add branch protection, add push/schedule triggers, or make the workflow a required check.
 
 ## Next Decision Surface

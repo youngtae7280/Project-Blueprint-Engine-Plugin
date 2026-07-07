@@ -62,9 +62,9 @@
     "behavior": "block-evaluation-until-normalized-to-repository-relative-path"
   },
   "globSemantics": {
-    "exactPathExample": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
-    "directoryGlobExample": "examples/valid/todo-app-devview-run/.pbe/evidence/**",
-    "directoryPrefixExample": "examples/valid/todo-app-devview-run/.pbe/evidence/",
+    "exactPathExample": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
+    "directoryGlobExample": "examples/valid/todo-app-devview-run/.devview/evidence/**",
+    "directoryPrefixExample": "examples/valid/todo-app-devview-run/.devview/evidence/",
     "regexExamplesAllowed": false,
     "matchingImplementationStatus": "helper-implemented-not-consumed-for-evaluation"
   },

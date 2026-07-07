@@ -15,7 +15,7 @@ export function writePbeState(
     revisionHistory?: Array<Record<string, unknown>>
   } = {},
 ): void {
-  writeJson(join(workspace, '.pbe', 'blueprint', 'pbe-state.json'), {
+  writeJson(join(workspace, '.devview', 'blueprint', 'pbe-state.json'), {
     version: '0.2.0-alpha',
     stage: 'rpd',
     mode: 'rpd_tree_walk',
@@ -35,7 +35,7 @@ export function writePbeState(
 }
 
 export function writeUserAcceptance(workspace: string): void {
-  writeJson(join(workspace, '.pbe', 'control', 'acceptance-tree.json'), {
+  writeJson(join(workspace, '.devview', 'control', 'acceptance-tree.json'), {
     version: '0.2.0-tree-control',
     branches: [
       {
@@ -53,7 +53,7 @@ export function writeUserAcceptance(workspace: string): void {
 }
 
 export function writeEmptyAcceptance(workspace: string): void {
-  writeJson(join(workspace, '.pbe', 'control', 'acceptance-tree.json'), {
+  writeJson(join(workspace, '.devview', 'control', 'acceptance-tree.json'), {
     version: '0.2.0-tree-control',
     branches: [],
   })

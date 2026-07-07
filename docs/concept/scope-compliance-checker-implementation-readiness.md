@@ -1088,4 +1088,4 @@ This readiness document and the first evaluator slice do not:
 - introduce graph delta apply;
 - automate user acceptance;
 - retire tree-native artifacts;
-- rename `pbe`, `.pbe`, validation scripts, generated paths, or sourceMode values.
+- rename `pbe`, `.devview`, validation scripts, generated paths, or sourceMode values.

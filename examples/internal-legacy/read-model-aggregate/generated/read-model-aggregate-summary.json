@@ -134,7 +134,7 @@
       "runtimeFixtureRequirement": {
         "required": false,
         "status": "attached-evidence-only",
-        "path": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+        "path": "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt",
         "reason": "Structure-only validation does not require a runnable runtime fixture; attached evidence text may be referenced when present."
       },
       "retainedWarningCount": 2,

@@ -37,17 +37,17 @@ describe('Contract compiler input generator core', () => {
     ])
     expect(result.allowedScope.map((entry) => entry.id)).toEqual(['allowed-scope-tt-1', 'allowed-scope-ev-1'])
     const allowedScopePaths = result.allowedScope.flatMap((entry) => entry.paths as string[])
-    expect(allowedScopePaths).not.toContain('examples/valid/todo-app-devview-run/.pbe/control/change-tree.json')
-    expect(allowedScopePaths).not.toContain('examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json')
+    expect(allowedScopePaths).not.toContain('examples/valid/todo-app-devview-run/.devview/control/change-tree.json')
+    expect(allowedScopePaths).not.toContain('examples/valid/todo-app-devview-run/.devview/tree/work-tree.json')
     expect(result.requiredEvidence.map((entry) => entry.sourceEvidenceId).sort()).toEqual([
       'evidence-ev-1',
       'evidence-tt-1',
     ])
     expect(result.requiredEvidence.map((entry) => entry.artifact)).toContain(
-      'examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt',
+      'examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt',
     )
     for (const artifact of result.requiredEvidence.map((entry) => String(entry.artifact))) {
-      expect(artifact.startsWith('.pbe/')).toBe(false)
+      expect(artifact.startsWith('.devview/')).toBe(false)
       expect(artifact.startsWith('unresolved:') || existsSync(join(pluginRoot, artifact))).toBe(true)
     }
     expect(result.knownRisks).toEqual([
@@ -192,7 +192,7 @@ function validSelectedSlice(): Record<string, unknown> {
   ]
   const evidenceNodes = [
     node('TT-1', 'check', 'Add todo acceptance check', ['evidence-or-check-source']),
-    node('EV-1', 'evidence', '.pbe/evidence/test-results/todo-add.txt', ['evidence-or-check-source']),
+    node('EV-1', 'evidence', '.devview/evidence/test-results/todo-add.txt', ['evidence-or-check-source']),
   ]
   const riskNodes = [
     node('IM-001', 'finding', 'Golden run includes a non-blocking analyzed change skeleton.', [
@@ -280,9 +280,9 @@ function edge(edgeId: string, from: string, to: string, edgeType: string): Recor
 }
 
 function sourceArtifactForNode(nodeKind: string): string {
-  if (nodeKind === 'change') return 'examples/valid/todo-app-devview-run/.pbe/control/change-tree.json'
-  if (nodeKind === 'task') return 'examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json'
-  if (nodeKind === 'check') return 'examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json'
-  if (nodeKind === 'evidence') return 'examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json'
-  return 'examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json'
+  if (nodeKind === 'change') return 'examples/valid/todo-app-devview-run/.devview/control/change-tree.json'
+  if (nodeKind === 'task') return 'examples/valid/todo-app-devview-run/.devview/tree/work-tree.json'
+  if (nodeKind === 'check') return 'examples/valid/todo-app-devview-run/.devview/tree/test-tree.json'
+  if (nodeKind === 'evidence') return 'examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json'
+  return 'examples/valid/todo-app-devview-run/.devview/control/impact-tree.json'
 }

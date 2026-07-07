@@ -1886,11 +1886,16 @@ function classifyReservedSourcePath(filePath: string): string | null {
   if (normalized.endsWith('/graph-source.json')) {
     return 'graph-source path'
   }
-  if (normalized.includes('/.pbe/evidence/')) {
+  if (normalized.includes('/.pbe/evidence/') || normalized.includes('/.devview/evidence/')) {
     return 'evidence authority path'
   }
-  if (normalized.includes('/.pbe/control/') || normalized.includes('/.pbe/tree/')) {
-    return 'PBE source/control path'
+  if (
+    normalized.includes('/.pbe/control/') ||
+    normalized.includes('/.pbe/tree/') ||
+    normalized.includes('/.devview/control/') ||
+    normalized.includes('/.devview/tree/')
+  ) {
+    return 'DevView source/control path'
   }
   if (
     normalized.endsWith('/generated/generated-read-model.json') ||

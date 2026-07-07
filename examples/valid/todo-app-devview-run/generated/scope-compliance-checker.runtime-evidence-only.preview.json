@@ -148,9 +148,9 @@
       "report-only-artifacts"
     ],
     "expectedAllowedScopePaths": [
-      "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
-      "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
-      "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+      "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
+      "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
+      "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt",
       "unresolved:node test/todos.test.js",
       "unresolved:todo-app-runtime-proof-report",
       "unresolved:production-source-non-modification-report"
@@ -173,7 +173,7 @@
       "src/todos.ts",
       "examples/internal-legacy/read-model-aggregate/read-model-slices.json",
       "examples/valid/todo-app-devview-run/graph-source.json",
-      "examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json"
+      "examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json"
     ],
     "sourceEditStopCondition": "runtime-proof-appears-to-require-production-source-edit",
     "scopeInputsAcceptedForFutureEvaluation": true,

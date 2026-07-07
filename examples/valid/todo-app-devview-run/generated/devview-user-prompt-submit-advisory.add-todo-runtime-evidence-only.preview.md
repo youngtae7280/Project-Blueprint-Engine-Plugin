@@ -37,14 +37,14 @@ Additional context ready: true
 
 ## Allowed Scope
 
-- allowed-scope-tt-1: `examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json`
-- allowed-scope-ev-1: `examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json`, `examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt`
+- allowed-scope-tt-1: `examples/valid/todo-app-devview-run/.devview/tree/test-tree.json`
+- allowed-scope-ev-1: `examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json`, `examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt`
 
 ## Forbidden Scope And Non-goals
 
 - forbidden-production-source-changes: `unresolved:production-source-changes`
 - forbidden-graph-source-mutation: `examples/valid/todo-app-devview-run/graph-source.json`
-- forbidden-approval-or-acceptance-changes: `examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json`
+- forbidden-approval-or-acceptance-changes: `examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json`
 - Do not treat this advisory context as approval.
 - Do not mutate graph-source or apply graph deltas.
 - Do not claim runtime Evidence satisfaction or equivalence proof.
@@ -52,8 +52,8 @@ Additional context ready: true
 
 ## Required Evidence
 
-- required-evidence-tt-1: `examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json`
-- required-evidence-ev-1: `examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt`
+- required-evidence-tt-1: `examples/valid/todo-app-devview-run/.devview/tree/test-tree.json`
+- required-evidence-ev-1: `examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt`
 
 ## Output Requirements
 

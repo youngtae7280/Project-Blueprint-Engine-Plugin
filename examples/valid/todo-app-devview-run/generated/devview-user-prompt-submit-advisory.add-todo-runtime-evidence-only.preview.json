@@ -49,7 +49,7 @@
     {
       "id": "allowed-scope-tt-1",
       "scopeKind": "test",
-      "paths": ["examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"],
+      "paths": ["examples/valid/todo-app-devview-run/.devview/tree/test-tree.json"],
       "sourceTargetScopeCandidate": "scope-tt-1",
       "sourceStatus": "derived-from-selected-graph-slice-check-or-evidence-context",
       "allowedUse": ["review-selected-check-or-evidence", "report-selected-evidence-status"],
@@ -59,8 +59,8 @@
       "id": "allowed-scope-ev-1",
       "scopeKind": "evidence",
       "paths": [
-        "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
-        "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt"
+        "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
+        "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt"
       ],
       "sourceTargetScopeCandidate": "scope-ev-1",
       "sourceStatus": "derived-from-selected-graph-slice-check-or-evidence-context",
@@ -88,7 +88,7 @@
     {
       "id": "forbidden-approval-or-acceptance-changes",
       "scopeKind": "product",
-      "paths": ["examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json"],
+      "paths": ["examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json"],
       "derivedFrom": ["request-ir-graph-aware-validation:scopeIntentResolution"],
       "sourceStatus": "derived-from-graph-aware-validation-context",
       "boundary": "forbidden scope is advisory contract-input context and not enforcement"
@@ -99,7 +99,7 @@
       "id": "required-evidence-tt-1",
       "sourceEvidenceId": "evidence-tt-1",
       "evidenceType": "selected_check_context",
-      "artifact": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+      "artifact": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
       "sourceStatus": "derived-from-selected-graph-slice",
       "runtimeEvidenceSatisfied": false,
       "acceptedEvidence": false
@@ -108,7 +108,7 @@
       "id": "required-evidence-ev-1",
       "sourceEvidenceId": "evidence-ev-1",
       "evidenceType": "selected_evidence_artifact",
-      "artifact": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+      "artifact": "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt",
       "sourceStatus": "derived-from-selected-graph-slice",
       "runtimeEvidenceSatisfied": false,
       "acceptedEvidence": false

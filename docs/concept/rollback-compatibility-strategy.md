@@ -202,8 +202,8 @@ Retirement is not deletion by drift. It is an explicit cleanup outcome.
 Future promotion may leave these as maintained compatibility views, projection views, rollback references, or retired
 artifacts depending on the approved transition:
 
-- `.pbe/blueprint/*`
-- `.pbe/codex-execution-pack/*`
+- `.devview/blueprint/*`
+- `.devview/codex-execution-pack/*`
 - ACEP package views
 - task-card views
 - legacy public-doc examples
@@ -408,7 +408,7 @@ plus contracts, evidence, acceptance, skills, and CLI gates. This policy preserv
 ### Multi-Slice Follow-Up Status
 
 The Todo Search scoped pilot keeps fallback/reference artifacts retained. The new
-`examples/valid/todo-app-devview-run` profile is structure-only Evidence over a canonical `.pbe` fixture; it is not a
+`examples/valid/todo-app-devview-run` profile is structure-only Evidence over a canonical `.devview` fixture; it is not a
 rollback/fallback retirement event, does not create a second scoped authority pilot, and does not remove compatibility
 or fallback obligations. The current validation reports include per-slice fallback/reference summaries so future
 aggregation can preserve rollback and compatibility boundaries per slice. The first aggregate summary now reads those

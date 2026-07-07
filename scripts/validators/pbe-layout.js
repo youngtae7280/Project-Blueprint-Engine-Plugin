@@ -33,23 +33,29 @@ export function runPbeLayoutValidator({ root, requireReadmeTerms = true }) {
     }
   }
 
-  if (!dirExists(root, '.pbe')) {
+  const storageRoot = dirExists(root, '.devview') ? '.devview' : dirExists(root, '.pbe') ? '.pbe' : null
+  if (!storageRoot) {
     return issues
   }
 
-  if (dirExists(root, '.pbe/blueprint') && !dirExists(root, '.pbe/tree')) {
+  if (dirExists(root, `${storageRoot}/blueprint`) && !dirExists(root, `${storageRoot}/tree`)) {
     return issues
   }
 
-  for (const relativePath of ['.pbe/tree', '.pbe/execution', '.pbe/control', '.pbe/evidence']) {
+  for (const relativePath of [
+    `${storageRoot}/tree`,
+    `${storageRoot}/execution`,
+    `${storageRoot}/control`,
+    `${storageRoot}/evidence`,
+  ]) {
     if (!dirExists(root, relativePath)) {
       issues.push(
         createIssue({
           validator,
           file: relativePath,
           code: 'PBE_TARGET_DIR_MISSING',
-          message: `${relativePath}/ is missing from an existing .pbe workspace.`,
-          suggestedFix: `Create ${relativePath}/ or repair the legacy migration input layout.`,
+          message: `${relativePath}/ is missing from an existing DevView workspace.`,
+          suggestedFix: `Create ${relativePath}/ or repair the DevView/legacy migration input layout.`,
         }),
       )
     }

@@ -73,13 +73,13 @@ level visible.
 
 ## Candidate Slice Analysis
 
-| Candidate                                                               | Role                                                    | Strengths                                                                                                                                                                 | Gaps / risks                                                                                                               | Design decision                                                                            |
-| ----------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `examples/internal-legacy/adoption/todo-search-slice`                   | Current baseline slice                                  | Full generated/manual read-model shape, View Instance Manifest, pilot marker, local validator, reviewed CI artifact.                                                      | Todo-shaped hardcoding in builder and validator policy.                                                                    | Remains first profile and regression baseline.                                             |
-| `examples/valid/todo-app-devview-run`                                   | Second structure-only validation fixture                | Canonical `.pbe` layout; Product/Project/Work/Test/Evidence/Acceptance/Change/Impact/Cycle Tree, Cycle Contract, WorkGraph, source-of-truth matrix, evidence text output. | No manual parity artifact, no View Instance Manifest, no pilot marker, no CI-backed Evidence, no runnable runtime fixture. | Implemented as a `structure-only` profile/fixture, not parity-backed or authority-bearing. |
-| `examples/internal-legacy/dogfooding/windows-validation-sequential-run` | Medium later candidate                                  | Useful dogfooding example and Windows validation context.                                                                                                                 | Missing or weaker Project/Cycle/Change/Impact coverage for first multi-slice expansion.                                    | Defer until after the canonical `.pbe` layout candidate is understood.                     |
-| `examples/internal-legacy/adoption/compatibility-mismatch-slice`        | Supplemental compatibility warning/control-node fixture | Real ACEP/task-card wording mismatch and compatibility boundary Evidence.                                                                                                 | Not a full Product/Project/Work/Test/Evidence/Acceptance slice.                                                            | Keep as warning/control-node supplemental fixture only.                                    |
-| `examples/invalid/*`                                                    | Later negative validation fixture family                | Useful for proving failure modes and error messages.                                                                                                                      | Invalid by design; not a read-model generation target.                                                                     | Use later for negative validation tests, not for first positive multi-slice generation.    |
+| Candidate                                                               | Role                                                    | Strengths                                                                                                                                                                     | Gaps / risks                                                                                                               | Design decision                                                                            |
+| ----------------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `examples/internal-legacy/adoption/todo-search-slice`                   | Current baseline slice                                  | Full generated/manual read-model shape, View Instance Manifest, pilot marker, local validator, reviewed CI artifact.                                                          | Todo-shaped hardcoding in builder and validator policy.                                                                    | Remains first profile and regression baseline.                                             |
+| `examples/valid/todo-app-devview-run`                                   | Second structure-only validation fixture                | Canonical `.devview` layout; Product/Project/Work/Test/Evidence/Acceptance/Change/Impact/Cycle Tree, Cycle Contract, WorkGraph, source-of-truth matrix, evidence text output. | No manual parity artifact, no View Instance Manifest, no pilot marker, no CI-backed Evidence, no runnable runtime fixture. | Implemented as a `structure-only` profile/fixture, not parity-backed or authority-bearing. |
+| `examples/internal-legacy/dogfooding/windows-validation-sequential-run` | Medium later candidate                                  | Useful dogfooding example and Windows validation context.                                                                                                                     | Missing or weaker Project/Cycle/Change/Impact coverage for first multi-slice expansion.                                    | Defer until after the canonical `.devview` layout candidate is understood.                 |
+| `examples/internal-legacy/adoption/compatibility-mismatch-slice`        | Supplemental compatibility warning/control-node fixture | Real ACEP/task-card wording mismatch and compatibility boundary Evidence.                                                                                                     | Not a full Product/Project/Work/Test/Evidence/Acceptance slice.                                                            | Keep as warning/control-node supplemental fixture only.                                    |
+| `examples/invalid/*`                                                    | Later negative validation fixture family                | Useful for proving failure modes and error messages.                                                                                                                          | Invalid by design; not a read-model generation target.                                                                     | Use later for negative validation tests, not for first positive multi-slice generation.    |
 
 ## Selected Next Candidate
 
@@ -92,7 +92,7 @@ examples/valid/todo-app-devview-run
 Implemented stance:
 
 - treat it as a structural validation target
-- read its canonical `.pbe` layout as source inputs
+- read its canonical `.devview` layout as source inputs
 - generate and validate structure-only read-model Evidence only
 - do not make it a scoped source-authority pilot
 - do not treat it as a full Graph-source promotion candidate
@@ -209,7 +209,7 @@ Recommended implementation sequence:
    unchanged. Status: local generated/parity/validation checks remain 40 nodes, 59 edges, `comparison-pass`,
    `validation-pass`, and 20 validation checks.
 3. Add/read `examples/valid/todo-app-devview-run` as a second `structure-only` fixture. Status: complete for one canonical
-   `.pbe` fixture, with generated structure-only output and validation report.
+   `.devview` fixture, with generated structure-only output and validation report.
 4. Add per-slice validation report independence. Status: complete for the Todo Search and Todo App DevView Run validation
    reports.
 5. Add aggregation only after per-slice validation is stable. Status: first Evidence-only aggregate summary implemented
@@ -333,7 +333,7 @@ It does not:
 - change current operational source
 - expand the Todo Search scoped pilot authority
 - make `examples/valid/todo-app-devview-run` source-authority pilot scope
-- retire tree-native or `.pbe` artifacts
+- retire tree-native or `.devview` artifacts
 - make generated read-model outputs the repository source
 - approve full Graph-source promotion
 - introduce CI enforcement
@@ -438,7 +438,7 @@ cleanup, enforcement design, multi-slice scope redesign, or continued observatio
 | ----------------------------------- | -------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | Multi-slice validation design       | Decision Control Node      | design-recorded              | The expansion strategy is documented; aggregation remains unimplemented.                                                      |
 | Todo Search hardcoding              | Evidence / Impact Control  | resolved for first profile   | Todo assumptions are isolated into an explicit profile/config.                                                                |
-| `todo-app-devview-run` candidate    | Evidence Control Node      | implemented / structure-only | It has canonical `.pbe` source inputs plus structure-only generated/validation output.                                        |
+| `todo-app-devview-run` candidate    | Evidence Control Node      | implemented / structure-only | It has canonical `.devview` source inputs plus structure-only generated/validation output.                                    |
 | Compatibility mismatch supplemental | Compatibility Control Node | retained warning             | Public-doc cleanup remains deferred and warning-only.                                                                         |
 | Aggregate summary                   | Evidence Control Node      | implemented / Evidence-only  | First aggregate summary reads existing per-slice validation reports only.                                                     |
 | Aggregate CI-backed review          | Evidence Control Node      | reviewed                     | Runs `28156403793` and `28157938343` reviewed the aggregate-enabled artifact bundle as non-enforcing CI-backed Evidence.      |

@@ -8,19 +8,19 @@ Add or strengthen evidence for the Todo App add button behavior without touching
 
 ## Allowed Scope
 
-- allowed-scope-tt-1: `examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json`
-- allowed-scope-ev-1: `examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json`, `examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt`
+- allowed-scope-tt-1: `examples/valid/todo-app-devview-run/.devview/tree/test-tree.json`
+- allowed-scope-ev-1: `examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json`, `examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt`
 
 ## Forbidden Scope
 
 - forbidden-production-source-changes: `unresolved:production-source-changes`
 - forbidden-graph-source-mutation: `examples/valid/todo-app-devview-run/graph-source.json`
-- forbidden-approval-or-acceptance-changes: `examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json`
+- forbidden-approval-or-acceptance-changes: `examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json`
 
 ## Required Evidence
 
-- required-evidence-tt-1: `examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json`
-- required-evidence-ev-1: `examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt`
+- required-evidence-tt-1: `examples/valid/todo-app-devview-run/.devview/tree/test-tree.json`
+- required-evidence-ev-1: `examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt`
 
 ## Stop Conditions
 

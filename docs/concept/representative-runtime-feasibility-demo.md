@@ -108,7 +108,7 @@ too broad.
 ## Candidate Slice Review
 
 The candidate review uses existing public docs and example snapshots only. It does not run a demo, create fixtures,
-execute CLI commands, or write `.pbe` artifacts.
+execute CLI commands, or write `.devview` artifacts.
 
 ### Candidate A: Todo Search Adoption + Product Meaning Feedback
 
@@ -238,7 +238,7 @@ Tiny Todo add flow with Product, Project, Work, Test, Cycle, Evidence, Acceptanc
 
 Coverage strengths:
 
-- Cleanest full tree-native happy path with `.pbe` layout and compatibility blueprint views.
+- Cleanest full tree-native happy path with `.devview` layout and compatibility blueprint views.
 - Strong calibration baseline for Product -> Project -> Work -> Test -> Evidence -> Acceptance.
 - Good for source artifact reference and compatibility view visibility.
 
@@ -258,7 +258,7 @@ Evidence observability:
 
 Compatibility usefulness:
 
-- High as calibration baseline because it contains v2 tree-native layout plus `.pbe/blueprint/*` compatibility views.
+- High as calibration baseline because it contains v2 tree-native layout plus `.devview/blueprint/*` compatibility views.
 
 Recommendation:
 
@@ -308,7 +308,7 @@ The future demo should attempt to show:
     unaffected, or refreshed.
 11. Evidence exception can be represented if manual empty-state review is missing, stale, or insufficient after feedback.
 12. Decision Control Node can represent title-only scope confirmation or Product Patch confirmation.
-13. Compatibility Control Node candidate can represent old ACEP/task-card or `.pbe/blueprint/*` wording that would
+13. Compatibility Control Node candidate can represent old ACEP/task-card or `.devview/blueprint/*` wording that would
     otherwise imply task-card-only authority.
 14. Maintainability Graph can read and align the slice without becoming source.
 
@@ -340,7 +340,7 @@ A future demo result should include or reference:
 - Evidence status summary showing `present`, `missing`, `stale`, `partial`, `not-applicable`, or `exception`
 - Approval Brief draft or review surface
 - Control Node summary for decision, evidence, impact/reopen, acceptance, and compatibility situations
-- Legacy Compatibility Map interpretation note for ACEP/task-card or `.pbe/blueprint/*` mismatch
+- Legacy Compatibility Map interpretation note for ACEP/task-card or `.devview/blueprint/*` mismatch
 - rollback/compatibility readiness note using concept labels only
 
 ### Required Control / Approval Situations
@@ -418,7 +418,7 @@ plan.
 | Check/Evidence separation         | Required Checks, Evidence categories, Evidence status, and Evidence exceptions are distinct.                         |
 | Approval Brief                    | Result is summarized as user-facing intent/result/verification/remaining judgment/approval choice.                   |
 | Control Node visibility           | Only user-relevant blocker, decision, stale/reopen, evidence, acceptance, and compatibility situations are surfaced. |
-| Legacy compatibility              | Legacy Compatibility Map is used when ACEP/task-card or `.pbe/blueprint/*` mismatch appears.                         |
+| Legacy compatibility              | Legacy Compatibility Map is used when ACEP/task-card or `.devview/blueprint/*` mismatch appears.                     |
 | Rollback / Compatibility Strategy | Rollback/compatibility readiness labels are concept labels only and do not imply rollback implementation.            |
 | Evidence safety                   | AI self-report is not treated as Evidence.                                                                           |
 | Non-promotion statement           | Demo output explicitly states that slice selection and demo success do not promote Maintainability Graph.            |
@@ -509,7 +509,7 @@ demo must reuse them rather than inventing separate demo-only proof rules.
 
 ### Legacy Compatibility Map
 
-[legacy-compatibility-map.md](legacy-compatibility-map.md) defines how ACEP, task cards, `.pbe/blueprint/*`, and older
+[legacy-compatibility-map.md](legacy-compatibility-map.md) defines how ACEP, task cards, `.devview/blueprint/*`, and older
 terms should be read. Compatibility mismatch in the demo must use that map before becoming a Compatibility Control Node
 candidate.
 

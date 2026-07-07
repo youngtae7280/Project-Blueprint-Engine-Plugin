@@ -894,40 +894,40 @@ export const todoAppPbeRunStructureOnlyProfile: SliceReadModelConfig = {
     viewInstance: 'VIEW-TODO-APP-DEVVIEW-RUN-STRUCTURE',
   },
   artifacts: {
-    productTree: '.pbe/tree/product-tree.json',
-    projectTree: '.pbe/tree/project-tree.json',
-    workTree: '.pbe/tree/work-tree.json',
-    testTree: '.pbe/tree/test-tree.json',
-    evidenceTree: '.pbe/evidence/evidence-tree.json',
-    acceptanceTree: '.pbe/control/acceptance-tree.json',
-    changeTree: '.pbe/control/change-tree.json',
-    impactTree: '.pbe/control/impact-tree.json',
-    cycleContract: '.pbe/execution/cycle-contract.md',
-    cycleTree: '.pbe/execution/cycle-tree.json',
+    productTree: '.devview/tree/product-tree.json',
+    projectTree: '.devview/tree/project-tree.json',
+    workTree: '.devview/tree/work-tree.json',
+    testTree: '.devview/tree/test-tree.json',
+    evidenceTree: '.devview/evidence/evidence-tree.json',
+    acceptanceTree: '.devview/control/acceptance-tree.json',
+    changeTree: '.devview/control/change-tree.json',
+    impactTree: '.devview/control/impact-tree.json',
+    cycleContract: '.devview/execution/cycle-contract.md',
+    cycleTree: '.devview/execution/cycle-tree.json',
     generatedReadModel: 'generated/generated-read-model.json',
     validationReport: 'generated/read-model-validation-report.json',
     evidenceManifest: 'generated/read-model-evidence-manifest.json',
-    workGraph: '.pbe/blueprint/work-graph.json',
-    sourceOfTruthMatrix: '.pbe/blueprint/source-of-truth-matrix.md',
-    evidenceOutput: '.pbe/evidence/test-results/todo-add.txt',
-    pbeState: '.pbe/blueprint/pbe-state.json',
+    workGraph: '.devview/blueprint/work-graph.json',
+    sourceOfTruthMatrix: '.devview/blueprint/source-of-truth-matrix.md',
+    evidenceOutput: '.devview/evidence/test-results/todo-add.txt',
+    pbeState: '.devview/blueprint/pbe-state.json',
     graphSource: 'graph-source.json',
   },
   sourceArtifactRelativePaths: [
-    '.pbe/tree/product-tree.json',
-    '.pbe/tree/project-tree.json',
-    '.pbe/tree/work-tree.json',
-    '.pbe/tree/test-tree.json',
-    '.pbe/evidence/evidence-tree.json',
-    '.pbe/control/acceptance-tree.json',
-    '.pbe/control/change-tree.json',
-    '.pbe/control/impact-tree.json',
-    '.pbe/execution/cycle-tree.json',
-    '.pbe/execution/cycle-contract.md',
-    '.pbe/blueprint/work-graph.json',
-    '.pbe/blueprint/source-of-truth-matrix.md',
-    '.pbe/evidence/test-results/todo-add.txt',
-    '.pbe/blueprint/pbe-state.json',
+    '.devview/tree/product-tree.json',
+    '.devview/tree/project-tree.json',
+    '.devview/tree/work-tree.json',
+    '.devview/tree/test-tree.json',
+    '.devview/evidence/evidence-tree.json',
+    '.devview/control/acceptance-tree.json',
+    '.devview/control/change-tree.json',
+    '.devview/control/impact-tree.json',
+    '.devview/execution/cycle-tree.json',
+    '.devview/execution/cycle-contract.md',
+    '.devview/blueprint/work-graph.json',
+    '.devview/blueprint/source-of-truth-matrix.md',
+    '.devview/evidence/test-results/todo-add.txt',
+    '.devview/blueprint/pbe-state.json',
     'graph-source.json',
   ],
   retainedWarnings: [
@@ -936,7 +936,7 @@ export const todoAppPbeRunStructureOnlyProfile: SliceReadModelConfig = {
       findingNodeId: 'FIND-STRUCTURE-ONLY-LIMITATION',
       status: 'structure-only-limitation',
       summary:
-        'This profile validates canonical .pbe structure only; no manual parity artifact, pilot marker, CI-backed Evidence, or source-authority pilot is required or claimed.',
+        'This profile validates canonical .devview structure only; no manual parity artifact, pilot marker, CI-backed Evidence, or source-authority pilot is required or claimed.',
     },
     {
       id: 'RW-NO-RUNTIME-FIXTURE',
@@ -4860,7 +4860,7 @@ function buildCanonicalPbeStructureCoreViewCoverage(profile: SliceReadModelConfi
       ['PJ-ROOT', 'PJ-1', 'WG-TODO-1', 'WG-NODE-WT-1', 'DOC-SOURCE-OF-TRUTH-MATRIX'],
       ['E-WT-1-TOUCHES-PJ-1', 'E-WORKGRAPH-DERIVES-WT-1', 'E-SOT-PRESERVES-SOURCE-BOUNDARY'],
       ['context'],
-      'Shows canonical .pbe project/workgraph/source-of-truth structure.',
+      'Shows canonical .devview project/workgraph/source-of-truth structure.',
     ),
     view(
       'scope-execution-view',
@@ -5583,7 +5583,7 @@ function buildStructureOnlyValidationChecks(
     ),
     check(
       'source-input-artifacts-present',
-      'Canonical .pbe source input artifacts exist',
+      'Canonical .devview source input artifacts exist',
       sourceInputs.length > 0 && sourceInputs.every((entry) => entry.status === 'present'),
       'blocking',
       'generated sourceInputs',
@@ -6412,28 +6412,28 @@ function statusFreshness(status: unknown): FreshnessStatus {
 
 function sourceAuthorityBoundaryForProfile(profile: SliceReadModelConfig): string {
   if (profile.policyLevel === 'structure-only') {
-    return 'Canonical .pbe tree/control/execution/evidence artifacts remain current operational source for this structure-only fixture.'
+    return 'Canonical .devview tree/control/execution/evidence artifacts remain current operational source for this structure-only fixture.'
   }
   return 'Tree-native selected-slice artifacts remain current operational source.'
 }
 
 function nonPromotionStatementForProfile(profile: SliceReadModelConfig): string {
   if (profile.policyLevel === 'structure-only') {
-    return 'Generated structure-only output is reviewable Evidence only. It does not change source authority, create a pilot marker, require parity, introduce CI enforcement, retire .pbe artifacts, or approve promotion.'
+    return 'Generated structure-only output is reviewable Evidence only. It does not change source authority, create a pilot marker, require parity, introduce CI enforcement, retire .devview artifacts, or approve promotion.'
   }
   return 'Generated output is reviewable Evidence only and cannot change source authority without later explicit user approval.'
 }
 
 function validationBoundaryForProfile(profile: SliceReadModelConfig): string {
   if (profile.policyLevel === 'structure-only') {
-    return 'Validator-backed Evidence checks structure-only generated read-model outputs for this canonical .pbe fixture. It does not change source authority.'
+    return 'Validator-backed Evidence checks structure-only generated read-model outputs for this canonical .devview fixture. It does not change source authority.'
   }
   return 'Validator-backed Evidence checks the bounded Todo Search read-model outputs only. It does not change source authority.'
 }
 
 function validationNonPromotionStatementForProfile(profile: SliceReadModelConfig): string {
   if (profile.policyLevel === 'structure-only') {
-    return 'Structure-only validation pass is Evidence only. It does not promote Maintainability Graph, create a source-authority pilot, require parity, introduce CI enforcement, retire .pbe artifacts, or replace user approval.'
+    return 'Structure-only validation pass is Evidence only. It does not promote Maintainability Graph, create a source-authority pilot, require parity, introduce CI enforcement, retire .devview artifacts, or replace user approval.'
   }
   return 'Validation pass is Evidence only. It does not promote Maintainability Graph, expand pilot scope, retire tree-native artifacts, introduce CI enforcement, or replace user approval.'
 }

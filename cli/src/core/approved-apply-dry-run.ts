@@ -1025,8 +1025,13 @@ function classifyProtectedLocation(root: string, resolvedPath: string): string |
   if (relative === '.codex/config.json' || relative.startsWith('.codex/hooks/')) {
     return 'Codex hook/config path'
   }
-  if (relative === '.pbe' || relative.startsWith('.pbe/')) {
-    return '.pbe source/control path'
+  if (
+    relative === '.pbe' ||
+    relative.startsWith('.pbe/') ||
+    relative === '.devview' ||
+    relative.startsWith('.devview/')
+  ) {
+    return 'DevView source/control path'
   }
   return null
 }

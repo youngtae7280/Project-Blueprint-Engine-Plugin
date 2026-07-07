@@ -341,7 +341,7 @@ function instructionPack(): Record<string, unknown> {
     allowedScope: [
       {
         id: 'allowed-test',
-        paths: ['examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json'],
+        paths: ['examples/valid/todo-app-devview-run/.devview/tree/test-tree.json'],
       },
     ],
     forbiddenScope: [
@@ -353,7 +353,7 @@ function instructionPack(): Record<string, unknown> {
     requiredEvidence: [
       {
         id: 'required-evidence',
-        artifact: 'examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt',
+        artifact: 'examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt',
       },
     ],
     outputRequirements: [

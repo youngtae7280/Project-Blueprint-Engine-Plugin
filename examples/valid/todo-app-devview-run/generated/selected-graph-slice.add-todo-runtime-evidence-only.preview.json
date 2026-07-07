@@ -28,7 +28,7 @@
       "nodeId": "CH-001",
       "nodeKind": "change",
       "title": "Preserve completed add-todo behavior while future revisions are assessed.",
-      "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json",
+      "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/control/change-tree.json",
       "selectionReason": "start node selected from traversal plan startNodeCandidates[0]",
       "selectedAs": ["start-node", "target-change"],
       "sourceAuthorityStatus": "selected-from-graph-source-and-generated-read-model"
@@ -37,7 +37,7 @@
       "nodeId": "WT-1",
       "nodeKind": "task",
       "title": "Implement add todo behavior",
-      "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json",
+      "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/tree/work-tree.json",
       "selectionReason": "direct neighbor selected through touches edge E-CH-001-TOUCHES-WT-1",
       "selectedAs": ["scope-source"],
       "sourceAuthorityStatus": "selected-from-graph-source-and-generated-read-model"
@@ -46,7 +46,7 @@
       "nodeId": "TT-1",
       "nodeKind": "check",
       "title": "Add todo acceptance check",
-      "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+      "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
       "selectionReason": "direct neighbor selected through preserves edge E-CH-001-PRESERVES-TT-1",
       "selectedAs": ["evidence-or-check-source"],
       "sourceAuthorityStatus": "selected-from-graph-source-and-generated-read-model"
@@ -54,8 +54,8 @@
     {
       "nodeId": "EV-1",
       "nodeKind": "evidence",
-      "title": ".pbe/evidence/test-results/todo-add.txt",
-      "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
+      "title": ".devview/evidence/test-results/todo-add.txt",
+      "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
       "selectionReason": "direct neighbor selected through preserves edge E-CH-001-PRESERVES-EV-1",
       "selectedAs": ["evidence-or-check-source"],
       "sourceAuthorityStatus": "selected-from-graph-source-and-generated-read-model"
@@ -64,7 +64,7 @@
       "nodeId": "IM-001",
       "nodeKind": "finding",
       "title": "Golden run includes a non-blocking analyzed change skeleton.",
-      "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json",
+      "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/control/impact-tree.json",
       "selectionReason": "direct neighbor selected through reports-on edge E-IM-001-REPORTS-ON-CH-001",
       "selectedAs": ["risk-or-impact-source"],
       "sourceAuthorityStatus": "selected-from-graph-source-and-generated-read-model"
@@ -110,7 +110,7 @@
       "nodeId": "CH-001",
       "nodeKind": "change",
       "title": "Preserve completed add-todo behavior while future revisions are assessed.",
-      "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json",
+      "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/control/change-tree.json",
       "selectionReason": "start node selected from traversal plan startNodeCandidates[0]",
       "selectedAs": ["start-node", "target-change"],
       "sourceAuthorityStatus": "selected-from-graph-source-and-generated-read-model"
@@ -119,7 +119,7 @@
       "nodeId": "WT-1",
       "nodeKind": "task",
       "title": "Implement add todo behavior",
-      "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json",
+      "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/tree/work-tree.json",
       "selectionReason": "direct neighbor selected through touches edge E-CH-001-TOUCHES-WT-1",
       "selectedAs": ["scope-source"],
       "sourceAuthorityStatus": "selected-from-graph-source-and-generated-read-model"
@@ -130,7 +130,7 @@
       "nodeId": "TT-1",
       "nodeKind": "check",
       "title": "Add todo acceptance check",
-      "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+      "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
       "selectionReason": "direct neighbor selected through preserves edge E-CH-001-PRESERVES-TT-1",
       "selectedAs": ["evidence-or-check-source"],
       "sourceAuthorityStatus": "selected-from-graph-source-and-generated-read-model"
@@ -138,8 +138,8 @@
     {
       "nodeId": "EV-1",
       "nodeKind": "evidence",
-      "title": ".pbe/evidence/test-results/todo-add.txt",
-      "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
+      "title": ".devview/evidence/test-results/todo-add.txt",
+      "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
       "selectionReason": "direct neighbor selected through preserves edge E-CH-001-PRESERVES-EV-1",
       "selectedAs": ["evidence-or-check-source"],
       "sourceAuthorityStatus": "selected-from-graph-source-and-generated-read-model"
@@ -150,7 +150,7 @@
       "nodeId": "IM-001",
       "nodeKind": "finding",
       "title": "Golden run includes a non-blocking analyzed change skeleton.",
-      "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json",
+      "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/control/impact-tree.json",
       "selectionReason": "direct neighbor selected through reports-on edge E-IM-001-REPORTS-ON-CH-001",
       "selectedAs": ["risk-or-impact-source"],
       "sourceAuthorityStatus": "selected-from-graph-source-and-generated-read-model"

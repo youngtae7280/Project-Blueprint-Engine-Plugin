@@ -37,16 +37,16 @@
   "currentRuntimeEvidenceStatus": "missing",
   "evidenceCheckBindingStatus": "preview-only-not-satisfied",
   "allowedScopePatterns": [
-    "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
-    "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
-    "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+    "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
+    "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
+    "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt",
     "unresolved:todo-app-runtime-proof-report"
   ],
   "forbiddenScopePatterns": [
     "src/todos.ts",
     "examples/internal-legacy/read-model-aggregate/read-model-slices.json",
     "examples/valid/todo-app-devview-run/graph-source.json",
-    "examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json"
+    "examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json"
   ],
   "evaluatedFiles": [
     {

@@ -869,8 +869,8 @@ function classifyReservedSourcePath(filePath: string): string | null {
   if (normalized.endsWith('/graph-source.json')) {
     return 'graph-source path'
   }
-  if (normalized.includes('/.pbe/')) {
-    return 'PBE source/control/evidence path'
+  if (normalized.includes('/.pbe/') || normalized.includes('/.devview/')) {
+    return 'DevView source/control/evidence path'
   }
   if (normalized.includes('/.codex/hooks/') || normalized.endsWith('/.codex/config.json')) {
     return 'active hook/config path'

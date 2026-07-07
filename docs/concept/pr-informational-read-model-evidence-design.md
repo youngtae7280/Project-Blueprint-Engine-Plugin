@@ -231,7 +231,7 @@ This design does not:
 - make Todo App DevView Run parity-backed, pilot-marker-backed, CI-backed, or authority-bearing
 - approve full Graph-source promotion
 - perform public-doc cleanup
-- retire tree-native or `.pbe` artifacts
+- retire tree-native or `.devview` artifacts
 - make CI pass equivalent to user acceptance
 
 ## Reviewed PR Informational Runs

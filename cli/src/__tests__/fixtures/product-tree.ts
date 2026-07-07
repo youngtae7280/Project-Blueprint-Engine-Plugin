@@ -12,7 +12,7 @@ export function writeMinimalPbe(
   },
 ): void {
   const productStatus = options.acceptedByAssistant ? 'accepted' : 'confirmed'
-  writeJson(join(workspace, '.pbe', 'tree', 'product-tree.json'), {
+  writeJson(join(workspace, '.devview', 'tree', 'product-tree.json'), {
     version: '0.2.0-tree-control',
     rootNodeId: 'PT-ROOT',
     nodes: [
@@ -59,7 +59,7 @@ export function writeMinimalPbe(
         ambiguity: {
           status: options.ambiguityResolved ? 'clear' : 'partial',
           type: options.ambiguityResolved ? 'none' : 'abstract_quality',
-          terms: options.ambiguityResolved ? [] : ['源붾걫?섍쾶'],
+          terms: options.ambiguityResolved ? [] : ['源붾�??�쾶'],
           missing: options.ambiguityResolved ? [] : ['completion_criteria'],
         },
         ambiguityResolution: {
@@ -73,7 +73,7 @@ export function writeMinimalPbe(
   })
   writeRequirementCompat(workspace, options.productTitle)
   writeDecisionQueue(workspace)
-  writeJson(join(workspace, '.pbe', 'control', 'acceptance-tree.json'), {
+  writeJson(join(workspace, '.devview', 'control', 'acceptance-tree.json'), {
     version: '0.2.0-tree-control',
     branches: options.acceptedByAssistant
       ? [
@@ -88,7 +88,7 @@ export function writeMinimalPbe(
         ]
       : [],
   })
-  writeJson(join(workspace, '.pbe', 'blueprint', 'pbe-state.json'), {
+  writeJson(join(workspace, '.devview', 'blueprint', 'pbe-state.json'), {
     version: '0.2.0-alpha',
     autoflow: {
       enabled: true,
@@ -101,10 +101,10 @@ export function writeMinimalPbe(
       stateHistory: [],
     },
     artifacts: {
-      productTree: '.pbe/tree/product-tree.json',
-      decisionQueue: '.pbe/control/decision-queue.json',
-      acceptanceTree: '.pbe/control/acceptance-tree.json',
-      requirementTree: '.pbe/blueprint/requirement-tree.json',
+      productTree: '.devview/tree/product-tree.json',
+      decisionQueue: '.devview/control/decision-queue.json',
+      acceptanceTree: '.devview/control/acceptance-tree.json',
+      requirementTree: '.devview/blueprint/requirement-tree.json',
     },
     deliveryStatus: options.acceptedByAssistant ? 'accepted' : 'waiting_root_confirmation',
   })
@@ -114,7 +114,7 @@ export function writeExecutableProduct(
   workspace: string,
   options: { scopeClass?: string; status?: string; visualImpact?: boolean; productUpdatedAt?: string } = {},
 ): void {
-  writeJson(join(workspace, '.pbe', 'tree', 'product-tree.json'), {
+  writeJson(join(workspace, '.devview', 'tree', 'product-tree.json'), {
     version: '0.2.0-tree-control',
     rootNodeId: 'PT-ROOT',
     nodes: [
@@ -174,7 +174,7 @@ export function writeExecutableProduct(
 }
 
 export function writeRequirementCompat(workspace: string, title = 'Root goal'): void {
-  writeJson(join(workspace, '.pbe', 'blueprint', 'requirement-tree.json'), {
+  writeJson(join(workspace, '.devview', 'blueprint', 'requirement-tree.json'), {
     schemaVersion: 1,
     rootNodeId: 'req-root',
     traversal: 'breadth_first',
@@ -198,7 +198,7 @@ export function writeRequirementCompat(workspace: string, title = 'Root goal'): 
 }
 
 export function writeDecisionQueue(workspace: string): void {
-  writeJson(join(workspace, '.pbe', 'control', 'decision-queue.json'), {
+  writeJson(join(workspace, '.devview', 'control', 'decision-queue.json'), {
     version: '0.2.0-tree-control',
     decisions: [],
   })

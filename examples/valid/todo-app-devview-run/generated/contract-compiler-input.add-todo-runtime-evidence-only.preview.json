@@ -65,27 +65,27 @@
       },
       {
         "id": "selected-node-source-artifact-1",
-        "path": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json",
+        "path": "examples/valid/todo-app-devview-run/.devview/control/change-tree.json",
         "role": "selected node source artifact"
       },
       {
         "id": "selected-node-source-artifact-2",
-        "path": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json",
+        "path": "examples/valid/todo-app-devview-run/.devview/tree/work-tree.json",
         "role": "selected node source artifact"
       },
       {
         "id": "selected-node-source-artifact-3",
-        "path": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+        "path": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
         "role": "selected node source artifact"
       },
       {
         "id": "selected-node-source-artifact-4",
-        "path": "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
+        "path": "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
         "role": "selected node source artifact"
       },
       {
         "id": "selected-node-source-artifact-5",
-        "path": "examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json",
+        "path": "examples/valid/todo-app-devview-run/.devview/control/impact-tree.json",
         "role": "selected node source artifact"
       }
     ]
@@ -156,7 +156,7 @@
       {
         "id": "forbidden-approval-or-acceptance-changes",
         "scopeKind": "product",
-        "paths": ["examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json"],
+        "paths": ["examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json"],
         "derivedFrom": ["request-ir-graph-aware-validation:scopeIntentResolution"],
         "sourceStatus": "derived-from-graph-aware-validation-context"
       }
@@ -167,7 +167,7 @@
     "entries": [
       {
         "id": "evidence-tt-1",
-        "artifact": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+        "artifact": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
         "evidenceType": "selected_check_context",
         "freshness": "required-after-graph-or-artifact-change",
         "sourceNodeId": "TT-1",
@@ -176,7 +176,7 @@
       },
       {
         "id": "evidence-ev-1",
-        "artifact": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+        "artifact": "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt",
         "evidenceType": "selected_evidence_artifact",
         "freshness": "required-after-graph-or-artifact-change",
         "sourceNodeId": "EV-1",
@@ -189,7 +189,7 @@
     {
       "id": "scope-ch-001",
       "scopeKind": "product",
-      "paths": ["examples/valid/todo-app-devview-run/.pbe/control/change-tree.json"],
+      "paths": ["examples/valid/todo-app-devview-run/.devview/control/change-tree.json"],
       "derivedFrom": ["graph-source:node:CH-001"],
       "contractDerivedFrom": ["selected-slice:node:CH-001"],
       "confidence": "graph-backed-candidate",
@@ -199,7 +199,7 @@
     {
       "id": "scope-wt-1",
       "scopeKind": "workflow",
-      "paths": ["examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json"],
+      "paths": ["examples/valid/todo-app-devview-run/.devview/tree/work-tree.json"],
       "derivedFrom": ["graph-source:node:WT-1"],
       "contractDerivedFrom": ["selected-slice:node:WT-1"],
       "confidence": "graph-backed-candidate",
@@ -209,7 +209,7 @@
     {
       "id": "scope-tt-1",
       "scopeKind": "test",
-      "paths": ["examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"],
+      "paths": ["examples/valid/todo-app-devview-run/.devview/tree/test-tree.json"],
       "derivedFrom": ["graph-source:node:TT-1"],
       "contractDerivedFrom": ["selected-slice:node:TT-1"],
       "confidence": "graph-backed-candidate",
@@ -220,8 +220,8 @@
       "id": "scope-ev-1",
       "scopeKind": "evidence",
       "paths": [
-        "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
-        "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt"
+        "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
+        "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt"
       ],
       "derivedFrom": ["graph-source:node:EV-1"],
       "contractDerivedFrom": ["selected-slice:node:EV-1"],
@@ -234,7 +234,7 @@
     {
       "id": "allowed-scope-tt-1",
       "scopeKind": "test",
-      "paths": ["examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"],
+      "paths": ["examples/valid/todo-app-devview-run/.devview/tree/test-tree.json"],
       "sourceTargetScopeCandidate": "scope-tt-1",
       "sourceStatus": "derived-from-selected-graph-slice-check-or-evidence-context",
       "allowedUse": ["review-selected-check-or-evidence", "report-selected-evidence-status"],
@@ -244,8 +244,8 @@
       "id": "allowed-scope-ev-1",
       "scopeKind": "evidence",
       "paths": [
-        "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
-        "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt"
+        "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
+        "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt"
       ],
       "sourceTargetScopeCandidate": "scope-ev-1",
       "sourceStatus": "derived-from-selected-graph-slice-check-or-evidence-context",
@@ -273,7 +273,7 @@
     {
       "id": "forbidden-approval-or-acceptance-changes",
       "scopeKind": "product",
-      "paths": ["examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json"],
+      "paths": ["examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json"],
       "derivedFrom": ["request-ir-graph-aware-validation:scopeIntentResolution"],
       "sourceStatus": "derived-from-graph-aware-validation-context",
       "boundary": "forbidden scope is advisory contract-input context and not enforcement"
@@ -284,7 +284,7 @@
       "id": "required-evidence-tt-1",
       "sourceEvidenceId": "evidence-tt-1",
       "evidenceType": "selected_check_context",
-      "artifact": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+      "artifact": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
       "sourceStatus": "derived-from-selected-graph-slice",
       "runtimeEvidenceSatisfied": false,
       "acceptedEvidence": false
@@ -293,7 +293,7 @@
       "id": "required-evidence-ev-1",
       "sourceEvidenceId": "evidence-ev-1",
       "evidenceType": "selected_evidence_artifact",
-      "artifact": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+      "artifact": "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt",
       "sourceStatus": "derived-from-selected-graph-slice",
       "runtimeEvidenceSatisfied": false,
       "acceptedEvidence": false

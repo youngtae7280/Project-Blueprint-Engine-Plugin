@@ -50,14 +50,27 @@ export const defaultArtifacts = {
 
 export type ArtifactKey = keyof typeof defaultArtifacts
 
+export function projectStorageRoot(root: string): '.devview' | '.pbe' {
+  if (existsSync(path.join(root, '.devview'))) return '.devview'
+  if (existsSync(path.join(root, '.pbe'))) return '.pbe'
+  return '.devview'
+}
+
+export function artifactRelativePath(root: string, key: ArtifactKey): string {
+  const relativePath = defaultArtifacts[key]
+  const storageRoot = projectStorageRoot(root)
+  return storageRoot === '.devview' ? relativePath.replace(/^\.pbe\//, '.devview/') : relativePath
+}
+
 export function artifactPath(root: string, key: ArtifactKey): string {
-  return path.join(root, defaultArtifacts[key])
+  return path.join(root, artifactRelativePath(root, key))
 }
 
 export async function loadProject(root: string): Promise<{ project: PbeProject; issues: ValidationIssue[] }> {
   const statePath = artifactPath(root, 'pbeState')
   const decisionQueuePath = artifactPath(root, 'decisionQueue')
-  const initialized = existsSync(path.join(root, '.pbe'))
+  const storageRoot = projectStorageRoot(root)
+  const initialized = existsSync(path.join(root, storageRoot))
   const issues: ValidationIssue[] = []
   let state: Record<string, unknown> | null = null
   let decisionQueue: Record<string, unknown> | null = null
@@ -101,7 +114,7 @@ export async function loadProject(root: string): Promise<{ project: PbeProject; 
   return {
     project: {
       root,
-      pbeDir: path.join(root, '.pbe'),
+      pbeDir: path.join(root, storageRoot),
       initialized,
       statePath,
       state,

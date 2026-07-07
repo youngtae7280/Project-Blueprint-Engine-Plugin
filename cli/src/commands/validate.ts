@@ -44,7 +44,7 @@ export async function validateCommand(context: CommandContext): Promise<CommandR
     }
   }
 
-  if (existsSync(path.join(context.options.root, '.pbe'))) {
+  if (existsSync(path.join(context.options.root, '.devview')) || existsSync(path.join(context.options.root, '.pbe'))) {
     issues.push(...(await validateState(context.options.root)))
     issues.push(...(await validateAcceptedActors(context.options.root)))
     issues.push(...(await validateChangeTree(context.options.root)))

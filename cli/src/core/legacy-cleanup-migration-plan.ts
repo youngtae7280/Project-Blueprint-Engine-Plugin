@@ -275,9 +275,10 @@ function buildPbeStorageCompatibilityOperation(
   root: string,
   files: TextFile[],
 ): Omit<LegacyCleanupOperation, 'operationId'> | null {
-  const sourcePath = 'examples/valid/todo-app-devview-run/.pbe'
+  const legacyStorageDirectory = '.pbe'
+  const sourcePath = ['examples', 'valid', 'todo-app-devview-run', legacyStorageDirectory].join('/')
   if (!existsSync(join(root, sourcePath))) return null
-  const refs = findReferences(files, '.pbe').filter((entry) => entry.startsWith('examples/'))
+  const refs = findReferences(files, legacyStorageDirectory).filter((entry) => entry.startsWith('examples/'))
   return {
     operationKind: 'keep-internal-hidden-compatibility',
     sourcePath,
@@ -525,9 +526,9 @@ function buildGrepAcceptanceCriteria(): string[] {
   return [
     'rg -n "PBE|Project Blueprint Engine|\\bpbe\\b|\\.pbe" README.md docs docs/index.md docs/cli-reference.md => zero public-doc matches.',
     'git grep -n "todo-app-pbe-run" -- . => zero active canonical fixture path references outside explicitly allowlisted internal migration fixtures.',
-    'git grep -n -E "PBE|Project Blueprint Engine|\\bpbe\\b|\\.pbe" -- examples ":!examples/internal-legacy/**" ":!examples/valid/todo-app-devview-run/.pbe/**" => only deferred .pbe storage references under examples/valid/todo-app-devview-run until the storage migration slice.',
+    'git grep -n "\\.pbe" -- examples ":!examples/internal-legacy/**" => zero public/canonical example storage matches after active Todo fixture storage migration.',
     'rg -n "\\bpbe\\b|PBE_|Project Blueprint Engine|validate:pbe" package.json package-lock.json .github cli scripts => hidden compatibility allowlist only.',
-    'rg -n "\\.pbe" cli/src scripts examples docs => storage migration resolver, output guards, or internal migration fixtures only.',
+    'rg -n "\\.pbe" cli/src scripts examples docs => legacy storage guard, hidden compatibility, or internal migration fixtures only.',
   ]
 }
 
@@ -561,8 +562,8 @@ function classifyProtectedOutputPath(root: string, filePath: string): string | n
   if (relativePath === 'package.json' || relativePath === 'package-lock.json') return 'package metadata'
   if (relativePath.startsWith('docs/')) return 'public or historical docs'
   if (relativePath.startsWith('examples/')) return 'example source or generated artifacts'
-  if (relativePath === '.pbe' || relativePath.startsWith('.pbe/')) return 'legacy storage'
   if (relativePath === '.devview' || relativePath.startsWith('.devview/')) return 'future canonical storage'
+  if (relativePath === '.pbe' || relativePath.startsWith('.pbe/')) return 'legacy storage'
   if (relativePath === '.codex' || relativePath.startsWith('.codex/')) return 'Codex configuration'
   if (relativePath.startsWith('.codex-plugin/')) return 'plugin configuration'
   if (relativePath.includes('/.pbe/') || relativePath.includes('/.devview/') || relativePath.includes('/.codex/')) {

@@ -5,7 +5,7 @@ export function writeVisualContractArtifacts(
   workspace: string,
   options: { requiredScreenshot?: boolean; contractOnly?: boolean } = {},
 ): void {
-  writeJson(join(workspace, '.pbe', 'blueprint', 'visual-reference.json'), {
+  writeJson(join(workspace, '.devview', 'blueprint', 'visual-reference.json'), {
     schemaVersion: '1.0.0',
     artifactType: 'visual_reference',
     status: 'confirmed',
@@ -35,12 +35,12 @@ export function writeVisualContractArtifacts(
       scope: null,
     },
   })
-  writeText(join(workspace, '.pbe', 'blueprint', 'ui-theme-spec.md'), '# UI Theme Spec\n')
-  writeJson(join(workspace, '.pbe', 'blueprint', 'design-tokens.json'), {
+  writeText(join(workspace, '.devview', 'blueprint', 'ui-theme-spec.md'), '# UI Theme Spec\n')
+  writeJson(join(workspace, '.devview', 'blueprint', 'design-tokens.json'), {
     schemaVersion: '1.0.0',
     artifactType: 'design_tokens',
     status: 'confirmed',
-    sourceRef: '.pbe/blueprint/visual-reference.json',
+    sourceRef: '.devview/blueprint/visual-reference.json',
     tokens: {
       colors: { primary: { value: '#3B82F6' } },
       spacing: { sm: { value: '8px' } },
@@ -53,11 +53,11 @@ export function writeVisualContractArtifacts(
     openQuestions: [],
     exceptions: [],
   })
-  writeJson(join(workspace, '.pbe', 'blueprint', 'component-style-contract.json'), {
+  writeJson(join(workspace, '.devview', 'blueprint', 'component-style-contract.json'), {
     schemaVersion: '1.0.0',
     artifactType: 'component_style_contract',
     status: 'confirmed',
-    sourceRef: '.pbe/blueprint/design-tokens.json',
+    sourceRef: '.devview/blueprint/design-tokens.json',
     components: [
       {
         componentName: 'Button',
@@ -84,7 +84,7 @@ export function writeVisualContractArtifacts(
   if (options.contractOnly) {
     return
   }
-  writeJson(join(workspace, '.pbe', 'control', 'ui-surface-inventory.json'), {
+  writeJson(join(workspace, '.devview', 'control', 'ui-surface-inventory.json'), {
     schemaVersion: '1.0.0',
     artifactType: 'ui_surface_inventory',
     status: 'confirmed',
@@ -101,7 +101,7 @@ export function writeVisualContractArtifacts(
             requiredScreenshots: [
               {
                 state: 'default',
-                path: '.pbe/evidence/screenshots/surface-1-default.png',
+                path: '.devview/evidence/screenshots/surface-1-default.png',
                 required: true,
               },
             ],
@@ -116,7 +116,7 @@ export function writeVisualContractArtifacts(
     childSurfaces: [],
     missingInventoryItems: [],
   })
-  writeJson(join(workspace, '.pbe', 'control', 'component-style-inventory.json'), {
+  writeJson(join(workspace, '.devview', 'control', 'component-style-inventory.json'), {
     schemaVersion: '1.0.0',
     artifactType: 'component_style_inventory',
     status: 'confirmed',
@@ -125,15 +125,15 @@ export function writeVisualContractArtifacts(
     tokenIntegrationFiles: [],
     risks: [],
   })
-  writeJson(join(workspace, '.pbe', 'control', 'visual-verification-profile.json'), {
+  writeJson(join(workspace, '.devview', 'control', 'visual-verification-profile.json'), {
     version: '0.2.1-parity-completeness',
     schemaVersion: '1.0.0',
     artifactType: 'visual_verification_profile',
     status: 'confirmed',
-    visualContractRef: '.pbe/blueprint/ui-theme-spec.md',
-    designTokensRef: '.pbe/blueprint/design-tokens.json',
-    componentContractRef: '.pbe/blueprint/component-style-contract.json',
-    surfaceInventoryRef: '.pbe/control/ui-surface-inventory.json',
+    visualContractRef: '.devview/blueprint/ui-theme-spec.md',
+    designTokensRef: '.devview/blueprint/design-tokens.json',
+    componentContractRef: '.devview/blueprint/component-style-contract.json',
+    surfaceInventoryRef: '.devview/control/ui-surface-inventory.json',
     contractChecks: [],
     blockingIssues: [],
     waivers: [],
@@ -143,7 +143,7 @@ export function writeVisualContractArtifacts(
 
 export function writePassingVisualAudit(workspace: string): void {
   writeText(
-    join(workspace, '.pbe', 'evidence', 'visual-audit.md'),
+    join(workspace, '.devview', 'evidence', 'visual-audit.md'),
     [
       '# Visual Implementation Audit',
       '',

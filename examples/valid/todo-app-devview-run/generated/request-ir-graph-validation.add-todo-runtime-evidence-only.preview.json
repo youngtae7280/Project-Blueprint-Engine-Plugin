@@ -16,14 +16,14 @@
     "graphSourceScope": "todo-app-devview-run-structure-only",
     "graphSourceNodeCount": 22,
     "graphSourceEdgeCount": 38,
-    "sourceAuthorityBoundary": "This Todo App DevView Run graph source is confirmed for structure-only graph-source-backed generation. Canonical .pbe artifacts remain compatibility/fallback/reference, and this graph source does not create parity backing, pilot marker backing, CI enforcement, or broader source authority."
+    "sourceAuthorityBoundary": "This Todo App DevView Run graph source is confirmed for structure-only graph-source-backed generation. Canonical .devview artifacts remain compatibility/fallback/reference, and this graph source does not create parity backing, pilot marker backing, CI enforcement, or broader source authority."
   },
   "targetRecordValidationStatus": "resolved",
   "targetRecordResolution": {
     "candidate": "CH-001",
     "resolvedRecordId": "CH-001",
     "nodeKind": "change",
-    "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json",
+    "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/control/change-tree.json",
     "status": "impact_analyzed",
     "graphSourceAuthorityStatus": "resolved-from-structure-only-graph-source",
     "readModelRecordPresent": true,

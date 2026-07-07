@@ -610,11 +610,11 @@ test-only behavior proof
 Primary source surfaces:
 
 - `examples/valid/todo-app-devview-run/graph-source.json`
-- `examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json`
-- `examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json`
-- `examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json`
-- `examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json`
-- `examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt`
+- `examples/valid/todo-app-devview-run/.devview/tree/product-tree.json`
+- `examples/valid/todo-app-devview-run/.devview/tree/work-tree.json`
+- `examples/valid/todo-app-devview-run/.devview/tree/test-tree.json`
+- `examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json`
+- `examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt`
 - `docs/concept/todo-app-source-authority-evidence-package.md`
 
 This selection does not promote the existing Todo App positive fixture beyond its current structure-only role. It
@@ -692,8 +692,8 @@ structure-only; the draft is a separate calibration artifact for a possible futu
 
 The draft models:
 
-- allowed test/Evidence-oriented scope through `.pbe/tree/test-tree.json`, `.pbe/evidence/evidence-tree.json`, and
-  `.pbe/evidence/test-results/todo-add.txt`;
+- allowed test/Evidence-oriented scope through `.devview/tree/test-tree.json`, `.devview/evidence/evidence-tree.json`, and
+  `.devview/evidence/test-results/todo-add.txt`;
 - forbidden production source scope through the conceptual `src/todos.ts` path from `WT-1`;
 - required runtime command Evidence as missing/unresolved rather than satisfied;
 - attached structure-only Evidence as present but not authoritative runtime proof;
@@ -2381,7 +2381,7 @@ The selected-slice-to-contract-input generator maps the selected slice into exis
 `targetScopeCandidates` keep selected context from `CH-001`, `WT-1`, `TT-1`, and `EV-1`, while `allowedScope` is narrowed
 to check/evidence/report-oriented artifacts derived from `TT-1` and `EV-1`. The change-tree and work-tree paths stay
 context-only and are not authorized as editable allowed scope for runtime-Evidence-only work. Evidence paths are
-fixture-root normalized when a selected node points at `.pbe/...`; risk context comes from `IM-001`; output requirements
+fixture-root normalized when a selected node points at `.devview/...`; risk context comes from `IM-001`; output requirements
 remain preview/advisory report obligations; and unresolved production-source forbidden scope stays explicitly unresolved
 until selected graph/source authority proves a concrete path.
 
@@ -2576,7 +2576,7 @@ This selection does not:
 - introduce required checks, branch protection, or CI enforcement;
 - automate user acceptance;
 - retire tree-native artifacts;
-- rename `pbe`, `.pbe`, validation scripts, generated artifact paths, or sourceMode values.
+- rename `pbe`, `.devview`, validation scripts, generated artifact paths, or sourceMode values.
 
 ## Next Step
 

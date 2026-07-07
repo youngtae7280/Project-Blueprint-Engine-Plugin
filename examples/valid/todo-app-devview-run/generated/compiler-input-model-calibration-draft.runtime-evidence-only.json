@@ -34,27 +34,27 @@
       },
       {
         "id": "todo-app-product-tree",
-        "path": "examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json",
+        "path": "examples/valid/todo-app-devview-run/.devview/tree/product-tree.json",
         "role": "Product and acceptance-criteria context"
       },
       {
         "id": "todo-app-work-tree",
-        "path": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json",
+        "path": "examples/valid/todo-app-devview-run/.devview/tree/work-tree.json",
         "role": "Work scope context with conceptual production source path"
       },
       {
         "id": "todo-app-test-tree",
-        "path": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+        "path": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
         "role": "required check context"
       },
       {
         "id": "todo-app-evidence-tree",
-        "path": "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
+        "path": "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
         "role": "attached Evidence context"
       },
       {
         "id": "todo-app-attached-test-output",
-        "path": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+        "path": "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt",
         "role": "attached structure-only test output"
       },
       {
@@ -151,7 +151,7 @@
       {
         "id": "scope-no-acceptance-state-mutation",
         "scopeKind": "decision",
-        "paths": ["examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json"],
+        "paths": ["examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json"],
         "derivedFrom": ["policy:user-acceptance-not-replaced-by-evidence"]
       }
     ]
@@ -161,7 +161,7 @@
     "entries": [
       {
         "id": "evidence-todo-app-attached-test-output",
-        "artifact": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+        "artifact": "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt",
         "evidenceType": "attached_structure_only_test_output",
         "freshness": "existing-structure-only-evidence",
         "evidenceStatus": "present-not-authoritative-runtime-proof"
@@ -186,7 +186,7 @@
     {
       "id": "scope-todo-app-test-tree",
       "scopeKind": "test",
-      "paths": ["examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"],
+      "paths": ["examples/valid/todo-app-devview-run/.devview/tree/test-tree.json"],
       "derivedFrom": ["test:TT-1", "acceptance:AC-PT-1-1"],
       "contractDerivedFrom": ["check:check-todo-app-runtime-add-todo"],
       "confidence": "structure-only-context",
@@ -196,8 +196,8 @@
       "id": "scope-todo-app-evidence-tree",
       "scopeKind": "evidence",
       "paths": [
-        "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
-        "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt"
+        "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
+        "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt"
       ],
       "derivedFrom": ["evidence:EV-1"],
       "contractDerivedFrom": ["check:check-todo-app-attached-evidence-review"],

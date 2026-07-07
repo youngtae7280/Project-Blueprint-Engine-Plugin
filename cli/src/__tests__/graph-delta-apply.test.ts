@@ -87,9 +87,9 @@ describe('Graph Delta Apply CLI', () => {
   })
 
   it('blocks protected graph-source targets', async () => {
-    const workspace = workspaceWithApplyInputs({ graphSourcePath: '.pbe/graph-source.json' })
+    const workspace = workspaceWithApplyInputs({ graphSourcePath: '.devview/graph-source.json' })
 
-    const result = await runApply(workspace, { graphSource: '.pbe/graph-source.json' })
+    const result = await runApply(workspace, { graphSource: '.devview/graph-source.json' })
     const payload = JSON.parse(result.stderr)
 
     expect(result.exitCode).toBe(ExitCode.ValidationFailed)

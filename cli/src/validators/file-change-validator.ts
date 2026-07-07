@@ -232,7 +232,8 @@ function isIgnoredPath(filePath: string): boolean {
 }
 
 function isPbeArtifact(filePath: string): boolean {
-  return normalizeForMatch(filePath).startsWith('.pbe/')
+  const normalized = normalizeForMatch(filePath)
+  return normalized.startsWith('.pbe/') || normalized.startsWith('.devview/')
 }
 
 function normalizeForMatch(filePath: string): string {

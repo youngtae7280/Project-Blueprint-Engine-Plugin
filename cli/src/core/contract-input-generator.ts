@@ -490,7 +490,11 @@ function buildAllowedScope(targetScopeCandidates: JsonRecord[], mappingTrace: Js
         sourceTargetScopeCandidate: entry.id,
         sourceStatus: 'derived-from-selected-graph-slice-check-or-evidence-context',
         allowedUse: ['review-selected-check-or-evidence', 'report-selected-evidence-status'],
-        modificationAuthority: paths.some((entryPath) => entryPath.includes('/.pbe/evidence/test-results/'))
+        modificationAuthority: paths.some(
+          (entryPath) =>
+            entryPath.includes('/.devview/evidence/test-results/') ||
+            entryPath.includes('/.devview/evidence/test-results/'),
+        )
           ? 'evidence-artifact-or-report-only'
           : 'context-only-no-modification',
       }
@@ -594,7 +598,7 @@ function buildForbiddenScope(
       ? ['unresolved:production-source-changes']
       : normalized.includes('graph')
         ? [graphSourcePath || 'unresolved:graph-source-mutation']
-        : ['examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json']
+        : ['examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json']
     const scopeKind = normalized.includes('production') ? 'code' : normalized.includes('graph') ? 'graph' : 'product'
     if (productionSourceUnresolved) {
       findings.push({
@@ -862,7 +866,7 @@ function normalizePathCandidate(candidate: string, fixtureRoot: string | null): 
   if (!normalized) {
     return ''
   }
-  if (normalized.startsWith('.pbe/')) {
+  if (normalized.startsWith('.devview/') || normalized.startsWith('.devview/')) {
     return fixtureRoot ? `${fixtureRoot}/${normalized}` : ''
   }
   return normalized

@@ -88,11 +88,11 @@ if (validationTarget.kind === 'plugin-repository') {
     issues: [
       createIssue({
         validator: 'DevView target',
-        file: '.pbe',
+        file: '.devview',
         code: 'PBE_NOT_INITIALIZED',
         message:
-          'Target root is not the DevView plugin repository and does not contain legacy migration input storage.',
-        suggestedFix: 'Run validation from the DevView repository or an initialized legacy migration root.',
+          'Target root is not the DevView plugin repository and does not contain DevView or legacy migration input storage.',
+        suggestedFix: 'Run validation from the DevView repository or an initialized DevView/legacy migration root.',
       }),
     ],
   })
@@ -115,13 +115,16 @@ function classifyValidationTarget(repoRoot, cwd) {
   if (isPluginRepository) {
     return { kind: 'plugin-repository' }
   }
-  if (existsSync(path.join(cwd, '.pbe'))) {
+  if (existsSync(path.join(cwd, '.devview')) || existsSync(path.join(cwd, '.pbe'))) {
     return { kind: 'initialized-project' }
   }
   return { kind: 'uninitialized' }
 }
 
 function runCompatibilityCore(repoRoot, cwd, targetKind) {
+  if (targetKind === 'initialized-project' && !existsSync(path.join(cwd, '.pbe'))) {
+    return []
+  }
   try {
     execFileSync(process.execPath, [path.join(repoRoot, 'scripts', 'validators', 'legacy-core.js')], {
       cwd: repoRoot,

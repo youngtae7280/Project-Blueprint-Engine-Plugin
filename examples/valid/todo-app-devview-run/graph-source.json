@@ -6,23 +6,23 @@
   "sourceSlice": "examples/valid/todo-app-devview-run",
   "sourceProfile": "todo-app-devview-run-structure-only",
   "policyLevel": "structure-only",
-  "sourceAuthorityBoundary": "This Todo App DevView Run graph source is confirmed for structure-only graph-source-backed generation. Canonical .pbe artifacts remain compatibility/fallback/reference, and this graph source does not create parity backing, pilot marker backing, CI enforcement, or broader source authority.",
+  "sourceAuthorityBoundary": "This Todo App DevView Run graph source is confirmed for structure-only graph-source-backed generation. Canonical .devview artifacts remain compatibility/fallback/reference, and this graph source does not create parity backing, pilot marker backing, CI enforcement, or broader source authority.",
   "projectionBoundary": "Confirmed structure-only graph-source records support generated read-model projection for Todo App DevView Run. Generated read-model, validation, aggregate, and CI artifacts remain Evidence and do not replace user acceptance or promote beyond structure-only.",
   "fallbackReferences": [
-    "examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json",
-    "examples/valid/todo-app-devview-run/.pbe/tree/project-tree.json",
-    "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json",
-    "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
-    "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
-    "examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json",
-    "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json",
-    "examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json",
-    "examples/valid/todo-app-devview-run/.pbe/execution/cycle-tree.json",
-    "examples/valid/todo-app-devview-run/.pbe/execution/cycle-contract.md",
-    "examples/valid/todo-app-devview-run/.pbe/blueprint/work-graph.json",
-    "examples/valid/todo-app-devview-run/.pbe/blueprint/source-of-truth-matrix.md",
-    "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
-    "examples/valid/todo-app-devview-run/.pbe/blueprint/pbe-state.json"
+    "examples/valid/todo-app-devview-run/.devview/tree/product-tree.json",
+    "examples/valid/todo-app-devview-run/.devview/tree/project-tree.json",
+    "examples/valid/todo-app-devview-run/.devview/tree/work-tree.json",
+    "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
+    "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
+    "examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json",
+    "examples/valid/todo-app-devview-run/.devview/control/change-tree.json",
+    "examples/valid/todo-app-devview-run/.devview/control/impact-tree.json",
+    "examples/valid/todo-app-devview-run/.devview/execution/cycle-tree.json",
+    "examples/valid/todo-app-devview-run/.devview/execution/cycle-contract.md",
+    "examples/valid/todo-app-devview-run/.devview/blueprint/work-graph.json",
+    "examples/valid/todo-app-devview-run/.devview/blueprint/source-of-truth-matrix.md",
+    "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt",
+    "examples/valid/todo-app-devview-run/.devview/blueprint/pbe-state.json"
   ],
   "retainedCompatibilityArtifacts": [
     "examples/valid/todo-app-devview-run/generated/generated-read-model.json",
@@ -35,7 +35,7 @@
       {
         "id": "PT-ROOT",
         "nodeKind": "requirement",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/tree/product-tree.json",
         "title": "Todo app accepted slice",
         "status": "confirmed",
         "confidence": "user-confirmed",
@@ -51,7 +51,7 @@
       {
         "id": "PT-1",
         "nodeKind": "requirement",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/tree/product-tree.json",
         "title": "Add a todo item",
         "status": "confirmed",
         "confidence": "user-confirmed",
@@ -67,7 +67,7 @@
       {
         "id": "AC-PT-1-1",
         "nodeKind": "requirement",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/tree/product-tree.json",
         "title": "WHEN the user submits a todo title, THE SYSTEM SHALL persist and display the todo item.",
         "status": "confirmed",
         "confidence": "user-confirmed",
@@ -83,7 +83,7 @@
       {
         "id": "PJ-ROOT",
         "nodeKind": "code",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/tree/project-tree.json",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/tree/project-tree.json",
         "title": "Todo app project",
         "status": "derived",
         "confidence": "inferred",
@@ -98,7 +98,7 @@
       {
         "id": "PJ-1",
         "nodeKind": "code",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/tree/project-tree.json",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/tree/project-tree.json",
         "title": "Todo item module",
         "status": "module_verified",
         "confidence": "inferred",
@@ -113,7 +113,7 @@
       {
         "id": "WT-ROOT",
         "nodeKind": "task",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/tree/work-tree.json",
         "title": "Todo work root",
         "status": "implemented",
         "confidence": "inferred",
@@ -129,7 +129,7 @@
       {
         "id": "WT-1",
         "nodeKind": "task",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/tree/work-tree.json",
         "title": "Implement add todo behavior",
         "status": "implemented",
         "confidence": "inferred",
@@ -145,7 +145,7 @@
       {
         "id": "TT-ROOT",
         "nodeKind": "check",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
         "title": "Todo test root",
         "status": "passed",
         "confidence": "tool-confirmed",
@@ -160,7 +160,7 @@
       {
         "id": "TT-1",
         "nodeKind": "check",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
         "title": "Add todo acceptance check",
         "status": "passed",
         "confidence": "tool-confirmed",
@@ -175,8 +175,8 @@
       {
         "id": "EV-1",
         "nodeKind": "evidence",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
-        "title": ".pbe/evidence/test-results/todo-add.txt",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
+        "title": ".devview/evidence/test-results/todo-add.txt",
         "status": "attached",
         "confidence": "inferred",
         "freshnessStatus": "fresh",
@@ -191,7 +191,7 @@
       {
         "id": "ACCEPT-PT-1",
         "nodeKind": "decision",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json",
         "title": "Product PT-1, Work WT-1, Test TT-1, Evidence EV-1, and AC-PT-1-1 are closed.",
         "status": "accepted_done",
         "confidence": "user-confirmed",
@@ -207,7 +207,7 @@
       {
         "id": "CH-001",
         "nodeKind": "change",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/control/change-tree.json",
         "title": "Preserve completed add-todo behavior while future revisions are assessed.",
         "status": "impact_analyzed",
         "confidence": "inferred",
@@ -222,7 +222,7 @@
       {
         "id": "IM-001",
         "nodeKind": "finding",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/control/impact-tree.json",
         "title": "Golden run includes a non-blocking analyzed change skeleton.",
         "status": "analyzed",
         "confidence": "inferred",
@@ -237,7 +237,7 @@
       {
         "id": "CY-1",
         "nodeKind": "task",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/execution/cycle-tree.json",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/execution/cycle-tree.json",
         "title": "Close the selected add-todo capability.",
         "status": "accepted",
         "confidence": "inferred",
@@ -252,7 +252,7 @@
       {
         "id": "CY-1-CONTRACT",
         "nodeKind": "document",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/execution/cycle-contract.md",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/execution/cycle-contract.md",
         "title": "Cycle Contract for add-todo golden run",
         "status": "present",
         "confidence": "inferred",
@@ -267,7 +267,7 @@
       {
         "id": "WG-TODO-1",
         "nodeKind": "document",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/blueprint/work-graph.json",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/blueprint/work-graph.json",
         "title": "Todo App WorkGraph compatibility view",
         "status": "present",
         "confidence": "inferred",
@@ -283,7 +283,7 @@
       {
         "id": "WG-NODE-WT-1",
         "nodeKind": "task",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/blueprint/work-graph.json",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/blueprint/work-graph.json",
         "title": "Implement add todo behavior",
         "status": "selected",
         "confidence": "inferred",
@@ -299,7 +299,7 @@
       {
         "id": "DOC-SOURCE-OF-TRUTH-MATRIX",
         "nodeKind": "document",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/blueprint/source-of-truth-matrix.md",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/blueprint/source-of-truth-matrix.md",
         "title": "Todo App source-of-truth matrix",
         "status": "present",
         "confidence": "inferred",
@@ -314,7 +314,7 @@
       {
         "id": "LOG-TODO-ADD-EVIDENCE",
         "nodeKind": "log",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt",
         "title": "Attached todo-add test output",
         "status": "present",
         "confidence": "tool-confirmed",
@@ -374,7 +374,7 @@
       {
         "id": "FIND-NO-RUNTIME-FIXTURE",
         "nodeKind": "finding",
-        "sourceArtifact": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+        "sourceArtifact": "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt",
         "title": "Attached evidence exists, but no runnable runtime fixture is required for structure-only validation",
         "status": "structure_only_limitation",
         "confidence": "inferred",
@@ -397,7 +397,7 @@
         "confidence": "user-confirmed",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/product-tree.json"
       },
       {
         "id": "E-PT-ROOT-TARGETS-PJ-1",
@@ -407,7 +407,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/product-tree.json"
       },
       {
         "id": "E-PT-ROOT-TARGETS-WT-1",
@@ -417,7 +417,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/product-tree.json"
       },
       {
         "id": "E-PT-1-TARGETS-PJ-1",
@@ -427,7 +427,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/product-tree.json"
       },
       {
         "id": "E-PT-1-TARGETS-WT-1",
@@ -437,7 +437,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/product-tree.json"
       },
       {
         "id": "E-PT-1-REQUIRES-TT-1",
@@ -447,7 +447,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/product-tree.json"
       },
       {
         "id": "E-PT-1-REQUIRES-AC-PT-1-1",
@@ -457,7 +457,7 @@
         "confidence": "user-confirmed",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/product-tree.json"
       },
       {
         "id": "E-WT-ROOT-SATISFIES-PT-ROOT",
@@ -467,7 +467,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/work-tree.json"
       },
       {
         "id": "E-WT-ROOT-TOUCHES-PJ-ROOT",
@@ -477,7 +477,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/work-tree.json"
       },
       {
         "id": "E-WT-1-SATISFIES-PT-1",
@@ -487,7 +487,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/work-tree.json"
       },
       {
         "id": "E-WT-1-TOUCHES-PJ-1",
@@ -497,7 +497,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/work-tree.json"
       },
       {
         "id": "E-WT-1-SATISFIES-AC-PT-1-1",
@@ -507,7 +507,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/work-tree.json"
       },
       {
         "id": "E-TT-ROOT-VERIFIES-PT-ROOT",
@@ -517,7 +517,7 @@
         "confidence": "tool-confirmed",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json"
       },
       {
         "id": "E-TT-ROOT-VERIFIES-WT-ROOT",
@@ -527,7 +527,7 @@
         "confidence": "tool-confirmed",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json"
       },
       {
         "id": "E-TT-1-VERIFIES-PT-1",
@@ -537,7 +537,7 @@
         "confidence": "tool-confirmed",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json"
       },
       {
         "id": "E-TT-1-VERIFIES-WT-1",
@@ -547,7 +547,7 @@
         "confidence": "tool-confirmed",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json"
       },
       {
         "id": "E-TT-1-VERIFIES-AC-PT-1-1",
@@ -557,7 +557,7 @@
         "confidence": "tool-confirmed",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json"
       },
       {
         "id": "E-EV-1-EVIDENCES-TT-1",
@@ -567,7 +567,7 @@
         "confidence": "tool-confirmed",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json"
       },
       {
         "id": "E-EV-1-EVIDENCES-AC-PT-1-1",
@@ -577,7 +577,7 @@
         "confidence": "tool-confirmed",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json"
       },
       {
         "id": "E-LOG-EVIDENCES-EV-1",
@@ -587,7 +587,7 @@
         "confidence": "tool-confirmed",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt"
+        "source": "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt"
       },
       {
         "id": "E-ACCEPT-PT-1-APPROVES-PT-1",
@@ -597,7 +597,7 @@
         "confidence": "user-confirmed",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json"
       },
       {
         "id": "E-ACCEPT-PT-1-APPROVES-EV-1",
@@ -607,7 +607,7 @@
         "confidence": "user-confirmed",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/control/acceptance-tree.json"
       },
       {
         "id": "E-CH-001-TOUCHES-WT-1",
@@ -617,7 +617,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/control/change-tree.json"
       },
       {
         "id": "E-CH-001-PRESERVES-TT-1",
@@ -627,7 +627,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/control/change-tree.json"
       },
       {
         "id": "E-CH-001-PRESERVES-EV-1",
@@ -637,7 +637,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/control/change-tree.json"
       },
       {
         "id": "E-IM-001-REPORTS-ON-CH-001",
@@ -647,7 +647,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/control/impact-tree.json"
       },
       {
         "id": "E-IM-001-REPORTS-ON-WT-1",
@@ -657,7 +657,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/control/impact-tree.json"
       },
       {
         "id": "E-CY-1-REQUIRES-WT-1",
@@ -667,7 +667,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/execution/cycle-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/execution/cycle-tree.json"
       },
       {
         "id": "E-CY-1-REQUIRES-TT-1",
@@ -677,7 +677,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/execution/cycle-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/execution/cycle-tree.json"
       },
       {
         "id": "E-CY-1-REQUIRES-EV-1",
@@ -687,7 +687,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/execution/cycle-tree.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/execution/cycle-tree.json"
       },
       {
         "id": "E-CYCLE-CONTRACT-REPORTS-ON-CY-1",
@@ -697,7 +697,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/execution/cycle-contract.md"
+        "source": "examples/valid/todo-app-devview-run/.devview/execution/cycle-contract.md"
       },
       {
         "id": "E-WORKGRAPH-DERIVES-WT-1",
@@ -707,7 +707,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/blueprint/work-graph.json"
+        "source": "examples/valid/todo-app-devview-run/.devview/blueprint/work-graph.json"
       },
       {
         "id": "E-SOT-PRESERVES-SOURCE-BOUNDARY",
@@ -717,7 +717,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/blueprint/source-of-truth-matrix.md"
+        "source": "examples/valid/todo-app-devview-run/.devview/blueprint/source-of-truth-matrix.md"
       },
       {
         "id": "E-VIEW-DERIVES-PT-1",
@@ -767,7 +767,7 @@
         "confidence": "inferred",
         "freshnessStatus": "fresh",
         "parityStatus": "present",
-        "source": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt"
+        "source": "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt"
       }
     ],
     "coreViewCoverage": [
@@ -796,7 +796,7 @@
         "includedNodeIds": ["PJ-ROOT", "PJ-1", "WG-TODO-1", "WG-NODE-WT-1", "DOC-SOURCE-OF-TRUTH-MATRIX"],
         "includedEdgeIds": ["E-WT-1-TOUCHES-PJ-1", "E-WORKGRAPH-DERIVES-WT-1", "E-SOT-PRESERVES-SOURCE-BOUNDARY"],
         "viewScopedTags": ["context"],
-        "boundaryNotes": "Shows canonical .pbe project/workgraph/source-of-truth structure."
+        "boundaryNotes": "Shows canonical .devview project/workgraph/source-of-truth structure."
       },
       {
         "viewId": "scope-execution-view",

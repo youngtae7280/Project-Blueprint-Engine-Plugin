@@ -53,12 +53,12 @@
       "notAgentClaim": true,
       "changedFiles": [
         {
-          "path": "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
+          "path": "examples/valid/todo-app-devview-run/.devview/evidence/evidence-tree.json",
           "previewScopeExpectation": "test-or-evidence-scope",
           "sourceBoundary": "fixture-provided-preview-only"
         },
         {
-          "path": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+          "path": "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt",
           "previewScopeExpectation": "runtime-evidence-file",
           "sourceBoundary": "fixture-provided-preview-only"
         },
@@ -87,7 +87,7 @@
           "sourceBoundary": "fixture-provided-preview-only"
         },
         {
-          "path": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+          "path": "examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt",
           "previewScopeExpectation": "runtime-evidence-file",
           "sourceBoundary": "fixture-provided-preview-only"
         }

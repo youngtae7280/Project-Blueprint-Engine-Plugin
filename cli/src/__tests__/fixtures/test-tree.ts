@@ -11,7 +11,7 @@ export function writeTestTree(
     testUpdatedAt?: string
   } = {},
 ): void {
-  writeJson(join(workspace, '.pbe', 'tree', 'test-tree.json'), {
+  writeJson(join(workspace, '.devview', 'tree', 'test-tree.json'), {
     version: '0.2.0-tree-control',
     rootNodeId: 'TT-ROOT',
     nodes: [

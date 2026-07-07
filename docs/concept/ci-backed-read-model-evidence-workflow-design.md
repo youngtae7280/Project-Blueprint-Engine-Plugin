@@ -198,7 +198,7 @@ This workflow design still keeps the CI sequence explicit unless a later workflo
 | `read-model-parity-report.md`                  | Human-readable parity summary.                                                            | yes                    |
 | `read-model-validation-report.json`            | Machine-readable validator-backed Evidence report.                                        | yes                    |
 | `read-model-validation-report.md`              | Human-readable validation report.                                                         | yes                    |
-| Todo App DevView Run `generated-read-model.*`  | Structure-only generated read-model Evidence for the canonical `.pbe` fixture.            | yes                    |
+| Todo App DevView Run `generated-read-model.*`  | Structure-only generated read-model Evidence for the canonical `.devview` fixture.        | yes                    |
 | Todo App DevView Run validation report         | Structure-only validator-backed Evidence for the second fixture.                          | yes                    |
 | `read-model-aggregate-summary.*`               | Cross-slice Evidence summary over existing per-slice validation reports.                  | yes                    |
 | `read-model-candidate-observation-output.json` | Separate Todo App candidate projection observation output.                                | yes                    |
@@ -475,6 +475,6 @@ unapproved.
 ## Final Non-Implementation Statement
 
 This non-enforcing CI workflow implementation does not introduce enforcement, does not expand source authority, does not
-make Todo App DevView Run a pilot slice, does not retire tree-native or `.pbe` artifacts, and does not approve full
+make Todo App DevView Run a pilot slice, does not retire tree-native or `.devview` artifacts, and does not approve full
 Graph-source promotion. The aggregate-enabled workflow output is reviewed in runs `28156403793` and `28157938343`, but
 it remains non-enforcing Evidence only and does not approve source authority expansion.

@@ -19,7 +19,7 @@
     "id": "required-evidence-tt-1",
     "sourceEvidenceId": "evidence-tt-1",
     "evidenceType": "selected_check_context",
-    "artifact": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+    "artifact": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json",
     "sourceStatus": "derived-from-selected-graph-slice",
     "runtimeEvidenceSatisfied": false,
     "acceptedEvidence": false
@@ -54,7 +54,7 @@
         "id": "required-evidence-tt-1",
         "sourceEvidenceId": "evidence-tt-1",
         "evidenceType": "selected_check_context",
-        "artifact": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"
+        "artifact": "examples/valid/todo-app-devview-run/.devview/tree/test-tree.json"
       },
       "actual": {
         "evidenceKind": "devview-graph-delta-apply-report-candidate",

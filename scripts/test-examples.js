@@ -141,58 +141,58 @@ function copyPluginValidationAssets(targetRoot) {
 function applyMutation(root, mutation) {
   switch (mutation) {
     case 'ambiguousAcceptance': {
-      const product = readArtifact(root, '.pbe/tree/product-tree.json')
+      const product = readArtifact(root, '.devview/tree/product-tree.json')
       const node = findNode(product, 'PT-1')
       node.acceptanceCriteria[0].observableResult = 'The todo interaction feels nice to the user.'
-      writeArtifact(root, '.pbe/tree/product-tree.json', product)
+      writeArtifact(root, '.devview/tree/product-tree.json', product)
       break
     }
     case 'missingWorkLink': {
-      const work = readArtifact(root, '.pbe/tree/work-tree.json')
+      const work = readArtifact(root, '.devview/tree/work-tree.json')
       findNode(work, 'WT-1').derivedFromProductNodeIds = []
-      writeArtifact(root, '.pbe/tree/work-tree.json', work)
+      writeArtifact(root, '.devview/tree/work-tree.json', work)
       break
     }
     case 'missingTestCoverage': {
-      const test = readArtifact(root, '.pbe/tree/test-tree.json')
+      const test = readArtifact(root, '.devview/tree/test-tree.json')
       test.nodes = test.nodes.filter((node) => node.id !== 'TT-1')
-      writeArtifact(root, '.pbe/tree/test-tree.json', test)
+      writeArtifact(root, '.devview/tree/test-tree.json', test)
       break
     }
     case 'missingEvidence': {
-      const evidence = readArtifact(root, '.pbe/evidence/evidence-tree.json')
+      const evidence = readArtifact(root, '.devview/evidence/evidence-tree.json')
       evidence.evidence = []
-      writeArtifact(root, '.pbe/evidence/evidence-tree.json', evidence)
+      writeArtifact(root, '.devview/evidence/evidence-tree.json', evidence)
       break
     }
     case 'staleEvidence': {
-      const evidence = readArtifact(root, '.pbe/evidence/evidence-tree.json')
+      const evidence = readArtifact(root, '.devview/evidence/evidence-tree.json')
       evidence.evidence[0].createdAt = '2026-06-12T08:00:00.000Z'
       evidence.evidence[0].updatedAt = '2026-06-12T08:05:00.000Z'
-      writeArtifact(root, '.pbe/evidence/evidence-tree.json', evidence)
+      writeArtifact(root, '.devview/evidence/evidence-tree.json', evidence)
       writeStateFor(root, 'ACEP_RUN_DONE', 'verified')
       break
     }
     case 'assistantAccepted': {
-      const acceptance = readArtifact(root, '.pbe/control/acceptance-tree.json')
+      const acceptance = readArtifact(root, '.devview/control/acceptance-tree.json')
       acceptance.branches[0].decisionSource.actor = 'assistant'
       delete acceptance.branches[0].userAcceptedAt
-      writeArtifact(root, '.pbe/control/acceptance-tree.json', acceptance)
+      writeArtifact(root, '.devview/control/acceptance-tree.json', acceptance)
       writeStateFor(root, 'WAITING_REVIEW_RESULT', 'submitted_for_review')
       break
     }
     case 'deferredScopeLeak': {
-      const product = readArtifact(root, '.pbe/tree/product-tree.json')
+      const product = readArtifact(root, '.devview/tree/product-tree.json')
       const node = findNode(product, 'PT-1')
       node.status = 'deferred'
       node.scopeClass = 'deferred'
-      writeArtifact(root, '.pbe/tree/product-tree.json', product)
+      writeArtifact(root, '.devview/tree/product-tree.json', product)
       break
     }
     case 'changeWithoutImpact': {
-      const impact = readArtifact(root, '.pbe/control/impact-tree.json')
+      const impact = readArtifact(root, '.devview/control/impact-tree.json')
       impact.impacts = []
-      writeArtifact(root, '.pbe/control/impact-tree.json', impact)
+      writeArtifact(root, '.devview/control/impact-tree.json', impact)
       break
     }
     default:
@@ -201,7 +201,7 @@ function applyMutation(root, mutation) {
 }
 
 function writeStateFor(root, targetState, deliveryStatus) {
-  const state = readArtifact(root, '.pbe/blueprint/pbe-state.json')
+  const state = readArtifact(root, '.devview/blueprint/pbe-state.json')
   const history = state.autoflow.stateHistory
   const index = history.findIndex((entry) => entry.to === targetState)
   state.autoflow.state = targetState
@@ -212,7 +212,7 @@ function writeStateFor(root, targetState, deliveryStatus) {
   if (deliveryStatus !== 'accepted') {
     delete state.acceptance
   }
-  writeArtifact(root, '.pbe/blueprint/pbe-state.json', state)
+  writeArtifact(root, '.devview/blueprint/pbe-state.json', state)
 }
 
 function runPbe(args, cwd) {

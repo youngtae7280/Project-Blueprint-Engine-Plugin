@@ -32,8 +32,8 @@ describe('scope compliance path pattern helper', () => {
 
   it('matches exact repository-relative POSIX paths', () => {
     const result = matchScopeCompliancePathPattern(
-      'examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json',
-      'examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json',
+      'examples/valid/todo-app-devview-run/.devview/tree/test-tree.json',
+      'examples/valid/todo-app-devview-run/.devview/tree/test-tree.json',
     )
 
     expect(result).toMatchObject({
@@ -48,8 +48,8 @@ describe('scope compliance path pattern helper', () => {
   it('matches directory-prefix patterns without treating the directory itself as a descendant', () => {
     expect(
       matchScopeCompliancePathPattern(
-        'examples/valid/todo-app-devview-run/.pbe/evidence/',
-        'examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt',
+        'examples/valid/todo-app-devview-run/.devview/evidence/',
+        'examples/valid/todo-app-devview-run/.devview/evidence/test-results/todo-add.txt',
       ),
     ).toMatchObject({
       matched: true,
@@ -58,8 +58,8 @@ describe('scope compliance path pattern helper', () => {
     })
     expect(
       matchScopeCompliancePathPattern(
-        'examples/valid/todo-app-devview-run/.pbe/evidence/',
-        'examples/valid/todo-app-devview-run/.pbe/evidence',
+        'examples/valid/todo-app-devview-run/.devview/evidence/',
+        'examples/valid/todo-app-devview-run/.devview/evidence',
       ),
     ).toMatchObject({
       matched: false,
@@ -71,8 +71,8 @@ describe('scope compliance path pattern helper', () => {
   it('matches first-slice glob-like patterns only', () => {
     expect(
       matchScopeCompliancePathPattern(
-        'examples/valid/todo-app-devview-run/.pbe/evidence/**',
-        'examples/valid/todo-app-devview-run/.pbe/evidence',
+        'examples/valid/todo-app-devview-run/.devview/evidence/**',
+        'examples/valid/todo-app-devview-run/.devview/evidence',
       ),
     ).toMatchObject({
       matched: true,

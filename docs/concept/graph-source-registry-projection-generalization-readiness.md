@@ -108,7 +108,7 @@ Generalization must answer these questions before implementation:
 
 - Are projection contracts allowed to vary by policy level, or should one normalized contract shape cover all profiles?
 - Are Core View count expectations universal or profile-specific?
-- Does every external slice need a graph-source artifact, or can canonical `.pbe` artifacts remain the initial source?
+- Does every external slice need a graph-source artifact, or can canonical `.devview` artifacts remain the initial source?
 - Does every source-backed profile need parity, a pilot marker, both, or a policy-specific replacement?
 - How should structure-only slices become stronger without silently becoming source-authority-bearing?
 - How should retained warnings be carried forward when an external slice is promoted, deferred, or rejected?

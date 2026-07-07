@@ -195,7 +195,7 @@ function createLegacyExamplesWorkspace(options: { includeOldTodoFixture?: boolea
       '{"commandIdentity":"devview graph read-model generate --slice examples/valid/todo-app-pbe-run"}\n',
     )
     writeText(
-      join(workspace, 'examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json'),
+      join(workspace, 'examples/valid/todo-app-pbe-run/.devview/tree/product-tree.json'),
       '{"artifact":"legacy pbe tree"}\n',
     )
   } else {
@@ -204,7 +204,7 @@ function createLegacyExamplesWorkspace(options: { includeOldTodoFixture?: boolea
       '{"commandIdentity":"devview graph read-model generate --slice examples/valid/todo-app-devview-run"}\n',
     )
     writeText(
-      join(workspace, 'examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json'),
+      join(workspace, 'examples/valid/todo-app-devview-run/.devview/tree/product-tree.json'),
       '{"artifact":"legacy pbe tree"}\n',
     )
   }

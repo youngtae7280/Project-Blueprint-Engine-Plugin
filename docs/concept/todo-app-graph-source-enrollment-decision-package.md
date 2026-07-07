@@ -73,7 +73,7 @@ structure-only generated read-model can be backed by the candidate records.
 - Enrollment means positive Evidence visibility, not source authority.
 - Candidate projection pass is not parity, pilot marker, user acceptance, or promotion approval.
 - The candidate graph-source artifact remains non-generated review input unless a later authority package changes it.
-- Tree-native `.pbe` artifacts remain source/reference for Todo App.
+- Tree-native `.devview` artifacts remain source/reference for Todo App.
 - Required checks, branch protection, and enforcement remain separate.
 
 ## Review Gates After Local Implementation

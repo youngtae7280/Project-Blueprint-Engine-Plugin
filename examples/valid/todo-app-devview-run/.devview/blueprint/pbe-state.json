@@ -111,14 +111,14 @@
     ]
   },
   "artifacts": {
-    "productTree": ".pbe/tree/product-tree.json",
-    "projectTree": ".pbe/tree/project-tree.json",
-    "workTree": ".pbe/tree/work-tree.json",
-    "testTree": ".pbe/tree/test-tree.json",
-    "evidenceTree": ".pbe/evidence/evidence-tree.json",
-    "acceptanceTree": ".pbe/control/acceptance-tree.json",
-    "requirementTree": ".pbe/blueprint/requirement-tree.json",
-    "pbeRoutingContract": ".pbe/blueprint/pbe-routing-contract.md"
+    "productTree": ".devview/tree/product-tree.json",
+    "projectTree": ".devview/tree/project-tree.json",
+    "workTree": ".devview/tree/work-tree.json",
+    "testTree": ".devview/tree/test-tree.json",
+    "evidenceTree": ".devview/evidence/evidence-tree.json",
+    "acceptanceTree": ".devview/control/acceptance-tree.json",
+    "requirementTree": ".devview/blueprint/requirement-tree.json",
+    "pbeRoutingContract": ".devview/blueprint/pbe-routing-contract.md"
   },
   "updatedAt": "2026-06-12T12:30:00.000Z"
 }

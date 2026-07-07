@@ -16,7 +16,7 @@ Status: `devview-runtime-evidence-satisfaction-readiness-blocked`
 
 ## Matched Obligation
 
-- required-evidence-tt-1: examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json
+- required-evidence-tt-1: examples/valid/todo-app-devview-run/.devview/tree/test-tree.json
 
 ## Safety Boundary
 

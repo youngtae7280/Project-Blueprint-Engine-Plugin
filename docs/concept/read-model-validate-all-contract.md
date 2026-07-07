@@ -55,7 +55,7 @@ Required for `todo-app-devview-run-structure-only`:
 - generate structure-only read-model Evidence
 - validate structure-only read-model Evidence
 - maintain `read-model-validation-report.json` / `.md`
-- list source inputs from canonical `.pbe` layout
+- list source inputs from canonical `.devview` layout
 - keep source authority boundary visible
 - preserve non-promotion statement
 
@@ -194,7 +194,7 @@ Aggregate decision rules:
 Aggregate status is Evidence only. `aggregate-pass` does not:
 
 - expand source authority
-- retire tree-native or `.pbe` artifacts
+- retire tree-native or `.devview` artifacts
 - promote Todo App DevView Run beyond `structure-only`
 - approve CI enforcement
 - approve full Graph-source promotion
@@ -219,7 +219,7 @@ Aggregate status is Evidence only. `aggregate-pass` does not:
 
 All-slice validation is Evidence only.
 
-Tree-native selected-slice artifacts and canonical `.pbe` artifacts remain current operational source unless a separate
+Tree-native selected-slice artifacts and canonical `.devview` artifacts remain current operational source unless a separate
 source-transition decision changes that boundary. Generated read-models, validation reports, CI manifests, and aggregate
 summaries do not become source authority by passing validation.
 
@@ -254,7 +254,7 @@ This contract does not:
 - expand source authority
 - approve full Graph-source promotion
 - perform public-doc cleanup
-- retire tree-native or `.pbe` artifacts
+- retire tree-native or `.devview` artifacts
 - promote Todo App DevView Run beyond `structure-only`
 - make aggregate or validation pass equivalent to user acceptance
 

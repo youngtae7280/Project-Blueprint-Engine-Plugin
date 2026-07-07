@@ -280,7 +280,7 @@ This policy does not:
 - expand source authority
 - approve full Graph-source promotion
 - perform public-doc cleanup
-- retire tree-native or `.pbe` artifacts
+- retire tree-native or `.devview` artifacts
 - promote Todo App DevView Run beyond `structure-only`
 - make PR informational pass equivalent to user acceptance
 

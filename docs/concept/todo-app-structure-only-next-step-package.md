@@ -20,7 +20,7 @@ Todo App DevView Run is currently:
 - passing its structure-only projection contract;
 - passing validator-backed read-model validation;
 - visible in local E2E smoke and non-enforcing CI Evidence;
-- retained as canonical `.pbe` compatibility/fallback/reference artifacts.
+- retained as canonical `.devview` compatibility/fallback/reference artifacts.
 
 It is not currently:
 
@@ -59,7 +59,7 @@ Moving Todo App beyond `structure-only` requires a separate user-approved branch
 7. A warning/fallback policy that keeps retained limitations visible instead of treating them as clean promotion.
 8. Confirmation that invalid fixtures remain negative/focused tests and are not enrolled as positive CI.
 9. Confirmation that Candidate B health/E2E pass does not automatically approve Todo App promotion.
-10. Rollback/fallback expectations for canonical `.pbe` artifacts if graph-source interpretation is rejected.
+10. Rollback/fallback expectations for canonical `.devview` artifacts if graph-source interpretation is rejected.
 
 ## Readiness Checklist
 
@@ -72,7 +72,7 @@ Moving Todo App beyond `structure-only` requires a separate user-approved branch
 - [ ] Pilot-marker requirement is accepted or explicitly waived for Todo App.
 - [ ] Projection contract pass remains stable.
 - [ ] Retained warnings remain visible.
-- [ ] Canonical `.pbe` fallback/reference role remains available.
+- [ ] Canonical `.devview` fallback/reference role remains available.
 - [ ] Invalid fixtures remain outside positive validate-all and CI.
 - [ ] Candidate B is treated as readiness Evidence only, not promotion approval.
 - [ ] Tree-native retirement remains out of scope.

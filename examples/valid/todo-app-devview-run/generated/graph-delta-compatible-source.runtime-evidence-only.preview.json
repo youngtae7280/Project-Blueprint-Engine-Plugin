@@ -96,7 +96,7 @@
         "authorityStatus": "structure-only-graph-source-context"
       },
       {
-        "artifact": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json",
+        "artifact": "examples/valid/todo-app-devview-run/.devview/control/change-tree.json",
         "field": "changes[].id",
         "authorityStatus": "tree-native-compatibility-reference"
       }
