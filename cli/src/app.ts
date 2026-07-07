@@ -266,6 +266,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     packageJson: undefined as string | undefined,
     sbomValidation: undefined as string | undefined,
     packageProvenanceInputs: undefined as string | undefined,
+    packageArtifactDigest: undefined as string | undefined,
     sourceRef: undefined as string | undefined,
     buildCommand: undefined as string | undefined,
     rbacReadiness: undefined as string | undefined,
@@ -1454,6 +1455,15 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
       }
       options.packageProvenanceInputs = options.packageProvenanceInputs
         ? `${options.packageProvenanceInputs},${value}`
+        : value
+      index += 1
+    } else if (arg === '--package-artifact-digest') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--package-artifact-digest requires one or more file paths.' }
+      }
+      options.packageArtifactDigest = options.packageArtifactDigest
+        ? `${options.packageArtifactDigest},${value}`
         : value
       index += 1
     } else if (arg === '--source-ref') {

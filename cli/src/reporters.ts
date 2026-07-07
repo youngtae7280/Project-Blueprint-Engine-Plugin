@@ -456,6 +456,8 @@ Options:
                        SBOM validation report for security report-enterprise-readiness or record-package-provenance-inputs; repeat or comma-separate for multiples.
   --package-provenance-inputs <file>
                        Package provenance inputs record for security report-enterprise-readiness or record-package-artifact-digest; repeat or comma-separate for multiples where supported.
+  --package-artifact-digest <file>
+                       Package artifact digest record for security report-enterprise-readiness; repeat or comma-separate for multiples.
   --source-ref <value>
                        Explicit source ref label for security record-package-provenance-inputs; metadata only, not verified.
   --build-command <value>

@@ -40,6 +40,8 @@ const SBOM_VALIDATION_ROLE = 'devview-sbom-validation-report'
 const SBOM_VALIDATION_STATUS = 'devview-sbom-validation-passed'
 const PACKAGE_PROVENANCE_INPUTS_ROLE = 'devview-package-provenance-inputs-record'
 const PACKAGE_PROVENANCE_INPUTS_STATUS = 'devview-package-provenance-inputs-recorded'
+const PACKAGE_ARTIFACT_DIGEST_ROLE = 'devview-package-artifact-digest-record'
+const PACKAGE_ARTIFACT_DIGEST_STATUS = 'devview-package-artifact-digest-recorded'
 
 const unsafeAuthorityFields = [
   'enterpriseGateActivated',
@@ -131,6 +133,7 @@ export interface EnterpriseReadinessReportOptions {
   releaseProvenanceReadiness?: string
   sbomValidation?: string
   packageProvenanceInputs?: string
+  packageArtifactDigest?: string
   output?: string
   markdown?: string
 }
@@ -343,6 +346,36 @@ export interface EnterpriseReadinessReport {
     sbomAttested: boolean | null
     provenanceAttested: boolean | null
   }>
+  sourcePackageArtifactDigestRecords: Array<{
+    supplied: true
+    path: string
+    artifactRole: string | null
+    status: string | null
+    artifactDigestStatus: string | null
+    packageArtifactPath: string | null
+    fileName: string | null
+    byteLength: number | null
+    sha256Present: boolean
+    expectedSha256Supplied: boolean | null
+    expectedSha256Match: boolean | null
+    packageName: string | null
+    packageVersion: string | null
+    packageIdentitySource: string | null
+    sourceArtifactDigestCount: number | null
+    packageProvenanceInputsLinked: boolean | null
+    releaseSurfaceValidationLinked: boolean | null
+    findingCount: number | null
+    downstreamActionCount: number | null
+    packageArtifactGeneratedByDevView: boolean | null
+    packageArtifactGenerated: boolean | null
+    packageTarballGenerated: boolean | null
+    packagePublished: boolean | null
+    packageSigned: boolean | null
+    packageSigningPresent: boolean | null
+    sbomGenerated: boolean | null
+    sbomAttested: boolean | null
+    provenanceAttested: boolean | null
+  }>
   releaseSurfaceReadiness: {
     status: 'satisfied' | 'failed' | 'not-supplied'
     packageAllowlistPresent: boolean
@@ -409,6 +442,26 @@ export interface EnterpriseReadinessReport {
     provenanceAttestationStatuses: string[]
     releaseSurfaceSourceLinkedCount: number
     sbomValidationLinkedCount: number
+    findingCount: number
+    downstreamActionCount: number
+    gaps: string[]
+  }
+  packageArtifactDigestReadiness: {
+    status: 'gap' | 'artifact-digest-recorded'
+    sourceCount: number
+    sourceStatuses: string[]
+    artifactDigestStatuses: string[]
+    artifactDigestComputedCount: number
+    expectedDigestMatchedCount: number
+    packageArtifactGeneratedByDevViewCount: number
+    packageArtifactGeneratedCount: number
+    packageSignedCount: number
+    provenanceAttestedCount: number
+    packageNames: string[]
+    packageVersions: string[]
+    sourceArtifactDigestCount: number
+    packageProvenanceInputsLinkedCount: number
+    releaseSurfaceValidationLinkedCount: number
     findingCount: number
     downstreamActionCount: number
     gaps: string[]
@@ -563,6 +616,7 @@ interface LoadedSource {
     | 'release-provenance-readiness-report'
     | 'sbom-validation-report'
     | 'package-provenance-inputs-record'
+    | 'package-artifact-digest-record'
   record: JsonRecord | null
   readError: string | null
 }
@@ -588,6 +642,7 @@ export async function reportEnterpriseReadiness(
   const releaseProvenanceReadinessPaths = parseList(options.releaseProvenanceReadiness)
   const sbomValidationPaths = parseList(options.sbomValidation)
   const packageProvenanceInputsPaths = parseList(options.packageProvenanceInputs)
+  const packageArtifactDigestPaths = parseList(options.packageArtifactDigest)
   const sourcePaths = [
     options.benchmarkGovernanceVerification,
     options.releaseSurfaceValidation,
@@ -599,6 +654,7 @@ export async function reportEnterpriseReadiness(
     ...releaseProvenanceReadinessPaths,
     ...sbomValidationPaths,
     ...packageProvenanceInputsPaths,
+    ...packageArtifactDigestPaths,
   ].filter((entry): entry is string => Boolean(entry))
   await assertOutputAuthority(
     root,
@@ -636,6 +692,9 @@ export async function reportEnterpriseReadiness(
   const packageProvenanceInputsRecords = await Promise.all(
     packageProvenanceInputsPaths.map((entry) => loadSource(root, entry, 'package-provenance-inputs-record')),
   )
+  const packageArtifactDigestRecords = await Promise.all(
+    packageArtifactDigestPaths.map((entry) => loadSource(root, entry, 'package-artifact-digest-record')),
+  )
   const blockingFindings = validateSources(
     benchmarkGovernance,
     releaseSurface,
@@ -647,6 +706,7 @@ export async function reportEnterpriseReadiness(
     releaseProvenanceReadinessReports,
     sbomValidationReports,
     packageProvenanceInputsRecords,
+    packageArtifactDigestRecords,
   )
   if (blockingFindings.length > 0) {
     throw new EnterpriseReadinessReportValidationError(
@@ -661,6 +721,7 @@ export async function reportEnterpriseReadiness(
         releaseProvenanceReadinessReports,
         sbomValidationReports,
         packageProvenanceInputsRecords,
+        packageArtifactDigestRecords,
         blockingFindings,
         true,
       ),
@@ -678,6 +739,7 @@ export async function reportEnterpriseReadiness(
     releaseProvenanceReadinessReports,
     sbomValidationReports,
     packageProvenanceInputsRecords,
+    packageArtifactDigestRecords,
     buildFindings(
       benchmarkGovernance,
       releaseSurface,
@@ -689,6 +751,7 @@ export async function reportEnterpriseReadiness(
       releaseProvenanceReadinessReports,
       sbomValidationReports,
       packageProvenanceInputsRecords,
+      packageArtifactDigestRecords,
     ),
   )
   const outputPath = resolveRepoPath(root, options.output ?? '')
@@ -714,6 +777,7 @@ function buildReport(
   releaseProvenanceReadinessReports: LoadedSource[],
   sbomValidationReports: LoadedSource[],
   packageProvenanceInputsRecords: LoadedSource[],
+  packageArtifactDigestRecords: LoadedSource[],
   findings: EnterpriseReadinessFinding[],
   blocked = false,
 ): EnterpriseReadinessReport {
@@ -731,6 +795,9 @@ function buildReport(
     .filter(isJsonRecord)
   const sbomValidationRecords = sbomValidationReports.map((entry) => entry.record).filter(isJsonRecord)
   const packageProvenanceInputsJsonRecords = packageProvenanceInputsRecords
+    .map((entry) => entry.record)
+    .filter(isJsonRecord)
+  const packageArtifactDigestJsonRecords = packageArtifactDigestRecords
     .map((entry) => entry.record)
     .filter(isJsonRecord)
   const releaseStatus = releaseReadinessStatus(releaseRecord)
@@ -789,6 +856,9 @@ function buildReport(
     sourceSbomValidationReports: sbomValidationReports.map((source) => sbomValidationSummary(source)),
     sourcePackageProvenanceInputsRecords: packageProvenanceInputsRecords.map((source) =>
       packageProvenanceInputsSummary(source),
+    ),
+    sourcePackageArtifactDigestRecords: packageArtifactDigestRecords.map((source) =>
+      packageArtifactDigestSummary(source),
     ),
     releaseSurfaceReadiness: {
       status: releaseStatus,
@@ -959,6 +1029,60 @@ function buildReport(
         0,
       ),
       gaps: packageProvenanceInputsGaps(packageProvenanceInputsJsonRecords),
+    },
+    packageArtifactDigestReadiness: {
+      status: packageArtifactDigestJsonRecords.length > 0 ? 'artifact-digest-recorded' : 'gap',
+      sourceCount: packageArtifactDigestJsonRecords.length,
+      sourceStatuses: uniqueStrings(packageArtifactDigestJsonRecords.map((record) => stringValue(record.status))),
+      artifactDigestStatuses: uniqueStrings(
+        packageArtifactDigestJsonRecords.map((record) => stringValue(record.artifactDigestStatus)),
+      ),
+      artifactDigestComputedCount: packageArtifactDigestJsonRecords.filter((record) =>
+        Boolean(stringValue(asRecord(record.sourcePackageArtifact)?.sha256)),
+      ).length,
+      expectedDigestMatchedCount: packageArtifactDigestJsonRecords.filter((record) =>
+        booleanValue(asRecord(record.sourcePackageArtifact)?.expectedSha256Match),
+      ).length,
+      packageArtifactGeneratedByDevViewCount: packageArtifactDigestJsonRecords.filter((record) =>
+        booleanValue(record.packageArtifactGeneratedByDevView),
+      ).length,
+      packageArtifactGeneratedCount: packageArtifactDigestJsonRecords.filter((record) =>
+        booleanValue(record.packageArtifactGenerated),
+      ).length,
+      packageSignedCount: packageArtifactDigestJsonRecords.filter((record) => booleanValue(record.packageSigned))
+        .length,
+      provenanceAttestedCount: packageArtifactDigestJsonRecords.filter((record) =>
+        booleanValue(record.provenanceAttested),
+      ).length,
+      packageNames: uniqueStrings(
+        packageArtifactDigestJsonRecords.map((record) =>
+          stringValue(asRecord(record.packageIdentitySummary)?.packageName),
+        ),
+      ),
+      packageVersions: uniqueStrings(
+        packageArtifactDigestJsonRecords.map((record) =>
+          stringValue(asRecord(record.packageIdentitySummary)?.packageVersion),
+        ),
+      ),
+      sourceArtifactDigestCount: packageArtifactDigestJsonRecords.reduce(
+        (total, record) => total + (arrayLength(record.sourceArtifactDigests) ?? 0),
+        0,
+      ),
+      packageProvenanceInputsLinkedCount: packageArtifactDigestJsonRecords.filter((record) =>
+        booleanValue(asRecord(record.sourcePackageProvenanceInputs)?.supplied),
+      ).length,
+      releaseSurfaceValidationLinkedCount: packageArtifactDigestJsonRecords.filter((record) =>
+        booleanValue(asRecord(record.sourceReleaseSurfaceValidation)?.supplied),
+      ).length,
+      findingCount: packageArtifactDigestJsonRecords.reduce(
+        (total, record) => total + (arrayLength(record.packageDigestRecordFindings) ?? 0),
+        0,
+      ),
+      downstreamActionCount: packageArtifactDigestJsonRecords.reduce(
+        (total, record) => total + (arrayLength(record.downstreamActionPlan) ?? 0),
+        0,
+      ),
+      gaps: packageArtifactDigestGaps(packageArtifactDigestJsonRecords),
     },
     extensionExecutionReadiness: {
       status: 'partial',
@@ -1176,6 +1300,7 @@ function validateSources(
   releaseProvenanceReadinessReports: LoadedSource[],
   sbomValidationReports: LoadedSource[],
   packageProvenanceInputsRecords: LoadedSource[],
+  packageArtifactDigestRecords: LoadedSource[],
 ): EnterpriseReadinessFinding[] {
   const findings: EnterpriseReadinessFinding[] = []
   for (const source of [
@@ -1189,6 +1314,7 @@ function validateSources(
     ...releaseProvenanceReadinessReports,
     ...sbomValidationReports,
     ...packageProvenanceInputsRecords,
+    ...packageArtifactDigestRecords,
   ].filter((entry): entry is LoadedSource => Boolean(entry))) {
     if (source.readError) {
       findings.push(blockingFinding('ENTERPRISE_READINESS_SOURCE_READ_FAILED', source.readError, source.relativePath))
@@ -1235,8 +1361,10 @@ function validateSources(
       validateReleaseProvenanceReadinessSource(source, record, findings)
     } else if (source.sourceKind === 'sbom-validation-report') {
       validateSbomValidationSource(source, record, findings)
-    } else {
+    } else if (source.sourceKind === 'package-provenance-inputs-record') {
       validatePackageProvenanceInputsSource(source, record, findings)
+    } else {
+      validatePackageArtifactDigestSource(source, record, findings)
     }
     for (const hit of collectUnsafeAuthorityHits(record)) {
       findings.push({
@@ -1262,6 +1390,7 @@ function buildFindings(
   releaseProvenanceReadinessReports: LoadedSource[],
   sbomValidationReports: LoadedSource[],
   packageProvenanceInputsRecords: LoadedSource[],
+  packageArtifactDigestRecords: LoadedSource[],
 ): EnterpriseReadinessFinding[] {
   const findings: EnterpriseReadinessFinding[] = []
   const benchmarkRecord = benchmarkGovernance?.record ?? null
@@ -1278,6 +1407,9 @@ function buildFindings(
     .filter(isJsonRecord)
   const sbomValidationRecords = sbomValidationReports.map((entry) => entry.record).filter(isJsonRecord)
   const packageProvenanceInputsJsonRecords = packageProvenanceInputsRecords
+    .map((entry) => entry.record)
+    .filter(isJsonRecord)
+  const packageArtifactDigestJsonRecords = packageArtifactDigestRecords
     .map((entry) => entry.record)
     .filter(isJsonRecord)
 
@@ -1467,6 +1599,23 @@ function buildFindings(
       message:
         'Package/source/build input facts are recorded as provenance inputs only, not as package artifact digest or provenance attestation.',
       path: packageProvenanceInputsRecords[0]?.relativePath,
+    })
+  }
+
+  if (packageArtifactDigestJsonRecords.length === 0) {
+    findings.push({
+      severity: 'gap',
+      code: 'ENTERPRISE_PACKAGE_ARTIFACT_DIGEST_NOT_SUPPLIED',
+      message:
+        'Package artifact digest record was not supplied; package artifact digest is not source-governed for provenance planning.',
+    })
+  } else {
+    findings.push({
+      severity: 'satisfied',
+      code: 'ENTERPRISE_PACKAGE_ARTIFACT_DIGEST_RECORDED',
+      message:
+        'Preexisting package artifact digest is recorded as a source fact only, not as package generation, signing, or provenance attestation.',
+      path: packageArtifactDigestRecords[0]?.relativePath,
     })
   }
 
@@ -1814,6 +1963,54 @@ function validatePackageProvenanceInputsSource(
   }
 }
 
+function validatePackageArtifactDigestSource(
+  source: LoadedSource,
+  record: JsonRecord,
+  findings: EnterpriseReadinessFinding[],
+): void {
+  if (record.artifactRole !== PACKAGE_ARTIFACT_DIGEST_ROLE || record.status !== PACKAGE_ARTIFACT_DIGEST_STATUS) {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_PACKAGE_ARTIFACT_DIGEST_SOURCE_ROLE_STATUS_INVALID',
+        `${source.relativePath} must be ${PACKAGE_ARTIFACT_DIGEST_ROLE} with recorded status.`,
+        source.relativePath,
+      ),
+    )
+  }
+  const artifact = asRecord(record.sourcePackageArtifact)
+  if (!stringValue(artifact?.sha256)) {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_PACKAGE_ARTIFACT_DIGEST_SHA256_MISSING',
+        `${source.relativePath} must record a package artifact sha256.`,
+        source.relativePath,
+        'sourcePackageArtifact.sha256',
+      ),
+    )
+  }
+  const digestStatus = stringValue(record.artifactDigestStatus)
+  if (digestStatus !== 'computed' && digestStatus !== 'matched-expected') {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_PACKAGE_ARTIFACT_DIGEST_STATUS_UNSUPPORTED',
+        `${source.relativePath} must report computed or matched-expected artifact digest status.`,
+        source.relativePath,
+        'artifactDigestStatus',
+      ),
+    )
+  }
+  for (const hit of collectTrueFieldHits(record, releaseProvenanceAuthorityFields)) {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_PACKAGE_ARTIFACT_DIGEST_AUTHORITY_CLAIM_UNSUPPORTED',
+        `${source.relativePath} claims package/SBOM/signing/provenance authority field ${hit.field}: true; enterprise v1 only accepts package artifact digest source facts.`,
+        source.relativePath,
+        hit.field,
+      ),
+    )
+  }
+}
+
 async function loadSource(
   root: string,
   requestedPath: string,
@@ -1905,6 +2102,7 @@ function renderMarkdown(report: EnterpriseReadinessReport): string {
     `- releaseProvenanceReadinessReports: ${report.releaseProvenanceReadiness.sourceCount}`,
     `- sbomValidationReports: ${report.sbomValidationReadiness.sourceCount}`,
     `- packageProvenanceInputsRecords: ${report.packageProvenanceInputsReadiness.sourceCount}`,
+    `- packageArtifactDigestRecords: ${report.packageArtifactDigestReadiness.sourceCount}`,
     '',
     '## Findings',
     ...report.enterpriseReadinessFindings.map((entry) => `- [${entry.severity}] ${entry.code}: ${entry.message}`),
@@ -2038,6 +2236,26 @@ function packageProvenanceInputsGaps(records: JsonRecord[]): string[] {
     gaps.push('No package provenance input source records source artifact digests.')
   }
   gaps.push('Package artifact digest, provenance attestation, package signing, and CI governance remain missing.')
+  return gaps
+}
+
+function packageArtifactDigestGaps(records: JsonRecord[]): string[] {
+  if (records.length === 0) {
+    return ['Package artifact digest record is not supplied.']
+  }
+  const gaps = [
+    'Package artifact digest is a source fact only and does not create, publish, sign, or attest a package.',
+  ]
+  if (!records.some((record) => stringValue(record.artifactDigestStatus) === 'matched-expected')) {
+    gaps.push('No package artifact digest source reports an expected sha256 match.')
+  }
+  if (!records.some((record) => booleanValue(asRecord(record.sourcePackageProvenanceInputs)?.supplied))) {
+    gaps.push('No package artifact digest source links package provenance inputs.')
+  }
+  if (!records.some((record) => booleanValue(asRecord(record.sourceReleaseSurfaceValidation)?.supplied))) {
+    gaps.push('No package artifact digest source links release-surface validation.')
+  }
+  gaps.push('Provenance attestation, package signing, SBOM attestation, and CI governance remain missing.')
   return gaps
 }
 
@@ -2338,6 +2556,46 @@ function packageProvenanceInputsSummary(
   }
 }
 
+function packageArtifactDigestSummary(
+  source: LoadedSource,
+): EnterpriseReadinessReport['sourcePackageArtifactDigestRecords'][number] {
+  const record = source.record ?? {}
+  const artifact = asRecord(record.sourcePackageArtifact)
+  const identity = asRecord(record.packageIdentitySummary)
+  const provenanceInputs = asRecord(record.sourcePackageProvenanceInputs)
+  const releaseSurface = asRecord(record.sourceReleaseSurfaceValidation)
+  return {
+    supplied: true,
+    path: source.relativePath,
+    artifactRole: stringValue(record.artifactRole),
+    status: stringValue(record.status),
+    artifactDigestStatus: stringValue(record.artifactDigestStatus),
+    packageArtifactPath: stringValue(artifact?.path),
+    fileName: stringValue(artifact?.fileName),
+    byteLength: numberValue(artifact?.byteLength),
+    sha256Present: Boolean(stringValue(artifact?.sha256)),
+    expectedSha256Supplied: booleanOrNull(artifact?.expectedSha256Supplied),
+    expectedSha256Match: booleanOrNull(artifact?.expectedSha256Match),
+    packageName: stringValue(identity?.packageName),
+    packageVersion: stringValue(identity?.packageVersion),
+    packageIdentitySource: stringValue(identity?.packageIdentitySource),
+    sourceArtifactDigestCount: arrayLength(record.sourceArtifactDigests),
+    packageProvenanceInputsLinked: booleanOrNull(provenanceInputs?.supplied),
+    releaseSurfaceValidationLinked: booleanOrNull(releaseSurface?.supplied),
+    findingCount: arrayLength(record.packageDigestRecordFindings),
+    downstreamActionCount: arrayLength(record.downstreamActionPlan),
+    packageArtifactGeneratedByDevView: booleanOrNull(record.packageArtifactGeneratedByDevView),
+    packageArtifactGenerated: booleanOrNull(record.packageArtifactGenerated),
+    packageTarballGenerated: booleanOrNull(record.packageTarballGenerated),
+    packagePublished: booleanOrNull(record.packagePublished),
+    packageSigned: booleanOrNull(record.packageSigned),
+    packageSigningPresent: booleanOrNull(record.packageSigningPresent),
+    sbomGenerated: booleanOrNull(record.sbomGenerated),
+    sbomAttested: booleanOrNull(record.sbomAttested),
+    provenanceAttested: booleanOrNull(record.provenanceAttested),
+  }
+}
+
 function payloadDigestVerifiedCount(records: JsonRecord[]): number {
   return records.filter((record) => booleanValue(asRecord(record.payloadVerification)?.digestMatches)).length
 }
@@ -2382,6 +2640,9 @@ function downstreamActionPlan(findings: EnterpriseReadinessFinding[]): string[] 
   }
   if (openFindings.some((entry) => entry.code.includes('PACKAGE_PROVENANCE_INPUTS'))) {
     actions.add('Attach package provenance inputs before package artifact digest or attestation planning.')
+  }
+  if (openFindings.some((entry) => entry.code.includes('PACKAGE_ARTIFACT_DIGEST'))) {
+    actions.add('Attach package artifact digest records before provenance attestation planning.')
   }
   if (openFindings.some((entry) => entry.code.includes('RBAC_POLICY_VALIDATION'))) {
     actions.add('Attach RBAC policy validation before planning RBAC enforcement or signed policy rollout.')

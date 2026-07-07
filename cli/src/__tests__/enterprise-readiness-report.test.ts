@@ -667,6 +667,88 @@ describe('security report-enterprise-readiness CLI', () => {
     expectSafetyFalse(payload)
   })
 
+  it('summarizes package artifact digest records without treating them as generation, signing, or attestation', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, '.tmp/package-artifact-digest.json'), packageArtifactDigestRecord())
+
+    const result = await runDevViewCli(
+      [
+        'security',
+        'report-enterprise-readiness',
+        '--package-artifact-digest',
+        '.tmp/package-artifact-digest.json',
+        '--output',
+        '.tmp/enterprise-readiness.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.readinessLevel).toBe('not-ready')
+    expect(payload.sourcePackageArtifactDigestRecords).toHaveLength(1)
+    expect(payload.sourcePackageArtifactDigestRecords[0]).toEqual(
+      expect.objectContaining({
+        path: '.tmp/package-artifact-digest.json',
+        artifactRole: 'devview-package-artifact-digest-record',
+        status: 'devview-package-artifact-digest-recorded',
+        artifactDigestStatus: 'matched-expected',
+        packageArtifactPath: '.tmp/devview-0.2.0-alpha.tgz',
+        fileName: 'devview-0.2.0-alpha.tgz',
+        byteLength: 31,
+        sha256Present: true,
+        expectedSha256Supplied: true,
+        expectedSha256Match: true,
+        packageName: 'devview',
+        packageVersion: '0.2.0-alpha',
+        packageIdentitySource: 'package-provenance-inputs',
+        sourceArtifactDigestCount: 3,
+        packageProvenanceInputsLinked: true,
+        releaseSurfaceValidationLinked: true,
+        findingCount: 4,
+        downstreamActionCount: 3,
+        packageArtifactGeneratedByDevView: false,
+        packageArtifactGenerated: false,
+        packageTarballGenerated: false,
+        packagePublished: false,
+        packageSigned: false,
+        packageSigningPresent: false,
+        sbomGenerated: false,
+        sbomAttested: false,
+        provenanceAttested: false,
+      }),
+    )
+    expect(payload.packageArtifactDigestReadiness.status).toBe('artifact-digest-recorded')
+    expect(payload.packageArtifactDigestReadiness.sourceCount).toBe(1)
+    expect(payload.packageArtifactDigestReadiness.sourceStatuses).toEqual(['devview-package-artifact-digest-recorded'])
+    expect(payload.packageArtifactDigestReadiness.artifactDigestStatuses).toEqual(['matched-expected'])
+    expect(payload.packageArtifactDigestReadiness.artifactDigestComputedCount).toBe(1)
+    expect(payload.packageArtifactDigestReadiness.expectedDigestMatchedCount).toBe(1)
+    expect(payload.packageArtifactDigestReadiness.packageArtifactGeneratedByDevViewCount).toBe(0)
+    expect(payload.packageArtifactDigestReadiness.packageArtifactGeneratedCount).toBe(0)
+    expect(payload.packageArtifactDigestReadiness.packageSignedCount).toBe(0)
+    expect(payload.packageArtifactDigestReadiness.provenanceAttestedCount).toBe(0)
+    expect(payload.packageArtifactDigestReadiness.packageNames).toEqual(['devview'])
+    expect(payload.packageArtifactDigestReadiness.packageVersions).toEqual(['0.2.0-alpha'])
+    expect(payload.packageArtifactDigestReadiness.sourceArtifactDigestCount).toBe(3)
+    expect(payload.packageArtifactDigestReadiness.packageProvenanceInputsLinkedCount).toBe(1)
+    expect(payload.packageArtifactDigestReadiness.releaseSurfaceValidationLinkedCount).toBe(1)
+    expect(payload.packageArtifactDigestReadiness.findingCount).toBe(4)
+    expect(payload.packageArtifactDigestReadiness.downstreamActionCount).toBe(3)
+    expect(payload.enterpriseReadinessFindings.map((entry: { code: string }) => entry.code)).toEqual(
+      expect.arrayContaining([
+        'ENTERPRISE_PACKAGE_ARTIFACT_DIGEST_RECORDED',
+        'ENTERPRISE_RELEASE_PROVENANCE_ARTIFACTS_MISSING',
+        'ENTERPRISE_RBAC_SIGNING_MISSING',
+      ]),
+    )
+    expect(payload.enterpriseReadinessFindings.map((entry: { code: string }) => entry.code)).not.toContain(
+      'ENTERPRISE_PACKAGE_ARTIFACT_DIGEST_NOT_SUPPLIED',
+    )
+    expectSafetyFalse(payload)
+  })
+
   it('blocks invalid or authority-claiming release provenance readiness sources with zero writes', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, '.tmp/wrong-release-provenance.json'), {
@@ -926,6 +1008,103 @@ describe('security report-enterprise-readiness CLI', () => {
       'ENTERPRISE_READINESS_UNSAFE_SOURCE_AUTHORITY_FLAG',
     )
     expect(existsSync(join(workspace, '.tmp/network-package-enterprise.json'))).toBe(false)
+  })
+
+  it('blocks invalid or authority-claiming package artifact digest sources with zero writes', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, '.tmp/wrong-package-artifact-digest.json'), {
+      ...packageArtifactDigestRecord(),
+      status: 'devview-package-artifact-digest-blocked',
+    })
+    writeJson(join(workspace, '.tmp/missing-sha-package-artifact-digest.json'), {
+      ...packageArtifactDigestRecord(),
+      sourcePackageArtifact: {
+        ...(packageArtifactDigestRecord().sourcePackageArtifact as Record<string, unknown>),
+        sha256: null,
+      },
+    })
+    writeJson(join(workspace, '.tmp/generated-package-artifact-digest.json'), {
+      ...packageArtifactDigestRecord(),
+      packageArtifactGeneratedByDevView: true,
+    })
+    writeJson(join(workspace, '.tmp/published-package-artifact-digest.json'), {
+      ...packageArtifactDigestRecord(),
+      packagePublished: true,
+    })
+    writeJson(join(workspace, '.tmp/signed-package-artifact-digest.json'), {
+      ...packageArtifactDigestRecord(),
+      packageSigned: true,
+    })
+    writeJson(join(workspace, '.tmp/sbom-package-artifact-digest.json'), {
+      ...packageArtifactDigestRecord(),
+      sbomAttested: true,
+    })
+    writeJson(join(workspace, '.tmp/provenance-package-artifact-digest.json'), {
+      ...packageArtifactDigestRecord(),
+      provenanceAttested: true,
+    })
+    writeJson(join(workspace, '.tmp/key-package-artifact-digest.json'), {
+      ...packageArtifactDigestRecord(),
+      keyGenerated: true,
+    })
+    writeJson(join(workspace, '.tmp/rbac-package-artifact-digest.json'), {
+      ...packageArtifactDigestRecord(),
+      rbacEnforced: true,
+    })
+    writeJson(join(workspace, '.tmp/network-package-artifact-digest.json'), {
+      ...packageArtifactDigestRecord(),
+      networkCallMade: true,
+    })
+
+    const wrong = await runEnterpriseWithPackageArtifactDigest(
+      workspace,
+      '.tmp/wrong-package-artifact-digest.json',
+      '.tmp/wrong-package-artifact-digest-enterprise.json',
+    )
+    expect(wrong.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(wrong.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_PACKAGE_ARTIFACT_DIGEST_SOURCE_ROLE_STATUS_INVALID',
+    )
+    expect(existsSync(join(workspace, '.tmp/wrong-package-artifact-digest-enterprise.json'))).toBe(false)
+
+    const missingSha = await runEnterpriseWithPackageArtifactDigest(
+      workspace,
+      '.tmp/missing-sha-package-artifact-digest.json',
+      '.tmp/missing-sha-package-artifact-digest-enterprise.json',
+    )
+    expect(missingSha.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(missingSha.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_PACKAGE_ARTIFACT_DIGEST_SHA256_MISSING',
+    )
+    expect(existsSync(join(workspace, '.tmp/missing-sha-package-artifact-digest-enterprise.json'))).toBe(false)
+
+    for (const [source, output] of [
+      ['.tmp/generated-package-artifact-digest.json', '.tmp/generated-package-artifact-digest-enterprise.json'],
+      ['.tmp/published-package-artifact-digest.json', '.tmp/published-package-artifact-digest-enterprise.json'],
+      ['.tmp/signed-package-artifact-digest.json', '.tmp/signed-package-artifact-digest-enterprise.json'],
+      ['.tmp/sbom-package-artifact-digest.json', '.tmp/sbom-package-artifact-digest-enterprise.json'],
+      ['.tmp/provenance-package-artifact-digest.json', '.tmp/provenance-package-artifact-digest-enterprise.json'],
+      ['.tmp/key-package-artifact-digest.json', '.tmp/key-package-artifact-digest-enterprise.json'],
+      ['.tmp/rbac-package-artifact-digest.json', '.tmp/rbac-package-artifact-digest-enterprise.json'],
+    ] as const) {
+      const result = await runEnterpriseWithPackageArtifactDigest(workspace, source, output)
+      expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+      expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+        'ENTERPRISE_READINESS_PACKAGE_ARTIFACT_DIGEST_AUTHORITY_CLAIM_UNSUPPORTED',
+      )
+      expect(existsSync(join(workspace, output))).toBe(false)
+    }
+
+    const network = await runEnterpriseWithPackageArtifactDigest(
+      workspace,
+      '.tmp/network-package-artifact-digest.json',
+      '.tmp/network-package-artifact-digest-enterprise.json',
+    )
+    expect(network.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(network.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_UNSAFE_SOURCE_AUTHORITY_FLAG',
+    )
+    expect(existsSync(join(workspace, '.tmp/network-package-artifact-digest-enterprise.json'))).toBe(false)
   })
 
   it('blocks invalid or authority-claiming RBAC policy validation sources with zero writes', async () => {
@@ -1363,6 +1542,7 @@ describe('security report-enterprise-readiness CLI', () => {
     writeJson(join(workspace, '.tmp/release-provenance-readiness.json'), releaseProvenanceReadinessReport())
     writeJson(join(workspace, '.tmp/sbom-validation.json'), sbomValidationReport())
     writeJson(join(workspace, '.tmp/package-provenance-inputs.json'), packageProvenanceInputsRecord())
+    writeJson(join(workspace, '.tmp/package-artifact-digest.json'), packageArtifactDigestRecord())
     const cases = [
       { output: '.tmp/benchmark-governance.json', expected: 'would overwrite a source input' },
       {
@@ -1398,6 +1578,11 @@ describe('security report-enterprise-readiness CLI', () => {
       {
         sourceArgs: ['--package-provenance-inputs', '.tmp/package-provenance-inputs.json'],
         output: '.tmp/package-provenance-inputs.json',
+        expected: 'would overwrite a source input',
+      },
+      {
+        sourceArgs: ['--package-artifact-digest', '.tmp/package-artifact-digest.json'],
+        output: '.tmp/package-artifact-digest.json',
         expected: 'would overwrite a source input',
       },
       { output: '.tmp/enterprise.json', markdown: '.tmp/enterprise.json', expected: 'must be different' },
@@ -2243,6 +2428,125 @@ function packageProvenanceInputsRecord(overrides: Record<string, unknown> = {}):
   }
 }
 
+function packageArtifactDigestRecord(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    schemaVersion: 1,
+    artifactRole: 'devview-package-artifact-digest-record',
+    status: 'devview-package-artifact-digest-recorded',
+    digestScope: 'package-artifact-digest-report-only',
+    sourceFactsOnly: true,
+    reportOnly: true,
+    artifactDigestStatus: 'matched-expected',
+    sourcePackageArtifact: {
+      path: '.tmp/devview-0.2.0-alpha.tgz',
+      fileName: 'devview-0.2.0-alpha.tgz',
+      byteLength: 31,
+      sha256: '5'.repeat(64),
+      extension: '.tgz',
+      typeHint: 'npm-package-tarball',
+      expectedSha256: '5'.repeat(64),
+      expectedSha256Supplied: true,
+      expectedSha256Match: true,
+    },
+    sourcePackageProvenanceInputs: {
+      supplied: true,
+      path: '.tmp/package-provenance-inputs.json',
+      artifactRole: 'devview-package-provenance-inputs-record',
+      status: 'devview-package-provenance-inputs-recorded',
+      packageName: 'devview',
+      packageVersion: '0.2.0-alpha',
+      sourceArtifactDigestCount: 4,
+      sourceRefStatus: 'supplied-explicit-cli-input',
+      buildCommandLabelStatus: 'supplied-metadata-only',
+      packageDigestStatus: 'not-computed-no-package-artifact-supplied',
+      provenanceAttestationStatus: 'not-generated',
+    },
+    sourceReleaseSurfaceValidation: {
+      supplied: true,
+      path: '.tmp/release-surface-validation.json',
+      artifactRole: 'devview-release-surface-validation-report',
+      status: 'devview-release-surface-validation-passed',
+      packageName: 'devview',
+      packageVersion: '0.2.0-alpha',
+      packageFileCount: 14,
+      forbiddenFindingCount: 0,
+    },
+    packageIdentitySummary: {
+      packageName: 'devview',
+      packageVersion: '0.2.0-alpha',
+      packageIdentitySource: 'package-provenance-inputs',
+      sourcesAgree: true,
+    },
+    sourceArtifactDigests: [
+      {
+        sourceKind: 'package-artifact',
+        path: '.tmp/devview-0.2.0-alpha.tgz',
+        artifactRole: null,
+        status: null,
+        sha256: '5'.repeat(64),
+        byteLength: 31,
+      },
+      {
+        sourceKind: 'package-provenance-inputs',
+        path: '.tmp/package-provenance-inputs.json',
+        artifactRole: 'devview-package-provenance-inputs-record',
+        status: 'devview-package-provenance-inputs-recorded',
+        sha256: '6'.repeat(64),
+        byteLength: 4096,
+      },
+      {
+        sourceKind: 'release-surface-validation',
+        path: '.tmp/release-surface-validation.json',
+        artifactRole: 'devview-release-surface-validation-report',
+        status: 'devview-release-surface-validation-passed',
+        sha256: '7'.repeat(64),
+        byteLength: 2048,
+      },
+    ],
+    packageDigestRecordFindings: [
+      { severity: 'satisfied', code: 'PACKAGE_ARTIFACT_DIGEST_RECORDED' },
+      { severity: 'satisfied', code: 'PACKAGE_ARTIFACT_DIGEST_EXPECTED_SHA256_MATCHED' },
+      { severity: 'satisfied', code: 'PACKAGE_ARTIFACT_DIGEST_PROVENANCE_INPUTS_LINKED' },
+      { severity: 'gap', code: 'PACKAGE_ARTIFACT_DIGEST_NO_ATTESTATION_GENERATED' },
+    ],
+    downstreamActionPlan: [
+      'Integrate this package artifact digest record into enterprise readiness as a source fact.',
+      'Validate a preexisting provenance attestation artifact against this digest before any real attestation generation.',
+      'Keep package signing, provenance attestation, and SBOM attestation behind signing/key/RBAC governance.',
+    ],
+    packageArtifactGeneratedByDevView: false,
+    packageArtifactGenerated: false,
+    packageTarballGenerated: false,
+    packagePublished: false,
+    publishingPerformed: false,
+    packageSigningPresent: false,
+    packageSigned: false,
+    packageSignaturePresent: false,
+    packageSignatureVerified: false,
+    sbomGeneratedByDevView: false,
+    sbomGenerated: false,
+    sbomAttested: false,
+    provenanceAttestationPresent: false,
+    provenanceAttested: false,
+    releaseProvenanceAttested: false,
+    npmProvenanceEnabled: false,
+    slsaProvenanceGenerated: false,
+    cryptographicSigningImplemented: false,
+    cryptographicSignaturePresent: false,
+    cryptographicSignatureVerified: false,
+    keyGenerated: false,
+    privateKeyStored: false,
+    keyManagementImplemented: false,
+    keyRegistryCreated: false,
+    trustRootCreated: false,
+    rbacEnforced: false,
+    permissionVerified: false,
+    rbacPermissionVerified: false,
+    ...safetyFlags(),
+    ...overrides,
+  }
+}
+
 function safetyFlags(): Record<string, unknown> {
   return {
     benchmarkExecuted: false,
@@ -2404,6 +2708,21 @@ function runEnterpriseWithPackageProvenanceInputs(workspace: string, packageProv
       'report-enterprise-readiness',
       '--package-provenance-inputs',
       packageProvenanceInputs,
+      '--output',
+      output,
+      '--json',
+    ],
+    { cwd: workspace, pluginRoot },
+  )
+}
+
+function runEnterpriseWithPackageArtifactDigest(workspace: string, packageArtifactDigest: string, output: string) {
+  return runDevViewCli(
+    [
+      'security',
+      'report-enterprise-readiness',
+      '--package-artifact-digest',
+      packageArtifactDigest,
       '--output',
       output,
       '--json',
