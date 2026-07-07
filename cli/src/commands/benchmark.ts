@@ -1,5 +1,6 @@
 import { BenchmarkComparisonValidationError, summarizeBenchmarkComparison } from '../core/benchmark-comparison.js'
 import { BenchmarkEvaluationValidationError, evaluateBenchmarkResult } from '../core/benchmark-evaluation.js'
+import { GraphifyImportValidationError, validateGraphifyImport } from '../core/graphify-import-validation.js'
 import type { CommandResult } from '../core/types.js'
 import { ExitCode, issue } from '../core/types.js'
 import type { CommandContext } from './shared.js'
@@ -62,6 +63,70 @@ export async function benchmarkEvaluateResultCommand(context: CommandContext): P
           message,
           suggestedFix:
             'Write benchmark evaluation output to a dedicated report path outside source/control artifacts and rerun the command.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function benchmarkValidateGraphifyImportCommand(context: CommandContext): Promise<CommandResult> {
+  try {
+    const report = await validateGraphifyImport(context.options.root, {
+      graphifyExport: context.options.graphifyExport,
+      mapping: context.options.mapping,
+      benchmarkTask: context.options.benchmarkTask,
+      goldenAnswer: context.options.goldenAnswer,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+
+    return {
+      ok: true,
+      command: 'benchmark validate-graphify-import',
+      exitCode: ExitCode.Success,
+      message: 'Static Graphify import fixture validated without live Graphify execution.',
+      issues: [],
+      data: { ...report },
+    }
+  } catch (error) {
+    if (error instanceof GraphifyImportValidationError) {
+      const report = error.report
+      const errorFindings = report.protocolFindings.filter((finding) => finding.severity === 'error')
+      return {
+        ok: false,
+        command: 'benchmark validate-graphify-import',
+        exitCode: ExitCode.ValidationFailed,
+        message: 'Graphify import validation is blocked before any live Graphify activity.',
+        issues: errorFindings.map((finding) =>
+          issue({
+            validator: 'GraphifyImportValidation',
+            code: finding.code,
+            severity: finding.severity,
+            message: finding.message,
+            file: finding.path,
+            reason: finding.field ? `Field: ${finding.field}` : undefined,
+            suggestedFix:
+              'Provide static Graphify export and mapping fixtures with valid nodes/edges, no execution instructions, and report-only safety flags false.',
+          }),
+        ),
+        data: { ...report },
+      }
+    }
+
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'benchmark validate-graphify-import',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Graphify import validation could not run.',
+      issues: [
+        issue({
+          validator: 'GraphifyImportValidation',
+          code: 'GRAPHIFY_IMPORT_VALIDATION_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide --graphify-export, --mapping, and --output paths, then write outputs outside source/control artifacts.',
         }),
       ],
     }

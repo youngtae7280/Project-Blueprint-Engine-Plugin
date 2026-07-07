@@ -160,6 +160,25 @@ dimension summaries, and deltas such as DevView versus Codex-only or Graphify ve
 report-only: it consumes stored evaluation reports and does not perform live benchmark-task, Graphify, native/retrofit
 build/test, extension-code, provider, network, graph-source, lifecycle-authority, hook, or approval activity.
 
+### Graphify Import Validation
+
+```bash
+devview benchmark validate-graphify-import \
+  --graphify-export <graphify-export.fixture.json> \
+  --mapping <graphify-to-devview-mapping.json> \
+  --benchmark-task <benchmark-task.json> \
+  --golden-answer <golden-answer.json> \
+  --output <graphify-import-validation.json> \
+  --markdown <graphify-import-validation.md> \
+  --json
+```
+
+Validates a static Graphify export fixture and Graphify-to-DevView mapping before any future live integration. The
+report summarizes node/edge mapping coverage, unmapped items, mapping conflicts, optional benchmark task/golden-answer
+alignment, and expected context coverage hints for future `codex-graphify` and `codex-graphify-devview` candidate
+fixtures. The command is report-only and blocks executable/provider/network instructions or unsafe authority flags
+before output is written.
+
 ### Work Journal
 
 ```bash

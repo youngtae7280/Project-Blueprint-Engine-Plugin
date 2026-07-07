@@ -1,7 +1,11 @@
 import type { CommandResult } from '../core/types.js'
 import { validateEvidence, validateTraceability, validateVisualDesign } from '../validators/devview-validators.js'
 import { acceptCommand } from './accept.js'
-import { benchmarkEvaluateResultCommand, benchmarkSummarizeComparisonCommand } from './benchmark.js'
+import {
+  benchmarkEvaluateResultCommand,
+  benchmarkSummarizeComparisonCommand,
+  benchmarkValidateGraphifyImportCommand,
+} from './benchmark.js'
 import { executionPackCheckCommand, executionPackReadyCommand } from './execution-pack.js'
 import { changeCreateCommand } from './change.js'
 import { contextPackCommand, contextRecommendCommand } from './context.js'
@@ -151,6 +155,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'benchmark' && subcommand === 'summarize-comparison') {
     return benchmarkSummarizeComparisonCommand(context)
+  }
+  if (command === 'benchmark' && subcommand === 'validate-graphify-import') {
+    return benchmarkValidateGraphifyImportCommand(context)
   }
   if (command === 'gate') {
     if (subcommand === 'assess') {

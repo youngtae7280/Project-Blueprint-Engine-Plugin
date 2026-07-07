@@ -238,10 +238,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     projectProfile: undefined as string | undefined,
     extensionsDir: undefined as string | undefined,
     benchmarkSuite: undefined as string | undefined,
+    benchmarkTask: undefined as string | undefined,
     task: undefined as string | undefined,
     goldenAnswer: undefined as string | undefined,
     candidateResult: undefined as string | undefined,
     evaluations: undefined as string | undefined,
+    graphifyExport: undefined as string | undefined,
+    mapping: undefined as string | undefined,
     base: undefined as string | undefined,
     head: undefined as string | undefined,
     scope: undefined as string | undefined,
@@ -1221,6 +1224,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
       }
       options.benchmarkSuite = value
       index += 1
+    } else if (arg === '--benchmark-task') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--benchmark-task requires a file path.' }
+      }
+      options.benchmarkTask = value
+      index += 1
     } else if (arg === '--task') {
       const value = argv[index + 1]
       if (!value) {
@@ -1248,6 +1258,20 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--evaluations requires one or more file paths.' }
       }
       options.evaluations = options.evaluations ? `${options.evaluations},${value}` : value
+      index += 1
+    } else if (arg === '--graphify-export') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--graphify-export requires a file path.' }
+      }
+      options.graphifyExport = value
+      index += 1
+    } else if (arg === '--mapping') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--mapping requires a file path.' }
+      }
+      options.mapping = value
       index += 1
     } else if (arg === '--base') {
       const value = argv[index + 1]

@@ -196,10 +196,13 @@ export interface CliOptions {
   projectProfile?: string
   extensionsDir?: string
   benchmarkSuite?: string
+  benchmarkTask?: string
   task?: string
   goldenAnswer?: string
   candidateResult?: string
   evaluations?: string
+  graphifyExport?: string
+  mapping?: string
   base?: string
   head?: string
   scope?: string

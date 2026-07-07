@@ -26,6 +26,19 @@ devview benchmark summarize-comparison \
   --json
 ```
 
+Static Graphify exports can be validated as import/mapping fixtures before any future live integration:
+
+```bash
+devview benchmark validate-graphify-import \
+  --graphify-export .tmp/benchmark-fixtures/graphify-export.fixture.json \
+  --mapping .tmp/benchmark-fixtures/graphify-to-devview-mapping.json \
+  --benchmark-task .tmp/benchmark-fixtures/task.json \
+  --golden-answer .tmp/benchmark-fixtures/golden.json \
+  --output .tmp/benchmark-fixtures/graphify-import-validation.json \
+  --markdown .tmp/benchmark-fixtures/graphify-import-validation.md \
+  --json
+```
+
 ## Comparison Arms
 
 Benchmark specs can model these arms:
@@ -63,6 +76,14 @@ averages for Work Journal usefulness, Evidence quality, and scope accuracy.
 
 Like the evaluator, the summary consumes stored JSON reports only. It does not perform live benchmark-task, Graphify,
 native/retrofit build/test, extension-code, provider, hook, graph-update, or lifecycle-authority activity.
+
+## Graphify Import Protocol
+
+Graphify comparison arms start as static import fixtures, not live integrations. The import validation report checks a
+stored Graphify-like export and a Graphify-to-DevView mapping for node/edge coverage, unmapped items, mapping conflicts,
+and optional golden-answer context coverage. It produces source facts for future `codex-graphify` and
+`codex-graphify-devview` candidate-result fixtures while keeping Graphify activity, provider activity, native benchmark
+activity, graph updates, and lifecycle authority false.
 
 ## Static Fixture Skeletons
 

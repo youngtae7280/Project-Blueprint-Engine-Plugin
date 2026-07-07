@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-graphify-to-devview-mapping-fixture",
+  "status": "devview-graphify-to-devview-mapping-ready",
+  "mappingId": "graphify-native-minimal-to-devview",
+  "graphifyExportId": "graphify-native-minimal-static-export",
+  "taskId": "native-filter-empty-state",
+  "projectMode": "native",
+  "nodeMappings": [
+    {
+      "graphifyNodeId": "g.todo-filter",
+      "devviewNodeId": "node.todo-filter",
+      "sourcePath": "src/todo-filter.ts",
+      "contextIds": ["node:node.todo-filter", "file:src/todo-filter.ts"]
+    },
+    {
+      "graphifyNodeId": "g.empty-state",
+      "devviewNodeId": "node.empty-state",
+      "sourcePath": "docs/evidence/filter-empty-state.md",
+      "contextIds": [
+        "node:node.empty-state",
+        "file:docs/evidence/filter-empty-state.md",
+        "evidence:evidence.filter-empty-state"
+      ]
+    }
+  ],
+  "edgeMappings": [
+    {
+      "graphifyEdgeId": "g.edge.filter-empty-state",
+      "devviewEdgeId": "edge.filter-empty-state",
+      "contextIds": ["edge:edge.filter-empty-state"]
+    }
+  ],
+  "graphifyExecuted": false,
+  "providerInvoked": false,
+  "networkCallMade": false,
+  "shellCommandsExecuted": false,
+  "benchmarkExecuted": false,
+  "candidateExecuted": false,
+  "nativeBenchmarkExecuted": false,
+  "extensionExecutionAllowed": false,
+  "extensionsExecuted": false,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false
+}

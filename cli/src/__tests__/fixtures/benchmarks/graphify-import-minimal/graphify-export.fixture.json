@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-static-graphify-export-fixture",
+  "status": "devview-static-graphify-export-ready",
+  "exportId": "graphify-native-minimal-static-export",
+  "taskId": "native-filter-empty-state",
+  "projectMode": "native",
+  "sourceMetadata": {
+    "origin": "synthetic-static-fixture",
+    "fixtureScope": "graphify-import-protocol-validation-report-only"
+  },
+  "nodes": [
+    {
+      "id": "g.todo-filter",
+      "label": "Todo filter",
+      "type": "module",
+      "sourcePath": "src/todo-filter.ts"
+    },
+    {
+      "id": "g.empty-state",
+      "label": "Empty state behavior",
+      "type": "behavior",
+      "sourcePath": "src/todo-filter.ts"
+    },
+    {
+      "id": "g.unmapped-helper",
+      "label": "Unmapped helper",
+      "type": "helper",
+      "sourcePath": "src/filter-helper.ts"
+    }
+  ],
+  "edges": [
+    {
+      "id": "g.edge.filter-empty-state",
+      "source": "g.todo-filter",
+      "target": "g.empty-state",
+      "relation": "controls",
+      "confidence": 0.91
+    },
+    {
+      "id": "g.edge.unmapped-helper",
+      "source": "g.unmapped-helper",
+      "target": "g.todo-filter",
+      "relation": "supports",
+      "confidence": 0.52
+    }
+  ],
+  "graphifyExecuted": false,
+  "providerInvoked": false,
+  "networkCallMade": false,
+  "shellCommandsExecuted": false,
+  "benchmarkExecuted": false,
+  "candidateExecuted": false,
+  "nativeBenchmarkExecuted": false,
+  "extensionExecutionAllowed": false,
+  "extensionsExecuted": false,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false
+}
