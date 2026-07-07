@@ -105,5 +105,5 @@ The SMART-51 Factory test field displays correctly after actual GetConfig.
 
 The temporary external source change was reverted by user request.
 
-This candidate match remains useful as a validated retrofit PBE lifecycle
+This candidate match remains useful as a validated retrofit DevView lifecycle
 example, but CardPrinterConfig no longer contains the temporary `test` field.

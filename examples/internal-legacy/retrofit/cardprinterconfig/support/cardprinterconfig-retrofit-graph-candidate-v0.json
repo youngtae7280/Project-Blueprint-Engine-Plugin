@@ -320,7 +320,7 @@
       "id": "question-smart51-module-owner",
       "state": "open-question",
       "blocks": ["expected-files", "hardware-boundary"],
-      "question": "Is the setting owned by Printer, Laminator, Flipper, or MHopper2? If unknown, PBE should search candidate labels first."
+      "question": "Is the setting owned by Printer, Laminator, Flipper, or MHopper2? If unknown, DevView should search candidate labels first."
     },
     {
       "id": "question-smart51-operation-scope",

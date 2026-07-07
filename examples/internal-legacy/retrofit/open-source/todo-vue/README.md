@@ -19,6 +19,6 @@ Current scope:
 - no source behavior change
 - no upstream PR
 
-The important PBE behavior under test is whether the graph-source operation
+The important DevView behavior under test is whether the graph-source operation
 chain can keep an external-project change bounded to an explicitly allowed
 surface while preserving maintainer-intent and upstream-approval boundaries.

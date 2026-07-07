@@ -1,4 +1,4 @@
-# RPD Interview Summary
+# Product Intake Interview Summary
 
 ## Raw User Request
 
@@ -50,9 +50,9 @@ User confirmation is needed before marking the title-only Product node confirmed
 ## 2026-06-24 Product Patch Update
 
 The parent orchestration chat approved `PP-001`, so the representative slice now records title + note/content search as
-confirmed product meaning. This RPD summary remains a historical intake note; refreshed Work/Test/Evidence and renewed
+confirmed product meaning. This Product Intake summary remains a historical intake note; refreshed Work/Test/Evidence and renewed
 Acceptance are still required before closing the expanded behavior.
 
 ## Next CLI Command
 
-`pbe rpd check`
+`devview rpd check`

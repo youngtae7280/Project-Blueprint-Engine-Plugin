@@ -4,13 +4,13 @@ Status: protocol draft / no implementation change
 
 Purpose:
 
-This protocol defines how retrofit PBE moves from read-only observation to a
+This protocol defines how retrofit DevView moves from read-only observation to a
 confirmed implementation slice without pretending that inferred legacy intent is
 already known.
 
 ## Fixed Principle
 
-Retrofit PBE must not produce implementation instructions from code inference
+Retrofit DevView must not produce implementation instructions from code inference
 alone.
 
 It may:
@@ -123,5 +123,5 @@ Planning is allowed only when the slice has:
 - hardware validation status
 - non-goals
 
-If any of those are missing, PBE should keep the slice in
+If any of those are missing, DevView should keep the slice in
 `blocked-before-user-confirmation`.

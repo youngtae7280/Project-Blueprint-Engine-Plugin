@@ -1,6 +1,6 @@
 # Todo Search Adoption Example
 
-This is a dogfooding/adoption snapshot for applying PBE to the next feature slice in an existing Todo app.
+This is a dogfooding/adoption snapshot for applying DevView to the next feature slice in an existing Todo app.
 
 Rough request:
 
@@ -28,18 +28,18 @@ Files in this folder are illustrative artifact snapshots, not regression fixture
 Flow:
 
 ```bash
-pbe init --profile lite --brief "Adopt PBE for Todo search slice"
-pbe rpd check
-pbe rpd close
-pbe wpd close
-pbe vd close
-pbe scope select
-pbe acep ready
-pbe execution start
-pbe files check
-pbe execution complete
-pbe review submit
-pbe accept
+devview init --profile lite --brief "Adopt DevView for Todo search slice"
+devview rpd check
+devview rpd close
+devview wpd close
+devview vd close
+devview scope select
+devview execution-pack ready
+devview execution start
+devview files check
+devview execution complete
+devview review submit
+devview accept
 ```
 
 The accepted title-only slice later receives Product meaning feedback: search should include todo note content. PP-001 is

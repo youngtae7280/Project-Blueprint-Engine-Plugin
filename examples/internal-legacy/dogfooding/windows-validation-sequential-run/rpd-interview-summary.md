@@ -1,8 +1,8 @@
-# RPD Interview Summary
+# Product Intake Interview Summary
 
 ## Raw User Request
 
-Windows에서 validate:pbe와 test:examples를 병렬 실행하면 clean-dist EPERM이 날 수 있다. 사용자가 검증 명령을
+Windows에서 validate:devview와 test:examples를 병렬 실행하면 clean-dist EPERM이 날 수 있다. 사용자가 검증 명령을
 안전하게 실행하도록 문서에 순차 실행 권장을 추가해줘.
 
 ## Draft Product Tree Candidate
@@ -43,4 +43,4 @@ The docs-only slice is treated as confirmed for this example after the assumed u
 
 ## Next CLI Command
 
-`pbe rpd check`
+`devview rpd check`

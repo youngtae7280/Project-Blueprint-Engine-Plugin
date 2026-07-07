@@ -32,7 +32,7 @@ runtime source artifact, and not Graph-source promotion.
 ## Limitations
 
 - This is a manual demo-support contract.
-- It was not produced by `pbe acep ready`.
+- It was not produced by `devview execution-pack ready`.
 - It does not prove a full Todo application was implemented in this repository.
 - It does not authorize tag, date, fuzzy, server-side, or saved search behavior.
 - It records renewed Acceptance only for the representative demo-support slice.

@@ -7,20 +7,20 @@ mismatch.
 
 ## Applied Policy Sources
 
-| Policy source                              | Relevant rule                                                                                                                                                                              |
-| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `docs/concept/legacy-compatibility-map.md` | ACEP is a compatibility name, not task-card-only authority. Mismatches affecting current approval, verification, scope, or user judgment can become Compatibility Control Node candidates. |
-| `docs/concept/execution-contract.md`       | Cycle Contracts and Node Execution Contracts are the planning/execution boundary. Task cards are human-friendly compatibility views.                                                       |
-| `docs/concept/control-node-policy.md`      | Compatibility Control Nodes track legacy/canonical mismatch, parity gap, migration caveat, or accepted compatibility exception.                                                            |
-| `docs/concept/superseded-items.md`         | Task-card-only ACEP is superseded by Cycle Contract and Node Execution Contract packaging.                                                                                                 |
-| `docs/concept/decision-log.md`             | DEC-006, DEC-018, DEC-023, and DEC-024 preserve execution-contract authority, compatibility interpretation, demo evidence boundaries, and non-promotion status.                            |
+| Policy source                              | Relevant rule                                                                                                                                                                                        |
+| ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `docs/concept/legacy-compatibility-map.md` | Execution Pack is a compatibility name, not task-card-only authority. Mismatches affecting current approval, verification, scope, or user judgment can become Compatibility Control Node candidates. |
+| `docs/concept/execution-contract.md`       | Cycle Contracts and Node Execution Contracts are the planning/execution boundary. Task cards are human-friendly compatibility views.                                                                 |
+| `docs/concept/control-node-policy.md`      | Compatibility Control Nodes track legacy/canonical mismatch, parity gap, migration caveat, or accepted compatibility exception.                                                                      |
+| `docs/concept/superseded-items.md`         | Task-card-only Execution Pack is superseded by Cycle Contract and Node Execution Contract packaging.                                                                                                 |
+| `docs/concept/decision-log.md`             | DEC-006, DEC-018, DEC-023, and DEC-024 preserve execution-contract authority, compatibility interpretation, demo evidence boundaries, and non-promotion status.                                      |
 
 ## Classification
 
 | Possible record type                 | Judgment                                                                                                                     |
 | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
 | Simple Legacy Compatibility Map note | Insufficient by itself because `source-of-truth-matrix.md` is authority-oriented wording.                                    |
-| Superseded Item reference            | Required as supporting classification because task-card-only ACEP is a replaced direction.                                   |
+| Superseded Item reference            | Required as supporting classification because task-card-only Execution Pack is a replaced direction.                         |
 | Compatibility Control Node candidate | Required for promotion readiness review because the mismatch can affect execution authority and scope verification judgment. |
 | Public-doc cleanup candidate         | Required but deferred. Cleanup is not performed in this evidence slice.                                                      |
 

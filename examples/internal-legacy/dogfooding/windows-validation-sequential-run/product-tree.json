@@ -5,7 +5,7 @@
     {
       "id": "PT-SELF-ROOT",
       "type": "goal",
-      "title": "PBE self-dogfooding documentation slice",
+      "title": "DevView self-dogfooding documentation slice",
       "status": "confirmed",
       "parent": null,
       "children": ["PT-SELF-001"],
@@ -13,7 +13,7 @@
         "actor": "user",
         "type": "self_dogfooding_request"
       },
-      "why": "The PBE repo should demonstrate improving itself through a small PBE-modeled slice.",
+      "why": "The DevView repo should demonstrate improving itself through a small DevView-modeled slice.",
       "scopeClass": "selected",
       "acceptanceCriteria": [],
       "acceptanceNotRequiredReason": "Root groups the selected documentation capability.",
@@ -37,7 +37,7 @@
         "actor": "user",
         "type": "self_dogfooding_request"
       },
-      "why": "A parallel validate:pbe and test:examples run produced a Windows EPERM around clean-dist, while sequential reruns passed.",
+      "why": "A parallel validate:devview and test:examples run produced a Windows EPERM around clean-dist, while sequential reruns passed.",
       "scopeClass": "selected",
       "acceptanceCriteria": [
         {

@@ -7,14 +7,14 @@ source authority change, or Graph-source promotion.
 
 ## Intent Understood
 
-PBE is reviewing whether a real legacy/canonical mismatch can be observed in the repository and interpreted safely
+DevView is reviewing whether a real legacy/canonical mismatch can be observed in the repository and interpreted safely
 through Legacy Compatibility Map and Control Node policy.
 
 ## Result Summary
 
 The supplemental slice found a real Execution pack task-card-only authority risk in public docs:
 
-- `docs/source-of-truth-matrix.md` maps ACEP to executable task cards.
+- `docs/source-of-truth-matrix.md` maps Execution Pack to executable task cards.
 - `docs/acep.md` and `docs/parallel-execution.md` contain supporting task-card-centered wording.
 - `README.md`, `AGENTS.md`, `docs/concept/legacy-compatibility-map.md`, and `docs/concept/execution-contract.md`
   provide the current canonical reading.
@@ -23,14 +23,14 @@ The mismatch is bounded as a Compatibility Control Node candidate and public-doc
 
 ## Verification Summary
 
-| Check                                  | Evidence status | Summary                                                                                                    |
-| -------------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------- |
-| Real mismatch source exists.           | present         | Primary and supporting public-doc wording is observable.                                                   |
-| Canonical interpretation exists.       | present         | Current policy maps ACEP to Cycle/Node Execution Contract packaging and task cards to compatibility views. |
-| Control Node boundary is reviewable.   | present         | `compatibility-control-node.md` records candidate `CCN-EXECUTION-PACK-TASK-CARD-AUTHORITY-001`.            |
-| Cleanup status is visible.             | deferred        | Public-doc cleanup is intentionally not performed in this task.                                            |
-| AI self-report exclusion is preserved. | present         | This brief points to source files, policy files, and explicit exceptions rather than AI assertion.         |
-| Source authority is unchanged.         | present         | The slice records evidence only and does not promote Maintainability Graph.                                |
+| Check                                  | Evidence status | Summary                                                                                                              |
+| -------------------------------------- | --------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Real mismatch source exists.           | present         | Primary and supporting public-doc wording is observable.                                                             |
+| Canonical interpretation exists.       | present         | Current policy maps Execution Pack to Cycle/Node Execution Contract packaging and task cards to compatibility views. |
+| Control Node boundary is reviewable.   | present         | `compatibility-control-node.md` records candidate `CCN-EXECUTION-PACK-TASK-CARD-AUTHORITY-001`.                      |
+| Cleanup status is visible.             | deferred        | Public-doc cleanup is intentionally not performed in this task.                                                      |
+| AI self-report exclusion is preserved. | present         | This brief points to source files, policy files, and explicit exceptions rather than AI assertion.                   |
+| Source authority is unchanged.         | present         | The slice records evidence only and does not promote Maintainability Graph.                                          |
 
 ## Remaining Judgment
 

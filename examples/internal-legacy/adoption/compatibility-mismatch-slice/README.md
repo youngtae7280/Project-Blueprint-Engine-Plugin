@@ -10,13 +10,13 @@ case. It is not public-doc cleanup, not runtime migration, not Graph-source prom
 Primary observed mismatch:
 
 ```text
-docs/source-of-truth-matrix.md: ACEP -> executable task cards
+docs/source-of-truth-matrix.md: Execution Pack -> executable task cards
 ```
 
 Canonical interpretation:
 
 ```text
-ACEP = Cycle Contract and Node Execution Contract packaging, plus compatibility execution-pack files.
+Execution Pack = Cycle Contract and Node Execution Contract packaging, plus compatibility execution-pack files.
 Task cards are human-friendly compatibility views and must not become task-card-only execution authority.
 ```
 
@@ -25,22 +25,22 @@ authority. Current concept policy makes Cycle Contracts and Node Execution Contr
 
 ## Source References
 
-| Source                                     | Observed role                                                                                 |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------- |
-| `docs/source-of-truth-matrix.md`           | Primary wording that maps ACEP to executable task cards.                                      |
-| `docs/acep.md`                             | Supporting task-card-centered ACEP wording and runner references.                             |
-| `docs/parallel-execution.md`               | Supporting flow that ends in ACEP Task Cards -> Codex Coding Tasks.                           |
-| `docs/usage.md`                            | Safer public-doc wording that ACEP is a contract and creates files in addition to task cards. |
-| `README.md`                                | Current compatibility name: ACEP = Cycle Contract and Node Execution Contract packaging.      |
-| `AGENTS.md`                                | Current operating instruction for ACEP compatibility and Node Execution Contract reading.     |
-| `docs/concept/legacy-compatibility-map.md` | Canonical compatibility interpretation boundary.                                              |
-| `docs/concept/execution-contract.md`       | Canonical execution boundary.                                                                 |
-| `docs/concept/control-node-policy.md`      | Compatibility Control Node boundary.                                                          |
-| `docs/concept/superseded-items.md`         | Records task-card-only ACEP as superseded.                                                    |
+| Source                                     | Observed role                                                                                           |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| `docs/source-of-truth-matrix.md`           | Primary wording that maps Execution Pack to executable task cards.                                      |
+| `docs/acep.md`                             | Supporting task-card-centered Execution Pack wording and runner references.                             |
+| `docs/parallel-execution.md`               | Supporting flow that ends in Execution Pack Task Cards -> Codex Coding Tasks.                           |
+| `docs/usage.md`                            | Safer public-doc wording that Execution Pack is a contract and creates files in addition to task cards. |
+| `README.md`                                | Current compatibility name: Execution Pack = Cycle Contract and Node Execution Contract packaging.      |
+| `AGENTS.md`                                | Current operating instruction for Execution Pack compatibility and Node Execution Contract reading.     |
+| `docs/concept/legacy-compatibility-map.md` | Canonical compatibility interpretation boundary.                                                        |
+| `docs/concept/execution-contract.md`       | Canonical execution boundary.                                                                           |
+| `docs/concept/control-node-policy.md`      | Compatibility Control Node boundary.                                                                    |
+| `docs/concept/superseded-items.md`         | Records task-card-only Execution Pack as superseded.                                                    |
 
 ## Supplemental Slice Purpose
 
-This slice demonstrates that PBE can:
+This slice demonstrates that DevView can:
 
 - observe real legacy/canonical wording mismatch from repository files
 - map the mismatch through Legacy Compatibility Map and Execution Contract policy
@@ -55,8 +55,8 @@ This slice does not:
 
 - edit or clean up the public docs containing the observed wording
 - create a CLI command, validator, schema, or runtime source model
-- migrate ACEP artifacts
-- retire task cards or `.pbe/codex-execution-pack/*`
+- migrate Execution Pack artifacts
+- retire task cards or `.devview/codex-execution-pack/*`
 - promote Maintainability Graph
 - mark tree-native artifacts as superseded
 

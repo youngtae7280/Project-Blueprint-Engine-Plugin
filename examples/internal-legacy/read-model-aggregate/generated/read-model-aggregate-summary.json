@@ -143,7 +143,7 @@
           "id": "RW-STRUCTURE-ONLY",
           "findingNodeId": "FIND-STRUCTURE-ONLY-LIMITATION",
           "status": "structure-only-limitation",
-          "summary": "This profile validates canonical .pbe structure only; no manual parity artifact, pilot marker, CI-backed Evidence, or source-authority pilot is required or claimed."
+          "summary": "This profile validates canonical .devview structure only; no manual parity artifact, pilot marker, CI-backed Evidence, or source-authority pilot is required or claimed."
         },
         {
           "id": "RW-NO-RUNTIME-FIXTURE",
@@ -152,8 +152,8 @@
           "summary": "The fixture contains attached test-output Evidence but no runnable app/runtime fixture is required for structure-only validation."
         }
       ],
-      "sourceAuthorityBoundary": "Validator-backed Evidence checks structure-only generated read-model outputs for this canonical .pbe fixture. It does not change source authority.",
-      "nonPromotionStatement": "Structure-only validation pass is Evidence only. It does not promote Maintainability Graph, create a source-authority pilot, require parity, introduce CI enforcement, retire .pbe artifacts, or replace user approval.",
+      "sourceAuthorityBoundary": "Validator-backed Evidence checks structure-only generated read-model outputs for this canonical .devview fixture. It does not change source authority.",
+      "nonPromotionStatement": "Structure-only validation pass is Evidence only. It does not promote Maintainability Graph, create a source-authority pilot, require parity, introduce CI enforcement, retire .devview artifacts, or replace user approval.",
       "notes": [
         "Per-slice validation report is interpreted as an independent Evidence unit.",
         "Validation uses the target slice profile, generated artifacts, and declared source inputs only. It must not depend on another slice generated directory, manual parity artifact, pilot marker, or runtime fixture unless that artifact is declared by this profile."

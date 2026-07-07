@@ -163,12 +163,12 @@
       "readinessStatus": "not-retirement-ready",
       "wouldRetireOrDeprecateIfApproved": [],
       "remainsFallbackReference": [
-        "canonical .pbe artifacts",
+        "canonical .devview artifacts",
         "structure-only generated/read-model artifacts",
         "CI/E2E evidence records",
         "user acceptance records"
       ],
-      "rollbackPath": "Keep canonical .pbe artifacts as compatibility/fallback/reference; no retirement path is eligible until source authority beyond structure-only is separately approved.",
+      "rollbackPath": "Keep canonical .devview artifacts as compatibility/fallback/reference; no retirement path is eligible until source authority beyond structure-only is separately approved.",
       "evidenceReferences": [
         "graph-source-backed structure-only generation 22/38/7",
         "validation-pass",

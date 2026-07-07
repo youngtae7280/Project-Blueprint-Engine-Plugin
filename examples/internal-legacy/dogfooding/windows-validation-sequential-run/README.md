@@ -1,10 +1,10 @@
 # Self-Dogfooding: Windows Sequential Validation Guidance
 
-This example records a small PBE self-dogfooding slice against the PBE repository itself.
+This example records a small DevView self-dogfooding slice against the DevView repository itself.
 
 Problem:
 
-`npm.cmd run validate:pbe` and `npm.cmd run test:examples` both build the CLI. When started in parallel on Windows, they
+`npm.cmd run validate:devview` and `npm.cmd run test:examples` both build the CLI. When started in parallel on Windows, they
 may both touch `clean-dist` / `dist`, which can surface as an `EPERM` file locking error.
 
 Decision:

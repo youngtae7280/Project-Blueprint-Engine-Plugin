@@ -1,6 +1,6 @@
 # Graph Counter Demo Native Behavior Example
 
-This example proves a tiny behavior change through the same PBE operation chain:
+This example proves a tiny behavior change through the same DevView operation chain:
 
 ```text
 graph-source -> instruction pack -> local change -> graph delta -> graph update proposal

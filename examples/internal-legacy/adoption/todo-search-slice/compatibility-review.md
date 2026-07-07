@@ -19,9 +19,9 @@ legacy/canonical mismatch that affects current judgment.
 
 ## Derivation Notes
 
-- The selected slice folder does not contain `.pbe/blueprint/*`, `.pbe/codex-execution-pack/*`, task-card files, or
-  ACEP package files.
-- The selected slice README includes a sample command flow that references `pbe acep ready`, but it does not make ACEP
+- The selected slice folder does not contain `.devview/blueprint/*`, `.devview/codex-execution-pack/*`, task-card files, or
+  Execution Pack package files.
+- The selected slice README includes a sample command flow that references `devview execution-pack ready`, but it does not make Execution Pack
   or task cards the selected-slice source authority.
 - The demo-support Cycle Contract and Node Execution Contract are manual evidence snapshots, not runtime authority.
 
@@ -38,15 +38,15 @@ compatibility scenario status: not-applicable for real mismatch, partially demon
 No Compatibility Control Node is opened for this selected slice because no real selected-slice legacy/canonical mismatch
 was found that affects current approval, scope, verification, or source authority judgment.
 
-If a future supplemental slice includes `.pbe/blueprint/*`, `.pbe/codex-execution-pack/*`, or task-card-only wording
+If a future supplemental slice includes `.devview/blueprint/*`, `.devview/codex-execution-pack/*`, or task-card-only wording
 that conflicts with Cycle/Node Execution Contract authority, that mismatch should become a Compatibility Control Node
 candidate instead of being silently ignored.
 
 ## Limitations
 
-- This review does not inspect a live `.pbe` project because the repository root has no `.pbe` directory.
-- This review does not prove compatibility behavior for all PBE examples.
-- This review does not retire ACEP, task-card, or blueprint compatibility terms.
+- This review does not inspect a live `.devview` project because the repository root has no `.devview` directory.
+- This review does not prove compatibility behavior for all DevView examples.
+- This review does not retire Execution Pack, task-card, or blueprint compatibility terms.
 - This review does not promote Maintainability Graph or change source authority.
 
 ## Evidence Status

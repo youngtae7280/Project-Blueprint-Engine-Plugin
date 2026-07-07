@@ -16,7 +16,7 @@ Do not modify C:/Users/ytkim/Desktop/kyt_work.
 
 ## Purpose
 
-This worksheet defines how PBE should handle a future request like:
+This worksheet defines how DevView should handle a future request like:
 
 > Add a SMART-51 printer setting change.
 
@@ -24,7 +24,7 @@ The goal is not to implement the setting yet. The goal is to avoid guessing.
 
 ## Known From Read-Only Observation
 
-PBE can safely know these from code structure:
+DevView can safely know these from code structure:
 
 - SMART-51 exists as a printer group.
 - SMART-51 has multiple module routes:
@@ -42,7 +42,7 @@ PBE can safely know these from code structure:
 
 ## Still Unknown
 
-PBE does not know these without the user:
+DevView does not know these without the user:
 
 - The exact setting name, label, parameter id, or menu wording.
 - Which SMART-51 module owns the setting.
@@ -65,12 +65,12 @@ wrappers, and config save/load paths.
 
 Still unknown:
 
-The specific setting name is not present in the request, so PBE cannot choose
+The specific setting name is not present in the request, so DevView cannot choose
 the owning module, expected files, or tests safely.
 
 Why this blocks the next step:
 
-If PBE guesses the module or parameter, it may edit the wrong subdialog, bypass
+If DevView guesses the module or parameter, it may edit the wrong subdialog, bypass
 the intended permission level, or include/exclude config save/load incorrectly.
 
 Please answer like:
@@ -88,13 +88,13 @@ Should save/load include it:
 Hardware test available:
 ```
 
-If you do not know all fields, answer only what you know. PBE should then search
+If you do not know all fields, answer only what you know. DevView should then search
 for matching labels, nearby parameters, and candidate files before asking the
 next smaller question.
 
 ## Candidate Search After First Answer
 
-After the user provides a setting name or description, PBE should search only
+After the user provides a setting name or description, DevView should search only
 read-only anchors first:
 
 - `SubDlg51SMART.*`

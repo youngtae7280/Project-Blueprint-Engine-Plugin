@@ -3,7 +3,7 @@
 Status: bounded representative evidence fixture
 
 This fixture exists only to provide runnable Evidence for the `Todo Search Adoption + Product Meaning Feedback`
-representative demo slice. It is not a Todo application scaffold, not PBE runtime implementation, not CLI/schema/model
+representative demo slice. It is not a Todo application scaffold, not DevView runtime implementation, not CLI/schema/model
 work, and not Graph-source promotion.
 
 ## Linked Nodes

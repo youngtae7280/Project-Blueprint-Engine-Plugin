@@ -199,7 +199,7 @@
     },
     {
       "id": "user-acceptance-authority-preserved",
-      "title": "User acceptance authority is not replaced by Codex/PBE",
+      "title": "User acceptance authority is not replaced by Codex/DevView",
       "severity": "info",
       "status": "pass",
       "message": "Check passed.",

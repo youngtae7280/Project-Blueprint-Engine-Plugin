@@ -26,7 +26,7 @@
       "id": "product.graph-notes-demo",
       "kind": "product-intent",
       "state": "authored",
-      "intentClaim": "Graph Notes Demo proves PBE graph operations on a tiny native project."
+      "intentClaim": "Graph Notes Demo proves DevView graph operations on a tiny native project."
     },
     {
       "id": "data.notes-json",

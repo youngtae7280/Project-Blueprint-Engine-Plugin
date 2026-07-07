@@ -262,7 +262,7 @@
   },
   "rollback": {
     "status": "reverted-after-successful-test",
-    "reason": "User requested the temporary CardPrinterConfig test code be restored before continuing PBE standardization work.",
+    "reason": "User requested the temporary CardPrinterConfig test code be restored before continuing DevView standardization work.",
     "revertedFiles": [
       "src/CardPrinterConfig/CardPrinterConfig.rc",
       "src/CardPrinterConfig/resource.h",
@@ -270,14 +270,14 @@
     ],
     "revertedSignatures": ["IDC_EDIT_PTYPEF_TEST", "strTest"],
     "activeCodeState": "external code no longer contains the test display change",
-    "preservedLearning": "The test proved the retrofit PBE path and device behavior, but the code change is not active in Utility_Windows."
+    "preservedLearning": "The test proved the retrofit DevView path and device behavior, but the code change is not active in Utility_Windows."
   },
   "finalState": {
     "status": "validated-then-reverted",
     "activeCodeState": "reverted",
     "remainingRisks": [
       "No active CardPrinterConfig behavior remains from this test change.",
-      "The report remains useful as a validated retrofit PBE lifecycle example.",
+      "The report remains useful as a validated retrofit DevView lifecycle example.",
       "A future reimplementation should start from this record and still require explicit user approval."
     ],
     "nextAllowedActions": [

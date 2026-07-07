@@ -117,7 +117,7 @@ Active external code state:
 The Utility_Windows CardPrinterConfig source no longer contains the test field.
 ```
 
-Preserved PBE learning:
+Preserved DevView learning:
 
 ```text
 The retrofit lifecycle was validated, including intent capture, code anchors,

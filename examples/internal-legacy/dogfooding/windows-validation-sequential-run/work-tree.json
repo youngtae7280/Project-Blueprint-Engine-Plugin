@@ -46,8 +46,8 @@
       ],
       "validationHints": [
         "npm.cmd run format:check",
-        "npm.cmd run validate:pbe",
-        "npm.cmd run validate:pbe:v2",
+        "npm.cmd run validate:devview",
+        "npm.cmd run validate:devview:v2",
         "npm.cmd run test:examples",
         "npm.cmd run typecheck",
         "npm.cmd test"

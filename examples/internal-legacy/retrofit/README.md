@@ -1,6 +1,6 @@
 # Retrofit Examples
 
-Retrofit examples show how PBE works against an existing project where the
+Retrofit examples show how DevView works against an existing project where the
 original intent is recovered from code, user answers, and evidence.
 
 Current examples:
@@ -20,5 +20,5 @@ project by themselves.
 Validate the formal retrofit examples with:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\validate-pbe-retrofit-smoke-v0.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\validate-devview-retrofit-smoke-v0.ps1
 ```

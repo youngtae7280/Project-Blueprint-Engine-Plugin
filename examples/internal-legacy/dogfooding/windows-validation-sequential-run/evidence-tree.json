@@ -30,7 +30,7 @@
       "provesProductNodeIds": ["PT-SELF-001"],
       "provesWorkNodeIds": ["WT-SELF-001"],
       "provesTestNodeIds": ["TT-SELF-004"],
-      "artifact": "format:check, validate:pbe, validate:pbe:v2, test:examples, typecheck, test, CLI help, and CLI JSON validate passed when run sequentially."
+      "artifact": "format:check, validate:devview, validate:devview:v2, test:examples, typecheck, test, CLI help, and CLI JSON validate passed when run sequentially."
     }
   ],
   "edges": []

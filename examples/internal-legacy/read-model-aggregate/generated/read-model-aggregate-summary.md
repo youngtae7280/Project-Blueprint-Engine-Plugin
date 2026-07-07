@@ -71,14 +71,14 @@ Aggregate-pass is not user acceptance, source-authority expansion, CI enforcemen
 ### examples/valid/todo-app-devview-run
 
 - Source authority boundary: Validator-backed Evidence checks structure-only generated read-model outputs for this
-  canonical .pbe fixture. It does not change source authority.
+  canonical .devview fixture. It does not change source authority.
 - Non-promotion statement: Structure-only validation pass is Evidence only. It does not promote Maintainability Graph,
-  create a source-authority pilot, require parity, introduce CI enforcement, retire .pbe artifacts, or replace user
+  create a source-authority pilot, require parity, introduce CI enforcement, retire .devview artifacts, or replace user
   approval.
 - Report status: present
 - Report path: `examples/valid/todo-app-devview-run/generated/read-model-validation-report.json`
 - Retained warnings / accepted limitations:
-  - RW-STRUCTURE-ONLY: structure-only-limitation - This profile validates canonical .pbe structure only; no manual
+  - RW-STRUCTURE-ONLY: structure-only-limitation - This profile validates canonical .devview structure only; no manual
     parity artifact, pilot marker, CI-backed Evidence, or source-authority pilot is required or claimed.
   - RW-NO-RUNTIME-FIXTURE: accepted-structure-only-limitation - The fixture contains attached test-output Evidence but
     no runnable app/runtime fixture is required for structure-only validation.

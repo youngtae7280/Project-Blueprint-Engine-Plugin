@@ -78,15 +78,15 @@
     },
     {
       "id": "edge-permission-guards-parameters",
-      "whySelected": "Prevents PBE from assuming the setting is available to every build/persona."
+      "whySelected": "Prevents DevView from assuming the setting is available to every build/persona."
     },
     {
       "id": "edge-parameters-use-device-io-boundary",
-      "whySelected": "Prevents PBE from treating UI changes and device side effects as the same scope."
+      "whySelected": "Prevents DevView from treating UI changes and device side effects as the same scope."
     },
     {
       "id": "edge-config-save-load-touches-parameters",
-      "whySelected": "Prevents PBE from assuming persistence behavior without confirmation."
+      "whySelected": "Prevents DevView from assuming persistence behavior without confirmation."
     }
   ],
   "knownBeforeQuestion": [
@@ -108,7 +108,7 @@
   "firstUserQuestion": {
     "decisionNeeded": "Identify the exact SMART-51 setting.",
     "question": "What is the exact setting name, UI label, parameter name, or device menu wording for the SMART-51 setting you want to add?",
-    "whyNow": "Without a setting name or description, PBE cannot safely select the module, expected files, tests, or hardware boundary.",
+    "whyNow": "Without a setting name or description, DevView cannot safely select the module, expected files, tests, or hardware boundary.",
     "answerTemplate": {
       "settingNameOrUiLabel": "",
       "existingDeviceOrMenuWordingIfKnown": "",

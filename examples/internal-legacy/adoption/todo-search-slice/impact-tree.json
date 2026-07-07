@@ -25,7 +25,7 @@
     "Renewed Acceptance was user-approved with retained warnings on 2026-06-24."
   ],
   "limitations": [
-    "This is not the output of `pbe impact analyze`.",
+    "This is not the output of `devview impact analyze`.",
     "It does not mark real runtime Evidence or Acceptance nodes invalidated.",
     "It does not prove a full Todo application implementation exists.",
     "It records renewed Acceptance for the representative demo-support slice only."

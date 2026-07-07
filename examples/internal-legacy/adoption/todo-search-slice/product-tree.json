@@ -5,7 +5,7 @@
     {
       "id": "PT-ROOT",
       "type": "goal",
-      "title": "Adopt PBE for the next Todo search slice",
+      "title": "Adopt DevView for the next Todo search slice",
       "status": "confirmed",
       "parent": null,
       "children": ["PT-SEARCH-001"],

@@ -105,10 +105,10 @@
         "structure-only profile has no scoped pilot marker",
         "structure-only output is not source-authority bearing"
       ],
-      "fallbackReferences": ["canonical .pbe artifacts under examples/valid/todo-app-devview-run"],
+      "fallbackReferences": ["canonical .devview artifacts under examples/valid/todo-app-devview-run"],
       "ciInclusion": "manual-and-pr-informational",
       "boundaryStatements": {
-        "sourceAuthorityBoundary": "Todo App DevView Run registry inclusion reflects confirmed graph-source-backed generation for structure-only only; canonical .pbe artifacts remain compatibility/fallback/reference records.",
+        "sourceAuthorityBoundary": "Todo App DevView Run registry inclusion reflects confirmed graph-source-backed generation for structure-only only; canonical .devview artifacts remain compatibility/fallback/reference records.",
         "nonPromotionStatement": "This profile does not promote Todo App DevView Run beyond structure-only, add parity backing, add pilot-marker backing, retire tree-native artifacts, or create CI enforcement.",
         "userAcceptanceBoundary": "Validation, aggregate status, CI Evidence, and registry inclusion do not replace user acceptance authority."
       }

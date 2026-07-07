@@ -1,6 +1,6 @@
 # CardPrinterConfig Retrofit Example
 
-This example captures two bounded retrofit PBE maintenance cycles against the
+This example captures two bounded retrofit DevView maintenance cycles against the
 legacy `CardPrinterConfig` utility.
 
 External project:
@@ -45,7 +45,7 @@ edgeIntent context that explains why the boundary exists.
 
 ## Why This Example Matters
 
-The example proves that PBE retrofit records need to capture:
+The example proves that DevView retrofit records need to capture:
 
 - confirmed user intent
 - observed code anchors
@@ -65,7 +65,7 @@ future AI agents can use without guessing.
 Run the formal retrofit smoke:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\validate-pbe-retrofit-smoke-v0.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\validate-devview-retrofit-smoke-v0.ps1
 ```
 
 Run only the fixture validator:

@@ -2,7 +2,7 @@
 
 Status: read-only-kep-intent-recovery / no external checkout mutation
 
-This fixture tests whether PBE can recover intent from a large external project's formal design process before any code
+This fixture tests whether DevView can recover intent from a large external project's formal design process before any code
 change is attempted.
 
 Target:
@@ -24,7 +24,7 @@ It does not:
 - run Kubernetes build/e2e suites;
 - enroll this fixture in positive read-model `validate --all`.
 
-The first expected PBE action is read-only:
+The first expected DevView action is read-only:
 
 ```bash
 node dist/cli/index.js graph retrofit plan --graph-source examples/internal-legacy/retrofit/open-source/kubernetes-sidecar-kep/graph-source.json --json

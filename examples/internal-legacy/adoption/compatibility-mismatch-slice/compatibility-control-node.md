@@ -16,15 +16,15 @@ This is a concept-level Control Node candidate, not a runtime Control Node imple
 
 ## Source Wording References
 
-| Source                           | Evidence                                                            |
-| -------------------------------- | ------------------------------------------------------------------- |
-| `docs/source-of-truth-matrix.md` | ACEP is mapped to executable task cards.                            |
-| `docs/acep.md`                   | ACEP package and runner wording center `11-task-cards/`.            |
-| `docs/parallel-execution.md`     | Transformation flow includes ACEP Task Cards -> Codex Coding Tasks. |
+| Source                           | Evidence                                                                      |
+| -------------------------------- | ----------------------------------------------------------------------------- |
+| `docs/source-of-truth-matrix.md` | Execution Pack is mapped to executable task cards.                            |
+| `docs/acep.md`                   | Execution Pack package and runner wording center `11-task-cards/`.            |
+| `docs/parallel-execution.md`     | Transformation flow includes Execution Pack Task Cards -> Codex Coding Tasks. |
 
 ## Canonical Interpretation
 
-Current policy reads ACEP as:
+Current policy reads Execution Pack as:
 
 ```text
 Cycle Contract and Node Execution Contract packaging, plus compatibility execution-pack files.
@@ -68,7 +68,7 @@ silent cleanup during evidence collection
 
 The candidate can close when one of these is true:
 
-1. Public docs are clarified so ACEP is described as Cycle/Node Execution Contract packaging and task cards are marked as
+1. Public docs are clarified so Execution Pack is described as Cycle/Node Execution Contract packaging and task cards are marked as
    compatibility views.
 2. A promotion readiness review records an explicit compatibility caveat that the older wording is accepted for the
    current phase, with cleanup deferred and visible.

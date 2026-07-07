@@ -13,5 +13,5 @@ Current scope:
 - local README-only maintenance boundary change
 - graph delta from target repo diff
 
-This example is intentionally small. It proves native PBE uses the same simple
-operation chain as retrofit PBE without requiring inferred legacy intent.
+This example is intentionally small. It proves native DevView uses the same simple
+operation chain as retrofit DevView without requiring inferred legacy intent.

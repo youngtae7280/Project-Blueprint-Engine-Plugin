@@ -69,7 +69,7 @@ declared by this profile.
 | pass   | info     | Non-promotion statement is present                                 | Check passed. |
 | pass   | info     | Retained warnings are visible                                      | Check passed. |
 | pass   | info     | Fallback/reference artifacts are present                           | Check passed. |
-| pass   | info     | User acceptance authority is not replaced by Codex/PBE             | Check passed. |
+| pass   | info     | User acceptance authority is not replaced by Codex/DevView         | Check passed. |
 | pass   | info     | Supplemental compatibility warning boundary is preserved           | Check passed. |
 | pass   | info     | No statement implies repo-wide promotion or tree-native retirement | Check passed. |
 

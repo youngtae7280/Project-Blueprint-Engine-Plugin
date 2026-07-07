@@ -13,7 +13,7 @@
       "workNodeIds": ["WT-SELF-001"],
       "testNodeIds": ["TT-SELF-001", "TT-SELF-002", "TT-SELF-003", "TT-SELF-004"],
       "evidenceNodeIds": ["EV-SELF-001", "EV-SELF-002"],
-      "decisionSource": "Example artifact records the requested docs-only self-dogfooding slice; active .pbe state was not marked accepted by Codex."
+      "decisionSource": "Example artifact records the requested docs-only self-dogfooding slice; active .devview state was not marked accepted by Codex."
     }
   ]
 }

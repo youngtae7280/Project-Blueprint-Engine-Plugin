@@ -24,7 +24,7 @@ not public-doc cleanup completion.
 
 ## Intent Understood
 
-PBE is reviewing whether the `Todo Search Adoption + Product Meaning Feedback` slice has enough observable
+DevView is reviewing whether the `Todo Search Adoption + Product Meaning Feedback` slice has enough observable
 selected-slice support artifacts to show what happens after the user confirms Product Patch `PP-001`.
 
 ## Result Summary

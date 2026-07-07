@@ -151,7 +151,7 @@
       "kind": "retrofit-change-record",
       "state": "analysis-ready-no-target-change",
       "recordPath": "examples/internal-legacy/retrofit/open-source/kubernetes-sidecar-kep/records/kep753-sidecar-intent-map.analysis-ready.json",
-      "intentClaim": "A read-only PBE retrofit mapping can recover KEP-753 intent and connect it to Kubernetes code/test surfaces before selecting any target change."
+      "intentClaim": "A read-only DevView retrofit mapping can recover KEP-753 intent and connect it to Kubernetes code/test surfaces before selecting any target change."
     }
   ],
   "edges": [
@@ -317,7 +317,7 @@
       "edgeIntent": {
         "classifications": ["intent-recovery", "read-only-mapping"],
         "claim": "The first large-project dogfood should only recover and map intent before selecting any Kubernetes target change.",
-        "confidence": "pbe-observed"
+        "confidence": "devview-observed"
       }
     },
     {
@@ -328,7 +328,7 @@
       "edgeIntent": {
         "classifications": ["non-goal", "external-repo-boundary"],
         "claim": "The read-only KEP mapping must not mutate external repositories, open upstream PRs, or claim maintainer approval.",
-        "confidence": "pbe-observed"
+        "confidence": "devview-observed"
       }
     },
     {
@@ -339,7 +339,7 @@
       "edgeIntent": {
         "classifications": ["non-goal", "verification-boundary"],
         "claim": "The fixture records candidate verification surfaces but cannot claim Kubernetes test results.",
-        "confidence": "pbe-observed"
+        "confidence": "devview-observed"
       }
     }
   ]

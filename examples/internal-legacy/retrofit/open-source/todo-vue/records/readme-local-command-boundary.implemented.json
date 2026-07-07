@@ -31,7 +31,7 @@
     {
       "path": "README.md",
       "anchor": "Sample todo app built with the Vue framework.",
-      "meaning": "The repository is a learning/sample Todo application, not a product where PBE can assume maintainer intent.",
+      "meaning": "The repository is a learning/sample Todo application, not a product where DevView can assume maintainer intent.",
       "confidence": "high"
     },
     {

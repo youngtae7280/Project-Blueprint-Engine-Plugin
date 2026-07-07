@@ -3,7 +3,7 @@
 Status: bounded representative fixture evidence / refreshed for whitespace-normalized query behavior
 
 This evidence record supports the `Todo Search Adoption + Product Meaning Feedback` representative runtime feasibility
-demo after `PP-001` confirmation. It is a bounded fixture result, not a full Todo application implementation, not PBE
+demo after `PP-001` confirmation. It is a bounded fixture result, not a full Todo application implementation, not DevView
 runtime implementation, not Graph-source promotion, and not enforcement. Renewed user Acceptance is recorded separately
 in `acceptance-tree.json`.
 

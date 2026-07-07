@@ -19,7 +19,7 @@ Current scope:
 - local README-only dogfood change for a build/test boundary clarification
 - no upstream PR
 
-The important PBE behavior under test is not whether Codex can edit cJSON.
-It is whether PBE can avoid pretending that inferred open-source intent is
+The important DevView behavior under test is not whether Codex can edit cJSON.
+It is whether DevView can avoid pretending that inferred open-source intent is
 maintainer-approved implementation authority, while still executing a bounded
 local doc-only change when explicitly approved.
