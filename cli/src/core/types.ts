@@ -229,6 +229,7 @@ export interface CliOptions {
   provenanceAttestationValidation?: string
   provenanceVerificationReadiness?: string
   ciBranchGovernanceReadiness?: string
+  ciBranchPolicyValidation?: string
   workflow?: string
   sourceRef?: string
   buildCommand?: string

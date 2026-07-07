@@ -473,6 +473,8 @@ Options:
                        Provenance verification readiness report for security report-enterprise-readiness or report-ci-branch-governance-readiness; repeat or comma-separate for multiples where supported.
   --ci-branch-governance-readiness <file>
                        CI/branch governance readiness report for security report-enterprise-readiness or validate-ci-branch-policy; repeat or comma-separate for multiples where supported.
+  --ci-branch-policy-validation <file>
+                       CI/branch policy validation report for security report-enterprise-readiness; repeat or comma-separate for multiples where supported.
   --workflow <file>    Explicit local workflow file for security report-ci-branch-governance-readiness; repeat or comma-separate for multiples.
   --source-ref <value>
                        Explicit source ref label for security record-package-provenance-inputs; metadata only, not verified.

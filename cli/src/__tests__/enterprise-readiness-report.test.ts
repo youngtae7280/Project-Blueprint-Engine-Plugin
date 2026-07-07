@@ -994,6 +994,176 @@ describe('security report-enterprise-readiness CLI', () => {
     expectSafetyFalse(payload)
   })
 
+  it('summarizes CI/branch policy validation without treating it as external CI activation', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, '.tmp/ci-branch-policy-validation.json'), ciBranchPolicyValidationReport())
+
+    const result = await runDevViewCli(
+      [
+        'security',
+        'report-enterprise-readiness',
+        '--ci-branch-policy-validation',
+        '.tmp/ci-branch-policy-validation.json',
+        '--output',
+        '.tmp/enterprise-readiness.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.readinessLevel).toBe('not-ready')
+    expect(payload.sourceCiBranchPolicyValidationReports).toHaveLength(1)
+    expect(payload.sourceCiBranchPolicyValidationReports[0]).toEqual(
+      expect.objectContaining({
+        path: '.tmp/ci-branch-policy-validation.json',
+        artifactRole: 'devview-ci-branch-policy-validation-report',
+        status: 'devview-ci-branch-policy-validation-passed',
+        ciBranchPolicyValidationStatus: 'passed-report-only-policy-not-enforced',
+        declaredRequiredCheckCount: 2,
+        matchedWorkflowCandidateCheckCount: 1,
+        unmappedDeclaredCheckCount: 1,
+        branchProtectionPolicyPresent: true,
+        targetBranchCount: 1,
+        rbacPolicyValidationLinked: true,
+        providerNetworkPolicyLinked: true,
+        requiredChecksConfigured: false,
+        requiredChecksMutated: false,
+        branchProtectionChanged: false,
+        branchProtectionMutated: false,
+        externalCiMutation: false,
+        providerInvoked: false,
+        networkCallMade: false,
+        apiCallMade: false,
+        hooksActivated: false,
+        findingCount: 3,
+        downstreamActionCount: 2,
+      }),
+    )
+    expect(payload.scopeCiGovernanceReadiness.status).toBe('readiness-recorded')
+    expect(payload.scopeCiGovernanceReadiness.ciBranchGovernanceReadinessSourceCount).toBe(0)
+    expect(payload.scopeCiGovernanceReadiness.ciBranchPolicyValidationSourceCount).toBe(1)
+    expect(payload.scopeCiGovernanceReadiness.ciBranchPolicyValidationSourceStatuses).toEqual([
+      'devview-ci-branch-policy-validation-passed',
+    ])
+    expect(payload.scopeCiGovernanceReadiness.policyValidationStatuses).toEqual([
+      'passed-report-only-policy-not-enforced',
+    ])
+    expect(payload.scopeCiGovernanceReadiness.declaredRequiredCheckCount).toBe(2)
+    expect(payload.scopeCiGovernanceReadiness.matchedWorkflowCandidateCheckCount).toBe(1)
+    expect(payload.scopeCiGovernanceReadiness.unmappedDeclaredCheckCount).toBe(1)
+    expect(payload.scopeCiGovernanceReadiness.requiredChecksConfiguredCount).toBe(0)
+    expect(payload.scopeCiGovernanceReadiness.requiredChecksMutatedCount).toBe(0)
+    expect(payload.scopeCiGovernanceReadiness.branchProtectionPolicyPresentCount).toBe(1)
+    expect(payload.scopeCiGovernanceReadiness.branchProtectionChangedCount).toBe(0)
+    expect(payload.scopeCiGovernanceReadiness.branchProtectionMutatedCount).toBe(0)
+    expect(payload.scopeCiGovernanceReadiness.policyTargetBranchCount).toBe(1)
+    expect(payload.scopeCiGovernanceReadiness.externalCiMutationCount).toBe(0)
+    expect(payload.scopeCiGovernanceReadiness.providerInvokedCount).toBe(0)
+    expect(payload.scopeCiGovernanceReadiness.networkCallMadeCount).toBe(0)
+    expect(payload.scopeCiGovernanceReadiness.apiCallMadeCount).toBe(0)
+    expect(payload.scopeCiGovernanceReadiness.hooksActivatedCount).toBe(0)
+    expect(payload.scopeCiGovernanceReadiness.providerNetworkPolicyLinkedCount).toBe(1)
+    expect(payload.scopeCiGovernanceReadiness.rbacPolicyValidationLinkedCount).toBe(1)
+    expect(payload.scopeCiGovernanceReadiness.policyFindingCount).toBe(3)
+    expect(payload.scopeCiGovernanceReadiness.policyDownstreamActionCount).toBe(2)
+    expect(payload.enterpriseReadinessFindings.map((entry: { code: string }) => entry.code)).toEqual(
+      expect.arrayContaining([
+        'ENTERPRISE_CI_BRANCH_POLICY_VALIDATION_RECORDED',
+        'ENTERPRISE_CI_ACTIVATION_GOVERNANCE_MISSING',
+        'ENTERPRISE_RBAC_SIGNING_MISSING',
+      ]),
+    )
+    expect(payload.enterpriseReadinessFindings.map((entry: { code: string }) => entry.code)).not.toContain(
+      'ENTERPRISE_CI_BRANCH_POLICY_VALIDATION_NOT_SUPPLIED',
+    )
+    expectSafetyFalse(payload)
+  })
+
+  it('blocks invalid or authority-claiming CI/branch policy validation sources with zero writes', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, '.tmp/wrong-ci-branch-policy.json'), {
+      ...ciBranchPolicyValidationReport(),
+      status: 'wrong',
+    })
+    writeJson(join(workspace, '.tmp/required-checks-ci-branch-policy.json'), {
+      ...ciBranchPolicyValidationReport(),
+      requiredChecksPolicyValidation: {
+        ...(ciBranchPolicyValidationReport().requiredChecksPolicyValidation as Record<string, unknown>),
+        requiredChecksConfigured: true,
+      },
+    })
+    writeJson(join(workspace, '.tmp/branch-ci-branch-policy.json'), {
+      ...ciBranchPolicyValidationReport(),
+      branchProtectionPolicyValidation: {
+        ...(ciBranchPolicyValidationReport().branchProtectionPolicyValidation as Record<string, unknown>),
+        branchProtectionMutated: true,
+      },
+    })
+    writeJson(join(workspace, '.tmp/provider-ci-branch-policy.json'), {
+      ...ciBranchPolicyValidationReport(),
+      providerNetworkPrerequisiteValidation: {
+        ...(ciBranchPolicyValidationReport().providerNetworkPrerequisiteValidation as Record<string, unknown>),
+        providerInvoked: true,
+      },
+    })
+    writeJson(join(workspace, '.tmp/rbac-ci-branch-policy.json'), {
+      ...ciBranchPolicyValidationReport(),
+      rbacEnforced: true,
+    })
+
+    const wrong = await runEnterpriseWithCiBranchPolicyValidation(
+      workspace,
+      '.tmp/wrong-ci-branch-policy.json',
+      '.tmp/wrong-ci-branch-policy-enterprise.json',
+    )
+    const requiredChecks = await runEnterpriseWithCiBranchPolicyValidation(
+      workspace,
+      '.tmp/required-checks-ci-branch-policy.json',
+      '.tmp/required-checks-ci-branch-policy-enterprise.json',
+    )
+    const branch = await runEnterpriseWithCiBranchPolicyValidation(
+      workspace,
+      '.tmp/branch-ci-branch-policy.json',
+      '.tmp/branch-ci-branch-policy-enterprise.json',
+    )
+    const provider = await runEnterpriseWithCiBranchPolicyValidation(
+      workspace,
+      '.tmp/provider-ci-branch-policy.json',
+      '.tmp/provider-ci-branch-policy-enterprise.json',
+    )
+    const rbac = await runEnterpriseWithCiBranchPolicyValidation(
+      workspace,
+      '.tmp/rbac-ci-branch-policy.json',
+      '.tmp/rbac-ci-branch-policy-enterprise.json',
+    )
+
+    expect(wrong.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(wrong.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_CI_BRANCH_POLICY_VALIDATION_SOURCE_ROLE_STATUS_INVALID',
+    )
+    expect(existsSync(join(workspace, '.tmp/wrong-ci-branch-policy-enterprise.json'))).toBe(false)
+
+    for (const [result, output] of [
+      [requiredChecks, '.tmp/required-checks-ci-branch-policy-enterprise.json'],
+      [branch, '.tmp/branch-ci-branch-policy-enterprise.json'],
+      [provider, '.tmp/provider-ci-branch-policy-enterprise.json'],
+    ] as const) {
+      expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+      expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+        'ENTERPRISE_READINESS_UNSAFE_SOURCE_AUTHORITY_FLAG',
+      )
+      expect(existsSync(join(workspace, output))).toBe(false)
+    }
+
+    expect(rbac.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(rbac.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_CI_BRANCH_POLICY_VALIDATION_AUTHORITY_CLAIM_UNSUPPORTED',
+    )
+    expect(existsSync(join(workspace, '.tmp/rbac-ci-branch-policy-enterprise.json'))).toBe(false)
+  })
+
   it('blocks invalid or authority-claiming CI/branch governance readiness sources with zero writes', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, '.tmp/wrong-ci-branch.json'), {
@@ -2014,6 +2184,7 @@ describe('security report-enterprise-readiness CLI', () => {
     writeJson(join(workspace, '.tmp/package-provenance-inputs.json'), packageProvenanceInputsRecord())
     writeJson(join(workspace, '.tmp/package-artifact-digest.json'), packageArtifactDigestRecord())
     writeJson(join(workspace, '.tmp/ci-branch-governance-readiness.json'), ciBranchGovernanceReadinessReport())
+    writeJson(join(workspace, '.tmp/ci-branch-policy-validation.json'), ciBranchPolicyValidationReport())
     const cases = [
       { output: '.tmp/benchmark-governance.json', expected: 'would overwrite a source input' },
       {
@@ -2059,6 +2230,11 @@ describe('security report-enterprise-readiness CLI', () => {
       {
         sourceArgs: ['--ci-branch-governance-readiness', '.tmp/ci-branch-governance-readiness.json'],
         output: '.tmp/ci-branch-governance-readiness.json',
+        expected: 'would overwrite a source input',
+      },
+      {
+        sourceArgs: ['--ci-branch-policy-validation', '.tmp/ci-branch-policy-validation.json'],
+        output: '.tmp/ci-branch-policy-validation.json',
         expected: 'would overwrite a source input',
       },
       { output: '.tmp/enterprise.json', markdown: '.tmp/enterprise.json', expected: 'must be different' },
@@ -3481,6 +3657,142 @@ function ciBranchGovernanceReadinessReport(overrides: Record<string, unknown> = 
   }
 }
 
+function ciBranchPolicyValidationReport(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    schemaVersion: 1,
+    artifactRole: 'devview-ci-branch-policy-validation-report',
+    status: 'devview-ci-branch-policy-validation-passed',
+    scope: 'ci-branch-policy-validation-report-only',
+    sourceFactsOnly: true,
+    reportOnly: true,
+    ciBranchPolicyValidationStatus: 'passed-report-only-policy-not-enforced',
+    sourcePolicy: {
+      path: '.tmp/ci-branch-policy.json',
+      artifactRole: 'devview-ci-branch-policy',
+      status: 'devview-ci-branch-policy-configured',
+      policyScope: 'ci-branch-policy-validation-report-only',
+      sha256: 'c'.repeat(64),
+      byteLength: 2048,
+    },
+    sourceCiBranchGovernanceReadiness: {
+      supplied: true,
+      path: '.tmp/ci-branch-governance-readiness.json',
+      artifactRole: 'devview-ci-branch-governance-readiness-report',
+      status: 'devview-ci-branch-governance-readiness-reported',
+    },
+    requiredChecksPolicyValidation: {
+      requiredChecksPolicyPresent: true,
+      requiredChecksConfigured: false,
+      requiredChecksMutated: false,
+      declaredCheckCount: 2,
+      workflowCandidateMatchCount: 1,
+      unmappedDeclaredChecks: ['release-provenance-readiness'],
+      extraWorkflowCandidateChecks: ['validate'],
+    },
+    branchProtectionPolicyValidation: {
+      branchProtectionPolicyPresent: true,
+      targetBranchCount: 1,
+      desiredFutureRuleCount: 3,
+      branchProtectionChanged: false,
+      branchProtectionMutated: false,
+    },
+    actorRbacPrerequisiteValidation: {
+      requiredRoleCount: 2,
+      requiredPermissionCount: 3,
+      rbacPolicyValidationLinked: true,
+      rbacEnforced: false,
+      permissionVerified: false,
+    },
+    providerNetworkPrerequisiteValidation: {
+      providerNetworkPolicyLinked: true,
+      defaultProviderPolicy: 'deny',
+      defaultNetworkPolicy: 'deny',
+      providerAllowlistEmpty: true,
+      networkAllowlistEmpty: true,
+      providerInvoked: false,
+      networkCallMade: false,
+      apiCallMade: false,
+    },
+    activationBoundary: {
+      activationMode: 'report-only-no-mutation',
+      reportOnly: true,
+      githubMutated: false,
+      requiredChecksConfigured: false,
+      requiredChecksMutated: false,
+      branchProtectionChanged: false,
+      branchProtectionMutated: false,
+      externalCiMutation: false,
+      hooksActivated: false,
+      enterpriseGateActivated: false,
+    },
+    policyFindings: [
+      {
+        severity: 'satisfied',
+        code: 'CI_BRANCH_POLICY_DEFAULT_DENY_RECORDED',
+        message: 'Default deny policy recorded.',
+      },
+      {
+        severity: 'gap',
+        code: 'CI_BRANCH_POLICY_DECLARED_CHECK_UNMAPPED',
+        message: 'A declared check is not mapped to a workflow candidate.',
+      },
+      {
+        severity: 'gap',
+        code: 'CI_BRANCH_POLICY_NOT_ENFORCED',
+        message: 'Policy is not externally configured or enforced.',
+      },
+    ],
+    downstreamActionPlan: [
+      'Integrate CI/branch policy validation into enterprise readiness.',
+      'Design a separate activation plan before configuring branch protection or required checks.',
+    ],
+    githubMutated: false,
+    githubWorkflowMutated: false,
+    workflowExecuted: false,
+    workflowsExecuted: false,
+    branchProtectionChanged: false,
+    branchProtectionMutated: false,
+    requiredChecksConfigured: false,
+    requiredChecksMutated: false,
+    externalCiMutated: false,
+    hooksActivated: false,
+    ciProviderCalled: false,
+    providerInvoked: false,
+    networkCallMade: false,
+    apiCallMade: false,
+    cryptographicSignatureVerified: false,
+    cryptographicSigningImplemented: false,
+    keyGenerated: false,
+    privateKeyStored: false,
+    keyRegistryCreated: false,
+    trustRootCreated: false,
+    rbacEnforced: false,
+    permissionVerified: false,
+    rbacPermissionVerified: false,
+    packageArtifactGeneratedByDevView: false,
+    packageArtifactGenerated: false,
+    packageTarballGenerated: false,
+    packageSigned: false,
+    sbomGeneratedByDevView: false,
+    sbomGenerated: false,
+    sbomAttested: false,
+    provenanceAttestationGenerated: false,
+    provenanceAttestationVerified: false,
+    provenanceAttested: false,
+    graphSourceMutated: false,
+    graphDeltaApplied: false,
+    runtimeEvidenceSatisfied: false,
+    evidenceAccepted: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+    approvalAutomationEnabled: false,
+    userAcceptanceAutomated: false,
+    enterpriseGateActivated: false,
+    ...overrides,
+  }
+}
+
 function safetyFlags(): Record<string, unknown> {
   return {
     benchmarkExecuted: false,
@@ -3714,6 +4026,25 @@ function runEnterpriseWithCiBranchGovernanceReadiness(
       'report-enterprise-readiness',
       '--ci-branch-governance-readiness',
       ciBranchGovernanceReadiness,
+      '--output',
+      output,
+      '--json',
+    ],
+    { cwd: workspace, pluginRoot },
+  )
+}
+
+function runEnterpriseWithCiBranchPolicyValidation(
+  workspace: string,
+  ciBranchPolicyValidation: string,
+  output: string,
+) {
+  return runDevViewCli(
+    [
+      'security',
+      'report-enterprise-readiness',
+      '--ci-branch-policy-validation',
+      ciBranchPolicyValidation,
       '--output',
       output,
       '--json',
