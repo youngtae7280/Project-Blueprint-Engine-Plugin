@@ -204,6 +204,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     roadmapAudit: undefined as string | undefined,
     finalHandoff: undefined as string | undefined,
     hookActivationChain: undefined as string | undefined,
+    extensionReadiness: undefined as string | undefined,
     scopeCiEnforcementReadiness: undefined as string | undefined,
     hookHealth: undefined as string | undefined,
     userPromptAdvisory: undefined as string | undefined,
@@ -963,6 +964,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--hook-activation-chain requires a file path.' }
       }
       options.hookActivationChain = value
+      index += 1
+    } else if (arg === '--extension-readiness') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--extension-readiness requires a file path.' }
+      }
+      options.extensionReadiness = value
       index += 1
     } else if (arg === '--scope-ci-enforcement-readiness') {
       const value = argv[index + 1]

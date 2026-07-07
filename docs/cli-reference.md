@@ -216,6 +216,7 @@ devview graph read-model report-devview-baseline \
   --final-handoff <final-handoff.json> \
   --frontend-chain <frontend-chain.json> \
   --hook-activation-chain <hook-activation-chain.json> \
+  --extension-readiness <extension-readiness.json> \
   --approved-apply-dry-run <approved-apply-dry-run.json> \
   --apply-report <graph-delta-apply-report.json> \
   --evidence-decision <evidence-decision-record.json> \

@@ -40,6 +40,7 @@ describe('DevView core baseline freeze report CLI', () => {
     )
     expect(payload.sourceApprovedApplyDryRun).toBe('generated/approved-apply-dry-run.json')
     expect(payload.sourceGraphDeltaApplyReport).toBe('generated/graph-delta-apply-report.json')
+    expect(payload.sourceExtensionReadiness).toBe('generated/extension-readiness.json')
     expect(payload.sourceEvidenceDecision).toBe('generated/evidence-decision.json')
     expect(payload.sourceAcceptedEvidence).toBe('generated/accepted-evidence.json')
     expect(payload.sourceRuntimeEvidenceSatisfactionReadiness).toBe(
@@ -54,6 +55,7 @@ describe('DevView core baseline freeze report CLI', () => {
       expect.arrayContaining([
         ['approved-apply-dry-run', 'advisory'],
         ['graph-delta-apply-report', 'blocked'],
+        ['extension-readiness', 'advisory'],
         ['evidence-decision', 'completed'],
         ['accepted-evidence', 'completed'],
         ['runtime-evidence-satisfaction-readiness', 'blocked'],
@@ -95,7 +97,7 @@ describe('DevView core baseline freeze report CLI', () => {
     )
     expect(
       payload.sourceArtifacts.filter((entry: { readStatus: string }) => entry.readStatus === 'missing-optional'),
-    ).toHaveLength(12)
+    ).toHaveLength(13)
     expectSafetyFalse(payload.safetyInvariantSummary)
   })
 
@@ -235,6 +237,8 @@ function baseArgs(): string[] {
     'generated/frontend-chain.json',
     '--hook-activation-chain',
     'generated/hook-activation.json',
+    '--extension-readiness',
+    'generated/extension-readiness.json',
     '--apply-readiness',
     'generated/apply-readiness.json',
     '--approved-apply-dry-run',
@@ -292,6 +296,25 @@ function writeBaselineInputs(
     equivalenceProven: false,
     scopeEnforced: false,
     ciEnforcementEnabled: false,
+  })
+  writeJson(join(workspace, 'generated/extension-readiness.json'), {
+    artifactRole: 'devview-extension-readiness-report',
+    status: 'devview-extension-readiness-ready',
+    readinessStatus: 'ready-extension-manifests-validated',
+    extensionExecutionAllowed: false,
+    extensionsExecuted: false,
+    providerInvoked: false,
+    networkCallMade: false,
+    shellCommandsExecuted: false,
+    filesMutated: false,
+    graphSourceMutated: false,
+    graphDeltaApplied: false,
+    runtimeEvidenceSatisfied: false,
+    evidenceAccepted: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+    nonEnforcing: true,
   })
   writeJson(join(workspace, 'generated/apply-readiness.json'), readiness('devview-graph-delta-apply-readiness-preview'))
   writeJson(join(workspace, 'generated/approved-apply-dry-run.json'), {
@@ -385,6 +408,13 @@ function writeBaselineInputs(
         laneStatus: 'preview-chain-complete-no-active-hooks',
         terminalArtifacts: ['generated/hook-activation.json'],
         authorityBoundary: 'Hooks are not installed, active, trusted, or blocking.',
+      },
+      {
+        laneId: 'project-specific-extension-foundation',
+        laneStatus: 'report-only-extension-readiness-ready',
+        terminalArtifacts: ['generated/extension-readiness.json'],
+        authorityBoundary:
+          'Extension manifests are declarative only; no extension code, provider, network, shell, mutation, or enforcement authority is granted.',
       },
       {
         laneId: 'phase-13-controlled-apply-readiness',

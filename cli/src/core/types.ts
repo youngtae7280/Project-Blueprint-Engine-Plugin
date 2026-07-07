@@ -162,6 +162,7 @@ export interface CliOptions {
   roadmapAudit?: string
   finalHandoff?: string
   hookActivationChain?: string
+  extensionReadiness?: string
   scopeCiEnforcementReadiness?: string
   hookHealth?: string
   userPromptAdvisory?: string

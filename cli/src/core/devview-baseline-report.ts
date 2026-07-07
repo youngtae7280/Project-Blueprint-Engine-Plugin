@@ -14,6 +14,7 @@ export interface DevViewBaselineReportOptions {
   finalHandoff: string
   frontendChain?: string
   hookActivationChain?: string
+  extensionReadiness?: string
   applyReadiness?: string
   approvedApplyDryRun?: string
   applyReport?: string
@@ -70,6 +71,7 @@ export interface DevViewCoreBaselineFreezeReport {
   sourceFinalHandoff: string
   sourceFrontendChain: string | null
   sourceHookActivationChain: string | null
+  sourceExtensionReadiness: string | null
   sourceApplyReadiness: string | null
   sourceApprovedApplyDryRun: string | null
   sourceGraphDeltaApplyReport: string | null
@@ -91,6 +93,12 @@ export interface DevViewCoreBaselineFreezeReport {
     codexExecutionTriggered: false
     llmInvoked: false
     networkCallsAllowed: false
+    providerInvoked: false
+    networkCallMade: false
+    extensionExecutionAllowed: false
+    extensionsExecuted: false
+    shellCommandsExecuted: false
+    filesMutated: false
     automaticRequestIrGenerationEnabled: false
     hookScriptsInstalled: false
     hooksActive: false
@@ -158,6 +166,12 @@ const OPTIONAL_SOURCE_DEFS = [
     label: 'Hook activation chain report',
     optionKey: 'hookActivationChain',
     expectedRole: 'devview-hook-activation-chain-report',
+  },
+  {
+    sourceId: 'extension-readiness',
+    label: 'Project-specific extension readiness',
+    optionKey: 'extensionReadiness',
+    expectedRole: 'devview-extension-readiness-report',
   },
   {
     sourceId: 'graph-delta-apply-readiness',
@@ -477,6 +491,7 @@ function buildReport(
     sourceFinalHandoff: relativePath(root, finalHandoff.resolvedPath ?? ''),
     sourceFrontendChain: sourcePath('frontend-chain'),
     sourceHookActivationChain: sourcePath('hook-activation-chain'),
+    sourceExtensionReadiness: sourcePath('extension-readiness'),
     sourceApplyReadiness: sourcePath('graph-delta-apply-readiness'),
     sourceApprovedApplyDryRun: sourcePath('approved-apply-dry-run'),
     sourceGraphDeltaApplyReport: sourcePath('graph-delta-apply-report'),
@@ -495,6 +510,12 @@ function buildReport(
       codexExecutionTriggered: false,
       llmInvoked: false,
       networkCallsAllowed: false,
+      providerInvoked: false,
+      networkCallMade: false,
+      extensionExecutionAllowed: false,
+      extensionsExecuted: false,
+      shellCommandsExecuted: false,
+      filesMutated: false,
       automaticRequestIrGenerationEnabled: false,
       hookScriptsInstalled: false,
       hooksActive: false,
@@ -521,7 +542,7 @@ function buildReport(
     writtenOutputPathAuthorityStatus: 'not-written-stdout-only',
     markdownReportAuthorityStatus: 'not-written',
     nonExecutionBoundary:
-      'This DevView core baseline freeze report summarizes existing deterministic spine, advisory, blocked, and future-only states only. It does not execute Codex, call an LLM/API, install or run hooks, activate strict/guided blocking, grant Project Memory extension authority, mutate graph-source, apply graph deltas, automate approval or human decisions, accept Evidence, satisfy runtime Evidence, prove equivalence, enforce scope, configure CI required checks, change branch protection, reject diffs, or replace user acceptance.',
+      'This DevView core baseline freeze report summarizes existing deterministic spine, advisory, blocked, and future-only states only. It does not execute Codex or extension code, call an LLM/API/provider, make network calls, run shell commands, install or run hooks, activate strict/guided blocking, grant Project Memory extension authority, mutate graph-source, apply graph deltas, automate approval or human decisions, accept Evidence, satisfy runtime Evidence, prove equivalence, enforce scope, configure CI required checks, change branch protection, reject diffs, or replace user acceptance.',
   }
 }
 
@@ -637,6 +658,12 @@ function buildBaselineLanes(finalHandoff: JsonRecord, roadmapAudit: JsonRecord):
     'No LLM provider execution or automatic Request IR generation authority is granted.',
   )
   addFromHandoff(
+    'project-specific-extension-foundation',
+    'advisory',
+    'Project profile and extension manifest readiness are represented without executing extension code.',
+    'Extension manifests are declarative report inputs only; extension code execution, provider calls, network calls, shell commands, and policy enforcement remain disabled.',
+  )
+  addFromHandoff(
     'activation-preview',
     'advisory',
     'Hook Gateway activation is represented by non-active previews and repo-local script bundle materialization.',
@@ -685,6 +712,7 @@ function buildFutureOnlyBoundaries(finalHandoff: JsonRecord, roadmapAudit: JsonR
     new Set([
       ...arrayStrings(finalHandoff.explicitlyStillDisabled),
       ...arrayStrings(roadmapAudit.explicitlyNotImplemented),
+      'project-specific extension code execution',
       'Project Memory extension authority',
     ]),
   ).sort((left, right) => left.localeCompare(right))
@@ -714,7 +742,7 @@ export function renderDevViewBaselineMarkdown(report: DevViewCoreBaselineFreezeR
     '',
     '## Safety',
     '',
-    '- Codex execution, LLM/API calls, active hooks, graph apply, graph-source mutation, Evidence acceptance, equivalence proof, scope/CI enforcement, and Project Memory extension authority remain disabled.',
+    '- Codex execution, extension code execution, LLM/API calls, provider/network calls, active hooks, graph apply, graph-source mutation, Evidence acceptance, equivalence proof, scope/CI enforcement, and Project Memory extension authority remain disabled.',
     '',
     '## Findings',
     '',
@@ -821,6 +849,13 @@ const UNSAFE_TRUE_FIELDS = new Set([
   'codexExecutionTriggered',
   'llmInvoked',
   'networkCallsAllowed',
+  'providerInvoked',
+  'networkCallMade',
+  'extensionExecutionAllowed',
+  'extensionsExecuted',
+  'shellCommandsExecuted',
+  'filesMutated',
+  'extensionCodeExecuted',
   'automaticRequestIrGenerationEnabled',
   'hookScriptsInstalled',
   'hooksActive',

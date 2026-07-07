@@ -3575,6 +3575,7 @@ export async function graphReadModelReportDevViewBaselineCommand(context: Comman
       finalHandoff: context.options.finalHandoff,
       frontendChain: context.options.frontendChain,
       hookActivationChain: context.options.hookActivationChain,
+      extensionReadiness: context.options.extensionReadiness,
       applyReadiness: context.options.applyReadiness,
       approvedApplyDryRun: context.options.approvedApplyDryRun,
       applyReport: context.options.applyReport,

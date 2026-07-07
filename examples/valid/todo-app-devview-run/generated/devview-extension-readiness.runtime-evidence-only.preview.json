@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-extension-readiness-report",
+  "status": "devview-extension-readiness-ready",
+  "extensionReadinessStatus": "ready-extension-manifests-validated",
+  "readinessScope": "project-specific-extension-system-foundation-report-only",
+  "sourceProjectProfile": "examples/valid/todo-app-devview-run/.devview/project-profile.json",
+  "sourceExtensionsDir": "examples/valid/todo-app-devview-run/.devview/extensions",
+  "projectProfilePresent": true,
+  "projectProfileStatus": "devview-project-profile-configured",
+  "projectProfileId": "todo-app-devview-profile",
+  "projectStack": ["typescript", "browser-ui", "deterministic-fixture"],
+  "projectDomain": "todo-application",
+  "discoveredManifestCount": 2,
+  "validManifestCount": 2,
+  "invalidManifestCount": 0,
+  "manifests": [
+    {
+      "path": "examples/valid/todo-app-devview-run/.devview/extensions/todo-app-evidence.manifest.json",
+      "extensionId": "todo-app-runtime-evidence-adapter",
+      "extensionKind": "evidence-adapter",
+      "status": "valid",
+      "capabilities": ["evidence-adapter", "policy-extension"],
+      "permissions": ["read-project-profile", "read-evidence", "read-policy", "write-report-output"],
+      "executionDisabled": true,
+      "findings": []
+    },
+    {
+      "path": "examples/valid/todo-app-devview-run/.devview/extensions/todo-app-view-tree.manifest.json",
+      "extensionId": "todo-app-view-tree-extractor",
+      "extensionKind": "view-tree-extractor",
+      "status": "valid",
+      "capabilities": ["context-pack-extension", "view-tree-extractor-extension"],
+      "permissions": ["read-project-profile", "read-maintainability-graph", "read-view-tree", "write-report-output"],
+      "executionDisabled": true,
+      "findings": []
+    }
+  ],
+  "capabilities": {
+    "analyzerExtensions": [],
+    "viewTreeExtractorExtensions": ["todo-app-view-tree-extractor"],
+    "contextPackExtensions": ["todo-app-view-tree-extractor"],
+    "evidenceAdapters": ["todo-app-runtime-evidence-adapter"],
+    "policyExtensions": ["todo-app-runtime-evidence-adapter"],
+    "skillWorkflowExtensions": []
+  },
+  "requiredPermissions": [
+    "read-evidence",
+    "read-maintainability-graph",
+    "read-policy",
+    "read-project-profile",
+    "read-view-tree",
+    "write-report-output"
+  ],
+  "findings": [],
+  "extensionExecutionAllowed": false,
+  "extensionsExecuted": false,
+  "providerInvoked": false,
+  "networkCallMade": false,
+  "shellCommandsExecuted": false,
+  "filesMutated": false,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "runtimeEvidenceSatisfied": false,
+  "evidenceAccepted": false,
+  "equivalenceProven": false,
+  "scopeEnforced": false,
+  "ciEnforcementEnabled": false,
+  "approvalAutomationEnabled": false,
+  "userAcceptanceAutomated": false,
+  "nonEnforcing": true,
+  "writtenOutputPath": "examples/valid/todo-app-devview-run/generated/devview-extension-readiness.runtime-evidence-only.preview.json"
+}

@@ -5,7 +5,7 @@
   "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
   "auditScope": "roadmap-state-evidence-summary-no-new-authority",
   "auditDate": "2026-07-03",
-  "roadmapEndStateClaim": "frontend-to-instruction-pack, advisory backend, proposal/review, activation previews including repo-local advisory hook script bundle materialization, analyzer/clarification previews, and Phase 13 controlled apply/evidence/proof/enforcement readiness boundaries are represented; approved apply dry-run, guarded graph-delta apply reporting, Evidence decision, accepted Evidence, Runtime Evidence Satisfaction readiness, runtime-gated Equivalence readiness, and runtime-gated Scope/CI readiness now exist as deterministic surfaces; actual Codex execution, hook installation/activation, runtime Evidence satisfaction, equivalence proof, scope/CI enforcement, CI required checks, branch protection, diff rejection, and approval/user-acceptance automation remain intentionally unimplemented.",
+  "roadmapEndStateClaim": "frontend-to-instruction-pack, advisory backend, proposal/review, activation previews including repo-local advisory hook script bundle materialization, analyzer/clarification previews, project-specific extension readiness, and controlled apply/evidence/proof/enforcement readiness boundaries are represented; Project Profile and Extension Manifest validation, approved apply dry-run, guarded graph-delta apply reporting, Evidence decision, accepted Evidence, Runtime Evidence Satisfaction readiness, runtime-gated Equivalence readiness, and runtime-gated Scope/CI readiness now exist as deterministic surfaces; actual Codex execution, extension code execution, provider/network access, hook installation/activation, runtime Evidence satisfaction, equivalence proof, scope/CI enforcement, CI required checks, branch protection, diff rejection, and approval/user-acceptance automation remain intentionally unimplemented.",
   "sourceAuthorityBoundary": "This audit summarizes existing artifacts and commands. It is not graph-source, not approval, not runtime Evidence satisfaction, not equivalence proof, not enforcement, and not graph delta apply.",
   "phaseSummary": [
     {
@@ -79,6 +79,20 @@
         "examples/valid/todo-app-devview-run/generated/request-ir-candidate.revised.add-todo-runtime-evidence-only.preview.json"
       ],
       "remaining": "No LLM provider execution or automatic Request IR generation is implemented; external candidate import remains candidate-only."
+    },
+    {
+      "phase": "Project-Specific Extension System Foundation",
+      "status": "readiness-report-connected-no-extension-execution",
+      "evidence": [
+        "cli/src/core/extension-readiness.ts",
+        "schemas/devview-project-profile.schema.json",
+        "schemas/devview-extension-manifest.schema.json",
+        "examples/valid/todo-app-devview-run/.devview/project-profile.json",
+        "examples/valid/todo-app-devview-run/.devview/extensions/todo-app-view-tree.manifest.json",
+        "examples/valid/todo-app-devview-run/.devview/extensions/todo-app-evidence.manifest.json",
+        "examples/valid/todo-app-devview-run/generated/devview-extension-readiness.runtime-evidence-only.preview.json"
+      ],
+      "remaining": "Project-specific extension manifests are declarative and report-only. Controlled adapters, permission/RBAC, execution sandboxing, provider/network access, and policy extension authority remain future-only."
     },
     {
       "phase": "Phase 8 Graph Traversal Plan / View Tree",
@@ -195,7 +209,8 @@
     "graph read-model create-accepted-evidence-record",
     "graph read-model report-runtime-evidence-satisfaction-readiness",
     "graph read-model report-equivalence-proof-readiness",
-    "graph read-model report-scope-ci-enforcement-readiness"
+    "graph read-model report-scope-ci-enforcement-readiness",
+    "extensions report-readiness"
   ],
   "explicitlyNotImplemented": [
     "Codex execution",
@@ -203,6 +218,8 @@
     "active hook session runtime",
     "guided or strict blocking",
     "LLM/API provider execution",
+    "project-specific extension code execution",
+    "project-specific extension provider/network access",
     "automatic Request IR generation",
     "approval automation",
     "runtime Evidence satisfaction",
@@ -235,7 +252,12 @@
     "branchProtectionChanged": false,
     "diffRejectionEnabled": false,
     "strictModeEnabled": false,
-    "guidedEnforcementEnabled": false
+    "guidedEnforcementEnabled": false,
+    "extensionExecutionAllowed": false,
+    "extensionsExecuted": false,
+    "providerInvoked": false,
+    "networkCallMade": false,
+    "shellCommandsExecuted": false
   },
   "verificationCommands": [
     "npm run build:cli",
@@ -245,5 +267,5 @@
     "git diff --check",
     "git diff --cached --check"
   ],
-  "nonExecutionBoundary": "This roadmap completion audit is an evidence summary only. It does not implement missing future actions, execute Codex, call an LLM, activate hooks, record new human decisions, approve proposals, apply graph deltas, mutate graph-source, accept Evidence, satisfy runtime Evidence, prove equivalence, enforce scope, configure CI, configure required checks, change branch protection, reject diffs, or replace user acceptance."
+  "nonExecutionBoundary": "This roadmap completion audit is an evidence summary only. It does not implement missing future actions, execute Codex or extension code, call an LLM/API/provider, make network calls, run shell commands, activate hooks, record new human decisions, approve proposals, apply graph deltas, mutate graph-source, accept Evidence, satisfy runtime Evidence, prove equivalence, enforce scope, configure CI, configure required checks, change branch protection, reject diffs, or replace user acceptance."
 }

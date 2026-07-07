@@ -346,6 +346,8 @@ Options:
                        Runtime Evidence Satisfaction readiness file for graph read-model report-equivalence-proof-readiness or report-devview-baseline.
   --equivalence-proof-readiness <file>
                        Equivalence Proof readiness file for graph read-model report-scope-ci-enforcement-readiness or report-devview-baseline.
+  --extension-readiness <file>
+                       Project-specific extension readiness report for graph read-model report-devview-baseline.
   --scope-ci-enforcement-readiness <file>
                        Scope/CI Enforcement readiness file for graph read-model report-devview-baseline.
   --policy <file>      Policy boundary file for graph read-model report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, record-evidence-decision, create-accepted-evidence-record, report-equivalence-proof-readiness, or report-scope-ci-enforcement-readiness.

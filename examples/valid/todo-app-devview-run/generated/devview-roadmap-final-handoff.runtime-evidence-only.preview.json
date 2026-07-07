@@ -6,7 +6,7 @@
   "handoffDate": "2026-07-03",
   "handoffScope": "roadmap-end-state-handoff-no-new-authority",
   "sourceRoadmapCompletionAudit": "examples/valid/todo-app-devview-run/generated/devview-roadmap-completion-audit.runtime-evidence-only.preview.json",
-  "handoffConclusion": "DevView's roadmap is complete to the intended safe MVP boundary for this calibration: natural-language frontend candidate handling reaches instruction pack preview through deterministic graph/slice/contract stages; advisory backend report/proposal/review surfaces exist; analyzer and clarification are candidate-only; Hook Gateway activation is represented through non-active previews and repo-local advisory script bundle materialization; Phase 13 approved apply dry-run, guarded apply reporting, Evidence decision/accepted Evidence, Runtime Evidence Satisfaction readiness, Equivalence readiness, and Scope/CI readiness are represented while runtime satisfaction, equivalence proof, enforcement, hook activation, approval automation, and user acceptance automation remain disabled.",
+  "handoffConclusion": "DevView's roadmap is complete to the intended safe MVP boundary for this calibration: natural-language frontend candidate handling reaches instruction pack preview through deterministic graph/slice/contract stages; advisory backend report/proposal/review surfaces exist; analyzer and clarification are candidate-only; project-specific extension readiness now represents declarative Project Profile and Extension Manifest validation without executing extension code; Hook Gateway activation is represented through non-active previews and repo-local advisory script bundle materialization; approved apply dry-run, guarded apply reporting, Evidence decision/accepted Evidence, Runtime Evidence Satisfaction readiness, Equivalence readiness, and Scope/CI readiness are represented while runtime satisfaction, equivalence proof, enforcement, hook activation, extension execution, approval automation, and user acceptance automation remain disabled.",
   "safeEndStateReached": true,
   "safeEndStateMeaning": "Reached means the control/compiler path is represented and reviewable without granting execution, approval, graph mutation, Evidence acceptance, equivalence proof, scope enforcement, CI enforcement, or hook activation authority.",
   "notProductGeneralAvailability": true,
@@ -30,6 +30,15 @@
       ],
       "requiredNextHumanAction": "Use external or future analyzer output only as Request IR Candidate input, then rerun validation before traversal.",
       "authorityBoundary": "No LLM provider is implemented; external candidate import remains candidate-only."
+    },
+    {
+      "laneId": "project-specific-extension-foundation",
+      "laneStatus": "report-only-extension-readiness-ready",
+      "terminalArtifacts": [
+        "examples/valid/todo-app-devview-run/generated/devview-extension-readiness.runtime-evidence-only.preview.json"
+      ],
+      "requiredNextHumanAction": "Review declarative project profile and extension manifest capabilities before designing controlled adapters.",
+      "authorityBoundary": "Extension manifests are declarative only; no extension code, provider, network, shell, mutation, runtime satisfaction, equivalence, or enforcement authority is granted."
     },
     {
       "laneId": "activation-preview",
@@ -89,6 +98,12 @@
     },
     {
       "priority": 4,
+      "workItem": "Design controlled project-specific extension adapters",
+      "reason": "Project profile and extension manifest readiness are represented, but adapters remain declarative and non-executing until a permission, audit, and RBAC model is designed.",
+      "forbiddenShortcut": "Do not execute extension code, call providers, make network calls, run shell commands, mutate graph-source, or let extension manifests grant policy authority."
+    },
+    {
+      "priority": 5,
       "workItem": "Design runtime satisfaction, equivalence, and enforcement lifecycles after the accepted Evidence boundary",
       "reason": "Phase 13 is connected through approved apply dry-run and accepted Evidence, but runtime satisfaction readiness is blocked by obligation mismatch and downstream proof/enforcement remain disabled.",
       "forbiddenShortcut": "Do not apply graph deltas, mutate graph-source, satisfy runtime Evidence, prove equivalence, enforce scope, configure CI, require checks, change branch protection, or reject diffs from current readiness previews."
@@ -100,6 +115,8 @@
     "active hook session runtime",
     "guided or strict blocking",
     "LLM/API provider execution",
+    "project-specific extension code execution",
+    "project-specific extension provider/network access",
     "automatic Request IR generation",
     "approval automation",
     "graph-source mutation from the current Todo calibration",
@@ -147,8 +164,13 @@
     "hookScriptsInstalled": false,
     "hookGatewayActive": false,
     "llmInvoked": false,
-    "codexExecutionTriggered": false
+    "codexExecutionTriggered": false,
+    "extensionExecutionAllowed": false,
+    "extensionsExecuted": false,
+    "providerInvoked": false,
+    "networkCallMade": false,
+    "shellCommandsExecuted": false
   },
   "humanReviewRequired": true,
-  "nonExecutionBoundary": "This final handoff preview summarizes roadmap readiness only. It does not execute Codex, call an LLM, activate hooks, record new human decisions, approve proposals, apply graph deltas, mutate graph-source, accept Evidence, satisfy runtime Evidence, prove equivalence, enforce scope, configure CI, configure required checks, change branch protection, reject diffs, or replace user acceptance."
+  "nonExecutionBoundary": "This final handoff preview summarizes roadmap readiness only. It does not execute Codex or extension code, call an LLM/API/provider, make network calls, run shell commands, activate hooks, record new human decisions, approve proposals, apply graph deltas, mutate graph-source, accept Evidence, satisfy runtime Evidence, prove equivalence, enforce scope, configure CI, configure required checks, change branch protection, reject diffs, or replace user acceptance."
 }
