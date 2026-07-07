@@ -27,8 +27,6 @@ git -c core.longpaths=true diff --check
 ## Compatibility Rules
 
 - Keep public DevView terminology canonical.
-- Keep historical migration material internal unless a reviewed slice rewrites it.
-- Preserve hidden legacy guards for existing user repositories until an explicit migration lifecycle retires them.
+- Keep release artifacts focused on DevView production surfaces.
+- Treat compatibility as beginning at the first DevView production baseline.
 - Do not remove or rename public paths without migration notes and validation.
-
-Historical release policy text is retained in `docs/internal-legacy/release-history-legacy-release-policy.md`.

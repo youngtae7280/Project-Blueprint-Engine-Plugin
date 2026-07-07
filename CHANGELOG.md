@@ -7,6 +7,5 @@
   guarded update terminology.
 - Added DevView baseline, legacy audit, cleanup dry-run, runtime evidence readiness, equivalence readiness, Scope/CI
   readiness, and guarded graph update report surfaces.
-- Preserved historical migration material under internal legacy archives.
-
-Historical release notes are retained in `docs/internal-legacy/release-history-legacy-changelog.md`.
+- Removed historical migration material from the active release surface; DevView production compatibility begins at the
+  DevView baseline.
