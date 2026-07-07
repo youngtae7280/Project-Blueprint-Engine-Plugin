@@ -22,7 +22,7 @@ const requiredTemplates = [
   'templates/revision-manifest.template.json',
   'templates/devview-state.template.json',
   'templates/devview-routing-contract-template.md',
-  'templates/pbe-status-card-template.md',
+  'templates/devview-status-card-template.md',
 ]
 
 export function runTemplatesValidator({ root }) {
@@ -35,7 +35,7 @@ export function runTemplatesValidator({ root }) {
           validator,
           file: relativePath,
           code: 'REQUIRED_TEMPLATE_MISSING',
-          message: `${relativePath} is required by the PBE protocol.`,
+          message: `${relativePath} is required by the DevView protocol.`,
           suggestedFix: `Restore ${relativePath}.`,
         }),
       )

@@ -34,7 +34,7 @@ Status: devview-legacy-artifact-inventory-pass
 - `schemas/impact-tree.schema.json` (1777 bytes)
 - `schemas/legacy-control-inventory.schema.json` (3595 bytes)
 - `schemas/parallel-safety-contract.schema.json` (970 bytes)
-- `schemas/pbe-invariants.schema.json` (742 bytes)
+- `schemas/devview-invariants.schema.json` (733 bytes)
 - `schemas/devview-state.schema.json` (2370 bytes)
 - `schemas/product-patch-tree.schema.json` (1982 bytes)
 - `schemas/product-tree.schema.json` (6632 bytes)

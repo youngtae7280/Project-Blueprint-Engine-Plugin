@@ -83,8 +83,8 @@
       "bytes": 970
     },
     {
-      "path": "schemas/pbe-invariants.schema.json",
-      "bytes": 742
+      "path": "schemas/devview-invariants.schema.json",
+      "bytes": 733
     },
     {
       "path": "schemas/devview-state.schema.json",

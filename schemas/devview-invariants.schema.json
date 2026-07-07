@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/pbe-invariants.schema.json",
-  "title": "PBE Invariants",
+  "$id": "https://local/devview/devview-invariants.schema.json",
+  "title": "DevView Invariants",
   "type": "object",
   "required": ["schemaVersion", "invariants"],
   "properties": {

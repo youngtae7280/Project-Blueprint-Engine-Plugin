@@ -36,7 +36,7 @@ export const defaultArtifacts = {
   uiUxConfirmation: '.pbe/blueprint/ui-ux-confirmation.md',
   uiUxConfirmationLog: '.pbe/blueprint/ui-ux-confirmation-log.md',
   sourceOfTruthMatrix: '.pbe/blueprint/source-of-truth-matrix.md',
-  pbeInvariants: '.pbe/blueprint/pbe-invariants.md',
+  devviewInvariants: '.pbe/blueprint/devview-invariants.md',
   visualReference: '.pbe/blueprint/visual-reference.json',
   visualReferenceMarkdown: '.pbe/blueprint/visual-reference.md',
   uiThemeSpec: '.pbe/blueprint/ui-theme-spec.md',

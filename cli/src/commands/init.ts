@@ -74,8 +74,8 @@ const textTemplateTargets: Array<{ template?: string; target: string; fallback: 
       fallback: () => '# DevView Routing Contract\n\n',
     },
     {
-      template: 'pbe-invariants-template.md',
-      target: defaultArtifacts.pbeInvariants,
+      template: 'devview-invariants-template.md',
+      target: defaultArtifacts.devviewInvariants,
       fallback: () => '# DevView Invariants\n\n',
     },
     {
@@ -103,7 +103,11 @@ export async function initCommand(context: CommandContext): Promise<CommandResul
 
   const storageRoot = projectStorageRoot(context.options.root)
   const resolveStorageTarget = (target: string): string => {
-    if (target === defaultArtifacts.devviewState || target === defaultArtifacts.devviewRoutingContract) {
+    if (
+      target === defaultArtifacts.devviewState ||
+      target === defaultArtifacts.devviewRoutingContract ||
+      target === defaultArtifacts.devviewInvariants
+    ) {
       return target.replace(/^\.pbe\//, '.devview/')
     }
     return storageRoot === '.devview' ? target.replace(/^\.pbe\//, '.devview/') : target

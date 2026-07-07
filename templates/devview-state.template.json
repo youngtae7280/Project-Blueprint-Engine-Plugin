@@ -64,7 +64,7 @@
     "projectBrief": ".pbe/blueprint/project-brief.md",
     "devviewRoutingContract": ".pbe/blueprint/devview-routing-contract.md",
     "sourceOfTruthMatrix": ".pbe/blueprint/source-of-truth-matrix.md",
-    "pbeInvariants": ".pbe/blueprint/pbe-invariants.md",
+    "devviewInvariants": ".devview/blueprint/devview-invariants.md",
     "foundationContract": ".pbe/blueprint/foundation-contract.md",
     "parallelSafetyContract": ".pbe/blueprint/parallel-safety-contract.md",
     "requirementTree": ".pbe/blueprint/requirement-tree.json",

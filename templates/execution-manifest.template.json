@@ -51,7 +51,7 @@
     ".pbe/blueprint/execution-strategy.json",
     ".pbe/blueprint/execution-strategy.md",
     ".pbe/blueprint/source-of-truth-matrix.md",
-    ".pbe/blueprint/pbe-invariants.md",
+    ".devview/blueprint/devview-invariants.md",
     ".pbe/blueprint/foundation-contract.md",
     ".pbe/blueprint/parallel-safety-contract.md"
   ],
