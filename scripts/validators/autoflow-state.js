@@ -9,11 +9,7 @@ export function runAutoflowStateValidator({ root }) {
     data: state,
     issue,
     relativePath,
-  } = readFirstOptionalJson(
-    root,
-    ['.devview/blueprint/devview-state.json', '.devview/blueprint/pbe-state.json', '.devview/blueprint/pbe-state.json'],
-    validator,
-  )
+  } = readFirstOptionalJson(root, ['.devview/blueprint/devview-state.json'], validator)
   if (issue) {
     issues.push(issue)
   }

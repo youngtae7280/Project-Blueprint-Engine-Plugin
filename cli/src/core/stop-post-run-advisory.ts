@@ -1,5 +1,6 @@
 import path from 'node:path'
 import { readJsonSafe, readTextSafe, relativePath, writeJsonAtomic, writeTextAtomic } from './fs.js'
+import { hasDevViewControlDirectory, hasHiddenControlDirectorySegment, isCodexHookOrConfigPath } from './path-safety.js'
 import type { IssueSeverity } from './types.js'
 
 const REPORTER_NAME = 'StopPostRunAdvisoryReporter'
@@ -969,18 +970,13 @@ function allSourceArtifacts(inputs: LoadedInputs): Array<{
 
 function classifyReservedOutputPath(root: string, outputPath: string): string | null {
   const relative = relativePath(root, outputPath).replaceAll('\\', '/')
-  if (relative === '.codex/config.json') {
+  if (isCodexHookOrConfigPath(relative) && relative.endsWith('config.json')) {
     return 'active Codex config path'
   }
-  if (relative.startsWith('.codex/hooks/')) {
+  if (isCodexHookOrConfigPath(relative) && relative.includes('/hooks/')) {
     return 'active Codex hook script path'
   }
-  if (
-    relative === '.pbe' ||
-    relative.startsWith('.pbe/') ||
-    relative === '.devview' ||
-    relative.startsWith('.devview/')
-  ) {
+  if (hasDevViewControlDirectory(relative) || hasHiddenControlDirectorySegment(relative)) {
     return 'DevView source/control/evidence path'
   }
   return null

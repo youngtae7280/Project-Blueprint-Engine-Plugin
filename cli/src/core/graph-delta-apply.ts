@@ -3,6 +3,11 @@ import { copyFile, mkdir, readFile, rename, rm, writeFile } from 'node:fs/promis
 import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { readJsonSafe, relativePath, writeJsonAtomic, writeTextAtomic } from './fs.js'
+import {
+  hasCodexControlDirectory,
+  hasDevViewControlDirectory,
+  hasHiddenControlDirectorySegment,
+} from './path-safety.js'
 import { projectGraphSourceReadModelToFile } from './read-model-evidence.js'
 
 type JsonRecord = Record<string, unknown>
@@ -1124,9 +1129,9 @@ function renderMarkdownTable(header: [string, string], rows: string[][]): string
 function isProtectedGraphSourceTargetPath(root: string, filePath: string): boolean {
   const relative = relativePath(root, filePath)
   return (
-    relative.startsWith('.pbe/') ||
-    relative.startsWith('.devview/') ||
-    relative.startsWith('.codex/') ||
+    hasDevViewControlDirectory(relative) ||
+    hasCodexControlDirectory(relative) ||
+    hasHiddenControlDirectorySegment(relative) ||
     relative.includes('/generated/') ||
     /(^|\/)(evidence|proposal|review|decision|hook|config)(-|\/|\.)/i.test(relative) ||
     /read-model|runtime-report|source-authority|project-memory/i.test(relative)
@@ -1136,10 +1141,9 @@ function isProtectedGraphSourceTargetPath(root: string, filePath: string): boole
 function isProtectedOutputPath(root: string, filePath: string): boolean {
   const relative = relativePath(root, filePath)
   return (
-    relative.startsWith('.pbe/') ||
-    relative.startsWith('.devview/') ||
-    relative === '.codex/config.json' ||
-    relative.startsWith('.codex/hooks/') ||
+    hasDevViewControlDirectory(relative) ||
+    hasCodexControlDirectory(relative) ||
+    hasHiddenControlDirectorySegment(relative) ||
     /(^|\/)graph-source\.json$/i.test(relative)
   )
 }
@@ -1170,7 +1174,6 @@ function looksLikePath(value: string): boolean {
   return (
     /[\\/]/.test(value) ||
     /\.(json|md|txt|html|yml|yaml)$/i.test(value) ||
-    value.startsWith('.pbe/') ||
     value.startsWith('.devview/') ||
     value.startsWith('.codex/')
   )

@@ -1,5 +1,6 @@
 import path from 'node:path'
 import { readJsonSafe, relativePath, writeJsonAtomic, writeTextAtomic } from './fs.js'
+import { hasHiddenControlDirectorySegment, isDevViewEvidencePath, isDevViewSourceControlPath } from './path-safety.js'
 import {
   reviseRequestIrCandidateFromClarificationAnswers,
   type RequestIrCandidateRevisionFinding,
@@ -358,15 +359,10 @@ function classifyReservedSourcePath(filePath: string): string | null {
   if (normalized.endsWith('/graph-source.json')) {
     return 'graph-source path'
   }
-  if (normalized.includes('/.pbe/evidence/') || normalized.includes('/.devview/evidence/')) {
+  if (isDevViewEvidencePath(normalized)) {
     return 'evidence authority path'
   }
-  if (
-    normalized.includes('/.pbe/control/') ||
-    normalized.includes('/.pbe/tree/') ||
-    normalized.includes('/.devview/control/') ||
-    normalized.includes('/.devview/tree/')
-  ) {
+  if (isDevViewSourceControlPath(normalized) || hasHiddenControlDirectorySegment(normalized)) {
     return 'DevView source/control path'
   }
   if (

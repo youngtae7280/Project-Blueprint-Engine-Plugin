@@ -1,6 +1,11 @@
 import { createHash } from 'node:crypto'
 import path from 'node:path'
 import { readJsonSafe, readTextSafe, relativePath, writeJsonAtomic, writeTextAtomic } from './fs.js'
+import {
+  hasCodexControlDirectory,
+  hasDevViewControlDirectory,
+  hasHiddenControlDirectorySegment,
+} from './path-safety.js'
 
 type JsonRecord = Record<string, unknown>
 
@@ -809,15 +814,10 @@ function isConcretePath(value: string): boolean {
 function isProtectedControlPath(root: string, filePath: string): boolean {
   const relative = relativePath(root, filePath)
   return (
-    relative.startsWith('.pbe/') ||
-    relative.startsWith('.devview/') ||
-    relative.startsWith('.codex/') ||
-    relative.includes('/.pbe/') ||
-    relative.includes('/.devview/') ||
-    relative.includes('/.codex/') ||
+    hasDevViewControlDirectory(relative) ||
+    hasCodexControlDirectory(relative) ||
+    hasHiddenControlDirectorySegment(relative) ||
     /\.codex\/hooks/i.test(relative) ||
-    /^\.pbe\/evidence\//i.test(relative) ||
-    /^\.devview\/evidence\//i.test(relative) ||
     /(^|\/)(graph-source|source-authority|project-memory)(\.|-)/i.test(relative)
   )
 }

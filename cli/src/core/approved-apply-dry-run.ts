@@ -1,5 +1,6 @@
 import path from 'node:path'
 import { readJsonSafe, relativePath, writeJsonAtomic, writeTextAtomic } from './fs.js'
+import { hasDevViewControlDirectory, hasHiddenControlDirectorySegment, isCodexHookOrConfigPath } from './path-safety.js'
 
 type JsonRecord = Record<string, unknown>
 
@@ -1022,15 +1023,10 @@ function buildProtectedPathMap(root: string, input: LoadedInputs): Map<string, s
 
 function classifyProtectedLocation(root: string, resolvedPath: string): string | null {
   const relative = relativePath(root, resolvedPath)
-  if (relative === '.codex/config.json' || relative.startsWith('.codex/hooks/')) {
+  if (isCodexHookOrConfigPath(relative)) {
     return 'Codex hook/config path'
   }
-  if (
-    relative === '.pbe' ||
-    relative.startsWith('.pbe/') ||
-    relative === '.devview' ||
-    relative.startsWith('.devview/')
-  ) {
+  if (hasDevViewControlDirectory(relative) || hasHiddenControlDirectorySegment(relative)) {
     return 'DevView source/control path'
   }
   return null

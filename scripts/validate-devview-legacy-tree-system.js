@@ -210,10 +210,6 @@ function validateOptionalTreeTargets() {
 }
 
 function resolveTargetPath(relativePath) {
-  const devviewPath = relativePath.replace(/^\.pbe\//, '.devview/')
-  if (existsSync(path.join(targetRoot, devviewPath))) {
-    return devviewPath
-  }
   return relativePath
 }
 

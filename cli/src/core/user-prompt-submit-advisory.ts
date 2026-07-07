@@ -1,5 +1,6 @@
 import path from 'node:path'
 import { readJsonSafe, readTextSafe, relativePath, writeJsonAtomic, writeTextAtomic } from './fs.js'
+import { hasHiddenControlDirectorySegment, isCodexHookOrConfigPath } from './path-safety.js'
 import type { IssueSeverity } from './types.js'
 
 const REPORTER_NAME = 'UserPromptSubmitAdvisoryReporter'
@@ -869,11 +870,11 @@ function classifyReservedSourcePath(filePath: string): string | null {
   if (normalized.endsWith('/graph-source.json')) {
     return 'graph-source path'
   }
-  if (normalized.includes('/.pbe/') || normalized.includes('/.devview/')) {
-    return 'DevView source/control/evidence path'
-  }
-  if (normalized.includes('/.codex/hooks/') || normalized.endsWith('/.codex/config.json')) {
+  if (isCodexHookOrConfigPath(normalized)) {
     return 'active hook/config path'
+  }
+  if (hasHiddenControlDirectorySegment(normalized)) {
+    return 'DevView source/control/evidence path'
   }
   if (
     normalized.endsWith('/generated/generated-read-model.json') ||

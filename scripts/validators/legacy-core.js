@@ -14,8 +14,6 @@ const errors = []
 const targetContext = {}
 const schemaIdByTargetLabel = new Map([
   ['.devview/blueprint/devview-state.json', 'https://local/devview/devview-state.schema.json'],
-  ['.devview/blueprint/pbe-state.json', 'https://local/devview/devview-state.schema.json'],
-  ['.devview/blueprint/pbe-state.json', 'https://local/devview/devview-state.schema.json'],
   ['.devview/blueprint/requirement-tree.json', 'https://local/project-blueprint-engine/requirement-tree.schema.json'],
   ['.devview/blueprint/requirement-tree.json', 'https://local/project-blueprint-engine/requirement-tree.schema.json'],
   ['.devview/blueprint/ui-ux-preview.json', 'https://local/project-blueprint-engine/ui-ux-preview.schema.json'],
@@ -211,40 +209,9 @@ const requiredPaths = [
   'schemas/hardware-readiness-ledger.schema.json',
   'schemas/visual-verification-profile.schema.json',
   'schemas/verification-miss-log.schema.json',
-  'docs/internal-legacy/usage.md',
-  'docs/internal-legacy/workflow.md',
-  'docs/internal-legacy/autoflow.md',
-  'docs/internal-legacy/pbe-routing.md',
-  'docs/internal-legacy/pbe-philosophy.md',
-  'docs/internal-legacy/execution-profiles.md',
-  'docs/internal-legacy/source-of-truth-matrix.md',
   'docs/foundation-contract.md',
   'docs/parallel-safety-contract.md',
   'docs/parallel-conflict-recovery.md',
-  'docs/internal-legacy/state-machine.md',
-  'docs/internal-legacy/golden-scenarios.md',
-  'docs/internal-legacy/traceability-rules.md',
-  'docs/internal-legacy/file-format.md',
-  'docs/internal-legacy/rpd-tree-walk.md',
-  'docs/internal-legacy/ambiguity-gate.md',
-  'docs/internal-legacy/ears-acceptance-criteria.md',
-  'docs/internal-legacy/ui-ux-confirmation-gate.md',
-  'docs/internal-legacy/work-process-designer.md',
-  'docs/internal-legacy/execution-planner.md',
-  'docs/internal-legacy/parallel-execution.md',
-  'docs/internal-legacy/verification-designer.md',
-  'docs/internal-legacy/coverage-auditor.md',
-  'docs/internal-legacy/ux-auditor.md',
-  'docs/internal-legacy/acep.md',
-  'docs/internal-legacy/traceability.md',
-  'docs/internal-legacy/ui-ux-spec.md',
-  'docs/internal-legacy/evidence-and-coverage.md',
-  'docs/internal-legacy/result-review.md',
-  'docs/internal-legacy/revision-rpd.md',
-  'docs/internal-legacy/revision-pack.md',
-  'docs/internal-legacy/user-acceptance.md',
-  'docs/internal-legacy/parity-completeness-profile.md',
-  'docs/internal-legacy/examples.md',
   'AGENTS.md',
 ]
 
@@ -408,9 +375,9 @@ function validateOptionalDevViewTarget() {
     return
   }
 
-  const { root: storageRoot, prefix, canonicalStatePath, legacyStatePath } = storage
+  const { root: storageRoot, prefix, canonicalStatePath } = storage
   const blueprintRoot = path.join(storageRoot, 'blueprint')
-  const statePath = existsSync(canonicalStatePath) ? canonicalStatePath : legacyStatePath
+  const statePath = canonicalStatePath
   const treePath = path.join(blueprintRoot, 'requirement-tree.json')
   const previewPath = path.join(blueprintRoot, 'ui-ux-preview.json')
   const workDesignPath = path.join(blueprintRoot, 'work-design.json')
@@ -441,7 +408,7 @@ function validateOptionalDevViewTarget() {
     const state = parseTargetJson(statePath, stateLabel)
     if (state) {
       targetContext.state = state
-      validatePbeState(state)
+      validateDevViewState(state)
     }
   }
 
@@ -525,27 +492,17 @@ function validateOptionalDevViewTarget() {
   parseOptionalControlJson(visualVerificationPath, `${prefix}/control/visual-verification-profile.json`)
   parseOptionalControlJson(verificationMissPath, `${prefix}/control/verification-miss-log.json`)
 
-  validatePbeRouting(targetContext)
-  validatePbeCrossArtifacts(targetContext)
+  validateDevViewRouting(targetContext)
+  validateDevViewCrossArtifacts(targetContext)
 }
 
 function resolveTargetStorage() {
   const devviewRoot = path.join(targetRoot, '.devview')
-  const pbeRoot = path.join(targetRoot, '.pbe')
   if (existsSync(devviewRoot)) {
     return {
       root: devviewRoot,
       prefix: '.devview',
       canonicalStatePath: path.join(devviewRoot, 'blueprint', 'devview-state.json'),
-      legacyStatePath: path.join(devviewRoot, 'blueprint', 'pbe-state.json'),
-    }
-  }
-  if (existsSync(pbeRoot)) {
-    return {
-      root: pbeRoot,
-      prefix: '.pbe',
-      canonicalStatePath: path.join(pbeRoot, 'blueprint', 'devview-state.json'),
-      legacyStatePath: path.join(pbeRoot, 'blueprint', 'pbe-state.json'),
     }
   }
   return null
@@ -773,7 +730,7 @@ function validateUiUxPreview(preview) {
   }
 }
 
-function validatePbeState(state) {
+function validateDevViewState(state) {
   if (state.deliveryStatus === 'accepted') {
     if (!state.acceptance) {
       errors.push('DevView state deliveryStatus accepted requires acceptance metadata')
@@ -1317,17 +1274,13 @@ function validateOptionalReviewTarget() {
   }
 }
 
-function validatePbeRouting(context) {
+function validateDevViewRouting(context) {
   const autoflow = context.state?.autoflow
   if (!autoflow) {
     return
   }
 
-  if (
-    context.state.artifacts &&
-    !context.state.artifacts.devviewRoutingContract &&
-    !context.state.artifacts.pbeRoutingContract
-  ) {
+  if (context.state.artifacts && !context.state.artifacts.devviewRoutingContract) {
     errors.push('DevView state artifacts must include devviewRoutingContract when routing is active')
   }
 
@@ -1358,11 +1311,11 @@ function validatePbeRouting(context) {
     autoflow.currentGate !== 'implementation_scope' &&
     !autoflow.lastFailure
   ) {
-    errors.push('PBE routing cannot continue while dependency impact decisions are pending')
+    errors.push('DevView routing cannot continue while dependency impact decisions are pending')
   }
 }
 
-function validatePbeCrossArtifacts(context) {
+function validateDevViewCrossArtifacts(context) {
   const requirementIds = collectRequirementIds(context.requirementTree)
   const workGraphNodeIds = collectWorkGraphNodeIds(context.workGraph)
   const workUnitIds = collectWorkUnitIds(context.workDesign)
@@ -1488,7 +1441,7 @@ function validateAcepCrossArtifacts(context) {
 }
 
 function validateOptionalRevisionTargets() {
-  const revisionsRoot = path.join(targetRoot, '.pbe', 'revisions')
+  const revisionsRoot = path.join(targetRoot, '.devview', 'revisions')
   if (!existsSync(revisionsRoot)) {
     return
   }
@@ -1788,9 +1741,6 @@ function validateUiUxSpec(uiUxSpec) {
 
 function resolveAcepReference(acepRoot, reference) {
   if (reference.startsWith('.devview/')) {
-    return path.join(targetRoot, reference)
-  }
-  if (reference.startsWith('.pbe\\')) {
     return path.join(targetRoot, reference)
   }
   return path.join(acepRoot, reference)

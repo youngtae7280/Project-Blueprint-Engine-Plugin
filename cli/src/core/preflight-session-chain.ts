@@ -1,6 +1,12 @@
 import path from 'node:path'
 import { readJsonSafe, relativePath, writeJsonAtomic, writeTextAtomic } from './fs.js'
 import {
+  hasHiddenControlDirectorySegment,
+  isCodexHookOrConfigPath,
+  isDevViewEvidencePath,
+  isDevViewSourceControlPath,
+} from './path-safety.js'
+import {
   validateRequestIrCandidateFile,
   type RequestIrCandidateValidationFileResult,
 } from './request-ir-candidate-validator.js'
@@ -818,19 +824,14 @@ function classifyReservedSourcePath(filePath: string): string | null {
   if (normalized.endsWith('/graph-source.json')) {
     return 'graph-source path'
   }
-  if (normalized.includes('/.pbe/evidence/') || normalized.includes('/.devview/evidence/')) {
+  if (isDevViewEvidencePath(normalized)) {
     return 'evidence authority path'
   }
-  if (
-    normalized.includes('/.pbe/control/') ||
-    normalized.includes('/.pbe/tree/') ||
-    normalized.includes('/.devview/control/') ||
-    normalized.includes('/.devview/tree/')
-  ) {
-    return 'DevView source/control path'
-  }
-  if (normalized.includes('/.codex/hooks/') || normalized.endsWith('/.codex/config.json')) {
+  if (isCodexHookOrConfigPath(normalized)) {
     return 'active hook/config path'
+  }
+  if (isDevViewSourceControlPath(normalized) || hasHiddenControlDirectorySegment(normalized)) {
+    return 'DevView source/control path'
   }
   if (
     normalized.endsWith('/generated/generated-read-model.json') ||
