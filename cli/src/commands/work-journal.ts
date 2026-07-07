@@ -36,6 +36,7 @@ export async function workJournalRenderCommand(context: CommandContext): Promise
       equivalenceProofReadiness: context.options.equivalenceProofReadiness,
       equivalenceProofRecord: context.options.equivalenceProofRecord,
       scopeCiEnforcementReadiness: context.options.scopeCiEnforcementReadiness,
+      scopeCiEnforcementRecord: context.options.scopeCiEnforcementRecord,
       proposal: context.options.proposal,
       applyReport: context.options.applyReport,
       output: context.options.output,

@@ -3711,6 +3711,7 @@ export async function graphReadModelReportDevViewBaselineCommand(context: Comman
       runtimeEvidenceSatisfactionReadiness: context.options.runtimeEvidenceSatisfactionReadiness,
       equivalenceProofReadiness: context.options.equivalenceProofReadiness,
       scopeCiEnforcementReadiness: context.options.scopeCiEnforcementReadiness,
+      scopeCiEnforcementRecord: context.options.scopeCiEnforcementRecord,
       output: context.options.output,
       markdown: context.options.markdown,
     })

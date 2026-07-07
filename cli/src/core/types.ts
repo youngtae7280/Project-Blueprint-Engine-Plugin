@@ -170,6 +170,7 @@ export interface CliOptions {
   hookActivationChain?: string
   extensionReadiness?: string
   scopeCiEnforcementReadiness?: string
+  scopeCiEnforcementRecord?: string
   hookHealth?: string
   userPromptAdvisory?: string
   preflightSession?: string

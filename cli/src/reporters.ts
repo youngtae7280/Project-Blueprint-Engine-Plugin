@@ -359,6 +359,8 @@ Options:
                        Project-specific extension readiness report for graph read-model report-devview-baseline.
   --scope-ci-enforcement-readiness <file>
                        Scope/CI Enforcement readiness file for graph read-model record-scope-ci-enforcement or report-devview-baseline.
+  --scope-ci-enforcement-record <file>
+                       Scope/CI Enforcement record file for graph read-model report-devview-baseline or work-journal render.
   --policy <file>      Policy boundary file for graph read-model report-graph-source-mutation-readiness, report-evidence-acceptance-readiness, record-evidence-decision, create-accepted-evidence-record, report-equivalence-proof-readiness, record-equivalence-proof, or report-scope-ci-enforcement-readiness.
   --readiness <file>   Optional Evidence Acceptance readiness provenance for graph read-model record-evidence-decision or create-accepted-evidence-record.
   --source-evidence <file>

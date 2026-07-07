@@ -54,6 +54,7 @@ describe('DevView Work Journal renderer', () => {
     )
     expect(run.authoritySummary.runtimeEvidence.displayState).toBe('preview-only-blocked')
     expect(run.authoritySummary.equivalenceProof.displayState).toBe('preview-only-blocked')
+    expect(run.authoritySummary.scopeCi.displayState).toBe('preview-only-blocked')
     expect(run.authoritySummary.journalAuthorityFlags.runtimeEvidenceSatisfied).toBe(false)
     expect(run.authoritySummary.journalAuthorityFlags.equivalenceProven).toBe(false)
     expect(run.flow.map((step: { label: string }) => step.label)).toEqual([
@@ -81,6 +82,7 @@ describe('DevView Work Journal renderer', () => {
         'equivalence-proof-readiness',
         'equivalence-proof-record',
         'scope-ci',
+        'scope-ci-enforcement-record',
         'graph-delta',
         'guarded-update',
       ]),
@@ -177,6 +179,52 @@ describe('DevView Work Journal renderer', () => {
     expect(html).toContain('actual-record-satisfied')
     expect(html).toContain('actual-record-proven')
     expect(html).toContain('preview-only-blocked')
+  })
+
+  it('summarizes actual Scope/CI enforcement records as source facts without mutating external systems', async () => {
+    const workspace = createWorkspace()
+    writeWorkJournalSources(workspace)
+    writeActualAuthorityRecords(workspace)
+
+    const result = await runDevViewCli(
+      workJournalArgs(undefined, undefined, undefined, [
+        '--scope-ci-enforcement-record',
+        'generated/scope-ci-record.json',
+      ]),
+      { cwd: workspace, pluginRoot },
+    )
+    const data = JSON.parse(readFileSync(join(workspace, '.devview/generated/work-journal/index.data.json'), 'utf8'))
+    const run = JSON.parse(
+      readFileSync(join(workspace, '.devview/generated/work-journal/runs/todo-add/run.json'), 'utf8'),
+    )
+    const html = readFileSync(join(workspace, '.devview/generated/work-journal/index.html'), 'utf8')
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(run.authoritySummary.scopeCi).toEqual(
+      expect.objectContaining({
+        readinessStatus: 'devview-scope-ci-enforcement-readiness-blocked',
+        actualRecordStatus: 'devview-scope-ci-enforcement-recorded',
+        activationStatus: 'actual-record-present',
+        displayState: 'actual-record-scope-ci',
+      }),
+    )
+    expect(run.flow.find((step: { stepId: string }) => step.stepId === 'scope-ci')).toEqual(
+      expect.objectContaining({
+        sourceId: 'scope-ci-enforcement-record',
+        authority: 'actual-record',
+        status: 'devview-scope-ci-enforcement-recorded',
+      }),
+    )
+    expect(run.scopeSummary.status).toBe('actual-scope-ci-enforcement-record-present')
+    expect(data.safetyFlags.scopeEnforced).toBe(false)
+    expect(data.safetyFlags.ciEnforcementEnabled).toBe(false)
+    expect(data.safetyFlags.graphSourceMutated).toBe(false)
+    expect(data.safetyFlags.graphDeltaApplied).toBe(false)
+    expect(data.safetyFlags.providerInvoked).toBe(false)
+    expect(data.safetyFlags.networkCallMade).toBe(false)
+    expect(html).toContain('actual-record-scope-ci')
+    expect(html).toContain('Source artifacts and provenance')
+    expect(html).toContain('Run JSON')
   })
 
   it('preserves previous Work Journal runs and replaces the current run deterministically', async () => {
@@ -342,6 +390,35 @@ describe('DevView Work Journal renderer', () => {
       workJournalArgs('.tmp/journal.html', '.tmp/journal.data.json', '.tmp/run.json', [
         '--runtime-evidence-satisfaction-record',
         'generated/not-runtime-record.json',
+      ]),
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues[0].message).toContain('unsupported role/status')
+    expect(existsSync(join(workspace, '.tmp/journal.html'))).toBe(false)
+    expect(existsSync(join(workspace, '.tmp/journal.data.json'))).toBe(false)
+    expect(existsSync(join(workspace, '.tmp/run.json'))).toBe(false)
+  })
+
+  it('blocks wrong Scope/CI record role/status with authority true before writing outputs', async () => {
+    const workspace = createWorkspace()
+    writeWorkJournalSources(workspace)
+    writeJson(join(workspace, 'generated/not-scope-ci-record.json'), {
+      artifactRole: 'devview-scope-ci-enforcement-readiness-preview',
+      status: 'devview-scope-ci-enforcement-readiness-ready',
+      scopeEnforced: true,
+      ciEnforcementEnabled: true,
+      runtimeEvidenceSatisfied: false,
+      evidenceAccepted: false,
+      equivalenceProven: false,
+    })
+
+    const result = await runDevViewCli(
+      workJournalArgs('.tmp/journal.html', '.tmp/journal.data.json', '.tmp/run.json', [
+        '--scope-ci-enforcement-record',
+        'generated/not-scope-ci-record.json',
       ]),
       { cwd: workspace, pluginRoot },
     )
@@ -524,6 +601,36 @@ function writeActualAuthorityRecords(workspace: string): void {
     evidenceAccepted: false,
     scopeEnforced: false,
     ciEnforcementEnabled: false,
+    graphSourceMutated: false,
+    graphDeltaApplied: false,
+    approvalAutomationEnabled: false,
+    userAcceptanceAutomated: false,
+    providerInvoked: false,
+    networkCallMade: false,
+    extensionExecutionAllowed: false,
+    extensionsExecuted: false,
+    shellCommandsExecuted: false,
+    filesMutated: false,
+  })
+  writeJson(join(workspace, 'generated/scope-ci-record.json'), {
+    artifactRole: 'devview-scope-ci-enforcement-record',
+    status: 'devview-scope-ci-enforcement-recorded',
+    scopeCiEnforcementState: 'scope-ci-enforcement-recorded-no-external-ci-mutation',
+    scopeEnforced: true,
+    ciEnforcementEnabled: true,
+    runtimeEvidenceSatisfied: false,
+    evidenceAccepted: false,
+    equivalenceProven: false,
+    requiredChecksConfigured: false,
+    branchProtectionChanged: false,
+    branchProtectionMutated: false,
+    requiredChecksMutated: false,
+    externalCiMutated: false,
+    diffRejectionEnabled: false,
+    diffRejectionActivated: false,
+    strictModeEnabled: false,
+    guidedEnforcementEnabled: false,
+    hooksActivated: false,
     graphSourceMutated: false,
     graphDeltaApplied: false,
     approvalAutomationEnabled: false,

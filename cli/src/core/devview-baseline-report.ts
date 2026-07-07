@@ -25,6 +25,7 @@ export interface DevViewBaselineReportOptions {
   runtimeEvidenceSatisfactionReadiness?: string
   equivalenceProofReadiness?: string
   scopeCiEnforcementReadiness?: string
+  scopeCiEnforcementRecord?: string
   output?: string
   markdown?: string
 }
@@ -82,6 +83,7 @@ export interface DevViewCoreBaselineFreezeReport {
   sourceRuntimeEvidenceSatisfactionReadiness: string | null
   sourceEquivalenceProofReadiness: string | null
   sourceScopeCiEnforcementReadiness: string | null
+  sourceScopeCiEnforcementRecord: string | null
   sourceArtifacts: DevViewBaselineSourceSummary[]
   classificationTaxonomy: Array<{
     classification: BaselineClassification
@@ -232,6 +234,12 @@ const OPTIONAL_SOURCE_DEFS = [
     label: 'Scope/CI enforcement readiness',
     optionKey: 'scopeCiEnforcementReadiness',
     expectedRole: 'devview-scope-ci-enforcement-readiness-preview',
+  },
+  {
+    sourceId: 'scope-ci-enforcement-record',
+    label: 'Scope/CI enforcement record',
+    optionKey: 'scopeCiEnforcementRecord',
+    expectedRole: 'devview-scope-ci-enforcement-record',
   },
 ] as const
 
@@ -434,6 +442,8 @@ function validateUnsafeAuthoritySignals(source: LoadedSource, findings: DevViewB
   const unsafe = collectUnsafeAuthoritySignals(record, {
     allowTopLevelAcceptedEvidence:
       source.sourceId === 'accepted-evidence' && isAcceptedEvidenceSourceFactAllowed(record),
+    allowTopLevelScopeCiEnforcement:
+      source.sourceId === 'scope-ci-enforcement-record' && isScopeCiEnforcementSourceFactAllowed(record),
   })
   for (const entry of unsafe) {
     findings.push({
@@ -463,6 +473,32 @@ function isAcceptedEvidenceSourceFactAllowed(record: JsonRecord): boolean {
     record.artifactRole === 'devview-accepted-evidence-record' &&
     record.status === 'devview-accepted-evidence-recorded' &&
     record.acceptedEvidenceState === 'accepted-evidence-recorded-not-runtime-satisfied'
+  )
+}
+
+function isScopeCiEnforcementSourceFactAllowed(record: JsonRecord): boolean {
+  return (
+    record.artifactRole === 'devview-scope-ci-enforcement-record' &&
+    record.status === 'devview-scope-ci-enforcement-recorded' &&
+    record.scopeCiEnforcementState === 'scope-ci-enforcement-recorded-no-external-ci-mutation' &&
+    record.scopeEnforced === true &&
+    record.ciEnforcementEnabled === true &&
+    record.requiredChecksConfigured === false &&
+    record.branchProtectionChanged === false &&
+    record.branchProtectionMutated === false &&
+    record.requiredChecksMutated === false &&
+    record.externalCiMutated === false &&
+    record.diffRejectionEnabled === false &&
+    record.diffRejectionActivated === false &&
+    record.hooksActivated === false &&
+    record.graphSourceMutated === false &&
+    record.graphDeltaApplied === false &&
+    record.providerInvoked === false &&
+    record.networkCallMade === false &&
+    record.extensionExecutionAllowed === false &&
+    record.extensionsExecuted === false &&
+    record.shellCommandsExecuted === false &&
+    record.filesMutated === false
   )
 }
 
@@ -502,6 +538,7 @@ function buildReport(
     sourceRuntimeEvidenceSatisfactionReadiness: sourcePath('runtime-evidence-satisfaction-readiness'),
     sourceEquivalenceProofReadiness: sourcePath('equivalence-proof-readiness'),
     sourceScopeCiEnforcementReadiness: sourcePath('scope-ci-enforcement-readiness'),
+    sourceScopeCiEnforcementRecord: sourcePath('scope-ci-enforcement-record'),
     sourceArtifacts: sources.map((source) => summarizeSource(root, source)),
     classificationTaxonomy: buildClassificationTaxonomy(),
     baselineLanes: buildBaselineLanes(finalHandoff.record ?? {}, roadmapAudit.record ?? {}),
@@ -593,6 +630,9 @@ function classifyStatus(sourceId: string, status: string): BaselineClassificatio
   if (sourceId === 'roadmap-audit' || sourceId === 'final-handoff') return 'completed'
   if (sourceId === 'evidence-decision' && normalized === 'devview-evidence-decision-recorded') return 'completed'
   if (sourceId === 'accepted-evidence' && normalized === 'devview-accepted-evidence-recorded') return 'completed'
+  if (sourceId === 'scope-ci-enforcement-record' && normalized === 'devview-scope-ci-enforcement-recorded') {
+    return 'completed'
+  }
   if (sourceId === 'graph-delta-apply-report') {
     return normalized.includes('applied') ? 'advisory' : 'blocked'
   }
@@ -886,7 +926,7 @@ const UNSAFE_TRUE_FIELDS = new Set([
 
 function collectUnsafeAuthoritySignals(
   value: unknown,
-  options: { allowTopLevelAcceptedEvidence?: boolean } = {},
+  options: { allowTopLevelAcceptedEvidence?: boolean; allowTopLevelScopeCiEnforcement?: boolean } = {},
 ): Array<{ path: string }> {
   const findings: Array<{ path: string }> = []
   const visit = (entry: unknown, cursor: string, seen: Set<unknown>): void => {
@@ -902,7 +942,11 @@ function collectUnsafeAuthoritySignals(
       if (
         UNSAFE_TRUE_FIELDS.has(key) &&
         item === true &&
-        !(options.allowTopLevelAcceptedEvidence && nextPath === 'evidenceAccepted')
+        !(options.allowTopLevelAcceptedEvidence && nextPath === 'evidenceAccepted') &&
+        !(
+          options.allowTopLevelScopeCiEnforcement &&
+          (nextPath === 'scopeEnforced' || nextPath === 'ciEnforcementEnabled')
+        )
       ) {
         findings.push({ path: nextPath })
       }

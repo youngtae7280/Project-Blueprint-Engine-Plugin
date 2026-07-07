@@ -45,6 +45,7 @@ export interface WorkJournalRenderOptions {
   equivalenceProofReadiness?: string
   equivalenceProofRecord?: string
   scopeCiEnforcementReadiness?: string
+  scopeCiEnforcementRecord?: string
   proposal?: string
   applyReport?: string
   output?: string
@@ -106,8 +107,9 @@ export interface WorkJournalAuthoritySummary {
   }
   scopeCi: {
     readinessStatus: string | null
-    activationStatus: 'future-not-provided'
-    displayState: 'preview-only-ready' | 'preview-only-blocked' | 'not-provided'
+    actualRecordStatus: string | null
+    activationStatus: 'actual-record-present' | 'future-not-provided'
+    displayState: 'actual-record-scope-ci' | 'preview-only-ready' | 'preview-only-blocked' | 'not-provided'
   }
   journalAuthorityFlags: {
     runtimeEvidenceSatisfied: false
@@ -200,6 +202,11 @@ const SOURCE_DEFS = [
   },
   { sourceId: 'equivalence-proof-record', label: 'Equivalence proof record', optionKey: 'equivalenceProofRecord' },
   { sourceId: 'scope-ci', label: 'Scope/CI readiness', optionKey: 'scopeCiEnforcementReadiness' },
+  {
+    sourceId: 'scope-ci-enforcement-record',
+    label: 'Scope/CI enforcement record',
+    optionKey: 'scopeCiEnforcementRecord',
+  },
   { sourceId: 'graph-delta', label: 'Graph Delta proposal', optionKey: 'proposal' },
   { sourceId: 'guarded-update', label: 'Guarded graph update status', optionKey: 'applyReport' },
 ] as const
@@ -349,11 +356,50 @@ function validateSourceRecordShape(source: LoadedArtifact): void {
       'filesMutated',
     ])
   }
+  if (source.sourceId === 'scope-ci-enforcement-record') {
+    if (
+      record.artifactRole !== 'devview-scope-ci-enforcement-record' ||
+      record.status !== 'devview-scope-ci-enforcement-recorded'
+    ) {
+      throw new Error('Work Journal Scope/CI enforcement record source has an unsupported role/status.')
+    }
+    if (record.scopeEnforced !== true || record.ciEnforcementEnabled !== true) {
+      throw new Error(
+        'Work Journal Scope/CI enforcement record source must have scopeEnforced true and ciEnforcementEnabled true.',
+      )
+    }
+    requireFalseFields(source.label, record, [
+      'runtimeEvidenceSatisfied',
+      'evidenceAccepted',
+      'equivalenceProven',
+      'requiredChecksConfigured',
+      'branchProtectionChanged',
+      'branchProtectionMutated',
+      'requiredChecksMutated',
+      'externalCiMutated',
+      'diffRejectionEnabled',
+      'diffRejectionActivated',
+      'strictModeEnabled',
+      'guidedEnforcementEnabled',
+      'hooksActivated',
+      'graphSourceMutated',
+      'graphDeltaApplied',
+      'approvalAutomationEnabled',
+      'userAcceptanceAutomated',
+      'providerInvoked',
+      'networkCallMade',
+      'extensionExecutionAllowed',
+      'extensionsExecuted',
+      'shellCommandsExecuted',
+      'filesMutated',
+    ])
+  }
 }
 
 function allowedAuthorityPathsForSource(source: LoadedArtifact): Set<string> {
   if (source.sourceId === 'runtime-evidence-satisfaction-record') return new Set(['runtimeEvidenceSatisfied'])
   if (source.sourceId === 'equivalence-proof-record') return new Set(['equivalenceProven'])
+  if (source.sourceId === 'scope-ci-enforcement-record') return new Set(['scopeEnforced', 'ciEnforcementEnabled'])
   return new Set()
 }
 
@@ -498,7 +544,11 @@ function classifyArtifact(sourceId: string, status: string): WorkJournalArtifact
   const normalized = status.toLowerCase()
   if (normalized.includes('blocked')) return 'blocked'
   if (sourceId === 'baseline') return 'completed'
-  if (sourceId === 'runtime-evidence-satisfaction-record' || sourceId === 'equivalence-proof-record')
+  if (
+    sourceId === 'runtime-evidence-satisfaction-record' ||
+    sourceId === 'equivalence-proof-record' ||
+    sourceId === 'scope-ci-enforcement-record'
+  )
     return normalized.includes('recorded') ? 'completed' : 'blocked'
   if (sourceId === 'runtime-evidence-satisfaction-readiness')
     return normalized.includes('ready') ? 'advisory' : 'blocked'
@@ -579,8 +629,10 @@ function buildFlow(artifacts: WorkJournalArtifactSummary[]): WorkJournalFlowStep
     {
       stepId: 'scope-ci',
       label: 'Scope/CI',
-      summary: 'Scope and CI enforcement readiness state; activation is future-only here.',
+      summary: 'Actual Scope/CI record when present; otherwise readiness-only enforcement state.',
       sourceId: 'scope-ci',
+      actualSourceId: 'scope-ci-enforcement-record',
+      readinessSourceId: 'scope-ci',
     },
   ]
   return stages.map((stage) => {
@@ -643,6 +695,7 @@ function buildScopeSummary(
   const contextPack = findSourceRecord(sources, 'context-pack')
   const instructionPack = findSourceRecord(sources, 'instruction-pack')
   const scopeReadiness = findSourceRecord(sources, 'scope-ci')
+  const scopeRecord = findSourceRecord(sources, 'scope-ci-enforcement-record')
   const allowed =
     countFirstArray(contextPack, ['allowedFiles', 'allowedPaths', 'allowedScope']) ??
     countFirstArray(instructionPack, ['allowedFiles', 'allowedPaths', 'allowedScope'])
@@ -655,13 +708,18 @@ function buildScopeSummary(
   const protectedPathBlocks =
     numberValue(scopeReadiness?.protectedPathBlockCount) ??
     countFirstArray(scopeReadiness, ['protectedPathBlocks', 'protectedPathsBlocked'])
-  const scopeArtifact = artifacts.find((artifact) => artifact.sourceId === 'scope-ci')
+  const scopeArtifact =
+    artifacts.find((artifact) => artifact.sourceId === 'scope-ci-enforcement-record') ??
+    artifacts.find((artifact) => artifact.sourceId === 'scope-ci')
   return {
     allowed,
     forbidden,
     violations,
     protectedPathBlocks,
-    status: scopeArtifact?.status ?? 'scope-ci-readiness-not-provided',
+    status:
+      scopeRecord?.scopeEnforced === true && scopeRecord?.ciEnforcementEnabled === true
+        ? 'actual-scope-ci-enforcement-record-present'
+        : (scopeArtifact?.status ?? 'scope-ci-readiness-not-provided'),
   }
 }
 
@@ -671,6 +729,7 @@ function buildAuthoritySummary(artifacts: WorkJournalArtifactSummary[]): WorkJou
   const equivalenceReadiness = artifacts.find((artifact) => artifact.sourceId === 'equivalence-proof-readiness')
   const equivalenceRecord = artifacts.find((artifact) => artifact.sourceId === 'equivalence-proof-record')
   const scopeCi = artifacts.find((artifact) => artifact.sourceId === 'scope-ci')
+  const scopeCiRecord = artifacts.find((artifact) => artifact.sourceId === 'scope-ci-enforcement-record')
   return {
     runtimeEvidence: {
       readinessStatus: runtimeReadiness?.status ?? null,
@@ -698,13 +757,16 @@ function buildAuthoritySummary(artifacts: WorkJournalArtifactSummary[]): WorkJou
     },
     scopeCi: {
       readinessStatus: scopeCi?.status ?? null,
-      activationStatus: 'future-not-provided',
+      actualRecordStatus: scopeCiRecord?.status ?? null,
+      activationStatus: scopeCiRecord?.classification === 'completed' ? 'actual-record-present' : 'future-not-provided',
       displayState:
-        scopeCi?.classification === 'advisory'
-          ? 'preview-only-ready'
-          : scopeCi?.classification === 'blocked'
-            ? 'preview-only-blocked'
-            : 'not-provided',
+        scopeCiRecord?.classification === 'completed'
+          ? 'actual-record-scope-ci'
+          : scopeCi?.classification === 'advisory'
+            ? 'preview-only-ready'
+            : scopeCi?.classification === 'blocked'
+              ? 'preview-only-blocked'
+              : 'not-provided',
     },
     journalAuthorityFlags: {
       runtimeEvidenceSatisfied: false,
@@ -1229,7 +1291,7 @@ function renderWorkJournalHtml(journal: WorkJournalDataPreview): string {
         '<div class="authority-list">' +
         authorityRow('Runtime Evidence', runtime.displayState, runtime.actualRecordStatus || runtime.readinessStatus) +
         authorityRow('Equivalence Proof', equivalence.displayState, equivalence.actualRecordStatus || equivalence.readinessStatus) +
-        authorityRow('Scope/CI', scopeCi.displayState, scopeCi.activationStatus || scopeCi.readinessStatus) +
+        authorityRow('Scope/CI', scopeCi.displayState, scopeCi.actualRecordStatus || scopeCi.readinessStatus || scopeCi.activationStatus) +
         '</div>';
     }
     function authorityRow(label, stateValue, status) {
@@ -1257,6 +1319,7 @@ function renderWorkJournalHtml(journal: WorkJournalDataPreview): string {
     function relatedSourceIds(stepId) {
       if (stepId === 'runtime-evidence') return ['runtime-evidence-satisfaction-readiness', 'runtime-evidence-satisfaction-record'];
       if (stepId === 'equivalence-proof') return ['equivalence-proof-readiness', 'equivalence-proof-record'];
+      if (stepId === 'scope-ci') return ['scope-ci', 'scope-ci-enforcement-record'];
       return [];
     }
     render();

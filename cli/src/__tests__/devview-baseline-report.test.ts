@@ -46,6 +46,7 @@ describe('DevView core baseline freeze report CLI', () => {
     expect(payload.sourceRuntimeEvidenceSatisfactionReadiness).toBe(
       'generated/runtime-evidence-satisfaction-readiness.json',
     )
+    expect(payload.sourceScopeCiEnforcementRecord).toBe('generated/scope-ci-record.json')
     expect(
       payload.sourceArtifacts.map((entry: { sourceId: string; classification: string }) => [
         entry.sourceId,
@@ -61,6 +62,7 @@ describe('DevView core baseline freeze report CLI', () => {
         ['runtime-evidence-satisfaction-readiness', 'blocked'],
         ['equivalence-proof-readiness', 'blocked'],
         ['scope-ci-enforcement-readiness', 'blocked'],
+        ['scope-ci-enforcement-record', 'completed'],
       ]),
     )
     expectSafetyFalse(payload.safetyInvariantSummary)
@@ -97,7 +99,7 @@ describe('DevView core baseline freeze report CLI', () => {
     )
     expect(
       payload.sourceArtifacts.filter((entry: { readStatus: string }) => entry.readStatus === 'missing-optional'),
-    ).toHaveLength(13)
+    ).toHaveLength(14)
     expectSafetyFalse(payload.safetyInvariantSummary)
   })
 
@@ -200,6 +202,32 @@ describe('DevView core baseline freeze report CLI', () => {
     expect(existsSync(join(workspace, '.tmp/baseline.json'))).toBe(false)
   })
 
+  it('blocks Scope/CI true flags outside the exact Scope/CI enforcement record source shape', async () => {
+    const workspace = createWorkspace()
+    writeBaselineInputs(workspace)
+    writeJson(join(workspace, 'generated/scope-ci-record.json'), {
+      artifactRole: 'devview-scope-ci-enforcement-readiness-preview',
+      status: 'devview-scope-ci-enforcement-readiness-ready',
+      scopeEnforced: true,
+      ciEnforcementEnabled: true,
+      runtimeEvidenceSatisfied: false,
+      evidenceAccepted: false,
+      equivalenceProven: false,
+      graphDeltaApplied: false,
+      graphSourceMutated: false,
+    })
+
+    const result = await runDevViewCli([...baseArgs(), '--output', '.tmp/baseline.json'], {
+      cwd: workspace,
+      pluginRoot,
+    })
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.issues[0].message).toContain('scopeEnforced')
+    expect(existsSync(join(workspace, '.tmp/baseline.json'))).toBe(false)
+  })
+
   it('blocks new optional source overwrite before JSON output is written', async () => {
     const workspace = createWorkspace()
     writeBaselineInputs(workspace)
@@ -259,6 +287,8 @@ function baseArgs(): string[] {
     'generated/equivalence-readiness.json',
     '--scope-ci-enforcement-readiness',
     'generated/scope-ci-readiness.json',
+    '--scope-ci-enforcement-record',
+    'generated/scope-ci-record.json',
     '--json',
   ]
 }
@@ -386,6 +416,7 @@ function writeBaselineInputs(
     join(workspace, 'generated/scope-ci-readiness.json'),
     readiness('devview-scope-ci-enforcement-readiness-preview'),
   )
+  writeJson(join(workspace, 'generated/scope-ci-record.json'), scopeCiEnforcementRecord())
   writeJson(join(workspace, 'generated/roadmap.json'), {
     artifactRole: 'devview-roadmap-completion-audit-preview',
     status: 'devview-roadmap-completion-audit-previewed',
@@ -452,6 +483,37 @@ function acceptedEvidenceRecord(): Record<string, unknown> {
     graphSourceMutated: false,
     approvalAutomationEnabled: false,
     userAcceptanceAutomated: false,
+  }
+}
+
+function scopeCiEnforcementRecord(): Record<string, unknown> {
+  return {
+    artifactRole: 'devview-scope-ci-enforcement-record',
+    status: 'devview-scope-ci-enforcement-recorded',
+    scopeCiEnforcementState: 'scope-ci-enforcement-recorded-no-external-ci-mutation',
+    scopeEnforced: true,
+    ciEnforcementEnabled: true,
+    runtimeEvidenceSatisfied: false,
+    evidenceAccepted: false,
+    equivalenceProven: false,
+    requiredChecksConfigured: false,
+    branchProtectionChanged: false,
+    branchProtectionMutated: false,
+    requiredChecksMutated: false,
+    externalCiMutated: false,
+    diffRejectionEnabled: false,
+    diffRejectionActivated: false,
+    hooksActivated: false,
+    graphDeltaApplied: false,
+    graphSourceMutated: false,
+    approvalAutomationEnabled: false,
+    userAcceptanceAutomated: false,
+    providerInvoked: false,
+    networkCallMade: false,
+    extensionExecutionAllowed: false,
+    extensionsExecuted: false,
+    shellCommandsExecuted: false,
+    filesMutated: false,
   }
 }
 
