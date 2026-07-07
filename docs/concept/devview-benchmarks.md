@@ -47,6 +47,22 @@ The lock manifest records exact file-byte SHA-256 digests, evaluator and rubric 
 governance gaps such as missing golden-answer review metadata or held-out policy. It does not invent approval or run
 any benchmark arm.
 
+The lock can then be checked against an optional governance policy:
+
+```bash
+devview benchmark verify-governance \
+  --suite-lock .tmp/benchmark-fixtures/suite-lock.json \
+  --governance-policy .tmp/benchmark-fixtures/governance-policy.json \
+  --output .tmp/benchmark-fixtures/governance-verification.json \
+  --markdown .tmp/benchmark-fixtures/governance-verification.md \
+  --json
+```
+
+Without a policy, verification reports partial governance. A v1 policy may require evaluator and rubric versions,
+comparison arms, project modes, golden review metadata, held-out policy, or static Graphify import validation for
+Graphify arms. Verification is still report-only; it does not approve goldens, sign records, execute live benchmark
+arms, or activate enterprise gates.
+
 Static Graphify exports can be validated as import/mapping fixtures before any future live integration:
 
 ```bash
@@ -127,4 +143,6 @@ remain future work.
 Benchmark evaluation and comparison reports are useful evidence only after their source fixtures are locked. The suite
 lock manifest is the first governance layer: it records the exact suite, task, golden-answer, candidate, evaluation,
 comparison, and static Graphify import validation artifacts used for a claim. Enterprise readiness, signed record
-envelopes, reviewer RBAC, held-out task governance, and live-run planning remain future work.
+envelopes, reviewer RBAC, held-out task governance, and live-run planning remain future work. Governance verification
+checks the lock manifest and optional policy so benchmark claims can be classified as partial, not-ready, or verified
+for static benchmark evidence only.

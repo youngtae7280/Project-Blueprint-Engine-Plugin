@@ -182,6 +182,24 @@ digests, plus DevView package version, evaluator/rubric versions, and governance
 review metadata or held-out policy. It does not run benchmark tasks, run Graphify, run native/retrofit builds, call
 providers, mutate graph-source, approve goldens, or activate enterprise release gates.
 
+### Benchmark Governance Verification
+
+```bash
+devview benchmark verify-governance \
+  --suite-lock <benchmark-suite-lock-manifest.json> \
+  --governance-policy <benchmark-governance-policy.json> \
+  --output <benchmark-governance-verification.json> \
+  --markdown <benchmark-governance-verification.md> \
+  --json
+```
+
+Verifies a benchmark suite lock manifest and optional governance policy before any enterprise benchmark claim. The
+report checks role/status, false execution flags, evaluator/rubric versions, recorded source digests, golden review
+metadata, held-out policy, Graphify import governance, and required comparison arms or project modes. Without a policy,
+verification is partial. With a minimal policy, it can verify static benchmark governance only; it still does not run
+benchmark tasks, run Graphify, run native/retrofit builds, call providers, mutate graph-source, approve goldens, or
+activate release gates.
+
 ### Graphify Import Validation
 
 ```bash

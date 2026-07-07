@@ -206,6 +206,8 @@ export interface CliOptions {
   evaluations?: string
   comparisonSummary?: string
   graphifyImportValidations?: string
+  suiteLock?: string
+  governancePolicy?: string
   graphifyExport?: string
   mapping?: string
   base?: string

@@ -6,6 +6,7 @@ import {
   benchmarkLockSuiteCommand,
   benchmarkSummarizeComparisonCommand,
   benchmarkValidateGraphifyImportCommand,
+  benchmarkVerifyGovernanceCommand,
 } from './benchmark.js'
 import { executionPackCheckCommand, executionPackReadyCommand } from './execution-pack.js'
 import { changeCreateCommand } from './change.js'
@@ -159,6 +160,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'benchmark' && subcommand === 'lock-suite') {
     return benchmarkLockSuiteCommand(context)
+  }
+  if (command === 'benchmark' && subcommand === 'verify-governance') {
+    return benchmarkVerifyGovernanceCommand(context)
   }
   if (command === 'benchmark' && subcommand === 'validate-graphify-import') {
     return benchmarkValidateGraphifyImportCommand(context)

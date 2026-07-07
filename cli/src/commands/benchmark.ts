@@ -1,5 +1,9 @@
 import { BenchmarkComparisonValidationError, summarizeBenchmarkComparison } from '../core/benchmark-comparison.js'
 import { BenchmarkEvaluationValidationError, evaluateBenchmarkResult } from '../core/benchmark-evaluation.js'
+import {
+  BenchmarkGovernanceVerificationValidationError,
+  verifyBenchmarkGovernance,
+} from '../core/benchmark-governance-verification.js'
 import { BenchmarkSuiteLockValidationError, lockBenchmarkSuite } from '../core/benchmark-suite-lock.js'
 import { GraphifyImportValidationError, validateGraphifyImport } from '../core/graphify-import-validation.js'
 import type { CommandResult } from '../core/types.js'
@@ -256,6 +260,67 @@ export async function benchmarkLockSuiteCommand(context: CommandContext): Promis
           message,
           suggestedFix:
             'Provide the benchmark source artifact set and write the lock manifest outside source/control artifacts.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function benchmarkVerifyGovernanceCommand(context: CommandContext): Promise<CommandResult> {
+  try {
+    const report = await verifyBenchmarkGovernance(context.options.root, {
+      suiteLock: context.options.suiteLock,
+      governancePolicy: context.options.governancePolicy,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+
+    return {
+      ok: true,
+      command: 'benchmark verify-governance',
+      exitCode: ExitCode.Success,
+      message: 'Benchmark governance verified without executing benchmarks.',
+      issues: [],
+      data: { ...report },
+    }
+  } catch (error) {
+    if (error instanceof BenchmarkGovernanceVerificationValidationError) {
+      const report = error.report
+      const errorFindings = report.governanceFindings.filter((finding) => finding.severity === 'error')
+      return {
+        ok: false,
+        command: 'benchmark verify-governance',
+        exitCode: ExitCode.ValidationFailed,
+        message: 'Benchmark governance verification is blocked before any benchmark execution.',
+        issues: errorFindings.map((finding) =>
+          issue({
+            validator: 'BenchmarkGovernanceVerification',
+            code: finding.code,
+            severity: finding.severity,
+            message: finding.message,
+            file: finding.path,
+            reason: finding.field ? `Field: ${finding.field}` : undefined,
+            suggestedFix:
+              'Provide a valid benchmark suite lock manifest and optional governance policy with report-only safety flags false.',
+          }),
+        ),
+        data: { ...report },
+      }
+    }
+
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'benchmark verify-governance',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Benchmark governance verification could not run.',
+      issues: [
+        issue({
+          validator: 'BenchmarkGovernanceVerification',
+          code: 'BENCHMARK_GOVERNANCE_VERIFICATION_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix: 'Provide --suite-lock and --output paths, then write outputs outside source/control artifacts.',
         }),
       ],
     }
