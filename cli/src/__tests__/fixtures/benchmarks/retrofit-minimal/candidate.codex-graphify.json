@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-benchmark-candidate-result",
+  "status": "devview-benchmark-candidate-result-submitted",
+  "taskId": "retrofit-preserve-parity-fix",
+  "projectMode": "retrofit",
+  "comparisonArm": "codex-graphify",
+  "armComparisonGroupId": "retrofit-preserve-parity-fix-arms",
+  "reportedOutcome": "implemented",
+  "changedFiles": [
+    {
+      "path": "src/retrofit/widget-adapter.ts",
+      "status": "modified"
+    }
+  ],
+  "selectedContext": {
+    "files": ["src/retrofit/widget-adapter.ts", "docs/contracts/widget-parity.md", "src/native/device-driver.ts"],
+    "nodeIds": ["node.widget-adapter", "node.native-driver"],
+    "edgeIds": [],
+    "evidenceIds": []
+  },
+  "providedEvidence": [],
+  "graphDeltaSummary": {
+    "operations": []
+  },
+  "regressionSignals": {
+    "parityPreserved": true
+  },
+  "executionMetrics": {
+    "iterationCount": 7,
+    "elapsedMs": 5300,
+    "costProxy": 2
+  },
+  "workJournalSummary": {
+    "status": "blocked",
+    "nextAction": "add parity evidence and graph update source facts",
+    "authoritySummaryVisible": true,
+    "sourceFactSummaryVisible": false
+  },
+  "benchmarkExecuted": false,
+  "candidateExecuted": false,
+  "graphifyExecuted": false,
+  "nativeBenchmarkExecuted": false,
+  "providerInvoked": false,
+  "networkCallMade": false,
+  "shellCommandsExecuted": false,
+  "extensionExecutionAllowed": false,
+  "extensionsExecuted": false,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "runtimeEvidenceSatisfied": false,
+  "evidenceAccepted": false,
+  "equivalenceProven": false,
+  "scopeEnforced": false,
+  "ciEnforcementEnabled": false,
+  "hooksActivated": false,
+  "approvalAutomationEnabled": false,
+  "userAcceptanceAutomated": false
+}

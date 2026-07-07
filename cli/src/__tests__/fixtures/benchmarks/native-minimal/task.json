@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-benchmark-task-spec",
+  "status": "devview-benchmark-task-configured",
+  "taskId": "native-filter-empty-state",
+  "taskKind": "feature-addition",
+  "projectMode": "native",
+  "comparisonArms": ["codex-only", "codex-devview"],
+  "armComparisonGroupId": "native-filter-empty-state-arms",
+  "taskSummary": "Add a deterministic empty-state message for an active filter without touching storage or configuration.",
+  "benchmarkExecuted": false,
+  "nativeBenchmarkExecuted": false,
+  "graphifyExecuted": false
+}

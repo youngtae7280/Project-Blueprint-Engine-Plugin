@@ -43,3 +43,14 @@ The default evaluator uses a 100-point rubric:
 
 Golden answers may override weights, but scoring still uses explicit stored fields only. Unsafe execution or authority
 flags block the evaluator before output is written.
+
+## Static Fixture Skeletons
+
+The repository includes minimal Native and Retrofit benchmark skeletons under
+`cli/src/__tests__/fixtures/benchmarks/`. They contain only suite, task, golden-answer, and stored candidate-result
+JSON files for evaluator tests. They do not include buildable projects, live benchmark harnesses, live Graphify
+outputs, native test activity, external service activity, command activity, graph updates, or extension code activity.
+
+These fixtures are intentionally small CI-safe examples for proving that stored `codex-devview`, `codex-only`, and
+`codex-graphify` candidate arms can be scored against golden answers. Public benchmark examples and executable harnesses
+remain future work.

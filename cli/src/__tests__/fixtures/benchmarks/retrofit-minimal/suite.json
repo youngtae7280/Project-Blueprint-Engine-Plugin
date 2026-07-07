@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-benchmark-suite-spec",
+  "status": "devview-benchmark-suite-configured",
+  "suiteId": "retrofit-minimal-static-suite",
+  "suiteScope": "static-retrofit-benchmark-fixture-report-only",
+  "taskIds": ["retrofit-preserve-parity-fix"],
+  "comparisonArms": ["codex-devview", "codex-graphify"],
+  "passThreshold": 70
+}

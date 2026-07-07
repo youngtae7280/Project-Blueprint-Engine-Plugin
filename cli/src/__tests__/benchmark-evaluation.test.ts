@@ -86,6 +86,93 @@ describe('benchmark evaluate-result CLI', () => {
     }
   })
 
+  it('scores stored native benchmark fixture skeletons without executing benchmark arms', async () => {
+    const workspace = createWorkspace()
+
+    const devviewResult = await runDevViewCli(
+      [
+        ...fixtureEvaluationArgs('native-minimal', 'candidate.codex-devview.json', '.tmp/native-devview.json'),
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const devviewPayload = JSON.parse(devviewResult.stdout)
+
+    const codexOnlyResult = await runDevViewCli(
+      [
+        ...fixtureEvaluationArgs('native-minimal', 'candidate.codex-only.json', '.tmp/native-codex-only.json'),
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const codexOnlyPayload = JSON.parse(codexOnlyResult.stdout)
+
+    expect(devviewResult.exitCode).toBe(ExitCode.Success)
+    expect(devviewPayload.projectMode).toBe('native')
+    expect(devviewPayload.comparisonArm).toBe('codex-devview')
+    expect(devviewPayload.passed).toBe(true)
+    expect(devviewPayload.overallScore).toBeGreaterThanOrEqual(70)
+    expect(devviewPayload.overallScore).toBeLessThan(100)
+    expect(devviewPayload.findings.map((entry: { code: string }) => entry.code)).toContain(
+      'BENCHMARK_CONTEXT_PRECISION_PARTIAL',
+    )
+    expectSafetyFalse(devviewPayload)
+
+    expect(codexOnlyResult.exitCode).toBe(ExitCode.Success)
+    expect(codexOnlyPayload.comparisonArm).toBe('codex-only')
+    expect(codexOnlyPayload.overallScore).toBeLessThan(devviewPayload.overallScore)
+    expect(codexOnlyPayload.findings.map((entry: { code: string }) => entry.code)).toEqual(
+      expect.arrayContaining([
+        'BENCHMARK_REQUIRED_EVIDENCE_MISSING',
+        'BENCHMARK_GRAPH_DELTA_MISMATCH',
+        'BENCHMARK_CONTEXT_RECALL_PARTIAL',
+      ]),
+    )
+    expectSafetyFalse(codexOnlyPayload)
+  })
+
+  it('scores stored retrofit benchmark fixture skeletons and preserves Graphify comparison arm labels', async () => {
+    const workspace = createWorkspace()
+
+    const devviewResult = await runDevViewCli(
+      [
+        ...fixtureEvaluationArgs('retrofit-minimal', 'candidate.codex-devview.json', '.tmp/retrofit-devview.json'),
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const devviewPayload = JSON.parse(devviewResult.stdout)
+
+    const graphifyResult = await runDevViewCli(
+      [
+        ...fixtureEvaluationArgs('retrofit-minimal', 'candidate.codex-graphify.json', '.tmp/retrofit-graphify.json'),
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const graphifyPayload = JSON.parse(graphifyResult.stdout)
+
+    expect(devviewResult.exitCode).toBe(ExitCode.Success)
+    expect(devviewPayload.projectMode).toBe('retrofit')
+    expect(devviewPayload.comparisonArm).toBe('codex-devview')
+    expect(devviewPayload.passed).toBe(true)
+    expectSafetyFalse(devviewPayload)
+
+    expect(graphifyResult.exitCode).toBe(ExitCode.Success)
+    expect(graphifyPayload.projectMode).toBe('retrofit')
+    expect(graphifyPayload.comparisonArm).toBe('codex-graphify')
+    expect(graphifyPayload.graphifyExecuted).toBe(false)
+    expect(graphifyPayload.overallScore).toBeLessThan(devviewPayload.overallScore)
+    expect(graphifyPayload.findings.map((entry: { code: string }) => entry.code)).toEqual(
+      expect.arrayContaining([
+        'BENCHMARK_CONTEXT_PRECISION_PARTIAL',
+        'BENCHMARK_REQUIRED_EVIDENCE_MISSING',
+        'BENCHMARK_GRAPH_DELTA_MISMATCH',
+      ]),
+    )
+    expectSafetyFalse(graphifyPayload)
+  })
+
   it('records forbidden file mutation as a scored hard failure without executing benchmarks', async () => {
     const workspace = createWorkspace()
     writeBenchmarkSources(workspace, {
@@ -229,6 +316,24 @@ function evaluationArgs(output = join('.tmp', 'evaluation.json')): string[] {
     'golden.json',
     '--candidate-result',
     'candidate.json',
+    '--output',
+    output,
+  ]
+}
+
+function fixtureEvaluationArgs(fixtureName: string, candidateFile: string, output: string): string[] {
+  const fixtureRoot = join(pluginRoot, 'cli/src/__tests__/fixtures/benchmarks', fixtureName)
+  return [
+    'benchmark',
+    'evaluate-result',
+    '--benchmark-suite',
+    join(fixtureRoot, 'suite.json'),
+    '--task',
+    join(fixtureRoot, 'task.json'),
+    '--golden-answer',
+    join(fixtureRoot, 'golden-answer.json'),
+    '--candidate-result',
+    join(fixtureRoot, candidateFile),
     '--output',
     output,
   ]

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-benchmark-golden-answer",
+  "status": "devview-benchmark-golden-answer-ready",
+  "taskId": "retrofit-preserve-parity-fix",
+  "projectMode": "retrofit",
+  "expectedComparisonArms": ["codex-devview", "codex-graphify"],
+  "expectedOutcome": "implemented",
+  "allowedFiles": [
+    "src/retrofit/widget-adapter.ts",
+    "src/retrofit/widget-adapter.test.ts",
+    "docs/evidence/widget-parity.md"
+  ],
+  "forbiddenFiles": ["src/retrofit/global-state.ts", "src/native/device-driver.ts"],
+  "requiredTouchedFiles": ["src/retrofit/widget-adapter.ts", "docs/evidence/widget-parity.md"],
+  "optionalTouchedFiles": ["src/retrofit/widget-adapter.test.ts"],
+  "expectedContext": {
+    "files": ["src/retrofit/widget-adapter.ts", "docs/contracts/widget-parity.md", "docs/evidence/widget-parity.md"],
+    "nodeIds": ["node.widget-adapter", "node.widget-parity"],
+    "edgeIds": ["edge.adapter-parity"],
+    "evidenceIds": ["evidence.widget-parity"]
+  },
+  "forbiddenContext": {
+    "files": ["src/native/device-driver.ts", "src/retrofit/global-state.ts"],
+    "nodeIds": ["node.native-driver", "node.global-state"]
+  },
+  "requiredEvidence": [
+    {
+      "evidenceId": "evidence.widget-parity",
+      "kind": "parity-test-output"
+    }
+  ],
+  "expectedGraphDelta": {
+    "operations": [
+      {
+        "operationId": "op-retrofit-parity-status",
+        "action": "replace-field",
+        "targetId": "node.widget-parity",
+        "fieldPath": "status"
+      }
+    ]
+  },
+  "regressionExpectations": {
+    "parityPreserved": true
+  },
+  "executionBudgets": {
+    "maxIterations": 5
+  }
+}

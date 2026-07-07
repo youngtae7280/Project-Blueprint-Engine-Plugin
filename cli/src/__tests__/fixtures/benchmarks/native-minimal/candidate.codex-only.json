@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-benchmark-candidate-result",
+  "status": "devview-benchmark-candidate-result-submitted",
+  "taskId": "native-filter-empty-state",
+  "projectMode": "native",
+  "comparisonArm": "codex-only",
+  "armComparisonGroupId": "native-filter-empty-state-arms",
+  "reportedOutcome": "implemented",
+  "changedFiles": [
+    {
+      "path": "src/todo-filter.ts",
+      "status": "modified"
+    }
+  ],
+  "selectedContext": {
+    "files": ["src/todo-filter.ts", "src/storage.ts"],
+    "nodeIds": ["node.todo-filter"],
+    "edgeIds": [],
+    "evidenceIds": []
+  },
+  "providedEvidence": [],
+  "graphDeltaSummary": {
+    "operations": []
+  },
+  "regressionSignals": {
+    "parityPreserved": true
+  },
+  "executionMetrics": {
+    "iterationCount": 6,
+    "elapsedMs": 4800,
+    "costProxy": 2
+  },
+  "workJournalSummary": {
+    "status": "incomplete",
+    "nextAction": "collect evidence and graph update summary",
+    "authoritySummaryVisible": true,
+    "sourceFactSummaryVisible": false
+  },
+  "benchmarkExecuted": false,
+  "candidateExecuted": false,
+  "graphifyExecuted": false,
+  "nativeBenchmarkExecuted": false,
+  "providerInvoked": false,
+  "networkCallMade": false,
+  "shellCommandsExecuted": false,
+  "extensionExecutionAllowed": false,
+  "extensionsExecuted": false,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "runtimeEvidenceSatisfied": false,
+  "evidenceAccepted": false,
+  "equivalenceProven": false,
+  "scopeEnforced": false,
+  "ciEnforcementEnabled": false,
+  "hooksActivated": false,
+  "approvalAutomationEnabled": false,
+  "userAcceptanceAutomated": false
+}

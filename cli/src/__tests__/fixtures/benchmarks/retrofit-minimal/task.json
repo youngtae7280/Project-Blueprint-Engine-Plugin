@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-benchmark-task-spec",
+  "status": "devview-benchmark-task-configured",
+  "taskId": "retrofit-preserve-parity-fix",
+  "taskKind": "parity-preserving-bug-fix",
+  "projectMode": "retrofit",
+  "comparisonArms": ["codex-devview", "codex-graphify"],
+  "armComparisonGroupId": "retrofit-preserve-parity-fix-arms",
+  "taskSummary": "Fix a retrofit adapter parsing edge case while preserving the legacy contract boundary.",
+  "benchmarkExecuted": false,
+  "nativeBenchmarkExecuted": false,
+  "graphifyExecuted": false
+}

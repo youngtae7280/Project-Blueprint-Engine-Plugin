@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-benchmark-candidate-result",
+  "status": "devview-benchmark-candidate-result-submitted",
+  "taskId": "retrofit-preserve-parity-fix",
+  "projectMode": "retrofit",
+  "comparisonArm": "codex-devview",
+  "armComparisonGroupId": "retrofit-preserve-parity-fix-arms",
+  "reportedOutcome": "implemented",
+  "changedFiles": [
+    {
+      "path": "src/retrofit/widget-adapter.ts",
+      "status": "modified"
+    },
+    {
+      "path": "docs/evidence/widget-parity.md",
+      "status": "added"
+    }
+  ],
+  "selectedContext": {
+    "files": ["src/retrofit/widget-adapter.ts", "docs/contracts/widget-parity.md", "docs/evidence/widget-parity.md"],
+    "nodeIds": ["node.widget-adapter", "node.widget-parity"],
+    "edgeIds": ["edge.adapter-parity"],
+    "evidenceIds": ["evidence.widget-parity"]
+  },
+  "providedEvidence": [
+    {
+      "evidenceId": "evidence.widget-parity",
+      "status": "present"
+    }
+  ],
+  "graphDeltaSummary": {
+    "operations": [
+      {
+        "operationId": "op-retrofit-parity-status",
+        "action": "replace-field",
+        "targetId": "node.widget-parity",
+        "fieldPath": "status"
+      }
+    ]
+  },
+  "regressionSignals": {
+    "parityPreserved": true
+  },
+  "executionMetrics": {
+    "iterationCount": 4,
+    "elapsedMs": 3200,
+    "costProxy": 1
+  },
+  "workJournalSummary": {
+    "status": "ready",
+    "nextAction": "review retrofit parity benchmark score",
+    "authoritySummaryVisible": true,
+    "sourceFactSummaryVisible": true
+  },
+  "benchmarkExecuted": false,
+  "candidateExecuted": false,
+  "graphifyExecuted": false,
+  "nativeBenchmarkExecuted": false,
+  "providerInvoked": false,
+  "networkCallMade": false,
+  "shellCommandsExecuted": false,
+  "extensionExecutionAllowed": false,
+  "extensionsExecuted": false,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "runtimeEvidenceSatisfied": false,
+  "evidenceAccepted": false,
+  "equivalenceProven": false,
+  "scopeEnforced": false,
+  "ciEnforcementEnabled": false,
+  "hooksActivated": false,
+  "approvalAutomationEnabled": false,
+  "userAcceptanceAutomated": false
+}

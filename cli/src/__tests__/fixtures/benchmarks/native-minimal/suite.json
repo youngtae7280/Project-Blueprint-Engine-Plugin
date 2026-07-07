@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-benchmark-suite-spec",
+  "status": "devview-benchmark-suite-configured",
+  "suiteId": "native-minimal-static-suite",
+  "suiteScope": "static-native-benchmark-fixture-report-only",
+  "taskIds": ["native-filter-empty-state"],
+  "comparisonArms": ["codex-only", "codex-devview"],
+  "passThreshold": 70
+}

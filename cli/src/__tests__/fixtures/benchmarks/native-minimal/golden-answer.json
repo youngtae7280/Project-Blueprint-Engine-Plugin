@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-benchmark-golden-answer",
+  "status": "devview-benchmark-golden-answer-ready",
+  "taskId": "native-filter-empty-state",
+  "projectMode": "native",
+  "expectedComparisonArms": ["codex-only", "codex-devview"],
+  "expectedOutcome": "implemented",
+  "allowedFiles": ["src/todo-filter.ts", "src/todo-filter.test.ts", "docs/evidence/filter-empty-state.md"],
+  "forbiddenFiles": ["src/storage.ts", "src/app-config.ts"],
+  "requiredTouchedFiles": ["src/todo-filter.ts", "docs/evidence/filter-empty-state.md"],
+  "optionalTouchedFiles": ["src/todo-filter.test.ts"],
+  "expectedContext": {
+    "files": ["src/todo-filter.ts", "docs/evidence/filter-empty-state.md"],
+    "nodeIds": ["node.todo-filter", "node.empty-state"],
+    "edgeIds": ["edge.filter-empty-state"],
+    "evidenceIds": ["evidence.filter-empty-state"]
+  },
+  "forbiddenContext": {
+    "files": ["src/storage.ts", "src/app-config.ts"],
+    "nodeIds": ["node.storage", "node.config"]
+  },
+  "requiredEvidence": [
+    {
+      "evidenceId": "evidence.filter-empty-state",
+      "kind": "unit-test-output"
+    }
+  ],
+  "expectedGraphDelta": {
+    "operations": [
+      {
+        "operationId": "op-empty-state-acceptance",
+        "action": "replace-field",
+        "targetId": "node.empty-state",
+        "fieldPath": "status"
+      }
+    ]
+  },
+  "regressionExpectations": {
+    "parityPreserved": true
+  },
+  "executionBudgets": {
+    "maxIterations": 4
+  }
+}
