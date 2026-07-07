@@ -75,9 +75,11 @@ devview work-journal render \
   --json
 ```
 
-Renders a cumulative static Work Journal preview and per-run data snapshot. The journal is report-only: it summarizes
-DevView flow, artifacts, blocked reasons, and provenance without executing extensions, calling providers, mutating the
-Maintainability Graph, satisfying runtime Evidence, proving equivalence, or enforcing scope/CI.
+Renders a cumulative static Work Journal preview and per-run data snapshot. If the data output already contains a
+DevView Work Journal data artifact, the command preserves prior runs and replaces the current `--run-id`
+deterministically. The journal is report-only: it summarizes DevView flow, artifacts, blocked reasons, and provenance
+without executing extensions, calling providers, mutating the Maintainability Graph, satisfying runtime Evidence,
+proving equivalence, or enforcing scope/CI.
 
 ### UserPromptSubmit Advisory
 

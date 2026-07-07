@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs'
 import path from 'node:path'
 import { mkdir } from 'node:fs/promises'
 import { readJsonSafe, relativePath, writeJsonAtomic, writeTextAtomic } from './fs.js'
@@ -160,7 +161,14 @@ export async function renderWorkJournalFile(
   const runOutputPath = resolveRepoPath(root, options.runOutput ?? '')
   await assertWorkJournalOutputAuthority(root, sources, { outputPath, dataOutputPath, runOutputPath })
 
-  const journal = buildWorkJournalData(root, options, sources, { outputPath, dataOutputPath, runOutputPath })
+  const previousJournal = await loadPreviousWorkJournalData(dataOutputPath)
+  const journal = buildWorkJournalData(
+    root,
+    options,
+    sources,
+    { outputPath, dataOutputPath, runOutputPath },
+    previousJournal,
+  )
   await mkdir(path.dirname(outputPath), { recursive: true })
   await mkdir(path.dirname(dataOutputPath), { recursive: true })
   await mkdir(path.dirname(runOutputPath), { recursive: true })
@@ -231,6 +239,7 @@ function buildWorkJournalData(
   options: WorkJournalRenderOptions,
   sources: LoadedArtifact[],
   outputs: { outputPath: string; dataOutputPath: string; runOutputPath: string },
+  previousJournal: WorkJournalDataPreview | null,
 ): WorkJournalDataPreview {
   const artifacts = sources.map((source) => summarizeArtifact(source))
   const blocked = artifacts.find((artifact) => artifact.classification === 'blocked')
@@ -253,6 +262,7 @@ function buildWorkJournalData(
         status: artifact.status,
       })),
   }
+  const runs = mergeWorkJournalRuns(previousJournal, run)
   return {
     schemaVersion: 1,
     artifactRole: DATA_ROLE,
@@ -260,7 +270,7 @@ function buildWorkJournalData(
     status: 'devview-work-journal-data-generated',
     journalScope: 'cumulative-static-work-journal-preview',
     currentRunId: options.runId,
-    runs: [run],
+    runs,
     safetyFlags: {
       staticHtmlOnly: true,
       providerInvoked: false,
@@ -288,6 +298,39 @@ function buildWorkJournalData(
     nonExecutionBoundary:
       'This DevView Work Journal is a static visualization/report artifact. It does not execute extension code, call providers or networks, mutate graph-source, apply graph deltas, satisfy runtime Evidence, accept Evidence, prove equivalence, enforce scope, configure CI, activate hooks, automate approval, or replace user acceptance.',
   }
+}
+
+async function loadPreviousWorkJournalData(dataOutputPath: string): Promise<WorkJournalDataPreview | null> {
+  if (!existsSync(dataOutputPath)) return null
+  const parsed = await readJsonSafe<JsonRecord>(dataOutputPath)
+  if (!parsed.ok) {
+    throw new Error(`Existing Work Journal data output is not readable JSON: ${parsed.error}`)
+  }
+  const record = asRecord(parsed.value)
+  if (!record || record.artifactRole !== DATA_ROLE || !Array.isArray(record.runs)) {
+    throw new Error('Existing Work Journal data output must be a devview-work-journal-data-preview artifact.')
+  }
+  const unsafe = collectUnsafeAuthorityHits(record)
+  if (unsafe.length > 0) {
+    throw new Error(`Existing Work Journal data output has unsafe true authority field ${unsafe[0].field}.`)
+  }
+  return record as unknown as WorkJournalDataPreview
+}
+
+function mergeWorkJournalRuns(
+  previousJournal: WorkJournalDataPreview | null,
+  currentRun: WorkJournalRunPreview,
+): WorkJournalRunPreview[] {
+  const previousRuns = previousJournal?.runs ?? []
+  const retainedRuns = previousRuns.filter(
+    (run) => isWorkJournalRunPreview(run) && run.runId !== currentRun.runId,
+  ) as WorkJournalRunPreview[]
+  return [...retainedRuns, currentRun]
+}
+
+function isWorkJournalRunPreview(value: unknown): value is WorkJournalRunPreview {
+  const record = asRecord(value)
+  return Boolean(record && typeof record.runId === 'string' && typeof record.title === 'string')
 }
 
 function summarizeArtifact(source: LoadedArtifact): WorkJournalArtifactSummary {

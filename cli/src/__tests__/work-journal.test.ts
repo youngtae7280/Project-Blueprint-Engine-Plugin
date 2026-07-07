@@ -88,6 +88,24 @@ describe('DevView Work Journal renderer', () => {
     expect(html).toContain('static visualization/report artifact')
   })
 
+  it('preserves previous Work Journal runs and replaces the current run deterministically', async () => {
+    const workspace = createWorkspace()
+    writeWorkJournalSources(workspace)
+    writeJson(join(workspace, '.devview/generated/work-journal/index.data.json'), previousJournalData())
+
+    const result = await runDevViewCli(workJournalArgs(), { cwd: workspace, pluginRoot })
+    const data = JSON.parse(readFileSync(join(workspace, '.devview/generated/work-journal/index.data.json'), 'utf8'))
+    const html = readFileSync(join(workspace, '.devview/generated/work-journal/index.html'), 'utf8')
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(data.currentRunId).toBe('todo-add')
+    expect(data.runs.map((run: { runId: string }) => run.runId)).toEqual(['previous-work', 'todo-add'])
+    expect(data.runs[0].title).toBe('Previous DevView Work')
+    expect(data.runs[1].title).toBe('Todo Add Calibration')
+    expect(html).toContain('Previous DevView Work')
+    expect(html).toContain('Todo Add Calibration')
+  })
+
   it('requires --run-id before writing outputs', async () => {
     const workspace = createWorkspace()
     writeWorkJournalSources(workspace)
@@ -347,4 +365,62 @@ function writeWorkJournalSources(workspace: string): void {
     graphSourceMutated: false,
     graphDeltaApplied: false,
   })
+}
+
+function previousJournalData(): unknown {
+  return {
+    schemaVersion: 1,
+    artifactRole: 'devview-work-journal-data-preview',
+    htmlArtifactRole: 'devview-work-journal-html-preview',
+    status: 'devview-work-journal-data-generated',
+    journalScope: 'cumulative-static-work-journal-preview',
+    currentRunId: 'previous-work',
+    runs: [
+      {
+        runId: 'previous-work',
+        title: 'Previous DevView Work',
+        status: 'ready-for-review',
+        nextAction: 'Review prior work.',
+        blockedReason: null,
+        flow: [],
+        artifacts: [],
+        auditProvenance: [],
+      },
+      {
+        runId: 'todo-add',
+        title: 'Stale Todo Add Calibration',
+        status: 'advisory',
+        nextAction: 'This run should be replaced.',
+        blockedReason: null,
+        flow: [],
+        artifacts: [],
+        auditProvenance: [],
+      },
+    ],
+    safetyFlags: {
+      staticHtmlOnly: true,
+      providerInvoked: false,
+      networkCallMade: false,
+      extensionExecutionAllowed: false,
+      extensionsExecuted: false,
+      shellCommandsExecuted: false,
+      filesMutatedOutsideExplicitOutputs: false,
+      graphSourceMutated: false,
+      graphDeltaApplied: false,
+      runtimeEvidenceSatisfied: false,
+      evidenceAccepted: false,
+      equivalenceProven: false,
+      scopeEnforced: false,
+      ciEnforcementEnabled: false,
+      approvalAutomationEnabled: false,
+      userAcceptanceAutomated: false,
+      nonEnforcing: true,
+    },
+    outputPaths: {
+      htmlOutputPath: '.devview/generated/work-journal/index.html',
+      dataOutputPath: '.devview/generated/work-journal/index.data.json',
+      runOutputPath: '.devview/generated/work-journal/runs/previous-work/run.json',
+    },
+    nonExecutionBoundary: 'Static previous journal.',
+  }
 }
