@@ -140,14 +140,14 @@ describe('Graph Delta human review packet CLI', () => {
 function validProposalPreview(): Record<string, unknown> {
   return {
     schemaVersion: 1,
-    schemaId: 'pbe-graph-update-proposal-v0',
+    schemaId: 'devview-graph-update-proposal-v0',
     artifactRole: 'graph-delta-proposal-only-preview',
     proposalId: 'proposal-only-preview-ch-001',
     sourceRecordIdCandidate: 'CH-001',
     sourceRecordIdAuthorityStatus: 'structure-only-review-candidate',
     proposalGenerationStatus: 'generated-proposal-only-preview',
     proposalOnly: true,
-    changedFiles: ['examples/valid/todo-app-pbe-run/src/App.tsx'],
+    changedFiles: ['examples/valid/todo-app-devview-run/src/App.tsx'],
     proposedNodeUpdates: [{ candidateOnly: true }],
     candidateEvidenceLinks: [
       {

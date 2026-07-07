@@ -477,7 +477,7 @@ function validBoundary(): Record<string, unknown> {
 
 function validProposal(): Record<string, unknown> {
   return {
-    schemaId: 'pbe-graph-update-proposal-v0',
+    schemaId: 'devview-graph-update-proposal-v0',
     artifactRole: 'graph-delta-proposal-only-preview',
     proposalId: 'GDP-TEST',
     proposalOnly: true,
@@ -504,7 +504,7 @@ function validReviewPacket(overrides: Record<string, unknown> = {}): Record<stri
     reviewPacketStatus: 'review-required',
     sourceProposal: 'proposal.json',
     proposalId: 'GDP-TEST',
-    schemaId: 'pbe-graph-update-proposal-v0',
+    schemaId: 'devview-graph-update-proposal-v0',
     humanReviewQuestions: [],
     reviewRequiredItems: [],
     blockingReviewItems: [],

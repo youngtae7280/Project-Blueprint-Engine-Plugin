@@ -3,7 +3,7 @@
   "metadata": {
     "artifactRole": "generated_read_model_evidence",
     "generatedAt": "2026-06-29T08:46:09.238Z",
-    "commandIdentity": "pbe graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice",
+    "commandIdentity": "devview graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice",
     "sourceCommit": "a1c4f10",
     "sourceSlice": "examples/internal-legacy/adoption/todo-search-slice",
     "sliceProfile": "todo-search-selected-slice",
@@ -42,7 +42,7 @@
     "graphSourceArtifact": "examples/internal-legacy/adoption/todo-search-slice/graph-source.json",
     "graphSourceProjectionRole": "graph_source_read_model_projection",
     "graphSourcePromotionScope": "todo-search-selected-slice",
-    "graphSourceProjectionBoundary": "Generated read-model, parity, validation, aggregate, and CI artifacts are projections or Evidence derived from this limited graph source. They do not replace user acceptance, add enforcement, retire fallback artifacts, or promote Todo App PBE Run.",
+    "graphSourceProjectionBoundary": "Generated read-model, parity, validation, aggregate, and CI artifacts are projections or Evidence derived from this limited graph source. They do not replace user acceptance, add enforcement, retire fallback artifacts, or promote Todo App DevView Run.",
     "fallbackReferences": [
       "examples/internal-legacy/adoption/todo-search-slice/product-tree.json",
       "examples/internal-legacy/adoption/todo-search-slice/project-tree.json",

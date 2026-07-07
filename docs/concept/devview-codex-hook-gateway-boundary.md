@@ -19,7 +19,7 @@ This boundary is preview-only. It does not implement hook scripts, block tool ca
 The boundary preview artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json
 ```
 
 Required safety values remain:
@@ -106,7 +106,7 @@ The compiler frontend semantics for natural-language request intake are previewe
 [natural-language-request-intake-boundary.md](natural-language-request-intake-boundary.md) and:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
 ```
 
 The Hook Gateway is the activation and routing boundary. Natural Language Request Intake is the compiler frontend
@@ -117,14 +117,14 @@ generation.
 The Request IR Candidate schema and first calibration fixture are previewed as future analyzer outputs:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json
 ```
 
 The schema-only validation result for that fixture is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json
 ```
 
 These files do not implement hook behavior or AI classification. The schema-only validator checks schema and
@@ -135,8 +135,8 @@ generation, or instruction pack generation.
 The graph-aware validation boundary and first validation result are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json
 ```
 
 They are still not hook behavior, not graph traversal, not selected graph slice generation, and not contract compiler
@@ -163,7 +163,7 @@ lastObservedHookEvent: null
 The install/trust scope decision boundary is previewed separately in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json
 ```
 
 This boundary defines future install scope candidates, trust prerequisites, disallowed mutations, and decision states
@@ -181,7 +181,7 @@ enforcement.
 The Hook Gateway health/readiness boundary is previewed separately in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json
 ```
 
 The health boundary defines what a future deterministic preflight should check before DevView treats hooks as active:

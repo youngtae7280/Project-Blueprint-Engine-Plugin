@@ -6,7 +6,7 @@
   "sourceSlice": "examples/internal-legacy/adoption/todo-search-slice",
   "sourceProfile": "todo-search-selected-slice",
   "sourceAuthorityBoundary": "Maintainability Graph is the limited source model for the Todo Search selected-slice authority surface only. Tree-native selected-slice artifacts remain maintained compatibility / fallback / reference artifacts, and repository-wide source authority remains unchanged outside explicitly promoted scopes.",
-  "projectionBoundary": "Generated read-model, parity, validation, aggregate, and CI artifacts are projections or Evidence derived from this limited graph source. They do not replace user acceptance, add enforcement, retire fallback artifacts, or promote Todo App PBE Run.",
+  "projectionBoundary": "Generated read-model, parity, validation, aggregate, and CI artifacts are projections or Evidence derived from this limited graph source. They do not replace user acceptance, add enforcement, retire fallback artifacts, or promote Todo App DevView Run.",
   "fallbackReferences": [
     "examples/internal-legacy/adoption/todo-search-slice/product-tree.json",
     "examples/internal-legacy/adoption/todo-search-slice/project-tree.json",

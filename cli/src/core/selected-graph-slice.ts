@@ -131,11 +131,11 @@ export function generateSelectedGraphSlice(
   const graphSourcePath =
     authorityInputs.graphSourcePath ||
     stringValue(plan?.graphSourcePath) ||
-    'examples/valid/todo-app-pbe-run/graph-source.json'
+    'examples/valid/todo-app-devview-run/graph-source.json'
   const generatedReadModelPath =
     authorityInputs.generatedReadModelPath ||
     stringValue(plan?.generatedReadModelPath) ||
-    'examples/valid/todo-app-pbe-run/generated/generated-read-model.json'
+    'examples/valid/todo-app-devview-run/generated/generated-read-model.json'
 
   validateTraversalPlanPrerequisites(plan, findings)
 

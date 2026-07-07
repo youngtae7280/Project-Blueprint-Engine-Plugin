@@ -34,7 +34,7 @@ The smoke checks:
 - Todo Search graph-source-backed generation, 40 nodes / 59 edges / 7 Core Views
 - Todo Search parity and validation pass
 - Todo Search projection contract status `projection-contract-pass`
-- Todo App PBE Run structure-only generation and validation, 22 nodes / 38 edges / 7 Core Views
+- Todo App DevView Run structure-only generation and validation, 22 nodes / 38 edges / 7 Core Views
 - Todo App positive validate-all projection status `projection-contract-pass`
 - registry-backed `graph read-model validate --all --json` status `aggregate-pass`
 - `examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json` source roles and no-deletion/no-enforcement

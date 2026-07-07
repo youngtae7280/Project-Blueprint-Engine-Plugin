@@ -3,7 +3,7 @@
   "artifactRole": "devview-project-memory-preview",
   "status": "project-memory-preview-candidate-not-approved",
   "projectMemoryId": "windowsutility-retrofit-project-memory-v0",
-  "sourceProjectMemoryBoundary": "examples/valid/todo-app-pbe-run/generated/devview-project-memory-boundary.runtime-evidence-only.preview.json",
+  "sourceProjectMemoryBoundary": "examples/valid/todo-app-devview-run/generated/devview-project-memory-boundary.runtime-evidence-only.preview.json",
   "projectIdentity": {
     "projectId": "windowsutility-retrofit",
     "projectName": "WindowsUtility / Utility_Windows Retrofit Portfolio",
@@ -64,7 +64,7 @@
   },
   "taxonomyProfileRef": {
     "taxonomyProfileId": "legacy-retrofit-windowsutility-v0",
-    "sourceBoundary": "examples/valid/todo-app-pbe-run/generated/devview-taxonomy-profile-extension-boundary.runtime-evidence-only.preview.json",
+    "sourceBoundary": "examples/valid/todo-app-devview-run/generated/devview-taxonomy-profile-extension-boundary.runtime-evidence-only.preview.json",
     "authorityStatus": "preview-only-not-approved",
     "baseProfile": "legacy-retrofit",
     "extensionNodeKinds": [
@@ -125,7 +125,7 @@
   },
   "revisionPolicy": {
     "revisionHistoryRequired": true,
-    "directionChangeBoundary": "examples/valid/todo-app-pbe-run/generated/devview-project-direction-change-boundary.runtime-evidence-only.preview.json",
+    "directionChangeBoundary": "examples/valid/todo-app-devview-run/generated/devview-project-direction-change-boundary.runtime-evidence-only.preview.json",
     "profileImpactAnalysisRequired": true,
     "taxonomyExtensionDeltaProposalRequired": true,
     "viewTreeProfileDeltaProposalRequired": true,

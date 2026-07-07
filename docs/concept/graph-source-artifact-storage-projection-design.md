@@ -19,10 +19,10 @@ now also backs Todo Search default read-model generation from the bounded graph 
 workflows, retained fallback artifacts, Todo App structure-only behavior, or source authority beyond the executed limited
 scope.
 
-The next bounded expansion surface is now confirmed as a structure-only graph-source artifact for the Todo App PBE Run:
+The next bounded expansion surface is now confirmed as a structure-only graph-source artifact for the Todo App DevView Run:
 
 ```text
-examples/valid/todo-app-pbe-run/graph-source.json
+examples/valid/todo-app-devview-run/graph-source.json
 ```
 
 This graph source backs the current structure-only generated read-model records and is consumed by local positive
@@ -38,8 +38,8 @@ pilot-marker-backed, not enforcement, and not promotion beyond `structure-only`.
 | Fallback/reference    | Tree-native selected-slice artifacts retained as maintained compatibility / fallback / reference artifacts.                                          |
 | Graph source artifact | `examples/internal-legacy/adoption/todo-search-slice/graph-source.json` exists as non-generated limited source artifact.                             |
 | Generated projections | Existing generated read-model artifacts and the graph-source projection output remain Evidence/projection outputs, not independent source authority. |
-| Positive registry     | `examples/internal-legacy/read-model-aggregate/read-model-slices.json` includes Todo Search and Todo App PBE Run only.                               |
-| Todo App PBE Run      | `structure-only`, graph-source-backed with a confirmed projection contract in local positive validate-all; not parity-backed or pilot-marker-backed. |
+| Positive registry     | `examples/internal-legacy/read-model-aggregate/read-model-slices.json` includes Todo Search and Todo App DevView Run only.                           |
+| Todo App DevView Run  | `structure-only`, graph-source-backed with a confirmed projection contract in local positive validate-all; not parity-backed or pilot-marker-backed. |
 | CI                    | Manual and PR informational, non-enforcing.                                                                                                          |
 
 ## Candidate Storage Locations
@@ -84,7 +84,7 @@ Current projection helper and CLI surface:
 
 ```text
 loadGraphSourceArtifact -> projectGraphSourceReadModel -> projectGraphSourceReadModelToFile
-pbe graph read-model project --graph-source examples/internal-legacy/adoption/todo-search-slice/graph-source.json --output examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
+devview graph read-model project --graph-source examples/internal-legacy/adoption/todo-search-slice/graph-source.json --output examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
 ```
 
 Focused tests prove that projection from `graph-source.json` preserves the current Todo Search generated read-model
@@ -110,21 +110,21 @@ Future projection generation hardening should:
 2. Generate or refresh read-model / view projection artifacts into `generated/`.
 3. Compare generated projections against retained fallback/reference artifacts where parity is required.
 4. Preserve source, projection, Evidence, fallback, and user-acceptance boundaries in every output manifest.
-5. Keep Todo App PBE Run structure-only unless a separate authority package promotes it.
+5. Keep Todo App DevView Run structure-only unless a separate authority package promotes it.
 
 ## Todo App Structure-Only Graph Source
 
 The Todo App structure-only graph source is strict JSON, non-generated, and located outside `generated/`:
 
 ```text
-examples/valid/todo-app-pbe-run/graph-source.json
+examples/valid/todo-app-devview-run/graph-source.json
 ```
 
 Implemented boundary:
 
 - `artifactRole: structure-only-graph-source`
 - `status: confirmed-graph-source-backed`
-- `graphSourceScope: todo-app-pbe-run-structure-only`
+- `graphSourceScope: todo-app-devview-run-structure-only`
 - `policyLevel: structure-only`
 - source records preserve the current 22-node / 38-edge / 7-Core-View structure-only projection
 - graph-source boundaries state that the artifact is consumed by positive validate-all only as a confirmed
@@ -136,19 +136,19 @@ and reject attempts to mark the structure-only source as promoted beyond its bou
 The same `graph read-model project --graph-source ... --output ...` CLI surface now projects this source into:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-source-read-model-projection.json
+examples/valid/todo-app-devview-run/generated/graph-source-read-model-projection.json
 ```
 
 The projection preserves 22 nodes, 38 edges, and 7 Core Views. Its metadata uses
 `structure_only_graph_source_read_model_projection` and `structure-only`; its boundaries state that it does not promote
-Todo App PBE Run beyond structure-only, does not add parity or pilot marker requirements, and participates in positive
+Todo App DevView Run beyond structure-only, does not add parity or pilot marker requirements, and participates in positive
 validate-all only as a confirmed structure-only projection contract. Focused tests validate the committed projection
 contract directly and reject projection boundary drift, including broader authority creation claims.
 
 The local observation command checks this candidate projection outside positive validate-all semantics:
 
 ```bash
-pbe graph read-model observe-candidates
+devview graph read-model observe-candidates
 ```
 
 It reports `candidate-observation-pass` for backward-compatible observation output when the Todo App projection contract
@@ -161,7 +161,7 @@ uploads:
 
 ```text
 examples/internal-legacy/read-model-aggregate/generated/read-model-candidate-observation-output.json
-examples/valid/todo-app-pbe-run/generated/graph-source-read-model-projection.json
+examples/valid/todo-app-devview-run/generated/graph-source-read-model-projection.json
 ```
 
 The CI manifest and Step Summary expose `candidateObservationStatus` and the Todo App candidate projection status as
@@ -184,7 +184,7 @@ manual/PR CI review of the confirmed label remains the next observation step.
 Todo App structure-only generation now uses the confirmed graph-source records for generated read-model output:
 
 ```bash
-pbe graph read-model generate --slice examples/valid/todo-app-pbe-run
+devview graph read-model generate --slice examples/valid/todo-app-devview-run
 ```
 
 The generated read-model preserves 22 nodes, 38 edges, and 7 Core Views, records `readModelSourceMode:
@@ -214,7 +214,7 @@ This design does not:
 - modify workflow trigger mode, required checks, or enforcement
 - regenerate unrelated generated artifacts
 - add enforcement or required checks
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 - promote the Todo App candidate artifact into source authority or beyond `structure-only`
 - execute repo-wide Graph-source promotion
 - retire tree-native artifacts

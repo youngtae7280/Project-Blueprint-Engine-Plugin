@@ -192,7 +192,7 @@ function buildOperations(root: string, files: TextFile[]): LegacyCleanupOperatio
   addIfRelevant(operations, buildTodoFixtureRename(root, files))
   addIfRelevant(operations, buildRewriteOperation(root, files, 'examples/README.md'))
   addIfRelevant(operations, buildRewriteOperation(root, files, 'examples/internal-legacy/read-model-aggregate'))
-  addIfRelevant(operations, buildRewriteOperation(root, files, 'examples/valid/todo-app-pbe-run/generated'))
+  addIfRelevant(operations, buildRewriteOperation(root, files, 'examples/valid/todo-app-devview-run/generated'))
   addIfRelevant(operations, buildPbeStorageCompatibilityOperation(root, files))
   addIfRelevant(operations, buildInternalLegacyBoundaryOperation(root, files))
 
@@ -235,7 +235,7 @@ function buildTodoFixtureRename(root: string, files: TextFile[]): Omit<LegacyCle
     blockingRefCount: refs.length,
     collisionStatus: collisionStatus(root, sourcePath, targetPath),
     rationale:
-      'This fixture is the current canonical generated DevView chain, but its path still exposes legacy product terminology.',
+      'This legacy Todo App fixture path should move to the canonical DevView fixture path after active references are updated.',
   }
 }
 
@@ -249,7 +249,11 @@ function buildRewriteOperation(
   const relevantFiles = files.filter(
     (file) => file.relativePath === sourcePath || file.relativePath.startsWith(`${sourcePath}/`),
   )
-  const legacyCount = relevantFiles.reduce((count, file) => count + countLegacyMatches(file.text), 0)
+  const filesWithActionableLegacy = relevantFiles.filter((file) => countActionableLegacyMatches(file, sourcePath) > 0)
+  const legacyCount = filesWithActionableLegacy.reduce(
+    (count, file) => count + countActionableLegacyMatches(file, sourcePath),
+    0,
+  )
   if (legacyCount === 0) return null
   return {
     operationKind: 'rewrite-content',
@@ -258,10 +262,10 @@ function buildRewriteOperation(
       'Rewrite legacy command identities, product names, and path provenance to DevView terminology during the matching fixture migration slice.',
     classification: 'needs-devview-rename',
     riskLevel: sourcePath.includes('/generated') ? 'high' : 'medium',
-    dependencyRefs: relevantFiles.map((file) => file.relativePath).slice(0, MAX_REFS),
-    dependencyRefCount: relevantFiles.length,
-    blockingRefs: relevantFiles.map((file) => file.relativePath).slice(0, MAX_REFS),
-    blockingRefCount: relevantFiles.length,
+    dependencyRefs: filesWithActionableLegacy.map((file) => file.relativePath).slice(0, MAX_REFS),
+    dependencyRefCount: filesWithActionableLegacy.length,
+    blockingRefs: filesWithActionableLegacy.map((file) => file.relativePath).slice(0, MAX_REFS),
+    blockingRefCount: filesWithActionableLegacy.length,
     collisionStatus: 'not-applicable',
     rationale: `Found ${legacyCount} legacy references under ${sourcePath}.`,
   }
@@ -271,7 +275,7 @@ function buildPbeStorageCompatibilityOperation(
   root: string,
   files: TextFile[],
 ): Omit<LegacyCleanupOperation, 'operationId'> | null {
-  const sourcePath = 'examples/valid/todo-app-pbe-run/.pbe'
+  const sourcePath = 'examples/valid/todo-app-devview-run/.pbe'
   if (!existsSync(join(root, sourcePath))) return null
   const refs = findReferences(files, '.pbe').filter((entry) => entry.startsWith('examples/'))
   return {
@@ -417,6 +421,17 @@ function countLegacyMatches(text: string): number {
   return [...text.matchAll(LEGACY_PATTERN)].length
 }
 
+function countActionableLegacyMatches(file: TextFile, sourcePath: string): number {
+  if (!sourcePath.startsWith('examples/valid/todo-app-devview-run')) {
+    return countLegacyMatches(file.text)
+  }
+
+  return file.text
+    .split(/\r?\n/)
+    .filter((line) => !line.includes('.pbe'))
+    .reduce((count, line) => count + countLegacyMatches(line), 0)
+}
+
 function listTextFiles(root: string): TextFile[] {
   const files: TextFile[] = []
   const visit = (dir: string) => {
@@ -509,7 +524,8 @@ function buildScopeLimitations(scope: LegacyCleanupScope): string[] {
 function buildGrepAcceptanceCriteria(): string[] {
   return [
     'rg -n "PBE|Project Blueprint Engine|\\bpbe\\b|\\.pbe" README.md docs docs/index.md docs/cli-reference.md => zero public-doc matches.',
-    'git grep -n -E "PBE|Project Blueprint Engine|\\bpbe\\b|\\.pbe" -- examples ":!examples/internal-legacy/**" ":!examples/valid/todo-app-pbe-run/**" => zero public examples matches before the canonical fixture path migration slice.',
+    'git grep -n "todo-app-pbe-run" -- . => zero active canonical fixture path references outside explicitly allowlisted internal migration fixtures.',
+    'git grep -n -E "PBE|Project Blueprint Engine|\\bpbe\\b|\\.pbe" -- examples ":!examples/internal-legacy/**" ":!examples/valid/todo-app-devview-run/.pbe/**" => only deferred .pbe storage references under examples/valid/todo-app-devview-run until the storage migration slice.',
     'rg -n "\\bpbe\\b|PBE_|Project Blueprint Engine|validate:pbe" package.json package-lock.json .github cli scripts => hidden compatibility allowlist only.',
     'rg -n "\\.pbe" cli/src scripts examples docs => storage migration resolver, output guards, or internal migration fixtures only.',
   ]

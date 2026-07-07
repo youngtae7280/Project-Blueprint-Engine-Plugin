@@ -11,19 +11,19 @@ Evidence without changing workflow behavior.
 
 ## Current Baseline
 
-| Baseline item             | Current value                                                                                               |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Manual dispatch baseline  | Run `28207696557`, `workflow_dispatch`, `success`, `ci-evidence-pass`                                       |
-| First real PR run         | PR `#1`, run `28207822252`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`     |
-| Latest PR run             | PR `#12`, run `28348903718`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`    |
-| Current workflow mode     | `workflow_dispatch` plus non-enforcing `pull_request-informational`                                         |
-| Included slices           | `examples/internal-legacy/adoption/todo-search-slice`; `examples/valid/todo-app-pbe-run`; aggregate summary |
-| Workflow command mode     | registry-backed `validate --all` after manual run `28210541509`                                             |
-| Observation policy        | [pr-informational-observation-policy.md](pr-informational-observation-policy.md)                            |
-| Refinement design         | [pr-informational-path-filter-refinement.md](pr-informational-path-filter-refinement.md)                    |
-| Current real PR run count | 9 reviewed real PR informational runs                                                                       |
-| Target before refinement  | Run-count threshold satisfied; refinement may be considered but is not automatic.                           |
-| Enforcement / authority   | Not approved. PR Evidence is informational only and does not change source authority.                       |
+| Baseline item             | Current value                                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Manual dispatch baseline  | Run `28207696557`, `workflow_dispatch`, `success`, `ci-evidence-pass`                                           |
+| First real PR run         | PR `#1`, run `28207822252`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`         |
+| Latest PR run             | PR `#12`, run `28348903718`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`        |
+| Current workflow mode     | `workflow_dispatch` plus non-enforcing `pull_request-informational`                                             |
+| Included slices           | `examples/internal-legacy/adoption/todo-search-slice`; `examples/valid/todo-app-devview-run`; aggregate summary |
+| Workflow command mode     | registry-backed `validate --all` after manual run `28210541509`                                                 |
+| Observation policy        | [pr-informational-observation-policy.md](pr-informational-observation-policy.md)                                |
+| Refinement design         | [pr-informational-path-filter-refinement.md](pr-informational-path-filter-refinement.md)                        |
+| Current real PR run count | 9 reviewed real PR informational runs                                                                           |
+| Target before refinement  | Run-count threshold satisfied; refinement may be considered but is not automatic.                               |
+| Enforcement / authority   | Not approved. PR Evidence is informational only and does not change source authority.                           |
 
 Negative fixture policy is documented separately in
 [read-model-negative-fixture-storage-decision.md](read-model-negative-fixture-storage-decision.md). Current PR
@@ -50,7 +50,7 @@ unchanged after three successful PR observations.
 | Manifest status              | `ci-evidence-pass`                                                                                                                                 |
 | Evidence level               | `ci-backed`                                                                                                                                        |
 | Todo Search status           | `validation-pass`, `comparison-pass`, 40 nodes / 59 edges, 20 checks                                                                               |
-| Todo App PBE Run status      | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                                           |
+| Todo App DevView Run status  | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                                           |
 | Aggregate status             | `aggregate-pass`, 2 included slices                                                                                                                |
 | Warning / blocker / decision | 0 / 0 / 0 at aggregate status level                                                                                                                |
 | Retained warning visibility  | Present                                                                                                                                            |
@@ -76,7 +76,7 @@ unchanged after three successful PR observations.
 | Manifest status              | `ci-evidence-pass`                                                                                                                    |
 | Evidence level               | `ci-backed`                                                                                                                           |
 | Todo Search status           | `validation-pass`, `comparison-pass`, 40 nodes / 59 edges, 20 checks                                                                  |
-| Todo App PBE Run status      | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                              |
+| Todo App DevView Run status  | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                              |
 | Aggregate status             | `aggregate-pass`, 2 included slices, 0 warnings / 0 blocking / 0 decision-required                                                    |
 | Retained warning visibility  | Present; `retainedWarningsRemainVisible: true`                                                                                        |
 | Boundary visibility          | Source-authority boundary, non-enforcement statement, and non-promotion statement present                                             |
@@ -103,7 +103,7 @@ unchanged after three successful PR observations.
 | Evidence level               | `ci-backed`                                                                                                                                  |
 | Source mode                  | `registry-backed validate-all`; `validateAllStatus: aggregate-pass`                                                                          |
 | Todo Search status           | `validation-pass`, `comparison-pass`, 40 nodes / 59 edges, 20 checks                                                                         |
-| Todo App PBE Run status      | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                                     |
+| Todo App DevView Run status  | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                                     |
 | Aggregate status             | `aggregate-pass`, 2 included slices, 0 warnings / 0 blocking / 0 decision-required                                                           |
 | Retained warning visibility  | Present; `retainedWarningsRemainVisible: true`                                                                                               |
 | Boundary visibility          | Source-authority boundary, non-enforcement statement, and non-promotion statement present                                                    |
@@ -130,7 +130,7 @@ unchanged after three successful PR observations.
 | Evidence level               | `ci-backed`                                                                                                                                            |
 | Source mode                  | `registry-backed validate-all`; `validateAllStatus: aggregate-pass`                                                                                    |
 | Todo Search status           | `validation-pass`, `comparison-pass`, 40 nodes / 59 edges, 20 checks                                                                                   |
-| Todo App PBE Run status      | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                                               |
+| Todo App DevView Run status  | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                                               |
 | Aggregate status             | `aggregate-pass`, 2 included slices, 0 warnings / 0 blocking / 0 decision-required                                                                     |
 | Invalid fixture status       | Not included in artifact bundle, positive registry, validate-all aggregate path, or CI workflow                                                        |
 | Retained warning visibility  | Present; `retainedWarningsRemainVisible: true`                                                                                                         |
@@ -157,10 +157,10 @@ unchanged after three successful PR observations.
 | Manifest status              | `ci-evidence-pass`                                                                                                                            |
 | Evidence level               | `ci-backed`                                                                                                                                   |
 | Source mode                  | `registry-backed validate-all`; `validateAllStatus: aggregate-pass`                                                                           |
-| Projection contract status   | Todo Search `projection-contract-pass`; Todo App PBE Run `not-configured`; top-level `projectionContractStatus` present                       |
+| Projection contract status   | Todo Search `projection-contract-pass`; Todo App DevView Run `not-configured`; top-level `projectionContractStatus` present                   |
 | Projection artifacts         | `read-model-validate-all-output.json` and `graph-source-read-model-projection.json` present in artifact bundle                                |
 | Todo Search status           | `validation-pass`, `comparison-pass`, 40 nodes / 59 edges, 20 checks                                                                          |
-| Todo App PBE Run status      | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                                      |
+| Todo App DevView Run status  | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                                      |
 | Aggregate status             | `aggregate-pass`, 2 included slices, 0 warnings / 0 blocking / 0 decision-required                                                            |
 | Boundary visibility          | Source-authority boundary, non-enforcement statement, and non-promotion statement present                                                     |
 | Failure / noise class        | No failure; docs-only smoke verified PR projection-status capture after manual run `28218687289`                                              |
@@ -187,9 +187,9 @@ unchanged after three successful PR observations.
 | Source mode                  | `registry-backed validate-all`; `validateAllStatus: aggregate-pass`                                                                                   |
 | Generated source mode        | Todo Search generated read-model metadata records `readModelSourceMode: graph-source-backed`                                                          |
 | Graph source artifact        | Todo Search generated read-model metadata records `examples/internal-legacy/adoption/todo-search-slice/graph-source.json`                             |
-| Projection contract status   | Todo Search `projection-contract-pass`; Todo App PBE Run `not-configured`                                                                             |
+| Projection contract status   | Todo Search `projection-contract-pass`; Todo App DevView Run `not-configured`                                                                         |
 | Todo Search status           | `validation-pass`, `comparison-pass`, 40 nodes / 59 edges, 20 checks                                                                                  |
-| Todo App PBE Run status      | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                                              |
+| Todo App DevView Run status  | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                                              |
 | Aggregate status             | `aggregate-pass`, 2 included slices, 0 warnings / 0 blocking / 0 decision-required                                                                    |
 | Boundary visibility          | Source-authority boundary, non-enforcement statement, and non-promotion statement present                                                             |
 | Failure / noise class        | No failure; docs-only smoke verified PR behavior after Todo Search generation became graph-source-backed                                              |
@@ -215,11 +215,11 @@ unchanged after three successful PR observations.
 | Evidence level                   | `ci-backed`                                                                                                                                   |
 | Source mode                      | `registry-backed validate-all`; `validateAllStatus: aggregate-pass`                                                                           |
 | Candidate observation status     | `candidate-observation-pass`; Todo App candidate `candidate-projection-contract-pass`; candidate output artifact present                      |
-| Candidate projection artifact    | `valid/todo-app-pbe-run/generated/graph-source-candidate-read-model-projection.json` present                                                  |
+| Candidate projection artifact    | `valid/todo-app-devview-run/generated/graph-source-candidate-read-model-projection.json` present                                              |
 | Positive validate-all separation | Todo App positive projection remains `not-configured`; `aggregateStatus: aggregate-pass` remains separate from candidate observation          |
-| Projection contract status       | Todo Search `projection-contract-pass`; Todo App PBE Run positive path `not-configured`                                                       |
+| Projection contract status       | Todo Search `projection-contract-pass`; Todo App DevView Run positive path `not-configured`                                                   |
 | Todo Search status               | `validation-pass`, `comparison-pass`, 40 nodes / 59 edges, 20 checks                                                                          |
-| Todo App PBE Run status          | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                                      |
+| Todo App DevView Run status      | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                                      |
 | Aggregate status                 | `aggregate-pass`, 2 included slices, 0 warnings / 0 blocking / 0 decision-required                                                            |
 | Boundary visibility              | Source-authority boundary, non-enforcement statement, non-promotion statement, and candidate positive-validate-all boundary present           |
 | Failure / noise class            | No failure; docs-only smoke verified PR candidate-observation capture after manual run `28221088498`                                          |
@@ -228,23 +228,23 @@ unchanged after three successful PR observations.
 
 ### Baseline Entry 8: Confirmed Todo App Graph-Source PR Informational Run
 
-| Field                   | Value                                                                                                                                               |
-| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Entry type              | PR informational smoke review for confirmed Todo App graph-source-backed metadata                                                                   |
-| PR                      | `#10`; draft temporary smoke PR; closed without merge                                                                                               |
-| Run ID                  | `28226357099`                                                                                                                                       |
-| Run URL                 | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28226357099`                                                          |
-| Event / trigger mode    | `pull_request` / `pull_request-informational`                                                                                                       |
-| Head SHA / base SHA     | `cffe52fb9944a093d79096a70f804e69eee42b46` / `8a8ef76b63272d2303978dae51b1d0709fb632c4`                                                             |
-| Head ref / base ref     | `pbe/pr-info-confirmed-todo-app-smoke-20260626` / `main`                                                                                            |
-| Artifact bundle         | Present and reviewed; Todo App `graph-source-read-model-projection.json` uploaded                                                                   |
-| Manifest status         | `ci-evidence-pass`; PR metadata present                                                                                                             |
-| Todo Search status      | graph-source-backed; `projection-contract-pass`; 40 nodes / 59 edges / 7 Core Views; validation/parity pass                                         |
-| Todo App PBE Run status | graph-source-backed; `projection-contract-pass`; `structure-only-confirmed`; `confirmed-structure-only-graph-source`; 22 nodes / 38 edges / 7 views |
-| Validate-all / E2E      | `aggregate-pass`; `e2e-smoke-pass`                                                                                                                  |
-| Boundary visibility     | Informational PR Evidence only; no enforcement, required check, tree retirement, or invalid fixture CI                                              |
-| Failure / noise class   | No failure; docs-only smoke verified PR visibility after Todo App confirmed graph-source-backed rename                                              |
-| Cleanup                 | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted                                                               |
+| Field                       | Value                                                                                                                                               |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Entry type                  | PR informational smoke review for confirmed Todo App graph-source-backed metadata                                                                   |
+| PR                          | `#10`; draft temporary smoke PR; closed without merge                                                                                               |
+| Run ID                      | `28226357099`                                                                                                                                       |
+| Run URL                     | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28226357099`                                                          |
+| Event / trigger mode        | `pull_request` / `pull_request-informational`                                                                                                       |
+| Head SHA / base SHA         | `cffe52fb9944a093d79096a70f804e69eee42b46` / `8a8ef76b63272d2303978dae51b1d0709fb632c4`                                                             |
+| Head ref / base ref         | `pbe/pr-info-confirmed-todo-app-smoke-20260626` / `main`                                                                                            |
+| Artifact bundle             | Present and reviewed; Todo App `graph-source-read-model-projection.json` uploaded                                                                   |
+| Manifest status             | `ci-evidence-pass`; PR metadata present                                                                                                             |
+| Todo Search status          | graph-source-backed; `projection-contract-pass`; 40 nodes / 59 edges / 7 Core Views; validation/parity pass                                         |
+| Todo App DevView Run status | graph-source-backed; `projection-contract-pass`; `structure-only-confirmed`; `confirmed-structure-only-graph-source`; 22 nodes / 38 edges / 7 views |
+| Validate-all / E2E          | `aggregate-pass`; `e2e-smoke-pass`                                                                                                                  |
+| Boundary visibility         | Informational PR Evidence only; no enforcement, required check, tree retirement, or invalid fixture CI                                              |
+| Failure / noise class       | No failure; docs-only smoke verified PR visibility after Todo App confirmed graph-source-backed rename                                              |
+| Cleanup                     | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted                                                               |
 
 ### Baseline Entry 9: edgeIntent Projection PR Informational Run
 
@@ -307,7 +307,7 @@ Changed path categories:
 Artifact bundle presence:
 Manifest status / evidence level:
 Todo Search validation / parity:
-Todo App PBE Run structure-only validation:
+Todo App DevView Run structure-only validation:
 Aggregate status:
 Warnings / blocking / decision-required:
 Retained warning visibility:
@@ -339,7 +339,7 @@ Use this checklist for each new PR informational run.
    - parse `adoption/todo-search-slice/generated/read-model-ci-evidence-manifest.json`
    - parse `adoption/todo-search-slice/generated/read-model-validation-report.json`
    - parse `adoption/todo-search-slice/generated/read-model-parity-report.json`
-   - parse `valid/todo-app-pbe-run/generated/read-model-validation-report.json`
+   - parse `valid/todo-app-devview-run/generated/read-model-validation-report.json`
    - parse `read-model-aggregate/generated/read-model-aggregate-summary.json`
 
 4. Confirm PR metadata exists for PR-triggered runs:
@@ -353,7 +353,7 @@ Use this checklist for each new PR informational run.
 5. Confirm Evidence status:
 
    - Todo Search validation/parity status
-   - Todo App PBE Run structure-only validation status
+   - Todo App DevView Run structure-only validation status
    - aggregate status and included slice count
    - warning/blocking/decision-required counts
    - retained warnings remain visible
@@ -388,7 +388,7 @@ Record changed paths by category instead of only listing filenames:
 | Workflow              | `.github/workflows/read-model-evidence.yml`                                                | Must keep manual and PR informational boundaries visible.              |
 | CLI / read-model core | `cli/src/**`, `scripts/**`                                                                 | High signal; should normally trigger read-model Evidence.              |
 | Todo Search slice     | `examples/internal-legacy/adoption/todo-search-slice/**`                                   | High signal for parity-backed scoped pilot Evidence.                   |
-| Todo App structure    | `examples/valid/todo-app-pbe-run/**`                                                       | High signal for structure-only profile Evidence.                       |
+| Todo App structure    | `examples/valid/todo-app-devview-run/**`                                                   | High signal for structure-only profile Evidence.                       |
 | Aggregate summary     | `examples/internal-legacy/read-model-aggregate/**`                                         | Useful for aggregate artifact drift; watch for artifact churn.         |
 | Concept docs          | `docs/concept/**`                                                                          | Useful while policies are changing; may be noisy after policy settles. |
 | Other docs / files    | Files outside current filters or outside the declared graph read-model Evidence boundaries | Use to decide whether filters are too broad or too narrow.             |
@@ -427,7 +427,7 @@ Re-review before the observation window completes if any of these appear:
 - hidden retained warnings
 - aggregate status `aggregate-blocked` or `decision-required`
 - Todo Search parity no longer `comparison-pass`
-- Todo App PBE Run appears promoted beyond `structure-only` without a separate decision
+- Todo App DevView Run appears promoted beyond `structure-only` without a separate decision
 - artifact bundle missing or malformed
 - repeated command/runtime failure on ordinary PR changes
 
@@ -469,7 +469,7 @@ this log.
 | Non-Full-Promotion Gate          | PASS   | Full Graph-source promotion remains separate and unapproved.                           |
 | Path-Filter Refinement Gate      | PASS   | Defines how to record signal before later filter changes; does not change filters now. |
 | Retained Warning Visibility Gate | PASS   | Hidden warnings trigger immediate re-review.                                           |
-| Todo App Structure-Only Gate     | PASS   | Todo App PBE Run remains structure-only.                                               |
+| Todo App Structure-Only Gate     | PASS   | Todo App DevView Run remains structure-only.                                           |
 | User Approval Boundary Gate      | PASS   | PR pass and log entries cannot replace user acceptance or approve enforcement.         |
 | Temporary Artifact Hygiene Gate  | PASS   | Downloaded CI artifacts are reviewed from `.tmp/` and then removed.                    |
 
@@ -477,4 +477,4 @@ this log.
 
 This log/runbook records and standardizes observation of future PR informational read-model Evidence runs. It does not
 modify the workflow, dispatch GitHub Actions, create PRs, introduce enforcement, expand source authority, approve full
-Graph-source promotion, perform public-doc cleanup, or promote Todo App PBE Run beyond `structure-only`.
+Graph-source promotion, perform public-doc cleanup, or promote Todo App DevView Run beyond `structure-only`.

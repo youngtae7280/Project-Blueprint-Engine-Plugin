@@ -383,8 +383,8 @@ enforcement, waiver judgment, and any actual execution still require explicit us
 - Generated graph builder, CLI-backed parity, and local validator-backed Evidence now exist for the Todo Search scoped
   pilot.
 - Todo Search read-model assumptions are now isolated into an explicit profile/config without intended behavior change.
-- `examples/valid/todo-app-pbe-run` now has structure-only generated/validation Evidence as a second profile/fixture.
-- Todo Search and Todo App PBE Run validation reports now carry per-slice independence metadata for future aggregation
+- `examples/valid/todo-app-devview-run` now has structure-only generated/validation Evidence as a second profile/fixture.
+- Todo Search and Todo App DevView Run validation reports now carry per-slice independence metadata for future aggregation
   inputs.
 - The first multi-slice aggregate summary exists as Evidence-only output over existing per-slice validation reports.
   The manual workflow now includes the aggregate summarize command, and runs `28156403793` / `28157938343` reviewed the

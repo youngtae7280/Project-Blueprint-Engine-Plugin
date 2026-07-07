@@ -415,7 +415,7 @@ function instructionPack(): Record<string, unknown> {
     scopeEnforced: false,
     ciEnforcementEnabled: false,
     taskSummary: 'Review add button runtime evidence.',
-    allowedScope: [{ id: 'allowed-evidence', paths: ['examples/valid/todo-app-pbe-run/.pbe/evidence/a.txt'] }],
+    allowedScope: [{ id: 'allowed-evidence', paths: ['examples/valid/todo-app-devview-run/.pbe/evidence/a.txt'] }],
     forbiddenScope: [{ id: 'forbidden-source', paths: ['src/todo.ts'] }],
     requiredEvidence: [{ id: 'evidence-1' }],
     outputRequirements: [{ id: 'output-1' }],
@@ -430,8 +430,8 @@ function changedFiles(): Record<string, unknown> {
     status: 'git-derived-changed-files-collected',
     authorityClass: 'git-derived-changed-files',
     normalizedChangedFiles: [
-      { status: 'M', statusCode: 'M', path: 'examples/valid/todo-app-pbe-run/.pbe/evidence/a.txt' },
-      { status: 'A', statusCode: 'A', path: 'examples/valid/todo-app-pbe-run/.pbe/evidence/b.txt' },
+      { status: 'M', statusCode: 'M', path: 'examples/valid/todo-app-devview-run/.pbe/evidence/a.txt' },
+      { status: 'A', statusCode: 'A', path: 'examples/valid/todo-app-devview-run/.pbe/evidence/b.txt' },
     ],
     generatedFileHandling: { generatedFiles: [] },
     scopeEnforced: false,
@@ -465,7 +465,7 @@ function proposal(): Record<string, unknown> {
   return {
     artifactRole: 'graph-delta-proposal-only-preview',
     status: 'generated-proposal-only-preview',
-    schemaId: 'pbe-graph-update-proposal-v0',
+    schemaId: 'devview-graph-update-proposal-v0',
     proposalId: 'proposal-test',
     proposalOnly: true,
     proposalGenerated: true,

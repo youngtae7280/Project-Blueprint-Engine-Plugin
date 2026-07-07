@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "runtime-evidence-authority-preview",
+  "status": "runtime-evidence-authority-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "draftInputPath": "examples/valid/todo-app-devview-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
+  "observationPath": "examples/valid/todo-app-devview-run/generated/compiler-input-calibration-observation.runtime-evidence-only.preview.json",
+  "testOnlyScopeBoundaryPreview": "examples/valid/todo-app-devview-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
+  "supportStatus": "not-supported",
+  "compileEligibility": "not-eligible-current-command-not-wired",
+  "expectedCandidateStatus": "contract-candidate-not-run",
+  "approvalStatus": "not-approved",
+  "equivalenceProven": false,
+  "runtimeEvidenceAuthorityStatus": "preview-only-not-satisfied",
+  "candidateEvidenceTypes": [
+    {
+      "evidenceType": "captured-runtime-command-output",
+      "authorityStatus": "candidate-authoritative-if-captured",
+      "examples": [
+        "node test/todos.test.js output",
+        "test runner log with command, exit status, and assertion summary"
+      ],
+      "notes": "The output must be captured as an observable artifact, not merely summarized by Codex."
+    },
+    {
+      "evidenceType": "structured-runtime-test-artifact",
+      "authorityStatus": "candidate-authoritative-if-linked",
+      "examples": ["JSON/JUnit-style test report", "structured evidence record linked to TT-1 and AC-PT-1-1"],
+      "notes": "The artifact must map to the add-todo behavior check and preserve pass/fail status."
+    },
+    {
+      "evidenceType": "manual-runtime-observation-record",
+      "authorityStatus": "candidate-authoritative-only-with-human-review",
+      "examples": ["human review note with observable steps and result"],
+      "notes": "Manual observation may support review but does not become user acceptance by itself."
+    }
+  ],
+  "authoritativeEvidenceRequirements": [
+    {
+      "requirementId": "runtime-command-identity",
+      "requirement": "Record the exact command or runtime check that was performed.",
+      "currentStatus": "unresolved"
+    },
+    {
+      "requirementId": "runtime-command-result",
+      "requirement": "Record pass/fail status, exit code when applicable, and relevant assertion output.",
+      "currentStatus": "unresolved"
+    },
+    {
+      "requirementId": "behavior-binding",
+      "requirement": "Bind the evidence to PT-1, AC-PT-1-1, TT-1, and EV-1 for the add-todo behavior.",
+      "currentStatus": "draft-bindings-visible"
+    },
+    {
+      "requirementId": "freshness-and-scope",
+      "requirement": "State when the evidence was captured and that production source was not modified for the proof.",
+      "currentStatus": "unresolved"
+    },
+    {
+      "requirementId": "artifact-presence",
+      "requirement": "Persist the evidence as a reviewable artifact or structured record.",
+      "currentStatus": "unresolved"
+    }
+  ],
+  "nonAuthoritativeEvidenceExamples": [
+    {
+      "example": "Codex says tests passed",
+      "reason": "AI self-report is not observable Evidence."
+    },
+    {
+      "example": "Attached structure-only todo-add.txt alone",
+      "reason": "The existing attached text is structure-only context and not authoritative runtime command Evidence for this calibration fixture."
+    },
+    {
+      "example": "An uncaptured local command run",
+      "reason": "A command that is not recorded as an artifact cannot be reviewed later."
+    },
+    {
+      "example": "A passing report after production source edits",
+      "reason": "This fixture is test-only; production source edits should stop the flow rather than satisfy runtime Evidence."
+    }
+  ],
+  "commandOutputRequirements": {
+    "requiredFields": [
+      "command",
+      "exitStatus",
+      "passFailStatus",
+      "assertionSummary",
+      "evidenceArtifactPath",
+      "capturedAtOrFreshnessStatement",
+      "linkedCheckId",
+      "linkedAcceptanceCriteriaId",
+      "sourceNonModificationStatement"
+    ],
+    "candidateCommand": "node test/todos.test.js",
+    "candidateCommandStatus": "placeholder-from-structure-only-test-tree-not-executed",
+    "currentRuntimeEvidenceStatus": "missing"
+  },
+  "testOnlyBoundary": {
+    "runtimeEvidenceMustBeProducedWithoutProductionSourceEdits": true,
+    "sourceEditNeededBehavior": "stop-and-report",
+    "scopeBoundaryPreview": "examples/valid/todo-app-devview-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json"
+  },
+  "unresolvedEvidenceAuthorityGaps": [
+    "no authoritative runtime command output artifact exists",
+    "no freshness record exists for runtime behavior proof",
+    "no source non-modification evidence exists",
+    "no supported evidence/check binding exists for this fixture",
+    "no supported compiler command consumes this preview"
+  ],
+  "gapStatusUpdates": [
+    {
+      "gapId": "runtime-evidence-authority",
+      "previousStatus": "gap-observed",
+      "previewStatus": "runtime-evidence-authority-previewed",
+      "evidenceSatisfied": false,
+      "remainingSupportStatus": "not-supported"
+    }
+  ],
+  "remainingUnresolvedGaps": [
+    "evidence-check-binding",
+    "output-requirement-for-test-evidence",
+    "compliance-checker-bridge"
+  ],
+  "allowedUse": [
+    "review what can count as runtime Evidence for the third fixture",
+    "distinguish observable Evidence from Codex self-report",
+    "inform future evidence/check binding preview",
+    "inform future compliance-checker design"
+  ],
+  "forbiddenUse": [
+    "supported compiler output",
+    "proof that runtime behavior passed",
+    "execution authority",
+    "candidate generation eligibility",
+    "promotion approval",
+    "permission to edit production source",
+    "CI enforcement",
+    "branch protection",
+    "user acceptance",
+    "Todo App source-authority promotion"
+  ],
+  "nonExecutionBoundary": "This preview defines runtime Evidence authority requirements for calibration review only. It does not run commands, capture passing Evidence, enforce checks, modify source, generate a contract candidate, approve promotion, create required checks, configure branch protection, or replace user acceptance."
+}

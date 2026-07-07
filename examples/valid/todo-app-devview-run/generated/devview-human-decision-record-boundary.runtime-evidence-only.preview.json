@@ -1,0 +1,254 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-human-decision-record-boundary-preview",
+  "status": "devview-human-decision-record-boundary-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "boundaryScope": "human-decision-record-shape-and-command-preview",
+  "phase": "phase-13-human-decision-approved-apply-boundary",
+  "sourceFlow": "human-review-packet-to-future-human-decision-record-to-future-approved-proposal-state",
+  "humanDecisionRecordImplemented": true,
+  "humanDecisionRecordCommandImplemented": true,
+  "humanDecisionRecorded": false,
+  "decisionRecordAuthorityStatus": "future-human-authored-input-not-recorded",
+  "approvalStatus": "not-approved",
+  "approvedProposalStateCreated": false,
+  "graphDeltaApplyEnabled": false,
+  "graphDeltaApplied": false,
+  "graphSourceMutationAllowed": false,
+  "graphSourceMutated": false,
+  "runtimeEvidenceSatisfied": false,
+  "equivalenceProven": false,
+  "scopeEnforced": false,
+  "ciEnforcementEnabled": false,
+  "strictModeEnabled": false,
+  "guidedEnforcementEnabled": false,
+  "userAcceptanceAutomated": false,
+  "sourceArtifacts": {
+    "graphDeltaProposalBoundary": "examples/valid/todo-app-devview-run/generated/graph-delta-proposal-boundary.runtime-evidence-only.preview.json",
+    "graphDeltaProposalCompatibleSource": "examples/valid/todo-app-devview-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json",
+    "proposalOnlyGeneratorCommand": "graph read-model propose-graph-delta --source <artifact> --json",
+    "humanReviewPacketCommand": "graph read-model review-graph-delta --proposal <proposalPath> --markdown <file> --json",
+    "runtimeReportCommand": "graph read-model check-scope --base <baseRef> --head <headRef> --markdown <file> --json",
+    "futureDecisionRecordCore": "implemented-explicit-human-decision-record-preview",
+    "futureApprovedProposalStateCore": "not-implemented",
+    "futureGraphDeltaApplyCore": "not-implemented"
+  },
+  "futureHumanDecisionRecordShape": {
+    "recordId": "future-human-decision-record-id",
+    "artifactRole": "devview-human-decision-record",
+    "recordStatus": "created-by-explicit-human-decision-record-command",
+    "sourceHumanReviewPacket": "<future-human-review-packet-path>",
+    "sourceProposal": "<future-graph-delta-proposal-path>",
+    "sourceGraphDeltaProposal": "<future-graph-delta-proposal-path>",
+    "sourceRuntimeReport": "<future-advisory-runtime-report-path>",
+    "decisionLifecycleHardeningStatus": "hardened-human-decision-record-v1",
+    "decisionValue": "<one-of-allowedDecisionValues>",
+    "decisionKind": "approve | reject | request-changes | defer",
+    "decisionSummary": "<human-authored-summary>",
+    "decisionRationale": "<human-authored-rationale>",
+    "decisionActorType": "human",
+    "decisionActorLabel": "<human-provided-or-local-configured-identity>",
+    "decisionTimestamp": "<future-human-provided-or-command-generated-timestamp>",
+    "decisionTimestampAuthorityStatus": "cli-provided | runtime-generated",
+    "decisionSource": "explicit-cli-input | imported-human-review",
+    "reviewerIdentity": "<human-provided-or-local-configured-identity>",
+    "reviewedAt": "<future-human-provided-or-command-generated-timestamp>",
+    "decisionProvenance": "human-authored-explicit-decision",
+    "reviewPacketCompletenessStatus": "complete | incomplete-blocking-items | incomplete-review-items | missing-json-review-packet",
+    "reviewPacketQuestionCount": 0,
+    "reviewRequiredItemCount": 0,
+    "blockingReviewItemCount": 0,
+    "selfApprovalCheckStatus": "passed-human-actor",
+    "selfApprovalRejected": false,
+    "codexSelfApprovalAllowed": false,
+    "aiGeneratedDecisionAllowed": false,
+    "approvalAutomationAllowed": false,
+    "approvalAutomationEnabled": false,
+    "graphDeltaApplyTriggered": false,
+    "runtimeEvidenceSatisfactionAllowed": false,
+    "equivalenceProofAllowed": false,
+    "scopeEnforcementAllowed": false
+  },
+  "allowedDecisionValues": [
+    {
+      "decisionValue": "approve-proposal",
+      "meaning": "Human explicitly approves the proposal for a future approved proposal state, but this boundary does not create that state or apply it.",
+      "createsApprovedProposalStateHere": false,
+      "appliesGraphDeltaHere": false
+    },
+    {
+      "decisionValue": "reject-proposal",
+      "meaning": "Human rejects the proposal. Future tooling may record the rejection, but this boundary does not mutate graph-source.",
+      "createsApprovedProposalStateHere": false,
+      "appliesGraphDeltaHere": false
+    },
+    {
+      "decisionValue": "request-revision",
+      "meaning": "Human requests changes before any approval can be considered.",
+      "createsApprovedProposalStateHere": false,
+      "appliesGraphDeltaHere": false
+    },
+    {
+      "decisionValue": "request-changes",
+      "meaning": "Alias for a human request for changes before any approval can be considered.",
+      "createsApprovedProposalStateHere": false,
+      "appliesGraphDeltaHere": false
+    },
+    {
+      "decisionValue": "defer-decision",
+      "meaning": "Human defers judgment and leaves the proposal unapproved.",
+      "createsApprovedProposalStateHere": false,
+      "appliesGraphDeltaHere": false
+    }
+  ],
+  "decisionInputRequirements": [
+    {
+      "requirementId": "explicit-human-author",
+      "description": "The decision must be authored by a human reviewer, not inferred from Codex output, validator success, CI success, or a green report.",
+      "required": true
+    },
+    {
+      "requirementId": "source-review-packet",
+      "description": "The decision must link the Human Review Packet that was reviewed.",
+      "required": true
+    },
+    {
+      "requirementId": "source-proposal",
+      "description": "The decision must link the proposal-only Graph Delta preview or future apply-ready proposal under review.",
+      "required": true
+    },
+    {
+      "requirementId": "decision-value",
+      "description": "The decision must use the boundary vocabulary instead of freeform status mutation.",
+      "required": true
+    },
+    {
+      "requirementId": "human-rationale",
+      "description": "The decision must include a human-authored rationale or explicit note for auditability.",
+      "required": true
+    },
+    {
+      "requirementId": "human-actor-type",
+      "description": "The decision actor type must be human; Codex, AI, tool, validator, CI, generated, and automation actors are not approval authority.",
+      "required": true
+    },
+    {
+      "requirementId": "human-decision-source",
+      "description": "The decision source must be explicit-cli-input or imported-human-review; it cannot be inferred from generated artifacts, validators, runtime smoke, CI, or reports.",
+      "required": true
+    },
+    {
+      "requirementId": "approval-review-packet-completeness",
+      "description": "An approve decision requires a parseable JSON Human Review Packet with complete review-packet status and matching proposal provenance.",
+      "requiredForDecisionKind": "approve"
+    }
+  ],
+  "futureStateTransitionsPreview": [
+    {
+      "from": "human-review-packet-generated",
+      "decisionValue": "approve-proposal",
+      "to": "future-approved-proposal-state-candidate",
+      "implementedNow": false,
+      "requiresSeparateCommand": true,
+      "appliesGraphDelta": false
+    },
+    {
+      "from": "human-review-packet-generated",
+      "decisionValue": "reject-proposal",
+      "to": "future-rejected-decision-record-candidate",
+      "implementedNow": false,
+      "requiresSeparateCommand": true,
+      "appliesGraphDelta": false
+    },
+    {
+      "from": "human-review-packet-generated",
+      "decisionValue": "request-revision",
+      "to": "future-revision-request-decision-record-candidate",
+      "implementedNow": false,
+      "requiresSeparateCommand": true,
+      "appliesGraphDelta": false
+    },
+    {
+      "from": "human-review-packet-generated",
+      "decisionValue": "request-changes",
+      "to": "future-revision-request-decision-record-candidate",
+      "implementedNow": false,
+      "requiresSeparateCommand": true,
+      "appliesGraphDelta": false
+    },
+    {
+      "from": "human-review-packet-generated",
+      "decisionValue": "defer-decision",
+      "to": "future-deferred-decision-record-candidate",
+      "implementedNow": false,
+      "requiresSeparateCommand": true,
+      "appliesGraphDelta": false
+    }
+  ],
+  "futureApprovedProposalBoundary": {
+    "approvedProposalStateImplemented": false,
+    "approvedProposalStateCreated": false,
+    "requiresHumanDecisionRecord": true,
+    "requiresMatchingProposalId": true,
+    "requiresCurrentGraphSourceCheck": true,
+    "requiresSeparateApplyStep": true,
+    "graphDeltaApplyEnabled": false,
+    "graphSourceMutationAllowed": false,
+    "approvalStatus": "not-approved"
+  },
+  "allowedUse": [
+    "document the future human-authored decision record shape",
+    "define the vocabulary for future proposal decisions",
+    "separate review packet generation from human decision recording",
+    "separate human decision recording from future approved proposal state creation",
+    "preserve proposal-only and no-apply boundaries until a later explicit implementation"
+  ],
+  "forbiddenUse": [
+    "treat this boundary as approval",
+    "record a human decision",
+    "infer approval from Codex output",
+    "infer approval from a green validator or CI run",
+    "create approved proposal state",
+    "apply graph delta",
+    "mutate graph-source",
+    "satisfy runtime Evidence",
+    "prove equivalence",
+    "enforce scope",
+    "configure CI or branch protection",
+    "automate user acceptance"
+  ],
+  "runtimePerformanceBoundary": {
+    "designOnly": true,
+    "addsRuntimeWork": false,
+    "aiCalls": false,
+    "networkCalls": false,
+    "fullRepoScan": false,
+    "patchHunkInspection": false,
+    "fullValidation": false,
+    "timingSmokeIntegrationStatus": "not-integrated-boundary-preview-only",
+    "runtimeBudgetStatus": "advisory-not-enforced"
+  },
+  "nextFutureStepsPreview": [
+    {
+      "step": "human-decision-record-command",
+      "status": "implemented-explicit-record-only"
+    },
+    {
+      "step": "approved-proposal-state",
+      "status": "future-not-implemented"
+    },
+    {
+      "step": "graph-delta-apply",
+      "status": "future-not-implemented"
+    },
+    {
+      "step": "evidence-acceptance-policy",
+      "status": "future-not-implemented"
+    },
+    {
+      "step": "graph-source-mutation-policy",
+      "status": "future-not-implemented"
+    }
+  ],
+  "nonExecutionBoundary": "This artifact previews the Human Decision Record boundary and implemented record-only command. The boundary itself is not a decision record. The command can record explicit human decision metadata, but it does not approve a proposal by itself, create an approved proposal state, apply a graph delta, mutate graph-source, satisfy runtime Evidence, prove equivalence, enforce scope, configure CI or required checks, change branch protection, or replace user acceptance."
+}

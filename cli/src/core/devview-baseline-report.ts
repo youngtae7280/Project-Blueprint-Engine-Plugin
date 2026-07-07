@@ -662,7 +662,7 @@ function buildBaselineLanes(finalHandoff: JsonRecord, roadmapAudit: JsonRecord):
       classification: 'advisory',
       sourceStatus: 'preview/report-only-no-extension-authority',
       terminalArtifacts: [
-        'examples/valid/todo-app-pbe-run/generated/devview-project-memory-boundary.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/devview-project-memory-boundary.runtime-evidence-only.preview.json',
       ],
       baselineMeaning: 'Project Memory reports may summarize gaps and impact without granting extension authority.',
       authorityBoundary:

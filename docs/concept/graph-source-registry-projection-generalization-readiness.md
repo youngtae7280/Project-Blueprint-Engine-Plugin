@@ -20,10 +20,10 @@ examples/internal-legacy/read-model-aggregate/read-model-slices.json
 
 It contains exactly two positive validate-all profiles:
 
-| Profile                           | Slice                                                 | Policy level          | Current role                                                                        |
-| --------------------------------- | ----------------------------------------------------- | --------------------- | ----------------------------------------------------------------------------------- |
-| `todo-search-selected-slice`      | `examples/internal-legacy/adoption/todo-search-slice` | `pilot-marker-backed` | Limited graph-source promoted selected slice with parity and pilot marker.          |
-| `todo-app-pbe-run-structure-only` | `examples/valid/todo-app-pbe-run`                     | `structure-only`      | Confirmed Graph-source-backed structure-only fixture; not source-authority-bearing. |
+| Profile                               | Slice                                                 | Policy level          | Current role                                                                        |
+| ------------------------------------- | ----------------------------------------------------- | --------------------- | ----------------------------------------------------------------------------------- |
+| `todo-search-selected-slice`          | `examples/internal-legacy/adoption/todo-search-slice` | `pilot-marker-backed` | Limited graph-source promoted selected slice with parity and pilot marker.          |
+| `todo-app-devview-run-structure-only` | `examples/valid/todo-app-devview-run`                 | `structure-only`      | Confirmed Graph-source-backed structure-only fixture; not source-authority-bearing. |
 
 The current projection contract surface is useful but still fixture-shaped. It proves repeatability for these two
 configured slices; it is not yet a generic external-project registry system.

@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-runtime-evidence-satisfaction-readiness-preview",
+  "status": "devview-runtime-evidence-satisfaction-readiness-blocked",
+  "readinessScope": "runtime-evidence-satisfaction-binding-readiness-preview-no-satisfaction",
+  "sourceAcceptedEvidenceRecord": "examples/valid/todo-app-devview-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.json",
+  "sourceInstructionPack": "examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json",
+  "sourceContractInput": null,
+  "sourceEvidenceArtifact": "examples/valid/todo-app-devview-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json",
+  "sourceRuntimeEvidenceAuthority": null,
+  "sourceEvidenceCheckBinding": null,
+  "sourceOutputRequirement": null,
+  "sourceRuntimeReport": null,
+  "sourceScopeReport": null,
+  "sourceGraphDeltaApplyReport": null,
+  "sourceCheckReport": null,
+  "requiredEvidenceId": "required-evidence-tt-1",
+  "matchedRequiredEvidence": {
+    "id": "required-evidence-tt-1",
+    "sourceEvidenceId": "evidence-tt-1",
+    "evidenceType": "selected_check_context",
+    "artifact": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+    "sourceStatus": "derived-from-selected-graph-slice",
+    "runtimeEvidenceSatisfied": false,
+    "acceptedEvidence": false
+  },
+  "acceptedEvidenceRecordStatus": "devview-accepted-evidence-recorded",
+  "acceptedEvidenceState": "accepted-evidence-recorded-not-runtime-satisfied",
+  "sourceAcceptedEvidenceAccepted": true,
+  "acceptedEvidenceClaim": "devview-graph-delta-apply-report with status devview-graph-delta-apply-blocked is reviewed as candidate evidence only.",
+  "acceptedEvidenceKind": "devview-graph-delta-apply-report-candidate",
+  "sourceEvidenceHash": "f7b4020272ab8ac44c58754a3112495493f7f87934c8a813e9d4abf31da16c64",
+  "sourceEvidenceHashAlgorithm": "sha256",
+  "bindingMatchStatus": "not-matched",
+  "runtimeEvidenceSatisfactionReadinessStatus": "blocked-required-obligation-mismatch",
+  "terminalStage": "blocked-required-obligation-mismatch",
+  "runtimeEvidenceSatisfactionAllowed": false,
+  "runtimeEvidenceSatisfied": false,
+  "evidenceAccepted": false,
+  "equivalenceProven": false,
+  "scopeEnforced": false,
+  "ciEnforcementEnabled": false,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "approvalAutomationEnabled": false,
+  "userAcceptanceAutomated": false,
+  "nonEnforcing": true,
+  "validationFindings": [
+    {
+      "code": "RUNTIME_EVIDENCE_OBLIGATION_MISMATCH",
+      "severity": "warning",
+      "field": "requiredEvidence",
+      "expected": {
+        "id": "required-evidence-tt-1",
+        "sourceEvidenceId": "evidence-tt-1",
+        "evidenceType": "selected_check_context",
+        "artifact": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"
+      },
+      "actual": {
+        "evidenceKind": "devview-graph-delta-apply-report-candidate",
+        "sourceEvidenceArtifact": "examples/valid/todo-app-devview-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json",
+        "evidenceClaim": "devview-graph-delta-apply-report with status devview-graph-delta-apply-blocked is reviewed as candidate evidence only."
+      },
+      "message": "Accepted Evidence does not conservatively match the selected runtime Evidence obligation. This report remains readiness-blocked and does not satisfy runtime Evidence."
+    }
+  ],
+  "nextRequiredCommand": "Resolve the accepted Evidence and runtime obligation mismatch before any future runtime Evidence satisfaction record can be created.",
+  "allowedUse": [
+    "document why runtime Evidence satisfaction binding is not ready",
+    "preserve accepted Evidence and runtime obligation provenance for human review",
+    "keep mismatched accepted Evidence out of runtime satisfaction state"
+  ],
+  "forbiddenUse": [
+    "runtime Evidence satisfaction",
+    "accepted Evidence creation",
+    "equivalence proof",
+    "scope enforcement",
+    "CI required check",
+    "branch protection mutation",
+    "graph-source mutation",
+    "graph delta apply",
+    "approval automation",
+    "user acceptance automation",
+    "inference of runtime satisfaction from accepted Evidence alone",
+    "inference of equivalence from readiness alone"
+  ],
+  "outputWritePolicy": "explicit-output-only",
+  "writtenOutputPath": "examples/valid/todo-app-devview-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json",
+  "writtenOutputPathAuthorityStatus": "explicit-runtime-evidence-satisfaction-readiness-output-not-source-authority",
+  "markdownReportPath": "examples/valid/todo-app-devview-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.md",
+  "nonExecutionBoundary": "This Runtime Evidence Satisfaction Binding readiness command reports readiness only. It does not set runtimeEvidenceSatisfied true, create a satisfaction record, prove equivalence, enforce scope, configure CI or required checks, apply graph deltas, mutate graph-source, automate approval, or replace user acceptance."
+}

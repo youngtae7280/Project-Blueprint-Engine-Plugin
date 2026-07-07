@@ -9,7 +9,7 @@ considers broader execution, enforcement, or full Graph-source promotion review.
 
 It builds on the Todo Search scoped source-authority pilot, which is currently active under observation with retained
 warnings. The bounded scoped validator command is implemented for `examples/internal-legacy/adoption/todo-search-slice`, and the manual
-non-enforcing workflow now also runs the Todo App PBE Run structure-only validator plus aggregate summarize. This does
+non-enforcing workflow now also runs the Todo App DevView Run structure-only validator plus aggregate summarize. This does
 not enforce CI gates, does not expand source authority, and does not change promotion state.
 
 ## Current Scoped Pilot Baseline
@@ -43,8 +43,8 @@ and CI-backed Evidence runs continue to cover positive configured profiles only.
 CLI command success means a local command ran and produced a reviewable output. For the current scoped pilot, examples
 include:
 
-- `pbe graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice`
-- `pbe graph read-model compare --generated <file> --manual <file>`
+- `devview graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice`
+- `devview graph read-model compare --generated <file> --manual <file>`
 
 This is observable Evidence, but it is not the same as validator-backed Evidence or CI-backed Evidence.
 
@@ -100,7 +100,7 @@ promotion readiness.
 
 The scoped Todo Search validator creates the first two artifacts below under
 `examples/internal-legacy/adoption/todo-search-slice/generated/`. The CI manifest is implemented for the manual workflow and now carries
-Todo Search, Todo App PBE Run, and aggregate summary fields for the next workflow run. Repo-wide CI evidence and
+Todo Search, Todo App DevView Run, and aggregate summary fields for the next workflow run. Repo-wide CI evidence and
 enforcement remain future-only.
 
 | Artifact                               | Role                                                                                                                                                                                   |
@@ -115,7 +115,7 @@ enforcement remain future-only.
 Implemented scoped command:
 
 ```text
-pbe graph read-model validate --slice <path>
+devview graph read-model validate --slice <path>
 ```
 
 For the current bounded pilot this produces:
@@ -128,8 +128,8 @@ examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validat
 Future command candidates:
 
 ```text
-pbe graph read-model validate --all
-pbe graph read-model validate --slice <path> --ci-manifest <file>
+devview graph read-model validate --all
+devview graph read-model validate --slice <path> --ci-manifest <file>
 ```
 
 The scoped command is local validator-backed Evidence only. The later CI workflow implementation is manual and
@@ -142,7 +142,7 @@ defines CI trigger modes, command sequence, artifact outputs, status semantics, 
 workflow is `.github/workflows/read-model-evidence.yml` with manual `workflow_dispatch` only. The first worker run
 review records run `28151296796` as Todo Search `ci-evidence-pass` with `validation-pass` and `comparison-pass`. The
 later aggregate-enabled run `28156403793` is reviewed as `ci-evidence-pass` with Todo Search `validation-pass` /
-`comparison-pass`, Todo App PBE Run `validation-pass`, and aggregate `aggregate-pass`. Post-update run `28157938343`
+`comparison-pass`, Todo App DevView Run `validation-pass`, and aggregate `aggregate-pass`. Post-update run `28157938343`
 reviews the same aggregate-enabled workflow after the workflow moved to Node 24 action/runtime settings.
 
 [pr-informational-read-model-evidence-design.md](pr-informational-read-model-evidence-design.md) now designs a future
@@ -266,9 +266,9 @@ choose one of:
 
 Recommended next step: keep the workflow manual/non-enforcing and observe, or proceed through the multi-slice path by
 using the new Evidence-only aggregate summary after per-slice reports remain stable. The Todo Search profile extraction
-is complete, `examples/valid/todo-app-pbe-run` is implemented as a second `structure-only` profile with local generated
+is complete, `examples/valid/todo-app-devview-run` is implemented as a second `structure-only` profile with local generated
 and validation Evidence, both validation reports now carry self-contained per-slice independence metadata, and
-`pbe graph read-model summarize --slices ...` can write the first aggregate summary. The second fixture is not
+`devview graph read-model summarize --slices ...` can write the first aggregate summary. The second fixture is not
 parity-backed, pilot-marker-backed, CI-backed, or source-authority bearing. PR informational trigger behavior is now
 implemented and reviewed in PR run `28207822252` as a non-enforcing visibility signal. Local registry-backed
 `validate --all` is now implemented as non-enforcing Evidence and consumed by the non-enforcing CI workflow; PR run

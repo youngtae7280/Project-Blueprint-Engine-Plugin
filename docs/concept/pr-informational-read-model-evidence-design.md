@@ -34,7 +34,7 @@ triggers, introduce CI enforcement, expand source authority, or approve full Gra
 | Todo Search generated output | 40 nodes / 59 edges                                                                                                           |
 | Todo Search parity           | `comparison-pass`, 0 blocking, 0 decision-required                                                                            |
 | Todo Search validation       | `validation-pass`, 20 checks                                                                                                  |
-| Todo App PBE Run profile     | `todo-app-pbe-run-structure-only`, `structure-only`                                                                           |
+| Todo App DevView Run profile | `todo-app-devview-run-structure-only`, `structure-only`                                                                       |
 | Todo App generated output    | 22 nodes / 38 edges                                                                                                           |
 | Todo App validation          | `validation-pass`, 16 checks                                                                                                  |
 | Aggregate summary            | `aggregate-pass`, 2 slices, 0 warning / 0 blocking / 0 decision-required                                                      |
@@ -68,7 +68,7 @@ on:
       - 'cli/src/**'
       - 'scripts/**'
       - 'examples/internal-legacy/adoption/todo-search-slice/**'
-      - 'examples/valid/todo-app-pbe-run/**'
+      - 'examples/valid/todo-app-devview-run/**'
       - 'examples/internal-legacy/read-model-aggregate/**'
       - 'docs/concept/**'
 ```
@@ -84,7 +84,7 @@ expansion, or promotion gate.
 | `cli/src/**`                                             | Read-model generate/compare/validate/summarize code lives here.  | Medium if unrelated CLI internals change.                     | High: graph Evidence behavior can drift.                      | Include.                                                         |
 | `scripts/**`                                             | PBE validation and support validators can affect Evidence trust. | Medium/high because many scripts are not read-model-specific. | Medium: validator/root behavior can affect reported Evidence. | Include initially; revisit if noisy.                             |
 | `examples/internal-legacy/adoption/todo-search-slice/**` | Primary pilot-backed slice and manual parity source.             | Low/medium.                                                   | High: primary Evidence inputs could drift.                    | Include.                                                         |
-| `examples/valid/todo-app-pbe-run/**`                     | Second structure-only profile input/output.                      | Low/medium.                                                   | Medium/high: second slice aggregate status could drift.       | Include.                                                         |
+| `examples/valid/todo-app-devview-run/**`                 | Second structure-only profile input/output.                      | Low/medium.                                                   | Medium/high: second slice aggregate status could drift.       | Include.                                                         |
 | `examples/internal-legacy/read-model-aggregate/**`       | Aggregate summary output contract and committed artifact.        | Low.                                                          | Medium: aggregate output/contract changes could drift.        | Include.                                                         |
 | `docs/concept/**`                                        | Source-boundary and policy docs define Evidence semantics.       | High for unrelated concept edits.                             | Medium: boundary wording can drift without signal.            | Include in first informational design; consider narrowing later. |
 
@@ -111,9 +111,9 @@ npm run build:cli
 node dist/cli/index.js graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice --json
 node dist/cli/index.js graph read-model compare --generated examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json --manual examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json --json
 node dist/cli/index.js graph read-model validate --slice examples/internal-legacy/adoption/todo-search-slice --json
-node dist/cli/index.js graph read-model generate --slice examples/valid/todo-app-pbe-run --json
-node dist/cli/index.js graph read-model validate --slice examples/valid/todo-app-pbe-run --json
-node dist/cli/index.js graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run --json
+node dist/cli/index.js graph read-model generate --slice examples/valid/todo-app-devview-run --json
+node dist/cli/index.js graph read-model validate --slice examples/valid/todo-app-devview-run --json
+node dist/cli/index.js graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-devview-run --json
 npx vitest run cli/src/__tests__/read-model-evidence.test.ts
 npx vitest run examples/internal-legacy/adoption/todo-search-slice/runtime-fixture
 npm run validate:pbe
@@ -138,8 +138,8 @@ Required artifact content should match the current manual bundle:
 - Todo Search validation report JSON/Markdown
 - Todo Search CI/PR evidence manifest
 - Todo Search scoped pilot marker
-- Todo App PBE Run generated read-model JSON/Markdown
-- Todo App PBE Run validation report JSON/Markdown
+- Todo App DevView Run generated read-model JSON/Markdown
+- Todo App DevView Run validation report JSON/Markdown
 - aggregate summary JSON/Markdown
 
 PR manifest fields:
@@ -148,7 +148,7 @@ PR manifest fields:
 | ------------------- | -------------------------------------------------------------------------------------------------- |
 | Trigger identity    | `triggerMode: pull_request-informational`, workflow name, run id, run attempt, source ref.         |
 | PR identity         | PR number, head SHA, base SHA, head ref, base ref, repository owner/name.                          |
-| Included slices     | Todo Search and Todo App PBE Run paths.                                                            |
+| Included slices     | Todo Search and Todo App DevView Run paths.                                                        |
 | Todo Search status  | validator status, parity status, check count, node count, edge count.                              |
 | Todo App status     | validator status, parity `not-required`, check count, node count, edge count.                      |
 | Aggregate status    | aggregate status, included slice count, warning/blocking/decision-required counts.                 |
@@ -170,7 +170,7 @@ PR step summary wording:
 - Head SHA: <head>
 - Base SHA: <base>
 - Todo Search: validation-pass / comparison-pass
-- Todo App PBE Run: validation-pass / parity not-required
+- Todo App DevView Run: validation-pass / parity not-required
 - Aggregate: aggregate-pass
 - Boundary: informational Evidence only.
 - Not a required check, branch protection rule, source authority change, user acceptance, or Graph-source promotion.
@@ -228,7 +228,7 @@ This design does not:
 - add a required check, branch protection rule, or enforcement mode
 - implement `validate --all`
 - expand source authority
-- make Todo App PBE Run parity-backed, pilot-marker-backed, CI-backed, or authority-bearing
+- make Todo App DevView Run parity-backed, pilot-marker-backed, CI-backed, or authority-bearing
 - approve full Graph-source promotion
 - perform public-doc cleanup
 - retire tree-native or `.pbe` artifacts

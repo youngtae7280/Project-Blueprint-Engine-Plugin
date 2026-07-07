@@ -7,7 +7,7 @@ Evidence level: validator-backed
 ## Run Identity
 
 - Validated at: 2026-06-29T08:46:09.641Z
-- Command identity: `pbe graph read-model validate --slice examples/internal-legacy/adoption/todo-search-slice`
+- Command identity: `devview graph read-model validate --slice examples/internal-legacy/adoption/todo-search-slice`
 - Source commit: a1c4f10
 - Source slice: `examples/internal-legacy/adoption/todo-search-slice`
 - Profile id: `todo-search-selected-slice`

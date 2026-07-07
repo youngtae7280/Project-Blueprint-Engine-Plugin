@@ -6,11 +6,11 @@ Status: aggregate-pass
 
 - Summarized at: 2026-06-29T08:46:10.113Z
 - Command identity:
-  `pbe graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run`
+  `devview graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-devview-run`
 - Source commit: a1c4f10
 - Source mode: existing-per-slice-validation-reports-only
 - Input reports: `examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validation-report.json`,
-  `examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json`
+  `examples/valid/todo-app-devview-run/generated/read-model-validation-report.json`
 
 ## Boundary
 
@@ -40,10 +40,10 @@ Aggregate-pass is not user acceptance, source-authority expansion, CI enforcemen
 
 ## Per-Slice Summary
 
-| Slice                                                 | Profile                           | Policy              | Layout            | Validation      | Checks | Warnings | Blocking | Decision Required | Parity       | Pilot Marker | Runtime Fixture        |
-| ----------------------------------------------------- | --------------------------------- | ------------------- | ----------------- | --------------- | ------ | -------- | -------- | ----------------- | ------------ | ------------ | ---------------------- |
-| `examples/internal-legacy/adoption/todo-search-slice` | `todo-search-selected-slice`      | pilot-marker-backed | flat-demo-support | validation-pass | 20     | 0        | 0        | 0                 | pass         | present      | present                |
-| `examples/valid/todo-app-pbe-run`                     | `todo-app-pbe-run-structure-only` | structure-only      | canonical-pbe     | validation-pass | 16     | 0        | 0        | 0                 | not-required | not-required | attached-evidence-only |
+| Slice                                                 | Profile                               | Policy              | Layout            | Validation      | Checks | Warnings | Blocking | Decision Required | Parity       | Pilot Marker | Runtime Fixture        |
+| ----------------------------------------------------- | ------------------------------------- | ------------------- | ----------------- | --------------- | ------ | -------- | -------- | ----------------- | ------------ | ------------ | ---------------------- |
+| `examples/internal-legacy/adoption/todo-search-slice` | `todo-search-selected-slice`          | pilot-marker-backed | flat-demo-support | validation-pass | 20     | 0        | 0        | 0                 | pass         | present      | present                |
+| `examples/valid/todo-app-devview-run`                 | `todo-app-devview-run-structure-only` | structure-only      | canonical-devview | validation-pass | 16     | 0        | 0        | 0                 | not-required | not-required | attached-evidence-only |
 
 ## Source Authority / Non-Promotion Boundary By Slice
 
@@ -68,7 +68,7 @@ Aggregate-pass is not user acceptance, source-authority expansion, CI enforcemen
     on another slice generated directory, manual parity artifact, pilot marker, or runtime fixture unless that artifact
     is declared by this profile.
 
-### examples/valid/todo-app-pbe-run
+### examples/valid/todo-app-devview-run
 
 - Source authority boundary: Validator-backed Evidence checks structure-only generated read-model outputs for this
   canonical .pbe fixture. It does not change source authority.
@@ -76,7 +76,7 @@ Aggregate-pass is not user acceptance, source-authority expansion, CI enforcemen
   create a source-authority pilot, require parity, introduce CI enforcement, retire .pbe artifacts, or replace user
   approval.
 - Report status: present
-- Report path: `examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json`
+- Report path: `examples/valid/todo-app-devview-run/generated/read-model-validation-report.json`
 - Retained warnings / accepted limitations:
   - RW-STRUCTURE-ONLY: structure-only-limitation - This profile validates canonical .pbe structure only; no manual
     parity artifact, pilot marker, CI-backed Evidence, or source-authority pilot is required or claimed.

@@ -210,7 +210,7 @@ export interface GraphOperationProposeUpdateOptions {
 
 export interface GraphOperationProposeUpdateResult {
   schemaVersion: 1
-  artifactRole: 'pbe-graph-update-proposal-v0'
+  artifactRole: 'devview-graph-update-proposal-v0'
   status: 'generated-from-graph-delta'
   graphDeltaPath: string
   sourceRecordId: string
@@ -538,7 +538,7 @@ export async function proposeGraphUpdate(
 
   const result: GraphOperationProposeUpdateResult = {
     schemaVersion: 1,
-    artifactRole: 'pbe-graph-update-proposal-v0',
+    artifactRole: 'devview-graph-update-proposal-v0',
     status: 'generated-from-graph-delta',
     graphDeltaPath: relativePath(root, resolvedGraphDeltaPath),
     sourceRecordId: delta.sourceRecordId,
@@ -638,7 +638,7 @@ async function loadJson<T>(filePath: string): Promise<T> {
 }
 
 function validateProposal(proposal: GraphUpdateProposal, proposalPath: string): void {
-  if (proposal.artifactRole !== 'pbe-graph-update-proposal-v0') {
+  if (proposal.artifactRole !== 'devview-graph-update-proposal-v0') {
     throw new Error(`Proposal has unexpected artifactRole in ${proposalPath}: ${proposal.artifactRole}`)
   }
   if (proposal.status !== 'generated-from-graph-delta') {
@@ -958,7 +958,7 @@ function renderGraphDeltaMarkdown(result: GraphOperationCaptureDeltaResult): str
 
 function renderGraphUpdateProposalMarkdown(result: GraphOperationProposeUpdateResult): string {
   const lines = [
-    '# PBE Graph Update Proposal',
+    '# DevView Graph Update Proposal',
     '',
     `Status: ${result.status}`,
     '',

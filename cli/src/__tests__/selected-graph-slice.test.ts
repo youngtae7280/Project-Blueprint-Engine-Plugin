@@ -191,37 +191,37 @@ function validAuthority(): Record<string, unknown> {
       id: 'CH-001',
       nodeKind: 'change',
       title: 'Preserve completed add-todo behavior while future revisions are assessed.',
-      sourceArtifact: 'examples/valid/todo-app-pbe-run/.pbe/control/change-tree.json',
+      sourceArtifact: 'examples/valid/todo-app-devview-run/.pbe/control/change-tree.json',
     },
     {
       id: 'WT-1',
       nodeKind: 'task',
       title: 'Implement add todo behavior',
-      sourceArtifact: 'examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json',
+      sourceArtifact: 'examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json',
     },
     {
       id: 'TT-1',
       nodeKind: 'check',
       title: 'Add todo acceptance check',
-      sourceArtifact: 'examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json',
+      sourceArtifact: 'examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json',
     },
     {
       id: 'EV-1',
       nodeKind: 'evidence',
       title: '.pbe/evidence/test-results/todo-add.txt',
-      sourceArtifact: 'examples/valid/todo-app-pbe-run/.pbe/evidence/evidence-tree.json',
+      sourceArtifact: 'examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json',
     },
     {
       id: 'IM-001',
       nodeKind: 'finding',
       title: 'Golden run includes a non-blocking analyzed change skeleton.',
-      sourceArtifact: 'examples/valid/todo-app-pbe-run/.pbe/control/impact-tree.json',
+      sourceArtifact: 'examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json',
     },
     {
       id: 'DEC-1',
       nodeKind: 'decision',
       title: 'Approval fixture that must not be selected through approves edge.',
-      sourceArtifact: 'examples/valid/todo-app-pbe-run/.pbe/control/decision-log.json',
+      sourceArtifact: 'examples/valid/todo-app-devview-run/.pbe/control/decision-log.json',
     },
   ]
   const edges = [

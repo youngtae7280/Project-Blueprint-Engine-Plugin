@@ -216,7 +216,7 @@ This scope decision does not set `equivalenceProven: true` and does not change g
 The first scope compliance checker preview artifact is now recorded:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json
 ```
 
 Target fixture:
@@ -250,7 +250,7 @@ states, and the first future static preview result boundary without implementing
 The first static result-shape preview is now recorded:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-result.runtime-evidence-only.preview.json
 ```
 
 It originally reported `scope-compliance-input-missing` because no authoritative changed-file list existed. After the
@@ -260,7 +260,7 @@ scope compliance as not evaluated: no checker has run, and no violation or no-vi
 The changed-file list authority preview is now recorded:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json
 ```
 
 It records `changed-file-list-authority-previewed` while keeping changed-file collection unimplemented. The preview
@@ -271,7 +271,7 @@ normalization policy exist.
 The fixture-provided changed-file list preview is now recorded:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json
 ```
 
 It adds static test/Evidence-only and production-source-modified scenarios for future result-shape design. These
@@ -281,7 +281,7 @@ prove compliance or violations. The scope compliance result preview still keeps 
 The fixture input consumption preview is now recorded:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json
 ```
 
 It records `scope-compliance-fixture-input-present-preview-only`: fixture-provided input is present, but no checker has
@@ -292,7 +292,7 @@ checker dry-run boundary without adding enforcement, rejection, CI approval, or 
 The preview-only dry-run skeleton is now recorded:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json
 ```
 
 It records `dryRunSkeletonStatus: preview-only-not-executable`, `resultStatus: scope-compliance-dry-run-not-run`, and
@@ -302,7 +302,7 @@ described, but no checker dry-run logic has executed and no clean or violation r
 The not-run report shape preview is now recorded:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json
 ```
 
 It records `reportStatus: scope-compliance-not-run-report-previewed`, `checkerRun: false`, `stopReason:
@@ -325,7 +325,7 @@ evaluate fixture scenarios, or claim clean/violation results.
 The git-derived changed-file input design preview is now recorded:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json
 ```
 
 It records `git-derived-input-design-previewed` and designs the future input around explicit base/head refs or a
@@ -346,7 +346,7 @@ changed-file collection artifact. Collection success still keeps `checkerRun: fa
 The first collection-only implementation now records:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json
 ```
 
 Status:
@@ -363,7 +363,7 @@ fixtures, satisfy runtime Evidence, or prove equivalence.
 The first collection input consumption preview now records:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json
 ```
 
 Status:
@@ -380,7 +380,7 @@ actual violation results remain later work.
 The first allowed/forbidden scope input binding preview now records:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json
 ```
 
 Status:
@@ -402,7 +402,7 @@ eligible and wired. Path matching and clean/violation results remain later work.
 The first path pattern matching policy preview now records:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json
 ```
 
 Status:
@@ -420,7 +420,7 @@ keeps `policyConsumedForEvaluation: false`, `checkerRun: false`, `scopeComplianc
 The first violation category schema preview now records:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json
 ```
 
 Status:
@@ -438,7 +438,7 @@ The schema defines future categories such as `forbidden-scope-match`, `allowed-s
 The first evaluation result shape preview now records:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json
 ```
 
 Status:
@@ -479,7 +479,7 @@ cli/src/core/scope-compliance-evaluator.ts
 The first advisory evaluation artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json
 ```
 
 Status:
@@ -527,7 +527,7 @@ enforcement, approval, runtime Evidence satisfaction, equivalence proof, graph d
 The first Graph Delta Proposal boundary preview is now recorded:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-delta-proposal-boundary.runtime-evidence-only.preview.json
 ```
 
 This preview defines how advisory `check-scope` output may later contribute to proposal candidates such as
@@ -540,10 +540,10 @@ equivalence, or replace user acceptance. The preview keeps `proposalOnly: true`,
 The candidate schema alignment preview is recorded at:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json
 ```
 
-It aligns advisory scope outputs with the existing `pbe-graph-update-proposal-v0` fields such as
+It aligns advisory scope outputs with the existing `devview-graph-update-proposal-v0` fields such as
 `proposedRecordState`, `proposedNodeUpdates`, `changedFiles`, `edgeIntentSummary`, and `boundaries`. The alignment is
 still proposal-only. Unknown mappings, including Evidence links and runtime report links, remain
 `mappingStatus: unresolved-existing-schema-review-required` rather than becoming a parallel authoritative graph update
@@ -552,7 +552,7 @@ format.
 The narrow unresolved mapping decision preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-unresolved-mapping-decision.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-delta-proposal-unresolved-mapping-decision.runtime-evidence-only.preview.json
 ```
 
 It identifies `CH-001` as the structure-only `sourceRecordId` candidate for review, keeps `graphDeltaPath` unresolved
@@ -563,19 +563,19 @@ proposals.
 The graph-delta-compatible source preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json
 ```
 
 It collects the advisory `check-scope` result, compact runtime report, changed-file collection, scope evaluation,
 proposal boundary, schema alignment, and unresolved mapping decision references into a proposal-only generator
-input shape. It is not graph-source, not `graph-delta-v0`, not `pbe-graph-update-proposal-v0`, and not graph delta
+input shape. It is not graph-source, not `graph-delta-v0`, not `devview-graph-update-proposal-v0`, and not graph delta
 apply. `CH-001` remains a structure-only review candidate, `graphDeltaPath` remains candidate-only/not-written, and
 human review remains required.
 
 The proposal-only generator scope decision is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-generator-scope-decision.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-delta-proposal-generator-scope-decision.runtime-evidence-only.preview.json
 ```
 
 It decided that the first generator slice may read the graph-delta-compatible source, validate boundary fields, and
@@ -588,7 +588,7 @@ graph read-model propose-graph-delta --source <sourceArtifact> --json
 graph read-model propose-graph-delta --source <sourceArtifact> --output <proposalPath> --json
 ```
 
-It emits a `graph-delta-proposal-only-preview` object aligned to `pbe-graph-update-proposal-v0`, preserves `CH-001` as a
+It emits a `graph-delta-proposal-only-preview` object aligned to `devview-graph-update-proposal-v0`, preserves `CH-001` as a
 structure-only review candidate, keeps Evidence/report links candidate-only, and writes no file unless `--output` is
 explicitly supplied. The generated preview is not graph-source, not graph delta apply, not approval, not runtime Evidence
 satisfaction, and not enforcement.
@@ -610,7 +610,7 @@ explicitly supplied.
 The DevView Codex Hook Gateway boundary is now previewed:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json
 ```
 
 It defines how future Codex lifecycle hooks can sit in front of DevView ON execution. `SessionStart` may load DevView
@@ -625,7 +625,7 @@ work, satisfy runtime Evidence, enforce CI, or enable strict mode.
 The missing DevView compiler frontend is now previewed separately:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
 ```
 
 It defines the front-end flow from natural language request to AI Request IR candidate, deterministic Request IR
@@ -636,7 +636,7 @@ pack generation. Hook Gateway remains activation/routing; Request Intake defines
 The graph-aware validation boundary is also previewed:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json
 ```
 
 It is the future bridge from schema-valid Request IR candidates to graph/read-model authority checks. It is not graph

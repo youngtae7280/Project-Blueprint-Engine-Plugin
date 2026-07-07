@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-equivalence-proof-policy-boundary-preview",
+  "status": "devview-equivalence-proof-policy-boundary-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "boundaryScope": "equivalence-proof-readiness-policy-preview",
+  "phase": "phase-13-human-decision-approved-apply-boundary",
+  "sourceEvidenceAcceptancePolicyBoundary": "examples/valid/todo-app-devview-run/generated/devview-evidence-acceptance-policy-boundary.runtime-evidence-only.preview.json",
+  "sourceEvidenceAcceptanceReadiness": "examples/valid/todo-app-devview-run/generated/devview-evidence-acceptance-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
+  "equivalenceProofPolicyImplemented": true,
+  "equivalenceProofReadinessCommandImplemented": true,
+  "equivalenceProofCommandImplemented": false,
+  "firstCalibrationEquivalenceProofReadinessArtifact": "examples/valid/todo-app-devview-run/generated/devview-equivalence-proof-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
+  "firstCalibrationEquivalenceProofReadinessMarkdownArtifact": "examples/valid/todo-app-devview-run/generated/devview-equivalence-proof-readiness.blocked-defer-decision.runtime-evidence-only.preview.md",
+  "equivalenceAllowed": false,
+  "equivalenceProven": false,
+  "evidenceAccepted": false,
+  "runtimeEvidenceSatisfied": false,
+  "graphDeltaApplied": false,
+  "graphSourceMutated": false,
+  "scopeEnforced": false,
+  "ciEnforcementEnabled": false,
+  "codexSelfEquivalenceAllowed": false,
+  "aiGeneratedEquivalenceAllowed": false,
+  "validatorSelfEquivalenceAllowed": false,
+  "ciSelfEquivalenceAllowed": false,
+  "reviewPacketSelfEquivalenceAllowed": false,
+  "evidenceAcceptanceAloneProvesEquivalence": false,
+  "mutationReadinessAloneProvesEquivalence": false,
+  "futureRequiredInputs": [
+    {
+      "inputId": "evidence-acceptance-readiness",
+      "artifactRole": "devview-evidence-acceptance-readiness-preview",
+      "required": "required-before-equivalence-readiness",
+      "authorityBoundary": "Evidence acceptance readiness may provide upstream context but cannot prove equivalence."
+    },
+    {
+      "inputId": "equivalence-policy-check-report",
+      "artifactRole": "future-equivalence-policy-check-report",
+      "required": "future-policy-required-before-proof",
+      "authorityBoundary": "Future deterministic equivalence checks may produce candidates but cannot self-promote equivalenceProven."
+    },
+    {
+      "inputId": "explicit-human-equivalence-decision",
+      "artifactRole": "future-human-equivalence-decision",
+      "required": "future-policy-required-before-proof",
+      "authorityBoundary": "Future human decision may approve equivalence proof, but no such proof is created here."
+    }
+  ],
+  "futureEquivalenceStateVocabulary": [
+    {
+      "state": "equivalence-candidate",
+      "meaning": "Potential equivalence signal exists but has not been proven.",
+      "equivalenceProven": false
+    },
+    {
+      "state": "equivalence-policy-check-passed",
+      "meaning": "Future deterministic policy checks pass, but human or separately approved policy promotion is still required.",
+      "equivalenceProven": false
+    },
+    {
+      "state": "equivalence-proven",
+      "meaning": "Future terminal equivalence state after required evidence, policy, and human/configured promotion.",
+      "equivalenceProven": true,
+      "createdHere": false
+    },
+    {
+      "state": "equivalence-rejected",
+      "meaning": "Future state when evidence, scope, behavior, or policy does not support equivalence.",
+      "equivalenceProven": false
+    }
+  ],
+  "futurePolicyChecks": [
+    {
+      "checkId": "accepted-evidence-readiness",
+      "description": "Future policy must verify accepted Evidence or equivalent upstream context exists before equivalence proof review.",
+      "implementedNow": false
+    },
+    {
+      "checkId": "behavioral-equivalence-binding",
+      "description": "Future policy must bind evidence to the requested behavior, selected graph slice, and proposal under review.",
+      "implementedNow": false
+    },
+    {
+      "checkId": "scope-and-source-consistency",
+      "description": "Future policy must verify equivalence is not claimed across unrelated source, graph-source, or generated read-model drift.",
+      "implementedNow": false
+    },
+    {
+      "checkId": "no-self-equivalence",
+      "description": "Future policy must reject Codex, AI, CI, validator, smoke, review packet, apply readiness, mutation readiness, or Evidence acceptance readiness self-equivalence.",
+      "implementedNow": false
+    }
+  ],
+  "allowedUse": [
+    "document future equivalence proof vocabulary",
+    "separate equivalence candidates from equivalenceProven",
+    "define future no-self-equivalence policy",
+    "anchor the readiness-only equivalence proof command"
+  ],
+  "forbiddenUse": [
+    "treat this boundary as equivalence proof",
+    "set equivalenceProven true",
+    "accept Evidence",
+    "set runtimeEvidenceSatisfied true",
+    "apply graph delta",
+    "mutate graph-source",
+    "enforce scope",
+    "configure CI or branch protection",
+    "infer equivalence from Codex, AI, validators, runtime smoke, CI, review packet generation, Evidence acceptance readiness, mutation readiness, or apply readiness",
+    "automate user acceptance"
+  ],
+  "runtimePerformanceBoundary": {
+    "designOnly": false,
+    "addsRuntimeWork": "readiness-command-only",
+    "aiCalls": false,
+    "networkCalls": false,
+    "fullRepoScan": false,
+    "patchHunkInspection": false,
+    "fullValidation": false,
+    "timingSmokeIntegrationStatus": "not-integrated-readiness-branch-only",
+    "runtimeBudgetStatus": "advisory-not-enforced"
+  },
+  "nextFutureStepsPreview": [
+    {
+      "step": "equivalence-proof-readiness-command",
+      "status": "implemented-readiness-only"
+    },
+    {
+      "step": "equivalence-proof-command-boundary",
+      "status": "future-not-implemented"
+    },
+    {
+      "step": "scope-enforcement-policy-boundary",
+      "status": "future-not-implemented"
+    }
+  ],
+  "nonExecutionBoundary": "This artifact defines the Equivalence Proof policy boundary for readiness reporting only. The readiness command may report blocked or ready context, but it does not prove equivalence, set equivalenceProven true, accept Evidence, set runtimeEvidenceSatisfied true, enforce scope, configure CI or required checks, apply graph deltas, mutate graph-source, record human decisions, approve proposals, or replace user acceptance."
+}

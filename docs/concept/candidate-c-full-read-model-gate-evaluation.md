@@ -57,10 +57,10 @@ Positive validate-all is registry-scoped and explicit. It is not directory disco
 
 Current positive profiles:
 
-| Profile                           | Slice                                                 | Policy level          | Role                                                                                                |
-| --------------------------------- | ----------------------------------------------------- | --------------------- | --------------------------------------------------------------------------------------------------- |
-| `todo-search-selected-slice`      | `examples/internal-legacy/adoption/todo-search-slice` | `pilot-marker-backed` | Limited graph-source promoted selected slice with parity, runtime fixture, and scoped pilot marker. |
-| `todo-app-pbe-run-structure-only` | `examples/valid/todo-app-pbe-run`                     | `structure-only`      | Confirmed Graph-source-backed structure-only fixture; not source-authority-bearing.                 |
+| Profile                               | Slice                                                 | Policy level          | Role                                                                                                |
+| ------------------------------------- | ----------------------------------------------------- | --------------------- | --------------------------------------------------------------------------------------------------- |
+| `todo-search-selected-slice`          | `examples/internal-legacy/adoption/todo-search-slice` | `pilot-marker-backed` | Limited graph-source promoted selected slice with parity, runtime fixture, and scoped pilot marker. |
+| `todo-app-devview-run-structure-only` | `examples/valid/todo-app-devview-run`                 | `structure-only`      | Confirmed Graph-source-backed structure-only fixture; not source-authority-bearing.                 |
 
 `validate --all` must remain scoped to these configured profiles until registry expansion is separately approved.
 

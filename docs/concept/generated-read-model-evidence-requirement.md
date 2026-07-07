@@ -194,8 +194,8 @@ user accepts the current concept-level output shape. Stricter users can choose `
 
 The user approved that bounded implementation task. Todo Search generated read-model Evidence is now created by:
 
-- `pbe graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice`
-- `pbe graph read-model compare --generated <file> --manual <file>`
+- `devview graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice`
+- `devview graph read-model compare --generated <file> --manual <file>`
 
 Outputs are written under `examples/internal-legacy/adoption/todo-search-slice/generated/`. They satisfy this prerequisite for bounded
 Todo Search Evidence discussion only; they do not approve scoped source-authority execution.

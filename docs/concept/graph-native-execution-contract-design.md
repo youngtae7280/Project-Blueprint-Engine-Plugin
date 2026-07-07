@@ -50,7 +50,7 @@ Current source-authority boundaries:
 | Surface                    | Current role                                 | Boundary                                                                                      |
 | -------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | Todo Search selected slice | limited Graph-source promoted selected slice | Bounded to the Todo Search selected slice only.                                               |
-| Todo App PBE Run           | graph-source-backed `structure-only` profile | Structure-only; not source-authority-bearing beyond the structure contract.                   |
+| Todo App DevView Run       | graph-source-backed `structure-only` profile | Structure-only; not source-authority-bearing beyond the structure contract.                   |
 | Positive registry          | configured read-model validation registry    | Contains the current Todo Search and Todo App profiles only.                                  |
 | ACEP / execution pack      | compatibility/execution view                 | Still packages bounded execution obligations for current tree-native and compatibility flows. |
 | Repo-wide Graph-source     | not promoted                                 | No repo-wide source-authority expansion is approved.                                          |
@@ -350,9 +350,9 @@ Future implementation should follow the governance ladder:
 
 Potential future mutating/validating commands are candidates only:
 
-- `pbe graph execution-contract generate`
-- `pbe graph execution-contract validate`
-- `pbe graph execution-contract project-acep`
+- `devview graph execution-contract generate`
+- `devview graph execution-contract validate`
+- `devview graph execution-contract project-acep`
 
 Do not implement these commands until the contract is dogfooded and deterministic enough.
 

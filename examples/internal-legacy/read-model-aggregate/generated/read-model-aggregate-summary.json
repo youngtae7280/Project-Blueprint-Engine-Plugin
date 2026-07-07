@@ -2,12 +2,12 @@
   "version": "0.1.0-read-model-aggregate-summary",
   "metadata": {
     "summarizedAt": "2026-06-29T08:46:10.113Z",
-    "commandIdentity": "pbe graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run",
+    "commandIdentity": "devview graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-devview-run",
     "sourceCommit": "a1c4f10",
     "aggregateArtifactRole": "cross-slice-evidence-summary",
     "inputReportList": [
       "examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validation-report.json",
-      "examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json"
+      "examples/valid/todo-app-devview-run/generated/read-model-validation-report.json"
     ],
     "sourceMode": "existing-per-slice-validation-reports-only",
     "generationBoundary": "Aggregate summarize reads per-slice validation reports only. It does not run generate, compare, validate, or validate --all."
@@ -21,7 +21,7 @@
     "Otherwise, any warning slice => aggregate-warning.",
     "All included slices validation-pass with 0 warning/blocking/decision-required => aggregate-pass."
   ],
-  "includedSlices": ["examples/internal-legacy/adoption/todo-search-slice", "examples/valid/todo-app-pbe-run"],
+  "includedSlices": ["examples/internal-legacy/adoption/todo-search-slice", "examples/valid/todo-app-devview-run"],
   "summary": {
     "sliceCount": 2,
     "presentReportCount": 2,
@@ -107,12 +107,12 @@
       ]
     },
     {
-      "sourceSlice": "examples/valid/todo-app-pbe-run",
-      "reportPath": "examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json",
+      "sourceSlice": "examples/valid/todo-app-devview-run",
+      "reportPath": "examples/valid/todo-app-devview-run/generated/read-model-validation-report.json",
       "reportStatus": "present",
-      "profileId": "todo-app-pbe-run-structure-only",
+      "profileId": "todo-app-devview-run-structure-only",
       "policyLevel": "structure-only",
-      "sourceLayout": "canonical-pbe",
+      "sourceLayout": "canonical-devview",
       "validationStatus": "validation-pass",
       "checkCount": 16,
       "passCount": 16,
@@ -134,7 +134,7 @@
       "runtimeFixtureRequirement": {
         "required": false,
         "status": "attached-evidence-only",
-        "path": "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt",
+        "path": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
         "reason": "Structure-only validation does not require a runnable runtime fixture; attached evidence text may be referenced when present."
       },
       "retainedWarningCount": 2,

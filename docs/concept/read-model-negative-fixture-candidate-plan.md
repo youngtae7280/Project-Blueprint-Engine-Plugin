@@ -24,10 +24,10 @@ Current read-model baseline:
 
 - candidate positive registry exists at `examples/internal-legacy/read-model-aggregate/read-model-slices.json`
 - parser/normalization tests already cover duplicate IDs, missing top-level boundaries, and unknown policy levels
-- local non-enforcing `pbe graph read-model validate --all` exists
+- local non-enforcing `devview graph read-model validate --all` exists
 - manual and PR validate-all workflow runs are reviewed as `ci-evidence-pass`
 - Todo Search remains `pilot-marker-backed`
-- Todo App PBE Run remains `structure-only`
+- Todo App DevView Run remains `structure-only`
 - current CI runs positive configured profiles only
 - the invalid `viewScopedTags`, missing Core View, and missing pilot marker fixtures are implemented as local focused
   test fixtures only
@@ -208,12 +208,12 @@ examples/invalid/read-model-structure-only-policy-conflict
 Behavior protected:
 
 - `structure-only` profiles must not accidentally require parity, pilot marker, or CI-backed Evidence
-- Todo App PBE Run must not be silently promoted beyond structure-only
+- Todo App DevView Run must not be silently promoted beyond structure-only
 - policy-level requirements must match profile level
 
 Why durable fixture is useful:
 
-- protects Todo App PBE Run from accidental over-strengthening
+- protects Todo App DevView Run from accidental over-strengthening
 - verifies policy-level separation without source-authority implications
 
 Why not first:
@@ -241,7 +241,7 @@ Maintenance burden:
 Required boundary:
 
 - invalid test input only
-- Todo App PBE Run remains structure-only
+- Todo App DevView Run remains structure-only
 - no promotion
 - no CI enforcement
 
@@ -263,7 +263,7 @@ Rationale:
 - both protect generic read-model invariants rather than Todo Search-specific authority policy
 - both are reviewable with small fixture shapes
 - together they cover taxonomy and completeness
-- neither requires promoting Todo App PBE Run or expanding source authority
+- neither requires promoting Todo App DevView Run or expanding source authority
 - they can be tested locally without changing CI workflow behavior
 
 After those generic fixtures are stable, the first authority-boundary durable fixture is:
@@ -276,9 +276,9 @@ Current implementation status:
 - `examples/invalid/read-model-core-view-missing` is implemented as the second durable negative fixture.
 - `examples/invalid/read-model-pilot-marker-missing` is implemented as the third durable negative fixture.
 - The fixtures store invalid local test input or absence metadata outside `generated/`.
-- A focused test injects the invalid tag fixture into a temp Todo App PBE Run validation workspace and expects a blocking
+- A focused test injects the invalid tag fixture into a temp Todo App DevView Run validation workspace and expects a blocking
   `view-scoped-tags-allowed` result.
-- A focused test injects the missing Core View fixture into a temp Todo App PBE Run validation workspace and expects a
+- A focused test injects the missing Core View fixture into a temp Todo App DevView Run validation workspace and expects a
   blocking `core-view-coverage-present` result while `view-scoped-tags-allowed` remains passing.
 - A focused test removes the scoped pilot marker from a temp Todo Search validation workspace and expects a blocking
   `pilot-marker-exists` result while parity remains `comparison-pass`.
@@ -324,7 +324,7 @@ This candidate plan and the first three implemented fixtures do not:
 - introduce CI enforcement
 - expand source authority
 - perform public-doc cleanup
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 - approve full Graph-source promotion
 
 ## Gate Self-Check

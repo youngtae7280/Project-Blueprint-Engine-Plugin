@@ -105,7 +105,7 @@ export interface StructureOnlyGraphSourceCandidateArtifact {
   schemaVersion: 1
   artifactRole: 'structure-only-graph-source'
   status: 'confirmed-graph-source-backed'
-  graphSourceScope: 'todo-app-pbe-run-structure-only'
+  graphSourceScope: 'todo-app-devview-run-structure-only'
   sourceSlice: string
   sourceProfile: string
   policyLevel: 'structure-only'
@@ -133,7 +133,7 @@ export interface StructureOnlyGraphSourceCandidateProjectionArtifact
     sourceArtifact: string
     sourceSlice: string
     sourceProfile: string
-    graphSourceScope: 'todo-app-pbe-run-structure-only'
+    graphSourceScope: 'todo-app-devview-run-structure-only'
     policyLevel: 'structure-only'
     projectionBoundary: string
   }
@@ -645,7 +645,7 @@ export interface SliceReadModelConfig {
   displayName: string
   supportedSlice: string
   policyLevel: 'pilot-marker-backed' | 'structure-only'
-  sourceLayout: 'flat-demo-support' | 'canonical-pbe'
+  sourceLayout: 'flat-demo-support' | 'canonical-devview'
   expectedCounts: {
     nodes: number
     edges: number
@@ -873,11 +873,11 @@ export const todoSearchReadModelProfile: SliceReadModelConfig = {
 }
 
 export const todoAppPbeRunStructureOnlyProfile: SliceReadModelConfig = {
-  profileId: 'todo-app-pbe-run-structure-only',
-  displayName: 'Todo App PBE Golden Run',
-  supportedSlice: 'examples/valid/todo-app-pbe-run',
+  profileId: 'todo-app-devview-run-structure-only',
+  displayName: 'Todo App DevView Golden Run',
+  supportedSlice: 'examples/valid/todo-app-devview-run',
   policyLevel: 'structure-only',
-  sourceLayout: 'canonical-pbe',
+  sourceLayout: 'canonical-devview',
   expectedCounts: {
     nodes: 22,
     edges: 38,
@@ -891,7 +891,7 @@ export const todoAppPbeRunStructureOnlyProfile: SliceReadModelConfig = {
     acceptanceRoot: 'ACCEPT-PT-1',
     cycleContract: 'CY-1',
     nodeExecutionContract: 'CY-1-CONTRACT',
-    viewInstance: 'VIEW-TODO-APP-PBE-RUN-STRUCTURE',
+    viewInstance: 'VIEW-TODO-APP-DEVVIEW-RUN-STRUCTURE',
   },
   artifacts: {
     productTree: '.pbe/tree/product-tree.json',
@@ -1133,7 +1133,7 @@ export async function observeReadModelCandidateProjections(root: string): Promis
       sourceAuthorityBoundary:
         'Graph-source observation checks confirmed structure-only graph-source projections only. It does not create enforcement or promotion beyond structure-only.',
       nonPromotionStatement:
-        'Graph-source observation pass does not promote Todo App PBE Run beyond structure-only, approve repo-wide Graph-source promotion, or replace user acceptance.',
+        'Graph-source observation pass does not promote Todo App DevView Run beyond structure-only, approve repo-wide Graph-source promotion, or replace user acceptance.',
       validateAllBoundary:
         'Graph-source observation remains a separate report-only command. The Todo App graph-source projection is also checked by positive validate-all as confirmed structure-only Evidence.',
     }
@@ -1162,7 +1162,7 @@ export async function observeReadModelCandidateProjections(root: string): Promis
       sourceAuthorityBoundary:
         'Graph-source observation checks confirmed structure-only graph-source projections only. It does not create enforcement or promotion beyond structure-only.',
       nonPromotionStatement:
-        'Graph-source observation block does not promote Todo App PBE Run beyond structure-only, approve repo-wide Graph-source promotion, or replace user acceptance.',
+        'Graph-source observation block does not promote Todo App DevView Run beyond structure-only, approve repo-wide Graph-source promotion, or replace user acceptance.',
       validateAllBoundary:
         'Graph-source observation remains a separate report-only command. The Todo App graph-source projection is also checked by positive validate-all as confirmed structure-only Evidence.',
     }
@@ -1438,7 +1438,7 @@ export async function reportGraphSourceHealth(root: string): Promise<GraphSource
   const todoSearchRetirement = asRecord(todoSearchTransition.retirementReadiness, 'todoSearch.retirementReadiness', [])
   const todoAppRetirement = asRecord(todoAppTransition.retirementReadiness, 'todoApp.retirementReadiness', [])
   const todoSearchPackage = findByField(retirementApprovalPackages, 'scope', 'todo-search-selected-slice')
-  const todoAppPackage = findByField(retirementApprovalPackages, 'scope', 'todo-app-pbe-run-structure-only')
+  const todoAppPackage = findByField(retirementApprovalPackages, 'scope', 'todo-app-devview-run-structure-only')
   const repoWidePackage = findByField(retirementApprovalPackages, 'scope', 'repo-wide')
 
   if (todoSearchPackage.status !== 'retirement-candidate-not-deleted') {
@@ -1578,7 +1578,7 @@ export async function reportGraphSourceHealth(root: string): Promise<GraphSource
       nonEnforcing: true,
       enforcementStatus: 'not-enforced',
       lastEvaluationArtifact:
-        'examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json',
       reportHealthRunsEvaluator: false,
       compactReportIsBlocking: false,
       advisoryFindingsAreBlocking: false,
@@ -1595,7 +1595,7 @@ export async function reportGraphSourceHealth(root: string): Promise<GraphSource
       nonEnforcing: true,
       enforcementStatus: 'not-enforced',
       lastProposalPreviewArtifact:
-        'examples/valid/todo-app-pbe-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json',
       reportHealthRunsGenerator: false,
     },
     graphDeltaHumanReviewPacket: {
@@ -1661,7 +1661,7 @@ Status: \`${report.status}\`
 | Slice | Source status | Projection | Counts | Retirement |
 | --- | --- | --- | --- | --- |
 | Todo Search | \`${report.todoSearch.sourceMode}\` | \`${report.todoSearch.projectionContractStatus}\` | ${report.todoSearch.nodeCount} nodes / ${report.todoSearch.edgeCount} edges / ${report.todoSearch.coreViewCount} Core Views | \`${report.todoSearch.retirementReadinessStatus}\`; package \`${report.todoSearch.retirementApprovalStatus}\` |
-| Todo App PBE Run | \`${report.todoApp.sourceMode}\` / \`${report.todoApp.graphSourceAuthorityStatus}\` | \`${report.todoApp.projectionContractStatus}\` | ${report.todoApp.nodeCount} nodes / ${report.todoApp.edgeCount} edges / ${report.todoApp.coreViewCount} Core Views | \`${report.todoApp.retirementReadinessStatus}\`; package \`${report.todoApp.retirementApprovalStatus}\` |
+| Todo App DevView Run | \`${report.todoApp.sourceMode}\` / \`${report.todoApp.graphSourceAuthorityStatus}\` | \`${report.todoApp.projectionContractStatus}\` | ${report.todoApp.nodeCount} nodes / ${report.todoApp.edgeCount} edges / ${report.todoApp.coreViewCount} Core Views | \`${report.todoApp.retirementReadinessStatus}\`; package \`${report.todoApp.retirementApprovalStatus}\` |
 
 ## Evidence Status
 
@@ -1738,9 +1738,9 @@ npm run build:cli
 npm run devview:runtime:smoke
 node dist/cli/index.js graph read-model check-scope --base HEAD~1 --head HEAD --json
 node dist/cli/index.js graph read-model check-scope --base HEAD~1 --head HEAD --markdown .tmp/devview-scope-runtime-report.md --json
-node dist/cli/index.js graph read-model propose-graph-delta --source examples/valid/todo-app-pbe-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json --output .tmp/devview-graph-delta-proposal.preview.json --json
+node dist/cli/index.js graph read-model propose-graph-delta --source examples/valid/todo-app-devview-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json --output .tmp/devview-graph-delta-proposal.preview.json --json
 node dist/cli/index.js graph read-model review-graph-delta --proposal .tmp/devview-graph-delta-proposal.preview.json --markdown .tmp/devview-graph-delta-review-packet.md --json
-node dist/cli/index.js graph read-model validate-request-ir-graph --candidate examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json --schema-validation examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json --json
+node dist/cli/index.js graph read-model validate-request-ir-graph --candidate examples/valid/todo-app-devview-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json --schema-validation examples/valid/todo-app-devview-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json --json
 node dist/cli/index.js graph read-model validate --all --json
 npm run test:read-model:e2e
 node dist/cli/index.js graph read-model report-compiler-boundary --json
@@ -2279,7 +2279,7 @@ export function normalizeStructureOnlyGraphSourceCandidateProjectionArtifact(
       sourceArtifact: normalizePath(String(metadata.sourceArtifact || '')),
       sourceSlice: normalizePath(String(metadata.sourceSlice || '')),
       sourceProfile: String(metadata.sourceProfile || ''),
-      graphSourceScope: 'todo-app-pbe-run-structure-only',
+      graphSourceScope: 'todo-app-devview-run-structure-only',
       policyLevel: 'structure-only',
       projectionBoundary: String(metadata.projectionBoundary || ''),
     },
@@ -2460,8 +2460,8 @@ export function normalizeStructureOnlyGraphSourceCandidateArtifact(
   if (status !== 'confirmed-graph-source-backed') {
     errors.push('structureOnlyGraphSource.status must be confirmed-graph-source-backed')
   }
-  if (graphSourceScope !== 'todo-app-pbe-run-structure-only') {
-    errors.push('structureOnlyGraphSource.graphSourceScope must be todo-app-pbe-run-structure-only')
+  if (graphSourceScope !== 'todo-app-devview-run-structure-only') {
+    errors.push('structureOnlyGraphSource.graphSourceScope must be todo-app-devview-run-structure-only')
   }
   if (normalizePath(sourceSlice) !== todoAppPbeRunStructureOnlyProfile.supportedSlice) {
     errors.push(`structureOnlyGraphSource.sourceSlice must be ${todoAppPbeRunStructureOnlyProfile.supportedSlice}`)
@@ -2503,7 +2503,7 @@ export function normalizeStructureOnlyGraphSourceCandidateArtifact(
     schemaVersion: 1,
     artifactRole: 'structure-only-graph-source',
     status: 'confirmed-graph-source-backed',
-    graphSourceScope: 'todo-app-pbe-run-structure-only',
+    graphSourceScope: 'todo-app-devview-run-structure-only',
     sourceSlice: normalizePath(sourceSlice),
     sourceProfile,
     policyLevel: 'structure-only',
@@ -2576,7 +2576,7 @@ export async function generateReadModelEvidence(root: string, slice: string): Pr
   const outputDir = path.join(sliceDir, 'generated')
   const sourceInputs = sourceArtifactList(root, slice, profile)
   const data = await loadSliceData(sliceDir, profile)
-  const commandIdentity = `pbe graph read-model generate --slice ${slice}`
+  const commandIdentity = `devview graph read-model generate --slice ${slice}`
   const generatedAt = new Date().toISOString()
   const sourceCommit = resolveSourceCommit(root)
   const readModelRecords = await buildGeneratedReadModelRecords(root, data, profile)
@@ -2749,7 +2749,7 @@ export async function summarizeReadModelEvidence(root: string, slices: string[])
   if (normalizedSlices.length === 0) {
     throw new Error('graph read-model summarize requires at least one --slices entry.')
   }
-  const commandIdentity = `pbe graph read-model summarize --slices ${normalizedSlices.join(',')}`
+  const commandIdentity = `devview graph read-model summarize --slices ${normalizedSlices.join(',')}`
   const perSliceSummaries = await Promise.all(
     normalizedSlices.map((slice) => buildPerSliceAggregateSummary(root, slice)),
   )
@@ -3278,7 +3278,7 @@ async function loadSliceData(sliceDir: string, profile: SliceReadModelConfig): P
 }
 
 function buildNodes(data: Record<string, unknown>, profile: SliceReadModelConfig): GraphNode[] {
-  if (profile.sourceLayout === 'canonical-pbe') {
+  if (profile.sourceLayout === 'canonical-devview') {
     return buildCanonicalPbeStructureNodes(data, profile)
   }
   return buildTodoSearchNodes(data, profile)
@@ -3936,7 +3936,7 @@ function buildCanonicalPbeStructureNodes(data: Record<string, unknown>, profile:
 }
 
 function buildEdges(data: Record<string, unknown>, profile: SliceReadModelConfig): GraphEdge[] {
-  if (profile.sourceLayout === 'canonical-pbe') {
+  if (profile.sourceLayout === 'canonical-devview') {
     return buildCanonicalPbeStructureEdges(data, profile)
   }
   return buildTodoSearchEdges(profile)
@@ -4822,7 +4822,7 @@ function buildTodoSearchEdges(profile: SliceReadModelConfig): GraphEdge[] {
 }
 
 function buildCoreViewCoverage(profile: SliceReadModelConfig): CoreViewCoverage[] {
-  if (profile.sourceLayout === 'canonical-pbe') {
+  if (profile.sourceLayout === 'canonical-devview') {
     return buildCanonicalPbeStructureCoreViewCoverage(profile)
   }
   return buildTodoSearchCoreViewCoverage(profile)
@@ -5140,7 +5140,7 @@ function buildParityReport(
     version: '0.1.0-read-model-parity-report',
     metadata: {
       comparedAt: new Date().toISOString(),
-      commandIdentity: `pbe graph read-model compare --generated ${generatedPath} --manual ${manualPath}`,
+      commandIdentity: `devview graph read-model compare --generated ${generatedPath} --manual ${manualPath}`,
       sourceCommit: resolveSourceCommit(root),
       generatedArtifact: generatedPath,
       manualArtifact: manualPath,
@@ -5201,7 +5201,7 @@ function buildValidationReport(
   manifest: Record<string, unknown>,
   marker: Record<string, unknown> | undefined,
 ): ValidationReport {
-  const commandIdentity = `pbe graph read-model validate --slice ${slice}`
+  const commandIdentity = `devview graph read-model validate --slice ${slice}`
   const checks = buildValidationChecks(root, slice, profile, generated, parity, manifest, marker)
   const blockingCount = checks.filter((entry) => entry.status === 'blocking').length
   const decisionRequiredCount = checks.filter((entry) => entry.status === 'decision-required').length
@@ -6510,7 +6510,7 @@ function normalizeReadModelSliceRegistryProfile(
   const sourceLayout = requiredEnum<SliceReadModelConfig['sourceLayout']>(
     source,
     'sourceLayout',
-    ['flat-demo-support', 'canonical-pbe'],
+    ['flat-demo-support', 'canonical-devview'],
     errors,
     prefix,
   )

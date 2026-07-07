@@ -12,9 +12,9 @@ The current baseline already has:
 
 - candidate registry fixture: `examples/internal-legacy/read-model-aggregate/read-model-slices.json`
 - parser and normalization tests for the candidate registry
-- local non-enforcing `pbe graph read-model validate --all`
+- local non-enforcing `devview graph read-model validate --all`
 - non-enforcing manual and PR validate-all CI reviews
-- aggregate Evidence output over Todo Search and Todo App PBE Run
+- aggregate Evidence output over Todo Search and Todo App DevView Run
 
 Negative fixture storage remains open because future robustness work needs invalid inputs without mutating the positive
 slice fixtures, changing source authority, or turning invalid fixtures into CI enforcement policy.
@@ -27,10 +27,10 @@ local-only invalid fixture coverage; manual or PR CI execution remains a separat
 
 Current positive fixtures:
 
-| Profile                           | Slice                                                 | Policy level          | Status                                             |
-| --------------------------------- | ----------------------------------------------------- | --------------------- | -------------------------------------------------- |
-| `todo-search-selected-slice`      | `examples/internal-legacy/adoption/todo-search-slice` | `pilot-marker-backed` | Generated, parity-backed, validated, CI-reviewed   |
-| `todo-app-pbe-run-structure-only` | `examples/valid/todo-app-pbe-run`                     | `structure-only`      | Generated, structure-validated, aggregate-included |
+| Profile                               | Slice                                                 | Policy level          | Status                                             |
+| ------------------------------------- | ----------------------------------------------------- | --------------------- | -------------------------------------------------- |
+| `todo-search-selected-slice`          | `examples/internal-legacy/adoption/todo-search-slice` | `pilot-marker-backed` | Generated, parity-backed, validated, CI-reviewed   |
+| `todo-app-devview-run-structure-only` | `examples/valid/todo-app-devview-run`                 | `structure-only`      | Generated, structure-validated, aggregate-included |
 
 Current negative coverage mostly uses focused tests that create or mutate temporary registry data. That is appropriate
 for parser-level shape checks, but it may not be enough for future end-to-end `validate --all` robustness, cross-slice
@@ -242,7 +242,7 @@ Required rules:
 
 - copy positive fixtures to a temp workspace before corrupting them
 - never rewrite `examples/internal-legacy/adoption/todo-search-slice`
-- never rewrite `examples/valid/todo-app-pbe-run`
+- never rewrite `examples/valid/todo-app-devview-run`
 - never rewrite `examples/internal-legacy/read-model-aggregate/read-model-slices.json` during negative tests
 - keep durable invalid fixtures outside `generated/`
 - delete temp workspaces after tests
@@ -275,7 +275,7 @@ This decision surface does not:
 - introduce CI enforcement
 - expand source authority
 - perform public-doc cleanup
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 - approve full Graph-source promotion
 
 ## Decision Options After This Surface

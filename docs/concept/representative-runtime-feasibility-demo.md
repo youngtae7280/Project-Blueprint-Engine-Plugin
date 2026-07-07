@@ -224,7 +224,7 @@ Use as scope-boundary fallback or stress slice, not the primary representative s
 
 Source documents and snapshots:
 
-- [../../examples/valid/todo-app-pbe-run/README.md](../../examples/valid/todo-app-pbe-run/README.md)
+- [../../examples/valid/todo-app-devview-run/README.md](../../examples/valid/todo-app-devview-run/README.md)
 - [../tree-model.md](../tree-model.md)
 - [../traceability.md](../traceability.md)
 - [../evidence-and-coverage.md](../evidence-and-coverage.md)

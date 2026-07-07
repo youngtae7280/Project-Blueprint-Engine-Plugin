@@ -54,14 +54,14 @@ npm run devview:runtime:smoke
 
 It runs:
 
-- `node dist/cli/index.js graph read-model generate-ai-request-analyzer-pack --boundary examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json --schema examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json --output .tmp/devview-runtime-timing-smoke/ai-request-analyzer-pack.json --markdown .tmp/devview-runtime-timing-smoke/ai-request-analyzer-pack.md --json`;
-- `node dist/cli/index.js graph read-model validate-request-ir --candidate examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json --output .tmp/devview-runtime-timing-smoke/request-ir-validation.json --json`;
-- `node dist/cli/index.js graph read-model validate-request-ir-graph --candidate examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json --schema-validation .tmp/devview-runtime-timing-smoke/request-ir-validation.json --output .tmp/devview-runtime-timing-smoke/request-ir-graph-validation.json --json`;
+- `node dist/cli/index.js graph read-model generate-ai-request-analyzer-pack --boundary examples/valid/todo-app-devview-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json --schema examples/valid/todo-app-devview-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json --output .tmp/devview-runtime-timing-smoke/ai-request-analyzer-pack.json --markdown .tmp/devview-runtime-timing-smoke/ai-request-analyzer-pack.md --json`;
+- `node dist/cli/index.js graph read-model validate-request-ir --candidate examples/valid/todo-app-devview-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json --output .tmp/devview-runtime-timing-smoke/request-ir-validation.json --json`;
+- `node dist/cli/index.js graph read-model validate-request-ir-graph --candidate examples/valid/todo-app-devview-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json --schema-validation .tmp/devview-runtime-timing-smoke/request-ir-validation.json --output .tmp/devview-runtime-timing-smoke/request-ir-graph-validation.json --json`;
 - frontend deterministic generation through traversal plan, selected graph slice, Contract Compiler Input, and
   Instruction Pack preview;
-- `node dist/cli/index.js graph read-model report-hook-gateway-health --boundary examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --output .tmp/devview-runtime-timing-smoke/hook-gateway-health-report.json --json`;
-- `node dist/cli/index.js graph read-model prepare-user-prompt-context --frontend-chain examples/valid/todo-app-pbe-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json --hook-health .tmp/devview-runtime-timing-smoke/hook-gateway-health-report.json --instruction-pack .tmp/devview-runtime-timing-smoke/instruction-pack.json --instruction-markdown .tmp/devview-runtime-timing-smoke/instruction-pack.md --output .tmp/devview-runtime-timing-smoke/user-prompt-context.json --markdown .tmp/devview-runtime-timing-smoke/user-prompt-context.md --json`;
-- `node dist/cli/index.js graph read-model generate-hook-script-scaffold --boundary examples/valid/todo-app-pbe-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json --hook-health examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --install-trust examples/valid/todo-app-pbe-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json --user-prompt-context .tmp/devview-runtime-timing-smoke/user-prompt-context.json --output .tmp/devview-runtime-timing-smoke/hook-script-scaffold.json --markdown .tmp/devview-runtime-timing-smoke/hook-script-scaffold.md --json`;
+- `node dist/cli/index.js graph read-model report-hook-gateway-health --boundary examples/valid/todo-app-devview-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --output .tmp/devview-runtime-timing-smoke/hook-gateway-health-report.json --json`;
+- `node dist/cli/index.js graph read-model prepare-user-prompt-context --frontend-chain examples/valid/todo-app-devview-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json --hook-health .tmp/devview-runtime-timing-smoke/hook-gateway-health-report.json --instruction-pack .tmp/devview-runtime-timing-smoke/instruction-pack.json --instruction-markdown .tmp/devview-runtime-timing-smoke/instruction-pack.md --output .tmp/devview-runtime-timing-smoke/user-prompt-context.json --markdown .tmp/devview-runtime-timing-smoke/user-prompt-context.md --json`;
+- `node dist/cli/index.js graph read-model generate-hook-script-scaffold --boundary examples/valid/todo-app-devview-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json --hook-health examples/valid/todo-app-devview-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --install-trust examples/valid/todo-app-devview-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json --user-prompt-context .tmp/devview-runtime-timing-smoke/user-prompt-context.json --output .tmp/devview-runtime-timing-smoke/hook-script-scaffold.json --markdown .tmp/devview-runtime-timing-smoke/hook-script-scaffold.md --json`;
 - `node dist/cli/index.js graph read-model generate-hook-script-templates --scaffold .tmp/devview-runtime-timing-smoke/hook-script-scaffold.json --output .tmp/devview-runtime-timing-smoke/hook-script-template.json --markdown .tmp/devview-runtime-timing-smoke/hook-script-template.md --json`;
 - `node dist/cli/index.js graph read-model report-compiler-input --json`;
 - `node dist/cli/index.js graph read-model compile-contract --dry-run --json`;
@@ -119,7 +119,7 @@ when a measured deterministic command itself fails.
 The runtime smoke lane boundary is previewed in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-runtime-smoke-lane-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-runtime-smoke-lane-boundary.runtime-evidence-only.preview.json
 ```
 
 The all-steps smoke remains an advisory snapshot of the deterministic control plane, but each measured step now reports
@@ -147,7 +147,7 @@ future lane-specific smoke or reintroduced after the all-steps suite is optimize
 The Hook Gateway install/trust scope decision boundary is a preview artifact only:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json
 ```
 
 It is not currently measured as a command because no install/trust decision CLI exists. A future command must remain
@@ -190,7 +190,7 @@ Project Memory extension authority.
 The graph delta proposal boundary preview is now recorded at:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-delta-proposal-boundary.runtime-evidence-only.preview.json
 ```
 
 This preview explains how advisory `check-scope` JSON, compact runtime reports, changed-file collection, and
@@ -200,7 +200,7 @@ deltas.
 The candidate schema alignment preview is also design-only:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json
 ```
 
 It records how future proposal candidates may map to the existing graph update proposal fields. It adds no runtime
@@ -209,7 +209,7 @@ command, does not scan files, does not inspect patches, and does not change the 
 The unresolved mapping decision preview is also outside the measured runtime path:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-unresolved-mapping-decision.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-delta-proposal-unresolved-mapping-decision.runtime-evidence-only.preview.json
 ```
 
 It records pre-generator decisions for `sourceRecordId`, `graphDeltaPath`, and Evidence/report link handling. It does
@@ -218,7 +218,7 @@ not generate proposals, add runtime work, or change the advisory timing budget.
 The graph-delta-compatible source preview is also outside the measured runtime path:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json
 ```
 
 It is the proposal-only generator input shape that references advisory runtime output, changed-file collection, scope
@@ -228,7 +228,7 @@ graph update proposal, and not apply.
 The proposal-only generator scope decision is also outside the measured runtime path:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-generator-scope-decision.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-delta-proposal-generator-scope-decision.runtime-evidence-only.preview.json
 ```
 
 It records the CLI shape, stdout/explicit-output policy, exit-code policy, and minimum proposal-shaped preview object
@@ -262,7 +262,7 @@ apply, or enforcement.
 The DevView Codex Hook Gateway boundary is previewed in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json
 ```
 
 It defines future `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, and `Stop` responsibilities for
@@ -275,7 +275,7 @@ deltas, approve work, satisfy runtime Evidence, or turn the budget into CI enfor
 The Hook Gateway health/readiness boundary is previewed in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json
 ```
 
 It is not part of the measured runtime path yet because no health-check CLI or hook script exists. It defines what a
@@ -290,7 +290,7 @@ apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, o
 The natural-language compiler frontend boundary is previewed in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
 ```
 
 Natural language is the human request surface. A future AI analyzer may produce a Request IR candidate, but that output
@@ -301,7 +301,7 @@ call, graph traversal, contract input generation, instruction pack generation, o
 The AI Request Analyzer boundary preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json
 ```
 
 The boundary preview itself is outside the measured runtime path because no analyzer implementation exists and no
@@ -334,9 +334,9 @@ traversal. Live provider inference time remains outside the 5 second determinist
 The AI Request Analyzer provider config boundary is also outside the measured runtime path:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json
 ```
 
 This slice adds no command and no smoke step. It fixes provider-state vocabulary and secret/provenance policy only.
@@ -362,7 +362,7 @@ network time remains outside the 5 second deterministic budget.
 The OpenAI live provider config shape preview is also outside the measured runtime path:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.openai-live-disabled-by-default.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config.openai-live-disabled-by-default.runtime-evidence-only.preview.json
 ```
 
 It records live-provider configuration fields such as provider name, model candidate, environment variable reference
@@ -373,7 +373,7 @@ the smoke lanes must not call OpenAI/API/LLM/network or require an API key.
 The clarification interview boundary preview is outside the measured runtime path:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json
 ```
 
 The clarification interview pack generator is also outside the core-critical lane by default:
@@ -461,8 +461,8 @@ before writing.
 The Request IR Candidate schema and first calibration fixture are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json
 ```
 
 The schema-only Request IR Candidate validator is now part of the measured advisory runtime path:
@@ -475,7 +475,7 @@ graph read-model validate-request-ir --candidate <candidatePath> --output <valid
 The timing smoke writes the validation result only to `.tmp`. The tracked Todo App calibration validation artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json
 ```
 
 This validator checks candidate schema and safety boundaries only. A schema-valid result still reports
@@ -492,13 +492,13 @@ graph read-model validate-request-ir-graph --candidate <candidatePath> --schema-
 The tracked Todo App graph-aware validation result is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json
 ```
 
 The graph-aware boundary remains:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json
 ```
 
 The validator resolves schema-valid candidate fields such as `CH-001`, `Todo App`, `runtime-evidence-only`, and
@@ -509,8 +509,8 @@ instruction packs, call an LLM, or mutate graph-source.
 The traversal boundary and selected slice boundary remain boundary preview artifacts:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-traversal-plan-boundary.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/selected-graph-slice-boundary.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-traversal-plan-boundary.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/selected-graph-slice-boundary.add-todo-runtime-evidence-only.preview.json
 ```
 
 The deterministic traversal plan generator is now part of the measured advisory runtime path:
@@ -522,7 +522,7 @@ graph read-model plan-traversal --graph-validation <graphAwareValidationPath> --
 The tracked Todo App generated traversal plan is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json
 ```
 
 It generates a plan only. It does not produce final selected nodes/edges, generate contract input, or generate
@@ -537,7 +537,7 @@ graph read-model select-slice --traversal-plan <planPath> --json
 The tracked Todo App generated selected slice is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json
 ```
 
 It selects a bounded graph-source/read-model slice from a ready traversal plan and records selection trace. It does not
@@ -553,7 +553,7 @@ graph read-model generate-contract-input --selected-slice <selectedSlicePath> --
 The tracked Todo App generated Contract Compiler Input is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json
 ```
 
 It maps the selected graph slice into existing Contract Compiler Input groups and trace fields. For the
@@ -573,8 +573,8 @@ graph read-model generate-instruction-pack --contract-input <contractInputPath> 
 The tracked Todo App generated Instruction Pack outputs are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md
 ```
 
 It turns frontend Contract Compiler Input into deterministic JSON/Markdown pack surfaces while preserving non-execution

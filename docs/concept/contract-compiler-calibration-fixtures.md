@@ -46,7 +46,7 @@ Current baseline status:
 | Candidate                                                                                  | Calibration value                                                                                                        | Decision                                                                                                       |
 | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
 | Todo Search whitespace-normalization `bug_fix`                                             | Baseline fixture with complete source-authority reconstruction.                                                          | Not selected because it is the baseline.                                                                       |
-| `examples/valid/todo-app-pbe-run`                                                          | Existing read-model structure fixture with positive validate-all coverage.                                               | Deferred because it is structure-only and lacks a different behavior/evidence contract.                        |
+| `examples/valid/todo-app-devview-run`                                                      | Existing read-model structure fixture with positive validate-all coverage.                                               | Deferred because it is structure-only and lacks a different behavior/evidence contract.                        |
 | `examples/internal-legacy/retrofit/cardprinterconfig`                                      | Realistic retrofit records with UI/hardware-adjacent scope and local validation records.                                 | Deferred because it is larger, hardware-adjacent, and less suitable as the first compiler calibration fixture. |
 | `examples/internal-legacy/retrofit/open-source/kubernetes-sidecar-kep`                     | Large external design-doc retrofit with formal KEP context.                                                              | Deferred because it is read-only and too broad for the first second-fixture calibration pass.                  |
 | `examples/internal-legacy/retrofit/open-source/escape-html` plus `outputs/.../escape-html` | Existing external behavior-change dogfood with graph source, instruction pack, graph delta, proposal, and test evidence. | Selected as the second calibration fixture candidate.                                                          |
@@ -609,12 +609,12 @@ test-only behavior proof
 
 Primary source surfaces:
 
-- `examples/valid/todo-app-pbe-run/graph-source.json`
-- `examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json`
-- `examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json`
-- `examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json`
-- `examples/valid/todo-app-pbe-run/.pbe/evidence/evidence-tree.json`
-- `examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt`
+- `examples/valid/todo-app-devview-run/graph-source.json`
+- `examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json`
+- `examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json`
+- `examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json`
+- `examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json`
+- `examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt`
 - `docs/concept/todo-app-source-authority-evidence-package.md`
 
 This selection does not promote the existing Todo App positive fixture beyond its current structure-only role. It
@@ -661,7 +661,7 @@ Expected non-support boundary:
 
 The third fixture starts as planning-only. It is not wired into `graph read-model compile-contract --dry-run`, does not
 generate a contract candidate, does not create a promotion review packet, does not approve Todo App promotion, and does
-not change the existing `todo-app-pbe-run-structure-only` registry meaning.
+not change the existing `todo-app-devview-run-structure-only` registry meaning.
 
 Overfitting risk reduction:
 
@@ -674,7 +674,7 @@ contract may forbid production code edits and require only test/Evidence strengt
 The third fixture calibration-only input draft is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json
+examples/valid/todo-app-devview-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json
 ```
 
 Draft status:
@@ -687,7 +687,7 @@ Draft status:
 - `equivalenceProven: false`
 
 This draft is intentionally placed beside the existing Todo App generated artifacts, but it does not overwrite or
-reinterpret the existing `todo-app-pbe-run-structure-only` fixture. The positive Todo App fixture remains
+reinterpret the existing `todo-app-devview-run-structure-only` fixture. The positive Todo App fixture remains
 structure-only; the draft is a separate calibration artifact for a possible future runtime Evidence-only proof.
 
 The draft models:
@@ -711,7 +711,7 @@ generate a contract candidate, does not create a promotion review packet, and do
 The third fixture calibration observation preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/compiler-input-calibration-observation.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/compiler-input-calibration-observation.runtime-evidence-only.preview.json
 ```
 
 Observation status:
@@ -752,7 +752,7 @@ Evidence, does not create a contract candidate, and does not approve Todo App pr
 The third fixture test-only scope boundary preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -804,7 +804,7 @@ Still unresolved:
 The third fixture runtime Evidence authority preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/runtime-evidence-authority.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/runtime-evidence-authority.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -854,7 +854,7 @@ Still unresolved:
 The third fixture evidence-check binding preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/evidence-check-binding.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/evidence-check-binding.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -894,7 +894,7 @@ Still unresolved before the output requirement preview:
 The third fixture output requirement preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/output-requirement-for-test-evidence.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/output-requirement-for-test-evidence.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -940,7 +940,7 @@ Still unresolved before the compliance-checker bridge preview:
 The third fixture compliance-checker bridge preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/compliance-checker-bridge.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/compliance-checker-bridge.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -1243,7 +1243,7 @@ enforcing scope, rejecting diffs, approving fixtures, or changing equivalence st
 The first scope compliance checker preview artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -1294,7 +1294,7 @@ checker behavior.
 The first static scope compliance result-shape preview artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-result.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -1327,7 +1327,7 @@ Runtime Evidence remains missing, evidence/check binding remains `preview-only-n
 The first changed-file list authority preview artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -1380,7 +1380,7 @@ still remains not evaluated.
 The git-derived changed-file input design preview artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -1434,7 +1434,7 @@ Future collection-only state may set `changedFilesCollected: true`, but it must 
 The first git-derived changed-file collection artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json
 ```
 
 Collection status:
@@ -1474,7 +1474,7 @@ Changed files collected does not mean scope compliance checked.
 The first collection input consumption preview artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -1507,7 +1507,7 @@ generated-file handling policy, violation category schema, and evaluation result
 The allowed/forbidden scope input binding preview artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -1547,7 +1547,7 @@ safe step is path pattern matching policy, not scope compliance evaluation.
 The path pattern matching policy preview artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -1593,7 +1593,7 @@ With this preview, the next safe step was violation category schema preview, not
 The violation category schema preview artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -1640,7 +1640,7 @@ preview, the next safe step was evaluation result shape preview, not path matchi
 The evaluation result shape preview artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -1722,7 +1722,7 @@ cli/src/core/scope-compliance-evaluator.ts
 The first advisory evaluation artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json
 ```
 
 Current artifact status:
@@ -1763,7 +1763,7 @@ graph delta apply, or user acceptance.
 The first Graph Delta Proposal boundary preview for advisory scope results is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-delta-proposal-boundary.runtime-evidence-only.preview.json
 ```
 
 It records how advisory `check-scope` output may later inform proposal candidates such as scope-finding review notes,
@@ -1774,10 +1774,10 @@ proposal-only: `graphSourceMutated: false`, `graphDeltaApplied: false`, `require
 The candidate schema alignment preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json
 ```
 
-It maps advisory scope candidate categories against the existing `pbe-graph-update-proposal-v0` shape instead of
+It maps advisory scope candidate categories against the existing `devview-graph-update-proposal-v0` shape instead of
 creating a competing proposal format. The preview records partial mappings for `changedFiles`, `proposedRecordState`,
 and `boundaries`, while leaving Evidence links, runtime report links, source record binding, and graph-delta source
 selection unresolved for future review.
@@ -1785,7 +1785,7 @@ selection unresolved for future review.
 The unresolved mapping decision preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-unresolved-mapping-decision.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-delta-proposal-unresolved-mapping-decision.runtime-evidence-only.preview.json
 ```
 
 It narrows three pre-generator decisions. `CH-001` is the existing structure-only change node candidate for future
@@ -1795,7 +1795,7 @@ JSON/report links remain candidate-only review context rather than accepted Evid
 The graph-delta-compatible source preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json
 ```
 
 It defines the proposal-only generator input shape by gathering advisory `check-scope` output, compact runtime
@@ -1806,7 +1806,7 @@ Evidence satisfaction. `CH-001` remains a structure-only review candidate and hu
 The proposal-only generator scope decision is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-generator-scope-decision.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-delta-proposal-generator-scope-decision.runtime-evidence-only.preview.json
 ```
 
 It defines the implementation boundary that the first proposal-only generator now follows. The CLI may read the source
@@ -1820,7 +1820,7 @@ graph read-model propose-graph-delta --source <sourceArtifact> --json
 graph read-model propose-graph-delta --source <sourceArtifact> --output <proposalPath> --json
 ```
 
-It emits `artifactRole: graph-delta-proposal-only-preview` with `schemaId: pbe-graph-update-proposal-v0`. It does not
+It emits `artifactRole: graph-delta-proposal-only-preview` with `schemaId: devview-graph-update-proposal-v0`. It does not
 create an apply-ready graph update proposal, mutate graph-source, apply graph deltas, approve updates, satisfy runtime
 Evidence, prove equivalence, reject diffs, enforce scope, or configure required checks.
 
@@ -1839,7 +1839,7 @@ required checks.
 The Human Decision Record boundary preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-human-decision-record-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-human-decision-record-boundary.runtime-evidence-only.preview.json
 ```
 
 It defines the human-authored decision record shape after a Human Review Packet and before any approved proposal
@@ -1849,7 +1849,7 @@ state. The allowed decision vocabulary is `approve-proposal`, `reject-proposal`,
 The Human Decision Record command boundary preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-human-decision-record-command-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-human-decision-record-command-boundary.runtime-evidence-only.preview.json
 ```
 
 It previews the command:
@@ -1861,7 +1861,7 @@ graph read-model record-human-decision --review-packet <packet> --proposal <prop
 The command is now implemented as explicit human decision metadata recording. The first calibration decision record is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-human-decision-record.defer-decision.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-human-decision-record.defer-decision.runtime-evidence-only.preview.json
 ```
 
 It records `decisionValue: defer-decision`, `decisionKind: defer`, `decisionActorType: human`,
@@ -1875,7 +1875,7 @@ reject diffs, enforce scope, configure required checks, or automate user accepta
 The Approved Proposal State boundary preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-approved-proposal-state-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-approved-proposal-state-boundary.runtime-evidence-only.preview.json
 ```
 
 It defines the `graph read-model create-approved-proposal-state` command boundary. The command consumes a Human Decision
@@ -1884,7 +1884,7 @@ Record plus a proposal-only preview and creates an approved-state preview only w
 proposal checks. The first calibration artifact is blocked because the recorded decision is `defer-decision`:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-approved-proposal-state.blocked-defer-decision.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-approved-proposal-state.blocked-defer-decision.runtime-evidence-only.preview.json
 ```
 
 The blocked calibration keeps `approvedProposalStateCreated`, `graphDeltaApplied`, `graphSourceMutated`,
@@ -1895,14 +1895,14 @@ runtime Evidence, prove equivalence, reject diffs, enforce scope, configure requ
 The Graph Delta Apply boundary preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-graph-delta-apply-boundary.runtime-evidence-only.preview.json
 ```
 
 It defines future apply preconditions after approved proposal state and now anchors the
 `graph read-model check-graph-delta-apply` readiness command. The first calibration readiness artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply-readiness.blocked-defer-decision.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-graph-delta-apply-readiness.blocked-defer-decision.runtime-evidence-only.preview.json
 ```
 
 It is blocked because the calibration approved-state preview was not created from an `approve-proposal` decision. The
@@ -1913,7 +1913,7 @@ false. It performs no apply, no mutation, and no approved-state creation.
 The Evidence Acceptance Policy boundary preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-policy-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-evidence-acceptance-policy-boundary.runtime-evidence-only.preview.json
 ```
 
 It separates `evidence-linked`, `evidence-accepted`, and `runtime-evidence-satisfied` so review links, validator passes,
@@ -1925,7 +1925,7 @@ It now anchors the `graph read-model report-evidence-acceptance-readiness` comma
 artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-evidence-acceptance-readiness.blocked-defer-decision.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-evidence-acceptance-readiness.blocked-defer-decision.runtime-evidence-only.preview.json
 ```
 
 It is blocked because graph-source mutation readiness is blocked. The command reports readiness only and keeps
@@ -1937,8 +1937,8 @@ acceptance.
 The first Evidence Decision Record calibration is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-evidence-decision-record.defer-evidence.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-evidence-decision-record.defer-evidence.runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-evidence-decision-record.defer-evidence.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-evidence-decision-record.defer-evidence.runtime-evidence-only.preview.md
 ```
 
 It is generated by `graph read-model record-evidence-decision` using the blocked Graph Delta Apply report as a single
@@ -1952,10 +1952,10 @@ The accepted Evidence calibration uses a separate hardened `accept-evidence` dec
 calibration artifact in this phase where `evidenceAccepted: true` is valid:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.md
-examples/valid/todo-app-pbe-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.md
 ```
 
 The source evidence is still the blocked Graph Delta Apply report and the accepted claim is intentionally narrow:
@@ -1967,8 +1967,8 @@ evidence that the blocked apply lifecycle report was reviewed. The accepted Evid
 The Runtime Evidence Satisfaction Binding readiness calibration is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.md
 ```
 
 It runs `graph read-model report-runtime-evidence-satisfaction-readiness` against the accepted Evidence record and the
@@ -1983,7 +1983,7 @@ not advance equivalence or enforcement.
 The Equivalence Proof Policy boundary preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-policy-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-equivalence-proof-policy-boundary.runtime-evidence-only.preview.json
 ```
 
 It anchors the `graph read-model report-equivalence-proof-readiness` command. The first calibration readiness artifact
@@ -1991,8 +1991,8 @@ has been repointed through Runtime Evidence Satisfaction Binding readiness. The 
 artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.md
 ```
 
 It is blocked because the Runtime Evidence Satisfaction readiness artifact is blocked with
@@ -2006,15 +2006,15 @@ graph-source, configure required checks, or automate user acceptance.
 The Scope/CI Enforcement Policy boundary preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-policy-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-scope-ci-enforcement-policy-boundary.runtime-evidence-only.preview.json
 ```
 
 It anchors the `graph read-model report-scope-ci-enforcement-readiness` command. The first calibration readiness
 artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.md
 ```
 
 It is blocked because the canonical Equivalence Proof readiness artifact is itself blocked by Runtime Evidence
@@ -2030,14 +2030,14 @@ acceptance, graph apply, or graph-source mutation.
 The Graph-source Mutation Policy boundary preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-policy-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-graph-source-mutation-policy-boundary.runtime-evidence-only.preview.json
 ```
 
 It defines graph-source mutation readiness policy after apply readiness and now anchors the
 `graph read-model report-graph-source-mutation-readiness` command. The first calibration readiness artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-readiness.blocked-defer-decision.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-graph-source-mutation-readiness.blocked-defer-decision.runtime-evidence-only.preview.json
 ```
 
 It is blocked because Graph Delta apply readiness is blocked. The command reports readiness only and keeps
@@ -2048,7 +2048,7 @@ deltas, accept Evidence, configure required checks, or automate user acceptance.
 The DevView roadmap completion audit preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-roadmap-completion-audit.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-roadmap-completion-audit.runtime-evidence-only.preview.json
 ```
 
 It summarizes the current end-to-end roadmap state for this calibration: frontend request intake through instruction
@@ -2063,8 +2063,8 @@ rejection.
 The DevView roadmap final handoff preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-roadmap-final-handoff.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-roadmap-final-handoff.runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-roadmap-final-handoff.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-roadmap-final-handoff.runtime-evidence-only.preview.md
 ```
 
 It uses the completion audit as its source and records the safe MVP handoff lanes: compiler frontend, analyzer and
@@ -2081,8 +2081,8 @@ protection mutation, and not diff rejection.
 The DevView core baseline freeze report is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-core-baseline-freeze.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-core-baseline-freeze.runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-core-baseline-freeze.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-core-baseline-freeze.runtime-evidence-only.preview.md
 ```
 
 It is generated by `graph read-model report-devview-baseline` from the roadmap completion audit and final handoff, with
@@ -2123,7 +2123,7 @@ fixtures, record human decisions, satisfy runtime Evidence, prove equivalence, o
 The DevView Codex Hook Gateway boundary preview for the Todo App runtime Evidence-only calibration fixture is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json
 ```
 
 It records how future DevView ON sessions may be routed through Codex lifecycle hooks before and after editing:
@@ -2137,7 +2137,7 @@ disabled, approval automation is disabled, and graph-source remains unmutated.
 The Natural Language Request Intake compiler frontend boundary for this calibration fixture is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
 ```
 
 It previews how a human natural-language request could become a Request IR candidate and then require deterministic
@@ -2148,7 +2148,7 @@ Evidence, graph-source authority, or equivalence proof.
 The AI Request Analyzer boundary preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json
 ```
 
 It defines the future analyzer as a candidate-only producer from raw natural language plus optional repo/session context
@@ -2159,8 +2159,8 @@ runtime Evidence satisfaction, equivalence proof, graph-source mutation, graph d
 The deterministic prompt/input contract pack for future analyzer use is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.md
 ```
 
 It is generated from the analyzer boundary and Request IR Candidate schema previews. It is not an analyzer
@@ -2170,7 +2170,7 @@ The analyzer command surface is implemented with provider execution disabled. Th
 preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-run.provider-disabled.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-run.provider-disabled.add-todo-runtime-evidence-only.preview.json
 ```
 
 The command is:
@@ -2189,10 +2189,10 @@ The AI Request Analyzer provider config boundary previews the future provider co
 provider adapter:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.openai-live-disabled-by-default.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config.openai-live-disabled-by-default.runtime-evidence-only.preview.json
 ```
 
 The default config is `providerState: disabled`. The taxonomy also reserves `configured-not-invoked`,
@@ -2215,7 +2215,7 @@ OpenAI call, not network authority, not a provider response, and not Request IR 
 The provider-config-aware analyzer run calibration is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-run.provider-config-disabled.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-run.provider-config-disabled.add-todo-runtime-evidence-only.preview.json
 ```
 
 It reads the disabled provider config and records `providerState: disabled`,
@@ -2228,8 +2228,8 @@ Codex.
 The mock provider parser/guard calibration artifacts are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-mock-provider-response.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/request-ir-candidate.mock-provider.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-mock-provider-response.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-candidate.mock-provider.add-todo-runtime-evidence-only.preview.json
 ```
 
 The mock response is local fixture input only. `graph read-model analyze-request --invoke-provider
@@ -2247,14 +2247,14 @@ the live provider.
 The clarification interview boundary preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json
 ```
 
 The deterministic clarification question-plan pack for the current calibration candidate is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.md
 ```
 
 It defines the alternate branch for ambiguous natural-language requests. Low confidence, unknown request type, missing
@@ -2274,14 +2274,14 @@ or selected frontend/source artifacts.
 The current no-op clarification answers fixture and revised Request IR Candidate preview are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/clarification-answers.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/request-ir-candidate.revised.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/clarification-answers.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-candidate.revised.add-todo-runtime-evidence-only.preview.json
 ```
 
 The revised candidate is generated by:
 
 ```text
-graph read-model revise-request-ir-candidate --clarification-pack examples/valid/todo-app-pbe-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.json --answers examples/valid/todo-app-pbe-run/generated/clarification-answers.add-todo-runtime-evidence-only.preview.json --json
+graph read-model revise-request-ir-candidate --clarification-pack examples/valid/todo-app-devview-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.json --answers examples/valid/todo-app-devview-run/generated/clarification-answers.add-todo-runtime-evidence-only.preview.json --json
 ```
 
 It is still only a Request IR Candidate. It records
@@ -2294,9 +2294,9 @@ The clarification runtime chain ties that no-op revision to schema-only validati
 validation or any downstream compiler step:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-validation.revised.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/request-ir-validation.revised.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.md
 ```
 
 The chain report uses `artifactRole: devview-clarification-runtime-chain-report`, records `revisionMode:
@@ -2309,26 +2309,26 @@ false`, `evidenceAccepted: false`, `equivalenceProven: false`, `scopeEnforced: f
 The Request IR Candidate schema and first calibration candidate fixture are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json
 ```
 
 The schema-only Request IR validation result is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json
 ```
 
 The graph-aware validation boundary preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json
 ```
 
 The graph-aware validation result is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json
 ```
 
 The calibration candidate models a Korean natural-language request to add evidence for the Todo App add button without
@@ -2344,14 +2344,14 @@ generate instruction packs.
 The next frontend boundaries for this calibration fixture are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-traversal-plan-boundary.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/selected-graph-slice-boundary.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-traversal-plan-boundary.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/selected-graph-slice-boundary.add-todo-runtime-evidence-only.preview.json
 ```
 
 The generated traversal plan for this calibration fixture is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json
 ```
 
 The traversal plan generator resolves start-node planning for `CH-001` and records graph vocabulary-backed node/edge
@@ -2360,7 +2360,7 @@ type fields plus planner role/intent fields.
 The generated selected graph slice for this calibration fixture is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json
 ```
 
 The selected graph slice generator starts from `CH-001`, selects the bounded direct graph-source/read-model slice, and
@@ -2372,7 +2372,7 @@ packs.
 The generated Contract Compiler Input for this calibration fixture is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json
 ```
 
 The selected-slice-to-contract-input generator maps the selected slice into existing compiler input model groups:
@@ -2393,8 +2393,8 @@ graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce
 The generated frontend Instruction Pack outputs for this calibration fixture are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md
 ```
 
 The Contract-Input-to-Instruction-Pack generator preserves the narrowed `allowedScope` from `TT-1` and `EV-1`, keeps
@@ -2414,7 +2414,7 @@ are recorded as roles/intents rather than invented node kinds or edge types.
 The first fixture-provided changed-file list preview artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -2452,7 +2452,7 @@ records collected changed-file names/status without evaluating scope.
 The first fixture input consumption preview artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -2484,7 +2484,7 @@ empty.
 The first scope compliance dry-run skeleton preview artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -2520,7 +2520,7 @@ equivalence proof is claimed.
 The scope compliance not-run report preview artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json
 ```
 
 Preview status:
@@ -2594,14 +2594,14 @@ acceptance, allow production source edits, enforce CI, or change the existing To
 The Todo App runtime-Evidence-only calibration frontend now has a report-only artifact chain manifest:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.md
 ```
 
 It is generated with:
 
 ```text
-graph read-model report-frontend-chain --intake examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json --json
+graph read-model report-frontend-chain --intake examples/valid/todo-app-devview-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json --json
 ```
 
 The manifest reads the existing calibration chain from natural-language intake through Instruction Pack preview and
@@ -2613,14 +2613,14 @@ configure CI.
 The Hook Gateway `UserPromptSubmit` additionalContext preview for the same calibration is recorded in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.md
 ```
 
 It is generated with:
 
 ```text
-graph read-model prepare-user-prompt-context --frontend-chain examples/valid/todo-app-pbe-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json --hook-health examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --instruction-pack examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json --instruction-markdown examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md --json
+graph read-model prepare-user-prompt-context --frontend-chain examples/valid/todo-app-devview-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json --hook-health examples/valid/todo-app-devview-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --instruction-pack examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json --instruction-markdown examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md --json
 ```
 
 The preview is advisory additionalContext only. It does not install hooks, trigger Codex execution, mutate graph-source,
@@ -2630,14 +2630,14 @@ configure CI.
 The Hook Gateway script scaffold preview for the same calibration is recorded in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-hook-script-scaffold.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-hook-script-scaffold.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-hook-script-scaffold.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-hook-script-scaffold.add-todo-runtime-evidence-only.preview.md
 ```
 
 It is generated with:
 
 ```text
-graph read-model generate-hook-script-scaffold --boundary examples/valid/todo-app-pbe-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json --hook-health examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --install-trust examples/valid/todo-app-pbe-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json --user-prompt-context examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json --json
+graph read-model generate-hook-script-scaffold --boundary examples/valid/todo-app-devview-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json --hook-health examples/valid/todo-app-devview-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --install-trust examples/valid/todo-app-devview-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json --user-prompt-context examples/valid/todo-app-devview-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json --json
 ```
 
 The scaffold records preview-only roles for `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, and `Stop`.
@@ -2648,14 +2648,14 @@ configure CI.
 The materialized Hook Gateway script template preview for the same calibration is recorded in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-hook-script-template.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-hook-script-template.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-hook-script-template.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-hook-script-template.add-todo-runtime-evidence-only.preview.md
 ```
 
 It is generated with:
 
 ```text
-graph read-model generate-hook-script-templates --scaffold examples/valid/todo-app-pbe-run/generated/devview-hook-script-scaffold.add-todo-runtime-evidence-only.preview.json --json
+graph read-model generate-hook-script-templates --scaffold examples/valid/todo-app-devview-run/generated/devview-hook-script-scaffold.add-todo-runtime-evidence-only.preview.json --json
 ```
 
 The template preview materializes review-only PowerShell bodies for `SessionStart`, `UserPromptSubmit`, `PreToolUse`,
@@ -2666,14 +2666,14 @@ decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or config
 The Hook Gateway session manifest preview for the same calibration is recorded in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-hook-session-manifest.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-hook-session-manifest.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-hook-session-manifest.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-hook-session-manifest.add-todo-runtime-evidence-only.preview.md
 ```
 
 It is generated with:
 
 ```text
-graph read-model generate-hook-session-manifest --hook-health examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --user-prompt-context examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json --script-scaffold examples/valid/todo-app-pbe-run/generated/devview-hook-script-scaffold.add-todo-runtime-evidence-only.preview.json --script-templates examples/valid/todo-app-pbe-run/generated/devview-hook-script-template.add-todo-runtime-evidence-only.preview.json --json
+graph read-model generate-hook-session-manifest --hook-health examples/valid/todo-app-devview-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --user-prompt-context examples/valid/todo-app-devview-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json --script-scaffold examples/valid/todo-app-devview-run/generated/devview-hook-script-scaffold.add-todo-runtime-evidence-only.preview.json --script-templates examples/valid/todo-app-devview-run/generated/devview-hook-script-template.add-todo-runtime-evidence-only.preview.json --json
 ```
 
 The manifest remains `not-started-preview-only` and records hook readiness plus future transient session artifact
@@ -2684,14 +2684,14 @@ Evidence, prove equivalence, enforce scope, or configure CI.
 The Hook Gateway script bundle preview for the same calibration is recorded in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-hook-script-bundle.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-hook-script-bundle.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-hook-script-bundle.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-hook-script-bundle.add-todo-runtime-evidence-only.preview.md
 ```
 
 It is generated with:
 
 ```text
-graph read-model materialize-hook-script-bundle --script-templates examples/valid/todo-app-pbe-run/generated/devview-hook-script-template.add-todo-runtime-evidence-only.preview.json --session-manifest examples/valid/todo-app-pbe-run/generated/devview-hook-session-manifest.add-todo-runtime-evidence-only.preview.json --bundle-dir .tmp/devview-hook-script-bundle/add-todo-runtime-evidence-only --json
+graph read-model materialize-hook-script-bundle --script-templates examples/valid/todo-app-devview-run/generated/devview-hook-script-template.add-todo-runtime-evidence-only.preview.json --session-manifest examples/valid/todo-app-devview-run/generated/devview-hook-session-manifest.add-todo-runtime-evidence-only.preview.json --bundle-dir .tmp/devview-hook-script-bundle/add-todo-runtime-evidence-only --json
 ```
 
 The bundle writes repo-local advisory `.ps1` preview scripts under `.tmp/devview-hook-script-bundle/...`. It does not
@@ -2703,14 +2703,14 @@ diffs.
 The Hook Gateway activation preview chain report for the same calibration is recorded in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-hook-activation-chain.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-hook-activation-chain.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-hook-activation-chain.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-hook-activation-chain.add-todo-runtime-evidence-only.preview.md
 ```
 
 It is generated with:
 
 ```text
-graph read-model report-hook-activation-chain --hook-health examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --user-prompt-context examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json --script-scaffold examples/valid/todo-app-pbe-run/generated/devview-hook-script-scaffold.add-todo-runtime-evidence-only.preview.json --script-templates examples/valid/todo-app-pbe-run/generated/devview-hook-script-template.add-todo-runtime-evidence-only.preview.json --session-manifest examples/valid/todo-app-pbe-run/generated/devview-hook-session-manifest.add-todo-runtime-evidence-only.preview.json --json
+graph read-model report-hook-activation-chain --hook-health examples/valid/todo-app-devview-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --user-prompt-context examples/valid/todo-app-devview-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json --script-scaffold examples/valid/todo-app-devview-run/generated/devview-hook-script-scaffold.add-todo-runtime-evidence-only.preview.json --script-templates examples/valid/todo-app-devview-run/generated/devview-hook-script-template.add-todo-runtime-evidence-only.preview.json --session-manifest examples/valid/todo-app-devview-run/generated/devview-hook-session-manifest.add-todo-runtime-evidence-only.preview.json --json
 ```
 
 The report verifies preview chain continuity and hook event readiness only. It does not install or activate hooks, mutate
@@ -2722,14 +2722,14 @@ record human decisions, satisfy runtime Evidence, prove equivalence, enforce sco
 The preflight session chain report for the Todo App calibration is recorded in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-preflight-session-chain.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-preflight-session-chain.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-preflight-session-chain.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-preflight-session-chain.add-todo-runtime-evidence-only.preview.md
 ```
 
 It is generated from the calibration Request IR Candidate with:
 
 ```text
-graph read-model run-preflight-session --candidate examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json --output-dir .tmp/devview-preflight/add-todo-runtime-evidence-only --markdown .tmp/devview-preflight/add-todo-runtime-evidence-only/preflight-session-chain.md --json
+graph read-model run-preflight-session --candidate examples/valid/todo-app-devview-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json --output-dir .tmp/devview-preflight/add-todo-runtime-evidence-only --markdown .tmp/devview-preflight/add-todo-runtime-evidence-only/preflight-session-chain.md --json
 ```
 
 The command writes transient child artifacts under `.tmp/devview-preflight/...`: schema-only validation, graph-aware
@@ -2746,14 +2746,14 @@ enforce scope, enable strict/guided blocking, configure CI, require checks, chan
 The Hook Gateway `UserPromptSubmit` event-level advisory report for the same calibration is recorded in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-advisory.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-advisory.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-user-prompt-submit-advisory.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-user-prompt-submit-advisory.add-todo-runtime-evidence-only.preview.md
 ```
 
 It is generated with:
 
 ```text
-graph read-model report-user-prompt-submit-advisory --prompt "Add Todo App runtime evidence for the add button behavior without touching production source." --hook-health examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --devview-mode advisory --preflight-session examples/valid/todo-app-pbe-run/generated/devview-preflight-session-chain.add-todo-runtime-evidence-only.preview.json --output examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-advisory.add-todo-runtime-evidence-only.preview.json --markdown examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-advisory.add-todo-runtime-evidence-only.preview.md --json
+graph read-model report-user-prompt-submit-advisory --prompt "Add Todo App runtime evidence for the add button behavior without touching production source." --hook-health examples/valid/todo-app-devview-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --devview-mode advisory --preflight-session examples/valid/todo-app-devview-run/generated/devview-preflight-session-chain.add-todo-runtime-evidence-only.preview.json --output examples/valid/todo-app-devview-run/generated/devview-user-prompt-submit-advisory.add-todo-runtime-evidence-only.preview.json --markdown examples/valid/todo-app-devview-run/generated/devview-user-prompt-submit-advisory.add-todo-runtime-evidence-only.preview.md --json
 ```
 
 The report reads an existing preflight session chain and renders concise additionalContext Markdown with allowed scope,
@@ -2768,14 +2768,14 @@ satisfy Evidence, prove equivalence, enforce scope, or configure CI.
 The Stop/Post Run advisory report for the same calibration is recorded in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-stop-post-run-advisory.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-stop-post-run-advisory.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-stop-post-run-advisory.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-stop-post-run-advisory.add-todo-runtime-evidence-only.preview.md
 ```
 
 It is generated with:
 
 ```text
-graph read-model report-stop-post-run-advisory --user-prompt-advisory examples/valid/todo-app-pbe-run/generated/devview-user-prompt-submit-advisory.add-todo-runtime-evidence-only.preview.json --hook-health examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --preflight-session examples/valid/todo-app-pbe-run/generated/devview-preflight-session-chain.add-todo-runtime-evidence-only.preview.json --instruction-pack examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json --instruction-markdown examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md --output examples/valid/todo-app-pbe-run/generated/devview-stop-post-run-advisory.add-todo-runtime-evidence-only.preview.json --markdown examples/valid/todo-app-pbe-run/generated/devview-stop-post-run-advisory.add-todo-runtime-evidence-only.preview.md --json
+graph read-model report-stop-post-run-advisory --user-prompt-advisory examples/valid/todo-app-devview-run/generated/devview-user-prompt-submit-advisory.add-todo-runtime-evidence-only.preview.json --hook-health examples/valid/todo-app-devview-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json --preflight-session examples/valid/todo-app-devview-run/generated/devview-preflight-session-chain.add-todo-runtime-evidence-only.preview.json --instruction-pack examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json --instruction-markdown examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md --output examples/valid/todo-app-devview-run/generated/devview-stop-post-run-advisory.add-todo-runtime-evidence-only.preview.json --markdown examples/valid/todo-app-devview-run/generated/devview-stop-post-run-advisory.add-todo-runtime-evidence-only.preview.md --json
 ```
 
 The calibration intentionally omits a changed-file collection artifact, so it reports
@@ -2789,17 +2789,17 @@ Evidence, prove equivalence, enforce scope, or configure CI.
 The explicit hardened approval dry-run readiness report for the same calibration is recorded in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-delta-human-review-packet.complete-approve.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-human-decision-record.approve-proposal.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-human-decision-record.approve-proposal.runtime-evidence-only.preview.md
-examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/graph-delta-human-review-packet.complete-approve.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-human-decision-record.approve-proposal.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-human-decision-record.approve-proposal.runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.md
 ```
 
 It is generated with:
 
 ```text
-graph read-model report-approved-apply-dry-run --decision-record examples/valid/todo-app-pbe-run/generated/devview-human-decision-record.approve-proposal.runtime-evidence-only.preview.json --proposal examples/valid/todo-app-pbe-run/generated/graph-delta-proposal.add-todo-runtime-evidence-only.preview.json --approved-state-boundary examples/valid/todo-app-pbe-run/generated/devview-approved-proposal-state-boundary.runtime-evidence-only.preview.json --apply-boundary examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply-boundary.runtime-evidence-only.preview.json --mutation-policy examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-policy-boundary.runtime-evidence-only.preview.json --output examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json --markdown examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.md --json
+graph read-model report-approved-apply-dry-run --decision-record examples/valid/todo-app-devview-run/generated/devview-human-decision-record.approve-proposal.runtime-evidence-only.preview.json --proposal examples/valid/todo-app-devview-run/generated/graph-delta-proposal.add-todo-runtime-evidence-only.preview.json --approved-state-boundary examples/valid/todo-app-devview-run/generated/devview-approved-proposal-state-boundary.runtime-evidence-only.preview.json --apply-boundary examples/valid/todo-app-devview-run/generated/devview-graph-delta-apply-boundary.runtime-evidence-only.preview.json --mutation-policy examples/valid/todo-app-devview-run/generated/devview-graph-source-mutation-policy-boundary.runtime-evidence-only.preview.json --output examples/valid/todo-app-devview-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json --markdown examples/valid/todo-app-devview-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.md --json
 ```
 
 The complete review packet is a calibration fixture that allows an explicit human approval decision record to be
@@ -2816,14 +2816,14 @@ Evidence, prove equivalence, enforce scope, configure CI, or automate approval/u
 The first DevView Graph Delta Apply lifecycle report for the same calibration is recorded in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.md
 ```
 
 It is generated with:
 
 ```text
-graph read-model apply-graph-delta --dry-run-report examples/valid/todo-app-pbe-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json --proposal examples/valid/todo-app-pbe-run/generated/graph-delta-proposal.add-todo-runtime-evidence-only.preview.json --graph-source examples/valid/todo-app-pbe-run/graph-source.json --mutation-policy examples/valid/todo-app-pbe-run/generated/devview-graph-source-mutation-policy-boundary.runtime-evidence-only.preview.json --backup-dir .tmp/devview-graph-delta-apply/backups --read-model-output .tmp/devview-graph-delta-apply/read-model.json --validation-output .tmp/devview-graph-delta-apply/validation.json --output examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json --markdown examples/valid/todo-app-pbe-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.md --json
+graph read-model apply-graph-delta --dry-run-report examples/valid/todo-app-devview-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json --proposal examples/valid/todo-app-devview-run/generated/graph-delta-proposal.add-todo-runtime-evidence-only.preview.json --graph-source examples/valid/todo-app-devview-run/graph-source.json --mutation-policy examples/valid/todo-app-devview-run/generated/devview-graph-source-mutation-policy-boundary.runtime-evidence-only.preview.json --backup-dir .tmp/devview-graph-delta-apply/backups --read-model-output .tmp/devview-graph-delta-apply/read-model.json --validation-output .tmp/devview-graph-delta-apply/validation.json --output examples/valid/todo-app-devview-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json --markdown examples/valid/todo-app-devview-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.md --json
 ```
 
 The tracked Todo App proposal remains a proposal-only preview and intentionally has no concrete deterministic
@@ -2839,7 +2839,7 @@ tracked calibration does not mutate graph-source and records `mutationApplied: f
 The DevViewGraph HTML inspector boundary is recorded in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-graph-html-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-graph-html-boundary.runtime-evidence-only.preview.json
 ```
 
 The WindowsUtility portfolio retrofit demo artifacts are:
@@ -2878,15 +2878,15 @@ configure CI.
 The DevView Project Memory boundary is recorded in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-project-memory-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-project-memory-boundary.runtime-evidence-only.preview.json
 ```
 
 Its companion boundary previews are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-project-profile-schema-boundary.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-taxonomy-profile-extension-boundary.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-project-direction-change-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-project-profile-schema-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-taxonomy-profile-extension-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-project-direction-change-boundary.runtime-evidence-only.preview.json
 ```
 
 The WindowsUtility retrofit project memory preview is:

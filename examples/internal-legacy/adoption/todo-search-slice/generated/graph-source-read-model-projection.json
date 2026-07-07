@@ -5,7 +5,7 @@
     "sourceSlice": "examples/internal-legacy/adoption/todo-search-slice",
     "sourceProfile": "todo-search-selected-slice",
     "promotionScope": "todo-search-selected-slice",
-    "projectionBoundary": "Generated read-model, parity, validation, aggregate, and CI artifacts are projections or Evidence derived from this limited graph source. They do not replace user acceptance, add enforcement, retire fallback artifacts, or promote Todo App PBE Run."
+    "projectionBoundary": "Generated read-model, parity, validation, aggregate, and CI artifacts are projections or Evidence derived from this limited graph source. They do not replace user acceptance, add enforcement, retire fallback artifacts, or promote Todo App DevView Run."
   },
   "taxonomy": {
     "nodeKindsUsed": [

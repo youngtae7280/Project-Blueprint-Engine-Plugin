@@ -4,7 +4,7 @@ Status: evaluated / blocked-for-now / remains-structure-only / no-promotion
 
 ## Purpose
 
-This package evaluates whether the existing Todo App PBE Run can be advanced from Graph-source-backed
+This package evaluates whether the existing Todo App DevView Run can be advanced from Graph-source-backed
 `structure-only` toward a narrowly bounded limited source-authority pilot.
 
 The result is intentionally conservative: the current artifacts prove a strong structure-only projection contract, but
@@ -20,13 +20,13 @@ fixtures, or replace user acceptance.
 Current configured profile:
 
 ```text
-todo-app-pbe-run-structure-only
+todo-app-devview-run-structure-only
 ```
 
 Current slice:
 
 ```text
-examples/valid/todo-app-pbe-run
+examples/valid/todo-app-devview-run
 ```
 
 Current status:
@@ -46,7 +46,7 @@ The current artifacts support structure-only confidence:
 
 | Evidence surface     | Current signal                                                                 |
 | -------------------- | ------------------------------------------------------------------------------ |
-| Graph source         | `examples/valid/todo-app-pbe-run/graph-source.json`                            |
+| Graph source         | `examples/valid/todo-app-devview-run/graph-source.json`                        |
 | Projection contract  | `generated/graph-source-read-model-projection.json` passes                     |
 | Generated read-model | `generated/generated-read-model.json`, 22 nodes / 38 edges / 7 Core Views      |
 | Validation report    | `generated/read-model-validation-report.json`, `validation-pass`, 16 checks    |
@@ -87,15 +87,15 @@ and Todo App slices with:
 
 ```text
 node dist/cli/index.js graph execution-contract report --slice examples/internal-legacy/adoption/todo-search-slice --json
-node dist/cli/index.js graph execution-contract report --slice examples/valid/todo-app-pbe-run --json
+node dist/cli/index.js graph execution-contract report --slice examples/valid/todo-app-devview-run --json
 ```
 
 Observed result:
 
-| Slice       | Profile                           | Policy level          | Report signal                                                            | Pilot decision                           |
-| ----------- | --------------------------------- | --------------------- | ------------------------------------------------------------------------ | ---------------------------------------- |
-| Todo Search | `todo-search-selected-slice`      | `pilot-marker-backed` | Product/Work/Test/Evidence refs, source files, parity, pilot marker      | Preserve existing limited selected slice |
-| Todo App    | `todo-app-pbe-run-structure-only` | `structure-only`      | Product/Work/Test/Evidence refs and source files, no parity/pilot marker | Keep blocked beyond structure-only       |
+| Slice       | Profile                               | Policy level          | Report signal                                                            | Pilot decision                           |
+| ----------- | ------------------------------------- | --------------------- | ------------------------------------------------------------------------ | ---------------------------------------- |
+| Todo Search | `todo-search-selected-slice`          | `pilot-marker-backed` | Product/Work/Test/Evidence refs, source files, parity, pilot marker      | Preserve existing limited selected slice |
+| Todo App    | `todo-app-devview-run-structure-only` | `structure-only`      | Product/Work/Test/Evidence refs and source files, no parity/pilot marker | Keep blocked beyond structure-only       |
 
 The new report surface improves reviewability, but it does not create the missing Todo App pilot evidence. Todo App
 still lacks required parity backing, scoped pilot marker evidence, runtime fixture policy, and explicit approval for

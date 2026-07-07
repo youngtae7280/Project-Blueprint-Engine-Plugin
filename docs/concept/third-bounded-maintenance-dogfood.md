@@ -23,7 +23,7 @@ Todo Search is the bounded selected-slice Graph-source example:
 - projection contract: `projection-contract-pass`
 - expected shape: `40` nodes, `59` edges, `7` Core Views
 - boundary: generated read-model, parity, validation, aggregate, and CI artifacts are projections or Evidence; they do
-  not replace user acceptance, add enforcement, retire fallback artifacts, or promote Todo App PBE Run.
+  not replace user acceptance, add enforcement, retire fallback artifacts, or promote Todo App DevView Run.
 
 ## Expected Delta
 

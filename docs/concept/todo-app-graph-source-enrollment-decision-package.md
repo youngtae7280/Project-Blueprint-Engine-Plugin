@@ -5,15 +5,15 @@ Status: bounded-non-authority-enrollment-reviewed / graph-source-backed-structur
 ## Purpose
 
 This package records the decision surface and local-first implementation result for moving
-`examples/valid/todo-app-pbe-run` beyond candidate observation. The candidate graph-source artifact, candidate
+`examples/valid/todo-app-devview-run` beyond candidate observation. The candidate graph-source artifact, candidate
 projection, local observation command, and non-enforcing manual/PR CI artifact capture are reviewed. The next safe branch
-has now been implemented locally: Todo App PBE Run participates in positive validate-all only through a bounded
+has now been implemented locally: Todo App DevView Run participates in positive validate-all only through a bounded
 non-authority structure-only projection contract.
 
 This document does not approve source authority, enforcement, or Todo App promotion. Manual and PR workflow reviews are
 complete for the new positive validate-all projection status.
 
-The next bounded local branch is also implemented and reviewed in manual/PR CI: Todo App PBE Run structure-only
+The next bounded local branch is also implemented and reviewed in manual/PR CI: Todo App DevView Run structure-only
 generation now reads `graph-source-candidate.json` for generated read-model records while preserving `structure-only`,
 `candidate-not-promoted`, and `non-authority-structure-only` metadata. Manual run `28224636333` and PR #9 run
 `28224878648` confirm the uploaded artifact metadata.
@@ -22,7 +22,7 @@ generation now reads `graph-source-candidate.json` for generated read-model reco
 
 | Evidence surface             | Current status                                                                                                                             |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| Candidate graph source       | `examples/valid/todo-app-pbe-run/graph-source-candidate.json`, `candidate-not-promoted`                                                    |
+| Candidate graph source       | `examples/valid/todo-app-devview-run/graph-source-candidate.json`, `candidate-not-promoted`                                                |
 | Candidate projection         | `graph-source-candidate-read-model-projection.json`, 22 nodes / 38 edges / 7 Core Views                                                    |
 | Local contract check         | Focused tests verify structure-only, no source-authority claim, and non-authority validate-all use                                         |
 | Local observation command    | `graph read-model observe-candidates --json`, `candidate-observation-pass`                                                                 |
@@ -32,7 +32,7 @@ generation now reads `graph-source-candidate.json` for generated read-model reco
 | Manual CI review             | Run `28222731063`, `workflow_dispatch`, `ci-evidence-pass`, Todo App positive projection pass                                              |
 | PR informational review      | PR #7 run `28223010185`, `pull_request-informational`, Todo App positive projection pass                                                   |
 | Generation source mode       | Manual run `28224636333` and PR #9 run `28224878648` confirm `readModelSourceMode: graph-source-backed` and `non-authority-structure-only` |
-| Current policy               | Todo App PBE Run remains `structure-only`, not parity-backed, not pilot-marker-backed, not source                                          |
+| Current policy               | Todo App DevView Run remains `structure-only`, not parity-backed, not pilot-marker-backed, not source                                      |
 
 ## Decision Options
 
@@ -51,7 +51,7 @@ Implemented safe branch:
 Bounded non-authority enrollment of the Todo App candidate projection contract into positive validate-all.
 ```
 
-This is implemented only as a structure-only projection-contract check. It does not promote Todo App PBE Run, add parity
+This is implemented only as a structure-only projection-contract check. It does not promote Todo App DevView Run, add parity
 or pilot-marker requirements, change source authority, or make the candidate graph source an operational source. The
 local implementation:
 
@@ -64,12 +64,12 @@ local implementation:
 7. Has manual and PR CI review complete for the positive projection status.
 
 The follow-up generation branch now reuses the candidate source records for `graph read-model generate --slice
-examples/valid/todo-app-pbe-run`. This keeps the candidate graph source outside source authority while proving that the
+examples/valid/todo-app-devview-run`. This keeps the candidate graph source outside source authority while proving that the
 structure-only generated read-model can be backed by the candidate records.
 
 ## Required Boundaries For Enrollment
 
-- Todo App PBE Run remains `structure-only`.
+- Todo App DevView Run remains `structure-only`.
 - Enrollment means positive Evidence visibility, not source authority.
 - Candidate projection pass is not parity, pilot marker, user acceptance, or promotion approval.
 - The candidate graph-source artifact remains non-generated review input unless a later authority package changes it.
@@ -92,7 +92,7 @@ structure-only generated read-model can be backed by the candidate records.
 This local-first enrollment does not:
 
 - modify `.github/workflows/read-model-evidence.yml`
-- promote Todo App PBE Run
+- promote Todo App DevView Run
 - add parity-backed or pilot-marker-backed status
 - expand source authority
 - execute repo-wide promotion

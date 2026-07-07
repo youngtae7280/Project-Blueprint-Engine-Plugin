@@ -57,7 +57,7 @@ const workspaces: string[] = []
 const exampleWorkspacePaths = [
   'examples/internal-legacy/adoption/todo-search-slice',
   'examples/internal-legacy/adoption/compatibility-mismatch-slice',
-  'examples/valid/todo-app-pbe-run',
+  'examples/valid/todo-app-devview-run',
   'examples/internal-legacy/read-model-aggregate',
   'docs/concept',
   '.github/workflows/read-model-evidence.yml',
@@ -84,13 +84,13 @@ describe('read-model Evidence builder', () => {
     expect(profile.artifacts.compatibilitySlice).toBe('examples/internal-legacy/adoption/compatibility-mismatch-slice')
   })
 
-  it('uses the Todo App PBE run structure-only profile for the canonical fixture slice', () => {
-    const profile = getSliceReadModelProfile('examples/valid/todo-app-pbe-run')
+  it('uses the Todo App DevView run structure-only profile for the canonical fixture slice', () => {
+    const profile = getSliceReadModelProfile('examples/valid/todo-app-devview-run')
 
     expect(profile).toBe(todoAppPbeRunStructureOnlyProfile)
-    expect(profile.profileId).toBe('todo-app-pbe-run-structure-only')
+    expect(profile.profileId).toBe('todo-app-devview-run-structure-only')
     expect(profile.policyLevel).toBe('structure-only')
-    expect(profile.sourceLayout).toBe('canonical-pbe')
+    expect(profile.sourceLayout).toBe('canonical-devview')
     expect(profile.expectedCounts).toEqual({ nodes: 22, edges: 38, validationChecks: 16 })
   })
 
@@ -142,7 +142,7 @@ describe('read-model Evidence builder', () => {
   it('parses the Todo App structure-only graph source candidate without promoting it', async () => {
     const candidate = await loadStructureOnlyGraphSourceCandidateArtifact(resolve('.'))
     const generated = JSON.parse(
-      await readFile('examples/valid/todo-app-pbe-run/generated/generated-read-model.json', 'utf8'),
+      await readFile('examples/valid/todo-app-devview-run/generated/generated-read-model.json', 'utf8'),
     ) as {
       nodes: unknown[]
       edges: unknown[]
@@ -174,7 +174,7 @@ describe('read-model Evidence builder', () => {
     const registry = await loadReadModelSliceRegistry(resolve('.'))
     const candidate = await loadStructureOnlyGraphSourceCandidateArtifact(resolve('.'))
     const report = JSON.parse(
-      await readFile('examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json', 'utf8'),
+      await readFile('examples/valid/todo-app-devview-run/generated/read-model-validation-report.json', 'utf8'),
     ) as {
       metadata: {
         parityRequirement: Record<string, unknown>
@@ -201,7 +201,7 @@ describe('read-model Evidence builder', () => {
       (entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId,
     )
     const retirementTodoApp = transitionStatus.retirementApprovalPackages.find(
-      (entry) => entry.scope === 'todo-app-pbe-run-structure-only',
+      (entry) => entry.scope === 'todo-app-devview-run-structure-only',
     )
 
     expect(registryTodoAppProfile).toMatchObject({
@@ -232,7 +232,7 @@ describe('read-model Evidence builder', () => {
   })
 
   it('rejects Todo App graph source candidates that claim promotion or validate-all consumption', async () => {
-    const candidate = JSON.parse(await readFile('examples/valid/todo-app-pbe-run/graph-source.json', 'utf8')) as {
+    const candidate = JSON.parse(await readFile('examples/valid/todo-app-devview-run/graph-source.json', 'utf8')) as {
       status: string
       graphSourceBoundaries: {
         nonPromotionStatement: string
@@ -250,14 +250,14 @@ describe('read-model Evidence builder', () => {
 
   it('writes a Todo App graph source candidate projection without promoting the structure-only profile', async () => {
     const workspace = await createExampleWorkspace()
-    const outputPath = 'examples/valid/todo-app-pbe-run/generated/graph-source-read-model-projection.json'
+    const outputPath = 'examples/valid/todo-app-devview-run/generated/graph-source-read-model-projection.json'
     const result = await runPbeCli(
       [
         'graph',
         'read-model',
         'project',
         '--graph-source',
-        'examples/valid/todo-app-pbe-run/graph-source.json',
+        'examples/valid/todo-app-devview-run/graph-source.json',
         '--output',
         outputPath,
         '--json',
@@ -282,7 +282,10 @@ describe('read-model Evidence builder', () => {
     expect(payload.userAcceptanceBoundary).toContain('User acceptance remains user-controlled')
 
     const generated = JSON.parse(
-      await readFile(join(workspace, 'examples/valid/todo-app-pbe-run/generated/generated-read-model.json'), 'utf8'),
+      await readFile(
+        join(workspace, 'examples/valid/todo-app-devview-run/generated/generated-read-model.json'),
+        'utf8',
+      ),
     ) as { nodes: unknown[]; edges: unknown[]; coreViewCoverage: unknown[] }
     const candidate = await loadStructureOnlyGraphSourceCandidateArtifact(workspace)
     const projection = JSON.parse(await readFile(join(workspace, outputPath), 'utf8')) as {
@@ -312,11 +315,11 @@ describe('read-model Evidence builder', () => {
     const projection = await loadStructureOnlyGraphSourceCandidateProjectionArtifact(resolve('.'))
     const registry = await loadReadModelSliceRegistry(resolve('.'))
     const generated = JSON.parse(
-      await readFile('examples/valid/todo-app-pbe-run/generated/generated-read-model.json', 'utf8'),
+      await readFile('examples/valid/todo-app-devview-run/generated/generated-read-model.json', 'utf8'),
     ) as { nodes: unknown[]; edges: unknown[]; coreViewCoverage: unknown[] }
 
     expect(projection.metadata.artifactRole).toBe('structure_only_graph_source_read_model_projection')
-    expect(projection.metadata.sourceArtifact).toBe('examples/valid/todo-app-pbe-run/graph-source.json')
+    expect(projection.metadata.sourceArtifact).toBe('examples/valid/todo-app-devview-run/graph-source.json')
     expect(projection.metadata.sourceSlice).toBe(todoAppPbeRunStructureOnlyProfile.supportedSlice)
     expect(projection.metadata.sourceProfile).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
     expect(projection.metadata.policyLevel).toBe('structure-only')
@@ -390,7 +393,7 @@ describe('read-model Evidence builder', () => {
     const workspace = await createExampleWorkspace()
     const projectionPath = join(
       workspace,
-      'examples/valid/todo-app-pbe-run/generated/graph-source-read-model-projection.json',
+      'examples/valid/todo-app-devview-run/generated/graph-source-read-model-projection.json',
     )
     const projection = JSON.parse(await readFile(projectionPath, 'utf8')) as {
       sourceAuthorityBoundary: string
@@ -530,7 +533,7 @@ describe('read-model Evidence builder', () => {
     const drifted = JSON.parse(await readFile(projectionPath, 'utf8')) as {
       metadata: { sourceProfile: string }
     }
-    drifted.metadata.sourceProfile = 'todo-app-pbe-run-structure-only'
+    drifted.metadata.sourceProfile = 'todo-app-devview-run-structure-only'
     expect(() => normalizeGraphSourceProjectionArtifact(drifted, graphSource, projectionPath)).toThrow(/sourceProfile/)
   })
 
@@ -693,7 +696,7 @@ describe('read-model Evidence builder', () => {
     expect(report.references.workNodeIds).toContain('WT-1')
     expect(report.verificationRequirements.testNodeIds).toContain('TT-1')
     expect(report.fileChangeGuardContract.sourceFiles).toContain(
-      'examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json',
+      'examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json',
     )
     expect(report.verificationRequirements.requiredCommands).toEqual([
       'graph read-model generate',
@@ -905,7 +908,7 @@ describe('read-model Evidence builder', () => {
     await rm(
       join(
         missingCandidateProjectionWorkspace,
-        'examples/valid/todo-app-pbe-run/generated/graph-source-read-model-projection.json',
+        'examples/valid/todo-app-devview-run/generated/graph-source-read-model-projection.json',
       ),
       { force: true },
     )
@@ -919,7 +922,7 @@ describe('read-model Evidence builder', () => {
       status: 'projection-contract-blocked',
       blockingCount: 1,
     })
-  })
+  }, 15000)
 
   it('blocks validate-all when registry entries are unsupported or drift from in-code profiles', async () => {
     const unknownProfileWorkspace = await createExampleWorkspace()
@@ -3259,7 +3262,7 @@ describe('read-model Evidence builder', () => {
     expect(markdown).toContain('# Graph-Source Health Report')
     expect(markdown).toContain('Status: `graph-source-health-pass`')
     expect(markdown).toContain('Todo Search')
-    expect(markdown).toContain('Todo App PBE Run')
+    expect(markdown).toContain('Todo App DevView Run')
     expect(markdown).toContain('`aggregate-pass`')
     expect(markdown).toContain('`intent-report-pass`')
     expect(markdown).toContain('`compiler-boundary-mvp-pass`')
@@ -3341,7 +3344,11 @@ describe('read-model Evidence builder', () => {
   })
 
   afterEach(async () => {
-    await Promise.all(workspaces.splice(0).map((workspace) => rm(workspace, { recursive: true, force: true })))
+    await Promise.all(
+      workspaces
+        .splice(0)
+        .map((workspace) => rm(workspace, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 })),
+    )
   })
 
   it('generates bounded read-model Evidence with source authority boundaries', async () => {
@@ -3491,10 +3498,10 @@ describe('read-model Evidence builder', () => {
     expect(report.nonPromotionStatement).toContain('Validation pass is Evidence only')
   })
 
-  it('generates and validates Todo App PBE run as structure-only without parity or pilot marker', async () => {
+  it('generates and validates Todo App DevView run as structure-only without parity or pilot marker', async () => {
     const workspace = await createExampleWorkspace()
 
-    const generated = await generateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    const generated = await generateReadModelEvidence(workspace, 'examples/valid/todo-app-devview-run')
     const generatedJson = JSON.parse(await readFile(generated.generatedJsonPath, 'utf8')) as {
       nodes: unknown[]
       edges: unknown[]
@@ -3517,13 +3524,13 @@ describe('read-model Evidence builder', () => {
     expect(generatedJson.metadata.sliceProfile).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
     expect(generatedJson.metadata.slicePolicyLevel).toBe('structure-only')
     expect(generatedJson.metadata.readModelSourceMode).toBe('graph-source-backed')
-    expect(generatedJson.metadata.graphSourceArtifact).toBe('examples/valid/todo-app-pbe-run/graph-source.json')
+    expect(generatedJson.metadata.graphSourceArtifact).toBe('examples/valid/todo-app-devview-run/graph-source.json')
     expect(generatedJson.metadata.graphSourceProjectionRole).toBe('structure_only_graph_source_read_model_projection')
     expect(generatedJson.metadata.graphSourcePromotionStatus).toBe('structure-only-confirmed')
     expect(generatedJson.metadata.graphSourceAuthorityStatus).toBe('confirmed-structure-only-graph-source')
     expect(generatedJson.metadata.graphSourcePolicyLevel).toBe('structure-only')
     expect(generatedJson.sourceInputs.map((entry) => entry.relativePath)).toContain(
-      'examples/valid/todo-app-pbe-run/graph-source.json',
+      'examples/valid/todo-app-devview-run/graph-source.json',
     )
     expect(generatedJson.nodes).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes)
     expect(generatedJson.edges).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.edges)
@@ -3533,7 +3540,7 @@ describe('read-model Evidence builder', () => {
     const tags = generatedJson.coreViewCoverage.flatMap((entry) => entry.viewScopedTags || [])
     expect(tags.every((tag) => allowedTags.has(tag))).toBe(true)
 
-    const result = await validateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    const result = await validateReadModelEvidence(workspace, 'examples/valid/todo-app-devview-run')
     const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
       status: string
       summary: { checkCount: number; warningCount: number; blockingCount: number; decisionRequiredCount: number }
@@ -3560,7 +3567,7 @@ describe('read-model Evidence builder', () => {
     expect(report.summary.decisionRequiredCount).toBe(0)
     expect(report.metadata.sliceProfile).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
     expect(report.metadata.profileId).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
-    expect(report.metadata.sourceLayout).toBe('canonical-pbe')
+    expect(report.metadata.sourceLayout).toBe('canonical-devview')
     expect(report.metadata.policyLevel).toBe('structure-only')
     expect(report.metadata.expectedCounts).toEqual(todoAppPbeRunStructureOnlyProfile.expectedCounts)
     expect(report.metadata.parityReport).toBe('not-required-for-structure-only')
@@ -3573,7 +3580,7 @@ describe('read-model Evidence builder', () => {
     })
     expect(report.sliceValidationContract).toMatchObject({
       reportUnit: 'per-slice-validation-report',
-      sourceSlice: 'examples/valid/todo-app-pbe-run',
+      sourceSlice: 'examples/valid/todo-app-devview-run',
       policyLevel: 'structure-only',
     })
     expect(report.sourceAuthorityBoundary).toContain('structure-only')
@@ -3581,7 +3588,7 @@ describe('read-model Evidence builder', () => {
 
   it('uses Todo App graph-source candidate records for structure-only generated read-model output', async () => {
     const workspace = await createExampleWorkspace()
-    const graphSourcePath = join(workspace, 'examples/valid/todo-app-pbe-run/graph-source.json')
+    const graphSourcePath = join(workspace, 'examples/valid/todo-app-devview-run/graph-source.json')
     const graphSource = JSON.parse(await readFile(graphSourcePath, 'utf8')) as {
       sourceRecords: { nodes: Array<{ id: string; title: string }> }
     }
@@ -3590,7 +3597,7 @@ describe('read-model Evidence builder', () => {
     targetNode!.title = 'Todo App candidate graph source backed smoke title'
     await writeFile(graphSourcePath, JSON.stringify(graphSource, null, 2))
 
-    const generated = await generateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    const generated = await generateReadModelEvidence(workspace, 'examples/valid/todo-app-devview-run')
     const generatedJson = JSON.parse(await readFile(generated.generatedJsonPath, 'utf8')) as {
       nodes: Array<{ id: string; title: string }>
       edges: unknown[]
@@ -3605,7 +3612,7 @@ describe('read-model Evidence builder', () => {
     }
 
     expect(generatedJson.metadata.readModelSourceMode).toBe('graph-source-backed')
-    expect(generatedJson.metadata.graphSourceArtifact).toBe('examples/valid/todo-app-pbe-run/graph-source.json')
+    expect(generatedJson.metadata.graphSourceArtifact).toBe('examples/valid/todo-app-devview-run/graph-source.json')
     expect(generatedJson.metadata.graphSourceAuthorityStatus).toBe('confirmed-structure-only-graph-source')
     expect(generatedJson.nodes.find((entry) => entry.id === 'PT-1')?.title).toBe(
       'Todo App candidate graph source backed smoke title',
@@ -3619,10 +3626,10 @@ describe('read-model Evidence builder', () => {
 
   it('validates the structure-only fixture without Todo Search generated, manual parity, or pilot marker artifacts', async () => {
     const workspace = await createExampleWorkspace()
-    await generateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    await generateReadModelEvidence(workspace, 'examples/valid/todo-app-devview-run')
     await rm(join(workspace, 'examples/internal-legacy/adoption/todo-search-slice'), { recursive: true, force: true })
 
-    const result = await validateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    const result = await validateReadModelEvidence(workspace, 'examples/valid/todo-app-devview-run')
     const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
       status: string
       summary: { checkCount: number; blockingCount: number; decisionRequiredCount: number }
@@ -3650,7 +3657,7 @@ describe('read-model Evidence builder', () => {
       generated.generatedJsonPath,
       'examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json',
     )
-    await rm(join(workspace, 'examples/valid/todo-app-pbe-run/generated'), { recursive: true, force: true })
+    await rm(join(workspace, 'examples/valid/todo-app-devview-run/generated'), { recursive: true, force: true })
 
     const result = await validateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
     const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
@@ -3678,7 +3685,7 @@ describe('read-model Evidence builder', () => {
 
     const result = await summarizeReadModelEvidence(workspace, [
       'examples/internal-legacy/adoption/todo-search-slice',
-      'examples/valid/todo-app-pbe-run',
+      'examples/valid/todo-app-devview-run',
     ])
     const summary = JSON.parse(await readFile(result.summaryJsonPath, 'utf8')) as {
       status: string
@@ -3724,7 +3731,7 @@ describe('read-model Evidence builder', () => {
           runtimeFixtureRequirement: expect.objectContaining({ required: true, status: 'present' }),
         }),
         expect.objectContaining({
-          sourceSlice: 'examples/valid/todo-app-pbe-run',
+          sourceSlice: 'examples/valid/todo-app-devview-run',
           profileId: todoAppPbeRunStructureOnlyProfile.profileId,
           policyLevel: 'structure-only',
           validationStatus: 'validation-pass',
@@ -3739,11 +3746,17 @@ describe('read-model Evidence builder', () => {
 
   it('calculates aggregate warning status from report summaries', async () => {
     const workspace = await createAggregateReportWorkspace()
-    await mutateValidationReport(workspace, 'examples/valid/todo-app-pbe-run', 'validation-warning', 'warningCount', 1)
+    await mutateValidationReport(
+      workspace,
+      'examples/valid/todo-app-devview-run',
+      'validation-warning',
+      'warningCount',
+      1,
+    )
 
     const result = await summarizeReadModelEvidence(workspace, [
       'examples/internal-legacy/adoption/todo-search-slice',
-      'examples/valid/todo-app-pbe-run',
+      'examples/valid/todo-app-devview-run',
     ])
 
     expect(result.summary.status).toBe('aggregate-warning')
@@ -3751,11 +3764,17 @@ describe('read-model Evidence builder', () => {
 
   it('calculates aggregate blocked status from report summaries', async () => {
     const workspace = await createAggregateReportWorkspace()
-    await mutateValidationReport(workspace, 'examples/valid/todo-app-pbe-run', 'validation-blocked', 'blockingCount', 1)
+    await mutateValidationReport(
+      workspace,
+      'examples/valid/todo-app-devview-run',
+      'validation-blocked',
+      'blockingCount',
+      1,
+    )
 
     const result = await summarizeReadModelEvidence(workspace, [
       'examples/internal-legacy/adoption/todo-search-slice',
-      'examples/valid/todo-app-pbe-run',
+      'examples/valid/todo-app-devview-run',
     ])
 
     expect(result.summary.status).toBe('aggregate-blocked')
@@ -3765,7 +3784,7 @@ describe('read-model Evidence builder', () => {
     const workspace = await createAggregateReportWorkspace()
     await mutateValidationReport(
       workspace,
-      'examples/valid/todo-app-pbe-run',
+      'examples/valid/todo-app-devview-run',
       'decision-required',
       'decisionRequiredCount',
       1,
@@ -3773,7 +3792,7 @@ describe('read-model Evidence builder', () => {
 
     const result = await summarizeReadModelEvidence(workspace, [
       'examples/internal-legacy/adoption/todo-search-slice',
-      'examples/valid/todo-app-pbe-run',
+      'examples/valid/todo-app-devview-run',
     ])
 
     expect(result.summary.status).toBe('decision-required')
@@ -3787,13 +3806,13 @@ describe('read-model Evidence builder', () => {
         workspace,
         'examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validation-report.json',
       ),
-      join(workspace, 'examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json'),
+      join(workspace, 'examples/valid/todo-app-devview-run/generated/read-model-validation-report.json'),
     ]
     const before = await Promise.all(reportPaths.map((entry) => readFile(entry, 'utf8')))
 
     await summarizeReadModelEvidence(workspace, [
       'examples/internal-legacy/adoption/todo-search-slice',
-      'examples/valid/todo-app-pbe-run',
+      'examples/valid/todo-app-devview-run',
     ])
     const after = await Promise.all(reportPaths.map((entry) => readFile(entry, 'utf8')))
 
@@ -3809,11 +3828,13 @@ describe('read-model Evidence builder', () => {
         force: true,
       },
     )
-    await rm(join(workspace, 'examples/valid/todo-app-pbe-run/generated/generated-read-model.json'), { force: true })
+    await rm(join(workspace, 'examples/valid/todo-app-devview-run/generated/generated-read-model.json'), {
+      force: true,
+    })
 
     const result = await summarizeReadModelEvidence(workspace, [
       'examples/internal-legacy/adoption/todo-search-slice',
-      'examples/valid/todo-app-pbe-run',
+      'examples/valid/todo-app-devview-run',
     ])
 
     expect(result.summary.status).toBe('aggregate-pass')
@@ -3822,36 +3843,41 @@ describe('read-model Evidence builder', () => {
 
   it('reports aggregate-blocked for missing or malformed per-slice validation reports', async () => {
     const missingWorkspace = await createAggregateReportWorkspace()
-    await rm(join(missingWorkspace, 'examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json'), {
-      force: true,
-    })
+    await rm(
+      join(missingWorkspace, 'examples/valid/todo-app-devview-run/generated/read-model-validation-report.json'),
+      {
+        force: true,
+      },
+    )
 
     const missingResult = await summarizeReadModelEvidence(missingWorkspace, [
       'examples/internal-legacy/adoption/todo-search-slice',
-      'examples/valid/todo-app-pbe-run',
+      'examples/valid/todo-app-devview-run',
     ])
 
     expect(missingResult.summary.status).toBe('aggregate-blocked')
     expect(
-      missingResult.summary.perSliceSummaries.find((entry) => entry.sourceSlice === 'examples/valid/todo-app-pbe-run')
-        ?.reportStatus,
+      missingResult.summary.perSliceSummaries.find(
+        (entry) => entry.sourceSlice === 'examples/valid/todo-app-devview-run',
+      )?.reportStatus,
     ).toBe('missing')
 
     const malformedWorkspace = await createAggregateReportWorkspace()
     await writeFile(
-      join(malformedWorkspace, 'examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json'),
+      join(malformedWorkspace, 'examples/valid/todo-app-devview-run/generated/read-model-validation-report.json'),
       '{not-json',
     )
 
     const malformedResult = await summarizeReadModelEvidence(malformedWorkspace, [
       'examples/internal-legacy/adoption/todo-search-slice',
-      'examples/valid/todo-app-pbe-run',
+      'examples/valid/todo-app-devview-run',
     ])
 
     expect(malformedResult.summary.status).toBe('aggregate-blocked')
     expect(
-      malformedResult.summary.perSliceSummaries.find((entry) => entry.sourceSlice === 'examples/valid/todo-app-pbe-run')
-        ?.reportStatus,
+      malformedResult.summary.perSliceSummaries.find(
+        (entry) => entry.sourceSlice === 'examples/valid/todo-app-devview-run',
+      )?.reportStatus,
     ).toBe('malformed')
   })
 
@@ -3889,15 +3915,15 @@ describe('read-model Evidence builder', () => {
     const invalidFixturePath = resolve(
       'examples/invalid/read-model-invalid-view-scoped-tags/fixtures/invalid-generated-read-model.json',
     )
-    const positiveGeneratedPath = resolve('examples/valid/todo-app-pbe-run/generated/generated-read-model.json')
+    const positiveGeneratedPath = resolve('examples/valid/todo-app-devview-run/generated/generated-read-model.json')
     const registryPath = resolve('examples/internal-legacy/read-model-aggregate/read-model-slices.json')
     const positiveGeneratedBefore = await readFile(positiveGeneratedPath, 'utf8')
     const registryBefore = await readFile(registryPath, 'utf8')
 
-    const generated = await generateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    const generated = await generateReadModelEvidence(workspace, 'examples/valid/todo-app-devview-run')
     await writeFile(generated.generatedJsonPath, await readFile(invalidFixturePath, 'utf8'))
 
-    const result = await validateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    const result = await validateReadModelEvidence(workspace, 'examples/valid/todo-app-devview-run')
     const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
       status: string
       summary: { blockingCount: number }
@@ -3925,15 +3951,15 @@ describe('read-model Evidence builder', () => {
     const invalidFixturePath = resolve(
       'examples/invalid/read-model-core-view-missing/fixtures/invalid-generated-read-model.json',
     )
-    const positiveGeneratedPath = resolve('examples/valid/todo-app-pbe-run/generated/generated-read-model.json')
+    const positiveGeneratedPath = resolve('examples/valid/todo-app-devview-run/generated/generated-read-model.json')
     const registryPath = resolve('examples/internal-legacy/read-model-aggregate/read-model-slices.json')
     const positiveGeneratedBefore = await readFile(positiveGeneratedPath, 'utf8')
     const registryBefore = await readFile(registryPath, 'utf8')
 
-    const generated = await generateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    const generated = await generateReadModelEvidence(workspace, 'examples/valid/todo-app-devview-run')
     await writeFile(generated.generatedJsonPath, await readFile(invalidFixturePath, 'utf8'))
 
-    const result = await validateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+    const result = await validateReadModelEvidence(workspace, 'examples/valid/todo-app-devview-run')
     const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
       status: string
       summary: { blockingCount: number }
@@ -4153,10 +4179,10 @@ async function createAggregateReportWorkspace(): Promise<string> {
   )
   await writeValidationReportFixture(
     workspace,
-    'examples/valid/todo-app-pbe-run',
+    'examples/valid/todo-app-devview-run',
     todoAppPbeRunStructureOnlyProfile.profileId,
     'structure-only',
-    'canonical-pbe',
+    'canonical-devview',
     todoAppPbeRunStructureOnlyProfile.expectedCounts.validationChecks,
     {
       parityRequirement: { required: false, status: 'not-required' },
@@ -4250,8 +4276,8 @@ async function prepareTwoSliceValidationReports(workspace: string): Promise<void
     'examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json',
   )
   await validateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
-  await generateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
-  await validateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
+  await generateReadModelEvidence(workspace, 'examples/valid/todo-app-devview-run')
+  await validateReadModelEvidence(workspace, 'examples/valid/todo-app-devview-run')
 }
 
 async function mutateValidationReport(

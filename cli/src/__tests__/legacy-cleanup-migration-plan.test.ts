@@ -39,12 +39,27 @@ describe('DevView legacy cleanup migration plan CLI', () => {
     expect(payload.providerInvoked).toBe(false)
     expect(payload.networkCallMade).toBe(false)
     expect(payload.operationCount).toBeGreaterThan(0)
-    expect(payload.operationSummaryByKind['rename-path']).toBeGreaterThan(0)
     expect(payload.operationSummaryByKind['keep-internal-hidden-compatibility']).toBeGreaterThan(0)
   })
 
-  it('includes high-risk Todo fixture rename operation without mutating files', async () => {
+  it('does not report the completed Todo fixture rename when only the DevView path exists', async () => {
     const workspace = createLegacyExamplesWorkspace()
+
+    const result = await runPbeCli(['cleanup-legacy', '--dry-run', '--scope', 'examples', '--json'], {
+      cwd: workspace,
+      pluginRoot,
+    })
+    const payload = JSON.parse(result.stdout)
+    const operation = payload.operations.find(
+      (entry: Record<string, unknown>) => entry.sourcePath === 'examples/valid/todo-app-pbe-run',
+    )
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(operation).toBeUndefined()
+  })
+
+  it('includes high-risk Todo fixture rename operation for old-path migration fixtures without mutating files', async () => {
+    const workspace = createLegacyExamplesWorkspace({ includeOldTodoFixture: true })
 
     const result = await runPbeCli(['cleanup-legacy', '--dry-run', '--scope', 'examples', '--json'], {
       cwd: workspace,
@@ -93,7 +108,7 @@ describe('DevView legacy cleanup migration plan CLI', () => {
   })
 
   it('marks path collisions for planned targets', async () => {
-    const workspace = createLegacyExamplesWorkspace()
+    const workspace = createLegacyExamplesWorkspace({ includeOldTodoFixture: true })
     mkdirSync(join(workspace, 'examples/valid/todo-app-devview-run'), { recursive: true })
 
     const result = await runPbeCli(['cleanup-legacy', '--dry-run', '--scope', 'examples', '--json'], {
@@ -171,17 +186,28 @@ describe('DevView legacy cleanup migration plan CLI', () => {
   })
 })
 
-function createLegacyExamplesWorkspace(): string {
+function createLegacyExamplesWorkspace(options: { includeOldTodoFixture?: boolean } = {}): string {
   const workspace = createWorkspace()
   writeText(join(workspace, 'examples/README.md'), '# Legacy Examples\n\nUse pbe wording here.\n')
-  writeText(
-    join(workspace, 'examples/valid/todo-app-pbe-run/generated/generated-read-model.json'),
-    '{"commandIdentity":"pbe graph read-model generate --slice examples/valid/todo-app-pbe-run"}\n',
-  )
-  writeText(
-    join(workspace, 'examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json'),
-    '{"artifact":"legacy pbe tree"}\n',
-  )
+  if (options.includeOldTodoFixture) {
+    writeText(
+      join(workspace, 'examples/valid/todo-app-pbe-run/generated/generated-read-model.json'),
+      '{"commandIdentity":"devview graph read-model generate --slice examples/valid/todo-app-pbe-run"}\n',
+    )
+    writeText(
+      join(workspace, 'examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json'),
+      '{"artifact":"legacy pbe tree"}\n',
+    )
+  } else {
+    writeText(
+      join(workspace, 'examples/valid/todo-app-devview-run/generated/generated-read-model.json'),
+      '{"commandIdentity":"devview graph read-model generate --slice examples/valid/todo-app-devview-run"}\n',
+    )
+    writeText(
+      join(workspace, 'examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json'),
+      '{"artifact":"legacy pbe tree"}\n',
+    )
+  }
   writeText(
     join(workspace, 'examples/internal-legacy/adoption/todo-search-slice/README.md'),
     'Historical adoption example with pbe command text.\n',

@@ -7,12 +7,12 @@ import { fileURLToPath } from 'node:url'
 const scriptDir = path.dirname(fileURLToPath(import.meta.url))
 const repoRoot = path.resolve(scriptDir, '..')
 const cliPath = path.join(repoRoot, 'dist', 'cli', 'index.js')
-const validExampleRoot = path.join(repoRoot, 'examples', 'valid', 'todo-app-pbe-run')
+const validExampleRoot = path.join(repoRoot, 'examples', 'valid', 'todo-app-devview-run')
 const invalidExamplesRoot = path.join(repoRoot, 'examples', 'invalid')
 
 const validExamples = [
   {
-    name: 'todo-app-pbe-run',
+    name: 'todo-app-devview-run',
     source: validExampleRoot,
     commands: [
       ['validate', '--json'],

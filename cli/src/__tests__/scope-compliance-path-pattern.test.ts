@@ -6,9 +6,9 @@ import {
 
 describe('scope compliance path pattern helper', () => {
   it('normalizes Windows separators and leading dot slash without evaluating scope', () => {
-    expect(normalizeScopeCompliancePathInput('.\\examples\\valid\\todo-app-pbe-run\\src\\App.tsx')).toEqual({
-      input: '.\\examples\\valid\\todo-app-pbe-run\\src\\App.tsx',
-      normalizedPath: 'examples/valid/todo-app-pbe-run/src/App.tsx',
+    expect(normalizeScopeCompliancePathInput('.\\examples\\valid\\todo-app-devview-run\\src\\App.tsx')).toEqual({
+      input: '.\\examples\\valid\\todo-app-devview-run\\src\\App.tsx',
+      normalizedPath: 'examples/valid/todo-app-devview-run/src/App.tsx',
       valid: true,
       reason: 'normalized',
       warnings: ['leading-dot-slash-normalized-away'],
@@ -16,7 +16,10 @@ describe('scope compliance path pattern helper', () => {
   })
 
   it('marks absolute paths invalid instead of using local path authority', () => {
-    const result = matchScopeCompliancePathPattern('examples/valid/todo-app-pbe-run/src/**', 'C:\\repo\\src\\App.tsx')
+    const result = matchScopeCompliancePathPattern(
+      'examples/valid/todo-app-devview-run/src/**',
+      'C:\\repo\\src\\App.tsx',
+    )
 
     expect(result).toMatchObject({
       matched: false,
@@ -29,8 +32,8 @@ describe('scope compliance path pattern helper', () => {
 
   it('matches exact repository-relative POSIX paths', () => {
     const result = matchScopeCompliancePathPattern(
-      'examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json',
-      'examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json',
+      'examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json',
+      'examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json',
     )
 
     expect(result).toMatchObject({
@@ -45,8 +48,8 @@ describe('scope compliance path pattern helper', () => {
   it('matches directory-prefix patterns without treating the directory itself as a descendant', () => {
     expect(
       matchScopeCompliancePathPattern(
-        'examples/valid/todo-app-pbe-run/.pbe/evidence/',
-        'examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt',
+        'examples/valid/todo-app-devview-run/.pbe/evidence/',
+        'examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt',
       ),
     ).toMatchObject({
       matched: true,
@@ -55,8 +58,8 @@ describe('scope compliance path pattern helper', () => {
     })
     expect(
       matchScopeCompliancePathPattern(
-        'examples/valid/todo-app-pbe-run/.pbe/evidence/',
-        'examples/valid/todo-app-pbe-run/.pbe/evidence',
+        'examples/valid/todo-app-devview-run/.pbe/evidence/',
+        'examples/valid/todo-app-devview-run/.pbe/evidence',
       ),
     ).toMatchObject({
       matched: false,
@@ -68,8 +71,8 @@ describe('scope compliance path pattern helper', () => {
   it('matches first-slice glob-like patterns only', () => {
     expect(
       matchScopeCompliancePathPattern(
-        'examples/valid/todo-app-pbe-run/.pbe/evidence/**',
-        'examples/valid/todo-app-pbe-run/.pbe/evidence',
+        'examples/valid/todo-app-devview-run/.pbe/evidence/**',
+        'examples/valid/todo-app-devview-run/.pbe/evidence',
       ),
     ).toMatchObject({
       matched: true,
@@ -78,8 +81,8 @@ describe('scope compliance path pattern helper', () => {
     })
     expect(
       matchScopeCompliancePathPattern(
-        'examples/valid/todo-app-pbe-run/**/*.json',
-        'examples/valid/todo-app-pbe-run/generated/result.json',
+        'examples/valid/todo-app-devview-run/**/*.json',
+        'examples/valid/todo-app-devview-run/generated/result.json',
       ),
     ).toMatchObject({
       matched: true,
@@ -91,8 +94,8 @@ describe('scope compliance path pattern helper', () => {
   it('marks regex-like or unresolved patterns unsupported', () => {
     expect(
       matchScopeCompliancePathPattern(
-        'examples/(valid)/todo-app-pbe-run/**',
-        'examples/valid/todo-app-pbe-run/src/App.tsx',
+        'examples/(valid)/todo-app-devview-run/**',
+        'examples/valid/todo-app-devview-run/src/App.tsx',
       ),
     ).toMatchObject({
       matched: false,
@@ -104,7 +107,7 @@ describe('scope compliance path pattern helper', () => {
     expect(
       matchScopeCompliancePathPattern(
         'unresolved:todo-app-runtime-proof-report',
-        'examples/valid/todo-app-pbe-run/generated/report.json',
+        'examples/valid/todo-app-devview-run/generated/report.json',
       ),
     ).toMatchObject({
       matched: false,
@@ -117,8 +120,8 @@ describe('scope compliance path pattern helper', () => {
 
   it('returns helper-level match results without scope compliance conclusions', () => {
     const result = matchScopeCompliancePathPattern(
-      'examples/valid/todo-app-pbe-run/generated/**',
-      'examples/valid/todo-app-pbe-run/generated/report.json',
+      'examples/valid/todo-app-devview-run/generated/**',
+      'examples/valid/todo-app-devview-run/generated/report.json',
     )
 
     expect(result).not.toHaveProperty('checkerRun')

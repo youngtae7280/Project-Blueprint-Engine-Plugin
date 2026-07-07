@@ -43,7 +43,7 @@ export interface GraphDeltaHumanReviewPacket {
   forbiddenUse: string[]
 }
 
-const proposalSchemaId = 'pbe-graph-update-proposal-v0'
+const proposalSchemaId = 'devview-graph-update-proposal-v0'
 const proposalArtifactRole = 'graph-delta-proposal-only-preview'
 
 export async function generateGraphDeltaHumanReviewPacket(

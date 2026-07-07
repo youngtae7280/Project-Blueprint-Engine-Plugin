@@ -19,7 +19,7 @@ describe('proposal-only Graph Delta generator core', () => {
   it('generates a proposal-shaped preview from a valid source without promoting candidate identity', () => {
     const proposal = buildProposalOnlyGraphDeltaPreview(validSourceArtifact(), 'source.json')
 
-    expect(proposal.schemaId).toBe('pbe-graph-update-proposal-v0')
+    expect(proposal.schemaId).toBe('devview-graph-update-proposal-v0')
     expect(proposal.artifactRole).toBe('graph-delta-proposal-only-preview')
     expect(proposal.proposalGenerationStatus).toBe('generated-proposal-only-preview')
     expect(proposal.proposalOnly).toBe(true)
@@ -173,7 +173,7 @@ describe('proposal-only Graph Delta generator CLI', () => {
 
 function validSourceArtifact(): Record<string, unknown> {
   return {
-    compatibleProposalSchema: 'pbe-graph-update-proposal-v0',
+    compatibleProposalSchema: 'devview-graph-update-proposal-v0',
     proposalOnly: true,
     graphSourceMutated: false,
     graphDeltaApplied: false,

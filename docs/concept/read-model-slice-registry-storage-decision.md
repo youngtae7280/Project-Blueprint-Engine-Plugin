@@ -13,7 +13,7 @@ It follows:
 - [read-model-slice-registry-test-strategy.md](read-model-slice-registry-test-strategy.md)
 
 The approved candidate registry file now exists at `examples/internal-legacy/read-model-aggregate/read-model-slices.json`, and internal
-parser/normalization plus profile-comparison tests now cover it. The local non-enforcing `pbe graph read-model validate
+parser/normalization plus profile-comparison tests now cover it. The local non-enforcing `devview graph read-model validate
 --all` command now consumes it for configured profile execution and aggregate Evidence. This document still does not
 modify workflows, dispatch GitHub Actions, create PRs, introduce CI enforcement, expand source authority, perform
 public-doc cleanup, or approve full Graph-source promotion.
@@ -53,7 +53,7 @@ examples/internal-legacy/read-model-aggregate/read-model-slices.json
 
 Rationale:
 
-- It is outside Todo Search and Todo App PBE Run slice ownership, so it can describe cross-slice validation without
+- It is outside Todo Search and Todo App DevView Run slice ownership, so it can describe cross-slice validation without
   becoming a slice artifact.
 - It is outside `generated/`, so it is not confused with command output or artifact churn.
 - It is near the aggregate summary output, so readers can connect registry scope to aggregate Evidence.
@@ -105,7 +105,7 @@ Registry inclusion does not mean:
 
 - source authority changes
 - Maintainability Graph becomes source
-- Todo App PBE Run becomes parity-backed, pilot-marker-backed, CI-backed, or source-authority bearing
+- Todo App DevView Run becomes parity-backed, pilot-marker-backed, CI-backed, or source-authority bearing
 - tree-native or canonical `.pbe` artifacts are retired
 - user acceptance is replaced
 - full Graph-source promotion is approved
@@ -134,7 +134,7 @@ Registry file changes should be ordinary reviewed source changes, not side effec
 For existing single-slice commands, the in-code profile list remains the behavior source:
 
 - `todo-search-selected-slice`
-- `todo-app-pbe-run-structure-only`
+- `todo-app-devview-run-structure-only`
 
 The candidate registry file was introduced first as a fixture and is still compared against current in-code profiles.
 Local `validate --all` consumes the registry after checking it against those in-code profile expectations. The existing
@@ -169,7 +169,7 @@ examples/internal-legacy/read-model-aggregate/read-model-slices.json
 The fixture is strict JSON, outside `generated/`, and contains only:
 
 - `todo-search-selected-slice`
-- `todo-app-pbe-run-structure-only`
+- `todo-app-devview-run-structure-only`
 
 The candidate file is parsed by focused tests and is consumed by local `validate --all` only. It is not consumed by CI
 workflow behavior, and existing in-code profiles remain the behavior source for the existing single-slice commands.
@@ -211,7 +211,7 @@ This decision surface, candidate fixture, and parser tests do not:
 - expand source authority
 - approve full Graph-source promotion
 - perform public-doc cleanup
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 
 ## Gate Self-Check
 
@@ -226,7 +226,7 @@ This decision surface, candidate fixture, and parser tests do not:
 | Compatibility Fallback Gate    | PASS   | In-code profiles remain fallback for existing single-slice commands.                     |
 | Local Validate-All Gate        | PASS   | Local `validate --all` consumes the registry without changing workflow behavior.         |
 | Source Authority Boundary Gate | PASS   | Registry inclusion does not expand source authority or retire tree-native artifacts.     |
-| Todo App Structure-Only Gate   | PASS   | Todo App PBE Run remains structure-only.                                                 |
+| Todo App Structure-Only Gate   | PASS   | Todo App DevView Run remains structure-only.                                             |
 | User Approval Boundary Gate    | PASS   | Parser/CLI consumption remains a later decision.                                         |
 
 ## Final Statement

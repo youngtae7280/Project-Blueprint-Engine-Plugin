@@ -51,11 +51,11 @@ It does not:
 The first two command surfaces are now implemented for bounded Todo Search Evidence. They remain scoped Evidence
 commands, not source authority switches or promotion commands.
 
-| Conceptual surface                                                                          | Purpose                                                                                  | Source inputs                                                                                                     | Output artifact                                                            | Required for scoped pilot?                                     | Future full promotion role                                             | Non-authority boundary                                                              |
-| ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `pbe graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice` | Generate a read-model Evidence artifact from declared selected-slice inputs.             | Product/Project/Work/Test/Evidence/Acceptance, Change/Impact, contracts, runtime Evidence, warnings.              | `generated-read-model.json`, `generated-read-model.md`, optional manifest. | Yes, if user keeps generated output as execution prerequisite. | Possible input to broader generator design, not sufficient by itself.  | Generates Evidence only; does not switch source authority.                          |
-| `pbe graph read-model compare --generated <file> --manual <file>`                           | Compare generated output against the manual read-model parity artifact.                  | Generated read-model artifact and current manual parity artifact / View Instance Manifest.                        | `read-model-parity-report.json`, `read-model-parity-report.md`.            | Yes, if manual parity remains the review baseline.             | Validator input for scoped Todo Search; possible future broader input. | Reports mismatch only; does not auto-fix source or manual artifacts.                |
-| `pbe evidence read-model --slice examples/internal-legacy/adoption/todo-search-slice`       | Produce an Evidence-oriented manifest summarizing run identity, source inputs, warnings. | Same selected-slice inputs plus command/test Evidence references and Approval Brief / Evidence exception records. | `read-model-evidence-manifest.json` or equivalent summary.                 | Helpful but not necessarily sufficient alone.                  | Possible CI/reporting input if later approved.                         | Evidence manifest only; not source, not acceptance, not source-transition approval. |
+| Conceptual surface                                                                              | Purpose                                                                                  | Source inputs                                                                                                     | Output artifact                                                            | Required for scoped pilot?                                     | Future full promotion role                                             | Non-authority boundary                                                              |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `devview graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice` | Generate a read-model Evidence artifact from declared selected-slice inputs.             | Product/Project/Work/Test/Evidence/Acceptance, Change/Impact, contracts, runtime Evidence, warnings.              | `generated-read-model.json`, `generated-read-model.md`, optional manifest. | Yes, if user keeps generated output as execution prerequisite. | Possible input to broader generator design, not sufficient by itself.  | Generates Evidence only; does not switch source authority.                          |
+| `devview graph read-model compare --generated <file> --manual <file>`                           | Compare generated output against the manual read-model parity artifact.                  | Generated read-model artifact and current manual parity artifact / View Instance Manifest.                        | `read-model-parity-report.json`, `read-model-parity-report.md`.            | Yes, if manual parity remains the review baseline.             | Validator input for scoped Todo Search; possible future broader input. | Reports mismatch only; does not auto-fix source or manual artifacts.                |
+| `pbe evidence read-model --slice examples/internal-legacy/adoption/todo-search-slice`           | Produce an Evidence-oriented manifest summarizing run identity, source inputs, warnings. | Same selected-slice inputs plus command/test Evidence references and Approval Brief / Evidence exception records. | `read-model-evidence-manifest.json` or equivalent summary.                 | Helpful but not necessarily sufficient alone.                  | Possible CI/reporting input if later approved.                         | Evidence manifest only; not source, not acceptance, not source-transition approval. |
 
 The scoped validator command is documented in
 [validator-ci-backed-read-model-evidence-design.md](validator-ci-backed-read-model-evidence-design.md). Future CI
@@ -188,8 +188,8 @@ or full promotion.
 
 The user later approved the recommended implementation task. The bounded implementation now provides:
 
-- `pbe graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice`
-- `pbe graph read-model compare --generated <file> --manual <file>`
+- `devview graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice`
+- `devview graph read-model compare --generated <file> --manual <file>`
 - `examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json`
 - `examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.md`
 - `examples/internal-legacy/adoption/todo-search-slice/generated/read-model-evidence-manifest.json`
@@ -207,7 +207,7 @@ public-doc cleanup, scoped source-authority execution, full promotion, or broad 
 
 Later scoped validator work adds:
 
-- `pbe graph read-model validate --slice examples/internal-legacy/adoption/todo-search-slice`
+- `devview graph read-model validate --slice examples/internal-legacy/adoption/todo-search-slice`
 - `examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validation-report.json`
 - `examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validation-report.md`
 
@@ -285,18 +285,18 @@ builder now creates generated output for Todo Search only.
 
 ### Verification Summary
 
-| Check                           | Status       | Summary                                                                                        |
-| ------------------------------- | ------------ | ---------------------------------------------------------------------------------------------- |
-| User selected design-first path | present      | Parent orchestration chat selected `Prepare CLI-backed evidence output design first`.          |
-| Requirement basis               | present      | `generated-read-model-evidence-requirement.md` defines generated Evidence prerequisite.        |
-| Command/surface implementation  | present      | `pbe graph read-model generate` and `pbe graph read-model compare` exist for bounded Evidence. |
-| Output artifact design          | present      | Generated artifact, summary, comparison report, and optional manifest roles are defined.       |
-| Comparison / parity design      | present      | Comparable units, mismatch categories, severities, and treatment rules are defined.            |
-| Generated output                | present      | Bounded Todo Search generated read-model and parity report are created under `generated/`.     |
-| Source authority change         | not approved | Generated output remains Evidence rather than automatic source.                                |
-| Validator-backed Evidence       | present      | Scoped Todo Search validator report is `validation-pass`.                                      |
-| CI-backed Evidence              | reviewed     | Run `28151296796` is reviewed as `ci-evidence-pass`.                                           |
-| Comparison warning resolution   | present      | The five freshness warnings were reviewed and resolved; current parity status is pass.         |
+| Check                           | Status       | Summary                                                                                                |
+| ------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------ |
+| User selected design-first path | present      | Parent orchestration chat selected `Prepare CLI-backed evidence output design first`.                  |
+| Requirement basis               | present      | `generated-read-model-evidence-requirement.md` defines generated Evidence prerequisite.                |
+| Command/surface implementation  | present      | `devview graph read-model generate` and `devview graph read-model compare` exist for bounded Evidence. |
+| Output artifact design          | present      | Generated artifact, summary, comparison report, and optional manifest roles are defined.               |
+| Comparison / parity design      | present      | Comparable units, mismatch categories, severities, and treatment rules are defined.                    |
+| Generated output                | present      | Bounded Todo Search generated read-model and parity report are created under `generated/`.             |
+| Source authority change         | not approved | Generated output remains Evidence rather than automatic source.                                        |
+| Validator-backed Evidence       | present      | Scoped Todo Search validator report is `validation-pass`.                                              |
+| CI-backed Evidence              | reviewed     | Run `28151296796` is reviewed as `ci-evidence-pass`.                                                   |
+| Comparison warning resolution   | present      | The five freshness warnings were reviewed and resolved; current parity status is pass.                 |
 
 ### Remaining Judgment
 

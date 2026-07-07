@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "ai-request-analyzer-provider-config-boundary-preview",
+  "status": "ai-request-analyzer-provider-config-boundary-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "boundaryScope": "ai-request-analyzer-provider-config-preview-no-invocation",
+  "sourceAnalyzerBoundary": "examples/valid/todo-app-devview-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json",
+  "sourceAnalyzerPack": "examples/valid/todo-app-devview-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.json",
+  "sourceProviderDisabledRunResult": "examples/valid/todo-app-devview-run/generated/ai-request-analyzer-run.provider-disabled.add-todo-runtime-evidence-only.preview.json",
+  "sourceCoreBaselineFreeze": "examples/valid/todo-app-devview-run/generated/devview-core-baseline-freeze.runtime-evidence-only.preview.json",
+  "firstCalibrationDisabledConfigPreview": "examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json",
+  "firstCalibrationInvocationEnabledConfigPreview": "examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json",
+  "firstCalibrationOpenAiLiveConfigPreview": "examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config.openai-live-disabled-by-default.runtime-evidence-only.preview.json",
+  "providerConfigBoundaryPreviewed": true,
+  "providerConfigReaderImplemented": false,
+  "providerAdapterImplemented": false,
+  "providerInvocationImplemented": false,
+  "providerInvocationAuthority": "none-preview-only",
+  "providerStateTaxonomy": [
+    {
+      "providerState": "disabled",
+      "meaning": "Default safe state. Analyzer provider execution is unavailable and analyze-request must block unless an explicit external candidate is imported.",
+      "networkCallsAllowed": false,
+      "llmInvoked": false,
+      "requestIrCandidateGenerated": false
+    },
+    {
+      "providerState": "configured-not-invoked",
+      "meaning": "Provider name, model name, and environment variable references may be present for future review, but this state still grants no invocation authority in the current implementation.",
+      "networkCallsAllowed": false,
+      "llmInvoked": false,
+      "requestIrCandidateGenerated": false
+    },
+    {
+      "providerState": "configured-invocation-enabled-preview",
+      "meaning": "Future explicit invocation candidate state. It records that a provider config could be eligible for a future adapter only when a separate --invoke-provider flag is explicitly provided. This state grants no current invocation authority.",
+      "futureExplicitInvocationFlagRequired": "--invoke-provider",
+      "explicitInvocationFlagImplemented": false,
+      "networkCallsAllowed": false,
+      "llmInvoked": false,
+      "requestIrCandidateGenerated": false
+    },
+    {
+      "providerState": "configured-openai-invocation-enabled",
+      "meaning": "OpenAI live-provider-specific config shape for a future adapter. It is distinct from configured-invocation-enabled-preview and still grants no current invocation authority. Future live invocation would require --invoke-provider, --allow-network-provider, provider mode openai, an implemented adapter, and runtime secret handling that stores no secret values.",
+      "providerNameCandidate": "openai",
+      "futureExplicitInvocationFlagRequired": "--invoke-provider",
+      "futureExplicitNetworkFlagRequired": "--allow-network-provider",
+      "futureProviderModeRequired": "openai",
+      "providerAdapterImplemented": false,
+      "providerInvocationImplemented": false,
+      "networkCallsAllowed": false,
+      "llmInvoked": false,
+      "requestIrCandidateGenerated": false
+    },
+    {
+      "providerState": "unavailable",
+      "meaning": "A provider configuration was expected but a required non-secret reference or local configuration source is missing or unreadable.",
+      "networkCallsAllowed": false,
+      "llmInvoked": false,
+      "requestIrCandidateGenerated": false
+    },
+    {
+      "providerState": "blocked-invalid-config",
+      "meaning": "The configuration contains an unsafe or unknown provider state, a secret-looking value, a disallowed model/provenance field, or an authority escalation flag.",
+      "networkCallsAllowed": false,
+      "llmInvoked": false,
+      "requestIrCandidateGenerated": false
+    },
+    {
+      "providerState": "future-invocation-allowed-only-after-explicit-config",
+      "meaning": "Vocabulary reserved for a future provider-adapter decision. It is not active in this boundary and cannot be used by current artifacts to make network calls.",
+      "networkCallsAllowed": false,
+      "llmInvoked": false,
+      "requestIrCandidateGenerated": false
+    }
+  ],
+  "secretPolicy": {
+    "secretValueStored": false,
+    "secretValueInspected": false,
+    "secretValuesAllowedInArtifacts": false,
+    "apiKeyValueAllowedInArtifacts": false,
+    "tokenValueAllowedInArtifacts": false,
+    "allowedReferenceKinds": ["environment-variable-name", "provider-name-candidate", "model-name-candidate"],
+    "allowedEnvironmentVariableReferenceExamples": ["OPENAI_API_KEY"],
+    "forbiddenStoredValueExamples": [
+      "raw API key value",
+      "bearer token value",
+      "personal access token value",
+      "contents of .env files",
+      "credential manager response body"
+    ],
+    "secretRedactionRequirement": "Future tools may record only the reference name and must never store or print secret values."
+  },
+  "providerProvenancePolicy": {
+    "providerNameCandidateField": "providerNameCandidate",
+    "modelNameCandidateField": "modelNameCandidate",
+    "providerConfigSourceField": "providerConfigSource",
+    "apiKeySourceRefField": "apiKeySourceRef",
+    "invocationEnablementState": "configured-invocation-enabled-preview",
+    "openAiLiveInvocationEnablementState": "configured-openai-invocation-enabled",
+    "explicitInvocationFlagRequired": "--invoke-provider",
+    "explicitNetworkFlagRequired": "--allow-network-provider",
+    "providerModeRequiredForOpenAi": "openai",
+    "externalCandidateWithInvokeProviderPolicy": "blocked-future-policy",
+    "allowedProviderConfigSources": [
+      "disabled-default-preview",
+      "repo-local-preview-config",
+      "session-local-preview-config",
+      "environment-reference-only"
+    ],
+    "providerConfiguredMeaning": "configured means references are present for review only; it does not mean invocation is allowed",
+    "providerInvocationAuthority": "none-preview-only"
+  },
+  "futureAnalyzeRequestIntegration": {
+    "futureOptionCandidate": "--provider-config <providerConfigPath>",
+    "futureExplicitInvocationFlagCandidate": "--invoke-provider",
+    "futureExplicitNetworkFlagCandidate": "--allow-network-provider",
+    "futureProviderModeCandidate": "--provider-mode openai",
+    "futureInvocationEnablementRequirements": [
+      "providerState must be configured-invocation-enabled-preview",
+      "--invoke-provider must be explicitly supplied",
+      "external candidate import must not be supplied in the same command",
+      "provider adapter implementation must exist in a later slice"
+    ],
+    "futureOpenAiLiveInvocationEnablementRequirements": [
+      "providerState must be configured-openai-invocation-enabled",
+      "--invoke-provider must be explicitly supplied",
+      "--allow-network-provider must be explicitly supplied",
+      "--provider-mode openai must be explicitly supplied",
+      "external candidate import and mock provider response input must not be supplied in the same command",
+      "OpenAI adapter and SDK dependency must exist in a later slice",
+      "API key value may be read only at runtime from apiKeySourceRef and must not be stored, printed, or committed"
+    ],
+    "externalCandidateWithInvokeProviderPolicy": "blocked-future-policy",
+    "currentAnalyzeRequestBehavior": "provider-disabled-or-external-candidate-import-only",
+    "configuredProviderCurrentMeaning": "configured-not-invoked must still return no network call and no candidate generation until a future provider adapter is explicitly implemented",
+    "invocationEnabledProviderCurrentMeaning": "configured-invocation-enabled-preview is a boundary-only future state and still grants no current invocation authority",
+    "externalCandidateImportStillAllowed": true,
+    "validationRequiredBeforeTraversal": true
+  },
+  "currentBoundaryFlags": {
+    "networkCallsAllowed": false,
+    "llmInvoked": false,
+    "runtimeAiCallsAllowed": false,
+    "requestIrCandidateGenerated": false,
+    "candidateOnly": true,
+    "graphTraversalAllowed": false,
+    "graphTraversalExecuted": false,
+    "selectedGraphSliceGenerated": false,
+    "contractInputGenerated": false,
+    "instructionPackGenerated": false,
+    "codexExecutionTriggered": false,
+    "hookScriptsInstalled": false,
+    "hooksActive": false,
+    "strictModeEnabled": false,
+    "guidedEnforcementEnabled": false,
+    "graphSourceMutated": false,
+    "graphDeltaApplied": false,
+    "approvalStatus": "not-approved",
+    "humanDecisionRecorded": false,
+    "runtimeEvidenceSatisfied": false,
+    "evidenceAccepted": false,
+    "equivalenceProven": false,
+    "scopeEnforced": false,
+    "ciEnforcementEnabled": false,
+    "projectMemoryExtensionAuthorityGranted": false
+  },
+  "forbiddenUse": [
+    "store API key, token, or secret values in provider config artifacts",
+    "inspect or print secret values",
+    "treat providerState=configured-not-invoked as network-call authority",
+    "treat providerState=configured-invocation-enabled-preview as current network-call authority",
+    "treat providerState=configured-openai-invocation-enabled as current network-call authority",
+    "treat the future --invoke-provider flag as implemented in this slice",
+    "treat the future --allow-network-provider flag as implemented in this slice",
+    "treat the future --provider-mode openai flag as implemented in this slice",
+    "combine future --invoke-provider with --external-candidate",
+    "generate Request IR Candidate JSON from provider config alone",
+    "skip analyze-request provider-disabled behavior without a future explicit provider adapter",
+    "drive graph validation or traversal from provider config",
+    "generate selected graph slices, contract input, or instruction packs from provider config",
+    "trigger Codex execution",
+    "install or run hooks",
+    "mutate graph-source",
+    "apply graph deltas",
+    "automate approval or human decisions",
+    "claim runtime Evidence satisfaction",
+    "prove equivalence",
+    "enforce scope or CI",
+    "activate strict or guided blocking"
+  ],
+  "runtimeBudgetBoundary": {
+    "deterministicRuntimeBudgetMeasured": false,
+    "reason": "This boundary preview adds no command and no provider invocation.",
+    "futureProviderInferenceBudgetClassification": "outside-5-second-deterministic-runtime-budget",
+    "postCandidateDeterministicValidationBudget": "inside-advisory-devview-runtime-budget"
+  },
+  "nonExecutionBoundary": "This artifact previews the AI Request Analyzer provider configuration boundary only. It does not implement a provider config reader, call an LLM/API, make network calls, generate a Request IR Candidate, validate Request IR, run graph traversal, generate selected graph slices, generate Contract Compiler Input, generate Instruction Packs, execute Codex, install or run hooks, mutate graph-source, apply graph deltas, automate approval or human decisions, satisfy runtime Evidence, accept Evidence, prove equivalence, enforce scope, configure CI, activate strict/guided blocking, or grant Project Memory extension authority."
+}

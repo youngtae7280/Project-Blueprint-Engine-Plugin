@@ -5,12 +5,12 @@ Status: read-model-validate-all-contract / local-implementation-present / non-en
 This document defines the concept contract for the local all-slice read-model validation command:
 
 ```text
-pbe graph read-model validate --all
+devview graph read-model validate --all
 ```
 
 The command is now implemented as local non-enforcing Evidence. It does not change `.github/workflows/read-model-evidence.yml`,
 dispatch GitHub Actions, create PRs, add required checks, introduce enforcement, expand source authority, perform
-public-doc cleanup, promote Todo App PBE Run beyond `structure-only`, or approve full Graph-source promotion.
+public-doc cleanup, promote Todo App DevView Run beyond `structure-only`, or approve full Graph-source promotion.
 
 ## Purpose
 
@@ -28,10 +28,10 @@ The local command answers:
 
 ## Current Known Profiles
 
-| Profile ID                        | Source slice                                          | Source layout       | Policy level          | Current status                                                                                     |
-| --------------------------------- | ----------------------------------------------------- | ------------------- | --------------------- | -------------------------------------------------------------------------------------------------- |
-| `todo-search-selected-slice`      | `examples/internal-legacy/adoption/todo-search-slice` | `flat-demo-support` | `pilot-marker-backed` | 40 nodes / 59 edges; `comparison-pass`; `validation-pass`; active bounded scoped pilot for review. |
-| `todo-app-pbe-run-structure-only` | `examples/valid/todo-app-pbe-run`                     | `canonical-pbe`     | `structure-only`      | 22 nodes / 38 edges; `validation-pass`; no manual parity, pilot marker, or runtime fixture.        |
+| Profile ID                            | Source slice                                          | Source layout       | Policy level          | Current status                                                                                     |
+| ------------------------------------- | ----------------------------------------------------- | ------------------- | --------------------- | -------------------------------------------------------------------------------------------------- |
+| `todo-search-selected-slice`          | `examples/internal-legacy/adoption/todo-search-slice` | `flat-demo-support` | `pilot-marker-backed` | 40 nodes / 59 edges; `comparison-pass`; `validation-pass`; active bounded scoped pilot for review. |
+| `todo-app-devview-run-structure-only` | `examples/valid/todo-app-devview-run`                 | `canonical-devview` | `structure-only`      | 22 nodes / 38 edges; `validation-pass`; no manual parity, pilot marker, or runtime fixture.        |
 
 ### Todo Search Profile Requirements
 
@@ -48,9 +48,9 @@ Required for `todo-search-selected-slice`:
 - preserve Todo Search scoped source-authority boundary
 - preserve non-promotion statement
 
-### Todo App PBE Run Profile Requirements
+### Todo App DevView Run Profile Requirements
 
-Required for `todo-app-pbe-run-structure-only`:
+Required for `todo-app-devview-run-structure-only`:
 
 - generate structure-only read-model Evidence
 - validate structure-only read-model Evidence
@@ -59,7 +59,7 @@ Required for `todo-app-pbe-run-structure-only`:
 - keep source authority boundary visible
 - preserve non-promotion statement
 
-Not required for `todo-app-pbe-run-structure-only`:
+Not required for `todo-app-devview-run-structure-only`:
 
 - manual parity artifact
 - generated/manual comparison
@@ -79,7 +79,7 @@ Registry fields:
 | ------------------------- | ------------------------------------------------------------------------------------------------------- |
 | `profileId`               | Stable profile identifier, such as `todo-search-selected-slice`.                                        |
 | `sourceSlice`             | Repository-relative slice path.                                                                         |
-| `sourceLayout`            | Declared layout, such as `flat-demo-support` or `canonical-pbe`.                                        |
+| `sourceLayout`            | Declared layout, such as `flat-demo-support` or `canonical-devview`.                                    |
 | `policyLevel`             | Validation policy level, such as `structure-only`, `parity-backed`, `pilot-marker-backed`, `ci-backed`. |
 | `requiredCommands`        | Commands all-slice validation may run for the profile.                                                  |
 | `requiredArtifacts`       | Artifacts that must exist after the selected execution mode.                                            |
@@ -136,7 +136,7 @@ Rules:
 Current related implementation:
 
 ```text
-pbe graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run
+devview graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-devview-run
 ```
 
 This is not `validate --all`; it remains existing-report aggregation.
@@ -154,7 +154,7 @@ Rules:
 - never infer source authority from generated output
 - never run unsupported or unregistered slices by discovery
 
-This mode is implemented locally by `pbe graph read-model validate --all`. CI workflow integration and enforcement
+This mode is implemented locally by `devview graph read-model validate --all`. CI workflow integration and enforcement
 remain separate decisions.
 
 ### Mode 3: CI Informational All-Slice Validation
@@ -195,7 +195,7 @@ Aggregate status is Evidence only. `aggregate-pass` does not:
 
 - expand source authority
 - retire tree-native or `.pbe` artifacts
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 - approve CI enforcement
 - approve full Graph-source promotion
 - replace user acceptance
@@ -223,7 +223,7 @@ Tree-native selected-slice artifacts and canonical `.pbe` artifacts remain curre
 source-transition decision changes that boundary. Generated read-models, validation reports, CI manifests, and aggregate
 summaries do not become source authority by passing validation.
 
-Todo Search remains the only scoped source-authority pilot. Todo App PBE Run remains `structure-only`.
+Todo Search remains the only scoped source-authority pilot. Todo App DevView Run remains `structure-only`.
 
 ## Relation To PR Informational Observation
 
@@ -255,7 +255,7 @@ This contract does not:
 - approve full Graph-source promotion
 - perform public-doc cleanup
 - retire tree-native or `.pbe` artifacts
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 - make aggregate or validation pass equivalent to user acceptance
 
 ## Gate Self-Check
@@ -270,7 +270,7 @@ This contract does not:
 | Source Authority Boundary Gate   | PASS   | No source authority expansion or artifact retirement.                              |
 | Non-CI-Enforcement Gate          | PASS   | Enforcement mode remains future-only and separately approved.                      |
 | PR Observation Separation Gate   | PASS   | Current PR observation window remains separate from all-slice implementation.      |
-| Todo App Structure-Only Gate     | PASS   | Todo App PBE Run remains structure-only.                                           |
+| Todo App Structure-Only Gate     | PASS   | Todo App DevView Run remains structure-only.                                       |
 | Retained Warning Visibility Gate | PASS   | Hidden warnings are failure semantics, not acceptable cleanup.                     |
 | User Approval Boundary Gate      | PASS   | Validation pass cannot replace user acceptance or promotion approval.              |
 

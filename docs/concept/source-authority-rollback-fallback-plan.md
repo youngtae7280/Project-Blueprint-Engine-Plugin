@@ -27,15 +27,15 @@ fallback rules are ready and active for the limited Todo Search promotion. No ro
 
 The plan covers these review surfaces:
 
-| Scope area                                | Covered boundary                                                                                          |
-| ----------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Todo Search limited promotion             | Preserve bounded fallback/reference artifacts and stop or roll back the promoted scope if signals fail.   |
-| Candidate broader source-authority matrix | Apply fallback rules to every artifact family before any additional source role changes.                  |
-| Positive read-model registry              | Keep `validate --all` scoped to declared positive profiles unless a separate registry change is approved. |
-| Validate-all reports and aggregate        | Treat generated, validation, parity, and aggregate reports as Evidence only until promotion approval.     |
-| Public-doc cleanup state                  | Keep Batch A/B/C/D cleanup as review input; unresolved waiver/sufficiency questions can defer promotion.  |
-| CI Evidence and PR informational runs     | Use manual/PR CI as repeatability Evidence, not rollback enforcement or source authority.                 |
-| Todo App PBE Run structure-only profile   | Prevent structure-only Evidence from being interpreted as source-bearing or parity-backed.                |
+| Scope area                                  | Covered boundary                                                                                          |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Todo Search limited promotion               | Preserve bounded fallback/reference artifacts and stop or roll back the promoted scope if signals fail.   |
+| Candidate broader source-authority matrix   | Apply fallback rules to every artifact family before any additional source role changes.                  |
+| Positive read-model registry                | Keep `validate --all` scoped to declared positive profiles unless a separate registry change is approved. |
+| Validate-all reports and aggregate          | Treat generated, validation, parity, and aggregate reports as Evidence only until promotion approval.     |
+| Public-doc cleanup state                    | Keep Batch A/B/C/D cleanup as review input; unresolved waiver/sufficiency questions can defer promotion.  |
+| CI Evidence and PR informational runs       | Use manual/PR CI as repeatability Evidence, not rollback enforcement or source authority.                 |
+| Todo App DevView Run structure-only profile | Prevent structure-only Evidence from being interpreted as source-bearing or parity-backed.                |
 
 ## Fallback Precedence
 
@@ -53,18 +53,18 @@ stale, or disputed. Outside promoted scopes, tree-native artifacts remain operat
 
 ## Rollback Triggers
 
-| Trigger                                       | Meaning                                                                                                    |
-| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| parity mismatch / blocked / decision-required | Generated/manual parity no longer supports the scoped or broader authority claim.                          |
-| validation or aggregate blocked               | Per-slice validation, validate-all, or aggregate summary reports blocking status.                          |
-| stale or missing generated Evidence           | Required generated Evidence is missing, stale, unreproducible, or points to the wrong commit.              |
-| source-authority boundary ambiguity           | Users, docs, reports, or tooling make source/projection/Evidence roles unclear.                            |
-| user acceptance authority confusion           | Any artifact or workflow appears to replace user-controlled Acceptance.                                    |
-| public-doc cleanup insufficiency              | Cleanup is judged insufficient or a requested waiver is rejected.                                          |
-| CI Evidence missing or non-repeatable         | Manual/PR CI cannot reproduce the expected validate-all/Evidence bundle.                                   |
-| compatibility view confusion                  | Compatibility views, task-card views, or execution packs are read as source authority.                     |
-| Todo App structure-only misread               | Todo App PBE Run is treated as parity-backed, pilot-marker-backed, CI-backed authority, or source-bearing. |
-| invalid fixture boundary leakage              | Local invalid fixtures are accidentally included in positive registry, aggregate, or CI Evidence.          |
+| Trigger                                       | Meaning                                                                                                        |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| parity mismatch / blocked / decision-required | Generated/manual parity no longer supports the scoped or broader authority claim.                              |
+| validation or aggregate blocked               | Per-slice validation, validate-all, or aggregate summary reports blocking status.                              |
+| stale or missing generated Evidence           | Required generated Evidence is missing, stale, unreproducible, or points to the wrong commit.                  |
+| source-authority boundary ambiguity           | Users, docs, reports, or tooling make source/projection/Evidence roles unclear.                                |
+| user acceptance authority confusion           | Any artifact or workflow appears to replace user-controlled Acceptance.                                        |
+| public-doc cleanup insufficiency              | Cleanup is judged insufficient or a requested waiver is rejected.                                              |
+| CI Evidence missing or non-repeatable         | Manual/PR CI cannot reproduce the expected validate-all/Evidence bundle.                                       |
+| compatibility view confusion                  | Compatibility views, task-card views, or execution packs are read as source authority.                         |
+| Todo App structure-only misread               | Todo App DevView Run is treated as parity-backed, pilot-marker-backed, CI-backed authority, or source-bearing. |
+| invalid fixture boundary leakage              | Local invalid fixtures are accidentally included in positive registry, aggregate, or CI Evidence.              |
 
 ## Actions By Trigger
 
@@ -89,7 +89,7 @@ Before any future authority change can execute, these artifacts must be retained
 | Tree-native Product / Project / Work / Test / Evidence / Acceptance artifacts | Retain as fallback/reference until retirement is explicitly approved.                                        |
 | Cycle Contract / Node Execution Contracts                                     | Retain the execution scope used for any authority-bearing decision.                                          |
 | Todo Search selected-slice support artifacts                                  | Retain scoped pilot source/reference artifacts, manual read-model, parity, validation, and marker artifacts. |
-| Todo App PBE Run structure-only artifacts                                     | Retain as structure-only Evidence, not source authority.                                                     |
+| Todo App DevView Run structure-only artifacts                                 | Retain as structure-only Evidence, not source authority.                                                     |
 | Positive slice registry                                                       | Retain registry version and included profile IDs used for validate-all Evidence.                             |
 | Generated read-model / parity / validation / aggregate reports                | Retain with freshness/sourceCommit visible; reproducibility is required but source authority is not implied. |
 | CI evidence manifest                                                          | Retain run id, run attempt, source ref, source commit, event, trigger mode, and included slices.             |
@@ -140,7 +140,7 @@ Caveats:
 - repo-wide promotion is not approved
 - no concrete artifact snapshot command exists
 - no enforcement policy is approved
-- Todo App PBE Run remains `structure-only`
+- Todo App DevView Run remains `structure-only`
 - user acceptance authority remains user-controlled
 
 ## Non-Scope
@@ -156,7 +156,7 @@ This plan does not:
 - create a PR or dispatch GitHub Actions
 - add required checks, branch protection, or enforcement
 - add invalid fixtures to CI
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 - replace user acceptance authority
 
 ## Recommended Next Decision Surface

@@ -131,5 +131,5 @@ This package does not:
 - change workflow, code, CLI, tests, or generated artifacts
 - create a PR or dispatch GitHub Actions
 - add required checks, branch protection, or enforcement
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 - replace user acceptance authority

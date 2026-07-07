@@ -6,7 +6,7 @@ Status: comparison-pass
 
 - Compared at: 2026-06-29T08:46:09.521Z
 - Command identity:
-  `pbe graph read-model compare --generated examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json --manual examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json`
+  `devview graph read-model compare --generated examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json --manual examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json`
 - Source commit: a1c4f10
 
 ## Boundary

@@ -39,8 +39,8 @@ describe('git-derived changed-file collection', () => {
   })
 
   it('normalizes paths to repository-relative POSIX style', () => {
-    expect(normalizeRepositoryRelativePath('examples\\valid\\todo-app-pbe-run\\generated\\result.json')).toEqual({
-      path: 'examples/valid/todo-app-pbe-run/generated/result.json',
+    expect(normalizeRepositoryRelativePath('examples\\valid\\todo-app-devview-run\\generated\\result.json')).toEqual({
+      path: 'examples/valid/todo-app-devview-run/generated/result.json',
       warnings: [],
     })
   })
@@ -55,7 +55,7 @@ describe('git-derived changed-file collection', () => {
         'M',
         'docs\\concept\\scope-compliance-checker-implementation-readiness.md',
         'A',
-        'examples/valid/todo-app-pbe-run/generated/result.json',
+        'examples/valid/todo-app-devview-run/generated/result.json',
       ].join('\0'),
     })
 
@@ -88,29 +88,29 @@ describe('git-derived changed-file collection', () => {
     expect(artifact.patchContentsInspected).toBe(false)
     expect(artifact.normalizedChangedFiles.map((entry) => entry.path)).toEqual([
       'docs/concept/scope-compliance-checker-implementation-readiness.md',
-      'examples/valid/todo-app-pbe-run/generated/result.json',
+      'examples/valid/todo-app-devview-run/generated/result.json',
     ])
     expect(artifact.generatedFileHandling.generatedFilesPresent).toBe(true)
     expect(artifact.generatedFileHandling.generatedFiles).toEqual([
-      'examples/valid/todo-app-pbe-run/generated/result.json',
+      'examples/valid/todo-app-devview-run/generated/result.json',
     ])
     expect(artifact.sourceArtifacts.scopeComplianceCollectionInputConsumption).toBe(
-      'examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json',
+      'examples/valid/todo-app-devview-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json',
     )
     expect(artifact.sourceArtifacts.scopeComplianceScopeInputBinding).toBe(
-      'examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json',
+      'examples/valid/todo-app-devview-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json',
     )
     expect(artifact.sourceArtifacts.scopeCompliancePathPatternPolicy).toBe(
-      'examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json',
+      'examples/valid/todo-app-devview-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json',
     )
     expect(artifact.sourceArtifacts.scopeCompliancePathMatchingHelper).toBe(
       'cli/src/core/scope-compliance-path-pattern.ts',
     )
     expect(artifact.sourceArtifacts.scopeComplianceViolationCategorySchema).toBe(
-      'examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json',
+      'examples/valid/todo-app-devview-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json',
     )
     expect(artifact.sourceArtifacts.scopeComplianceEvaluationResultShape).toBe(
-      'examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json',
+      'examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json',
     )
     expect(artifact.forbiddenUse).toContain('scope compliance evaluation')
     expect(artifact.forbiddenUse).toContain('no-violation claim')
@@ -239,7 +239,7 @@ describe('git-derived changed-file collection', () => {
   it('reports untracked generated-looking files as warning-only churn', async () => {
     const workspace = createCommittedWorkspace('src/todos.ts', 'export const value = "baseline"\n')
     writeText(
-      join(workspace, 'examples', 'valid', 'todo-app-pbe-run', 'generated', 'candidate.json'),
+      join(workspace, 'examples', 'valid', 'todo-app-devview-run', 'generated', 'candidate.json'),
       '{"preview":true}\n',
     )
 
@@ -250,7 +250,7 @@ describe('git-derived changed-file collection', () => {
 
     expect(result.artifact.generatedFileHandling.generatedFilesPresent).toBe(true)
     expect(result.artifact.generatedFileHandling.generatedFiles).toEqual([
-      'examples/valid/todo-app-pbe-run/generated/candidate.json',
+      'examples/valid/todo-app-devview-run/generated/candidate.json',
     ])
     expect(result.artifact.collectionWarnings).toContain(
       'Untracked generated-looking files were collected as advisory input only; this warning does not approve, reject, enforce, or satisfy Evidence.',

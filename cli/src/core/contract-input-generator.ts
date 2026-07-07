@@ -594,7 +594,7 @@ function buildForbiddenScope(
       ? ['unresolved:production-source-changes']
       : normalized.includes('graph')
         ? [graphSourcePath || 'unresolved:graph-source-mutation']
-        : ['examples/valid/todo-app-pbe-run/.pbe/control/acceptance-tree.json']
+        : ['examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json']
     const scopeKind = normalized.includes('production') ? 'code' : normalized.includes('graph') ? 'graph' : 'product'
     if (productionSourceUnresolved) {
       findings.push({

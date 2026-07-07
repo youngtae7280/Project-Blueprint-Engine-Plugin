@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-roadmap-completion-audit-preview",
+  "status": "devview-roadmap-completion-audit-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "auditScope": "roadmap-state-evidence-summary-no-new-authority",
+  "auditDate": "2026-07-03",
+  "roadmapEndStateClaim": "frontend-to-instruction-pack, advisory backend, proposal/review, activation previews including repo-local advisory hook script bundle materialization, analyzer/clarification previews, and Phase 13 controlled apply/evidence/proof/enforcement readiness boundaries are represented; approved apply dry-run, guarded graph-delta apply reporting, Evidence decision, accepted Evidence, Runtime Evidence Satisfaction readiness, runtime-gated Equivalence readiness, and runtime-gated Scope/CI readiness now exist as deterministic surfaces; actual Codex execution, hook installation/activation, runtime Evidence satisfaction, equivalence proof, scope/CI enforcement, CI required checks, branch protection, diff rejection, and approval/user-acceptance automation remain intentionally unimplemented.",
+  "sourceAuthorityBoundary": "This audit summarizes existing artifacts and commands. It is not graph-source, not approval, not runtime Evidence satisfaction, not equivalence proof, not enforcement, and not graph delta apply.",
+  "phaseSummary": [
+    {
+      "phase": "Phase 1 Foundation / Identity / Safety Boundary",
+      "status": "represented",
+      "evidence": ["docs/concept/README.md", "docs/concept/decision-log.md"],
+      "remaining": "Continue preserving DevView compatibility and no-approval/no-enforcement boundaries as features grow."
+    },
+    {
+      "phase": "Phase 2 Contract Compiler Backend",
+      "status": "mvp-connected",
+      "evidence": [
+        "cli/src/core/contract-compiler-dry-run.ts",
+        "docs/concept/contract-compiler-calibration-fixtures.md",
+        "examples/valid/todo-app-devview-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json"
+      ],
+      "remaining": "Broader fixture/project coverage remains future generalization."
+    },
+    {
+      "phase": "Phase 3 Compliance Checker / Runtime Report Backend",
+      "status": "mvp-connected-advisory-only",
+      "evidence": [
+        "cli/src/core/scope-compliance-check.ts",
+        "graph read-model check-scope --base <base> --head <head> --json",
+        "scripts/devview-runtime-timing-smoke.mjs"
+      ],
+      "remaining": "Patch/hunk inspection, working-tree modes, and enforcement remain intentionally unimplemented."
+    },
+    {
+      "phase": "Phase 4 Graph Delta Proposal Backend",
+      "status": "proposal-and-review-connected",
+      "evidence": [
+        "cli/src/core/graph-delta-proposal-generator.ts",
+        "cli/src/core/graph-delta-human-review-packet.ts",
+        "graph read-model propose-graph-delta --source <artifact> --json",
+        "graph read-model review-graph-delta --proposal <proposalPath> --json"
+      ],
+      "remaining": "Human decision record, approved-state preview, approved apply dry-run, and guarded apply report surfaces are now implemented; the current Todo proposal remains blocked from graph-source mutation because it has no concrete mutation operations."
+    },
+    {
+      "phase": "Phase 5 Runtime Performance Budget",
+      "status": "measured-advisory-only",
+      "evidence": [
+        "scripts/devview-runtime-timing-smoke.mjs",
+        "examples/valid/todo-app-devview-run/generated/devview-runtime-smoke-lane-boundary.runtime-evidence-only.preview.json",
+        "npm run devview:runtime:smoke"
+      ],
+      "remaining": "Budget remains advisory and non-enforced; future lane-specific smoke may add currently excluded preview reports."
+    },
+    {
+      "phase": "Phase 6 DevView Activation / Hook Gateway",
+      "status": "preview-chain-connected-no-active-hooks",
+      "evidence": [
+        "examples/valid/todo-app-devview-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-hook-script-scaffold.add-todo-runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-hook-script-template.add-todo-runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-hook-session-manifest.add-todo-runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-hook-script-bundle.add-todo-runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-hook-activation-chain.add-todo-runtime-evidence-only.preview.json"
+      ],
+      "remaining": "Actual hook install, trust mutation, active sessions, guided blocking, and strict mode remain unimplemented."
+    },
+    {
+      "phase": "Phase 7 Natural Language Request Intake Frontend",
+      "status": "connected-through-validated-candidate-and-clarification-preview",
+      "evidence": [
+        "examples/valid/todo-app-devview-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/ai-request-analyzer-run.provider-disabled.add-todo-runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/request-ir-candidate.revised.add-todo-runtime-evidence-only.preview.json"
+      ],
+      "remaining": "No LLM provider execution or automatic Request IR generation is implemented; external candidate import remains candidate-only."
+    },
+    {
+      "phase": "Phase 8 Graph Traversal Plan / Selected Graph Slice",
+      "status": "implemented",
+      "evidence": [
+        "cli/src/core/graph-traversal-plan.ts",
+        "cli/src/core/selected-graph-slice.ts",
+        "examples/valid/todo-app-devview-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json"
+      ],
+      "remaining": "Product-grade graph diversity coverage remains future expansion."
+    },
+    {
+      "phase": "Phase 9 Request IR to Contract Compiler Input",
+      "status": "implemented",
+      "evidence": [
+        "cli/src/core/contract-input-generator.ts",
+        "examples/valid/todo-app-devview-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json"
+      ],
+      "remaining": "Broader project/source diversity remains future expansion."
+    },
+    {
+      "phase": "Phase 10 Instruction Pack Generation",
+      "status": "implemented-preview-no-execution",
+      "evidence": [
+        "cli/src/core/instruction-pack-generator.ts",
+        "examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md"
+      ],
+      "remaining": "Actual Codex execution remains outside this compiler path."
+    },
+    {
+      "phase": "Phase 11 AI Request Analyzer",
+      "status": "pack-and-disabled-command-surface-connected",
+      "evidence": [
+        "cli/src/core/ai-request-analyzer-pack.ts",
+        "cli/src/core/ai-request-analyzer-run.ts",
+        "examples/valid/todo-app-devview-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/ai-request-analyzer-run.provider-disabled.add-todo-runtime-evidence-only.preview.json"
+      ],
+      "remaining": "Actual LLM/API provider execution remains disabled and future."
+    },
+    {
+      "phase": "Phase 12 DevView Session / Hook Runtime Integration",
+      "status": "preview-chain-connected-no-runtime-activation",
+      "evidence": [
+        "examples/valid/todo-app-devview-run/generated/devview-hook-session-manifest.add-todo-runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-hook-script-bundle.add-todo-runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-hook-activation-chain.add-todo-runtime-evidence-only.preview.json"
+      ],
+      "remaining": "Repo-local advisory hook script bundle materialization is represented; active hook installation, session runtime, bypass detection enforcement, and guided/strict blocking remain future."
+    },
+    {
+      "phase": "Phase 13 Human Decision / Approved Apply",
+      "status": "runtime-gated-apply-evidence-proof-enforcement-chain-connected-currently-blocked",
+      "evidence": [
+        "examples/valid/todo-app-devview-run/generated/devview-human-decision-record-boundary.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-human-decision-record-command-boundary.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-human-decision-record.defer-decision.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-approved-proposal-state-boundary.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-approved-proposal-state.blocked-defer-decision.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-graph-delta-apply-boundary.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-graph-delta-apply-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-approved-apply-dry-run.approve-ready.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-graph-delta-apply.blocked-no-concrete-operations.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-evidence-acceptance-policy-boundary.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-evidence-decision-record.accept-evidence.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-accepted-evidence-record.accepted-evidence.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-runtime-evidence-satisfaction-readiness.blocked-obligation-mismatch.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-graph-source-mutation-policy-boundary.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-graph-source-mutation-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-evidence-acceptance-readiness.blocked-defer-decision.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-equivalence-proof-policy-boundary.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-scope-ci-enforcement-policy-boundary.runtime-evidence-only.preview.json",
+        "examples/valid/todo-app-devview-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.json"
+      ],
+      "remaining": "Approved apply dry-run and accepted Evidence are represented, but the current Todo graph apply report is blocked-no-concrete-operations, Runtime Evidence Satisfaction readiness is blocked by obligation mismatch, Equivalence readiness is blocked by runtime satisfaction readiness, and Scope/CI readiness is blocked and non-enforcing. Runtime Evidence satisfaction record creation, equivalence proof, scope enforcement, CI enforcement, required checks, branch protection changes, diff rejection, and approval/user-acceptance automation remain intentionally unimplemented."
+    }
+  ],
+  "implementedCommandSurface": [
+    "graph read-model validate-request-ir",
+    "graph read-model validate-request-ir-graph",
+    "graph read-model plan-traversal",
+    "graph read-model select-slice",
+    "graph read-model generate-contract-input",
+    "graph read-model generate-instruction-pack",
+    "graph read-model generate-ai-request-analyzer-pack",
+    "graph read-model analyze-request",
+    "graph read-model generate-clarification-interview-pack",
+    "graph read-model revise-request-ir-candidate",
+    "graph read-model report-frontend-chain",
+    "graph read-model report-hook-gateway-health",
+    "graph read-model prepare-user-prompt-context",
+    "graph read-model generate-hook-script-scaffold",
+    "graph read-model generate-hook-script-templates",
+    "graph read-model generate-hook-session-manifest",
+    "graph read-model materialize-hook-script-bundle",
+    "graph read-model report-hook-activation-chain",
+    "graph read-model collect-changed-files",
+    "graph read-model check-scope",
+    "graph read-model propose-graph-delta",
+    "graph read-model review-graph-delta",
+    "graph read-model record-human-decision",
+    "graph read-model create-approved-proposal-state",
+    "graph read-model check-graph-delta-apply",
+    "graph read-model report-approved-apply-dry-run",
+    "graph read-model apply-graph-delta",
+    "graph read-model report-graph-source-mutation-readiness",
+    "graph read-model report-evidence-acceptance-readiness",
+    "graph read-model record-evidence-decision",
+    "graph read-model create-accepted-evidence-record",
+    "graph read-model report-runtime-evidence-satisfaction-readiness",
+    "graph read-model report-equivalence-proof-readiness",
+    "graph read-model report-scope-ci-enforcement-readiness"
+  ],
+  "explicitlyNotImplemented": [
+    "Codex execution",
+    "active hook installation",
+    "active hook session runtime",
+    "guided or strict blocking",
+    "LLM/API provider execution",
+    "automatic Request IR generation",
+    "approval automation",
+    "runtime Evidence satisfaction",
+    "runtime Evidence satisfaction record creation",
+    "equivalence proof",
+    "equivalence proof record creation",
+    "scope enforcement",
+    "CI required checks",
+    "branch protection changes",
+    "diff rejection",
+    "user acceptance automation"
+  ],
+  "safetyInvariantSummary": {
+    "graphSourceMutated": false,
+    "graphDeltaApplied": false,
+    "auditArtifactHumanDecisionRecorded": false,
+    "calibrationDecisionRecordExists": true,
+    "calibrationDecisionValue": "accept-evidence-source-review-after-human-approval-boundary",
+    "approvedProposalStateCreatedPreview": true,
+    "approvedApplyDryRunReady": true,
+    "graphDeltaApplyReportStatus": "blocked-no-concrete-mutation-operations",
+    "acceptedEvidenceRecordExists": true,
+    "approvalStatus": "not-approved",
+    "evidenceAccepted": false,
+    "runtimeEvidenceSatisfied": false,
+    "equivalenceProven": false,
+    "scopeEnforced": false,
+    "ciEnforcementEnabled": false,
+    "requiredChecksConfigured": false,
+    "branchProtectionChanged": false,
+    "diffRejectionEnabled": false,
+    "strictModeEnabled": false,
+    "guidedEnforcementEnabled": false
+  },
+  "verificationCommands": [
+    "npm run build:cli",
+    "npm run devview:runtime:smoke",
+    "npm run validate:devview",
+    "npm run format:check",
+    "git diff --check",
+    "git diff --cached --check"
+  ],
+  "nonExecutionBoundary": "This roadmap completion audit is an evidence summary only. It does not implement missing future actions, execute Codex, call an LLM, activate hooks, record new human decisions, approve proposals, apply graph deltas, mutate graph-source, accept Evidence, satisfy runtime Evidence, prove equivalence, enforce scope, configure CI, configure required checks, change branch protection, reject diffs, or replace user acceptance."
+}

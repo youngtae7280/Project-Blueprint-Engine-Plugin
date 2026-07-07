@@ -40,7 +40,7 @@ It does not:
 - introduce CI enforcement
 - change source authority
 - expand the source-authority pilot scope beyond `examples/internal-legacy/adoption/todo-search-slice`
-- make `examples/valid/todo-app-pbe-run` parity-backed, pilot-marker-backed, or authority-bearing
+- make `examples/valid/todo-app-devview-run` parity-backed, pilot-marker-backed, or authority-bearing
 - approve full Graph-source promotion
 - perform public-doc cleanup
 - retire tree-native artifacts
@@ -84,8 +84,8 @@ All relevant workflow steps completed successfully:
 - Generate Todo Search read-model Evidence
 - Compare Todo Search generated and manual read-model Evidence
 - Validate Todo Search read-model Evidence
-- Generate Todo App PBE Run structure-only read-model Evidence
-- Validate Todo App PBE Run structure-only read-model Evidence
+- Generate Todo App DevView Run structure-only read-model Evidence
+- Validate Todo App DevView Run structure-only read-model Evidence
 - Summarize aggregate read-model Evidence
 - Focused read-model Evidence tests
 - Todo Search runtime fixture tests
@@ -109,11 +109,11 @@ workspace. It contained the expected files:
 - `adoption/todo-search-slice/generated/read-model-validation-report.json`
 - `adoption/todo-search-slice/generated/read-model-validation-report.md`
 - `adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json`
-- `valid/todo-app-pbe-run/generated/generated-read-model.json`
-- `valid/todo-app-pbe-run/generated/generated-read-model.md`
-- `valid/todo-app-pbe-run/generated/read-model-evidence-manifest.json`
-- `valid/todo-app-pbe-run/generated/read-model-validation-report.json`
-- `valid/todo-app-pbe-run/generated/read-model-validation-report.md`
+- `valid/todo-app-devview-run/generated/generated-read-model.json`
+- `valid/todo-app-devview-run/generated/generated-read-model.md`
+- `valid/todo-app-devview-run/generated/read-model-evidence-manifest.json`
+- `valid/todo-app-devview-run/generated/read-model-validation-report.json`
+- `valid/todo-app-devview-run/generated/read-model-validation-report.md`
 - `read-model-aggregate/generated/read-model-aggregate-summary.json`
 - `read-model-aggregate/generated/read-model-aggregate-summary.md`
 
@@ -134,7 +134,7 @@ workspace. It contained the expected files:
 | `pr.baseSha`                       | `0e5ceb90ed095ffdfda2cf34f3f9ed05f9d56bd3` | pass          |
 | `pr.headRef`                       | `pbe/pr-info-read-model-smoke-20260626`    | pass          |
 | `pr.baseRef`                       | `main`                                     | pass          |
-| `includedSlices`                   | Todo Search; Todo App PBE Run              | pass          |
+| `includedSlices`                   | Todo Search; Todo App DevView Run          | pass          |
 | Todo Search validator/parity       | `validation-pass` / `comparison-pass`      | pass          |
 | Todo Search node/edge/check counts | 40 nodes / 59 edges / 20 checks            | pass          |
 | Todo App validator/parity          | `validation-pass` / `not-required`         | pass          |
@@ -187,8 +187,8 @@ All relevant workflow steps completed successfully:
 - Generate Todo Search read-model Evidence
 - Compare Todo Search generated and manual read-model Evidence
 - Validate Todo Search read-model Evidence
-- Generate Todo App PBE Run structure-only read-model Evidence
-- Validate Todo App PBE Run structure-only read-model Evidence
+- Generate Todo App DevView Run structure-only read-model Evidence
+- Validate Todo App DevView Run structure-only read-model Evidence
 - Summarize aggregate read-model Evidence
 - Focused read-model Evidence tests
 - Todo Search runtime fixture tests
@@ -258,11 +258,11 @@ Expected and observed files:
 | `adoption/todo-search-slice/generated/read-model-validation-report.json`         | present       |
 | `adoption/todo-search-slice/generated/read-model-validation-report.md`           | present       |
 | `adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json` | present       |
-| `valid/todo-app-pbe-run/generated/generated-read-model.json`                     | present       |
-| `valid/todo-app-pbe-run/generated/generated-read-model.md`                       | present       |
-| `valid/todo-app-pbe-run/generated/read-model-evidence-manifest.json`             | present       |
-| `valid/todo-app-pbe-run/generated/read-model-validation-report.json`             | present       |
-| `valid/todo-app-pbe-run/generated/read-model-validation-report.md`               | present       |
+| `valid/todo-app-devview-run/generated/generated-read-model.json`                 | present       |
+| `valid/todo-app-devview-run/generated/generated-read-model.md`                   | present       |
+| `valid/todo-app-devview-run/generated/read-model-evidence-manifest.json`         | present       |
+| `valid/todo-app-devview-run/generated/read-model-validation-report.json`         | present       |
+| `valid/todo-app-devview-run/generated/read-model-validation-report.md`           | present       |
 | `read-model-aggregate/generated/read-model-aggregate-summary.json`               | present       |
 | `read-model-aggregate/generated/read-model-aggregate-summary.md`                 | present       |
 
@@ -284,7 +284,7 @@ adoption/todo-search-slice/generated/read-model-ci-evidence-manifest.json
 | `runAttempt`                            | `1`                                          | pass          |
 | `sourceCommit`                          | `96da2c772ce1a662dc65d7b7b7d7b7c6ba98e19c`   | pass          |
 | `sourceRef`                             | `refs/heads/main`                            | pass          |
-| `includedSlices`                        | Todo Search and Todo App PBE Run             | pass          |
+| `includedSlices`                        | Todo Search and Todo App DevView Run         | pass          |
 | `todoSearch.validatorStatus`            | `validation-pass`                            | pass          |
 | `todoSearch.parityStatus`               | `comparison-pass`                            | pass          |
 | `todoSearch.checkCount`                 | 20                                           | pass          |
@@ -337,11 +337,11 @@ Expected and observed files:
 | `adoption/todo-search-slice/generated/read-model-validation-report.json`         | present       |
 | `adoption/todo-search-slice/generated/read-model-validation-report.md`           | present       |
 | `adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json` | present       |
-| `valid/todo-app-pbe-run/generated/generated-read-model.json`                     | present       |
-| `valid/todo-app-pbe-run/generated/generated-read-model.md`                       | present       |
-| `valid/todo-app-pbe-run/generated/read-model-evidence-manifest.json`             | present       |
-| `valid/todo-app-pbe-run/generated/read-model-validation-report.json`             | present       |
-| `valid/todo-app-pbe-run/generated/read-model-validation-report.md`               | present       |
+| `valid/todo-app-devview-run/generated/generated-read-model.json`                 | present       |
+| `valid/todo-app-devview-run/generated/generated-read-model.md`                   | present       |
+| `valid/todo-app-devview-run/generated/read-model-evidence-manifest.json`         | present       |
+| `valid/todo-app-devview-run/generated/read-model-validation-report.json`         | present       |
+| `valid/todo-app-devview-run/generated/read-model-validation-report.md`           | present       |
 | `read-model-aggregate/generated/read-model-aggregate-summary.json`               | present       |
 | `read-model-aggregate/generated/read-model-aggregate-summary.md`                 | present       |
 
@@ -369,7 +369,7 @@ adoption/todo-search-slice/generated/read-model-ci-evidence-manifest.json
 | `runAttempt`                            | `1`                                          | pass          |
 | `sourceCommit`                          | `3673e34d2501f9e10cb79748bdaffe994d09a27a`   | pass          |
 | `sourceRef`                             | `refs/heads/main`                            | pass          |
-| `includedSlices`                        | Todo Search and Todo App PBE Run             | pass          |
+| `includedSlices`                        | Todo Search and Todo App DevView Run         | pass          |
 | `todoSearch.validatorStatus`            | `validation-pass`                            | pass          |
 | `todoSearch.parityStatus`               | `comparison-pass`                            | pass          |
 | `todoSearch.checkCount`                 | 20                                           | pass          |
@@ -394,18 +394,18 @@ Reviewed file:
 read-model-aggregate/generated/read-model-aggregate-summary.json
 ```
 
-| Aggregate field                    | Observed value / condition                                                        | Review status |
-| ---------------------------------- | --------------------------------------------------------------------------------- | ------------- |
-| `status`                           | `aggregate-pass`                                                                  | pass          |
-| `summary.sliceCount`               | 2                                                                                 | pass          |
-| `summary.warningCount`             | 0                                                                                 | pass          |
-| `summary.blockingCount`            | 0                                                                                 | pass          |
-| `summary.decisionRequiredCount`    | 0                                                                                 | pass          |
-| `summary.retainedWarningCount`     | 6                                                                                 | pass          |
-| source mode                        | existing per-slice validation reports only                                        | pass          |
-| boundary                           | Evidence-only; no source expansion, CI enforcement, or promotion                  | pass          |
-| Todo Search per-slice summary      | `todo-search-selected-slice`, `pilot-marker-backed`, `validation-pass`, 20 checks | pass          |
-| Todo App PBE Run per-slice summary | `todo-app-pbe-run-structure-only`, `structure-only`, `validation-pass`, 16 checks | pass          |
+| Aggregate field                        | Observed value / condition                                                            | Review status |
+| -------------------------------------- | ------------------------------------------------------------------------------------- | ------------- |
+| `status`                               | `aggregate-pass`                                                                      | pass          |
+| `summary.sliceCount`                   | 2                                                                                     | pass          |
+| `summary.warningCount`                 | 0                                                                                     | pass          |
+| `summary.blockingCount`                | 0                                                                                     | pass          |
+| `summary.decisionRequiredCount`        | 0                                                                                     | pass          |
+| `summary.retainedWarningCount`         | 6                                                                                     | pass          |
+| source mode                            | existing per-slice validation reports only                                            | pass          |
+| boundary                               | Evidence-only; no source expansion, CI enforcement, or promotion                      | pass          |
+| Todo Search per-slice summary          | `todo-search-selected-slice`, `pilot-marker-backed`, `validation-pass`, 20 checks     | pass          |
+| Todo App DevView Run per-slice summary | `todo-app-devview-run-structure-only`, `structure-only`, `validation-pass`, 16 checks | pass          |
 
 ## Historical Todo Search-Only Workflow Run
 
@@ -610,11 +610,11 @@ Reviewed files included:
 - `adoption/todo-search-slice/generated/read-model-validation-report.json`
 - `adoption/todo-search-slice/generated/read-model-validation-report.md`
 - `adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json`
-- `valid/todo-app-pbe-run/generated/generated-read-model.json`
-- `valid/todo-app-pbe-run/generated/generated-read-model.md`
-- `valid/todo-app-pbe-run/generated/read-model-evidence-manifest.json`
-- `valid/todo-app-pbe-run/generated/read-model-validation-report.json`
-- `valid/todo-app-pbe-run/generated/read-model-validation-report.md`
+- `valid/todo-app-devview-run/generated/generated-read-model.json`
+- `valid/todo-app-devview-run/generated/generated-read-model.md`
+- `valid/todo-app-devview-run/generated/read-model-evidence-manifest.json`
+- `valid/todo-app-devview-run/generated/read-model-validation-report.json`
+- `valid/todo-app-devview-run/generated/read-model-validation-report.md`
 - `read-model-aggregate/generated/read-model-aggregate-summary.json`
 - `read-model-aggregate/generated/read-model-aggregate-summary.md`
 
@@ -641,7 +641,7 @@ adoption/todo-search-slice/generated/read-model-ci-evidence-manifest.json
 | `sourceMode`                      | `registry-backed validate-all`             | pass          |
 | `validateAllStatus`               | `aggregate-pass`                           | pass          |
 | `aggregateStatus`                 | `aggregate-pass`                           | pass          |
-| `includedSlices`                  | Todo Search; Todo App PBE Run              | pass          |
+| `includedSlices`                  | Todo Search; Todo App DevView Run          | pass          |
 | Todo Search validator/parity      | `validation-pass` / `comparison-pass`      | pass          |
 | Todo Search node/edge/check count | 40 nodes / 59 edges / 20 checks            | pass          |
 | Todo App validator/parity         | `validation-pass` / `not-required`         | pass          |
@@ -668,7 +668,7 @@ read-model-aggregate/generated/read-model-aggregate-summary.json
 | `summary.decisionRequiredCount`         | 0                                | pass          |
 | `summary.retainedWarningCount`          | 6                                | pass          |
 | Todo Search per-slice summary           | `validation-pass`, 20 checks     | pass          |
-| Todo App PBE Run per-slice summary      | `validation-pass`, 16 checks     | pass          |
+| Todo App DevView Run per-slice summary  | `validation-pass`, 16 checks     | pass          |
 | Source mode note in aggregate artifact  | existing validation reports only | pass          |
 | Source mode note in CI manifest wrapper | `registry-backed validate-all`   | pass          |
 
@@ -719,11 +719,11 @@ Reviewed files included:
 - `adoption/todo-search-slice/generated/read-model-validation-report.json`
 - `adoption/todo-search-slice/generated/read-model-validation-report.md`
 - `adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json`
-- `valid/todo-app-pbe-run/generated/generated-read-model.json`
-- `valid/todo-app-pbe-run/generated/generated-read-model.md`
-- `valid/todo-app-pbe-run/generated/read-model-evidence-manifest.json`
-- `valid/todo-app-pbe-run/generated/read-model-validation-report.json`
-- `valid/todo-app-pbe-run/generated/read-model-validation-report.md`
+- `valid/todo-app-devview-run/generated/generated-read-model.json`
+- `valid/todo-app-devview-run/generated/generated-read-model.md`
+- `valid/todo-app-devview-run/generated/read-model-evidence-manifest.json`
+- `valid/todo-app-devview-run/generated/read-model-validation-report.json`
+- `valid/todo-app-devview-run/generated/read-model-validation-report.md`
 - `read-model-aggregate/generated/read-model-aggregate-summary.json`
 - `read-model-aggregate/generated/read-model-aggregate-summary.md`
 
@@ -755,7 +755,7 @@ adoption/todo-search-slice/generated/read-model-ci-evidence-manifest.json
 | `sourceMode`                      | `registry-backed validate-all`             | pass          |
 | `validateAllStatus`               | `aggregate-pass`                           | pass          |
 | `aggregateStatus`                 | `aggregate-pass`                           | pass          |
-| `includedSlices`                  | Todo Search; Todo App PBE Run              | pass          |
+| `includedSlices`                  | Todo Search; Todo App DevView Run          | pass          |
 | Todo Search validator/parity      | `validation-pass` / `comparison-pass`      | pass          |
 | Todo Search node/edge/check count | 40 nodes / 59 edges / 20 checks            | pass          |
 | Todo App validator/parity         | `validation-pass` / `not-required`         | pass          |
@@ -774,16 +774,16 @@ Reviewed file:
 read-model-aggregate/generated/read-model-aggregate-summary.json
 ```
 
-| Aggregate field                    | Observed value               | Review status |
-| ---------------------------------- | ---------------------------- | ------------- |
-| `status`                           | `aggregate-pass`             | pass          |
-| `summary.sliceCount`               | 2                            | pass          |
-| `summary.warningCount`             | 0                            | pass          |
-| `summary.blockingCount`            | 0                            | pass          |
-| `summary.decisionRequiredCount`    | 0                            | pass          |
-| `summary.retainedWarningCount`     | 6                            | pass          |
-| Todo Search per-slice summary      | `validation-pass`, 20 checks | pass          |
-| Todo App PBE Run per-slice summary | `validation-pass`, 16 checks | pass          |
+| Aggregate field                        | Observed value               | Review status |
+| -------------------------------------- | ---------------------------- | ------------- |
+| `status`                               | `aggregate-pass`             | pass          |
+| `summary.sliceCount`                   | 2                            | pass          |
+| `summary.warningCount`                 | 0                            | pass          |
+| `summary.blockingCount`                | 0                            | pass          |
+| `summary.decisionRequiredCount`        | 0                            | pass          |
+| `summary.retainedWarningCount`         | 6                            | pass          |
+| Todo Search per-slice summary          | `validation-pass`, 20 checks | pass          |
+| Todo App DevView Run per-slice summary | `validation-pass`, 16 checks | pass          |
 
 ## Reviewed Third PR Informational Run
 
@@ -825,7 +825,7 @@ The artifact bundle was downloaded, reviewed, and removed from `.tmp/` after ins
 positive read-model Evidence files:
 
 - Todo Search generated read-model, evidence manifest, parity report, validation report, and scoped pilot marker
-- Todo App PBE Run generated read-model, evidence manifest, and validation report
+- Todo App DevView Run generated read-model, evidence manifest, and validation report
 - aggregate summary JSON/Markdown
 - CI evidence manifest
 
@@ -857,7 +857,7 @@ adoption/todo-search-slice/generated/read-model-ci-evidence-manifest.json
 | `sourceMode`                      | `registry-backed validate-all`                | pass          |
 | `validateAllStatus`               | `aggregate-pass`                              | pass          |
 | `aggregateStatus`                 | `aggregate-pass`                              | pass          |
-| `includedSlices`                  | Todo Search; Todo App PBE Run                 | pass          |
+| `includedSlices`                  | Todo Search; Todo App DevView Run             | pass          |
 | Todo Search validator/parity      | `validation-pass` / `comparison-pass`         | pass          |
 | Todo Search node/edge/check count | 40 nodes / 59 edges / 20 checks               | pass          |
 | Todo App validator/parity         | `validation-pass` / `not-required`            | pass          |
@@ -877,16 +877,16 @@ Reviewed file:
 read-model-aggregate/generated/read-model-aggregate-summary.json
 ```
 
-| Aggregate field                    | Observed value               | Review status |
-| ---------------------------------- | ---------------------------- | ------------- |
-| `status`                           | `aggregate-pass`             | pass          |
-| `summary.sliceCount`               | 2                            | pass          |
-| `summary.warningCount`             | 0                            | pass          |
-| `summary.blockingCount`            | 0                            | pass          |
-| `summary.decisionRequiredCount`    | 0                            | pass          |
-| `summary.retainedWarningCount`     | 6                            | pass          |
-| Todo Search per-slice summary      | `validation-pass`, 20 checks | pass          |
-| Todo App PBE Run per-slice summary | `validation-pass`, 16 checks | pass          |
+| Aggregate field                        | Observed value               | Review status |
+| -------------------------------------- | ---------------------------- | ------------- |
+| `status`                               | `aggregate-pass`             | pass          |
+| `summary.sliceCount`                   | 2                            | pass          |
+| `summary.warningCount`                 | 0                            | pass          |
+| `summary.blockingCount`                | 0                            | pass          |
+| `summary.decisionRequiredCount`        | 0                            | pass          |
+| `summary.retainedWarningCount`         | 6                            | pass          |
+| Todo Search per-slice summary          | `validation-pass`, 20 checks | pass          |
+| Todo App DevView Run per-slice summary | `validation-pass`, 16 checks | pass          |
 
 ## Retained Warnings
 
@@ -910,7 +910,7 @@ The reviewed validate-all CI-backed Evidence confirms both a non-enforcing manua
 `pull_request` informational runs over the declared registry profiles and read-model Evidence artifacts. PR #2 and PR #3
 confirm that the validate-all-centered workflow records PR metadata, `pull_request-informational` trigger mode,
 `validateAllStatus: aggregate-pass`, and Evidence boundaries. Todo Search remains the only scoped source-authority pilot.
-Todo App PBE Run remains structure-only. Invalid fixtures remain local-only and are not part of the positive aggregate
+Todo App DevView Run remains structure-only. Invalid fixtures remain local-only and are not part of the positive aggregate
 path. The aggregate summary is Evidence-only over produced per-slice validation reports. This review does not change
 source authority, approve full Graph-source promotion, retire tree-native or `.pbe` artifacts, replace user acceptance,
 add branch protection, add push/schedule triggers, or make the workflow a required check.
@@ -963,7 +963,7 @@ status.
 | Conclusion    | `success`                                                                                                           |
 | Job ID        | `83595024984`                                                                                                       |
 | Manifest      | `ci-evidence-pass`; `validateAllStatus: aggregate-pass`; `aggregateStatus: aggregate-pass`                          |
-| Projection    | Todo Search `projection-contract-pass`; Todo App PBE Run `not-configured`                                           |
+| Projection    | Todo Search `projection-contract-pass`; Todo App DevView Run `not-configured`                                       |
 | Artifact      | `read-model-validate-all-output.json` and `graph-source-read-model-projection.json` present                         |
 | Boundary      | Non-enforcing Evidence only; no source authority expansion or Todo App promotion                                    |
 | Review result | Manual projection-status observation reviewed; PR projection-status observation later reviewed by run `28218854329` |
@@ -982,7 +982,7 @@ PR run `28218854329` then reviewed the same projection-status capture path throu
 | Base SHA      | `417f5d06166d8e9c062dc46de479af19e586681e`                                                  |
 | Manifest ref  | `refs/pull/4/merge`                                                                         |
 | Manifest      | `ci-evidence-pass`; `validateAllStatus: aggregate-pass`; `aggregateStatus: aggregate-pass`  |
-| Projection    | Todo Search `projection-contract-pass`; Todo App PBE Run `not-configured`                   |
+| Projection    | Todo Search `projection-contract-pass`; Todo App DevView Run `not-configured`               |
 | Artifact      | `read-model-validate-all-output.json` and `graph-source-read-model-projection.json` present |
 | Boundary      | Non-enforcing Evidence only; no source authority expansion or Todo App promotion            |
 | Cleanup       | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted       |
@@ -1003,7 +1003,7 @@ for the limited promoted scope.
 | Todo Search           | 40 nodes / 59 edges; `comparison-pass`; `validation-pass`; 20 checks                                          |
 | Generation source     | Generated read-model metadata records `readModelSourceMode: graph-source-backed`                              |
 | Graph source metadata | Generated read-model metadata records `examples/internal-legacy/adoption/todo-search-slice/graph-source.json` |
-| Projection            | Todo Search `projection-contract-pass`; Todo App PBE Run `not-configured`                                     |
+| Projection            | Todo Search `projection-contract-pass`; Todo App DevView Run `not-configured`                                 |
 | Artifact              | Generated read-model, evidence manifest, validate-all output, and graph projection present                    |
 | Boundary              | Non-enforcing Evidence only; no repo-wide promotion, enforcement, retirement, or Todo App promotion           |
 | Cleanup               | Artifact temp directory removed                                                                               |
@@ -1026,7 +1026,7 @@ PR run `28219583619` then reviewed graph-source-backed Todo Search generation th
 | Todo Search           | 40 nodes / 59 edges; `comparison-pass`; `validation-pass`; 20 checks                                          |
 | Generation source     | Generated read-model metadata records `readModelSourceMode: graph-source-backed`                              |
 | Graph source metadata | Generated read-model metadata records `examples/internal-legacy/adoption/todo-search-slice/graph-source.json` |
-| Projection            | Todo Search `projection-contract-pass`; Todo App PBE Run `not-configured`                                     |
+| Projection            | Todo Search `projection-contract-pass`; Todo App DevView Run `not-configured`                                 |
 | Boundary              | Non-enforcing Evidence only; no repo-wide promotion, enforcement, retirement, or Todo App promotion           |
 | Cleanup               | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted                         |
 | Review result         | PR informational CI confirms graph-source-backed Todo Search generation health                                |

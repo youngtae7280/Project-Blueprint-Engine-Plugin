@@ -4,10 +4,10 @@ Status: `graph-source-health-pass`
 
 ## Source Status
 
-| Slice            | Source status                                                   | Projection                 | Counts                             | Retirement                                                                              |
-| ---------------- | --------------------------------------------------------------- | -------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------- |
-| Todo Search      | `graph-source-backed`                                           | `projection-contract-pass` | 40 nodes / 59 edges / 7 Core Views | `deprecated-fallback-reference-not-deleted`; package `retirement-candidate-not-deleted` |
-| Todo App PBE Run | `graph-source-backed` / `confirmed-structure-only-graph-source` | `projection-contract-pass` | 22 nodes / 38 edges / 7 Core Views | `not-retirement-ready`; package `not-ready-structure-only`                              |
+| Slice                | Source status                                                   | Projection                 | Counts                             | Retirement                                                                              |
+| -------------------- | --------------------------------------------------------------- | -------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------- |
+| Todo Search          | `graph-source-backed`                                           | `projection-contract-pass` | 40 nodes / 59 edges / 7 Core Views | `deprecated-fallback-reference-not-deleted`; package `retirement-candidate-not-deleted` |
+| Todo App DevView Run | `graph-source-backed` / `confirmed-structure-only-graph-source` | `projection-contract-pass` | 22 nodes / 38 edges / 7 Core Views | `not-retirement-ready`; package `not-ready-structure-only`                              |
 
 ## Evidence Status
 
@@ -103,9 +103,9 @@ npm run build:cli
 npm run devview:runtime:smoke
 node dist/cli/index.js graph read-model check-scope --base HEAD~1 --head HEAD --json
 node dist/cli/index.js graph read-model check-scope --base HEAD~1 --head HEAD --markdown .tmp/devview-scope-runtime-report.md --json
-node dist/cli/index.js graph read-model propose-graph-delta --source examples/valid/todo-app-pbe-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json --output .tmp/devview-graph-delta-proposal.preview.json --json
+node dist/cli/index.js graph read-model propose-graph-delta --source examples/valid/todo-app-devview-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json --output .tmp/devview-graph-delta-proposal.preview.json --json
 node dist/cli/index.js graph read-model review-graph-delta --proposal .tmp/devview-graph-delta-proposal.preview.json --markdown .tmp/devview-graph-delta-review-packet.md --json
-node dist/cli/index.js graph read-model validate-request-ir-graph --candidate examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json --schema-validation examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json --json
+node dist/cli/index.js graph read-model validate-request-ir-graph --candidate examples/valid/todo-app-devview-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json --schema-validation examples/valid/todo-app-devview-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json --json
 node dist/cli/index.js graph read-model validate --all --json
 npm run test:read-model:e2e
 node dist/cli/index.js graph read-model report-compiler-boundary --json

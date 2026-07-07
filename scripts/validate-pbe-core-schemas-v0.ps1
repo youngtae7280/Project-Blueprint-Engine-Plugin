@@ -3,7 +3,7 @@ param()
 $ErrorActionPreference = "Stop"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$schemaRoot = Join-Path $repoRoot "schemas/pbe"
+$schemaRoot = Join-Path $repoRoot "schemas/devview"
 
 function Fail($Message) {
     Write-Error $Message

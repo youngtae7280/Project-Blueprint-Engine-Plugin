@@ -36,9 +36,9 @@ Prior explicit read-model command sequence:
 2. `node dist/cli/index.js graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice --json`
 3. `node dist/cli/index.js graph read-model compare --generated examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json --manual examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json --json`
 4. `node dist/cli/index.js graph read-model validate --slice examples/internal-legacy/adoption/todo-search-slice --json`
-5. `node dist/cli/index.js graph read-model generate --slice examples/valid/todo-app-pbe-run --json`
-6. `node dist/cli/index.js graph read-model validate --slice examples/valid/todo-app-pbe-run --json`
-7. `node dist/cli/index.js graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run --json`
+5. `node dist/cli/index.js graph read-model generate --slice examples/valid/todo-app-devview-run --json`
+6. `node dist/cli/index.js graph read-model validate --slice examples/valid/todo-app-devview-run --json`
+7. `node dist/cli/index.js graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-devview-run --json`
 8. focused read-model Evidence tests
 9. Todo Search runtime fixture tests
 10. `npm run validate:pbe`
@@ -72,7 +72,7 @@ Current projection-contract observation:
   `examples/internal-legacy/read-model-aggregate/generated/read-model-validate-all-output.json`.
 - CI manifest and Step Summary now expose `projectionContractStatus`.
 - Todo Search is expected to report `projection-contract-pass`.
-- Todo App PBE Run now reports `candidate-projection-contract-pass` as a bounded non-authority structure-only projection
+- Todo App DevView Run now reports `candidate-projection-contract-pass` as a bounded non-authority structure-only projection
   contract. Manual CI run `28222731063` and PR #7 run `28223010185` reviewed that status.
 - Missing or corrupt projection artifacts can block the non-enforcing CI Evidence status without adding required checks,
   branch protection, or merge enforcement.
@@ -83,7 +83,7 @@ Current candidate-observation capture:
 - The workflow also runs `graph read-model observe-candidates --json` after positive validate-all.
 - Output is captured at `examples/internal-legacy/read-model-aggregate/generated/read-model-candidate-observation-output.json`.
 - CI manifest and Step Summary expose `candidateObservationStatus` and the Todo App candidate projection status.
-- This remains separate from `candidateObservationStatus` and does not promote Todo App PBE Run or add source authority.
+- This remains separate from `candidateObservationStatus` and does not promote Todo App DevView Run or add source authority.
   The same candidate projection is now also locally checked by positive validate-all as non-authority structure-only
   Evidence.
 - Manual run `28221088498` reviewed this capture path as `ci-evidence-pass`; the uploaded manifest included
@@ -164,7 +164,7 @@ Projection-contract PR informational observation:
 | Todo Search generate            | Explicit command                                  | Covered by registry profile `todo-search-selected-slice`                                   |
 | Todo Search compare             | Explicit command                                  | Covered by required `compare` command in registry                                          |
 | Todo Search validate            | Explicit command                                  | Covered by required `validate` command in registry                                         |
-| Todo App generate               | Explicit command                                  | Covered by registry profile `todo-app-pbe-run-structure-only`                              |
+| Todo App generate               | Explicit command                                  | Covered by registry profile `todo-app-devview-run-structure-only`                          |
 | Todo App validate               | Explicit command                                  | Covered by required `validate` command in registry                                         |
 | Aggregate summarize             | Explicit command over per-slice reports           | Covered after registry profile commands complete                                           |
 | Todo Search graph projection    | Not present                                       | Captured as `projectionContractStatus` from validate-all JSON output                       |
@@ -185,7 +185,7 @@ Projection-contract PR informational observation:
 - registry loading and normalization
 - included profile selection
 - Todo Search generate / compare / validate
-- Todo App PBE Run generate / validate
+- Todo App DevView Run generate / validate
 - aggregate summary generation
 - per-slice status summary
 - Evidence-only / non-promotion / non-enforcement boundary statements
@@ -327,7 +327,7 @@ This design and implementation do not:
 - expand source authority
 - approve full Graph-source promotion
 - perform public-doc cleanup
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 - make CI pass equivalent to user acceptance
 
 ## Recommended Next Decision Surface

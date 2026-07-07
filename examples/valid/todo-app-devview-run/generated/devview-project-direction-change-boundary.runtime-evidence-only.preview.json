@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-project-direction-change-boundary-preview",
+  "status": "devview-project-direction-change-boundary-previewed",
+  "boundaryName": "DevView Project Direction Change Boundary",
+  "sourceProjectMemoryBoundary": "examples/valid/todo-app-devview-run/generated/devview-project-memory-boundary.runtime-evidence-only.preview.json",
+  "purpose": "Define how a project direction change, such as moving from porting to refactoring, must be recorded and reviewed before it can affect taxonomy extensions, view tree profiles, traversal, or contract generation.",
+  "directionChangeFlow": [
+    {
+      "step": "direction-change-candidate",
+      "authorityStatus": "candidate-only",
+      "description": "A user or AI candidate states the proposed direction change and why the current project memory no longer matches the project."
+    },
+    {
+      "step": "profile-impact-analysis",
+      "authorityStatus": "report-only",
+      "description": "Analyze affected preservation policies, improvement policies, source authority, taxonomy profile refs, and view tree profile refs."
+    },
+    {
+      "step": "taxonomy-extension-delta-proposal",
+      "authorityStatus": "proposal-only",
+      "description": "Propose added, removed, deprecated, or renamed node/edge kinds. Do not apply them."
+    },
+    {
+      "step": "view-tree-profile-delta-proposal",
+      "authorityStatus": "proposal-only",
+      "description": "Propose viewpoint tree changes that would explain the new direction. Do not make them authoritative."
+    },
+    {
+      "step": "human-review-packet",
+      "authorityStatus": "review-required",
+      "description": "Present impact, risks, extension deltas, and blocked authority changes for human judgment."
+    },
+    {
+      "step": "approved-project-memory-revision",
+      "authorityStatus": "future-only-not-implemented",
+      "description": "A future explicit approval path may record a new project memory revision. This preview does not implement it."
+    }
+  ],
+  "candidateShape": {
+    "requiredFields": [
+      "currentProjectMemoryRef",
+      "currentDirection",
+      "proposedDirection",
+      "reason",
+      "expectedPreservationPolicyImpact",
+      "expectedTaxonomyImpact",
+      "expectedViewTreeImpact",
+      "humanReviewRequired"
+    ],
+    "forbiddenFields": [
+      "approved",
+      "applied",
+      "graphTraversalAllowed",
+      "contractGenerationAllowed",
+      "instructionPackGenerationAllowed",
+      "runtimeEvidenceSatisfied",
+      "equivalenceProven"
+    ]
+  },
+  "blockedDirectionChanges": [
+    {
+      "case": "implicit-approval",
+      "reason": "Direction change candidates cannot self-approve project memory or extension authority."
+    },
+    {
+      "case": "source-authority-escalation",
+      "reason": "Changing direction cannot automatically turn observed inventory into editable scope."
+    },
+    {
+      "case": "forbidden-drift-erasure",
+      "reason": "A direction change cannot remove forbidden flow boundaries without an explicit future review packet."
+    }
+  ],
+  "futureApprovedRevisionState": {
+    "implemented": false,
+    "artifactRole": "future-approved-project-memory-revision",
+    "requiresHumanDecisionRecord": true,
+    "requiresTaxonomyDeltaReview": true,
+    "requiresViewTreeDeltaReview": true
+  },
+  "safetyFlags": {
+    "boundaryPreviewOnly": true,
+    "directionChangeApplied": false,
+    "approvedProjectMemoryRevisionImplemented": false,
+    "extensionApplied": false,
+    "viewTreeProfileApplied": false,
+    "traversalPlannerBehaviorChanged": false,
+    "selectedSliceGeneratedFromDirectionChange": false,
+    "contractInputGeneratedFromDirectionChange": false,
+    "instructionPackGeneratedFromDirectionChange": false,
+    "graphSourceMutated": false,
+    "graphDeltaApplied": false,
+    "humanDecisionAutomated": false,
+    "runtimeEvidenceSatisfied": false,
+    "equivalenceProven": false,
+    "scopeEnforced": false,
+    "ciEnforcementEnabled": false
+  },
+  "nonAuthorityBoundary": "Direction changes are candidate/proposal/review artifacts only in this boundary. They do not apply profile changes, grant extension authority, change traversal, mutate graph-source, or replace human review."
+}

@@ -21,7 +21,7 @@ Current operational source authority is now scoped:
 | Test / Evidence / Acceptance Trees           | Current source outside promoted scopes; maintained verification/evidence/acceptance fallback/reference for promoted Todo Search selected-slice scope. |
 | Cycle Contract / Node Execution Contracts    | Current bounded execution authority for selected/foundation scope and required Evidence.                                                              |
 | Todo Search generated read-model             | Generated projection/Evidence for the limited promoted Todo Search graph-source scope; not independent source authority.                              |
-| Todo App PBE Run generated read-model        | Structure-only Evidence over a canonical `.pbe` fixture; not parity-backed, pilot-marker-backed, or source-authority-bearing.                         |
+| Todo App DevView Run generated read-model    | Structure-only Evidence over a canonical `.pbe` fixture; not parity-backed, pilot-marker-backed, or source-authority-bearing.                         |
 | Read-model parity / validation / aggregate   | Evidence and review signals only. They do not approve source authority expansion, enforcement, promotion, or user acceptance.                         |
 | CI evidence manifest and PR informational CI | Non-enforcing Evidence only. They do not create required checks, branch protection, enforcement, or source authority consequences.                    |
 | Public docs and concept docs                 | Public explanation and concept records. They do not become product source authority or promotion approval by describing candidate future behavior.    |
@@ -89,17 +89,17 @@ This matrix is a design surface for review. It is not an approved promotion matr
 
 ## Risks And Caveats
 
-| Risk / caveat                            | Required handling before promotion                                                                                       |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| Tree-native vs graph/read-model conflict | Define conflict classification, source precedence, review path, and when user judgment is required.                      |
-| Stale generated Evidence                 | Keep freshness/sourceCommit visible and block hidden promotion from stale reports.                                       |
-| Compatibility view confusion             | Label compatibility views, task-card views, generated read-models, and public docs as non-authoritative unless approved. |
-| Acceptance/user approval boundary        | Preserve Acceptance Tree and user approval as user-controlled; CI/generation cannot self-accept.                         |
-| Rollback/fallback requirements           | Review the concrete rollback/fallback plan before execution; implementation and approval remain separate.                |
-| Todo App PBE Run structure-only status   | Do not treat the second profile as source-authority-bearing without separate parity/pilot/authority artifacts.           |
-| Invalid fixture local-only policy        | Keep negative fixtures local-only unless a separate CI invalid-fixture mode is approved.                                 |
-| Enforcement ambiguity                    | Keep CI informational/non-enforcing unless required checks and branch protection are explicitly approved.                |
-| Public-doc cleanup or waiver             | Batch A/B/C/D cleanup is reviewable, but waiver or sufficiency still needs explicit promotion-decision treatment.        |
+| Risk / caveat                              | Required handling before promotion                                                                                       |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| Tree-native vs graph/read-model conflict   | Define conflict classification, source precedence, review path, and when user judgment is required.                      |
+| Stale generated Evidence                   | Keep freshness/sourceCommit visible and block hidden promotion from stale reports.                                       |
+| Compatibility view confusion               | Label compatibility views, task-card views, generated read-models, and public docs as non-authoritative unless approved. |
+| Acceptance/user approval boundary          | Preserve Acceptance Tree and user approval as user-controlled; CI/generation cannot self-accept.                         |
+| Rollback/fallback requirements             | Review the concrete rollback/fallback plan before execution; implementation and approval remain separate.                |
+| Todo App DevView Run structure-only status | Do not treat the second profile as source-authority-bearing without separate parity/pilot/authority artifacts.           |
+| Invalid fixture local-only policy          | Keep negative fixtures local-only unless a separate CI invalid-fixture mode is approved.                                 |
+| Enforcement ambiguity                      | Keep CI informational/non-enforcing unless required checks and branch protection are explicitly approved.                |
+| Public-doc cleanup or waiver               | Batch A/B/C/D cleanup is reviewable, but waiver or sufficiency still needs explicit promotion-decision treatment.        |
 
 ## Non-Scope
 
@@ -114,7 +114,7 @@ This package does not:
 - create a PR or dispatch GitHub Actions
 - add required checks, branch protection, or enforcement
 - add invalid fixtures to CI
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 - replace user acceptance authority
 
 ## Related Rollback / Fallback Plan

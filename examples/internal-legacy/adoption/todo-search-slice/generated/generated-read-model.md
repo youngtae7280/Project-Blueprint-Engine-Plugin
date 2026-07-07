@@ -5,7 +5,7 @@ Status: generated-present / evidence-only / source-authority-unchanged
 ## Run Identity
 
 - Generated at: 2026-06-29T08:46:09.238Z
-- Command identity: `pbe graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice`
+- Command identity: `devview graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice`
 - Source commit: a1c4f10
 - Source slice: `examples/internal-legacy/adoption/todo-search-slice`
 

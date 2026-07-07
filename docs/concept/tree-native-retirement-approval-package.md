@@ -9,7 +9,7 @@ compatibility/fallback/reference toward retired or deprecated status.
 
 It does not delete, migrate, or enforce any artifact. It now records the narrow Todo Search fallback/reference
 deprecation mechanics that were applied without file deletion, plus what would still need approval before any physical
-retirement/deletion. Todo App PBE Run and repo-wide scope remain not ready.
+retirement/deletion. Todo App DevView Run and repo-wide scope remain not ready.
 
 The machine-readable counterpart is
 `examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json`.
@@ -57,11 +57,11 @@ records remain retained fallback/reference unless a later explicit approval says
 Rollback path: use the source-authority rollback/fallback plan to restore the tree-native selected-slice artifacts from
 deprecated fallback/reference to operational source if graph-source interpretation is blocked or rejected.
 
-## Todo App PBE Run Structure-Only
+## Todo App DevView Run Structure-Only
 
 Current readiness: `not-ready-structure-only`
 
-Todo App PBE Run is confirmed graph-source-backed for the structure-only read-model slice, but this does not approve
+Todo App DevView Run is confirmed graph-source-backed for the structure-only read-model slice, but this does not approve
 source authority beyond `structure-only`.
 
 | Field                 | Status                                                                                       |

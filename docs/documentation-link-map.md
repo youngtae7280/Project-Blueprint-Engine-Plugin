@@ -149,14 +149,15 @@ Impact:
 
 `examples/README.md` distinguishes:
 
-- `examples/valid/todo-app-pbe-run` as the valid golden fixture
+- `examples/valid/todo-app-devview-run` as the valid golden fixture
 - `examples/invalid/*` as invalid regression fixtures
 - `examples/internal-legacy/adoption/todo-search-slice` as narrative adoption material
 - `examples/internal-legacy/dogfooding/windows-validation-sequential-run` as a historical dogfooding record
 
 Validation-sensitive references:
 
-- `README.md` describes `npm run test:examples` and names `examples/valid/todo-app-pbe-run` plus `examples/invalid/*`.
+- `README.md` describes `npm run test:examples` and names `examples/valid/todo-app-devview-run` plus
+  `examples/invalid/*`.
 - `docs/validator-design.md` describes the example regression suite.
 - `docs/troubleshooting.md` mentions example regression behavior.
 - `docs/migration-policy.md` warns that `examples/valid` and `examples/invalid` should remain unaffected.

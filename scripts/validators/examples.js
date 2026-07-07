@@ -5,15 +5,15 @@ import { missingTerms } from '../validator-utils/markdown-utils.js'
 const validator = 'Examples'
 
 const requiredExampleFiles = [
-  'examples/valid/todo-app-pbe-run/README.md',
-  'examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json',
-  'examples/valid/todo-app-pbe-run/.pbe/tree/project-tree.json',
-  'examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json',
-  'examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json',
-  'examples/valid/todo-app-pbe-run/.pbe/evidence/evidence-tree.json',
-  'examples/valid/todo-app-pbe-run/.pbe/control/acceptance-tree.json',
-  'examples/valid/todo-app-pbe-run/.pbe/control/change-tree.json',
-  'examples/valid/todo-app-pbe-run/.pbe/control/impact-tree.json',
+  'examples/valid/todo-app-devview-run/README.md',
+  'examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json',
+  'examples/valid/todo-app-devview-run/.pbe/tree/project-tree.json',
+  'examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json',
+  'examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json',
+  'examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json',
+  'examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json',
+  'examples/valid/todo-app-devview-run/.pbe/control/change-tree.json',
+  'examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json',
   'examples/invalid/ambiguous-acceptance/fixture.json',
   'examples/invalid/missing-work-link/fixture.json',
   'examples/invalid/missing-test-coverage/fixture.json',
@@ -43,7 +43,7 @@ export function runExamplesValidator({ root }) {
     }
   }
 
-  const readmePath = 'examples/valid/todo-app-pbe-run/README.md'
+  const readmePath = 'examples/valid/todo-app-devview-run/README.md'
   if (fileExists(root, readmePath)) {
     const readme = readText(root, readmePath)
     for (const term of missingTerms(readme, requiredReadmeTerms)) {

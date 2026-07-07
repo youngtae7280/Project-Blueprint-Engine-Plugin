@@ -470,7 +470,7 @@ export async function graphExecutionContractReportCommand(context: CommandContex
           message,
           suggestedFix:
             'Use a configured read-model slice and refresh the graph-source projection before generating the report.',
-          nextCommand: 'pbe graph read-model report-health',
+          nextCommand: 'devview graph read-model report-health',
         }),
       ],
     }

@@ -319,7 +319,7 @@ describe('graph operation CLI', () => {
     })
     writeJson(join(workspace, 'proposal.json'), {
       schemaVersion: 1,
-      artifactRole: 'pbe-graph-update-proposal-v0',
+      artifactRole: 'devview-graph-update-proposal-v0',
       status: 'generated-from-graph-delta',
       graphDeltaPath: 'delta.json',
       sourceRecordId: 'change.demo',
@@ -386,7 +386,7 @@ describe('graph operation CLI', () => {
       sourceRecordId: 'change.demo',
     })
     writeJson(join(workspace, 'proposal.json'), {
-      artifactRole: 'pbe-graph-update-proposal-v0',
+      artifactRole: 'devview-graph-update-proposal-v0',
       status: 'generated-from-graph-delta',
       graphDeltaPath: 'delta.json',
       sourceRecordId: 'change.demo',

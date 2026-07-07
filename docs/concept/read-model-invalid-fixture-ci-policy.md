@@ -30,10 +30,10 @@ blocking by itself.
 Current positive CI / validate-all path:
 
 - registry: `examples/internal-legacy/read-model-aggregate/read-model-slices.json`
-- command: `pbe graph read-model validate --all`
+- command: `devview graph read-model validate --all`
 - included positive slices:
   - `examples/internal-legacy/adoption/todo-search-slice`
-  - `examples/valid/todo-app-pbe-run`
+  - `examples/valid/todo-app-devview-run`
 - expected aggregate status: `aggregate-pass`
 - source mode: registry-backed positive read-model Evidence only
 - latest PR observation: PR #3 / run `28213236499` confirmed the positive artifact bundle still excludes invalid
@@ -193,8 +193,8 @@ calculation unless a separate invalid-fixture mode is designed.
 If a future invalid-fixture mode exists, it should use a separate command, option, or job identity rather than changing
 the meaning of the current positive validate-all command. Candidate future surfaces might be:
 
-- `pbe graph read-model validate-invalid-fixtures`
-- `pbe graph read-model validate --invalid-fixtures`
+- `devview graph read-model validate-invalid-fixtures`
+- `devview graph read-model validate --invalid-fixtures`
 - CI-only script wrapper around focused invalid fixture tests
 
 Those names are examples only. No command is implemented or approved here.
@@ -244,7 +244,7 @@ This policy does not:
 
 - modify `.github/workflows/read-model-evidence.yml`
 - add invalid fixtures to `examples/internal-legacy/read-model-aggregate/read-model-slices.json`
-- change `pbe graph read-model validate --all`
+- change `devview graph read-model validate --all`
 - regenerate generated artifacts
 - create a PR
 - dispatch GitHub Actions
@@ -252,7 +252,7 @@ This policy does not:
 - expand source authority
 - approve full Graph-source promotion
 - perform public-doc cleanup
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 
 ## Recommendation
 

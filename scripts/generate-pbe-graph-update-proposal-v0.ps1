@@ -34,7 +34,7 @@ $delta = Get-Content -LiteralPath $deltaPath -Raw | ConvertFrom-Json
 
 $proposal = [PSCustomObject]@{
     schemaVersion = 1
-    artifactRole = "pbe-graph-update-proposal-v0"
+    artifactRole = "devview-graph-update-proposal-v0"
     status = "generated-from-graph-delta"
     graphDeltaPath = $GraphDeltaPath
     sourceRecordId = $delta.sourceRecordId

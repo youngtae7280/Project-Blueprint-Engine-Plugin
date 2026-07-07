@@ -52,9 +52,9 @@ fixtures local-only for now, so PR informational observation continues to cover 
 | Validate-all PR review        | PR #2, run `28210904900`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`                |
 | Third PR informational review | PR #3, run `28213236499`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`                |
 | Workflow mode                 | `workflow_dispatch` + non-enforcing `pull_request` informational trigger                                             |
-| Included slices               | `examples/internal-legacy/adoption/todo-search-slice`; `examples/valid/todo-app-pbe-run`; aggregate summary          |
+| Included slices               | `examples/internal-legacy/adoption/todo-search-slice`; `examples/valid/todo-app-devview-run`; aggregate summary      |
 | Todo Search status            | `validation-pass`, `comparison-pass`, 40 nodes / 59 edges / 20 checks                                                |
-| Todo App PBE Run status       | `validation-pass`, parity `not-required`, 22 nodes / 38 edges / 16 checks                                            |
+| Todo App DevView Run status   | `validation-pass`, parity `not-required`, 22 nodes / 38 edges / 16 checks                                            |
 | Aggregate status              | `aggregate-pass`, 2 slices, 0 warning / 0 blocking / 0 decision-required                                             |
 | Observation threshold         | 3 real PR informational runs reviewed; refinement can be considered but is not automatic                             |
 | Authority boundary            | CI/PR Evidence is Evidence only; no source authority expansion, full promotion, enforcement, or user acceptance swap |
@@ -67,7 +67,7 @@ It should answer:
 
 - Does the workflow run when expected PR paths change?
 - Does the run produce artifact bundles and Step Summary output reliably?
-- Are Todo Search, Todo App PBE Run, and aggregate statuses stable?
+- Are Todo Search, Todo App DevView Run, and aggregate statuses stable?
 - Are retained warnings and source-authority boundaries still visible?
 - Are path filters too broad, too narrow, or correctly balanced?
 - Does any failure represent runtime/tooling breakage, artifact integrity failure, evidence warning, decision-required
@@ -79,7 +79,7 @@ It should not:
 - become a required check
 - change source authority
 - expand the Todo Search scoped pilot
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 - approve full Graph-source promotion
 - replace user acceptance
 
@@ -87,18 +87,18 @@ It should not:
 
 Each observed PR informational run should record, at minimum:
 
-| Metric group               | Fields to record                                                                                                                                        |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Run identity               | run id, run URL, event, trigger mode, workflow name, run attempt, conclusion, job id, duration                                                          |
-| PR identity                | PR number, PR status, head SHA, base SHA, head ref, base ref                                                                                            |
-| Changed path categories    | workflow, CLI, scripts, Todo Search slice, Todo App PBE Run slice, aggregate artifacts, concept docs, other                                             |
-| Artifact availability      | artifact bundle present, manifest present, validation reports present, parity report present where required, aggregate summary present                  |
-| Todo Search status         | validation status, parity status, check count, node/edge count, warning/blocking/decision-required counts                                               |
-| Todo App PBE Run status    | validation status, policy level, parity requirement/status, check count, node/edge count, warning/blocking/decision-required counts                     |
-| Aggregate status           | aggregate status, slice count, warning/blocking/decision-required counts, retained warning count                                                        |
-| Boundary visibility        | source authority boundary present, non-enforcement statement present, non-promotion statement present, retained warnings remain visible                 |
-| Failure classification     | command/runtime failure, artifact integrity failure, evidence warning, decision-required, true blocker, false positive/noise                            |
-| Observation interpretation | whether the run supports continued observation, path-filter refinement, runtime/cost optimization, failure-semantics revision, or escalation discussion |
+| Metric group                | Fields to record                                                                                                                                        |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Run identity                | run id, run URL, event, trigger mode, workflow name, run attempt, conclusion, job id, duration                                                          |
+| PR identity                 | PR number, PR status, head SHA, base SHA, head ref, base ref                                                                                            |
+| Changed path categories     | workflow, CLI, scripts, Todo Search slice, Todo App DevView Run slice, aggregate artifacts, concept docs, other                                         |
+| Artifact availability       | artifact bundle present, manifest present, validation reports present, parity report present where required, aggregate summary present                  |
+| Todo Search status          | validation status, parity status, check count, node/edge count, warning/blocking/decision-required counts                                               |
+| Todo App DevView Run status | validation status, policy level, parity requirement/status, check count, node/edge count, warning/blocking/decision-required counts                     |
+| Aggregate status            | aggregate status, slice count, warning/blocking/decision-required counts, retained warning count                                                        |
+| Boundary visibility         | source authority boundary present, non-enforcement statement present, non-promotion statement present, retained warnings remain visible                 |
+| Failure classification      | command/runtime failure, artifact integrity failure, evidence warning, decision-required, true blocker, false positive/noise                            |
+| Observation interpretation  | whether the run supports continued observation, path-filter refinement, runtime/cost optimization, failure-semantics revision, or escalation discussion |
 
 ## Recommended Observation Window
 
@@ -130,7 +130,7 @@ The current path set intentionally favors visibility over minimizing every run:
 cli/src/**
 scripts/**
 examples/internal-legacy/adoption/todo-search-slice/**
-examples/valid/todo-app-pbe-run/**
+examples/valid/todo-app-devview-run/**
 examples/internal-legacy/read-model-aggregate/**
 docs/concept/**
 ```
@@ -232,7 +232,7 @@ Reopen broader validation scope or `validate --all` workflow integration only af
 - per-slice reports stay independent
 - aggregate summary remains stable
 - additional slice profiles have clear policy levels
-- Todo App PBE Run remains correctly classified unless separately strengthened
+- Todo App DevView Run remains correctly classified unless separately strengthened
 - source authority boundaries remain unambiguous
 
 The non-enforcing CI workflow switch to local `validate --all` is implemented and reviewed in
@@ -254,7 +254,7 @@ Changed path categories:
 Artifact bundle:
 Manifest status:
 Todo Search status:
-Todo App PBE Run status:
+Todo App DevView Run status:
 Aggregate status:
 Warnings / blockers / decision-required:
 Boundary visibility:
@@ -281,7 +281,7 @@ This policy does not:
 - approve full Graph-source promotion
 - perform public-doc cleanup
 - retire tree-native or `.pbe` artifacts
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 - make PR informational pass equivalent to user acceptance
 
 ## Gate Self-Check
@@ -295,7 +295,7 @@ This policy does not:
 | Path-Filter Refinement Gate      | PASS   | Defines criteria for later refinement without changing filters now.                    |
 | Failure Semantics Clarity Gate   | PASS   | Separates command/runtime failure, artifact integrity, warning, decision, and blocker. |
 | Retained Warning Visibility Gate | PASS   | Hidden warning or boundary ambiguity triggers immediate re-review.                     |
-| Todo App Structure-Only Gate     | PASS   | Todo App PBE Run remains structure-only.                                               |
+| Todo App Structure-Only Gate     | PASS   | Todo App DevView Run remains structure-only.                                           |
 | User Approval Boundary Gate      | PASS   | PR pass cannot replace user acceptance or approve enforcement/promotion.               |
 | Public-Doc Cleanup Boundary Gate | PASS   | Cleanup remains deferred and is not performed by this policy.                          |
 

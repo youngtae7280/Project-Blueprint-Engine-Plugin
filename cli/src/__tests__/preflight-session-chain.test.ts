@@ -8,7 +8,7 @@ import { cleanupWorkspaces, createWorkspace, writeJson } from './fixtures/worksp
 
 const pluginRoot = resolve(process.cwd())
 const calibrationCandidatePath =
-  'examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json'
+  'examples/valid/todo-app-devview-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json'
 
 afterEach(() => {
   cleanupWorkspaces()

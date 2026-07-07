@@ -11,14 +11,14 @@ const pluginRoot = resolve(process.cwd())
 const draftPath = join(
   'examples',
   'valid',
-  'todo-app-pbe-run',
+  'todo-app-devview-run',
   'generated',
   'compiler-input-model-calibration-draft.runtime-evidence-only.json',
 )
 const defaultEvaluationPath = join(
   'examples',
   'valid',
-  'todo-app-pbe-run',
+  'todo-app-devview-run',
   'generated',
   'scope-compliance-evaluation.runtime-evidence-only.preview.json',
 )

@@ -6,7 +6,7 @@ import { relativePath, writeJsonAtomic } from './fs.js'
 const execFileAsync = promisify(execFile)
 
 export const defaultGitDerivedChangedFileCollectionPath =
-  'examples/valid/todo-app-pbe-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json'
+  'examples/valid/todo-app-devview-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json'
 
 export interface GitDerivedCollectionOptions {
   baseRef?: string
@@ -291,22 +291,22 @@ export function buildGitDerivedChangedFileCollectionArtifact(input: {
     actualViolationClaimed: false,
     sourceArtifacts: {
       scopeComplianceCollectionInputConsumption:
-        'examples/valid/todo-app-pbe-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json',
       scopeComplianceScopeInputBinding:
-        'examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json',
       scopeCompliancePathPatternPolicy:
-        'examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json',
       scopeCompliancePathMatchingHelper: 'cli/src/core/scope-compliance-path-pattern.ts',
       scopeComplianceViolationCategorySchema:
-        'examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json',
       scopeComplianceEvaluationResultShape:
-        'examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json',
       scopeComplianceResultPreview:
-        'examples/valid/todo-app-pbe-run/generated/scope-compliance-result.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/scope-compliance-result.runtime-evidence-only.preview.json',
       scopeComplianceCheckerPreview:
-        'examples/valid/todo-app-pbe-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json',
       scopeComplianceNotRunReport:
-        'examples/valid/todo-app-pbe-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json',
     },
     changedFiles: parsed,
     normalizedChangedFiles,

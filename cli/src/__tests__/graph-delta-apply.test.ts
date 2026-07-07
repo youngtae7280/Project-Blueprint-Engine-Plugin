@@ -275,7 +275,7 @@ function validDryRun(): Record<string, unknown> {
 function validProposal(input: { proposalId?: string; graphDeltaOperations?: unknown[] } = {}): Record<string, unknown> {
   return {
     schemaVersion: 1,
-    schemaId: 'pbe-graph-update-proposal-v0',
+    schemaId: 'devview-graph-update-proposal-v0',
     artifactRole: 'graph-delta-proposal-only-preview',
     status: 'generated-proposal-only-preview',
     proposalId: input.proposalId ?? 'GDP-TEST',
@@ -347,7 +347,7 @@ function validMutationPolicy(): Record<string, unknown> {
 
 function graphSourceFixture(): Record<string, unknown> {
   return JSON.parse(
-    readFileSync(join(pluginRoot, 'examples/valid/todo-app-pbe-run/graph-source.json'), 'utf8'),
+    readFileSync(join(pluginRoot, 'examples/valid/todo-app-devview-run/graph-source.json'), 'utf8'),
   ) as Record<string, unknown>
 }
 

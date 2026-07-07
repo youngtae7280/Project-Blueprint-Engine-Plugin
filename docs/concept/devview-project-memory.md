@@ -12,15 +12,15 @@ allowed, and which taxonomy/viewpoint extensions are only candidates until revie
 The Project Memory boundary is recorded in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-project-memory-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-project-memory-boundary.runtime-evidence-only.preview.json
 ```
 
 The related profile boundaries are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-project-profile-schema-boundary.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-taxonomy-profile-extension-boundary.runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-project-direction-change-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-project-profile-schema-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-taxonomy-profile-extension-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-project-direction-change-boundary.runtime-evidence-only.preview.json
 ```
 
 The first WindowsUtility retrofit memory preview is:

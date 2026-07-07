@@ -36,7 +36,7 @@ Across the three reviewed PR runs:
 - trigger mode was `pull_request-informational`
 - artifact bundle was present and reviewed
 - Todo Search remained `validation-pass` / `comparison-pass`
-- Todo App PBE Run remained `validation-pass` / parity `not-required`
+- Todo App DevView Run remained `validation-pass` / parity `not-required`
 - aggregate status remained `aggregate-pass`
 - source-authority, non-enforcement, and non-promotion boundaries remained visible
 - no blocker, missing artifact, malformed manifest, hidden retained warning, or confirmed path-filter noise was recorded
@@ -53,7 +53,7 @@ Current workflow trigger scope:
 cli/src/**
 scripts/**
 examples/internal-legacy/adoption/todo-search-slice/**
-examples/valid/todo-app-pbe-run/**
+examples/valid/todo-app-devview-run/**
 examples/internal-legacy/read-model-aggregate/**
 docs/concept/**
 ```
@@ -66,7 +66,7 @@ Intended coverage:
 | `cli/src/**`                                             | Read-model generate/compare/validate/summarize and registry behavior live here. | Keep. High drift risk if excluded.                                              |
 | `scripts/**`                                             | PBE validation support can affect Evidence trust.                               | Keep for now. Ownership is broader than read-model, but no noise is proven yet. |
 | `examples/internal-legacy/adoption/todo-search-slice/**` | Todo Search is the pilot-marker-backed slice.                                   | Keep. Direct Evidence input/output surface.                                     |
-| `examples/valid/todo-app-pbe-run/**`                     | Todo App PBE Run is the structure-only second profile.                          | Keep. Direct Evidence input/output surface.                                     |
+| `examples/valid/todo-app-devview-run/**`                 | Todo App DevView Run is the structure-only second profile.                      | Keep. Direct Evidence input/output surface.                                     |
 | `examples/internal-legacy/read-model-aggregate/**`       | Registry and aggregate artifacts live here.                                     | Keep. Direct validate-all and aggregate surface.                                |
 | `docs/concept/**`                                        | Concept docs define Evidence boundaries and workflow policy.                    | Keep for now. Three smoke observations used this path intentionally.            |
 
@@ -300,7 +300,7 @@ This refinement design does not:
 - add invalid fixtures to CI or the positive registry
 - add required checks, branch protection, merge blocking, or CI enforcement
 - expand source authority
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 - clean up public docs
 - approve full Graph-source promotion
 - replace user acceptance

@@ -18,7 +18,7 @@ This is a boundary preview only. It does not implement an AI classifier, call an
 The boundary preview artifact is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json
 ```
 
 Required safety values include:
@@ -43,14 +43,14 @@ approvalStatus: not-approved
 The AI Request Analyzer boundary preview for the Todo App calibration request is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json
 ```
 
 The analyzer role is intentionally narrow: it may take a raw natural-language request plus optional repo/session context
 and produce Request IR Candidate JSON only. The expected candidate schema is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json
 ```
 
 The boundary records:
@@ -87,8 +87,8 @@ graph read-model generate-ai-request-analyzer-pack --boundary <analyzerBoundaryP
 The Todo App calibration outputs are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-pack.add-todo-runtime-evidence-only.preview.md
 ```
 
 The pack is not an analyzer implementation and does not call an LLM/API. It records the future analyzer role, required
@@ -115,7 +115,7 @@ The current provider mode is disabled by design. Without `--external-candidate`,
 run-result preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-run.provider-disabled.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-run.provider-disabled.add-todo-runtime-evidence-only.preview.json
 ```
 
 One current candidate-producing mode is explicit external import:
@@ -141,8 +141,8 @@ API, an LLM, or the network. Without `--mock-provider-response`, mock mode block
 `--invoke-provider` is blocked. The Todo App calibration artifacts are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-mock-provider-response.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/request-ir-candidate.mock-provider.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-mock-provider-response.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-candidate.mock-provider.add-todo-runtime-evidence-only.preview.json
 ```
 
 Live OpenAI provider invocation is gated separately and requires all of:
@@ -165,25 +165,25 @@ proof, or enforcement.
 The provider configuration boundary is previewed in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json
 ```
 
 The current disabled/default provider config preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json
 ```
 
 The future explicit invocation enablement preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json
 ```
 
 The OpenAI live provider config shape preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.openai-live-disabled-by-default.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config.openai-live-disabled-by-default.runtime-evidence-only.preview.json
 ```
 
 This boundary fixes provider state vocabulary before any provider adapter is implemented:
@@ -220,7 +220,7 @@ time when every explicit gate is present.
 The current Todo App provider-config-disabled run-result preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-run.provider-config-disabled.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/ai-request-analyzer-run.provider-config-disabled.add-todo-runtime-evidence-only.preview.json
 ```
 
 `disabled`, `unavailable`, `configured-not-invoked`, and
@@ -235,7 +235,7 @@ external candidate is supplied.
 The clarification interview boundary preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json
 ```
 
 The deterministic clarification question-plan pack generator is:
@@ -247,8 +247,8 @@ graph read-model generate-clarification-interview-pack --boundary <clarification
 The current Todo App calibration outputs are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/clarification-interview-pack.add-todo-runtime-evidence-only.preview.md
 ```
 
 For the current calibration candidate, the pack records
@@ -300,11 +300,11 @@ graph read-model run-clarification-chain --clarification-pack <packPath> --answe
 The current no-op calibration answer and revised candidate artifacts are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/clarification-answers.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/request-ir-candidate.revised.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/request-ir-validation.revised.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/clarification-answers.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-candidate.revised.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-validation.revised.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/clarification-runtime-chain.add-todo-runtime-evidence-only.preview.md
 ```
 
 The revised candidate uses `artifactRole: request-ir-candidate`,
@@ -356,7 +356,7 @@ All AI-produced fields are candidate-only. Target record and component candidate
 The Request IR Candidate schema preview is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json
 ```
 
 It defines the future AI analyzer output shape, required fields, narrow request type taxonomy, confidence policy, and
@@ -370,7 +370,7 @@ input only; it is not approval, user acceptance, runtime Evidence satisfaction, 
 The first calibration Request IR candidate fixture is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json
 ```
 
 It models the natural-language request:
@@ -394,7 +394,7 @@ graph read-model validate-request-ir --candidate <candidatePath> --json
 The Todo App calibration result is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json
 ```
 
 For the first calibration candidate it reports:
@@ -417,7 +417,7 @@ generation.
 The graph-aware validation boundary is previewed in:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-graph-aware-validation-boundary.runtime-evidence-only.preview.json
 ```
 
 The first non-traversing graph-aware validator is now available as:
@@ -429,7 +429,7 @@ graph read-model validate-request-ir-graph --candidate <candidatePath> --schema-
 The Todo App calibration graph-aware validation result is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json
 ```
 
 This pass resolves schema-valid candidate fields against graph/read-model authority before traversal. The first
@@ -522,7 +522,7 @@ produce deterministic JSON/Markdown pack surfaces without triggering Codex execu
 The traversal plan boundary preview for the Todo App calibration request is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-traversal-plan-boundary.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-traversal-plan-boundary.add-todo-runtime-evidence-only.preview.json
 ```
 
 The first deterministic traversal plan generator is now available as:
@@ -534,7 +534,7 @@ graph read-model plan-traversal --graph-validation <graphAwareValidationPath> --
 The generated Todo App calibration traversal plan is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json
 ```
 
 This generated plan resolves the start node `CH-001`, records graph taxonomy vocabulary, and records planner roles and
@@ -584,7 +584,7 @@ node/edge slice only after schema-only validation and graph-aware validation hav
 The selected graph slice boundary preview for the Todo App calibration request is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/selected-graph-slice-boundary.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/selected-graph-slice-boundary.add-todo-runtime-evidence-only.preview.json
 ```
 
 The first deterministic selected graph slice generator is now available as:
@@ -596,7 +596,7 @@ graph read-model select-slice --traversal-plan <planPath> --json
 The generated Todo App calibration selected graph slice is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json
 ```
 
 It starts from `CH-001` and selects directly connected graph-source/read-model nodes and edges allowed by the traversal
@@ -646,7 +646,7 @@ graph read-model generate-contract-input --selected-slice <selectedSlicePath> --
 The generated Todo App calibration Contract Compiler Input is:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json
 ```
 
 It consumes the generated selected graph slice and maps the existing compiler input concepts:
@@ -686,8 +686,8 @@ graph read-model generate-instruction-pack --contract-input <contractInputPath> 
 The generated Todo App calibration outputs are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md
 ```
 
 The pack consumes generated Contract Compiler Input and preserves the narrowed `allowedScope`, unresolved forbidden
@@ -745,8 +745,8 @@ graph read-model report-frontend-chain --intake <naturalLanguageIntakeBoundaryPa
 The Todo App calibration outputs are:
 
 ```text
-examples/valid/todo-app-pbe-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json
-examples/valid/todo-app-pbe-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.md
+examples/valid/todo-app-devview-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json
+examples/valid/todo-app-devview-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.md
 ```
 
 The report starts from the natural-language request intake boundary and reads the linked calibration artifacts through

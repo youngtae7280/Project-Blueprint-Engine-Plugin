@@ -62,7 +62,7 @@ try {
   copyPath('docs/concept')
   copyPath('examples/internal-legacy/adoption/todo-search-slice')
   copyPath('examples/internal-legacy/adoption/compatibility-mismatch-slice')
-  copyPath('examples/valid/todo-app-pbe-run')
+  copyPath('examples/valid/todo-app-devview-run')
   copyPath('examples/internal-legacy/read-model-aggregate')
   copyPath('examples/internal-legacy/intent-critical')
   copyPath('.github/workflows/read-model-evidence.yml')
@@ -118,17 +118,17 @@ try {
     'read-model',
     'generate',
     '--slice',
-    'examples/valid/todo-app-pbe-run',
+    'examples/valid/todo-app-devview-run',
     '--json',
   ])
   assertEqual(todoAppGenerate.nodeCount, 22, 'Todo App generated node count')
   assertEqual(todoAppGenerate.edgeCount, 38, 'Todo App generated edge count')
 
-  const todoAppGenerated = readJson('examples/valid/todo-app-pbe-run/generated/generated-read-model.json')
+  const todoAppGenerated = readJson('examples/valid/todo-app-devview-run/generated/generated-read-model.json')
   assertEqual(todoAppGenerated.metadata.readModelSourceMode, 'graph-source-backed', 'Todo App source mode')
   assertEqual(
     todoAppGenerated.metadata.graphSourceArtifact,
-    'examples/valid/todo-app-pbe-run/graph-source.json',
+    'examples/valid/todo-app-devview-run/graph-source.json',
     'Todo App graph source candidate artifact',
   )
   assertEqual(
@@ -143,7 +143,7 @@ try {
     'read-model',
     'validate',
     '--slice',
-    'examples/valid/todo-app-pbe-run',
+    'examples/valid/todo-app-devview-run',
     '--json',
   ])
   assertEqual(todoAppValidate.status, 'validation-pass', 'Todo App validation status')
@@ -208,7 +208,7 @@ try {
     (entry) => entry.scope === 'todo-search-selected-slice',
   )
   const todoAppRetirementPackage = transitionStatus.retirementApprovalPackages.find(
-    (entry) => entry.scope === 'todo-app-pbe-run-structure-only',
+    (entry) => entry.scope === 'todo-app-devview-run-structure-only',
   )
   const repoWideRetirementPackage = transitionStatus.retirementApprovalPackages.find(
     (entry) => entry.scope === 'repo-wide',
@@ -229,13 +229,13 @@ try {
     (entry) => entry.profileId === 'todo-search-selected-slice',
   )
   const todoAppProfile = validateAll.perSliceResults.find(
-    (entry) => entry.profileId === 'todo-app-pbe-run-structure-only',
+    (entry) => entry.profileId === 'todo-app-devview-run-structure-only',
   )
   const todoSearchTransition = transitionStatus.configuredSlices.find(
     (entry) => entry.profileId === 'todo-search-selected-slice',
   )
   const todoAppTransition = transitionStatus.configuredSlices.find(
-    (entry) => entry.profileId === 'todo-app-pbe-run-structure-only',
+    (entry) => entry.profileId === 'todo-app-devview-run-structure-only',
   )
   assertEqual(todoSearchTransition?.sourceRole, 'limited-graph-source-promoted', 'Todo Search transition source role')
   assertEqual(todoSearchTransition?.generationMode, 'graph-source-backed', 'Todo Search transition generation mode')

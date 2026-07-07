@@ -1,0 +1,580 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "contract-compiler-input",
+  "status": "contract-compiler-input-generated",
+  "generatorName": "ContractCompilerInputGenerator",
+  "generationScope": "selected-slice-to-contract-input-no-instruction-pack",
+  "sourceSelectedGraphSlice": "examples/valid/todo-app-devview-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json",
+  "sourceTraversalPlan": "examples/valid/todo-app-devview-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json",
+  "sourceGraphAwareValidation": "examples/valid/todo-app-devview-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json",
+  "sourceRequestIrCandidate": "examples/valid/todo-app-devview-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json",
+  "graphSourcePath": "examples/valid/todo-app-devview-run/graph-source.json",
+  "generatedReadModelPath": "examples/valid/todo-app-devview-run/generated/generated-read-model.json",
+  "compatibleInputModelSchema": "examples/internal-legacy/read-model-aggregate/compiler-input-model-schema.json",
+  "sourceMode": "selected-graph-slice-contract-input-preview",
+  "changeId": "change-ch-001-contract-input-preview",
+  "contractInputGenerated": true,
+  "instructionPackGenerated": false,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "approvalStatus": "not-approved",
+  "humanDecisionRecorded": false,
+  "equivalenceProven": false,
+  "runtimeEvidenceSatisfied": false,
+  "scopeEnforced": false,
+  "ciEnforcementEnabled": false,
+  "humanRequest": {
+    "id": "request-todo-app-runtime-evidence-only-contract-input-preview",
+    "source": "request-ir-candidate-linked-from-graph-aware-validation",
+    "text": "Add or strengthen evidence for the Todo App add button behavior without touching production source.",
+    "requestType": "runtime-evidence-only",
+    "authorityStatus": "trace-context-not-approval"
+  },
+  "graphSnapshot": {
+    "id": "graph-snapshot-selected-graph-slice-runtime-evidence-only",
+    "artifacts": [
+      {
+        "id": "selected-graph-slice",
+        "path": "examples/valid/todo-app-devview-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json",
+        "role": "selected graph slice input"
+      },
+      {
+        "id": "graph-traversal-plan",
+        "path": "examples/valid/todo-app-devview-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json",
+        "role": "traversal plan source"
+      },
+      {
+        "id": "request-ir-graph-aware-validation",
+        "path": "examples/valid/todo-app-devview-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json",
+        "role": "graph-aware validation context"
+      },
+      {
+        "id": "request-ir-candidate",
+        "path": "examples/valid/todo-app-devview-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json",
+        "role": "human request candidate context"
+      },
+      {
+        "id": "todo-app-graph-source",
+        "path": "examples/valid/todo-app-devview-run/graph-source.json",
+        "role": "graph source authority"
+      },
+      {
+        "id": "todo-app-generated-read-model",
+        "path": "examples/valid/todo-app-devview-run/generated/generated-read-model.json",
+        "role": "generated read-model authority"
+      },
+      {
+        "id": "selected-node-source-artifact-1",
+        "path": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json",
+        "role": "selected node source artifact"
+      },
+      {
+        "id": "selected-node-source-artifact-2",
+        "path": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json",
+        "role": "selected node source artifact"
+      },
+      {
+        "id": "selected-node-source-artifact-3",
+        "path": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+        "role": "selected node source artifact"
+      },
+      {
+        "id": "selected-node-source-artifact-4",
+        "path": "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
+        "role": "selected node source artifact"
+      },
+      {
+        "id": "selected-node-source-artifact-5",
+        "path": "examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json",
+        "role": "selected node source artifact"
+      }
+    ]
+  },
+  "packSchema": {
+    "id": "pack-schema-test-only-behavior-proof-selected-slice-preview",
+    "changeType": "test-only-behavior-proof",
+    "changeTypeSupportStatus": "frontend-contract-input-preview-only",
+    "requiredInputGroups": [
+      "humanRequest",
+      "graphSnapshot",
+      "packSchema",
+      "policySnapshot",
+      "evidenceIndex",
+      "targetScopeCandidates",
+      "outputRequirementSources",
+      "stopConditionSources",
+      "riskSources"
+    ],
+    "boundary": "This selected-slice frontend input may feed a future contract mapper, but it does not generate instruction packs."
+  },
+  "policySnapshot": {
+    "id": "policy-snapshot-selected-graph-slice-runtime-evidence-only",
+    "policies": [
+      {
+        "id": "selected-graph-slice-non-execution-boundary",
+        "authority": "validator",
+        "status": "non-enforcing"
+      },
+      {
+        "id": "runtime-evidence-only-no-production-source",
+        "authority": "policy",
+        "status": "policy-active"
+      },
+      {
+        "id": "human-review-required-before-approval",
+        "authority": "policy",
+        "status": "policy-active"
+      }
+    ],
+    "evidenceCheckMappings": [
+      {
+        "evidenceType": "selected_check_context",
+        "requiredCheckId": "check-todo-app-selected-check-review",
+        "compiledEvidenceType": "validator_output"
+      },
+      {
+        "evidenceType": "selected_evidence_artifact",
+        "requiredCheckId": "check-todo-app-selected-evidence-review",
+        "compiledEvidenceType": "validator_output"
+      }
+    ],
+    "forbiddenScopeRules": [
+      {
+        "id": "forbidden-production-source-changes",
+        "scopeKind": "code",
+        "paths": ["unresolved:production-source-changes"],
+        "derivedFrom": ["request-ir-graph-aware-validation:scopeIntentResolution"],
+        "sourceStatus": "unresolved-from-request-intent-not-derived-from-selected-slice"
+      },
+      {
+        "id": "forbidden-graph-source-mutation",
+        "scopeKind": "graph",
+        "paths": ["examples/valid/todo-app-devview-run/graph-source.json"],
+        "derivedFrom": ["request-ir-graph-aware-validation:scopeIntentResolution"],
+        "sourceStatus": "derived-from-graph-aware-validation-context"
+      },
+      {
+        "id": "forbidden-approval-or-acceptance-changes",
+        "scopeKind": "product",
+        "paths": ["examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json"],
+        "derivedFrom": ["request-ir-graph-aware-validation:scopeIntentResolution"],
+        "sourceStatus": "derived-from-graph-aware-validation-context"
+      }
+    ]
+  },
+  "evidenceIndex": {
+    "id": "evidence-index-selected-graph-slice-runtime-evidence-only",
+    "entries": [
+      {
+        "id": "evidence-tt-1",
+        "artifact": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+        "evidenceType": "selected_check_context",
+        "freshness": "required-after-graph-or-artifact-change",
+        "sourceNodeId": "TT-1",
+        "runtimeEvidenceSatisfied": false,
+        "acceptedEvidence": false
+      },
+      {
+        "id": "evidence-ev-1",
+        "artifact": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+        "evidenceType": "selected_evidence_artifact",
+        "freshness": "required-after-graph-or-artifact-change",
+        "sourceNodeId": "EV-1",
+        "runtimeEvidenceSatisfied": false,
+        "acceptedEvidence": false
+      }
+    ]
+  },
+  "targetScopeCandidates": [
+    {
+      "id": "scope-ch-001",
+      "scopeKind": "product",
+      "paths": ["examples/valid/todo-app-devview-run/.pbe/control/change-tree.json"],
+      "derivedFrom": ["graph-source:node:CH-001"],
+      "contractDerivedFrom": ["selected-slice:node:CH-001"],
+      "confidence": "graph-backed-candidate",
+      "sourceStatus": "derived-from-selected-graph-slice",
+      "contextOnly": true
+    },
+    {
+      "id": "scope-wt-1",
+      "scopeKind": "workflow",
+      "paths": ["examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json"],
+      "derivedFrom": ["graph-source:node:WT-1"],
+      "contractDerivedFrom": ["selected-slice:node:WT-1"],
+      "confidence": "graph-backed-candidate",
+      "sourceStatus": "derived-from-selected-graph-slice",
+      "contextOnly": true
+    },
+    {
+      "id": "scope-tt-1",
+      "scopeKind": "test",
+      "paths": ["examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"],
+      "derivedFrom": ["graph-source:node:TT-1"],
+      "contractDerivedFrom": ["selected-slice:node:TT-1"],
+      "confidence": "graph-backed-candidate",
+      "sourceStatus": "derived-from-selected-graph-slice",
+      "contextOnly": false
+    },
+    {
+      "id": "scope-ev-1",
+      "scopeKind": "evidence",
+      "paths": [
+        "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
+        "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt"
+      ],
+      "derivedFrom": ["graph-source:node:EV-1"],
+      "contractDerivedFrom": ["selected-slice:node:EV-1"],
+      "confidence": "graph-backed-candidate",
+      "sourceStatus": "derived-from-selected-graph-slice",
+      "contextOnly": false
+    }
+  ],
+  "allowedScope": [
+    {
+      "id": "allowed-scope-tt-1",
+      "scopeKind": "test",
+      "paths": ["examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json"],
+      "sourceTargetScopeCandidate": "scope-tt-1",
+      "sourceStatus": "derived-from-selected-graph-slice-check-or-evidence-context",
+      "allowedUse": ["review-selected-check-or-evidence", "report-selected-evidence-status"],
+      "modificationAuthority": "context-only-no-modification"
+    },
+    {
+      "id": "allowed-scope-ev-1",
+      "scopeKind": "evidence",
+      "paths": [
+        "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
+        "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt"
+      ],
+      "sourceTargetScopeCandidate": "scope-ev-1",
+      "sourceStatus": "derived-from-selected-graph-slice-check-or-evidence-context",
+      "allowedUse": ["review-selected-check-or-evidence", "report-selected-evidence-status"],
+      "modificationAuthority": "evidence-artifact-or-report-only"
+    }
+  ],
+  "forbiddenScope": [
+    {
+      "id": "forbidden-production-source-changes",
+      "scopeKind": "code",
+      "paths": ["unresolved:production-source-changes"],
+      "derivedFrom": ["request-ir-graph-aware-validation:scopeIntentResolution"],
+      "sourceStatus": "unresolved-from-request-intent-not-derived-from-selected-slice",
+      "boundary": "forbidden scope is advisory contract-input context and not enforcement"
+    },
+    {
+      "id": "forbidden-graph-source-mutation",
+      "scopeKind": "graph",
+      "paths": ["examples/valid/todo-app-devview-run/graph-source.json"],
+      "derivedFrom": ["request-ir-graph-aware-validation:scopeIntentResolution"],
+      "sourceStatus": "derived-from-graph-aware-validation-context",
+      "boundary": "forbidden scope is advisory contract-input context and not enforcement"
+    },
+    {
+      "id": "forbidden-approval-or-acceptance-changes",
+      "scopeKind": "product",
+      "paths": ["examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json"],
+      "derivedFrom": ["request-ir-graph-aware-validation:scopeIntentResolution"],
+      "sourceStatus": "derived-from-graph-aware-validation-context",
+      "boundary": "forbidden scope is advisory contract-input context and not enforcement"
+    }
+  ],
+  "requiredEvidence": [
+    {
+      "id": "required-evidence-tt-1",
+      "sourceEvidenceId": "evidence-tt-1",
+      "evidenceType": "selected_check_context",
+      "artifact": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+      "sourceStatus": "derived-from-selected-graph-slice",
+      "runtimeEvidenceSatisfied": false,
+      "acceptedEvidence": false
+    },
+    {
+      "id": "required-evidence-ev-1",
+      "sourceEvidenceId": "evidence-ev-1",
+      "evidenceType": "selected_evidence_artifact",
+      "artifact": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+      "sourceStatus": "derived-from-selected-graph-slice",
+      "runtimeEvidenceSatisfied": false,
+      "acceptedEvidence": false
+    }
+  ],
+  "outputRequirementSources": [
+    {
+      "sourceId": "output-evidence-tt-1",
+      "sourceType": "evidence",
+      "derivedOutputRequirementId": "output-evidence-tt-1-status",
+      "obligationType": "command-output-evidence-status",
+      "requiredReportTarget": "Report selected evidence/check status for TT-1.",
+      "evidenceBinding": {
+        "evidenceId": "evidence-tt-1"
+      }
+    },
+    {
+      "sourceId": "output-evidence-ev-1",
+      "sourceType": "evidence",
+      "derivedOutputRequirementId": "output-evidence-ev-1-status",
+      "obligationType": "command-output-evidence-status",
+      "requiredReportTarget": "Report selected evidence/check status for EV-1.",
+      "evidenceBinding": {
+        "evidenceId": "evidence-ev-1"
+      }
+    },
+    {
+      "sourceId": "output-selected-slice-non-execution-boundary",
+      "sourceType": "boundary",
+      "derivedOutputRequirementId": "output-report-selected-slice-non-execution-boundary",
+      "obligationType": "non-execution-boundary-statement",
+      "requiredReportTarget": "Report that selected-slice contract input is not instruction pack generation, approval, runtime Evidence satisfaction, or enforcement."
+    }
+  ],
+  "outputRequirements": [
+    {
+      "id": "output-evidence-tt-1-status",
+      "sourceId": "output-evidence-tt-1",
+      "obligationType": "command-output-evidence-status",
+      "requiredReportTarget": "Report selected evidence/check status for TT-1.",
+      "sourceStatus": "derived-from-selected-slice-contract-input-mapping"
+    },
+    {
+      "id": "output-evidence-ev-1-status",
+      "sourceId": "output-evidence-ev-1",
+      "obligationType": "command-output-evidence-status",
+      "requiredReportTarget": "Report selected evidence/check status for EV-1.",
+      "sourceStatus": "derived-from-selected-slice-contract-input-mapping"
+    },
+    {
+      "id": "output-report-selected-slice-non-execution-boundary",
+      "sourceId": "output-selected-slice-non-execution-boundary",
+      "obligationType": "non-execution-boundary-statement",
+      "requiredReportTarget": "Report that selected-slice contract input is not instruction pack generation, approval, runtime Evidence satisfaction, or enforcement.",
+      "sourceStatus": "derived-from-selected-slice-contract-input-mapping"
+    }
+  ],
+  "stopConditionSources": [
+    {
+      "sourceId": "stop-selected-slice-scope-expands",
+      "sourceType": "policy",
+      "derivedStopConditionId": "stop-if-selected-slice-scope-expands",
+      "triggerType": "scope-expansion",
+      "condition": "Contract input mapping requires nodes, edges, files, or product meaning outside the selected slice.",
+      "action": "stop-and-request-human-decision",
+      "policyBinding": {
+        "policyId": "selected-graph-slice-non-execution-boundary"
+      },
+      "relatedFields": ["targetScopeCandidates", "allowedScope", "forbiddenScope"]
+    },
+    {
+      "sourceId": "stop-selected-slice-evidence-unavailable",
+      "sourceType": "validator",
+      "derivedStopConditionId": "stop-if-selected-evidence-unavailable",
+      "triggerType": "required-check-unavailable",
+      "condition": "Selected evidence/check nodes cannot be reviewed or linked to command output.",
+      "action": "stop-and-record-missing-evidence",
+      "commandBinding": {
+        "requiredCheckIds": ["check-todo-app-selected-check-review", "check-todo-app-selected-evidence-review"]
+      },
+      "relatedFields": ["requiredEvidence", "outputRequirements"]
+    },
+    {
+      "sourceId": "stop-selected-slice-source-authority-loss",
+      "sourceType": "boundary",
+      "derivedStopConditionId": "stop-if-selected-slice-source-authority-loss",
+      "triggerType": "source-authority-loss",
+      "condition": "Selected graph slice source authority cannot be traced back to graph-source/read-model nodes.",
+      "action": "stop-and-request-human-decision",
+      "relatedFields": ["graphSnapshot", "mappingTrace"]
+    }
+  ],
+  "stopConditions": [
+    {
+      "id": "stop-if-selected-slice-scope-expands",
+      "sourceId": "stop-selected-slice-scope-expands",
+      "triggerType": "scope-expansion",
+      "condition": "Contract input mapping requires nodes, edges, files, or product meaning outside the selected slice.",
+      "action": "stop-and-request-human-decision"
+    },
+    {
+      "id": "stop-if-selected-evidence-unavailable",
+      "sourceId": "stop-selected-slice-evidence-unavailable",
+      "triggerType": "required-check-unavailable",
+      "condition": "Selected evidence/check nodes cannot be reviewed or linked to command output.",
+      "action": "stop-and-record-missing-evidence"
+    },
+    {
+      "id": "stop-if-selected-slice-source-authority-loss",
+      "sourceId": "stop-selected-slice-source-authority-loss",
+      "triggerType": "source-authority-loss",
+      "condition": "Selected graph slice source authority cannot be traced back to graph-source/read-model nodes.",
+      "action": "stop-and-request-human-decision"
+    }
+  ],
+  "riskSources": [
+    {
+      "sourceId": "risk-im-001",
+      "sourceType": "scope",
+      "derivedRiskId": "risk-im-001-scope-drift",
+      "riskType": "scope-drift",
+      "severity": "warning",
+      "status": "tracked",
+      "mitigation": "Golden run includes a non-blocking analyzed change skeleton.",
+      "scopeBinding": {
+        "targetScopeCandidateIds": ["scope-ch-001", "scope-wt-1", "scope-tt-1", "scope-ev-1"]
+      },
+      "evidenceBinding": {
+        "evidenceIds": ["evidence-tt-1", "evidence-ev-1"]
+      },
+      "selectedRiskNodeId": "IM-001"
+    }
+  ],
+  "knownRisks": [
+    {
+      "id": "risk-im-001-scope-drift",
+      "sourceId": "risk-im-001",
+      "riskType": "scope-drift",
+      "severity": "warning",
+      "status": "tracked",
+      "mitigation": "Golden run includes a non-blocking analyzed change skeleton.",
+      "sourceStatus": "derived-from-selected-graph-slice-risk-node"
+    }
+  ],
+  "compilerInputModelCompatibility": {
+    "requiredInputGroups": [
+      "humanRequest",
+      "graphSnapshot",
+      "packSchema",
+      "policySnapshot",
+      "evidenceIndex",
+      "targetScopeCandidates",
+      "outputRequirementSources",
+      "stopConditionSources",
+      "riskSources"
+    ],
+    "requiredInputGroupsPresent": [
+      "humanRequest",
+      "graphSnapshot",
+      "packSchema",
+      "policySnapshot",
+      "evidenceIndex",
+      "targetScopeCandidates",
+      "outputRequirementSources",
+      "stopConditionSources",
+      "riskSources"
+    ],
+    "missingRequiredInputGroups": [],
+    "compatibilityStatus": "frontend-field-compatible-with-compiler-input-model-groups",
+    "backendDryRunValidationStatus": "not-run-not-same-artifact-role",
+    "backendDryRunInvoked": false,
+    "backendInstructionPackGenerated": false
+  },
+  "mappingTrace": [
+    {
+      "targetField": "targetScopeCandidates",
+      "sourceNodeId": "CH-001",
+      "sourceNodeKind": "change",
+      "mappedId": "scope-ch-001",
+      "reason": "selected node mapped to target scope candidate"
+    },
+    {
+      "targetField": "targetScopeCandidates",
+      "sourceNodeId": "WT-1",
+      "sourceNodeKind": "task",
+      "mappedId": "scope-wt-1",
+      "reason": "selected node mapped to target scope candidate"
+    },
+    {
+      "targetField": "targetScopeCandidates",
+      "sourceNodeId": "TT-1",
+      "sourceNodeKind": "check",
+      "mappedId": "scope-tt-1",
+      "reason": "selected node mapped to target scope candidate"
+    },
+    {
+      "targetField": "targetScopeCandidates",
+      "sourceNodeId": "EV-1",
+      "sourceNodeKind": "evidence",
+      "mappedId": "scope-ev-1",
+      "reason": "selected node mapped to target scope candidate"
+    },
+    {
+      "targetField": "allowedScope",
+      "sourceTargetScopeCandidate": "scope-tt-1",
+      "mappedId": "allowed-scope-tt-1",
+      "reason": "runtime-evidence-only allowed scope narrowed to selected check/evidence/report context"
+    },
+    {
+      "targetField": "allowedScope",
+      "sourceTargetScopeCandidate": "scope-ev-1",
+      "mappedId": "allowed-scope-ev-1",
+      "reason": "runtime-evidence-only allowed scope narrowed to selected check/evidence/report context"
+    },
+    {
+      "targetField": "forbiddenScope",
+      "sourceIntent": "production source changes",
+      "mappedId": "forbidden-production-source-changes",
+      "reason": "forbidden scope intent preserved from Request IR/graph-aware validation context"
+    },
+    {
+      "targetField": "forbiddenScope",
+      "sourceIntent": "graph-source mutation",
+      "mappedId": "forbidden-graph-source-mutation",
+      "reason": "forbidden scope intent preserved from Request IR/graph-aware validation context"
+    },
+    {
+      "targetField": "forbiddenScope",
+      "sourceIntent": "approval or acceptance changes",
+      "mappedId": "forbidden-approval-or-acceptance-changes",
+      "reason": "forbidden scope intent preserved from Request IR/graph-aware validation context"
+    },
+    {
+      "targetField": "evidenceIndex.entries",
+      "sourceNodeId": "TT-1",
+      "sourceNodeKind": "check",
+      "mappedId": "evidence-tt-1",
+      "reason": "selected evidence/check node mapped to evidence index entry"
+    },
+    {
+      "targetField": "evidenceIndex.entries",
+      "sourceNodeId": "EV-1",
+      "sourceNodeKind": "evidence",
+      "mappedId": "evidence-ev-1",
+      "reason": "selected evidence/check node mapped to evidence index entry"
+    },
+    {
+      "targetField": "outputRequirementSources",
+      "sourceEvidenceId": "evidence-tt-1",
+      "mappedId": "output-evidence-tt-1",
+      "reason": "evidence index entry mapped to output reporting obligation"
+    },
+    {
+      "targetField": "outputRequirementSources",
+      "sourceEvidenceId": "evidence-ev-1",
+      "mappedId": "output-evidence-ev-1",
+      "reason": "evidence index entry mapped to output reporting obligation"
+    },
+    {
+      "targetField": "riskSources",
+      "sourceNodeId": "IM-001",
+      "mappedId": "risk-im-001",
+      "reason": "selected finding node mapped to known risk source"
+    }
+  ],
+  "validationFindings": [
+    {
+      "code": "CONTRACT_INPUT_FORBIDDEN_SCOPE_PATH_UNRESOLVED",
+      "severity": "warning",
+      "field": "forbiddenScope.production-source-changes.paths",
+      "message": "Production source changes are forbidden by request intent, but no production source file path was derived from the selected graph slice.",
+      "actual": ["unresolved:production-source-changes"],
+      "suggestedFix": "Keep the unresolved marker until graph/source authority provides a concrete production source path."
+    }
+  ],
+  "contractCompilerReadinessStatus": "ready",
+  "requiresClarification": false,
+  "humanReviewRequired": true,
+  "outputWritePolicy": "explicit-output-only",
+  "writtenOutputPath": "examples/valid/todo-app-devview-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json",
+  "writtenOutputPathAuthorityStatus": "explicit-preview-output-not-graph-source",
+  "nonExecutionStatement": "This frontend Contract Compiler Input does not compile contracts, invoke backend dry-run validation, generate instruction packs, or execute Codex.",
+  "nonExecutionBoundary": "This selected-slice contract input generator creates deterministic Contract Compiler Input only. It does not generate instruction packs, does not invoke Codex execution, does not call an LLM, does not mutate graph-source, does not apply graph deltas, does not approve work, does not record human decisions, does not satisfy runtime Evidence, does not prove equivalence, does not enforce scope, and does not configure CI required checks."
+}

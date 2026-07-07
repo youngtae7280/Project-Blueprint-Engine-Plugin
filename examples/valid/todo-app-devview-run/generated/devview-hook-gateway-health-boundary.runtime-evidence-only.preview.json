@@ -1,0 +1,252 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-hook-gateway-health-boundary-preview",
+  "status": "devview-hook-gateway-health-boundary-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "boundaryScope": "hook-gateway-health-check-readiness-preview",
+  "healthCheckImplemented": false,
+  "healthCheckCommandImplemented": false,
+  "hookScriptsImplemented": false,
+  "hookScriptsInstalled": false,
+  "hookGatewayConfigured": "not-checked-preview-only",
+  "hookGatewayTrusted": "not-checked-preview-only",
+  "hookGatewayActive": "not-checked-preview-only",
+  "lastObservedHookEvent": null,
+  "actualBlockingHookBehaviorImplemented": false,
+  "actualInstallOrTrustMutationImplemented": false,
+  "strictModeEnabled": false,
+  "ciEnforcementEnabled": false,
+  "graphApplyEnabled": false,
+  "approvalAutomationEnabled": false,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "approvalStatus": "not-approved",
+  "humanDecisionRecorded": false,
+  "equivalenceProven": false,
+  "runtimeEvidenceSatisfied": false,
+  "scopeEnforced": false,
+  "sourceHookGatewayBoundaryArtifact": "examples/valid/todo-app-devview-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json",
+  "healthCheckModeMatrix": [
+    {
+      "mode": "off",
+      "availability": "available",
+      "healthMeaning": "No automatic DevView hook gateway intervention is expected.",
+      "mayBlock": false,
+      "strictMode": false
+    },
+    {
+      "mode": "advisory",
+      "availability": "future-candidate",
+      "healthMeaning": "Future health check should confirm context injection readiness and missing-pipeline-step reporting readiness without blocking.",
+      "mayBlock": false,
+      "strictMode": false
+    },
+    {
+      "mode": "guided",
+      "availability": "future-candidate",
+      "healthMeaning": "Future health check should confirm session, contract, post-check, and review-packet readiness before guided blocking can be considered.",
+      "mayBlock": true,
+      "strictMode": false,
+      "blockingBoundary": "Guided blocking is future hook-gateway flow control only. It is not CI enforcement, graph apply, approval, or branch protection."
+    },
+    {
+      "mode": "strict-disabled",
+      "availability": "reserved-disabled",
+      "healthMeaning": "Strict mode must remain disabled and must not be reported as active.",
+      "mayBlock": false,
+      "strictMode": false
+    }
+  ],
+  "futureHealthCheckInputs": {
+    "devviewModeSource": "future project/session config",
+    "projectHookConfig": "not-implemented",
+    "trustedHookCommandRegistry": "not-implemented",
+    "observedHookEvents": "not-implemented",
+    "transientSessionState": ".tmp/devview/sessions/<sessionId>/session.json",
+    "frontendArtifactInventory": "previewed-below"
+  },
+  "futureHealthCheckReadinessItems": [
+    {
+      "item": "devview-mode-readiness",
+      "currentStatus": "boundary-preview-only",
+      "futureCheck": "Read DevView mode and verify it is one of off/advisory/guided/strict-disabled.",
+      "mustNotDo": "enable strict mode or mutate project config"
+    },
+    {
+      "item": "strict-mode-disabled",
+      "currentStatus": "satisfied-by-preview-boundary",
+      "expectedValue": false,
+      "futureCheck": "Confirm strict mode is disabled before reporting gateway health as usable."
+    },
+    {
+      "item": "hook-scripts-installed",
+      "currentStatus": "false-preview-only",
+      "futureCheck": "Detect whether project-local hook scripts or hook config are present.",
+      "mustNotDo": "install scripts or edit hook config from the health boundary preview"
+    },
+    {
+      "item": "trusted-repo-session-scope",
+      "currentStatus": "decision-required-future-work",
+      "futureCheck": "Confirm the repo/session has explicitly trusted DevView hook commands before assuming gateway activation.",
+      "mustNotDo": "auto-trust commands or silently mark hooks trusted"
+    },
+    {
+      "item": "user-prompt-submit-additional-context-readiness",
+      "currentStatus": "preview-only",
+      "futureCheck": "Confirm additionalContext text can point to the AI Request Analyzer and Request IR validation boundaries.",
+      "mustNotDo": "generate Request IR candidates from unvalidated AI output"
+    },
+    {
+      "item": "pre-tool-use-readiness",
+      "currentStatus": "preview-only",
+      "futureCheck": "Confirm future PreToolUse checks know how to detect missing session/contract before edit-capable tools.",
+      "mustNotDo": "block tools until guided hook behavior is explicitly implemented"
+    },
+    {
+      "item": "post-tool-use-readiness",
+      "currentStatus": "preview-only",
+      "futureCheck": "Confirm future PostToolUse observation can update transient session state without undoing side effects.",
+      "mustNotDo": "mutate graph-source or approve changed files"
+    },
+    {
+      "item": "stop-readiness",
+      "currentStatus": "preview-only",
+      "futureCheck": "Confirm future Stop checks can report missing post-checks, proposal-only preview, or Human Review Packet.",
+      "mustNotDo": "record human decisions or apply graph deltas"
+    },
+    {
+      "item": "bypass-detection-readiness",
+      "currentStatus": "preview-only-non-enforcing",
+      "futureCheck": "Report missing preflight, contract, post-check, and review packet in advisory mode.",
+      "mustNotDo": "treat bypass detection as CI enforcement"
+    },
+    {
+      "item": "install-trust-boundary",
+      "currentStatus": "boundary-preview-only",
+      "futureCheck": "Confirm explicit install/trust decision before treating hook scripts/config as active.",
+      "mustNotDo": "install hooks or auto-trust commands from a boundary preview"
+    }
+  ],
+  "frontendArtifactAvailability": [
+    {
+      "name": "AI Request Analyzer boundary",
+      "status": "available-boundary-preview",
+      "path": "examples/valid/todo-app-devview-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json"
+    },
+    {
+      "name": "Request IR Candidate schema",
+      "status": "available-boundary-preview",
+      "path": "examples/valid/todo-app-devview-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json"
+    },
+    {
+      "name": "schema-only Request IR validation",
+      "status": "implemented",
+      "command": "graph read-model validate-request-ir --candidate <candidatePath> --json",
+      "path": "examples/valid/todo-app-devview-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json"
+    },
+    {
+      "name": "graph-aware Request IR validation",
+      "status": "implemented-non-traversing",
+      "command": "graph read-model validate-request-ir-graph --candidate <candidatePath> --schema-validation <schemaValidationPath> --json",
+      "path": "examples/valid/todo-app-devview-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json"
+    },
+    {
+      "name": "Graph Traversal Plan",
+      "status": "implemented-plan-only",
+      "command": "graph read-model plan-traversal --graph-validation <graphAwareValidationPath> --json",
+      "path": "examples/valid/todo-app-devview-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json"
+    },
+    {
+      "name": "Selected Graph Slice",
+      "status": "implemented-deterministic-slice",
+      "command": "graph read-model select-slice --traversal-plan <planPath> --json",
+      "path": "examples/valid/todo-app-devview-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json"
+    },
+    {
+      "name": "Contract Compiler Input",
+      "status": "implemented-frontend-input",
+      "command": "graph read-model generate-contract-input --selected-slice <selectedSlicePath> --json",
+      "path": "examples/valid/todo-app-devview-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json"
+    },
+    {
+      "name": "Instruction Pack",
+      "status": "implemented-preview-no-execution",
+      "command": "graph read-model generate-instruction-pack --contract-input <contractInputPath> --json",
+      "path": "examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.json",
+      "markdownPath": "examples/valid/todo-app-devview-run/generated/instruction-pack.add-todo-runtime-evidence-only.preview.md"
+    },
+    {
+      "name": "user-prompt-submit-context-preview",
+      "status": "implemented-preview-command",
+      "command": "graph read-model prepare-user-prompt-context --frontend-chain <frontendChainReport> --hook-health <healthReportOrBoundary> --instruction-pack <instructionPackJson> --instruction-markdown <instructionPackMarkdown> --json",
+      "path": "examples/valid/todo-app-devview-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json",
+      "markdownPath": "examples/valid/todo-app-devview-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.md"
+    },
+    {
+      "artifactRole": "devview-hook-script-scaffold-preview",
+      "artifact": "examples/valid/todo-app-devview-run/generated/devview-hook-script-scaffold.add-todo-runtime-evidence-only.preview.json",
+      "availabilityStatus": "preview-generated-not-installed",
+      "command": "graph read-model generate-hook-script-scaffold --boundary <gatewayBoundary> --hook-health <healthBoundary> --install-trust <installTrustBoundary> --user-prompt-context <contextPreview> --json",
+      "nonExecutionStatus": "does-not-install-or-activate-hooks"
+    },
+    {
+      "artifactRole": "devview-hook-script-template-preview",
+      "artifact": "examples/valid/todo-app-devview-run/generated/devview-hook-script-template.add-todo-runtime-evidence-only.preview.json",
+      "availabilityStatus": "preview-generated-not-installed",
+      "command": "graph read-model generate-hook-script-templates --scaffold <hookScriptScaffold> --json",
+      "nonExecutionStatus": "does-not-write-active-hook-files"
+    },
+    {
+      "artifactRole": "devview-hook-session-manifest-preview",
+      "artifact": "examples/valid/todo-app-devview-run/generated/devview-hook-session-manifest.add-todo-runtime-evidence-only.preview.json",
+      "availabilityStatus": "preview-generated-not-active",
+      "command": "graph read-model generate-hook-session-manifest --hook-health <healthReportOrBoundary> --user-prompt-context <contextPreview> --script-scaffold <scaffoldPreview> --script-templates <templatePreview> --json",
+      "nonExecutionStatus": "does-not-start-or-activate-hooks"
+    }
+  ],
+  "healthResultPreviewShape": {
+    "artifactRole": "devview-hook-gateway-health-report",
+    "healthStatus": "not-implemented",
+    "devviewMode": "off|advisory|guided|strict-disabled",
+    "strictModeEnabled": false,
+    "hookScriptsInstalled": false,
+    "hookGatewayConfigured": "not-checked",
+    "hookGatewayTrusted": "not-checked",
+    "hookGatewayActive": "not-checked",
+    "frontendArtifactAvailabilityStatus": "available",
+    "bypassDetectionStatus": "preview-only-non-enforcing",
+    "recommendedNextAction": "implement report-only health check before hook scripts"
+  },
+  "runtimeBudgetBoundary": {
+    "measuredInCurrentTimingSmoke": false,
+    "reason": "This is a boundary preview artifact and no health check command exists.",
+    "futureHealthCheckRuntimeBudget": "must-remain-lightweight-and-within-advisory-5-second-devview-runtime-budget",
+    "llmCallsAllowed": false,
+    "networkCallsAllowed": false,
+    "fullValidationAllowed": false
+  },
+  "forbiddenUse": [
+    "implement hook scripts",
+    "install or trust hook commands",
+    "block Codex execution",
+    "enable strict mode",
+    "enable guided enforcement",
+    "mutate graph-source",
+    "apply graph deltas",
+    "record approval or human decisions",
+    "claim runtime Evidence satisfaction",
+    "prove equivalence",
+    "enforce scope or CI",
+    "change branch protection"
+  ],
+  "nonExecutionBoundary": "This artifact previews the DevView Hook Gateway health/readiness boundary only. It does not implement hook scripts, install hooks, trust commands, block Codex execution, enable strict or guided enforcement, call an LLM, make network calls, mutate graph-source, apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.",
+  "userPromptSubmitContextPreviewCommandImplemented": true,
+  "userPromptSubmitContextPreviewArtifact": "examples/valid/todo-app-devview-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.json",
+  "userPromptSubmitContextPreviewMarkdownArtifact": "examples/valid/todo-app-devview-run/generated/devview-user-prompt-submit-context.add-todo-runtime-evidence-only.preview.md",
+  "hookInstallTrustBoundaryStatus": "devview-hook-install-trust-boundary-previewed",
+  "hookInstallTrustBoundaryArtifact": "examples/valid/todo-app-devview-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json",
+  "firstCalibrationHookScriptScaffoldPreviewArtifact": "examples/valid/todo-app-devview-run/generated/devview-hook-script-scaffold.add-todo-runtime-evidence-only.preview.json",
+  "firstCalibrationHookScriptTemplatePreviewArtifact": "examples/valid/todo-app-devview-run/generated/devview-hook-script-template.add-todo-runtime-evidence-only.preview.json",
+  "firstCalibrationHookSessionManifestPreviewArtifact": "examples/valid/todo-app-devview-run/generated/devview-hook-session-manifest.add-todo-runtime-evidence-only.preview.json"
+}

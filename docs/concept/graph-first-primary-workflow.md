@@ -20,7 +20,7 @@ PBE's current forward direction is Graph-source-backed read-model projection and
 Current status:
 
 - Todo Search selected slice is limited Graph-source promoted.
-- Todo App PBE Run is graph-source-backed for `structure-only`.
+- Todo App DevView Run is graph-source-backed for `structure-only`.
 - Repo-wide Graph-source promotion is not complete.
 - Tree-native retirement is not complete.
 - CI/read-model Evidence remains informational and non-enforcing.
@@ -70,7 +70,7 @@ Only configured Graph-source surfaces have source-authority roles.
 | Surface                    | Current source role                              | Boundary                                                                                       |
 | -------------------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
 | Todo Search selected slice | limited Graph-source promoted selected slice     | Scoped to the Todo Search selected slice only.                                                 |
-| Todo App PBE Run           | confirmed Graph-source-backed `structure-only`   | Structure-only; not source-authority-bearing beyond the structure contract.                    |
+| Todo App DevView Run       | confirmed Graph-source-backed `structure-only`   | Structure-only; not source-authority-bearing beyond the structure contract.                    |
 | Positive registry          | configured read-model validation registry        | Defines configured validation profiles; does not expand source authority by itself.            |
 | Generated read-model files | Evidence/projection output for configured slices | Reviewable generated Evidence; not user acceptance and not tree-native retirement approval.    |
 | Health/E2E reports         | observation Evidence                             | Local/CI informational status; not a required check unless separately approved and configured. |

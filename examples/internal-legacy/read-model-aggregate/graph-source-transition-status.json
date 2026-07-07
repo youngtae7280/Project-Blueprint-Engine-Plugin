@@ -157,8 +157,8 @@
       "userApprovalRequirement": "explicit-file-retirement-or-deletion-approval-still-required-before-any-destructive-action"
     },
     {
-      "scope": "todo-app-pbe-run-structure-only",
-      "packageDocument": "docs/concept/tree-native-retirement-approval-package.md#todo-app-pbe-run-structure-only",
+      "scope": "todo-app-devview-run-structure-only",
+      "packageDocument": "docs/concept/tree-native-retirement-approval-package.md#todo-app-devview-run-structure-only",
       "status": "not-ready-structure-only",
       "readinessStatus": "not-retirement-ready",
       "wouldRetireOrDeprecateIfApproved": [],
@@ -236,10 +236,10 @@
       }
     },
     {
-      "profileId": "todo-app-pbe-run-structure-only",
-      "sourceSlice": "examples/valid/todo-app-pbe-run",
-      "graphSourceArtifact": "examples/valid/todo-app-pbe-run/graph-source.json",
-      "generatedProjectionArtifact": "examples/valid/todo-app-pbe-run/generated/graph-source-read-model-projection.json",
+      "profileId": "todo-app-devview-run-structure-only",
+      "sourceSlice": "examples/valid/todo-app-devview-run",
+      "graphSourceArtifact": "examples/valid/todo-app-devview-run/graph-source.json",
+      "generatedProjectionArtifact": "examples/valid/todo-app-devview-run/generated/graph-source-read-model-projection.json",
       "sourceRole": "confirmed-structure-only-graph-source",
       "generationMode": "graph-source-backed",
       "policyLevel": "structure-only",
@@ -250,7 +250,7 @@
         "validationChecks": 16
       },
       "positiveValidateAllRole": "confirmed-structure-only-projection-contract",
-      "fallbackRole": "canonical-pbe-artifacts-maintained-as-compatibility-fallback-reference",
+      "fallbackRole": "canonical-devview-artifacts-maintained-as-compatibility-fallback-reference",
       "retirementReadiness": {
         "status": "not-retirement-ready",
         "criteriaStatus": {

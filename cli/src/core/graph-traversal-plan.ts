@@ -111,11 +111,11 @@ export function generateGraphTraversalPlan(
   const graphSourcePath =
     authorityInputs.graphSourcePath ||
     stringValue(asRecord(validation?.graphAuthorityInputs)?.graphSourcePath) ||
-    'examples/valid/todo-app-pbe-run/graph-source.json'
+    'examples/valid/todo-app-devview-run/graph-source.json'
   const generatedReadModelPath =
     authorityInputs.generatedReadModelPath ||
     stringValue(asRecord(validation?.graphAuthorityInputs)?.generatedReadModelPath) ||
-    'examples/valid/todo-app-pbe-run/generated/generated-read-model.json'
+    'examples/valid/todo-app-devview-run/generated/generated-read-model.json'
 
   validateGraphAwarePrerequisites(validation, findings)
 

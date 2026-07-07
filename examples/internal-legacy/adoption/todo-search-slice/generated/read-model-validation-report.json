@@ -2,7 +2,7 @@
   "version": "0.1.0-read-model-validation-report",
   "metadata": {
     "validatedAt": "2026-06-29T08:46:09.641Z",
-    "commandIdentity": "pbe graph read-model validate --slice examples/internal-legacy/adoption/todo-search-slice",
+    "commandIdentity": "devview graph read-model validate --slice examples/internal-legacy/adoption/todo-search-slice",
     "sourceCommit": "a1c4f10",
     "sourceSlice": "examples/internal-legacy/adoption/todo-search-slice",
     "profileId": "todo-search-selected-slice",

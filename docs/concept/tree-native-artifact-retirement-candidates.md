@@ -19,7 +19,7 @@ Current machine-readable status is recorded in
 The current boundary is:
 
 - Todo Search selected slice is limited Graph-source promoted.
-- Todo App PBE Run is graph-source-backed for `structure-only`.
+- Todo App DevView Run is graph-source-backed for `structure-only`.
 - `examples/internal-legacy/read-model-aggregate/read-model-slices.json` is the positive read-model registry.
 - `graph read-model validate --all`, `graph read-model report-health`, and `test:read-model:e2e` provide local and CI
   observation Evidence.

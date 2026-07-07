@@ -11,19 +11,19 @@ The aggregate summary reads existing per-slice validation reports and writes one
 not run read-model generation, parity comparison, validation, CI enforcement, source authority expansion, public-doc
 cleanup, tree-native retirement, or full Graph-source promotion.
 
-The local registry-backed command `pbe graph read-model validate --all` now runs configured per-slice commands first and
+The local registry-backed command `devview graph read-model validate --all` now runs configured per-slice commands first and
 then reuses this aggregate summary behavior. The standalone `summarize --slices ...` command remains report-only.
 
 ## Implemented Command
 
 ```text
-pbe graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run
+devview graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-devview-run
 ```
 
 The command reads only:
 
 - `examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validation-report.json`
-- `examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json`
+- `examples/valid/todo-app-devview-run/generated/read-model-validation-report.json`
 
 The command writes:
 
@@ -35,12 +35,12 @@ slice-owned source artifact.
 
 ## Included Slices
 
-| Slice                                                 | Profile id                        | Policy level          | Source layout       | Current validation |
-| ----------------------------------------------------- | --------------------------------- | --------------------- | ------------------- | ------------------ |
-| `examples/internal-legacy/adoption/todo-search-slice` | `todo-search-selected-slice`      | `pilot-marker-backed` | `flat-demo-support` | `validation-pass`  |
-| `examples/valid/todo-app-pbe-run`                     | `todo-app-pbe-run-structure-only` | `structure-only`      | `canonical-pbe`     | `validation-pass`  |
+| Slice                                                 | Profile id                            | Policy level          | Source layout       | Current validation |
+| ----------------------------------------------------- | ------------------------------------- | --------------------- | ------------------- | ------------------ |
+| `examples/internal-legacy/adoption/todo-search-slice` | `todo-search-selected-slice`          | `pilot-marker-backed` | `flat-demo-support` | `validation-pass`  |
+| `examples/valid/todo-app-devview-run`                 | `todo-app-devview-run-structure-only` | `structure-only`      | `canonical-devview` | `validation-pass`  |
 
-Todo Search remains the only active scoped source-authority pilot. Todo App PBE Run remains structure-only and is not
+Todo Search remains the only active scoped source-authority pilot. Todo App DevView Run remains structure-only and is not
 parity-backed, pilot-marker-backed, or authority-bearing, even when included in the reviewed aggregate-enabled CI
 artifact bundle.
 
@@ -114,10 +114,10 @@ approve broader execution, CI enforcement, source authority expansion, or full G
 ## Non-Enforcing CI Workflow Use
 
 The manual `PBE Read-Model Evidence` workflow now runs the aggregate summarize command after generating and validating
-the Todo Search and Todo App PBE Run per-slice reports:
+the Todo Search and Todo App DevView Run per-slice reports:
 
 ```text
-node dist/cli/index.js graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run --json
+node dist/cli/index.js graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-devview-run --json
 ```
 
 The workflow is still non-enforcing manual/PR informational Evidence. Running aggregate summarize in CI does not turn
@@ -158,7 +158,7 @@ Recommended next work remains bounded:
    parser/planner tests against the candidate registry fixture
 6. use `examples/internal-legacy/read-model-aggregate/read-model-slices.json` only as reviewable metadata until parser consumption is
    separately approved
-7. decide whether to strengthen Todo App PBE Run beyond structure-only
+7. decide whether to strengthen Todo App DevView Run beyond structure-only
 8. keep source authority expansion and full promotion as separate explicit decisions
 
 ## Final Statement

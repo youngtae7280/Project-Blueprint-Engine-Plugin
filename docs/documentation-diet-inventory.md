@@ -201,7 +201,7 @@ future regression work.
 
 Leave these areas untouched until a dedicated compatibility pass is planned:
 
-- `examples/valid/todo-app-pbe-run/`
+- `examples/valid/todo-app-devview-run/`
 - `examples/invalid/`
 - `examples/README.md`
 - `skills/*/SKILL.md`

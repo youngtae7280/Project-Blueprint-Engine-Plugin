@@ -347,7 +347,7 @@ only, and run `28151296796` provides reviewed `ci-evidence-pass` Evidence. That 
 not perform rollback, approve fallback, clean up compatibility warnings, or retire tree-native fallback/reference
 artifacts.
 
-The later aggregate-enabled run `28156403793` reviews Todo Search, Todo App PBE Run, and aggregate summary artifacts as
+The later aggregate-enabled run `28156403793` reviews Todo Search, Todo App DevView Run, and aggregate summary artifacts as
 CI-backed Evidence. Post-update run `28157938343` confirms the same aggregate-enabled workflow after the Node 24
 action/runtime update. These runs remain Evidence only and do not perform rollback, approve fallback, or retire
 artifacts.
@@ -408,13 +408,13 @@ plus contracts, evidence, acceptance, skills, and CLI gates. This policy preserv
 ### Multi-Slice Follow-Up Status
 
 The Todo Search scoped pilot keeps fallback/reference artifacts retained. The new
-`examples/valid/todo-app-pbe-run` profile is structure-only Evidence over a canonical `.pbe` fixture; it is not a
+`examples/valid/todo-app-devview-run` profile is structure-only Evidence over a canonical `.pbe` fixture; it is not a
 rollback/fallback retirement event, does not create a second scoped authority pilot, and does not remove compatibility
 or fallback obligations. The current validation reports include per-slice fallback/reference summaries so future
 aggregation can preserve rollback and compatibility boundaries per slice. The first aggregate summary now reads those
 reports as Evidence-only inputs, but it does not execute rollback checks, retire fallback artifacts, or implement broader
 aggregate validation.
-The non-enforcing manual workflow now can upload Todo Search, Todo App PBE Run, and aggregate summary artifacts together,
+The non-enforcing manual workflow now can upload Todo Search, Todo App DevView Run, and aggregate summary artifacts together,
 and runs `28156403793` / `28157938343` reviewed that aggregate-enabled bundle as CI-backed Evidence. PR run
 `28207822252` reviewed the non-enforcing `pull_request-informational` visibility layer. The observation policy in
 [pr-informational-observation-policy.md](pr-informational-observation-policy.md) governs later PR observation before

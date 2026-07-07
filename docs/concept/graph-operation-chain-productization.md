@@ -13,17 +13,17 @@ graph-source -> instruction pack -> local change -> graph delta -> graph update 
 
 ## Added Surface
 
-- Common schema notes under `schemas/pbe/`.
+- Common schema notes under `schemas/devview/`.
 - Retrofit change-record schema under `schemas/retrofit/`.
 - Native dogfood examples under `examples/internal-legacy/native/`.
 - Retrofit dogfood examples under `examples/internal-legacy/retrofit/`.
 - Local PowerShell entry point: `scripts/invoke-pbe-v0.ps1`.
-- CLI operation-chain entry point: `pbe graph operation run-chain`.
-- CLI graph instruction-pack generation entry point: `pbe graph operation generate-pack`.
-- CLI graph delta capture entry point: `pbe graph operation capture-delta`.
-- CLI graph update proposal generation entry point: `pbe graph operation propose-update`.
-- CLI graph update proposal entry point: `pbe graph operation apply-proposal`.
-- CLI retrofit planning entry point: `pbe graph retrofit plan`.
+- CLI operation-chain entry point: `devview graph operation run-chain`.
+- CLI graph instruction-pack generation entry point: `devview graph operation generate-pack`.
+- CLI graph delta capture entry point: `devview graph operation capture-delta`.
+- CLI graph update proposal generation entry point: `devview graph operation propose-update`.
+- CLI graph update proposal entry point: `devview graph operation apply-proposal`.
+- CLI retrofit planning entry point: `devview graph retrofit plan`.
 - Local graph operation flow smoke: `npm run test:graph-operation:flow`.
 - Generated observation reports under `outputs/`.
 - Non-enforcing CI observation through `.github/workflows/read-model-evidence.yml`.
@@ -81,24 +81,24 @@ after stale-state and boundary checks pass.
 
 Advisory DevView `check-scope` output is not a graph update proposal by itself. The Todo App runtime Evidence-only
 calibration now records a proposal candidate schema alignment preview at
-`examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json`.
-That preview maps advisory scope candidate categories to the existing `pbe-graph-update-proposal-v0` fields where
+`examples/valid/todo-app-devview-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json`.
+That preview maps advisory scope candidate categories to the existing `devview-graph-update-proposal-v0` fields where
 possible, and marks Evidence/report link mappings as unresolved. It does not run `propose-update`, create approved graph
 updates, mutate graph-source, or apply graph deltas.
 
 The follow-on mapping decision preview is
-`examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-unresolved-mapping-decision.runtime-evidence-only.preview.json`.
+`examples/valid/todo-app-devview-run/generated/graph-delta-proposal-unresolved-mapping-decision.runtime-evidence-only.preview.json`.
 It keeps `graphDeltaPath` unresolved until a graph-delta-compatible source exists and treats advisory JSON/markdown links
 as candidate review context only.
 
 The graph-delta-compatible source preview is
-`examples/valid/todo-app-pbe-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json`. It is a
+`examples/valid/todo-app-devview-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json`. It is a
 proposal-only generator input shape that collects advisory runtime output, changed-file collection, scope
 evaluation, proposal boundary, schema alignment, and mapping decisions. It is not graph-source, not `graph-delta-v0`,
-not `pbe-graph-update-proposal-v0`, and not apply.
+not `devview-graph-update-proposal-v0`, and not apply.
 
 The proposal-only generator scope decision is
-`examples/valid/todo-app-pbe-run/generated/graph-delta-proposal-generator-scope-decision.runtime-evidence-only.preview.json`.
+`examples/valid/todo-app-devview-run/generated/graph-delta-proposal-generator-scope-decision.runtime-evidence-only.preview.json`.
 It selected the advisory command shape
 `graph read-model propose-graph-delta --source <sourceArtifact> --output <proposalPath> --json` for the first slice.
 That proposal-only CLI is now implemented. It emits `graph-delta-proposal-only-preview` JSON through stdout by default
@@ -113,7 +113,7 @@ decision, mutate graph-source, apply graph deltas, satisfy runtime Evidence, pro
 diffs.
 
 The DevView Codex Hook Gateway boundary is previewed in
-`examples/valid/todo-app-pbe-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json`.
+`examples/valid/todo-app-devview-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json`.
 It defines future hook-level routing for DevView ON sessions across request intake, contract checks, edit-capable tool
 checks, post-checks, proposal-only previews, and Human Review Packets. It does not implement hooks, add blocking
 behavior, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, or enable CI enforcement.

@@ -118,7 +118,7 @@ describe('Hook Gateway health report CLI', () => {
     writeJson(
       join(
         workspace,
-        'examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json',
       ),
       {
         artifactRole: 'request-ir-candidate-schema-preview',
@@ -126,7 +126,7 @@ describe('Hook Gateway health report CLI', () => {
       },
     )
     const linkedPath =
-      'examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json'
+      'examples/valid/todo-app-devview-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json'
     const linkedBefore = readFileSync(join(workspace, linkedPath), 'utf8')
 
     const result = await runPbeCli(
@@ -178,7 +178,7 @@ function validBoundary(): Record<string, unknown> {
     runtimeEvidenceSatisfied: false,
     scopeEnforced: false,
     sourceHookGatewayBoundaryArtifact:
-      'examples/valid/todo-app-pbe-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json',
+      'examples/valid/todo-app-devview-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json',
     healthCheckModeMatrix: [
       { mode: 'off', availability: 'available', mayBlock: false, strictMode: false },
       { mode: 'guided', availability: 'future-candidate', mayBlock: true, strictMode: false },
@@ -195,12 +195,12 @@ function validBoundary(): Record<string, unknown> {
       {
         name: 'AI Request Analyzer boundary',
         status: 'available-boundary-preview',
-        path: 'examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json',
+        path: 'examples/valid/todo-app-devview-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json',
       },
       {
         name: 'Request IR Candidate schema',
         status: 'available-boundary-preview',
-        path: 'examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json',
+        path: 'examples/valid/todo-app-devview-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json',
       },
     ],
   }

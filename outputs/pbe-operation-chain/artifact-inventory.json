@@ -1,4 +1,4 @@
-﻿{
+{
   "status": "pbe-artifact-inventory-pass",
   "repoRoot": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin",
   "workspaceGitRepo": true,
@@ -171,23 +171,23 @@
       "bytes": 2264
     },
     {
-      "path": "schemas/pbe/graph-delta-v0.json",
+      "path": "schemas/devview/graph-delta-v0.json",
       "bytes": 830
     },
     {
-      "path": "schemas/pbe/graph-source-v0.json",
+      "path": "schemas/devview/graph-source-v0.json",
       "bytes": 1096
     },
     {
-      "path": "schemas/pbe/graph-update-proposal-v0.json",
+      "path": "schemas/devview/graph-update-proposal-v0.json",
       "bytes": 713
     },
     {
-      "path": "schemas/pbe/instruction-pack-v0.json",
+      "path": "schemas/devview/instruction-pack-v0.json",
       "bytes": 878
     },
     {
-      "path": "schemas/pbe/README.md",
+      "path": "schemas/devview/README.md",
       "bytes": 413
     },
     {
@@ -619,107 +619,107 @@
       "bytes": 5593
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/graph-source.json",
+      "path": "examples/valid/todo-app-devview-run/graph-source.json",
       "bytes": 32406
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/README.md",
+      "path": "examples/valid/todo-app-devview-run/README.md",
       "bytes": 619
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/blueprint/dependency-impact-audit.json",
+      "path": "examples/valid/todo-app-devview-run/.pbe/blueprint/dependency-impact-audit.json",
       "bytes": 266
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/blueprint/pbe-routing-contract.md",
+      "path": "examples/valid/todo-app-devview-run/.pbe/blueprint/pbe-routing-contract.md",
       "bytes": 105
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/blueprint/pbe-state.json",
+      "path": "examples/valid/todo-app-devview-run/.pbe/blueprint/pbe-state.json",
       "bytes": 3244
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/blueprint/requirement-tree.json",
+      "path": "examples/valid/todo-app-devview-run/.pbe/blueprint/requirement-tree.json",
       "bytes": 993
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/blueprint/source-of-truth-matrix.md",
+      "path": "examples/valid/todo-app-devview-run/.pbe/blueprint/source-of-truth-matrix.md",
       "bytes": 450
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/blueprint/work-graph.json",
+      "path": "examples/valid/todo-app-devview-run/.pbe/blueprint/work-graph.json",
       "bytes": 1590
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/control/acceptance-tree.json",
+      "path": "examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json",
       "bytes": 467
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/control/change-tree.json",
+      "path": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json",
       "bytes": 784
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/control/decision-queue.json",
+      "path": "examples/valid/todo-app-devview-run/.pbe/control/decision-queue.json",
       "bytes": 57
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/control/impact-tree.json",
+      "path": "examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json",
       "bytes": 703
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/evidence/evidence-tree.json",
+      "path": "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
       "bytes": 633
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt",
+      "path": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
       "bytes": 106
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/execution/cycle-contract.md",
+      "path": "examples/valid/todo-app-devview-run/.pbe/execution/cycle-contract.md",
       "bytes": 140
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/execution/cycle-tree.json",
+      "path": "examples/valid/todo-app-devview-run/.pbe/execution/cycle-tree.json",
       "bytes": 547
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json",
+      "path": "examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json",
       "bytes": 2863
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/tree/project-tree.json",
+      "path": "examples/valid/todo-app-devview-run/.pbe/tree/project-tree.json",
       "bytes": 770
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json",
+      "path": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
       "bytes": 1063
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json",
+      "path": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json",
       "bytes": 1256
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/generated/generated-read-model.json",
+      "path": "examples/valid/todo-app-devview-run/generated/generated-read-model.json",
       "bytes": 38365
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/generated/generated-read-model.md",
+      "path": "examples/valid/todo-app-devview-run/generated/generated-read-model.md",
       "bytes": 3641
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/generated/graph-source-read-model-projection.json",
+      "path": "examples/valid/todo-app-devview-run/generated/graph-source-read-model-projection.json",
       "bytes": 31105
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/generated/read-model-evidence-manifest.json",
+      "path": "examples/valid/todo-app-devview-run/generated/read-model-evidence-manifest.json",
       "bytes": 5897
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json",
+      "path": "examples/valid/todo-app-devview-run/generated/read-model-validation-report.json",
       "bytes": 12911
     },
     {
-      "path": "examples/valid/todo-app-pbe-run/generated/read-model-validation-report.md",
+      "path": "examples/valid/todo-app-devview-run/generated/read-model-validation-report.md",
       "bytes": 5803
     },
     {
@@ -735,7 +735,7 @@
       "bytes": 2915
     },
     {
-      "path": "scripts/generate-pbe-graph-update-proposal-v0.ps1",
+      "path": "scripts/generate-devview-graph-update-proposal-v0.ps1",
       "bytes": 3903
     },
     {

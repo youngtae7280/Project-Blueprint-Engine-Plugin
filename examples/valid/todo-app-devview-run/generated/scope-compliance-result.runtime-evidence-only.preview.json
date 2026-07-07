@@ -1,0 +1,382 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "scope-compliance-result-preview",
+  "status": "scope-compliance-collection-only-not-evaluated-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "checkerAxis": "scope-compliance-preview",
+  "resultStatus": "scope-compliance-not-evaluated-collection-only",
+  "scopeComplianceResultStatus": "scope-compliance-not-evaluated-collection-only",
+  "changedFileListStatus": "git-derived-changed-files-collected",
+  "changedFileListAuthorityStatus": "git-derived-changed-files",
+  "changedFileListAuthorityPreviewStatus": "changed-file-list-authority-previewed",
+  "authoritativeChangedFileInputBoundaryDecisionStatus": "authoritative-changed-file-input-boundary-decided",
+  "gitDerivedChangedFileInputDesignStatus": "git-derived-input-design-previewed",
+  "gitDerivedChangedFileCollectionScopeDecisionStatus": "git-derived-collection-scope-decided",
+  "gitDerivedChangedFileCollectionStatus": "git-derived-changed-files-collected",
+  "scopeComplianceCollectionInputConsumptionStatus": "scope-compliance-collection-input-consumption-previewed",
+  "scopeComplianceScopeInputBindingStatus": "scope-compliance-scope-input-binding-previewed",
+  "scopeCompliancePathPatternPolicyStatus": "scope-compliance-path-pattern-policy-previewed",
+  "scopeCompliancePathMatchingHelperStatus": "helper-implemented-not-consumed-for-evaluation",
+  "scopeComplianceViolationCategorySchemaStatus": "scope-compliance-violation-category-schema-previewed",
+  "scopeComplianceEvaluationResultShapeStatus": "scope-compliance-evaluation-result-shape-previewed",
+  "scopeComplianceEvaluatorStatus": "non-enforcing-evaluator-implemented",
+  "fixtureProvidedChangedFileListPreviewStatus": "fixture-provided-preview-input-available",
+  "fixtureInputConsumptionPreviewStatus": "scope-compliance-fixture-input-present-preview-only",
+  "scopeComplianceDryRunSkeletonStatus": "preview-only-not-executable",
+  "scopeComplianceNotRunReportStatus": "scope-compliance-not-run-report-previewed",
+  "enforcementStatus": "non-enforcing-preview",
+  "checkerImplemented": false,
+  "checkerRun": false,
+  "actualDiffInspected": false,
+  "changedFilesCollected": true,
+  "scopeComplianceEvaluationStatus": "not-evaluated",
+  "scopeEnforced": false,
+  "diffRejected": false,
+  "supportStatus": "not-supported",
+  "compileEligibility": "not-eligible-current-command-not-wired",
+  "expectedCandidateStatus": "contract-candidate-not-run",
+  "approvalStatus": "not-approved",
+  "equivalenceProven": false,
+  "currentRuntimeEvidenceStatus": "missing",
+  "evidenceCheckBindingStatus": "preview-only-not-satisfied",
+  "sourceArtifacts": {
+    "scopeComplianceCheckerPreview": "examples/valid/todo-app-devview-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
+    "changedFileListAuthorityPreview": "examples/valid/todo-app-devview-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
+    "gitDerivedChangedFileInputDesign": "examples/valid/todo-app-devview-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json",
+    "gitDerivedChangedFileCollection": "examples/valid/todo-app-devview-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+    "scopeComplianceCollectionInputConsumption": "examples/valid/todo-app-devview-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
+    "scopeComplianceScopeInputBinding": "examples/valid/todo-app-devview-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+    "scopeCompliancePathPatternPolicy": "examples/valid/todo-app-devview-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+    "scopeCompliancePathMatchingHelper": "cli/src/core/scope-compliance-path-pattern.ts",
+    "scopeComplianceViolationCategorySchema": "examples/valid/todo-app-devview-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
+    "scopeComplianceEvaluationResultShape": "examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json",
+    "scopeComplianceEvaluation": "examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json",
+    "collectionScopeDecision": "docs/concept/scope-compliance-checker-implementation-readiness.md#git-derived-changed-file-collection-scope-decision",
+    "fixtureProvidedChangedFileListPreview": "examples/valid/todo-app-devview-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
+    "fixtureInputConsumptionPreview": "examples/valid/todo-app-devview-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
+    "scopeComplianceDryRunSkeleton": "examples/valid/todo-app-devview-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json",
+    "scopeComplianceNotRunReport": "examples/valid/todo-app-devview-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json",
+    "testOnlyScopeBoundaryPreview": "examples/valid/todo-app-devview-run/generated/test-only-scope-boundary.runtime-evidence-only.preview.json",
+    "complianceCheckerBridgePreview": "examples/valid/todo-app-devview-run/generated/compliance-checker-bridge.runtime-evidence-only.preview.json",
+    "implementationReadiness": "docs/concept/scope-compliance-checker-implementation-readiness.md"
+  },
+  "requiredFutureInputs": [
+    {
+      "inputId": "execution-contract-or-contract-equivalent-scope-source",
+      "requiredFor": ["allowedScope", "forbiddenScope"],
+      "currentStatus": "scope-input-binding-previewed-not-consumed",
+      "currentSource": "examples/valid/todo-app-devview-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
+      "bindingPreview": "examples/valid/todo-app-devview-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+      "blockingReason": "The fixture has no supported generated contract candidate and remains contract-candidate-not-run; the binding preview only identifies draft scope sources."
+    },
+    {
+      "inputId": "allowedScope",
+      "requiredFor": ["allowed-scope-violation"],
+      "currentStatus": "allowed-scope-source-binding-previewed-not-consumed",
+      "currentSource": "compiler-input-model-calibration-draft.targetScopeCandidates",
+      "bindingPreview": "examples/valid/todo-app-devview-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+      "blockingReason": "Allowed scope source is identified for future evaluation, but path matching and evaluation are not implemented."
+    },
+    {
+      "inputId": "forbiddenScope",
+      "requiredFor": ["forbidden-scope-violation", "production-source-modified-in-test-only-fixture"],
+      "currentStatus": "forbidden-scope-source-binding-previewed-not-consumed",
+      "currentSource": "compiler-input-model-calibration-draft.policySnapshot.forbiddenScopeRules",
+      "bindingPreview": "examples/valid/todo-app-devview-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+      "blockingReason": "Forbidden scope source is identified for future evaluation, but path matching and evaluation are not implemented."
+    },
+    {
+      "inputId": "authoritative-changed-file-list",
+      "requiredFor": [
+        "allowed-scope-violation",
+        "forbidden-scope-violation",
+        "production-source-modified-in-test-only-fixture"
+      ],
+      "currentStatus": "git-derived-changed-files-collected",
+      "currentSource": "examples/valid/todo-app-devview-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+      "authorityPreview": "examples/valid/todo-app-devview-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
+      "gitDerivedDesign": "examples/valid/todo-app-devview-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json",
+      "collectionScopeDecision": "git-derived-collection-scope-decided",
+      "collectionImplementationStatus": "collection-only-implemented",
+      "fixtureProvidedPreview": "examples/valid/todo-app-devview-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
+      "authoritativeBoundaryDecision": "git-derived-changed-files-selected-for-later-implementation",
+      "blockingReason": "A git-derived changed-file collection artifact exists, but scope compliance still has no supported scope source, path comparison implementation, or checker evaluation slice."
+    },
+    {
+      "inputId": "scope-evaluation-path-comparison-rules",
+      "requiredFor": ["scope-path-comparison"],
+      "currentStatus": "scope-compliance-path-pattern-policy-previewed-not-consumed",
+      "currentSource": "examples/valid/todo-app-devview-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+      "blockingReason": "Path pattern policy is previewed, but no matching helper or evaluation slice consumes it."
+    },
+    {
+      "inputId": "result-output-path",
+      "requiredFor": ["non-enforcing-result-report"],
+      "currentStatus": "preview-path-only",
+      "currentSource": "examples/valid/todo-app-devview-run/generated/scope-compliance-result.runtime-evidence-only.preview.json",
+      "blockingReason": "This file is a static result-shape preview, not output from an implemented checker."
+    }
+  ],
+  "scopeSourceStatus": {
+    "allowedScopeSourceStatus": "allowed-scope-source-binding-previewed-not-consumed",
+    "forbiddenScopeSourceStatus": "forbidden-scope-source-binding-previewed-not-consumed",
+    "scopeSourceAuthoritative": false,
+    "scopeSourceSupportedByChecker": false,
+    "scopeInputsAcceptedForFutureEvaluation": true,
+    "scopeInputsConsumedForEvaluation": false,
+    "bindingPreview": "examples/valid/todo-app-devview-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+    "reason": "The calibration draft identifies allowed and forbidden scope sources for future evaluation, but the fixture is not supported and no checker consumes the binding."
+  },
+  "pathNormalizationStatus": {
+    "status": "not-defined",
+    "repositoryRelativePathRuleDefined": false,
+    "unresolvedPathHandlingDefined": false,
+    "generatedPathHandlingDefined": false,
+    "conceptualPathHandlingDefined": false,
+    "reason": "Path matching rules must be defined before any actual changed-file comparison."
+  },
+  "fixtureInputConsumptionPreview": {
+    "status": "scope-compliance-fixture-input-present-preview-only",
+    "path": "examples/valid/todo-app-devview-run/generated/scope-compliance-fixture-input-consumption.runtime-evidence-only.preview.json",
+    "inputAuthorityStatus": "fixture-provided-preview-only",
+    "checkerRun": false,
+    "actualDiffInspected": false,
+    "changedFilesCollected": false,
+    "evaluatedViolations": [],
+    "resultConclusion": "not-produced"
+  },
+  "gitDerivedChangedFileCollectionPreview": {
+    "status": "git-derived-changed-files-collected",
+    "path": "examples/valid/todo-app-devview-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+    "collectionMode": "explicit-base-head",
+    "authorityClass": "git-derived-changed-files",
+    "changedFilesCollected": true,
+    "checkerRun": false,
+    "actualDiffInspected": false,
+    "patchContentsInspected": false,
+    "scopeComplianceEvaluationStatus": "not-evaluated",
+    "evaluatedViolations": [],
+    "resultConclusion": "not-produced"
+  },
+  "scopeComplianceCollectionInputConsumptionPreview": {
+    "status": "scope-compliance-collection-input-consumption-previewed",
+    "path": "examples/valid/todo-app-devview-run/generated/scope-compliance-collection-input-consumption.runtime-evidence-only.preview.json",
+    "inputAuthorityClass": "git-derived-changed-files",
+    "inputCollectionStatus": "git-derived-changed-files-collected",
+    "inputAcceptedForFutureEvaluation": true,
+    "inputConsumedForEvaluation": false,
+    "checkerRun": false,
+    "scopeComplianceEvaluationStatus": "not-evaluated",
+    "evaluatedViolations": [],
+    "resultConclusion": "not-produced"
+  },
+  "scopeComplianceScopeInputBindingPreview": {
+    "status": "scope-compliance-scope-input-binding-previewed",
+    "path": "examples/valid/todo-app-devview-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json",
+    "scopeSourceArtifact": "examples/valid/todo-app-devview-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",
+    "allowedScopeBindingStatus": "allowed-scope-source-binding-previewed",
+    "forbiddenScopeBindingStatus": "forbidden-scope-source-binding-previewed",
+    "scopeInputsAcceptedForFutureEvaluation": true,
+    "scopeInputsConsumedForEvaluation": false,
+    "checkerRun": false,
+    "scopeComplianceEvaluationStatus": "not-evaluated",
+    "evaluatedViolations": [],
+    "resultConclusion": "not-produced"
+  },
+  "scopeCompliancePathPatternPolicyPreview": {
+    "status": "scope-compliance-path-pattern-policy-previewed",
+    "path": "examples/valid/todo-app-devview-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+    "patternSyntax": "glob-like-patterns-only-preview",
+    "forbiddenOverAllowed": true,
+    "policyAcceptedForFutureEvaluation": true,
+    "policyConsumedForEvaluation": false,
+    "checkerRun": false,
+    "scopeComplianceEvaluationStatus": "not-evaluated",
+    "evaluatedViolations": [],
+    "resultConclusion": "not-produced"
+  },
+  "scopeCompliancePathMatchingHelperPreview": {
+    "status": "helper-implemented-not-consumed-for-evaluation",
+    "path": "cli/src/core/scope-compliance-path-pattern.ts",
+    "helperScope": "single-normalized-path-against-single-pattern",
+    "producesScopeComplianceResult": false,
+    "producesViolationCategory": false,
+    "checkerRun": false,
+    "scopeComplianceEvaluationStatus": "not-evaluated",
+    "evaluatedViolations": [],
+    "resultConclusion": "not-produced"
+  },
+  "scopeComplianceViolationCategorySchemaPreview": {
+    "status": "scope-compliance-violation-category-schema-previewed",
+    "path": "examples/valid/todo-app-devview-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
+    "categorySchemaAcceptedForFutureEvaluation": true,
+    "categorySchemaConsumedForEvaluation": false,
+    "checkerRun": false,
+    "scopeComplianceEvaluationStatus": "not-evaluated",
+    "evaluatedViolations": [],
+    "resultConclusion": "not-produced",
+    "cleanResultAllowed": false
+  },
+  "scopeComplianceEvaluationResultShapePreview": {
+    "status": "scope-compliance-evaluation-result-shape-previewed",
+    "path": "examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json",
+    "resultShapeStatus": "scope-compliance-evaluation-result-shape-previewed",
+    "inputConsumedForEvaluation": false,
+    "scopeInputsConsumedForEvaluation": false,
+    "pathPolicyConsumedForEvaluation": false,
+    "categorySchemaConsumedForEvaluation": false,
+    "checkerRun": false,
+    "scopeComplianceEvaluationStatus": "not-evaluated",
+    "scopeComplianceResult": "no-result",
+    "evaluatedViolations": [],
+    "reviewRequiredFindings": [],
+    "blockingFindings": [],
+    "resultConclusion": "not-produced",
+    "cleanResultAllowed": false
+  },
+  "scopeComplianceEvaluationPreview": {
+    "status": "scope-compliance-evaluation-previewed",
+    "path": "examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json",
+    "scopeComplianceEvaluatorStatus": "non-enforcing-evaluator-implemented",
+    "checkerRun": true,
+    "nonEnforcing": true,
+    "scopeComplianceEvaluationStatus": "evaluation-blocked",
+    "scopeComplianceResult": "evaluation-blocked",
+    "evaluatedViolations": [],
+    "reviewRequiredFindingsPresent": true,
+    "blockingFindingsPresent": true,
+    "enforcementStatus": "not-enforced",
+    "resultConclusion": "advisory-non-enforcing"
+  },
+  "dryRunSkeletonPreview": {
+    "status": "preview-only-not-executable",
+    "path": "examples/valid/todo-app-devview-run/generated/scope-compliance-dry-run-skeleton.runtime-evidence-only.preview.json",
+    "resultStatus": "scope-compliance-dry-run-not-run",
+    "stopReason": "authoritative-changed-file-list-missing",
+    "checkerRun": false,
+    "actualDiffInspected": false,
+    "changedFilesCollected": true,
+    "scopeComplianceEvaluationStatus": "not-evaluated",
+    "evaluatedViolations": [],
+    "resultConclusion": "not-produced"
+  },
+  "notRunReportPreview": {
+    "status": "scope-compliance-not-run-report-previewed",
+    "path": "examples/valid/todo-app-devview-run/generated/scope-compliance-not-run-report.runtime-evidence-only.preview.json",
+    "reportStatus": "scope-compliance-not-run-report-previewed",
+    "stopReason": "authoritative-changed-file-list-missing",
+    "nextRequiredInput": "authoritative-changed-file-list",
+    "checkerRun": false,
+    "actualDiffInspected": false,
+    "changedFilesCollected": true,
+    "scopeComplianceEvaluationStatus": "not-evaluated",
+    "evaluatedViolations": [],
+    "resultConclusion": "not-produced"
+  },
+  "evaluatedViolations": [],
+  "violationEvaluationStatus": "not-run-input-missing",
+  "notEvaluatedViolations": [
+    {
+      "violationId": "allowed-scope-violation",
+      "reasonNotEvaluated": "Changed files have been collected, but no scope evaluation slice compares them with allowedScope.",
+      "wouldRequire": ["implemented-scope-evaluation", "allowedScope", "path-normalization-rules"]
+    },
+    {
+      "violationId": "forbidden-scope-violation",
+      "reasonNotEvaluated": "Changed files have been collected, but no scope evaluation slice compares them with forbiddenScope.",
+      "wouldRequire": ["implemented-scope-evaluation", "forbiddenScope", "path-normalization-rules"]
+    },
+    {
+      "violationId": "production-source-modified-in-test-only-fixture",
+      "reasonNotEvaluated": "Changed files have been collected as names/status only, but no production-source scope comparison has run.",
+      "wouldRequire": ["implemented-scope-evaluation", "production-source-forbidden-scope", "path-normalization-rules"]
+    },
+    {
+      "violationId": "missing-changed-file-list",
+      "reasonNotEvaluated": "Changed-file collection exists, but this result preview does not run a checker.",
+      "wouldRequire": ["implemented-result-classifier"]
+    },
+    {
+      "violationId": "scope-status-overclaim",
+      "reasonNotEvaluated": "No agent output report is attached to this preview.",
+      "wouldRequire": ["agent-output-report", "status-field-policy"]
+    }
+  ],
+  "missingInputs": [
+    {
+      "inputId": "implemented-scope-evaluation",
+      "impact": "changed files were collected, but scope compliance cannot be evaluated",
+      "authorityPreview": "examples/valid/todo-app-devview-run/generated/changed-file-list-authority.runtime-evidence-only.preview.json",
+      "gitDerivedDesign": "examples/valid/todo-app-devview-run/generated/git-derived-changed-file-input-design.runtime-evidence-only.preview.json",
+      "collectionScopeDecision": "git-derived-collection-scope-decided",
+      "collectionArtifact": "examples/valid/todo-app-devview-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+      "fixtureProvidedPreview": "examples/valid/todo-app-devview-run/generated/fixture-provided-changed-file-list.runtime-evidence-only.preview.json",
+      "authoritativeBoundaryDecision": "git-derived-changed-files-selected-for-later-implementation",
+      "requiredBeforeNoViolationClaim": false,
+      "currentStatus": "implemented-as-non-enforcing-advisory-evaluator",
+      "note": "The separate scope-compliance-evaluation artifact now runs non-enforcing evaluation. This collection-only result preview remains not evaluated."
+    },
+    {
+      "inputId": "scope-evaluation-path-comparison-rules",
+      "impact": "path pattern policy is previewed and a helper exists, but no checker consumes it",
+      "policyPreview": "examples/valid/todo-app-devview-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json",
+      "helperArtifact": "cli/src/core/scope-compliance-path-pattern.ts",
+      "requiredBeforeNoViolationClaim": true
+    },
+    {
+      "inputId": "supported-contract-scope-source",
+      "impact": "allowedScope and forbiddenScope remain preview-only for this fixture",
+      "requiredBeforeNoViolationClaim": true
+    },
+    {
+      "inputId": "implemented-result-classifier",
+      "impact": "violation category schema is previewed, but no result classifier consumes it",
+      "schemaPreview": "examples/valid/todo-app-devview-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json",
+      "requiredBeforeNoViolationClaim": true
+    },
+    {
+      "inputId": "agent-output-report",
+      "impact": "scope-status-overclaim cannot be checked",
+      "requiredBeforeNoViolationClaim": false
+    }
+  ],
+  "resultInterpretation": {
+    "canClaimNoViolationObserved": false,
+    "canClaimViolationDetected": false,
+    "canClaimScopeCompliant": false,
+    "canRejectDiff": false,
+    "canEnforceCi": false,
+    "canApproveFixture": false,
+    "canSatisfyRuntimeEvidence": false,
+    "canProveEquivalence": false,
+    "reason": "The result preview has a collection-only changed-file input, but no implemented scope evaluation or checker execution."
+  },
+  "allowedUse": [
+    "review the expected scope compliance result shape",
+    "show how collection-only changed-file input should remain not evaluated",
+    "confirm that collection success does not become no-violation",
+    "prepare a future static result schema or checker input decision"
+  ],
+  "forbiddenUse": [
+    "implemented checker result",
+    "actual diff inspection",
+    "authoritative changed-file list",
+    "scope-compliance pass",
+    "scope-compliance violation finding",
+    "no-violation claim",
+    "diff rejection",
+    "scope enforcement",
+    "supported compiler output",
+    "candidate generation eligibility",
+    "promotion approval",
+    "runtime Evidence satisfaction",
+    "required check configuration",
+    "CI enforcement",
+    "branch protection",
+    "execution authority",
+    "Todo App source-authority promotion",
+    "user acceptance"
+  ],
+  "nonExecutionBoundary": "This scope compliance result preview is static and non-enforcing. It records that a git-derived changed-file collection artifact exists, but scope compliance evaluation is not implemented and checkerRun remains false. It does not inspect patch contents, compare allowedScope or forbiddenScope, report no-violation, detect violations, reject changes, enforce scope, wire CI, configure required checks, generate a contract candidate, approve a fixture, satisfy runtime Evidence, set equivalenceProven true, apply graph deltas, or replace user acceptance."
+}

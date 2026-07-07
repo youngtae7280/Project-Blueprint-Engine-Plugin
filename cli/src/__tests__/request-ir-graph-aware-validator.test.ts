@@ -290,18 +290,18 @@ function validAuthority(): Record<string, unknown> {
   return {
     graphSource: {
       status: 'confirmed-graph-source-backed',
-      graphSourceScope: 'todo-app-pbe-run-structure-only',
-      sourceProfile: 'todo-app-pbe-run-structure-only',
+      graphSourceScope: 'todo-app-devview-run-structure-only',
+      sourceProfile: 'todo-app-devview-run-structure-only',
       policyLevel: 'structure-only',
-      sourceSlice: 'examples/valid/todo-app-pbe-run',
+      sourceSlice: 'examples/valid/todo-app-devview-run',
       sourceAuthorityBoundary:
-        'This Todo App PBE Run graph source is confirmed for structure-only graph-source-backed generation.',
+        'This Todo App DevView Run graph source is confirmed for structure-only graph-source-backed generation.',
       sourceRecords: {
         nodes: [
           {
             id: 'CH-001',
             nodeKind: 'change',
-            sourceArtifact: 'examples/valid/todo-app-pbe-run/.pbe/control/change-tree.json',
+            sourceArtifact: 'examples/valid/todo-app-devview-run/.pbe/control/change-tree.json',
             title: 'Preserve completed add-todo behavior while future revisions are assessed.',
             status: 'impact_analyzed',
           },
@@ -311,7 +311,7 @@ function validAuthority(): Record<string, unknown> {
     },
     generatedReadModel: {
       metadata: {
-        sliceProfileDisplayName: 'Todo App PBE Golden Run',
+        sliceProfileDisplayName: 'Todo App DevView Golden Run',
       },
       nodes: [
         {
@@ -322,7 +322,7 @@ function validAuthority(): Record<string, unknown> {
     },
     compilerInputCalibrationDraft: {
       calibrationFixture: {
-        projectName: 'Todo App PBE Run',
+        projectName: 'Todo App DevView Run',
       },
       policySnapshot: {
         policies: [

@@ -23,13 +23,13 @@ branch protection, ACEP, tree-native artifacts, or user acceptance.
 Configured profile:
 
 ```text
-todo-app-pbe-run-structure-only
+todo-app-devview-run-structure-only
 ```
 
 Configured slice:
 
 ```text
-examples/valid/todo-app-pbe-run
+examples/valid/todo-app-devview-run
 ```
 
 Current role:
@@ -53,7 +53,7 @@ Todo App has strong structure-only evidence:
 
 | Evidence surface              | Current signal                                                                                 |
 | ----------------------------- | ---------------------------------------------------------------------------------------------- |
-| Graph source                  | `examples/valid/todo-app-pbe-run/graph-source.json`                                            |
+| Graph source                  | `examples/valid/todo-app-devview-run/graph-source.json`                                        |
 | Product / AC refs             | `PT-1`, `AC-PT-1-1` in `.pbe/tree/product-tree.json`                                           |
 | Work refs / expected files    | `WT-1`, `expectedFiles: ["src/todos.ts"]` in `.pbe/tree/work-tree.json`                        |
 | Test refs                     | `TT-1` verifies `PT-1`, `WT-1`, and `AC-PT-1-1`                                                |
@@ -196,7 +196,7 @@ Future pilot approval must be explicit and scoped.
 
 Existing tests already protect the current blocked state, including:
 
-- Todo App uses `todo-app-pbe-run-structure-only`;
+- Todo App uses `todo-app-devview-run-structure-only`;
 - Todo App graph source parses without promotion;
 - Todo App source authority beyond structure-only remains blocked until pilot evidence exists;
 - Todo App graph-source candidates that claim promotion are rejected;

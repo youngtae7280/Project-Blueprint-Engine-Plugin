@@ -3,7 +3,7 @@ import { readJsonSafe, relativePath, writeJsonAtomic, writeTextAtomic } from './
 import type { IssueSeverity } from './types.js'
 
 const GENERATOR_NAME = 'InstructionPackGenerator'
-const COMPATIBLE_INSTRUCTION_PACK_SCHEMA = 'schemas/pbe/instruction-pack-v0.json'
+const COMPATIBLE_INSTRUCTION_PACK_SCHEMA = 'schemas/devview/instruction-pack-v0.json'
 const REQUIRED_GROUPS = [
   'humanRequest',
   'graphSnapshot',

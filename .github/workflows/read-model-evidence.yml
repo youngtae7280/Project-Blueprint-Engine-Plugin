@@ -10,7 +10,7 @@ on:
       - package.json
       - schemas/**
       - examples/internal-legacy/adoption/todo-search-slice/**
-      - examples/valid/todo-app-pbe-run/**
+      - examples/valid/todo-app-devview-run/**
       - examples/internal-legacy/read-model-aggregate/**
       - examples/internal-legacy/native/**
       - examples/internal-legacy/retrofit/**
@@ -29,12 +29,12 @@ jobs:
     env:
       PBE_TODO_SEARCH_SLICE: examples/internal-legacy/adoption/todo-search-slice
       PBE_TODO_SEARCH_GENERATED_DIR: examples/internal-legacy/adoption/todo-search-slice/generated
-      PBE_TODO_APP_SLICE: examples/valid/todo-app-pbe-run
-      PBE_TODO_APP_GENERATED_DIR: examples/valid/todo-app-pbe-run/generated
+      PBE_TODO_APP_SLICE: examples/valid/todo-app-devview-run
+      PBE_TODO_APP_GENERATED_DIR: examples/valid/todo-app-devview-run/generated
       PBE_AGGREGATE_DIR: examples/internal-legacy/read-model-aggregate/generated
       PBE_VALIDATE_ALL_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-validate-all-output.json
       PBE_CANDIDATE_OBSERVATION_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-candidate-observation-output.json
-      PBE_AGGREGATE_SLICES: examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run
+      PBE_AGGREGATE_SLICES: examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-devview-run
       PBE_E2E_SMOKE_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-e2e-smoke-output.json
       PBE_INTENT_NATIVE_GRAPH_SOURCE: examples/internal-legacy/intent-critical/native-pbe-maintenance/graph-source-intent.json
       PBE_INTENT_NATIVE_PROJECTION: examples/internal-legacy/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json
@@ -210,14 +210,14 @@ jobs:
           const todoSearchProjectionContract =
             projectionContractStatus.find((entry) => entry.profileId === 'todo-search-selected-slice') || null
           const todoAppProjectionContract =
-            projectionContractStatus.find((entry) => entry.profileId === 'todo-app-pbe-run-structure-only') || null
+            projectionContractStatus.find((entry) => entry.profileId === 'todo-app-devview-run-structure-only') || null
           const todoSearchProjectionPass = todoSearchProjectionContract?.status === 'projection-contract-pass'
           const todoAppProjectionPass = todoAppProjectionContract?.status === 'projection-contract-pass'
           const candidateObservationStatus =
             candidateObservationOutput?.candidateObservationStatus || candidateObservationOutput?.status || 'missing'
           const todoAppCandidateObservation =
             candidateObservationOutput?.observedCandidates?.find(
-              (entry) => entry.profileId === 'todo-app-pbe-run-structure-only',
+              (entry) => entry.profileId === 'todo-app-devview-run-structure-only',
             ) || null
           const todoAppCandidateObservationPass =
             candidateObservationStatus === 'candidate-observation-pass' &&
@@ -447,7 +447,7 @@ jobs:
               dogfoodEvaluationReportPath,
             ],
             sourceAuthorityBoundary:
-              'CI-backed Evidence is Evidence only for declared read-model reports, aggregate summary, and separate candidate-observation metadata. Todo Search remains the only scoped pilot; Todo App PBE Run remains structure-only. This workflow does not expand source authority.',
+              'CI-backed Evidence is Evidence only for declared read-model reports, aggregate summary, and separate candidate-observation metadata. Todo Search remains the only scoped pilot; Todo App DevView Run remains structure-only. This workflow does not expand source authority.',
             nonEnforcementStatement:
               'This workflow is non-enforcing Evidence only. workflow_dispatch runs are manual Evidence runs; pull_request runs, when present, are informational signals only. It is not configured as a required check, branch protection rule, merge gate, or CI enforcement mode.',
             nonPromotionStatement:
@@ -518,7 +518,7 @@ jobs:
             `- CI evidence status: \`${status}\``,
             `- Todo Search validator status: \`${todoSearchStatus}\``,
             `- Todo Search parity status: \`${todoSearchParity}\``,
-            `- Todo App PBE Run validator status: \`${todoAppStatus}\``,
+            `- Todo App DevView Run validator status: \`${todoAppStatus}\``,
             `- Validate-all status: \`${validateAllStatus}\``,
             `- E2E smoke status: \`${e2eSmokeStatus}\``,
             `- Todo Search projection contract status: \`${todoSearchProjection}\``,
@@ -573,12 +573,12 @@ jobs:
             examples/internal-legacy/adoption/todo-search-slice/generated/read-model-ci-evidence-manifest.json
             examples/internal-legacy/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json
             examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
-            examples/valid/todo-app-pbe-run/generated/generated-read-model.json
-            examples/valid/todo-app-pbe-run/generated/generated-read-model.md
-            examples/valid/todo-app-pbe-run/generated/read-model-evidence-manifest.json
-            examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json
-            examples/valid/todo-app-pbe-run/generated/read-model-validation-report.md
-            examples/valid/todo-app-pbe-run/generated/graph-source-read-model-projection.json
+            examples/valid/todo-app-devview-run/generated/generated-read-model.json
+            examples/valid/todo-app-devview-run/generated/generated-read-model.md
+            examples/valid/todo-app-devview-run/generated/read-model-evidence-manifest.json
+            examples/valid/todo-app-devview-run/generated/read-model-validation-report.json
+            examples/valid/todo-app-devview-run/generated/read-model-validation-report.md
+            examples/valid/todo-app-devview-run/generated/graph-source-read-model-projection.json
             examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.json
             examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.md
             examples/internal-legacy/read-model-aggregate/generated/read-model-validate-all-output.json

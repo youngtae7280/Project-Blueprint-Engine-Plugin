@@ -7,7 +7,7 @@ This document defines the registry fixture and test strategy used before impleme
 validation surface:
 
 ```text
-pbe graph read-model validate --all
+devview graph read-model validate --all
 ```
 
 It extends [read-model-validate-all-contract.md](read-model-validate-all-contract.md) by specifying what the future
@@ -117,7 +117,7 @@ Required profile fields:
 | ---------------------------- | ---------------------------------------------------------------------------------------- |
 | `profileId`                  | Stable profile key used by generator, validator, and aggregate reports.                  |
 | `sourceSlice`                | Repository-relative source slice path.                                                   |
-| `sourceLayout`               | Declared source layout such as `flat-demo-support` or `canonical-pbe`.                   |
+| `sourceLayout`               | Declared source layout such as `flat-demo-support` or `canonical-devview`.               |
 | `policyLevel`                | Profile policy such as `structure-only`, `parity-backed`, or `pilot-marker-backed`.      |
 | `includedInValidateAll`      | Whether future all-slice validation includes this profile by default.                    |
 | `requiredCommands`           | Commands the future execution planner may run.                                           |
@@ -147,13 +147,13 @@ Required profile fields:
 | Runtime fixture       | required/present                                                                               |
 | Boundary              | Todo Search scoped, Evidence-only, non-promotion                                               |
 
-### Todo App PBE Run
+### Todo App DevView Run
 
 | Field                 | Expected value                                                        |
 | --------------------- | --------------------------------------------------------------------- |
-| `profileId`           | `todo-app-pbe-run-structure-only`                                     |
-| `sourceSlice`         | `examples/valid/todo-app-pbe-run`                                     |
-| `sourceLayout`        | `canonical-pbe`                                                       |
+| `profileId`           | `todo-app-devview-run-structure-only`                                 |
+| `sourceSlice`         | `examples/valid/todo-app-devview-run`                                 |
+| `sourceLayout`        | `canonical-devview`                                                   |
 | `policyLevel`         | `structure-only`                                                      |
 | Required commands     | `generate`, `validate`                                                |
 | Required artifacts    | generated read-model, validation report, evidence manifest            |
@@ -210,7 +210,7 @@ Current parser/normalization tests validate that the candidate registry parser:
 Current command-plan tests validate non-executing plans:
 
 - builds `generate + compare + validate` for Todo Search
-- builds `generate + validate` for Todo App PBE Run
+- builds `generate + validate` for Todo App DevView Run
 - does not plan compare for `structure-only`
 - does not plan pilot-marker checks for `structure-only`
 - does not run any generated commands while constructing the plan
@@ -274,8 +274,8 @@ Validate that positive fixture expectations stay intentional:
 
 - Todo Search remains 40 nodes / 59 edges / 20 validation checks unless a deliberate update records why
 - Todo Search parity remains `comparison-pass`
-- Todo App PBE Run remains 22 nodes / 38 edges / 16 validation checks unless a deliberate update records why
-- Todo App PBE Run remains `structure-only`
+- Todo App DevView Run remains 22 nodes / 38 edges / 16 validation checks unless a deliberate update records why
+- Todo App DevView Run remains `structure-only`
 - aggregate over current reports remains `aggregate-pass` when per-slice reports are valid
 
 ## Test Execution Ordering
@@ -336,7 +336,7 @@ This strategy, candidate fixture, and parser tests do not:
 - expand source authority
 - approve full Graph-source promotion
 - perform public-doc cleanup
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 
 ## Gate Self-Check
 
@@ -346,7 +346,7 @@ This strategy, candidate fixture, and parser tests do not:
 | Parser / Normalization Gate    | PASS   | Internal tests parse, normalize, reject invalid registry shapes, and compare profiles. |
 | Local Validate-All Gate        | PASS   | Local `validate --all` consumes the registry without changing existing slice commands. |
 | Registry Fixture Shape Gate    | PASS   | Proposed fields are explicit and profile-driven.                                       |
-| Positive Fixture Clarity Gate  | PASS   | Todo Search and Todo App PBE Run expected policy levels and counts are declared.       |
+| Positive Fixture Clarity Gate  | PASS   | Todo Search and Todo App DevView Run expected policy levels and counts are declared.   |
 | Negative Fixture Honesty Gate  | PASS   | Failure categories are visible and should not mutate positive source artifacts.        |
 | Test Class Coverage Gate       | PASS   | Parser, planning, policy, independence, aggregate, non-mutation, boundary, and drift.  |
 | Non-Mutation Gate              | PASS   | Future tests must prove source/manual/pilot/report-only inputs remain unchanged.       |

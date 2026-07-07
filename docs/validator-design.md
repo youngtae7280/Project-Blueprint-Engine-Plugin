@@ -30,11 +30,11 @@ Run the example regression suite with:
 npm run test:examples
 ```
 
-The runner builds the CLI, materializes `examples/valid/todo-app-pbe-run`, and expects `pbe validate` plus stage-aware
-`pbe trace check` commands to pass. Invalid fixtures under `examples/invalid/*` are applied as focused mutations to the
-golden run; each command must fail with its configured `expectedIssueCode`. This keeps the current state machine,
-structured acceptance criteria, traceability closure, evidence freshness, and Change/Impact/Revision skeleton covered by
-concrete `.pbe` examples without adding new validator rules.
+The runner builds the CLI, materializes `examples/valid/todo-app-devview-run`, and expects `pbe validate` plus
+stage-aware `pbe trace check` commands to pass. Invalid fixtures under `examples/invalid/*` are applied as focused
+mutations to the golden run; each command must fail with its configured `expectedIssueCode`. This keeps the current
+state machine, structured acceptance criteria, traceability closure, evidence freshness, and Change/Impact/Revision
+skeleton covered by concrete `.pbe` examples without adding new validator rules.
 
 ## Expected Report Shape
 

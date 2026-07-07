@@ -24,7 +24,7 @@ Current positive registry-backed read-model validation is scoped to:
 The positive registry currently contains the configured positive profiles only:
 
 - `todo-search-selected-slice`
-- `todo-app-pbe-run-structure-only`
+- `todo-app-devview-run-structure-only`
 
 Current durable read-model invalid fixtures live outside the positive registry:
 

@@ -29,8 +29,8 @@ describe('scope compliance evaluator', () => {
 
   it('allows matching allowed scope without blocking findings', () => {
     const result = evaluateScopeCompliance({
-      changedFiles: [{ path: 'examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt' }],
-      allowedScopePatterns: ['examples/valid/todo-app-pbe-run/.pbe/evidence/**'],
+      changedFiles: [{ path: 'examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt' }],
+      allowedScopePatterns: ['examples/valid/todo-app-devview-run/.pbe/evidence/**'],
       forbiddenScopePatterns: ['src/todos.ts'],
     })
 
@@ -44,7 +44,7 @@ describe('scope compliance evaluator', () => {
   it('marks unmatched changed paths review-required instead of silently clean', () => {
     const result = evaluateScopeCompliance({
       changedFiles: [{ path: 'docs/concept/scope-compliance.md' }],
-      allowedScopePatterns: ['examples/valid/todo-app-pbe-run/.pbe/evidence/**'],
+      allowedScopePatterns: ['examples/valid/todo-app-devview-run/.pbe/evidence/**'],
       forbiddenScopePatterns: ['src/todos.ts'],
     })
 
@@ -110,10 +110,10 @@ describe('scope compliance evaluator', () => {
 
   it('handles many files and patterns without async or external work', () => {
     const changedFiles = Array.from({ length: 200 }, (_, index) => ({
-      path: `examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/${index}.txt`,
+      path: `examples/valid/todo-app-devview-run/.pbe/evidence/test-results/${index}.txt`,
     }))
     const allowedScopePatterns = [
-      'examples/valid/todo-app-pbe-run/.pbe/evidence/**',
+      'examples/valid/todo-app-devview-run/.pbe/evidence/**',
       ...Array.from({ length: 20 }, (_, index) => `unused/${index}/**`),
     ]
 

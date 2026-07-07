@@ -405,7 +405,7 @@ describe('PBE CLI', () => {
         '--brief',
         '작은 문서 정리',
         '--files',
-        'cli/src/commands/status.ts,schemas/pbe-state.schema.json,examples/valid/todo-app-pbe-run/README.md',
+        'cli/src/commands/status.ts,schemas/pbe-state.schema.json,examples/valid/todo-app-devview-run/README.md',
         '--json',
       ],
       { cwd: createWorkspace(), pluginRoot },
@@ -4028,7 +4028,10 @@ function mutateProductNode(workspace: string, productId: string, fields: Record<
 }
 
 function copyValidExample(workspace: string): void {
-  cpSync(join(pluginRoot, 'examples', 'valid', 'todo-app-pbe-run', '.'), workspace, { recursive: true, force: true })
+  cpSync(join(pluginRoot, 'examples', 'valid', 'todo-app-devview-run', '.'), workspace, {
+    recursive: true,
+    force: true,
+  })
   for (const entry of ['.codex-plugin', 'skills', 'templates', 'schemas', 'docs']) {
     cpSync(join(pluginRoot, entry), join(workspace, entry), { recursive: true, force: true })
   }

@@ -609,8 +609,8 @@ function isUnsafeBundleDir(candidatePath: string): boolean {
     normalized.startsWith('.git/') ||
     normalized === '.codex' ||
     normalized.startsWith('.codex/') ||
-    normalized === 'examples/valid/todo-app-pbe-run/generated' ||
-    normalized.startsWith('examples/valid/todo-app-pbe-run/generated/')
+    normalized === 'examples/valid/todo-app-devview-run/generated' ||
+    normalized.startsWith('examples/valid/todo-app-devview-run/generated/')
   )
 }
 

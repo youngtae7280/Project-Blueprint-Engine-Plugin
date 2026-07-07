@@ -20,7 +20,7 @@ export interface CandidateLink extends JsonRecord {
 
 export interface ProposalOnlyGraphDeltaPreview {
   schemaVersion: 1
-  schemaId: 'pbe-graph-update-proposal-v0'
+  schemaId: 'devview-graph-update-proposal-v0'
   artifactRole: 'graph-delta-proposal-only-preview'
   status: 'generated-proposal-only-preview'
   proposalId: string
@@ -88,7 +88,7 @@ interface GraphDeltaCompatibleSourceArtifact extends JsonRecord {
   evidenceAndReportLinkCandidates?: unknown
 }
 
-const compatibleProposalSchema = 'pbe-graph-update-proposal-v0'
+const compatibleProposalSchema = 'devview-graph-update-proposal-v0'
 
 export async function generateProposalOnlyGraphDeltaPreview(
   root: string,

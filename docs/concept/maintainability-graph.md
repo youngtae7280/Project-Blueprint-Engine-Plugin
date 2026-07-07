@@ -203,7 +203,7 @@ not add CI enforcement or broaden Maintainability Graph source authority. Run `2
 
 [multi-slice-read-model-validation-design.md](multi-slice-read-model-validation-design.md) records the next design step
 for validation beyond the Todo Search slice. It treats multi-slice validation as Evidence-only, selects
-`examples/valid/todo-app-pbe-run` as the next structural candidate, and requires Todo Search hardcoding to be isolated
+`examples/valid/todo-app-devview-run` as the next structural candidate, and requires Todo Search hardcoding to be isolated
 behind a future slice profile/config before implementation.
 
 [generated-read-model-evidence-requirement.md](generated-read-model-evidence-requirement.md) records the user's decision

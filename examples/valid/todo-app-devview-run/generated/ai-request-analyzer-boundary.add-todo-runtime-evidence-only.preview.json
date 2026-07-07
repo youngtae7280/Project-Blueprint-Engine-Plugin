@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "ai-request-analyzer-boundary",
+  "status": "ai-request-analyzer-boundary-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "boundaryScope": "natural-language-request-to-request-ir-candidate-only",
+  "analyzerImplemented": false,
+  "llmInvoked": false,
+  "networkCallsAllowed": false,
+  "runtimeAiCallsAllowed": false,
+  "requestIrCandidateGenerated": false,
+  "requestIrCandidateGenerationStatus": "boundary-preview-only-not-generated",
+  "candidateOnly": true,
+  "candidateAuthorityStatus": "ai-generated-candidate-not-validated",
+  "requestIrAuthorityStatus": "not-authoritative-until-validated",
+  "expectedOutputArtifactRole": "request-ir-candidate",
+  "expectedOutputSchemaId": "devview-request-ir-candidate-v0-preview",
+  "expectedOutputSchemaArtifact": "examples/valid/todo-app-devview-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json",
+  "calibrationCandidateFixtureArtifact": "examples/valid/todo-app-devview-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json",
+  "naturalLanguageRequestIntakeBoundaryArtifact": "examples/valid/todo-app-devview-run/generated/natural-language-request-intake-boundary.runtime-evidence-only.preview.json",
+  "clarificationInterviewBoundaryArtifact": "examples/valid/todo-app-devview-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json",
+  "clarificationInterviewBoundaryStatus": "clarification-interview-boundary-previewed",
+  "inputContract": {
+    "rawNaturalLanguageRequest": {
+      "required": true,
+      "authorityStatus": "human-request-text-not-compiler-authority",
+      "example": "Add Todo App runtime evidence for the add button behavior without touching production source."
+    },
+    "optionalRepoContext": {
+      "allowed": true,
+      "authorityStatus": "context-only-not-source-authority",
+      "examples": [
+        "project name",
+        "current DevView mode",
+        "known fixture or session context",
+        "candidate graph/read-model metadata summaries"
+      ]
+    },
+    "optionalSessionContext": {
+      "allowed": true,
+      "authorityStatus": "context-only-not-source-authority",
+      "examples": ["request session id", "previous clarification answers", "hook gateway mode"]
+    }
+  },
+  "outputContract": {
+    "outputKind": "Request IR Candidate JSON only",
+    "outputAuthorityStatus": "ai-generated-candidate-not-validated",
+    "requiredBoundaryFields": {
+      "requestIrCandidateStatus": "candidate-only",
+      "candidateOnly": true,
+      "authorityStatus": "not-authoritative-until-validated",
+      "graphTraversalAllowed": false,
+      "contractGenerationAllowed": false,
+      "instructionPackGenerationAllowed": false
+    },
+    "allowedRequestTypes": [
+      "runtime-evidence-only",
+      "behavior-change",
+      "bug-fix",
+      "refactor",
+      "documentation-only",
+      "investigation-only",
+      "unknown"
+    ],
+    "unknownOrLowConfidencePolicy": "clarification-required-or-human-review-required-before-deterministic-validation",
+    "clarificationPolicy": {
+      "boundaryArtifact": "examples/valid/todo-app-devview-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json",
+      "lowConfidenceHandling": "set requiresClarification=true and do not invent target/scope/evidence authority",
+      "unknownRequestTypeHandling": "set requestTypeCandidate=unknown and requiresClarification=true",
+      "missingTargetHandling": "set requiresClarification=true and ask a mapped target question",
+      "implicitApprovalApplyOrEnforcementHandling": "set humanReviewRequired=true and keep approval/apply/enforcement flags false",
+      "revisedCandidateValidationRequiredAgain": true
+    }
+  },
+  "validationChainRequiredBeforeTraversal": [
+    {
+      "step": "clarification-interview-branch-if-needed",
+      "boundaryArtifact": "examples/valid/todo-app-devview-run/generated/clarification-interview-boundary.add-todo-runtime-evidence-only.preview.json",
+      "requiredWhen": "requiresClarification=true, low confidence, unknown request type, missing target, ambiguous scope, missing evidence requirement, source authority conflict, production source edit ambiguity, or implicit approval/apply/enforcement request",
+      "outputAuthority": "clarification-derived-candidate-not-validated",
+      "revalidateRevisedCandidate": true
+    },
+    {
+      "step": "schema-only-request-ir-validation",
+      "command": "graph read-model validate-request-ir --candidate <candidatePath> --json",
+      "requiredBeforeGraphAwareValidation": true,
+      "outputArtifact": "examples/valid/todo-app-devview-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json"
+    },
+    {
+      "step": "graph-aware-request-ir-validation",
+      "command": "graph read-model validate-request-ir-graph --candidate <candidatePath> --schema-validation <schemaValidationPath> --json",
+      "requiredBeforeTraversalPlan": true,
+      "outputArtifact": "examples/valid/todo-app-devview-run/generated/request-ir-graph-validation.add-todo-runtime-evidence-only.preview.json"
+    },
+    {
+      "step": "graph-traversal-plan-generation",
+      "command": "graph read-model plan-traversal --graph-validation <graphAwareValidationPath> --json",
+      "requiresGraphTraversalAllowed": true
+    }
+  ],
+  "downstreamAuthorityBoundaries": {
+    "graphTraversalAllowedFromAnalyzerOutput": false,
+    "selectedSliceAllowedFromAnalyzerOutput": false,
+    "contractInputAllowedFromAnalyzerOutput": false,
+    "instructionPackAllowedFromAnalyzerOutput": false,
+    "codexExecutionAllowedFromAnalyzerOutput": false,
+    "graphSourceMutationAllowedFromAnalyzerOutput": false,
+    "graphDeltaApplyAllowedFromAnalyzerOutput": false,
+    "approvalAllowedFromAnalyzerOutput": false,
+    "humanDecisionAllowedFromAnalyzerOutput": false,
+    "runtimeEvidenceSatisfactionAllowedFromAnalyzerOutput": false,
+    "equivalenceProofAllowedFromAnalyzerOutput": false,
+    "scopeEnforcementAllowedFromAnalyzerOutput": false,
+    "ciEnforcementAllowedFromAnalyzerOutput": false,
+    "clarificationAnswersAllowedToBypassValidation": false
+  },
+  "currentBoundaryFlags": {
+    "graphTraversalExecuted": false,
+    "selectedGraphSliceGenerated": false,
+    "contractInputGenerated": false,
+    "instructionPackGenerated": false,
+    "codexExecutionTriggered": false,
+    "graphSourceMutated": false,
+    "graphDeltaApplied": false,
+    "approvalStatus": "not-approved",
+    "humanDecisionRecorded": false,
+    "equivalenceProven": false,
+    "runtimeEvidenceSatisfied": false,
+    "scopeEnforced": false,
+    "ciEnforcementEnabled": false
+  },
+  "forbiddenUse": [
+    "treat AI analyzer output as validated Request IR",
+    "drive graph traversal directly from analyzer output",
+    "generate selected graph slices directly from analyzer output",
+    "generate contract compiler input directly from analyzer output",
+    "generate instruction packs directly from analyzer output",
+    "skip clarification when confidence is low, request type is unknown, target/scope/evidence is ambiguous, source authority conflicts, or approval/apply/enforcement is implied",
+    "treat clarification answers as approval or validated Request IR",
+    "trigger Codex execution",
+    "mutate graph-source",
+    "apply graph deltas",
+    "record approval or human decisions",
+    "claim runtime Evidence satisfaction",
+    "prove equivalence",
+    "enforce scope or CI"
+  ],
+  "runtimeBudgetBoundary": {
+    "deterministicRuntimeBudgetMeasured": false,
+    "reason": "This is a boundary preview and no analyzer command or LLM call exists.",
+    "futureLlmTimeBudgetClassification": "outside-5-second-deterministic-runtime-budget",
+    "postCandidateDeterministicValidationBudget": "inside-advisory-devview-runtime-budget"
+  },
+  "nonExecutionBoundary": "This artifact previews the AI Request Analyzer boundary only. It does not implement an analyzer, call an LLM, generate a Request IR Candidate, validate Request IR, run graph traversal, generate a selected graph slice, generate contract compiler input, generate instruction packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI."
+}

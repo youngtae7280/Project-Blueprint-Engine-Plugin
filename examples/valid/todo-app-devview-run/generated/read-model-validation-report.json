@@ -1,0 +1,275 @@
+{
+  "version": "0.1.0-read-model-validation-report",
+  "metadata": {
+    "validatedAt": "2026-06-29T08:46:09.957Z",
+    "commandIdentity": "devview graph read-model validate --slice examples/valid/todo-app-devview-run",
+    "sourceCommit": "a1c4f10",
+    "sourceSlice": "examples/valid/todo-app-devview-run",
+    "profileId": "todo-app-devview-run-structure-only",
+    "sliceProfile": "todo-app-devview-run-structure-only",
+    "sourceLayout": "canonical-devview",
+    "policyLevel": "structure-only",
+    "evidenceLevel": "validator-backed",
+    "scopeLevel": "scoped-slice-validation",
+    "expectedCounts": { "nodes": 22, "edges": 38, "validationChecks": 16 },
+    "generatedReadModel": "examples/valid/todo-app-devview-run/generated/generated-read-model.json",
+    "parityRequirement": {
+      "required": false,
+      "status": "not-required",
+      "path": "not-required-for-structure-only",
+      "reason": "Structure-only validation does not require generated/manual parity."
+    },
+    "parityReport": "not-required-for-structure-only",
+    "evidenceManifest": "examples/valid/todo-app-devview-run/generated/read-model-evidence-manifest.json",
+    "pilotMarkerRequirement": {
+      "required": false,
+      "status": "not-required",
+      "path": "not-required-for-structure-only",
+      "reason": "Structure-only validation does not require a scoped source-authority pilot marker."
+    },
+    "pilotMarker": "not-required-for-structure-only",
+    "runtimeFixtureRequirement": {
+      "required": false,
+      "status": "attached-evidence-only",
+      "path": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+      "reason": "Structure-only validation does not require a runnable runtime fixture; attached evidence text may be referenced when present."
+    },
+    "retainedWarningCount": 2,
+    "fallbackReferenceCount": 15
+  },
+  "status": "validation-pass",
+  "evidenceLevel": "validator-backed",
+  "scopeLevel": "scoped-slice-validation",
+  "sourceAuthorityBoundary": "Validator-backed Evidence checks structure-only generated read-model outputs for this canonical .pbe fixture. It does not change source authority.",
+  "nonPromotionStatement": "Structure-only validation pass is Evidence only. It does not promote Maintainability Graph, create a source-authority pilot, require parity, introduce CI enforcement, retire .pbe artifacts, or replace user approval.",
+  "summary": {
+    "checkCount": 16,
+    "passCount": 16,
+    "warningCount": 0,
+    "blockingCount": 0,
+    "decisionRequiredCount": 0,
+    "status": "validation-pass"
+  },
+  "checks": [
+    {
+      "id": "generated-read-model-exists",
+      "title": "Generated read-model exists and parses",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["examples/valid/todo-app-devview-run/generated/generated-read-model.json"]
+    },
+    {
+      "id": "evidence-manifest-exists",
+      "title": "Evidence manifest exists and parses",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["examples/valid/todo-app-devview-run/generated/read-model-evidence-manifest.json"]
+    },
+    {
+      "id": "source-input-artifacts-present",
+      "title": "Canonical .pbe source input artifacts exist",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["generated sourceInputs"]
+    },
+    {
+      "id": "node-edge-tag-taxonomy-valid",
+      "title": "Node/Edge/Tag taxonomy is valid",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["examples/valid/todo-app-devview-run/generated/generated-read-model.json"]
+    },
+    {
+      "id": "view-scoped-tags-allowed",
+      "title": "viewScopedTags uses allowed role tags only",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["examples/valid/todo-app-devview-run/generated/generated-read-model.json"]
+    },
+    {
+      "id": "view-membership-separated",
+      "title": "View membership is separated from tags",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["examples/valid/todo-app-devview-run/generated/generated-read-model.json"]
+    },
+    {
+      "id": "core-view-coverage-present",
+      "title": "7 Core View coverage is present for structure-only validation",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["examples/valid/todo-app-devview-run/generated/generated-read-model.json"]
+    },
+    {
+      "id": "confidence-freshness-separated",
+      "title": "Confidence and freshness/status are separated",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["examples/valid/todo-app-devview-run/generated/generated-read-model.json"]
+    },
+    {
+      "id": "check-evidence-mapping-present",
+      "title": "Check/Evidence mapping is present where source inputs support it",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["examples/valid/todo-app-devview-run/generated/generated-read-model.json"]
+    },
+    {
+      "id": "source-authority-boundary-bounded",
+      "title": "Source authority boundary is present and bounded",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["examples/valid/todo-app-devview-run/generated/generated-read-model.json"]
+    },
+    {
+      "id": "non-promotion-statement-present",
+      "title": "Non-promotion statement is present",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["examples/valid/todo-app-devview-run/generated/generated-read-model.json"]
+    },
+    {
+      "id": "retained-limitations-visible",
+      "title": "Structure-only limitations are visible",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["examples/valid/todo-app-devview-run/generated/generated-read-model.json"]
+    },
+    {
+      "id": "fallback-reference-artifacts-present",
+      "title": "Fallback/reference source artifacts are present",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["examples/valid/todo-app-devview-run/generated/generated-read-model.json"]
+    },
+    {
+      "id": "user-acceptance-authority-preserved",
+      "title": "User acceptance authority is not replaced by Codex/DevView",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["examples/valid/todo-app-devview-run/generated/generated-read-model.json"]
+    },
+    {
+      "id": "supplemental-compatibility-not-source-scope",
+      "title": "Supplemental compatibility slice is not source scope for structure-only validation",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["examples/valid/todo-app-devview-run/generated/generated-read-model.json"]
+    },
+    {
+      "id": "no-repo-wide-promotion-or-retirement",
+      "title": "No statement implies repo-wide promotion or tree-native retirement",
+      "severity": "info",
+      "status": "pass",
+      "message": "Check passed.",
+      "sourceRefs": ["examples/valid/todo-app-devview-run/generated/generated-read-model.json"]
+    }
+  ],
+  "retainedWarnings": [
+    {
+      "id": "RW-STRUCTURE-ONLY",
+      "findingNodeId": "FIND-STRUCTURE-ONLY-LIMITATION",
+      "status": "structure-only-limitation",
+      "summary": "This profile validates canonical .pbe structure only; no manual parity artifact, pilot marker, CI-backed Evidence, or source-authority pilot is required or claimed."
+    },
+    {
+      "id": "RW-NO-RUNTIME-FIXTURE",
+      "findingNodeId": "FIND-NO-RUNTIME-FIXTURE",
+      "status": "accepted-structure-only-limitation",
+      "summary": "The fixture contains attached test-output Evidence but no runnable app/runtime fixture is required for structure-only validation."
+    }
+  ],
+  "fallbackReferenceStatus": [
+    { "path": "examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json", "status": "present" },
+    { "path": "examples/valid/todo-app-devview-run/.pbe/tree/project-tree.json", "status": "present" },
+    { "path": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json", "status": "present" },
+    { "path": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json", "status": "present" },
+    { "path": "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json", "status": "present" },
+    { "path": "examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json", "status": "present" },
+    { "path": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json", "status": "present" },
+    { "path": "examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json", "status": "present" },
+    { "path": "examples/valid/todo-app-devview-run/.pbe/execution/cycle-tree.json", "status": "present" },
+    { "path": "examples/valid/todo-app-devview-run/.pbe/execution/cycle-contract.md", "status": "present" },
+    { "path": "examples/valid/todo-app-devview-run/.pbe/blueprint/work-graph.json", "status": "present" },
+    { "path": "examples/valid/todo-app-devview-run/.pbe/blueprint/source-of-truth-matrix.md", "status": "present" },
+    { "path": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt", "status": "present" },
+    { "path": "examples/valid/todo-app-devview-run/.pbe/blueprint/pbe-state.json", "status": "present" },
+    { "path": "examples/valid/todo-app-devview-run/graph-source.json", "status": "present" }
+  ],
+  "sliceValidationContract": {
+    "version": "0.1.0-per-slice-validation-report-independence",
+    "reportUnit": "per-slice-validation-report",
+    "sourceSlice": "examples/valid/todo-app-devview-run",
+    "profileId": "todo-app-devview-run-structure-only",
+    "sourceLayout": "canonical-devview",
+    "policyLevel": "structure-only",
+    "evidenceLevel": "validator-backed",
+    "scopeLevel": "scoped-slice-validation",
+    "expectedCounts": { "nodes": 22, "edges": 38, "validationChecks": 16 },
+    "generatedReadModel": {
+      "path": "examples/valid/todo-app-devview-run/generated/generated-read-model.json",
+      "status": "present",
+      "nodeCount": 22,
+      "edgeCount": 38
+    },
+    "parityRequirement": {
+      "required": false,
+      "status": "not-required",
+      "path": "not-required-for-structure-only",
+      "reason": "Structure-only validation does not require generated/manual parity."
+    },
+    "pilotMarkerRequirement": {
+      "required": false,
+      "status": "not-required",
+      "path": "not-required-for-structure-only",
+      "reason": "Structure-only validation does not require a scoped source-authority pilot marker."
+    },
+    "runtimeFixtureRequirement": {
+      "required": false,
+      "status": "attached-evidence-only",
+      "path": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+      "reason": "Structure-only validation does not require a runnable runtime fixture; attached evidence text may be referenced when present."
+    },
+    "retainedWarnings": [
+      {
+        "id": "RW-STRUCTURE-ONLY",
+        "findingNodeId": "FIND-STRUCTURE-ONLY-LIMITATION",
+        "status": "structure-only-limitation",
+        "summary": "This profile validates canonical .pbe structure only; no manual parity artifact, pilot marker, CI-backed Evidence, or source-authority pilot is required or claimed."
+      },
+      {
+        "id": "RW-NO-RUNTIME-FIXTURE",
+        "findingNodeId": "FIND-NO-RUNTIME-FIXTURE",
+        "status": "accepted-structure-only-limitation",
+        "summary": "The fixture contains attached test-output Evidence but no runnable app/runtime fixture is required for structure-only validation."
+      }
+    ],
+    "fallbackReferenceSummary": { "count": 15, "missingCount": 0 },
+    "sourceAuthorityBoundary": "Validator-backed Evidence checks structure-only generated read-model outputs for this canonical .pbe fixture. It does not change source authority.",
+    "nonPromotionStatement": "Structure-only validation pass is Evidence only. It does not promote Maintainability Graph, create a source-authority pilot, require parity, introduce CI enforcement, retire .pbe artifacts, or replace user approval.",
+    "crossSliceDependencyRule": "Validation uses the target slice profile, generated artifacts, and declared source inputs only. It must not depend on another slice generated directory, manual parity artifact, pilot marker, or runtime fixture unless that artifact is declared by this profile."
+  },
+  "recommendedNextDecisionSurface": [
+    "Continue active observation",
+    "Design CI workflow integration before broader enforcement",
+    "Apply scoped validator to another explicitly approved slice",
+    "Perform public-doc cleanup",
+    "Prepare broader Graph-source promotion review",
+    "Rollback or defer scoped pilot"
+  ]
+}

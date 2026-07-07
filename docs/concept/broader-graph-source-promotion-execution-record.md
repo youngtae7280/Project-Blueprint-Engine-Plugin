@@ -39,7 +39,7 @@ rollback/fallback plan. It does not approve unrelated repo-wide retirement or en
 | Promoted source model            | Maintainability Graph is the source model for approved Todo Search selected-slice graph relationships and Core View traversal semantics.                                   |
 | Tree-native selected-slice files | Reclassified from current operational source to maintained compatibility / fallback / reference artifacts for the promoted Todo Search scope. They are not retired.        |
 | Generated Todo Search read-model | Projection/Evidence artifact for the promoted limited graph-source scope. It remains generated Evidence and must not silently override source records or user judgment.    |
-| Todo App PBE Run                 | Remains `structure-only` Evidence only. It is not parity-backed, pilot-marker-backed, source-authority-bearing, or promoted.                                               |
+| Todo App DevView Run             | Remains `structure-only` Evidence only. It is not parity-backed, pilot-marker-backed, source-authority-bearing, or promoted.                                               |
 | Positive read-model registry     | Remains execution metadata for non-enforcing validate-all Evidence. Registry inclusion is not source promotion by itself.                                                  |
 | CI and PR informational Evidence | Remains non-enforcing repeatability Evidence. No required check, branch protection, merge blocking, or source authority consequence is added.                              |
 | Cycle / Node Execution Contracts | Remain bounded execution authority. Source promotion does not authorize silent scope expansion or missing Evidence.                                                        |
@@ -81,7 +81,7 @@ Repository-wide source authority remains unchanged outside the promoted scope.
 | Parity / validation / aggregate reports | Evidence for drift, validation, and repeatability; not independent acceptance or enforcement.                             |
 | CI evidence manifest                    | Non-enforcing repeatability Evidence.                                                                                     |
 | ACEP execution pack / task-card views   | Compatibility/execution views over Cycle Contract and Node Execution Contract obligations.                                |
-| Todo App PBE Run                        | Structure-only Evidence fixture; not source-bearing.                                                                      |
+| Todo App DevView Run                    | Structure-only Evidence fixture; not source-bearing.                                                                      |
 
 Outside the promoted Todo Search selected-slice scope, the existing tree-native source authority model remains in force
 until another explicit promotion execution record changes that boundary.
@@ -102,10 +102,10 @@ until another explicit promotion execution record changes that boundary.
 
 This execution remains healthy only while these checks pass:
 
-- local registry-backed `pbe graph read-model validate --all`
+- local registry-backed `devview graph read-model validate --all`
 - Todo Search generated/manual parity remains `comparison-pass`
 - Todo Search validation remains `validation-pass`
-- Todo App PBE Run remains `structure-only` and `validation-pass`
+- Todo App DevView Run remains `structure-only` and `validation-pass`
 - aggregate summary remains reviewable, with retained warnings visible
 - public-doc wording continues to distinguish source, projection, compatibility, Evidence, and user acceptance
 
@@ -121,7 +121,7 @@ be treated as stable enough to begin.
 This execution record does not:
 
 - retire tree-native artifacts
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 - add CI enforcement, required checks, branch protection, push triggers, or schedule triggers
 - add invalid fixtures to CI
 - implement migration scripts or schema changes

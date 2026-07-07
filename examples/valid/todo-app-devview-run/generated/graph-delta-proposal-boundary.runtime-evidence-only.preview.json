@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "graph-delta-proposal-boundary-preview",
+  "status": "graph-delta-proposal-boundary-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "fixtureShape": "test-only-behavior-proof",
+  "sourceFlow": "meaning-graph-to-view-selection-to-instruction-pack-to-agent-execution-to-graph-delta",
+  "proposalBoundaryStatus": "graph-delta-proposal-boundary-previewed",
+  "proposalOnly": true,
+  "graphSourceMutated": false,
+  "graphDeltaApplied": false,
+  "requiresHumanReview": true,
+  "approvalStatus": "not-approved",
+  "humanDecisionRecorded": false,
+  "equivalenceProven": false,
+  "runtimeEvidenceSatisfied": false,
+  "enforcementStatus": "not-enforced",
+  "scopeEnforced": false,
+  "diffRejected": false,
+  "ciRequiredCheckIntroduced": false,
+  "branchProtectionChanged": false,
+  "candidateGenerationStatus": "proposal-candidate-shape-preview-only",
+  "candidateSchemaAlignmentStatus": "graph-delta-proposal-candidate-schema-alignment-previewed",
+  "unresolvedMappingDecisionStatus": "graph-delta-proposal-unresolved-mapping-decision-previewed",
+  "graphDeltaCompatibleSourceStatus": "graph-delta-compatible-source-previewed",
+  "proposalGeneratorScopeDecisionStatus": "proposal-only-generator-scope-decided",
+  "humanReviewPacketSurfaceStatus": "review-packet-cli-available",
+  "sourceArtifacts": {
+    "advisoryCheckScopeJsonCommand": "graph read-model check-scope --base <baseRef> --head <headRef> --json",
+    "compactAdvisoryRuntimeReportCommand": "graph read-model check-scope --base <baseRef> --head <headRef> --markdown <file> --json",
+    "scopeComplianceEvaluation": "examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json",
+    "gitDerivedChangedFileCollection": "examples/valid/todo-app-devview-run/generated/git-derived-changed-file-collection.runtime-evidence-only.preview.json",
+    "scopeComplianceCheckerPreview": "examples/valid/todo-app-devview-run/generated/scope-compliance-checker.runtime-evidence-only.preview.json",
+    "compilerInputCalibrationObservation": "examples/valid/todo-app-devview-run/generated/compiler-input-calibration-observation.runtime-evidence-only.preview.json",
+    "proposalCandidateSchemaAlignment": "examples/valid/todo-app-devview-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json",
+    "proposalUnresolvedMappingDecision": "examples/valid/todo-app-devview-run/generated/graph-delta-proposal-unresolved-mapping-decision.runtime-evidence-only.preview.json",
+    "graphDeltaCompatibleSource": "examples/valid/todo-app-devview-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json",
+    "proposalGeneratorScopeDecision": "examples/valid/todo-app-devview-run/generated/graph-delta-proposal-generator-scope-decision.runtime-evidence-only.preview.json",
+    "humanReviewPacketCore": "cli/src/core/graph-delta-human-review-packet.ts",
+    "existingGraphSource": "examples/valid/todo-app-devview-run/graph-source.json"
+  },
+  "inputSources": [
+    {
+      "inputId": "advisory-check-scope-json-result",
+      "sourceStatus": "runtime-command-available",
+      "allowedContribution": "May inform proposal candidates for review notes, risk updates, changed-file observations, and unresolved scope findings.",
+      "authorityBoundary": "Advisory findings are not approval, enforcement, graph-source mutation, runtime Evidence satisfaction, or equivalence proof."
+    },
+    {
+      "inputId": "compact-advisory-runtime-report",
+      "sourceStatus": "optional-markdown-report-available",
+      "allowedContribution": "May be linked from a future proposal as a human-readable runtime summary.",
+      "authorityBoundary": "The report is a readability surface over advisory output and does not make findings blocking."
+    },
+    {
+      "inputId": "git-derived-changed-file-collection",
+      "sourceStatus": "collection-only-artifact-available",
+      "allowedContribution": "May contribute changed-file observation candidates.",
+      "authorityBoundary": "Collection does not imply scope compliance, approval, or graph delta application."
+    },
+    {
+      "inputId": "scope-compliance-evaluation-artifact",
+      "sourceStatus": "non-enforcing-evaluation-preview-available",
+      "allowedContribution": "May contribute review-required or blocking finding note candidates.",
+      "authorityBoundary": "Evaluation is advisory and non-enforcing."
+    },
+    {
+      "inputId": "existing-graph-source",
+      "sourceStatus": "read-only-reference",
+      "allowedContribution": "May be read by a future proposal generator to target candidate nodes, edges, or evidence links.",
+      "authorityBoundary": "This boundary preview does not mutate graph-source and does not apply deltas."
+    }
+  ],
+  "proposalCandidateTypes": [
+    {
+      "candidateType": "scope-finding-review-note-candidate",
+      "description": "A future proposal may summarize advisory scope findings as review notes requiring human attention.",
+      "authoritativeGraphUpdate": false
+    },
+    {
+      "candidateType": "risk-update-candidate",
+      "description": "A future proposal may suggest risk metadata updates when advisory findings expose unresolved scope or production-source risk.",
+      "authoritativeGraphUpdate": false
+    },
+    {
+      "candidateType": "evidence-link-candidate",
+      "description": "A future proposal may link an advisory runtime report or evaluation artifact as review Evidence.",
+      "authoritativeGraphUpdate": false
+    },
+    {
+      "candidateType": "decision-note-candidate",
+      "description": "A future proposal may suggest human decision questions before any graph update can be accepted.",
+      "authoritativeGraphUpdate": false
+    },
+    {
+      "candidateType": "changed-file-observation-candidate",
+      "description": "A future proposal may summarize git-derived changed-file observations without treating them as scope approval.",
+      "authoritativeGraphUpdate": false
+    },
+    {
+      "candidateType": "runtime-report-link-candidate",
+      "description": "A future proposal may point to the compact advisory runtime report for reviewer context.",
+      "authoritativeGraphUpdate": false
+    }
+  ],
+  "futureGraphDeltaProposalShape": {
+    "proposalId": "future-generated-id",
+    "candidateSchemaAlignment": "examples/valid/todo-app-devview-run/generated/graph-delta-proposal-candidate-schema.runtime-evidence-only.preview.json",
+    "unresolvedMappingDecision": "examples/valid/todo-app-devview-run/generated/graph-delta-proposal-unresolved-mapping-decision.runtime-evidence-only.preview.json",
+    "graphDeltaCompatibleSource": "examples/valid/todo-app-devview-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json",
+    "proposalGeneratorScopeDecision": "examples/valid/todo-app-devview-run/generated/graph-delta-proposal-generator-scope-decision.runtime-evidence-only.preview.json",
+    "sourceEvaluationArtifact": "examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json",
+    "sourceRuntimeReport": ".tmp/devview-scope-runtime-report.md",
+    "candidateNodes": [],
+    "candidateEdges": [],
+    "candidateEvidenceLinks": [],
+    "candidateRiskUpdates": [],
+    "candidateDecisionNotes": [],
+    "humanReviewQuestions": [
+      "Which advisory scope findings should become graph review notes?",
+      "Should any changed-file observation be linked as review Evidence?",
+      "Does any proposed risk update require a separate human approval decision?",
+      "Should unresolved scope findings block proposal acceptance without enforcing runtime scope?"
+    ],
+    "proposalApprovalStatus": "not-approved",
+    "graphDeltaApplyStatus": "not-applied"
+  },
+  "futureProposalBoundaryStates": {
+    "proposalCreated": "future-task-not-created-here",
+    "proposalOnly": true,
+    "candidateNodesAuthoritative": false,
+    "candidateEdgesAuthoritative": false,
+    "candidateEvidenceLinksAuthoritative": false,
+    "candidateRiskUpdatesAuthoritative": false,
+    "candidateDecisionNotesAuthoritative": false,
+    "requiresHumanReview": true,
+    "graphSourceMutated": false,
+    "graphDeltaApplied": false,
+    "approvalStatus": "not-approved"
+  },
+  "runtimePerformanceBoundary": {
+    "designOnly": true,
+    "addsRuntimeWork": false,
+    "aiCalls": false,
+    "networkCalls": false,
+    "fullRepoScan": false,
+    "patchHunkInspection": false,
+    "fullValidation": false,
+    "timingSmokeIntegrationStatus": "not-integrated-boundary-preview-only",
+    "runtimeBudgetStatus": "advisory-not-enforced"
+  },
+  "allowedUse": [
+    "document how advisory check-scope outputs may feed future graph delta proposal candidates",
+    "define candidate types for future proposal-only graph updates",
+    "preserve human review before any graph-source mutation",
+    "keep graph delta proposal separate from graph delta apply"
+  ],
+  "forbiddenUse": [
+    "graph-source mutation",
+    "graph delta apply",
+    "approved graph update",
+    "scope compliance enforcement",
+    "diff rejection",
+    "CI required check",
+    "branch protection",
+    "fixture approval",
+    "runtime Evidence satisfaction",
+    "equivalence proof",
+    "user acceptance automation",
+    "executor automation"
+  ],
+  "nonEnforcementBoundary": "This artifact previews the proposal boundary only. It does not create a graph delta, apply a graph delta, mutate graph-source, approve a proposal, enforce scope, reject diffs, satisfy runtime Evidence, prove equivalence, configure CI or required checks, change branch protection, or replace user acceptance."
+}

@@ -13,10 +13,10 @@ import {
 } from './scope-compliance-evaluator.js'
 
 export const defaultScopeComplianceCalibrationDraftPath =
-  'examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json'
+  'examples/valid/todo-app-devview-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json'
 
 export const defaultScopeComplianceEvaluationArtifactPath =
-  'examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json'
+  'examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation.runtime-evidence-only.preview.json'
 
 export interface AdvisoryScopeComplianceCheckOptions {
   baseRef?: string
@@ -243,24 +243,24 @@ export function buildAdvisoryScopeComplianceCheckArtifact(input: {
     collectionOutputWritten: false,
     changedFileInputArtifact: changedFileInputArtifactForCollection(input.collectionArtifact.collectionMode),
     scopeInputBindingArtifact:
-      'examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json',
+      'examples/valid/todo-app-devview-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json',
     pathPatternPolicyArtifact:
-      'examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json',
+      'examples/valid/todo-app-devview-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json',
     pathMatchingHelperArtifact: 'cli/src/core/scope-compliance-path-pattern.ts',
     violationCategorySchemaArtifact:
-      'examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json',
+      'examples/valid/todo-app-devview-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json',
     resultShapeArtifact:
-      'examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json',
+      'examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json',
     sourceArtifacts: {
       compilerInputCalibrationDraft: defaultScopeComplianceCalibrationDraftPath,
       scopeComplianceScopeInputBinding:
-        'examples/valid/todo-app-pbe-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/scope-compliance-scope-input-binding.runtime-evidence-only.preview.json',
       scopeCompliancePathPatternPolicy:
-        'examples/valid/todo-app-pbe-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/scope-compliance-path-pattern-policy.runtime-evidence-only.preview.json',
       scopeComplianceViolationCategorySchema:
-        'examples/valid/todo-app-pbe-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/scope-compliance-violation-category-schema.runtime-evidence-only.preview.json',
       scopeComplianceEvaluationResultShape:
-        'examples/valid/todo-app-pbe-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json',
+        'examples/valid/todo-app-devview-run/generated/scope-compliance-evaluation-result-shape.runtime-evidence-only.preview.json',
     },
     allowedScopePatterns: input.scopePatterns.allowedScopePatterns,
     forbiddenScopePatterns: input.scopePatterns.forbiddenScopePatterns,

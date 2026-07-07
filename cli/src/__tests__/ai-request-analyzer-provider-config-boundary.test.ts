@@ -4,19 +4,19 @@ import { describe, expect, it } from 'vitest'
 
 const boundaryPath = resolve(
   process.cwd(),
-  'examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json',
+  'examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config-boundary.runtime-evidence-only.preview.json',
 )
 const disabledConfigPath = resolve(
   process.cwd(),
-  'examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json',
+  'examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config.disabled.runtime-evidence-only.preview.json',
 )
 const invocationEnabledConfigPath = resolve(
   process.cwd(),
-  'examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json',
+  'examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config.invocation-enabled.runtime-evidence-only.preview.json',
 )
 const openAiLiveConfigPath = resolve(
   process.cwd(),
-  'examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-provider-config.openai-live-disabled-by-default.runtime-evidence-only.preview.json',
+  'examples/valid/todo-app-devview-run/generated/ai-request-analyzer-provider-config.openai-live-disabled-by-default.runtime-evidence-only.preview.json',
 )
 
 const expectedProviderStates = [

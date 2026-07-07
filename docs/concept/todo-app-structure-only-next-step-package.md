@@ -4,7 +4,7 @@ Status: decision package / readiness only / no promotion
 
 ## Purpose
 
-This package records what must be true before `examples/valid/todo-app-pbe-run` can move beyond its current
+This package records what must be true before `examples/valid/todo-app-devview-run` can move beyond its current
 Graph-source-backed `structure-only` role.
 
 It is intended to support the next user decision before external dogfooding. It does not promote Todo App source
@@ -13,7 +13,7 @@ validators, CLI behavior, or state transitions.
 
 ## Current Todo App State
 
-Todo App PBE Run is currently:
+Todo App DevView Run is currently:
 
 - graph-source-backed for a bounded read-model structure fixture;
 - included in positive registry-backed `graph read-model validate --all --json`;
@@ -35,16 +35,16 @@ It is not currently:
 
 ## Current Evidence References
 
-| Surface             | Current Todo App signal                                                                                          |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Registry profile    | `examples/internal-legacy/read-model-aggregate/read-model-slices.json` profile `todo-app-pbe-run-structure-only` |
-| Transition status   | `graph-source-transition-status.json` says Todo App is `confirmed-structure-only-graph-source`                   |
-| Generated source    | `examples/valid/todo-app-pbe-run/graph-source.json` and generated read-model artifacts                           |
-| Projection contract | `projection-contract-pass` for 22 nodes, 38 edges, 7 Core Views                                                  |
-| Validation report   | `validation-pass`, 16 checks, 0 warnings/blocking/decision-required                                              |
-| Retained warnings   | structure-only limitation and no runnable runtime fixture requirement                                            |
-| Retirement package  | `not-ready-structure-only`; no Todo App retirement/deprecation action requested                                  |
-| CI mode             | manual/PR informational Evidence only; no enforcement or required check                                          |
+| Surface             | Current Todo App signal                                                                                              |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Registry profile    | `examples/internal-legacy/read-model-aggregate/read-model-slices.json` profile `todo-app-devview-run-structure-only` |
+| Transition status   | `graph-source-transition-status.json` says Todo App is `confirmed-structure-only-graph-source`                       |
+| Generated source    | `examples/valid/todo-app-devview-run/graph-source.json` and generated read-model artifacts                           |
+| Projection contract | `projection-contract-pass` for 22 nodes, 38 edges, 7 Core Views                                                      |
+| Validation report   | `validation-pass`, 16 checks, 0 warnings/blocking/decision-required                                                  |
+| Retained warnings   | structure-only limitation and no runnable runtime fixture requirement                                                |
+| Retirement package  | `not-ready-structure-only`; no Todo App retirement/deprecation action requested                                      |
+| CI mode             | manual/PR informational Evidence only; no enforcement or required check                                              |
 
 ## Conditions To Move Beyond Structure-Only
 
@@ -104,7 +104,7 @@ enforcement.
 The next decision is:
 
 ```text
-Should Todo App PBE Run be prepared as a limited source-authority pilot, or should it remain structure-only while
+Should Todo App DevView Run be prepared as a limited source-authority pilot, or should it remain structure-only while
 external dogfooding continues elsewhere?
 ```
 

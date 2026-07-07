@@ -1,0 +1,105 @@
+{
+  "version": "0.1.0-read-model-evidence-manifest",
+  "generatedAt": "2026-06-29T08:46:09.775Z",
+  "commandIdentity": "devview graph read-model generate --slice examples/valid/todo-app-devview-run",
+  "sourceCommit": "a1c4f10",
+  "sourceSlice": "examples/valid/todo-app-devview-run",
+  "generatedArtifacts": [
+    "examples/valid/todo-app-devview-run/generated/generated-read-model.json",
+    "examples/valid/todo-app-devview-run/generated/generated-read-model.md"
+  ],
+  "sourceInputs": [
+    {
+      "relativePath": "examples/valid/todo-app-devview-run/.pbe/tree/product-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\DevView Plugin\\examples\\valid\\todo-app-devview-run\\.pbe\\tree\\product-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-devview-run/.pbe/tree/project-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\DevView Plugin\\examples\\valid\\todo-app-devview-run\\.pbe\\tree\\project-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\DevView Plugin\\examples\\valid\\todo-app-devview-run\\.pbe\\tree\\work-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\DevView Plugin\\examples\\valid\\todo-app-devview-run\\.pbe\\tree\\test-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\DevView Plugin\\examples\\valid\\todo-app-devview-run\\.pbe\\evidence\\evidence-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-devview-run/.pbe/control/acceptance-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\DevView Plugin\\examples\\valid\\todo-app-devview-run\\.pbe\\control\\acceptance-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-devview-run/.pbe/control/change-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\DevView Plugin\\examples\\valid\\todo-app-devview-run\\.pbe\\control\\change-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\DevView Plugin\\examples\\valid\\todo-app-devview-run\\.pbe\\control\\impact-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-devview-run/.pbe/execution/cycle-tree.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\DevView Plugin\\examples\\valid\\todo-app-devview-run\\.pbe\\execution\\cycle-tree.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-devview-run/.pbe/execution/cycle-contract.md",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\DevView Plugin\\examples\\valid\\todo-app-devview-run\\.pbe\\execution\\cycle-contract.md",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-devview-run/.pbe/blueprint/work-graph.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\DevView Plugin\\examples\\valid\\todo-app-devview-run\\.pbe\\blueprint\\work-graph.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-devview-run/.pbe/blueprint/source-of-truth-matrix.md",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\DevView Plugin\\examples\\valid\\todo-app-devview-run\\.pbe\\blueprint\\source-of-truth-matrix.md",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\DevView Plugin\\examples\\valid\\todo-app-devview-run\\.pbe\\evidence\\test-results\\todo-add.txt",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-devview-run/.pbe/blueprint/pbe-state.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\DevView Plugin\\examples\\valid\\todo-app-devview-run\\.pbe\\blueprint\\pbe-state.json",
+      "status": "present"
+    },
+    {
+      "relativePath": "examples/valid/todo-app-devview-run/graph-source.json",
+      "absolutePath": "C:\\Users\\ytkim\\Desktop\\kyt_work\\DevView Plugin\\examples\\valid\\todo-app-devview-run\\graph-source.json",
+      "status": "present"
+    }
+  ],
+  "retainedWarnings": [
+    {
+      "id": "RW-STRUCTURE-ONLY",
+      "findingNodeId": "FIND-STRUCTURE-ONLY-LIMITATION",
+      "status": "structure-only-limitation",
+      "summary": "This profile validates canonical .pbe structure only; no manual parity artifact, pilot marker, CI-backed Evidence, or source-authority pilot is required or claimed."
+    },
+    {
+      "id": "RW-NO-RUNTIME-FIXTURE",
+      "findingNodeId": "FIND-NO-RUNTIME-FIXTURE",
+      "status": "accepted-structure-only-limitation",
+      "summary": "The fixture contains attached test-output Evidence but no runnable app/runtime fixture is required for structure-only validation."
+    }
+  ],
+  "compatibilityWarnings": [],
+  "sourceAuthorityBoundary": "Canonical .pbe tree/control/execution/evidence artifacts remain current operational source for this structure-only fixture.",
+  "nonPromotionStatement": "Generated structure-only output is reviewable Evidence only. It does not change source authority, create a pilot marker, require parity, introduce CI enforcement, retire .pbe artifacts, or approve promotion."
+}

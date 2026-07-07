@@ -27,23 +27,23 @@ const smokeHookScriptScaffoldMarkdownPath = '.tmp/devview-runtime-timing-smoke/h
 const smokeHookScriptTemplatePath = '.tmp/devview-runtime-timing-smoke/hook-script-template.json'
 const smokeHookScriptTemplateMarkdownPath = '.tmp/devview-runtime-timing-smoke/hook-script-template.md'
 const graphDeltaCompatibleSourcePath =
-  'examples/valid/todo-app-pbe-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json'
+  'examples/valid/todo-app-devview-run/generated/graph-delta-compatible-source.runtime-evidence-only.preview.json'
 const requestIrCandidatePath =
-  'examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json'
+  'examples/valid/todo-app-devview-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json'
 const aiRequestAnalyzerBoundaryPath =
-  'examples/valid/todo-app-pbe-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json'
+  'examples/valid/todo-app-devview-run/generated/ai-request-analyzer-boundary.add-todo-runtime-evidence-only.preview.json'
 const requestIrCandidateSchemaPath =
-  'examples/valid/todo-app-pbe-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json'
+  'examples/valid/todo-app-devview-run/generated/request-ir-candidate-schema.runtime-evidence-only.preview.json'
 const hookGatewayHealthBoundaryPath =
-  'examples/valid/todo-app-pbe-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json'
+  'examples/valid/todo-app-devview-run/generated/devview-hook-gateway-health-boundary.runtime-evidence-only.preview.json'
 const hookGatewayBoundaryPath =
-  'examples/valid/todo-app-pbe-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json'
+  'examples/valid/todo-app-devview-run/generated/devview-codex-hook-gateway-boundary.runtime-evidence-only.preview.json'
 const hookInstallTrustBoundaryPath =
-  'examples/valid/todo-app-pbe-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json'
+  'examples/valid/todo-app-devview-run/generated/devview-hook-install-trust-boundary.runtime-evidence-only.preview.json'
 const frontendChainReportPath =
-  'examples/valid/todo-app-pbe-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json'
+  'examples/valid/todo-app-devview-run/generated/devview-frontend-chain.add-todo-runtime-evidence-only.preview.json'
 const runtimeSmokeLaneBoundaryPath =
-  'examples/valid/todo-app-pbe-run/generated/devview-runtime-smoke-lane-boundary.runtime-evidence-only.preview.json'
+  'examples/valid/todo-app-devview-run/generated/devview-runtime-smoke-lane-boundary.runtime-evidence-only.preview.json'
 const runtimeBudgetTargetMs = 5000
 const outputArgIndex = process.argv.indexOf('--output')
 const outputPath = outputArgIndex >= 0 ? process.argv[outputArgIndex + 1] : null

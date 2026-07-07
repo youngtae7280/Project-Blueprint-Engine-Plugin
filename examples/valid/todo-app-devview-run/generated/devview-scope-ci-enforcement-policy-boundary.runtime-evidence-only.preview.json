@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "devview-scope-ci-enforcement-policy-boundary-preview",
+  "status": "devview-scope-ci-enforcement-policy-boundary-previewed",
+  "fixtureId": "calibration-fixture-todo-app-runtime-evidence-only",
+  "boundaryScope": "scope-ci-enforcement-disabled-readiness-policy-preview",
+  "phase": "phase-13-human-decision-approved-apply-boundary",
+  "sourceEquivalenceProofPolicyBoundary": "examples/valid/todo-app-devview-run/generated/devview-equivalence-proof-policy-boundary.runtime-evidence-only.preview.json",
+  "sourceEquivalenceProofReadiness": "examples/valid/todo-app-devview-run/generated/devview-equivalence-proof-readiness.blocked-runtime-evidence-satisfaction-readiness.runtime-evidence-only.preview.json",
+  "scopeEnforcementPolicyImplemented": true,
+  "ciEnforcementPolicyImplemented": true,
+  "scopeCiEnforcementReadinessCommandImplemented": true,
+  "scopeEnforcementCommandImplemented": false,
+  "ciEnforcementCommandImplemented": false,
+  "firstCalibrationScopeCiEnforcementReadinessArtifact": "examples/valid/todo-app-devview-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.json",
+  "firstCalibrationScopeCiEnforcementReadinessMarkdownArtifact": "examples/valid/todo-app-devview-run/generated/devview-scope-ci-enforcement-readiness.blocked-equivalence-runtime-satisfaction.runtime-evidence-only.preview.md",
+  "scopeEnforcementAllowed": false,
+  "ciEnforcementAllowed": false,
+  "scopeEnforced": false,
+  "ciEnforcementEnabled": false,
+  "requiredChecksConfigured": false,
+  "branchProtectionChanged": false,
+  "diffRejectionEnabled": false,
+  "strictModeEnabled": false,
+  "guidedEnforcementEnabled": false,
+  "equivalenceProven": false,
+  "runtimeEvidenceSatisfied": false,
+  "evidenceAccepted": false,
+  "graphDeltaApplied": false,
+  "graphSourceMutated": false,
+  "futureEnforcementStateVocabulary": [
+    {
+      "state": "advisory-scope-report",
+      "meaning": "Scope findings are reported for review only.",
+      "scopeEnforced": false,
+      "ciEnforcementEnabled": false
+    },
+    {
+      "state": "enforcement-readiness-blocked",
+      "meaning": "Required proof/evidence/apply/mutation prerequisites are missing or blocked.",
+      "scopeEnforced": false,
+      "ciEnforcementEnabled": false
+    },
+    {
+      "state": "enforcement-readiness-ready",
+      "meaning": "Future readiness context exists, but enforcement remains disabled until a separate policy and command are approved.",
+      "scopeEnforced": false,
+      "ciEnforcementEnabled": false
+    },
+    {
+      "state": "scope-enforced",
+      "meaning": "Future terminal state where diffs or operations may be rejected by policy.",
+      "scopeEnforced": true,
+      "createdHere": false
+    },
+    {
+      "state": "ci-enforcement-enabled",
+      "meaning": "Future terminal state where required checks or branch protection are configured.",
+      "ciEnforcementEnabled": true,
+      "createdHere": false
+    }
+  ],
+  "futurePolicyChecks": [
+    {
+      "checkId": "equivalence-proof-readiness",
+      "description": "Future enforcement policy must verify equivalence proof readiness or proven equivalence before considering enforcement.",
+      "implementedNow": false
+    },
+    {
+      "checkId": "explicit-human-enforcement-approval",
+      "description": "Future enforcement must require explicit human approval for required checks, branch protection, diff rejection, or strict/guided blocking.",
+      "implementedNow": false
+    },
+    {
+      "checkId": "repo-trust-and-install-scope",
+      "description": "Future enforcement must verify trusted repo/session/install scope before any hook, CI, or branch protection mutation.",
+      "implementedNow": false
+    },
+    {
+      "checkId": "rollback-and-disable-path",
+      "description": "Future enforcement must define rollback, disable, and emergency bypass procedures before activation.",
+      "implementedNow": false
+    },
+    {
+      "checkId": "no-self-enforcement",
+      "description": "Future policy must reject Codex, AI, validators, runtime smoke, CI, review packets, readiness reports, or generated artifacts as self-enforcement authority.",
+      "implementedNow": false
+    }
+  ],
+  "disabledActions": [
+    "scope enforcement",
+    "CI required checks",
+    "branch protection mutation",
+    "diff rejection",
+    "strict mode activation",
+    "guided blocking activation",
+    "hook install or trust mutation",
+    "graph-source mutation",
+    "graph delta apply",
+    "evidence acceptance",
+    "runtime Evidence satisfaction",
+    "equivalence proof",
+    "approval automation",
+    "user acceptance automation"
+  ],
+  "allowedUse": [
+    "document disabled scope/CI enforcement boundary",
+    "separate readiness reporting from enforcement activation",
+    "anchor the readiness-only scope/CI enforcement command",
+    "preserve all enforcement flags false until future explicit policy approval"
+  ],
+  "forbiddenUse": [
+    "treat this boundary as active enforcement",
+    "set scopeEnforced true",
+    "set ciEnforcementEnabled true",
+    "configure required checks",
+    "change branch protection",
+    "reject diffs",
+    "activate strict or guided blocking",
+    "prove equivalence",
+    "accept Evidence",
+    "set runtimeEvidenceSatisfied true",
+    "apply graph deltas",
+    "mutate graph-source",
+    "automate approval or user acceptance"
+  ],
+  "runtimePerformanceBoundary": {
+    "designOnly": false,
+    "addsRuntimeWork": "readiness-command-only",
+    "aiCalls": false,
+    "networkCalls": false,
+    "fullRepoScan": false,
+    "patchHunkInspection": false,
+    "fullValidation": false,
+    "timingSmokeIntegrationStatus": "not-integrated-disabled-readiness-branch-only",
+    "runtimeBudgetStatus": "advisory-not-enforced"
+  },
+  "nextFutureStepsPreview": [
+    {
+      "step": "scope-ci-enforcement-readiness-command",
+      "status": "implemented-disabled-readiness-only"
+    },
+    {
+      "step": "scope-enforcement-command-boundary",
+      "status": "future-not-implemented"
+    },
+    {
+      "step": "ci-required-check-policy-boundary",
+      "status": "future-not-implemented"
+    },
+    {
+      "step": "devview-roadmap-completion-audit-refresh",
+      "status": "next"
+    }
+  ],
+  "nonExecutionBoundary": "This artifact defines the Scope/CI Enforcement policy boundary for disabled readiness reporting only. The readiness command may report blocked or ready context, but it does not enforce scope, enable CI enforcement, configure required checks, change branch protection, reject diffs, activate strict or guided blocking, prove equivalence, accept Evidence, set runtimeEvidenceSatisfied true, apply graph deltas, mutate graph-source, approve proposals, or replace user acceptance."
+}

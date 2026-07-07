@@ -5,10 +5,10 @@ import type { IssueSeverity } from './types.js'
 const VALIDATOR_NAME = 'RequestIrGraphAwareValidator'
 const COMPATIBLE_CANDIDATE_SCHEMA_ID = 'devview-request-ir-candidate-v0-preview'
 const COMPATIBLE_SCHEMA_VALIDATOR = 'RequestIrCandidateSchemaOnlyValidator'
-const DEFAULT_GRAPH_SOURCE_PATH = 'examples/valid/todo-app-pbe-run/graph-source.json'
-const DEFAULT_READ_MODEL_PATH = 'examples/valid/todo-app-pbe-run/generated/generated-read-model.json'
+const DEFAULT_GRAPH_SOURCE_PATH = 'examples/valid/todo-app-devview-run/graph-source.json'
+const DEFAULT_READ_MODEL_PATH = 'examples/valid/todo-app-devview-run/generated/generated-read-model.json'
 const DEFAULT_COMPILER_INPUT_DRAFT_PATH =
-  'examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json'
+  'examples/valid/todo-app-devview-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json'
 
 type JsonRecord = Record<string, unknown>
 
@@ -299,7 +299,7 @@ export function validateRequestIrGraphAware(
     targetComponentResolution: componentResolved
       ? {
           candidate: targetComponent,
-          resolvedComponent: 'Todo App PBE Run',
+          resolvedComponent: 'Todo App DevView Run',
           graphSourceScope: stringValue(graphSource?.graphSourceScope),
           sourceProfile: stringValue(graphSource?.sourceProfile),
           authorityStatus: 'resolved-from-calibration-fixture-and-graph-source-scope',

@@ -271,7 +271,7 @@ function legacyApprovalLookingDecisionRecord(): Record<string, unknown> {
 
 function validProposal(): Record<string, unknown> {
   return {
-    schemaId: 'pbe-graph-update-proposal-v0',
+    schemaId: 'devview-graph-update-proposal-v0',
     artifactRole: 'graph-delta-proposal-only-preview',
     status: 'generated-proposal-only-preview',
     proposalId: 'GDP-TEST',

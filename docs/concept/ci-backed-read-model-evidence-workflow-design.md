@@ -7,7 +7,7 @@ ci-validate-all-integration-reviewed / non-enforcing
 
 This document defines the CI workflow design for read-model Evidence after the Todo Search scoped read-model validator
 became available. The bounded non-enforcing workflow is implemented as manual dispatch plus PR informational mode and
-now includes Todo App PBE Run structure-only Evidence plus the first aggregate read-model summary command.
+now includes Todo App DevView Run structure-only Evidence plus the first aggregate read-model summary command.
 
 It explains how CI-backed Evidence can be produced by the manual workflow, how that differs from local
 validator-backed Evidence, what commands and artifacts the workflow uses, and how CI results should relate to Approval
@@ -25,7 +25,7 @@ Graph-source promotion.
 | Scoped pilot               | `examples/internal-legacy/adoption/todo-search-slice` only                                                                                                                                                                                                                                                 |
 | Active observation status  | `keep-active-with-retained-warnings`                                                                                                                                                                                                                                                                       |
 | Generated/manual parity    | `comparison-pass`                                                                                                                                                                                                                                                                                          |
-| Local validator command    | `pbe graph read-model validate --slice examples/internal-legacy/adoption/todo-search-slice`                                                                                                                                                                                                                |
+| Local validator command    | `devview graph read-model validate --slice examples/internal-legacy/adoption/todo-search-slice`                                                                                                                                                                                                            |
 | Validator-backed status    | `validation-pass`                                                                                                                                                                                                                                                                                          |
 | Validator check count      | 20                                                                                                                                                                                                                                                                                                         |
 | Warning/blocking/decision  | 0 / 0 / 0                                                                                                                                                                                                                                                                                                  |
@@ -36,7 +36,7 @@ Graph-source promotion.
 
 The local validator baseline is enough to keep the scoped pilot active under observation. The non-enforcing manual CI
 workflow produced reviewed Todo Search CI-backed Evidence in run `28151296796`; the later aggregate-enabled workflow run
-`28156403793` reviewed the Todo Search, Todo App PBE Run, and aggregate artifact bundle. The post-update Node 24 run
+`28156403793` reviewed the Todo Search, Todo App DevView Run, and aggregate artifact bundle. The post-update Node 24 run
 `28157938343` reviewed the same aggregate-enabled workflow after the action/runtime hygiene update. PR #1 reviewed run
 `28207822252` as a non-enforcing `pull_request-informational` Evidence run. The workflow later switched to
 registry-backed local `validate --all`; manual run `28210541509`, PR #2 run `28210904900`, and PR #3 run `28213236499`
@@ -163,9 +163,9 @@ npm run build:cli
 node dist/cli/index.js graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice --json
 node dist/cli/index.js graph read-model compare --generated examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json --manual examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json --json
 node dist/cli/index.js graph read-model validate --slice examples/internal-legacy/adoption/todo-search-slice --json
-node dist/cli/index.js graph read-model generate --slice examples/valid/todo-app-pbe-run --json
-node dist/cli/index.js graph read-model validate --slice examples/valid/todo-app-pbe-run --json
-node dist/cli/index.js graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run --json
+node dist/cli/index.js graph read-model generate --slice examples/valid/todo-app-devview-run --json
+node dist/cli/index.js graph read-model validate --slice examples/valid/todo-app-devview-run --json
+node dist/cli/index.js graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-devview-run --json
 ```
 
 Implemented supporting commands:
@@ -180,11 +180,11 @@ npm run validate:pbe:v2
 Local command surfaces not currently used by the CI workflow:
 
 ```text
-pbe graph read-model validate --all
-pbe graph read-model validate --slice <path> --ci-manifest <file>
+devview graph read-model validate --all
+devview graph read-model validate --slice <path> --ci-manifest <file>
 ```
 
-`pbe graph read-model validate --all` is now implemented as a local non-enforcing registry-backed Evidence command.
+`devview graph read-model validate --all` is now implemented as a local non-enforcing registry-backed Evidence command.
 This workflow design still keeps the CI sequence explicit unless a later workflow-integration decision replaces it with
 `validate --all`.
 
@@ -198,8 +198,8 @@ This workflow design still keeps the CI sequence explicit unless a later workflo
 | `read-model-parity-report.md`                  | Human-readable parity summary.                                                            | yes                    |
 | `read-model-validation-report.json`            | Machine-readable validator-backed Evidence report.                                        | yes                    |
 | `read-model-validation-report.md`              | Human-readable validation report.                                                         | yes                    |
-| Todo App PBE Run `generated-read-model.*`      | Structure-only generated read-model Evidence for the canonical `.pbe` fixture.            | yes                    |
-| Todo App PBE Run validation report             | Structure-only validator-backed Evidence for the second fixture.                          | yes                    |
+| Todo App DevView Run `generated-read-model.*`  | Structure-only generated read-model Evidence for the canonical `.pbe` fixture.            | yes                    |
+| Todo App DevView Run validation report         | Structure-only validator-backed Evidence for the second fixture.                          | yes                    |
 | `read-model-aggregate-summary.*`               | Cross-slice Evidence summary over existing per-slice validation reports.                  | yes                    |
 | `read-model-candidate-observation-output.json` | Separate Todo App candidate projection observation output.                                | yes                    |
 | Todo App candidate projection artifact         | Structure-only candidate projection uploaded for observation and local positive contract. | yes                    |
@@ -213,7 +213,7 @@ CI artifacts should preserve:
 - command identity and exit status
 - source slice and input artifact list
 - generated/parity/validation report references
-- Todo App PBE Run structure-only validation references
+- Todo App DevView Run structure-only validation references
 - aggregate summary status, included slices, and aggregate artifact references
 - retained warnings and Evidence exceptions
 - source-authority boundary and non-promotion statement
@@ -475,6 +475,6 @@ unapproved.
 ## Final Non-Implementation Statement
 
 This non-enforcing CI workflow implementation does not introduce enforcement, does not expand source authority, does not
-make Todo App PBE Run a pilot slice, does not retire tree-native or `.pbe` artifacts, and does not approve full
+make Todo App DevView Run a pilot slice, does not retire tree-native or `.pbe` artifacts, and does not approve full
 Graph-source promotion. The aggregate-enabled workflow output is reviewed in runs `28156403793` and `28157938343`, but
 it remains non-enforcing Evidence only and does not approve source authority expansion.

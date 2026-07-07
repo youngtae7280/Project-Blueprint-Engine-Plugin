@@ -4,7 +4,7 @@ Status: implementation-mechanics / bounded / non-enforcing
 
 ## Purpose
 
-This record captures the first repo-wide transition mechanics after Todo Search and Todo App PBE Run both became
+This record captures the first repo-wide transition mechanics after Todo Search and Todo App DevView Run both became
 graph-source-backed configured read-model slices.
 
 It does not delete tree-native artifacts, enable enforcement, enroll invalid fixtures in CI, or promote Todo App beyond
@@ -45,10 +45,10 @@ operation:
 
 Repo-wide readiness remains `retirement-not-ready`.
 
-| Slice                             | Current readiness                           | Boundary                                                                                                                        |
-| --------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `todo-search-selected-slice`      | `deprecated-fallback-reference-not-deleted` | Tree-native selected-slice artifacts are deprecated fallback/reference, not source, and remain present with rollback available. |
-| `todo-app-pbe-run-structure-only` | `not-retirement-ready`                      | The slice is confirmed graph-source-backed for `structure-only`, but source authority beyond structure-only is not approved.    |
+| Slice                                 | Current readiness                           | Boundary                                                                                                                        |
+| ------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `todo-search-selected-slice`          | `deprecated-fallback-reference-not-deleted` | Tree-native selected-slice artifacts are deprecated fallback/reference, not source, and remain present with rollback available. |
+| `todo-app-devview-run-structure-only` | `not-retirement-ready`                      | The slice is confirmed graph-source-backed for `structure-only`, but source authority beyond structure-only is not approved.    |
 
 The approval decision surface is prepared in
 [tree-native-retirement-approval-package.md](tree-native-retirement-approval-package.md). It classifies Todo Search as
@@ -61,10 +61,10 @@ The approval decision surface is prepared in
 
 The registry still has exactly two positive validate-all profiles:
 
-| Profile                           | Source role                                        | Positive validate-all role                                                              |
-| --------------------------------- | -------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| `todo-search-selected-slice`      | limited graph-source promoted selected slice       | graph-source-backed generate/compare/validate plus source-backed projection contract    |
-| `todo-app-pbe-run-structure-only` | confirmed graph-source-backed structure-only slice | graph-source-backed generate/validate plus confirmed structure-only projection contract |
+| Profile                               | Source role                                        | Positive validate-all role                                                              |
+| ------------------------------------- | -------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `todo-search-selected-slice`          | limited graph-source promoted selected slice       | graph-source-backed generate/compare/validate plus source-backed projection contract    |
+| `todo-app-devview-run-structure-only` | confirmed graph-source-backed structure-only slice | graph-source-backed generate/validate plus confirmed structure-only projection contract |
 
 ## E2E Check
 

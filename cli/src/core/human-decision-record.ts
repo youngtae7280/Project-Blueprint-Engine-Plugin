@@ -231,7 +231,7 @@ function buildHumanDecisionRecord(
       ? relativePath(root, sources.resolvedRuntimeReportPath)
       : null,
     proposalId,
-    proposalSchemaId: stringValue(sources.proposal.schemaId) || 'pbe-graph-update-proposal-v0',
+    proposalSchemaId: stringValue(sources.proposal.schemaId) || 'devview-graph-update-proposal-v0',
     decisionLifecycleHardeningStatus: HARDENING_STATUS,
     decisionValue: sources.decision.value,
     decisionKind: sources.decision.kind,

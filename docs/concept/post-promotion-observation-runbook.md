@@ -19,7 +19,7 @@ reference artifacts, and tree-native artifacts remain operational source outside
 | Projection Evidence stays healthy  | Todo Search generated/manual parity, validation, validate-all, and aggregate Evidence should keep passing. |
 | Fallback remains available         | Tree-native selected-slice artifacts must remain usable as compatibility / fallback / reference artifacts. |
 | User acceptance remains user-owned | CI, validators, generated reports, and aggregate summaries must not accept product results.                |
-| Todo App remains structure-only    | Todo App PBE Run must not be read as source-bearing or parity-backed.                                      |
+| Todo App remains structure-only    | Todo App DevView Run must not be read as source-bearing or parity-backed.                                  |
 | CI remains informational           | Manual and PR CI stay non-enforcing unless a separate enforcement decision is approved.                    |
 
 ## Execution-Health Criteria
@@ -28,9 +28,9 @@ A post-promotion observation is healthy when all of these remain true:
 
 - Todo Search parity report remains `comparison-pass`.
 - Todo Search validation remains `validation-pass`.
-- Local `pbe graph read-model validate --all` remains `aggregate-pass`.
+- Local `devview graph read-model validate --all` remains `aggregate-pass`.
 - Aggregate summary covers exactly the positive registry profiles unless a later registry change is approved.
-- Todo App PBE Run remains `structure-only` with validation pass and no parity/pilot marker requirement.
+- Todo App DevView Run remains `structure-only` with validation pass and no parity/pilot marker requirement.
 - Retained warnings remain visible.
 - Public docs and concept docs do not imply repo-wide promotion, tree-native retirement, or CI enforcement.
 - No invalid fixture is added to the positive registry or CI workflow.
@@ -60,7 +60,7 @@ Escalate to the rollback/fallback plan or a user decision when any of these occu
 - stale or missing generated Evidence for the promoted Todo Search scope
 - source boundary ambiguity between Maintainability Graph, generated projections, and fallback tree-native artifacts
 - user acceptance authority confusion
-- Todo App PBE Run read as source-authority-bearing
+- Todo App DevView Run read as source-authority-bearing
 - invalid fixtures leaking into positive validate-all or CI
 - public docs implying repo-wide Graph-source promotion or tree-native retirement
 - repeated PR/manual CI failure that makes repeatability Evidence unreliable
@@ -95,12 +95,12 @@ The first concrete steps are now implemented as `examples/internal-legacy/adopti
 parser/projection tests, and the minimal CLI projection path:
 
 ```bash
-pbe graph read-model project --graph-source examples/internal-legacy/adoption/todo-search-slice/graph-source.json --output examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
+devview graph read-model project --graph-source examples/internal-legacy/adoption/todo-search-slice/graph-source.json --output examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
 ```
 
-The next branch now includes a candidate-only Todo App PBE Run graph-source artifact at
-`examples/valid/todo-app-pbe-run/graph-source-candidate.json` and a generated candidate projection at
-`examples/valid/todo-app-pbe-run/generated/graph-source-candidate-read-model-projection.json`. They are structure-only
+The next branch now includes a candidate-only Todo App DevView Run graph-source artifact at
+`examples/valid/todo-app-devview-run/graph-source-candidate.json` and a generated candidate projection at
+`examples/valid/todo-app-devview-run/generated/graph-source-candidate-read-model-projection.json`. They are structure-only
 review inputs, not validate-all or CI inputs. Continue observation should check that these candidate artifacts remain
 outside the positive registry unless a separate Todo App promotion or projection consumption decision is approved.
 
@@ -112,6 +112,6 @@ This runbook does not:
 - execute repo-wide Graph-source promotion
 - retire tree-native artifacts
 - add required checks, branch protection, or CI enforcement
-- promote Todo App PBE Run beyond `structure-only`
+- promote Todo App DevView Run beyond `structure-only`
 - add invalid fixtures to CI
 - replace user acceptance

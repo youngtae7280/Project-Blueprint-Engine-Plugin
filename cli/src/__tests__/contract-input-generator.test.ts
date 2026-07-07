@@ -37,14 +37,14 @@ describe('Contract compiler input generator core', () => {
     ])
     expect(result.allowedScope.map((entry) => entry.id)).toEqual(['allowed-scope-tt-1', 'allowed-scope-ev-1'])
     const allowedScopePaths = result.allowedScope.flatMap((entry) => entry.paths as string[])
-    expect(allowedScopePaths).not.toContain('examples/valid/todo-app-pbe-run/.pbe/control/change-tree.json')
-    expect(allowedScopePaths).not.toContain('examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json')
+    expect(allowedScopePaths).not.toContain('examples/valid/todo-app-devview-run/.pbe/control/change-tree.json')
+    expect(allowedScopePaths).not.toContain('examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json')
     expect(result.requiredEvidence.map((entry) => entry.sourceEvidenceId).sort()).toEqual([
       'evidence-ev-1',
       'evidence-tt-1',
     ])
     expect(result.requiredEvidence.map((entry) => entry.artifact)).toContain(
-      'examples/valid/todo-app-pbe-run/.pbe/evidence/test-results/todo-add.txt',
+      'examples/valid/todo-app-devview-run/.pbe/evidence/test-results/todo-add.txt',
     )
     for (const artifact of result.requiredEvidence.map((entry) => String(entry.artifact))) {
       expect(artifact.startsWith('.pbe/')).toBe(false)
@@ -205,7 +205,7 @@ function validSelectedSlice(): Record<string, unknown> {
     status: 'selected-graph-slice-generated',
     sourceTraversalPlan: 'graph-traversal-plan.json',
     sourceGraphAwareValidation: 'request-ir-graph-validation.json',
-    graphSourcePath: 'examples/valid/todo-app-pbe-run/graph-source.json',
+    graphSourcePath: 'examples/valid/todo-app-devview-run/graph-source.json',
     generatedReadModelPath: 'generated-read-model.json',
     selectedGraphSliceStatus: 'generated',
     graphTraversalExecuted: true,
@@ -280,9 +280,9 @@ function edge(edgeId: string, from: string, to: string, edgeType: string): Recor
 }
 
 function sourceArtifactForNode(nodeKind: string): string {
-  if (nodeKind === 'change') return 'examples/valid/todo-app-pbe-run/.pbe/control/change-tree.json'
-  if (nodeKind === 'task') return 'examples/valid/todo-app-pbe-run/.pbe/tree/work-tree.json'
-  if (nodeKind === 'check') return 'examples/valid/todo-app-pbe-run/.pbe/tree/test-tree.json'
-  if (nodeKind === 'evidence') return 'examples/valid/todo-app-pbe-run/.pbe/evidence/evidence-tree.json'
-  return 'examples/valid/todo-app-pbe-run/.pbe/control/impact-tree.json'
+  if (nodeKind === 'change') return 'examples/valid/todo-app-devview-run/.pbe/control/change-tree.json'
+  if (nodeKind === 'task') return 'examples/valid/todo-app-devview-run/.pbe/tree/work-tree.json'
+  if (nodeKind === 'check') return 'examples/valid/todo-app-devview-run/.pbe/tree/test-tree.json'
+  if (nodeKind === 'evidence') return 'examples/valid/todo-app-devview-run/.pbe/evidence/evidence-tree.json'
+  return 'examples/valid/todo-app-devview-run/.pbe/control/impact-tree.json'
 }
