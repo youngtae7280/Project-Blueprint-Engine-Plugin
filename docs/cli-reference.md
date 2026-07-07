@@ -52,6 +52,23 @@ Discovers Project Profile and Extension Manifest declarations. It validates capa
 execute extension code, call providers, make network calls, mutate the Maintainability Graph, satisfy runtime Evidence,
 prove equivalence, or enforce scope/CI.
 
+### Project-Specific Extension Catalog
+
+```bash
+devview extensions compile-profile \
+  --project-profile .devview/project-profile.json \
+  --extensions-dir .devview/extensions \
+  --extension-readiness <extension-readiness.json> \
+  --output <extension-profile-catalog.json> \
+  --markdown <extension-profile-catalog.md> \
+  --json
+```
+
+Compiles a ready Project Profile and Extension Manifest readiness result into a normalized, report-only capability
+catalog for downstream View Tree, Context Pack, Evidence, policy, workflow, and graph-ingestion planning. The catalog is
+a source fact only: it does not execute extension code, call providers, make network calls, run shell commands, mutate
+the Maintainability Graph, satisfy runtime Evidence, prove equivalence, or enforce scope/CI.
+
 ### Work Journal
 
 ```bash

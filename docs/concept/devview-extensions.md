@@ -32,3 +32,23 @@ devview extensions report-readiness \
 The report records discovered capabilities and required permissions. It also records that extension execution, provider
 invocation, network calls, graph updates, runtime Evidence satisfaction, equivalence proof, and enforcement are all
 disabled.
+
+## Profile Catalog
+
+```bash
+devview extensions compile-profile \
+  --project-profile .devview/project-profile.json \
+  --extensions-dir .devview/extensions \
+  --extension-readiness .tmp/devview-extension-readiness.json \
+  --output .tmp/devview-extension-profile-catalog.json \
+  --markdown .tmp/devview-extension-profile-catalog.md \
+  --json
+```
+
+The catalog turns a ready Project Profile and Extension Manifest readiness report into normalized source facts grouped
+by capability: analyzer, View Tree extractor, Context Pack, Evidence adapter, policy, skill/workflow, and protocol-only
+graph-ingestion candidates. Graph ingestion candidates, including future Graphify-style providers, are not installed or
+executed by this command. Native and retrofit signals are summarized as profile hints only.
+
+The catalog does not grant traversal, Context Pack, Evidence, policy, enforcement, provider, network, shell, or graph
+mutation authority.

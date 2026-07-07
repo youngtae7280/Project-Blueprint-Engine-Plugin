@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://devview.local/schemas/devview-extension-profile-catalog.schema.json",
+  "title": "DevView Extension Profile Catalog",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schemaVersion", "artifactRole", "status", "catalogScope", "extensionCatalogStatus"],
+  "properties": {
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "artifactRole": { "const": "devview-extension-profile-catalog" },
+    "status": {
+      "enum": ["devview-extension-profile-catalog-compiled", "devview-extension-profile-catalog-blocked"]
+    },
+    "catalogScope": { "const": "project-specific-extension-catalog-report-only" },
+    "extensionCatalogStatus": {
+      "enum": [
+        "compiled-declarative-capabilities-only",
+        "blocked-extension-readiness-missing",
+        "blocked-extension-readiness-not-ready",
+        "blocked-project-profile-invalid",
+        "blocked-invalid-extension-manifest",
+        "blocked-unsafe-authority-flag"
+      ]
+    },
+    "extensionCatalogEntries": { "type": "array" },
+    "capabilityCatalog": { "type": "object" },
+    "downstreamCompatibility": { "type": "object" },
+    "extensionExecutionAllowed": { "const": false },
+    "extensionsExecuted": { "const": false },
+    "providerInvoked": { "const": false },
+    "networkCallMade": { "const": false },
+    "shellCommandsExecuted": { "const": false },
+    "graphSourceMutated": { "const": false },
+    "graphDeltaApplied": { "const": false },
+    "runtimeEvidenceSatisfied": { "const": false },
+    "evidenceAccepted": { "const": false },
+    "equivalenceProven": { "const": false },
+    "scopeEnforced": { "const": false },
+    "ciEnforcementEnabled": { "const": false }
+  }
+}
