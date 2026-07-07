@@ -56,6 +56,58 @@ describe('security report-enterprise-readiness CLI', () => {
     expectSafetyFalse(payload)
   })
 
+  it('summarizes provider/network default-deny policy report without making enterprise-ready claims', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, '.tmp/benchmark-governance.json'), benchmarkGovernanceReport())
+    writeJson(join(workspace, '.tmp/release-surface.json'), releaseSurfaceReport())
+    writeJson(join(workspace, '.tmp/provider-network-policy-report.json'), providerNetworkPolicyReport())
+
+    const result = await runDevViewCli(
+      [
+        'security',
+        'report-enterprise-readiness',
+        '--benchmark-governance-verification',
+        '.tmp/benchmark-governance.json',
+        '--release-surface-validation',
+        '.tmp/release-surface.json',
+        '--provider-network-policy-report',
+        '.tmp/provider-network-policy-report.json',
+        '--output',
+        '.tmp/enterprise-readiness.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.readinessLevel).toBe('not-ready')
+    expect(payload.sourceProviderNetworkPolicyReport.status).toBe(
+      'devview-provider-network-default-deny-policy-recorded',
+    )
+    expect(payload.sourceProviderNetworkPolicyReport.defaultProviderPolicy).toBe('deny')
+    expect(payload.sourceProviderNetworkPolicyReport.defaultNetworkPolicy).toBe('deny')
+    expect(payload.sourceProviderNetworkPolicyReport.explicitAllowSupported).toBe(false)
+    expect(payload.sourceProviderNetworkPolicyReport.providerAllowlistCount).toBe(0)
+    expect(payload.sourceProviderNetworkPolicyReport.networkAllowlistCount).toBe(0)
+    expect(payload.sourceProviderNetworkPolicyReport.futureAllowRequirementCount).toBe(2)
+    expect(payload.sourceProviderNetworkPolicyReport.blockedCapabilityCount).toBe(3)
+    expect(payload.providerNetworkPolicyReadiness.status).toBe('default-deny-recorded')
+    expect(payload.providerNetworkPolicyReadiness.providerAllowlistEmpty).toBe(true)
+    expect(payload.providerNetworkPolicyReadiness.networkAllowlistEmpty).toBe(true)
+    expect(payload.enterpriseReadinessFindings.map((entry: { code: string }) => entry.code)).toEqual(
+      expect.arrayContaining([
+        'ENTERPRISE_PROVIDER_NETWORK_POLICY_DEFAULT_DENY_RECORDED',
+        'ENTERPRISE_RBAC_SIGNING_MISSING',
+        'ENTERPRISE_CI_ACTIVATION_GOVERNANCE_MISSING',
+      ]),
+    )
+    expect(payload.enterpriseReadinessFindings.map((entry: { code: string }) => entry.code)).not.toContain(
+      'ENTERPRISE_PROVIDER_NETWORK_POLICY_MISSING',
+    )
+    expectSafetyFalse(payload)
+  })
+
   it('records not-supplied areas cleanly while keeping report-only safety flags false', async () => {
     const workspace = createWorkspace()
 
@@ -126,6 +178,53 @@ describe('security report-enterprise-readiness CLI', () => {
       'ENTERPRISE_READINESS_UNSAFE_SOURCE_AUTHORITY_FLAG',
     )
     expect(existsSync(join(workspace, '.tmp/unsafe-enterprise.json'))).toBe(false)
+  })
+
+  it('blocks invalid provider/network policy report sources with zero writes', async () => {
+    const workspace = createWorkspace()
+    const unsafeFlag = 'apiCallMade'
+    writeJson(join(workspace, '.tmp/bad-provider-report.json'), {
+      ...providerNetworkPolicyReport(),
+      status: 'wrong',
+    })
+    writeJson(join(workspace, '.tmp/unsafe-provider-report.json'), {
+      ...providerNetworkPolicyReport(),
+      [unsafeFlag]: true,
+    })
+    writeJson(join(workspace, '.tmp/allowlist-provider-report.json'), {
+      ...providerNetworkPolicyReport(),
+      providerAllowlist: ['future-provider'],
+    })
+
+    const bad = await runEnterpriseWithProvider(workspace, '.tmp/bad-provider-report.json', '.tmp/bad-enterprise.json')
+    const unsafe = await runEnterpriseWithProvider(
+      workspace,
+      '.tmp/unsafe-provider-report.json',
+      '.tmp/unsafe-enterprise.json',
+    )
+    const allowlist = await runEnterpriseWithProvider(
+      workspace,
+      '.tmp/allowlist-provider-report.json',
+      '.tmp/allowlist-enterprise.json',
+    )
+
+    expect(bad.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(bad.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_PROVIDER_NETWORK_SOURCE_ROLE_STATUS_INVALID',
+    )
+    expect(existsSync(join(workspace, '.tmp/bad-enterprise.json'))).toBe(false)
+
+    expect(unsafe.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(unsafe.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_UNSAFE_SOURCE_AUTHORITY_FLAG',
+    )
+    expect(existsSync(join(workspace, '.tmp/unsafe-enterprise.json'))).toBe(false)
+
+    expect(allowlist.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(allowlist.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_PROVIDER_NETWORK_ALLOWLIST_NOT_EMPTY',
+    )
+    expect(existsSync(join(workspace, '.tmp/allowlist-enterprise.json'))).toBe(false)
   })
 
   it('blocks release surface source failures as enterprise blockers but accepts the source shape', async () => {
@@ -250,6 +349,55 @@ function releaseSurfaceReport(overrides: Record<string, unknown> = {}): Record<s
   }
 }
 
+function providerNetworkPolicyReport(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    schemaVersion: 1,
+    artifactRole: 'devview-provider-network-default-deny-policy-report',
+    status: 'devview-provider-network-default-deny-policy-recorded',
+    policyScope: 'provider-network-default-deny-policy-report-only',
+    sourceFactsOnly: true,
+    reportOnly: true,
+    defaultProviderPolicy: 'deny',
+    defaultNetworkPolicy: 'deny',
+    providerAllowlist: [],
+    networkAllowlist: [],
+    policyEnforcementMode: 'report-only-default-deny-recorded',
+    explicitAllowSupported: false,
+    futureAllowPolicyRequirements: ['signed policy artifact', 'actor identity and RBAC grant'],
+    blockedCapabilities: ['provider execution', 'network access', 'external API calls'],
+    enterpriseGateActivated: false,
+    providerInvoked: false,
+    networkCallMade: false,
+    apiCallMade: false,
+    shellCommandsExecuted: false,
+    extensionExecutionAllowed: false,
+    extensionsExecuted: false,
+    benchmarkExecuted: false,
+    candidateExecuted: false,
+    graphifyExecuted: false,
+    nativeBenchmarkExecuted: false,
+    filesMutated: false,
+    graphSourceMutated: false,
+    graphDeltaApplied: false,
+    runtimeEvidenceSatisfied: false,
+    evidenceAccepted: false,
+    equivalenceProven: false,
+    scopeEnforced: false,
+    ciEnforcementEnabled: false,
+    hooksActivated: false,
+    branchProtectionChanged: false,
+    branchProtectionMutated: false,
+    requiredChecksConfigured: false,
+    requiredChecksMutated: false,
+    externalCiMutated: false,
+    diffRejectionEnabled: false,
+    diffRejectionActivated: false,
+    approvalAutomationEnabled: false,
+    userAcceptanceAutomated: false,
+    ...overrides,
+  }
+}
+
 function safetyFlags(): Record<string, unknown> {
   return {
     benchmarkExecuted: false,
@@ -259,6 +407,7 @@ function safetyFlags(): Record<string, unknown> {
     sourceFactsOnly: true,
     providerInvoked: false,
     networkCallMade: false,
+    apiCallMade: false,
     shellCommandsExecuted: false,
     extensionExecutionAllowed: false,
     extensionsExecuted: false,
@@ -290,6 +439,7 @@ function expectSafetyFalse(payload: Record<string, unknown>): void {
   expect(payload.nativeBenchmarkExecuted).toBe(false)
   expect(payload.providerInvoked).toBe(false)
   expect(payload.networkCallMade).toBe(false)
+  expect(payload.apiCallMade).toBe(false)
   expect(payload.shellCommandsExecuted).toBe(false)
   expect(payload.extensionExecutionAllowed).toBe(false)
   expect(payload.extensionsExecuted).toBe(false)
@@ -311,4 +461,19 @@ function expectSafetyFalse(payload: Record<string, unknown>): void {
   expect(payload.approvalAutomationEnabled).toBe(false)
   expect(payload.userAcceptanceAutomated).toBe(false)
   expect(payload.sourceFactsOnly).toBe(true)
+}
+
+function runEnterpriseWithProvider(workspace: string, providerReport: string, output: string) {
+  return runDevViewCli(
+    [
+      'security',
+      'report-enterprise-readiness',
+      '--provider-network-policy-report',
+      providerReport,
+      '--output',
+      output,
+      '--json',
+    ],
+    { cwd: workspace, pluginRoot },
+  )
 }

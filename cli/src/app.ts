@@ -252,6 +252,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     governancePolicy: undefined as string | undefined,
     benchmarkGovernanceVerification: undefined as string | undefined,
     releaseSurfaceValidation: undefined as string | undefined,
+    providerNetworkPolicyReport: undefined as string | undefined,
     enterpriseReadiness: undefined as string | undefined,
     graphifyExport: undefined as string | undefined,
     mapping: undefined as string | undefined,
@@ -1333,6 +1334,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--release-surface-validation requires a file path.' }
       }
       options.releaseSurfaceValidation = value
+      index += 1
+    } else if (arg === '--provider-network-policy-report') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--provider-network-policy-report requires a file path.' }
+      }
+      options.providerNetworkPolicyReport = value
       index += 1
     } else if (arg === '--enterprise-readiness') {
       const value = argv[index + 1]

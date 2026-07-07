@@ -22,11 +22,14 @@ const RELEASE_SURFACE_STATUSES = [
   'devview-release-surface-validation-passed',
   'devview-release-surface-validation-failed',
 ] as const
+const PROVIDER_NETWORK_POLICY_ROLE = 'devview-provider-network-default-deny-policy-report'
+const PROVIDER_NETWORK_POLICY_STATUS = 'devview-provider-network-default-deny-policy-recorded'
 
 const unsafeAuthorityFields = [
   'enterpriseGateActivated',
   'providerInvoked',
   'networkCallMade',
+  'apiCallMade',
   'shellCommandExecuted',
   'shellCommandsExecuted',
   'extensionExecutionAllowed',
@@ -60,6 +63,7 @@ const unsafeAuthorityFields = [
 export interface EnterpriseReadinessReportOptions {
   benchmarkGovernanceVerification?: string
   releaseSurfaceValidation?: string
+  providerNetworkPolicyReport?: string
   output?: string
   markdown?: string
 }
@@ -95,6 +99,19 @@ export interface EnterpriseReadinessReport {
     forbiddenFindingCount: number | null
     packageFileCount: number | null
   }
+  sourceProviderNetworkPolicyReport: {
+    supplied: boolean
+    path: string | null
+    artifactRole: string | null
+    status: string | null
+    defaultProviderPolicy: string | null
+    defaultNetworkPolicy: string | null
+    explicitAllowSupported: boolean | null
+    providerAllowlistCount: number | null
+    networkAllowlistCount: number | null
+    futureAllowRequirementCount: number | null
+    blockedCapabilityCount: number | null
+  }
   releaseSurfaceReadiness: {
     status: 'satisfied' | 'failed' | 'not-supplied'
     packageAllowlistPresent: boolean
@@ -128,8 +145,16 @@ export interface EnterpriseReadinessReport {
     gaps: string[]
   }
   providerNetworkPolicyReadiness: {
-    status: 'gap'
+    status: 'gap' | 'default-deny-recorded'
     currentReportsProviderNetworkFalse: true
+    sourceStatus: string | null
+    defaultProviderPolicy: string | null
+    defaultNetworkPolicy: string | null
+    explicitAllowSupported: boolean | null
+    providerAllowlistEmpty: boolean | null
+    networkAllowlistEmpty: boolean | null
+    futureAllowRequirementCount: number | null
+    blockedCapabilityCount: number | null
     gaps: string[]
   }
   scopeCiGovernanceReadiness: {
@@ -159,6 +184,7 @@ export interface EnterpriseReadinessReport {
   nativeBenchmarkExecuted: false
   providerInvoked: false
   networkCallMade: false
+  apiCallMade: false
   shellCommandsExecuted: false
   extensionExecutionAllowed: false
   extensionsExecuted: false
@@ -187,7 +213,7 @@ interface LoadedSource {
   requestedPath: string
   resolvedPath: string
   relativePath: string
-  sourceKind: 'benchmark-governance-verification' | 'release-surface-validation'
+  sourceKind: 'benchmark-governance-verification' | 'release-surface-validation' | 'provider-network-policy-report'
   record: JsonRecord | null
   readError: string | null
 }
@@ -206,9 +232,11 @@ export async function reportEnterpriseReadiness(
   options: EnterpriseReadinessReportOptions,
 ): Promise<EnterpriseReadinessReport> {
   validateRequiredOptions(options)
-  const sourcePaths = [options.benchmarkGovernanceVerification, options.releaseSurfaceValidation].filter(
-    (entry): entry is string => Boolean(entry),
-  )
+  const sourcePaths = [
+    options.benchmarkGovernanceVerification,
+    options.releaseSurfaceValidation,
+    options.providerNetworkPolicyReport,
+  ].filter((entry): entry is string => Boolean(entry))
   await assertOutputAuthority(
     root,
     sourcePaths.map((entry) => resolveRepoPath(root, entry)),
@@ -221,14 +249,22 @@ export async function reportEnterpriseReadiness(
   const releaseSurface = options.releaseSurfaceValidation
     ? await loadSource(root, options.releaseSurfaceValidation, 'release-surface-validation')
     : null
-  const blockingFindings = validateSources(benchmarkGovernance, releaseSurface)
+  const providerNetworkPolicy = options.providerNetworkPolicyReport
+    ? await loadSource(root, options.providerNetworkPolicyReport, 'provider-network-policy-report')
+    : null
+  const blockingFindings = validateSources(benchmarkGovernance, releaseSurface, providerNetworkPolicy)
   if (blockingFindings.length > 0) {
     throw new EnterpriseReadinessReportValidationError(
-      buildReport(benchmarkGovernance, releaseSurface, blockingFindings, true),
+      buildReport(benchmarkGovernance, releaseSurface, providerNetworkPolicy, blockingFindings, true),
     )
   }
 
-  const report = buildReport(benchmarkGovernance, releaseSurface, buildFindings(benchmarkGovernance, releaseSurface))
+  const report = buildReport(
+    benchmarkGovernance,
+    releaseSurface,
+    providerNetworkPolicy,
+    buildFindings(benchmarkGovernance, releaseSurface, providerNetworkPolicy),
+  )
   const outputPath = resolveRepoPath(root, options.output ?? '')
   await writeJsonAtomic(outputPath, report)
   report.writtenOutputPath = relativePath(root, outputPath)
@@ -244,11 +280,13 @@ export async function reportEnterpriseReadiness(
 function buildReport(
   benchmarkGovernance: LoadedSource | null,
   releaseSurface: LoadedSource | null,
+  providerNetworkPolicy: LoadedSource | null,
   findings: EnterpriseReadinessFinding[],
   blocked = false,
 ): EnterpriseReadinessReport {
   const benchmarkRecord = benchmarkGovernance?.record ?? null
   const releaseRecord = releaseSurface?.record ?? null
+  const providerNetworkRecord = providerNetworkPolicy?.record ?? null
   const releaseStatus = releaseReadinessStatus(releaseRecord)
   const benchmarkStatus = benchmarkReadinessStatus(benchmarkRecord)
   const benchmarkDigestSummary = asRecord(benchmarkRecord?.sourceDigestVerificationSummary)
@@ -279,6 +317,19 @@ function buildReport(
       status: stringValue(releaseRecord?.status),
       forbiddenFindingCount: numberValue(releaseRecord?.forbiddenFindingCount),
       packageFileCount: numberValue(releaseRecord?.packageFileCount),
+    },
+    sourceProviderNetworkPolicyReport: {
+      supplied: Boolean(providerNetworkPolicy),
+      path: providerNetworkPolicy?.relativePath ?? null,
+      artifactRole: stringValue(providerNetworkRecord?.artifactRole),
+      status: stringValue(providerNetworkRecord?.status),
+      defaultProviderPolicy: stringValue(providerNetworkRecord?.defaultProviderPolicy),
+      defaultNetworkPolicy: stringValue(providerNetworkRecord?.defaultNetworkPolicy),
+      explicitAllowSupported: booleanOrNull(providerNetworkRecord?.explicitAllowSupported),
+      providerAllowlistCount: arrayLength(providerNetworkRecord?.providerAllowlist),
+      networkAllowlistCount: arrayLength(providerNetworkRecord?.networkAllowlist),
+      futureAllowRequirementCount: arrayLength(providerNetworkRecord?.futureAllowPolicyRequirements),
+      blockedCapabilityCount: arrayLength(providerNetworkRecord?.blockedCapabilities),
     },
     releaseSurfaceReadiness: {
       status: releaseStatus,
@@ -319,12 +370,17 @@ function buildReport(
       gaps: benchmarkGovernanceGaps(benchmarkRecord),
     },
     providerNetworkPolicyReadiness: {
-      status: 'gap',
+      status: providerNetworkRecord ? 'default-deny-recorded' : 'gap',
       currentReportsProviderNetworkFalse: true,
-      gaps: [
-        'Formal provider/network default-deny policy artifact is not implemented.',
-        'Provider/network audit enforcement is not activated.',
-      ],
+      sourceStatus: stringValue(providerNetworkRecord?.status),
+      defaultProviderPolicy: stringValue(providerNetworkRecord?.defaultProviderPolicy),
+      defaultNetworkPolicy: stringValue(providerNetworkRecord?.defaultNetworkPolicy),
+      explicitAllowSupported: booleanOrNull(providerNetworkRecord?.explicitAllowSupported),
+      providerAllowlistEmpty: providerNetworkRecord ? arrayLength(providerNetworkRecord.providerAllowlist) === 0 : null,
+      networkAllowlistEmpty: providerNetworkRecord ? arrayLength(providerNetworkRecord.networkAllowlist) === 0 : null,
+      futureAllowRequirementCount: arrayLength(providerNetworkRecord?.futureAllowPolicyRequirements),
+      blockedCapabilityCount: arrayLength(providerNetworkRecord?.blockedCapabilities),
+      gaps: providerNetworkPolicyGaps(providerNetworkRecord),
     },
     scopeCiGovernanceReadiness: {
       status: 'gap',
@@ -362,6 +418,7 @@ function buildReport(
     nativeBenchmarkExecuted: false,
     providerInvoked: false,
     networkCallMade: false,
+    apiCallMade: false,
     shellCommandsExecuted: false,
     extensionExecutionAllowed: false,
     extensionsExecuted: false,
@@ -388,9 +445,12 @@ function buildReport(
 function validateSources(
   benchmarkGovernance: LoadedSource | null,
   releaseSurface: LoadedSource | null,
+  providerNetworkPolicy: LoadedSource | null,
 ): EnterpriseReadinessFinding[] {
   const findings: EnterpriseReadinessFinding[] = []
-  for (const source of [benchmarkGovernance, releaseSurface].filter((entry): entry is LoadedSource => Boolean(entry))) {
+  for (const source of [benchmarkGovernance, releaseSurface, providerNetworkPolicy].filter(
+    (entry): entry is LoadedSource => Boolean(entry),
+  )) {
     if (source.readError) {
       findings.push(blockingFinding('ENTERPRISE_READINESS_SOURCE_READ_FAILED', source.readError, source.relativePath))
       continue
@@ -409,17 +469,21 @@ function validateSources(
           ),
         )
       }
-    } else if (
-      record.artifactRole !== RELEASE_SURFACE_ROLE ||
-      !RELEASE_SURFACE_STATUSES.includes(record.status as (typeof RELEASE_SURFACE_STATUSES)[number])
-    ) {
-      findings.push(
-        blockingFinding(
-          'ENTERPRISE_READINESS_SOURCE_ROLE_STATUS_INVALID',
-          `${source.relativePath} must be ${RELEASE_SURFACE_ROLE} with passed or failed status.`,
-          source.relativePath,
-        ),
-      )
+    } else if (source.sourceKind === 'release-surface-validation') {
+      if (
+        record.artifactRole !== RELEASE_SURFACE_ROLE ||
+        !RELEASE_SURFACE_STATUSES.includes(record.status as (typeof RELEASE_SURFACE_STATUSES)[number])
+      ) {
+        findings.push(
+          blockingFinding(
+            'ENTERPRISE_READINESS_SOURCE_ROLE_STATUS_INVALID',
+            `${source.relativePath} must be ${RELEASE_SURFACE_ROLE} with passed or failed status.`,
+            source.relativePath,
+          ),
+        )
+      }
+    } else {
+      validateProviderNetworkPolicySource(source, record, findings)
     }
     for (const hit of collectUnsafeAuthorityHits(record)) {
       findings.push({
@@ -437,10 +501,12 @@ function validateSources(
 function buildFindings(
   benchmarkGovernance: LoadedSource | null,
   releaseSurface: LoadedSource | null,
+  providerNetworkPolicy: LoadedSource | null,
 ): EnterpriseReadinessFinding[] {
   const findings: EnterpriseReadinessFinding[] = []
   const benchmarkRecord = benchmarkGovernance?.record ?? null
   const releaseRecord = releaseSurface?.record ?? null
+  const providerNetworkRecord = providerNetworkPolicy?.record ?? null
 
   if (!releaseSurface) {
     findings.push({
@@ -488,16 +554,35 @@ function buildFindings(
     })
   }
 
+  if (!providerNetworkPolicy) {
+    findings.push({
+      severity: 'blocker',
+      code: 'ENTERPRISE_PROVIDER_NETWORK_POLICY_MISSING',
+      message: 'Provider/network default-deny policy report was not supplied.',
+    })
+  } else {
+    findings.push({
+      severity: 'satisfied',
+      code: 'ENTERPRISE_PROVIDER_NETWORK_POLICY_DEFAULT_DENY_RECORDED',
+      message: 'Provider/network default-deny policy source is recorded as report-only.',
+      path: providerNetworkPolicy.relativePath,
+    })
+    if (arrayLength(providerNetworkRecord?.futureAllowPolicyRequirements) === 0) {
+      findings.push({
+        severity: 'gap',
+        code: 'ENTERPRISE_PROVIDER_NETWORK_FUTURE_ALLOW_REQUIREMENTS_MISSING',
+        message: 'Provider/network policy source does not list future allow policy requirements.',
+        path: providerNetworkPolicy.relativePath,
+        field: 'futureAllowPolicyRequirements',
+      })
+    }
+  }
+
   findings.push(
     {
       severity: 'blocker',
       code: 'ENTERPRISE_RBAC_SIGNING_MISSING',
       message: 'Enterprise RBAC, actor identity, and signed record envelope are not implemented.',
-    },
-    {
-      severity: 'blocker',
-      code: 'ENTERPRISE_PROVIDER_NETWORK_POLICY_MISSING',
-      message: 'Formal provider/network default-deny policy artifact and enforcement are not implemented.',
     },
     {
       severity: 'blocker',
@@ -512,6 +597,64 @@ function buildFindings(
     },
   )
   return findings
+}
+
+function validateProviderNetworkPolicySource(
+  source: LoadedSource,
+  record: JsonRecord,
+  findings: EnterpriseReadinessFinding[],
+): void {
+  if (record.artifactRole !== PROVIDER_NETWORK_POLICY_ROLE || record.status !== PROVIDER_NETWORK_POLICY_STATUS) {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_PROVIDER_NETWORK_SOURCE_ROLE_STATUS_INVALID',
+        `${source.relativePath} must be ${PROVIDER_NETWORK_POLICY_ROLE} with recorded status.`,
+        source.relativePath,
+      ),
+    )
+  }
+  if (record.defaultProviderPolicy !== 'deny') {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_PROVIDER_POLICY_NOT_DENY',
+        'Provider/network policy source must set defaultProviderPolicy to deny.',
+        source.relativePath,
+        'defaultProviderPolicy',
+      ),
+    )
+  }
+  if (record.defaultNetworkPolicy !== 'deny') {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_NETWORK_POLICY_NOT_DENY',
+        'Provider/network policy source must set defaultNetworkPolicy to deny.',
+        source.relativePath,
+        'defaultNetworkPolicy',
+      ),
+    )
+  }
+  if (record.explicitAllowSupported !== false) {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_PROVIDER_ALLOW_UNSUPPORTED',
+        'Provider/network policy source must keep explicitAllowSupported false in v1.',
+        source.relativePath,
+        'explicitAllowSupported',
+      ),
+    )
+  }
+  for (const field of ['providerAllowlist', 'networkAllowlist'] as const) {
+    if (arrayLength(record[field]) !== 0) {
+      findings.push(
+        blockingFinding(
+          'ENTERPRISE_READINESS_PROVIDER_NETWORK_ALLOWLIST_NOT_EMPTY',
+          `${field} must stay empty for enterprise report v1 source consumption.`,
+          source.relativePath,
+          field,
+        ),
+      )
+    }
+  }
 }
 
 async function loadSource(
@@ -647,6 +790,14 @@ function benchmarkGovernanceGaps(record: JsonRecord | null): string[] {
   return gaps
 }
 
+function providerNetworkPolicyGaps(record: JsonRecord | null): string[] {
+  if (!record) return ['Provider/network default-deny policy report is not supplied.']
+  return [
+    'Provider/network audit enforcement is not activated.',
+    'Signed policy, RBAC, sandboxing, and provider isolation remain future requirements before any allow policy.',
+  ]
+}
+
 function readinessLevel(findings: EnterpriseReadinessFinding[]): EnterpriseReadinessReport['readinessLevel'] {
   if (findings.some((entry) => entry.severity === 'blocker')) return 'not-ready'
   if (findings.some((entry) => entry.severity === 'gap')) return 'partial'
@@ -662,7 +813,9 @@ function downstreamActionPlan(findings: EnterpriseReadinessFinding[]): string[] 
   if (openFindings.some((entry) => entry.code.includes('BENCHMARK_GOVERNANCE'))) {
     actions.add('Attach verified benchmark governance before benchmark-based product claims.')
   }
-  actions.add('Define provider/network default-deny policy artifact and verification command.')
+  if (openFindings.some((entry) => entry.code.includes('PROVIDER_NETWORK'))) {
+    actions.add('Attach a provider/network default-deny policy report before enterprise release review.')
+  }
   actions.add('Plan RBAC actor identity and signed record envelope before enterprise authority claims.')
   actions.add('Add rollback drill and audit-chain reporting for guarded graph update operations.')
   actions.add('Plan policy-gated external Scope/CI activation without mutating branch protection in this report.')
@@ -735,4 +888,8 @@ function numberValue(value: unknown): number | null {
 
 function booleanOrNull(value: unknown): boolean | null {
   return typeof value === 'boolean' ? value : null
+}
+
+function arrayLength(value: unknown): number | null {
+  return Array.isArray(value) ? value.length : null
 }

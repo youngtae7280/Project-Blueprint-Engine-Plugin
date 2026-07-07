@@ -15,6 +15,7 @@ export async function securityReportEnterpriseReadinessCommand(context: CommandC
     const report = await reportEnterpriseReadiness(context.options.root, {
       benchmarkGovernanceVerification: context.options.benchmarkGovernanceVerification,
       releaseSurfaceValidation: context.options.releaseSurfaceValidation,
+      providerNetworkPolicyReport: context.options.providerNetworkPolicyReport,
       output: context.options.output,
       markdown: context.options.markdown,
     })

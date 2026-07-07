@@ -206,16 +206,17 @@ activate release gates.
 devview security report-enterprise-readiness \
   --benchmark-governance-verification <benchmark-governance-verification.json> \
   --release-surface-validation <release-surface-validation.json> \
+  --provider-network-policy-report <provider-network-policy-report.json> \
   --output <enterprise-readiness.json> \
   --markdown <enterprise-readiness.md> \
   --json
 ```
 
 Aggregates enterprise hardening posture into a report-only readiness assessment. The report carries benchmark governance
-and release-surface validation as source facts, then lists remaining enterprise gaps for extension execution policy,
-guarded graph update governance, provider/network default-deny policy, Scope/CI activation governance, RBAC, signing,
-audit, and tamper-evidence. It does not activate enterprise gates, execute extensions, call providers, make network
-calls, mutate graph-source, configure CI, activate hooks, or automate approval.
+release-surface validation, and provider/network default-deny policy reports as source facts, then lists remaining
+enterprise gaps for extension execution policy, guarded graph update governance, Scope/CI activation governance, RBAC,
+signing, audit, and tamper-evidence. It does not activate enterprise gates, execute extensions, call providers, make
+network calls, mutate graph-source, configure CI, activate hooks, or automate approval.
 
 ### Provider/Network Default-Deny Policy
 
