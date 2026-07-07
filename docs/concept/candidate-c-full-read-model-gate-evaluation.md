@@ -164,7 +164,7 @@ and kept separate from positive registry validation.
 Current CI state:
 
 - `PBE CI / Candidate B Read-Model Check` exists and runs `npm run check:graph-source:candidate-b`.
-- `.github/workflows/read-model-evidence.yml` exists as `PBE Read-Model Evidence` with `workflow_dispatch` and
+- `.github/workflows/read-model-evidence.yml` exists as `DevView Read-Model Evidence` with `workflow_dispatch` and
   `pull_request` informational triggers.
 - The read-model Evidence workflow uploads reviewable artifacts and health summaries.
 - The workflow is not a required check and does not configure branch protection.

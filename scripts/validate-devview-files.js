@@ -6,7 +6,7 @@ import process from 'node:process'
 import { runAcepManifestValidator } from './validators/acep-manifest.js'
 import { runAutoflowStateValidator } from './validators/autoflow-state.js'
 import { runExamplesValidator } from './validators/examples.js'
-import { runPbeLayoutValidator } from './validators/pbe-layout.js'
+import { runDevViewLayoutValidator } from './validators/devview-layout.js'
 import { runPluginStructureValidator } from './validators/plugin-structure.js'
 import { runRevisionValidator } from './validators/revision.js'
 import { runRpdTransitionValidator } from './validators/rpd-transition.js'
@@ -33,7 +33,7 @@ const repoValidators = [
 const projectValidators = [
   [
     'DevView public terminology and legacy layout',
-    runPbeLayoutValidator,
+    runDevViewLayoutValidator,
     targetRoot,
     { requireReadmeTerms: validationTarget.kind === 'plugin-repository' },
   ],
@@ -89,7 +89,7 @@ if (validationTarget.kind === 'plugin-repository') {
       createIssue({
         validator: 'DevView target',
         file: '.devview',
-        code: 'PBE_NOT_INITIALIZED',
+        code: 'DEVVIEW_NOT_INITIALIZED',
         message:
           'Target root is not the DevView plugin repository and does not contain DevView or legacy migration input storage.',
         suggestedFix: 'Run validation from the DevView repository or an initialized DevView/legacy migration root.',
@@ -108,7 +108,13 @@ if (results.some((result) => result.issues.length > 0)) {
 console.log('DevView validation passed.')
 
 function classifyValidationTarget(repoRoot, cwd) {
-  const pluginMarkers = ['.codex-plugin/plugin.json', 'skills', 'templates', 'schemas', 'scripts/validate-pbe-files.js']
+  const pluginMarkers = [
+    '.codex-plugin/plugin.json',
+    'skills',
+    'templates',
+    'schemas',
+    'scripts/validate-devview-files.js',
+  ]
   const isPluginRepository =
     path.resolve(repoRoot) === path.resolve(cwd) && pluginMarkers.every((marker) => existsSync(path.join(cwd, marker)))
 
@@ -130,9 +136,9 @@ function runCompatibilityCore(repoRoot, cwd, targetKind) {
       cwd: repoRoot,
       env: {
         ...process.env,
-        PBE_REPO_ROOT: repoRoot,
-        PBE_TARGET_ROOT: cwd,
-        PBE_VALIDATION_TARGET_KIND: targetKind,
+        DEVVIEW_LEGACY_REPO_ROOT: repoRoot,
+        DEVVIEW_LEGACY_TARGET_ROOT: cwd,
+        DEVVIEW_LEGACY_VALIDATION_TARGET_KIND: targetKind,
       },
       encoding: 'utf8',
       stdio: 'pipe',

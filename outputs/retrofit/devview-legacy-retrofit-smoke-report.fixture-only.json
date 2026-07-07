@@ -1,7 +1,7 @@
 ﻿{
-  "status": "pbe-retrofit-smoke-pass",
-  "mode": "fixture-plus-external-repo-check",
-  "repoRoot": "C:\\Users\\ytkim\\Documents\\Codex\\2026-06-24\\concept-developmen",
+  "status": "devview-legacy-retrofit-smoke-pass",
+  "mode": "fixture-only",
+  "repoRoot": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin",
   "fixtureValidation": "retrofit-fixtures-pass",
   "graphSourceValidation": "retrofit-graph-source-pass",
   "graphSourceNodeCount": 10,
@@ -9,7 +9,7 @@
   "instructionPackValidation": "retrofit-instruction-packs-pass",
   "instructionPackCount": 2,
   "smart51Record": "validated-then-reverted",
-  "smart51ExternalRepoStatus": "reverted-signatures-absent",
+  "smart51ExternalRepoStatus": "not-checked",
   "laminatorRecord": "implemented-build-pass-ui-review-pass",
   "reportsDependencyStatus": "absent",
   "records": [
@@ -17,7 +17,7 @@
       "id": "smart51-test-setting",
       "status": "validated-then-reverted",
       "activeCodeState": "reverted",
-      "externalRepoStatus": "reverted-signatures-absent"
+      "externalRepoStatus": "not-checked"
     },
     {
       "id": "laminator-tag-layout",

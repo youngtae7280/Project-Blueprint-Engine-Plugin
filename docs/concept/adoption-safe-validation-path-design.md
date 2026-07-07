@@ -154,7 +154,7 @@ Possible inputs:
 - `--root <path>`: the target project root.
 - presence of `.pbe/`: initialized PBE project signal.
 - package/root identity: whether the target root is the PBE plugin repository.
-- plugin repository files: `.codex-plugin/plugin.json`, `skills/`, `templates/`, `schemas/`, `scripts/validate-pbe-files.js`.
+- plugin repository files: `.codex-plugin/plugin.json`, `skills/`, `templates/`, `schemas/`, `scripts/validate-devview-files.js`.
 - external project signals: package/app files without plugin repo files.
 - current `.pbe/blueprint/pbe-state.json` state, when present.
 - explicit future target option such as `--target repo|project|external`.

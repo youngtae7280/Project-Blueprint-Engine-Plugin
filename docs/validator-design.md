@@ -4,7 +4,7 @@ PBE validation is split between the CLI validator layer, preserved repository-le
 regression fixtures while preserving the historical command:
 
 ```text
-node scripts/validate-pbe-files.js
+node scripts/validate-devview-files.js
 npm run validate:pbe
 npm run validate
 ```
@@ -12,10 +12,10 @@ npm run validate
 ## Layers
 
 - `cli/src/validators/*`: the active CLI validator layer used by `pbe validate`, stage gates, and transition commands.
-- `scripts/validate-pbe-files.js`: repository-level validation wrapper for plugin structure, compatibility artifacts,
-  examples, and preserved checks.
-- `scripts/validate-pbe-tree-system.js`: v2 schema/template and optional `.devview` tree artifact validator.
-- `scripts/validators/*`: legacy repository validation scripts used by `scripts/validate-pbe-files.js`.
+- `scripts/validate-devview-files.js`: repository-level validation wrapper for plugin structure, compatibility
+  artifacts, examples, and preserved checks.
+- `scripts/validate-devview-legacy-tree-system.js`: v2 schema/template and optional `.devview` tree artifact validator.
+- `scripts/validators/*`: legacy repository validation scripts used by `scripts/validate-devview-files.js`.
 - `scripts/validator-utils/*`: shared file, JSON, markdown, and report helpers for legacy repository validators.
 - `scripts/validators/legacy-core.js`: compatibility validator preserved from the previous monolithic implementation.
 - `scripts/test-examples.js`: example regression runner for valid and invalid fixture workspaces.
@@ -64,8 +64,8 @@ Failures should include the validator name, file, error code, message, and a sug
 
 ## Repository Validator Responsibility Boundaries
 
-`scripts/validate-pbe-files.js` reports `Skills`, `Skills CLI sync`, and `Compatibility core` together, but they protect
-different failure surfaces. Keep them separate unless their failure semantics become the same.
+`scripts/validate-devview-files.js` reports `Skills`, `Skills CLI sync`, and `Compatibility core` together, but they
+protect different failure surfaces. Keep them separate unless their failure semantics become the same.
 
 | Validator          | Scope                                          | What it catches                                                           | What it does not catch                     | Why it stays separate                                                                   |
 | ------------------ | ---------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------ | --------------------------------------------------------------------------------------- |

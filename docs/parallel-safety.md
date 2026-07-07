@@ -160,7 +160,7 @@ Risky example:
 
 ```text
 WT-TEST-001 changes scripts/test-examples.js.
-WT-VALIDATE-001 changes scripts/validate-pbe-files.js.
+WT-VALIDATE-001 changes scripts/validate-devview-files.js.
 Both may interact with generated dist/clean-dist behavior.
 Run sequentially unless isolation is explicit.
 ```
@@ -274,7 +274,7 @@ Risky:
 
 ```text
 WT-TEST-001 changes scripts/test-examples.js.
-WT-VALIDATE-001 changes scripts/validate-pbe-files.js.
+WT-VALIDATE-001 changes scripts/validate-devview-files.js.
 Both may interact with generated dist/clean-dist behavior.
 Run sequentially unless isolation is explicit.
 ```

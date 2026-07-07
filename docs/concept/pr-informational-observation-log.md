@@ -331,7 +331,7 @@ Use this checklist for each new PR informational run.
 2. Download artifacts to a temporary directory:
 
    ```bash
-   gh run download <run-id> --name pbe-todo-search-read-model-evidence --dir .tmp/read-model-evidence-pr-run-<run-id>
+   gh run download <run-id> --name devview-todo-search-read-model-evidence --dir .tmp/read-model-evidence-pr-run-<run-id>
    ```
 
 3. Inspect the CI manifest and reports:

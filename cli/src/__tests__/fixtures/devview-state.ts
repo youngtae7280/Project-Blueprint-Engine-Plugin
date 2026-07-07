@@ -1,7 +1,7 @@
 import { join } from 'node:path'
 import { writeJson } from './workspace'
 
-export function writePbeState(
+export function writeDevViewState(
   workspace: string,
   state: string,
   options: {

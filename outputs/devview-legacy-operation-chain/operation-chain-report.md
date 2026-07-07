@@ -1,6 +1,6 @@
-﻿# PBE Operation Chain Report
+﻿# DevView Legacy Operation Chain Report
 
-Status: pbe-operation-chain-pass
+Status: devview-legacy-operation-chain-pass
 
 Operation chain:
 
@@ -10,7 +10,7 @@ graph-source -> instruction pack -> local change -> graph delta
 
 ## Checks
 
-- CardPrinterConfig retrofit fixture smoke: pbe-retrofit-smoke-pass
+- CardPrinterConfig retrofit fixture smoke: devview-legacy-retrofit-smoke-pass
 - Open-source cJSON retrofit dogfood: open-source-cjson-dogfood-pass
 - Native graph-notes dogfood: native-graph-notes-dogfood-pass
 - Native graph-counter behavior dogfood: native-graph-counter-dogfood-pass

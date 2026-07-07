@@ -113,7 +113,7 @@ approve broader execution, CI enforcement, source authority expansion, or full G
 
 ## Non-Enforcing CI Workflow Use
 
-The manual `PBE Read-Model Evidence` workflow now runs the aggregate summarize command after generating and validating
+The manual `DevView Read-Model Evidence` workflow now runs the aggregate summarize command after generating and validating
 the Todo Search and Todo App DevView Run per-slice reports:
 
 ```text

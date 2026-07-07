@@ -14,13 +14,13 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-function Format-PbeOperationOutputs {
+function Format-DevViewLegacyOperationOutputs {
     $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
     Push-Location $repoRoot
     try {
         & npx prettier --write "outputs/**/*.json" "outputs/**/*.md" | Out-Null
         if ($LASTEXITCODE -ne 0) {
-            throw "Prettier formatting failed for PBE operation outputs."
+            throw "Prettier formatting failed for DevView legacy operation outputs."
         }
     }
     finally {
@@ -30,19 +30,19 @@ function Format-PbeOperationOutputs {
 
 switch ($Command) {
     "operation-chain" {
-        & (Join-Path $PSScriptRoot "validate-pbe-operation-chain-v0.ps1")
+        & (Join-Path $PSScriptRoot "validate-devview-legacy-operation-chain-v0.ps1")
         break
     }
     "artifact-inventory" {
-        & (Join-Path $PSScriptRoot "generate-pbe-artifact-inventory-v0.ps1")
+        & (Join-Path $PSScriptRoot "generate-devview-legacy-artifact-inventory-v0.ps1")
         break
     }
     "core-schemas" {
-        & (Join-Path $PSScriptRoot "validate-pbe-core-schemas-v0.ps1")
+        & (Join-Path $PSScriptRoot "validate-devview-legacy-core-schemas-v0.ps1")
         break
     }
     "retrofit-smoke" {
-        & (Join-Path $PSScriptRoot "validate-pbe-retrofit-smoke-v0.ps1") -SkipExternalRepo
+        & (Join-Path $PSScriptRoot "validate-devview-legacy-retrofit-smoke-v0.ps1") -SkipExternalRepo
         break
     }
     "cjson-dogfood" {
@@ -58,9 +58,9 @@ switch ($Command) {
         break
     }
     "evaluate-dogfood" {
-        & (Join-Path $PSScriptRoot "evaluate-pbe-dogfood-v0.ps1")
+        & (Join-Path $PSScriptRoot "evaluate-devview-legacy-dogfood-v0.ps1")
         break
     }
 }
 
-Format-PbeOperationOutputs
+Format-DevViewLegacyOperationOutputs

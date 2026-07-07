@@ -1,6 +1,6 @@
-﻿# PBE Dogfood Evaluation
+﻿# DevView Legacy Dogfood Evaluation
 
-Status: pbe-dogfood-evaluation-pass
+Status: devview-legacy-dogfood-evaluation-pass
 
 Score: 6 / 6
 

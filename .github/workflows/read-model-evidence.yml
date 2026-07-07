@@ -1,4 +1,4 @@
-name: PBE Read-Model Evidence
+name: DevView Read-Model Evidence
 
 on:
   workflow_dispatch:
@@ -27,27 +27,27 @@ jobs:
     name: Read-Model Evidence
     runs-on: ubuntu-latest
     env:
-      PBE_TODO_SEARCH_SLICE: examples/internal-legacy/adoption/todo-search-slice
-      PBE_TODO_SEARCH_GENERATED_DIR: examples/internal-legacy/adoption/todo-search-slice/generated
-      PBE_TODO_APP_SLICE: examples/valid/todo-app-devview-run
-      PBE_TODO_APP_GENERATED_DIR: examples/valid/todo-app-devview-run/generated
-      PBE_AGGREGATE_DIR: examples/internal-legacy/read-model-aggregate/generated
-      PBE_VALIDATE_ALL_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-validate-all-output.json
-      PBE_CANDIDATE_OBSERVATION_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-candidate-observation-output.json
-      PBE_AGGREGATE_SLICES: examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-devview-run
-      PBE_E2E_SMOKE_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-e2e-smoke-output.json
-      PBE_INTENT_NATIVE_GRAPH_SOURCE: examples/internal-legacy/intent-critical/native-pbe-maintenance/graph-source-intent.json
-      PBE_INTENT_NATIVE_PROJECTION: examples/internal-legacy/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json
-      PBE_INTENT_NATIVE_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-edge-intent-native-output.json
-      PBE_INTENT_RETROFIT_GRAPH_SOURCE: examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json
-      PBE_INTENT_RETROFIT_PROJECTION: examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json
-      PBE_INTENT_RETROFIT_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-edge-intent-retrofit-output.json
-      PBE_EDGE_INTENT_OBSERVATION_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-edge-intent-observation-output.json
-      PBE_HEALTH_REPORT_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.json
-      PBE_HEALTH_REPORT_MARKDOWN: examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.md
-      PBE_COMPILER_BOUNDARY_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-compiler-boundary-output.json
-      PBE_OPERATION_CHAIN_REPORT: outputs/pbe-operation-chain/operation-chain-report.json
-      PBE_DOGFOOD_EVALUATION_REPORT: outputs/pbe-operation-chain/dogfood-evaluation.json
+      DEVVIEW_TODO_SEARCH_SLICE: examples/internal-legacy/adoption/todo-search-slice
+      DEVVIEW_TODO_SEARCH_GENERATED_DIR: examples/internal-legacy/adoption/todo-search-slice/generated
+      DEVVIEW_TODO_APP_SLICE: examples/valid/todo-app-devview-run
+      DEVVIEW_TODO_APP_GENERATED_DIR: examples/valid/todo-app-devview-run/generated
+      DEVVIEW_AGGREGATE_DIR: examples/internal-legacy/read-model-aggregate/generated
+      DEVVIEW_VALIDATE_ALL_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-validate-all-output.json
+      DEVVIEW_CANDIDATE_OBSERVATION_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-candidate-observation-output.json
+      DEVVIEW_AGGREGATE_SLICES: examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-devview-run
+      DEVVIEW_E2E_SMOKE_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-e2e-smoke-output.json
+      DEVVIEW_INTENT_NATIVE_GRAPH_SOURCE: examples/internal-legacy/intent-critical/native-pbe-maintenance/graph-source-intent.json
+      DEVVIEW_INTENT_NATIVE_PROJECTION: examples/internal-legacy/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json
+      DEVVIEW_INTENT_NATIVE_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-edge-intent-native-output.json
+      DEVVIEW_INTENT_RETROFIT_GRAPH_SOURCE: examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json
+      DEVVIEW_INTENT_RETROFIT_PROJECTION: examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json
+      DEVVIEW_INTENT_RETROFIT_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-edge-intent-retrofit-output.json
+      DEVVIEW_EDGE_INTENT_OBSERVATION_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-edge-intent-observation-output.json
+      DEVVIEW_HEALTH_REPORT_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.json
+      DEVVIEW_HEALTH_REPORT_MARKDOWN: examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.md
+      DEVVIEW_COMPILER_BOUNDARY_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-compiler-boundary-output.json
+      DEVVIEW_OPERATION_CHAIN_REPORT: outputs/devview-legacy-operation-chain/operation-chain-report.json
+      DEVVIEW_DOGFOOD_EVALUATION_REPORT: outputs/devview-legacy-operation-chain/dogfood-evaluation.json
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -66,29 +66,29 @@ jobs:
 
       - name: Validate all registry-backed read-model Evidence
         run: |
-          mkdir -p "$PBE_AGGREGATE_DIR"
-          node dist/cli/index.js graph read-model validate --all --json 2>&1 | tee "$PBE_VALIDATE_ALL_OUTPUT"
+          mkdir -p "$DEVVIEW_AGGREGATE_DIR"
+          node dist/cli/index.js graph read-model validate --all --json 2>&1 | tee "$DEVVIEW_VALIDATE_ALL_OUTPUT"
 
       - name: Observe read-model candidate projections
         run: |
-          node dist/cli/index.js graph read-model observe-candidates --json 2>&1 | tee "$PBE_CANDIDATE_OBSERVATION_OUTPUT"
+          node dist/cli/index.js graph read-model observe-candidates --json 2>&1 | tee "$DEVVIEW_CANDIDATE_OBSERVATION_OUTPUT"
 
       - name: Read-model E2E smoke
         run: |
-          mkdir -p "$PBE_AGGREGATE_DIR"
-          node scripts/read-model-e2e-smoke.js --output "$PBE_E2E_SMOKE_OUTPUT"
+          mkdir -p "$DEVVIEW_AGGREGATE_DIR"
+          node scripts/read-model-e2e-smoke.js --output "$DEVVIEW_E2E_SMOKE_OUTPUT"
 
       - name: Report Compiler Boundary MVP
         run: |
-          mkdir -p "$PBE_AGGREGATE_DIR"
-          node dist/cli/index.js graph read-model report-compiler-boundary --json 2>&1 | tee "$PBE_COMPILER_BOUNDARY_OUTPUT"
+          mkdir -p "$DEVVIEW_AGGREGATE_DIR"
+          node dist/cli/index.js graph read-model report-compiler-boundary --json 2>&1 | tee "$DEVVIEW_COMPILER_BOUNDARY_OUTPUT"
 
       - name: Observe intent-critical edgeIntent projections
         run: |
-          mkdir -p "$PBE_AGGREGATE_DIR"
-          mkdir -p "$(dirname "$PBE_INTENT_NATIVE_PROJECTION")" "$(dirname "$PBE_INTENT_RETROFIT_PROJECTION")"
-          node dist/cli/index.js graph read-model project-intent --graph-source "$PBE_INTENT_NATIVE_GRAPH_SOURCE" --output "$PBE_INTENT_NATIVE_PROJECTION" --json 2>&1 | tee "$PBE_INTENT_NATIVE_OUTPUT"
-          node dist/cli/index.js graph read-model project-intent --graph-source "$PBE_INTENT_RETROFIT_GRAPH_SOURCE" --output "$PBE_INTENT_RETROFIT_PROJECTION" --json 2>&1 | tee "$PBE_INTENT_RETROFIT_OUTPUT"
+          mkdir -p "$DEVVIEW_AGGREGATE_DIR"
+          mkdir -p "$(dirname "$DEVVIEW_INTENT_NATIVE_PROJECTION")" "$(dirname "$DEVVIEW_INTENT_RETROFIT_PROJECTION")"
+          node dist/cli/index.js graph read-model project-intent --graph-source "$DEVVIEW_INTENT_NATIVE_GRAPH_SOURCE" --output "$DEVVIEW_INTENT_NATIVE_PROJECTION" --json 2>&1 | tee "$DEVVIEW_INTENT_NATIVE_OUTPUT"
+          node dist/cli/index.js graph read-model project-intent --graph-source "$DEVVIEW_INTENT_RETROFIT_GRAPH_SOURCE" --output "$DEVVIEW_INTENT_RETROFIT_PROJECTION" --json 2>&1 | tee "$DEVVIEW_INTENT_RETROFIT_OUTPUT"
           node <<'NODE'
           const fs = require('node:fs')
 
@@ -96,8 +96,8 @@ jobs:
             return JSON.parse(fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, ''))
           }
 
-          const nativeOutputPath = process.env.PBE_INTENT_NATIVE_OUTPUT
-          const retrofitOutputPath = process.env.PBE_INTENT_RETROFIT_OUTPUT
+          const nativeOutputPath = process.env.DEVVIEW_INTENT_NATIVE_OUTPUT
+          const retrofitOutputPath = process.env.DEVVIEW_INTENT_RETROFIT_OUTPUT
           const nativeOutput = readJson(nativeOutputPath)
           const retrofitOutput = readJson(retrofitOutputPath)
           const nativePass = nativeOutput.status === 'intent-projection-pass'
@@ -109,15 +109,15 @@ jobs:
               nativePass && retrofitPass ? 'edge-intent-projection-pass' : 'edge-intent-projection-blocked',
             sourceMode: 'intent-critical-edge-intent-projection-observation',
             native: {
-              graphSource: process.env.PBE_INTENT_NATIVE_GRAPH_SOURCE,
-              projection: process.env.PBE_INTENT_NATIVE_PROJECTION,
+              graphSource: process.env.DEVVIEW_INTENT_NATIVE_GRAPH_SOURCE,
+              projection: process.env.DEVVIEW_INTENT_NATIVE_PROJECTION,
               output: nativeOutputPath,
               status: nativeOutput.status || 'missing',
               projectedIntentCount: nativeOutput.projectedIntentCount ?? null,
             },
             retrofit: {
-              graphSource: process.env.PBE_INTENT_RETROFIT_GRAPH_SOURCE,
-              projection: process.env.PBE_INTENT_RETROFIT_PROJECTION,
+              graphSource: process.env.DEVVIEW_INTENT_RETROFIT_GRAPH_SOURCE,
+              projection: process.env.DEVVIEW_INTENT_RETROFIT_PROJECTION,
               output: retrofitOutputPath,
               status: retrofitOutput.status || 'missing',
               projectedIntentCount: retrofitOutput.projectedIntentCount ?? null,
@@ -126,31 +126,31 @@ jobs:
               'Intent-critical edgeIntent projection is non-enforcing CI observation only and is not enrolled in broad validate-all intent enforcement.',
           }
 
-          fs.writeFileSync(process.env.PBE_EDGE_INTENT_OBSERVATION_OUTPUT, `${JSON.stringify(observation, null, 2)}\n`)
+          fs.writeFileSync(process.env.DEVVIEW_EDGE_INTENT_OBSERVATION_OUTPUT, `${JSON.stringify(observation, null, 2)}\n`)
           if (observation.status !== 'edge-intent-projection-pass') process.exitCode = 1
           NODE
 
       - name: Report graph-source transition health
         run: |
-          node dist/cli/index.js graph read-model report-health --json --markdown "$PBE_HEALTH_REPORT_MARKDOWN" 2>&1 | tee "$PBE_HEALTH_REPORT_OUTPUT"
+          node dist/cli/index.js graph read-model report-health --json --markdown "$DEVVIEW_HEALTH_REPORT_MARKDOWN" 2>&1 | tee "$DEVVIEW_HEALTH_REPORT_OUTPUT"
 
-      - name: Observe PBE operation chain dogfood
+      - name: Observe DevView legacy operation chain dogfood
         shell: pwsh
         run: |
-          ./scripts/invoke-pbe-v0.ps1 -Command operation-chain
-          ./scripts/invoke-pbe-v0.ps1 -Command evaluate-dogfood
+          ./scripts/invoke-devview-legacy-v0.ps1 -Command operation-chain
+          ./scripts/invoke-devview-legacy-v0.ps1 -Command evaluate-dogfood
 
       - name: Focused read-model Evidence tests
         run: npx vitest run cli/src/__tests__/read-model-evidence.test.ts
 
       - name: Todo Search runtime fixture tests
-        run: npx vitest run "$PBE_TODO_SEARCH_SLICE/runtime-fixture"
+        run: npx vitest run "$DEVVIEW_TODO_SEARCH_SLICE/runtime-fixture"
 
-      - name: Validate PBE plugin files
-        run: npm run validate:pbe
+      - name: Validate DevView plugin files
+        run: npm run validate:devview
 
-      - name: Validate PBE tree schemas
-        run: npm run validate:pbe:v2
+      - name: Validate DevView legacy tree schemas
+        run: npm run validate:devview:legacy-tree
 
       - name: Write CI evidence manifest
         if: always()
@@ -159,21 +159,21 @@ jobs:
           const fs = require('node:fs')
           const path = require('node:path')
 
-          const todoSearchSlice = process.env.PBE_TODO_SEARCH_SLICE
-          const todoSearchGeneratedDir = process.env.PBE_TODO_SEARCH_GENERATED_DIR
-          const todoAppSlice = process.env.PBE_TODO_APP_SLICE
-          const todoAppGeneratedDir = process.env.PBE_TODO_APP_GENERATED_DIR
-          const aggregateDir = process.env.PBE_AGGREGATE_DIR
-          const validateAllOutputPath = process.env.PBE_VALIDATE_ALL_OUTPUT
-          const candidateObservationOutputPath = process.env.PBE_CANDIDATE_OBSERVATION_OUTPUT
-          const e2eSmokeOutputPath = process.env.PBE_E2E_SMOKE_OUTPUT
-          const edgeIntentObservationOutputPath = process.env.PBE_EDGE_INTENT_OBSERVATION_OUTPUT
-          const healthReportOutputPath = process.env.PBE_HEALTH_REPORT_OUTPUT
-          const healthReportMarkdownPath = process.env.PBE_HEALTH_REPORT_MARKDOWN
-          const compilerBoundaryOutputPath = process.env.PBE_COMPILER_BOUNDARY_OUTPUT
-          const operationChainReportPath = process.env.PBE_OPERATION_CHAIN_REPORT
-          const dogfoodEvaluationReportPath = process.env.PBE_DOGFOOD_EVALUATION_REPORT
-          const aggregateSlices = (process.env.PBE_AGGREGATE_SLICES || '')
+          const todoSearchSlice = process.env.DEVVIEW_TODO_SEARCH_SLICE
+          const todoSearchGeneratedDir = process.env.DEVVIEW_TODO_SEARCH_GENERATED_DIR
+          const todoAppSlice = process.env.DEVVIEW_TODO_APP_SLICE
+          const todoAppGeneratedDir = process.env.DEVVIEW_TODO_APP_GENERATED_DIR
+          const aggregateDir = process.env.DEVVIEW_AGGREGATE_DIR
+          const validateAllOutputPath = process.env.DEVVIEW_VALIDATE_ALL_OUTPUT
+          const candidateObservationOutputPath = process.env.DEVVIEW_CANDIDATE_OBSERVATION_OUTPUT
+          const e2eSmokeOutputPath = process.env.DEVVIEW_E2E_SMOKE_OUTPUT
+          const edgeIntentObservationOutputPath = process.env.DEVVIEW_EDGE_INTENT_OBSERVATION_OUTPUT
+          const healthReportOutputPath = process.env.DEVVIEW_HEALTH_REPORT_OUTPUT
+          const healthReportMarkdownPath = process.env.DEVVIEW_HEALTH_REPORT_MARKDOWN
+          const compilerBoundaryOutputPath = process.env.DEVVIEW_COMPILER_BOUNDARY_OUTPUT
+          const operationChainReportPath = process.env.DEVVIEW_OPERATION_CHAIN_REPORT
+          const dogfoodEvaluationReportPath = process.env.DEVVIEW_DOGFOOD_EVALUATION_REPORT
+          const aggregateSlices = (process.env.DEVVIEW_AGGREGATE_SLICES || '')
             .split(',')
             .map((slice) => slice.trim())
             .filter(Boolean)
@@ -234,9 +234,9 @@ jobs:
           const compilerBoundaryStatus = compilerBoundaryOutput?.status || 'missing'
           const compilerBoundaryPass = compilerBoundaryStatus === 'compiler-boundary-mvp-pass'
           const operationChainStatus = operationChainReport?.status || 'missing'
-          const operationChainPass = operationChainStatus === 'pbe-operation-chain-pass'
+          const operationChainPass = operationChainStatus === 'devview-legacy-operation-chain-pass'
           const dogfoodEvaluationStatus = dogfoodEvaluationReport?.status || 'missing'
-          const dogfoodEvaluationPass = dogfoodEvaluationStatus === 'pbe-dogfood-evaluation-pass'
+          const dogfoodEvaluationPass = dogfoodEvaluationStatus === 'devview-legacy-dogfood-evaluation-pass'
           const status =
             todoSearchPass &&
             todoAppPass &&
@@ -257,7 +257,7 @@ jobs:
           const manifest = {
             version: '1.0',
             evidenceLevel: 'ci-backed',
-            workflowName: process.env.GITHUB_WORKFLOW || 'PBE Read-Model Evidence',
+            workflowName: process.env.GITHUB_WORKFLOW || 'DevView Read-Model Evidence',
             eventName,
             triggerMode,
             runId: process.env.GITHUB_RUN_ID || 'unavailable',
@@ -300,7 +300,7 @@ jobs:
               nodeCount: todoSearchValidation?.sliceValidationContract?.expectedCounts?.nodes ?? null,
               edgeCount: todoSearchValidation?.sliceValidationContract?.expectedCounts?.edges ?? null,
             },
-            todoAppPbeRun: {
+            todoAppDevviewRun: {
               sourceSlice: todoAppSlice,
               validatorStatus: todoAppValidation?.status || 'missing',
               parityStatus: todoAppValidation?.sliceValidationContract?.requirements?.parity?.status || 'not-required',
@@ -370,7 +370,7 @@ jobs:
               compilerBoundary: compilerBoundaryOutput?.compilerBoundary || null,
               humanDecisionBoundary: compilerBoundaryOutput?.humanDecisionBoundary || null,
             },
-            pbeOperationChain: {
+            devviewLegacyOperationChain: {
               status: operationChainStatus,
               artifactPath: operationChainReportPath,
               operationChain: operationChainReport?.operationChain || null,
@@ -382,7 +382,7 @@ jobs:
               sourceMode:
                 'non-enforcing CI observation for graph-source -> instruction pack -> local change -> graph delta dogfood',
             },
-            pbeDogfoodEvaluation: {
+            devviewLegacyDogfoodEvaluation: {
               status: dogfoodEvaluationStatus,
               artifactPath: dogfoodEvaluationReportPath,
               score: dogfoodEvaluationReport?.score || null,
@@ -436,10 +436,10 @@ jobs:
               candidateObservationOutputPath,
               e2eSmokeOutputPath,
               edgeIntentObservationOutputPath,
-              process.env.PBE_INTENT_NATIVE_OUTPUT,
-              process.env.PBE_INTENT_NATIVE_PROJECTION,
-              process.env.PBE_INTENT_RETROFIT_OUTPUT,
-              process.env.PBE_INTENT_RETROFIT_PROJECTION,
+              process.env.DEVVIEW_INTENT_NATIVE_OUTPUT,
+              process.env.DEVVIEW_INTENT_NATIVE_PROJECTION,
+              process.env.DEVVIEW_INTENT_RETROFIT_OUTPUT,
+              process.env.DEVVIEW_INTENT_RETROFIT_PROJECTION,
               healthReportOutputPath,
               healthReportMarkdownPath,
               compilerBoundaryOutputPath,
@@ -472,7 +472,7 @@ jobs:
           const summaryPath = process.env.GITHUB_STEP_SUMMARY
           if (!summaryPath) process.exit(0)
 
-          const generatedDir = process.env.PBE_TODO_SEARCH_GENERATED_DIR
+          const generatedDir = process.env.DEVVIEW_TODO_SEARCH_GENERATED_DIR
           const manifestPath = path.join(generatedDir, 'read-model-ci-evidence-manifest.json')
           let manifest = null
           if (fs.existsSync(manifestPath)) {
@@ -484,14 +484,14 @@ jobs:
           const pr = manifest?.pr || null
           const todoSearchStatus = manifest?.todoSearch?.validatorStatus || 'missing'
           const todoSearchParity = manifest?.todoSearch?.parityStatus || 'missing'
-          const todoAppStatus = manifest?.todoAppPbeRun?.validatorStatus || 'missing'
+          const todoAppStatus = manifest?.todoAppDevviewRun?.validatorStatus || 'missing'
           const aggregateStatus = manifest?.aggregate?.status || 'missing'
           const validateAllStatus = manifest?.validateAllStatus || 'missing'
           const e2eSmokeStatus = manifest?.e2eSmokeStatus || 'missing'
           const todoSearchProjection = manifest?.todoSearch?.projectionContractStatus || 'missing'
-          const todoAppProjection = manifest?.todoAppPbeRun?.projectionContractStatus || 'missing'
+          const todoAppProjection = manifest?.todoAppDevviewRun?.projectionContractStatus || 'missing'
           const candidateObservationStatus = manifest?.candidateObservationStatus || 'missing'
-          const todoAppCandidateObservation = manifest?.todoAppPbeRun?.candidateObservationStatus || 'missing'
+          const todoAppCandidateObservation = manifest?.todoAppDevviewRun?.candidateObservationStatus || 'missing'
           const edgeIntentProjectionObservationStatus = manifest?.edgeIntentProjectionObservationStatus || 'missing'
           const healthReportStatus = manifest?.healthReportStatus || 'missing'
           const healthReportMarkdown = manifest?.healthReport?.markdownArtifactPath || 'missing'
@@ -510,7 +510,7 @@ jobs:
           const includedSlices = manifest?.includedSlices || []
 
           const markdown = [
-            '# PBE Read-Model Evidence',
+            '# DevView Read-Model Evidence',
             '',
             `- Trigger mode: \`${triggerMode}\``,
             pr?.number ? `- PR: #${pr.number} (${pr.headRef}@${pr.headSha} -> ${pr.baseRef}@${pr.baseSha})` : null,
@@ -537,8 +537,8 @@ jobs:
             `- Execution contract schema: \`${compilerContractSchema}\``,
             `- Execution contract validator: \`${compilerContractValidator}\``,
             `- Dry-run execution contract: \`${compilerDryRun}\``,
-            `- PBE operation-chain status: \`${operationChainStatus}\``,
-            `- PBE dogfood evaluation status: \`${dogfoodEvaluationStatus}\``,
+            `- DevView legacy operation-chain status: \`${operationChainStatus}\``,
+            `- DevView legacy dogfood evaluation status: \`${dogfoodEvaluationStatus}\``,
             `- Aggregate status: \`${aggregateStatus}\``,
             '- Boundary: CI-backed Evidence is Evidence only.',
             '- Candidate observation is retained as separate report-only metadata.',
@@ -561,7 +561,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: pbe-todo-search-read-model-evidence
+          name: devview-todo-search-read-model-evidence
           path: |
             examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json
             examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.md
@@ -591,7 +591,7 @@ jobs:
             examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.md
             examples/internal-legacy/read-model-aggregate/generated/read-model-compiler-boundary-output.json
             examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json
-            outputs/pbe-operation-chain/**
+            outputs/devview-legacy-operation-chain/**
             outputs/native/**
             outputs/retrofit/**
             examples/internal-legacy/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json

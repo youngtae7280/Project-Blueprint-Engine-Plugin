@@ -244,7 +244,7 @@ export async function graphOperationRunChainCommand(context: CommandContext): Pr
           severity: 'error',
           message,
           suggestedFix:
-            'Use --dry-run to inspect the wrapped command, or run scripts/invoke-pbe-v0.ps1 directly for detailed troubleshooting.',
+            'Use --dry-run to inspect the wrapped command, or run scripts/invoke-devview-legacy-v0.ps1 directly for detailed troubleshooting.',
         }),
       ],
     }

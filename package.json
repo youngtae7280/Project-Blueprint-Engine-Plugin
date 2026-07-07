@@ -5,20 +5,16 @@
   "description": "DevView Codex plugin workflow for Maintainability Graph context, View Trees, Context Packs, evidence, and guarded graph updates.",
   "type": "module",
   "bin": {
-    "devview": "./dist/cli/index.js",
-    "pbe": "./dist/cli/index.js"
+    "devview": "./dist/cli/index.js"
   },
   "scripts": {
     "clean:dist": "node scripts/clean-dist.js",
     "build:cli": "npm run clean:dist && tsc -p tsconfig.cli.json",
     "devview": "node dist/cli/index.js",
-    "pbe": "node dist/cli/index.js",
     "validate:devview": "npm run build:cli && node dist/cli/index.js validate",
-    "validate:devview:legacy-tree": "node scripts/validate-pbe-tree-system.js",
-    "validate:pbe": "npm run build:cli && node dist/cli/index.js validate",
-    "validate:pbe:v2": "node scripts/validate-pbe-tree-system.js",
-    "validate:pbe:operation-chain": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/invoke-pbe-v0.ps1 -Command operation-chain",
-    "validate:pbe:dogfood": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/invoke-pbe-v0.ps1 -Command evaluate-dogfood",
+    "validate:devview:legacy-tree": "node scripts/validate-devview-legacy-tree-system.js",
+    "validate:devview:legacy-operation-chain": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/invoke-devview-legacy-v0.ps1 -Command operation-chain",
+    "validate:devview:legacy-dogfood": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/invoke-devview-legacy-v0.ps1 -Command evaluate-dogfood",
     "test:graph-operation:flow": "npm run build:cli && node scripts/graph-operation-flow-smoke.js",
     "typecheck": "tsc -b",
     "test": "vitest run",

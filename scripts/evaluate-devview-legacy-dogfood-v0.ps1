@@ -1,6 +1,6 @@
 param(
-    [string]$JsonOutputPath = "outputs/pbe-operation-chain/dogfood-evaluation.json",
-    [string]$MarkdownOutputPath = "outputs/pbe-operation-chain/dogfood-evaluation.md"
+    [string]$JsonOutputPath = "outputs/devview-legacy-operation-chain/dogfood-evaluation.json",
+    [string]$MarkdownOutputPath = "outputs/devview-legacy-operation-chain/dogfood-evaluation.md"
 )
 
 $ErrorActionPreference = "Stop"
@@ -16,7 +16,7 @@ function Read-Json($Path) {
     Get-Content -LiteralPath (Resolve-RepoPath $Path) -Raw | ConvertFrom-Json
 }
 
-$operation = Read-Json "outputs/pbe-operation-chain/operation-chain-report.json"
+$operation = Read-Json "outputs/devview-legacy-operation-chain/operation-chain-report.json"
 $cjson = Read-Json "outputs/retrofit/open-source/cjson/dogfood-report.json"
 $nativeNotes = Read-Json "outputs/native/graph-notes-demo/dogfood-report.json"
 $nativeCounter = Read-Json "outputs/native/graph-counter-demo/dogfood-report.json"
@@ -74,7 +74,7 @@ $criteria = @(
 )
 
 $summary = [PSCustomObject]@{
-    status = if (@($criteria | Where-Object { $_.status -ne "pass" }).Count -eq 0) { "pbe-dogfood-evaluation-pass" } else { "pbe-dogfood-evaluation-fail" }
+    status = if (@($criteria | Where-Object { $_.status -ne "pass" }).Count -eq 0) { "devview-legacy-dogfood-evaluation-pass" } else { "devview-legacy-dogfood-evaluation-fail" }
     criteria = $criteria
     score = [PSCustomObject]@{
         passed = @($criteria | Where-Object { $_.status -eq "pass" }).Count
@@ -96,7 +96,7 @@ $markdownPath = Resolve-RepoPath $MarkdownOutputPath
 $markdownDir = Split-Path -Parent $markdownPath
 if ($markdownDir -and -not (Test-Path $markdownDir)) { New-Item -ItemType Directory -Path $markdownDir | Out-Null }
 $lines = @(
-    "# PBE Dogfood Evaluation",
+    "# DevView Legacy Dogfood Evaluation",
     "",
     "Status: $($summary.status)",
     "",

@@ -1,6 +1,6 @@
 param(
-    [string]$JsonOutputPath = "outputs/pbe-operation-chain/artifact-inventory.json",
-    [string]$MarkdownOutputPath = "outputs/pbe-operation-chain/artifact-inventory.md"
+    [string]$JsonOutputPath = "outputs/devview-legacy-operation-chain/artifact-inventory.json",
+    [string]$MarkdownOutputPath = "outputs/devview-legacy-operation-chain/artifact-inventory.md"
 )
 
 $ErrorActionPreference = "Stop"
@@ -38,7 +38,7 @@ $artifacts = @(
 )
 
 $summary = [PSCustomObject]@{
-    status = "pbe-artifact-inventory-pass"
+    status = "devview-legacy-artifact-inventory-pass"
     repoRoot = $repoRoot
     workspaceGitRepo = $isGitRepo
     artifactCount = @($artifacts).Count
@@ -61,7 +61,7 @@ $markdownPath = Resolve-RepoPath $MarkdownOutputPath
 $markdownDir = Split-Path -Parent $markdownPath
 if ($markdownDir -and -not (Test-Path $markdownDir)) { New-Item -ItemType Directory -Path $markdownDir | Out-Null }
 $lines = @(
-    "# PBE Artifact Inventory",
+    "# DevView Legacy Artifact Inventory",
     "",
     "Status: $($summary.status)",
     "",

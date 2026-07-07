@@ -12,7 +12,7 @@ afterEach(() => {
   }
 })
 
-describe('PBE v2 tree validator', () => {
+describe('DevView legacy tree validator', () => {
   it('passes when only schemas and templates are present', () => {
     const workspace = createTreeValidatorWorkspace()
 
@@ -386,11 +386,15 @@ function createTreeValidatorWorkspace() {
 
 function runTreeValidator(workspace: string) {
   try {
-    const output = execFileSync(process.execPath, [resolve(process.cwd(), 'scripts/validate-pbe-tree-system.js')], {
-      cwd: workspace,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'pipe'],
-    })
+    const output = execFileSync(
+      process.execPath,
+      [resolve(process.cwd(), 'scripts/validate-devview-legacy-tree-system.js')],
+      {
+        cwd: workspace,
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'pipe'],
+      },
+    )
     return { status: 0, output }
   } catch (error) {
     const failure = error as { status?: number; stdout?: Buffer; stderr?: Buffer }

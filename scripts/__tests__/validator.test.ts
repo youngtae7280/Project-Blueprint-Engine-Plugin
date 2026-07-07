@@ -13,7 +13,7 @@ afterEach(() => {
   }
 })
 
-describe('PBE validator', () => {
+describe('DevView validator', () => {
   it('rejects parallel tasks that declare the same expected file', () => {
     const workspace = createValidatorWorkspace()
     writePbeFixture(workspace, {
@@ -37,7 +37,7 @@ describe('PBE validator', () => {
     const result = runValidator(workspace)
 
     expect(result.status).toBe(0)
-    expect(result.output).toContain('PBE validation passed.')
+    expect(result.output).toContain('DevView validation passed.')
   })
 
   it('rejects submitted review when the root requirement is still interviewing', () => {
@@ -132,7 +132,7 @@ function createValidatorWorkspace() {
 
 function runValidator(workspace: string) {
   try {
-    const output = execFileSync(process.execPath, [resolve(process.cwd(), 'scripts/validate-pbe-files.js')], {
+    const output = execFileSync(process.execPath, [resolve(process.cwd(), 'scripts/validate-devview-files.js')], {
       cwd: workspace,
       encoding: 'utf8',
       stdio: ['ignore', 'pipe', 'pipe'],

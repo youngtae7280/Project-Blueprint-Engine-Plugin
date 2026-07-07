@@ -1,6 +1,6 @@
 param(
-    [string]$JsonOutputPath = "outputs/pbe-operation-chain/operation-chain-report.json",
-    [string]$MarkdownOutputPath = "outputs/pbe-operation-chain/operation-chain-report.md"
+    [string]$JsonOutputPath = "outputs/devview-legacy-operation-chain/operation-chain-report.json",
+    [string]$MarkdownOutputPath = "outputs/devview-legacy-operation-chain/operation-chain-report.md"
 )
 
 $ErrorActionPreference = "Stop"
@@ -20,16 +20,16 @@ function Fail($Message) {
     exit 1
 }
 
-$targetSetup = & (Join-Path $PSScriptRoot "setup-pbe-operation-chain-targets-v0.ps1")
-if ($targetSetup.status -ne "pbe-operation-chain-targets-ready") {
+$targetSetup = & (Join-Path $PSScriptRoot "setup-devview-legacy-operation-chain-targets-v0.ps1")
+if ($targetSetup.status -ne "devview-legacy-operation-chain-targets-ready") {
     Fail "operation-chain target setup failed"
 }
 
-$retrofitSmoke = & (Join-Path $PSScriptRoot "validate-pbe-retrofit-smoke-v0.ps1") `
+$retrofitSmoke = & (Join-Path $PSScriptRoot "validate-devview-legacy-retrofit-smoke-v0.ps1") `
     -SkipExternalRepo `
-    -JsonOutputPath "outputs/retrofit/pbe-retrofit-smoke-report.fixture-only.json" `
-    -MarkdownOutputPath "outputs/retrofit/pbe-retrofit-smoke-report.fixture-only.md"
-if ($retrofitSmoke.status -ne "pbe-retrofit-smoke-pass") {
+    -JsonOutputPath "outputs/retrofit/devview-legacy-retrofit-smoke-report.fixture-only.json" `
+    -MarkdownOutputPath "outputs/retrofit/devview-legacy-retrofit-smoke-report.fixture-only.md"
+if ($retrofitSmoke.status -ne "devview-legacy-retrofit-smoke-pass") {
     Fail "retrofit CardPrinterConfig fixture smoke failed"
 }
 
@@ -55,7 +55,7 @@ if ($nativeBehaviorDogfood.status -ne "native-graph-counter-dogfood-pass") {
 }
 
 $summary = [PSCustomObject]@{
-    status = "pbe-operation-chain-pass"
+    status = "devview-legacy-operation-chain-pass"
     operationChain = "graph-source -> instruction pack -> local change -> graph delta"
     repoRoot = $repoRoot
     checks = [PSCustomObject]@{
@@ -109,7 +109,7 @@ if ($MarkdownOutputPath) {
     }
 
     $lines = @(
-        "# PBE Operation Chain Report",
+        "# DevView Legacy Operation Chain Report",
         "",
         "Status: $($summary.status)",
         "",

@@ -9,7 +9,7 @@ no-promotion-change
 read-model examples into a temporary workspace, runs the CLI against that workspace, and removes the temporary files after
 the run so the repository's generated artifacts do not churn.
 
-The non-enforcing `PBE Read-Model Evidence` workflow now also runs the smoke and writes
+The non-enforcing `DevView Read-Model Evidence` workflow now also runs the smoke and writes
 `examples/internal-legacy/read-model-aggregate/generated/read-model-e2e-smoke-output.json` as an uploaded observation artifact.
 
 Manual workflow run `28223860233` reviewed the CI observation path after integration. The artifact manifest recorded

@@ -119,7 +119,7 @@ $cjsonReadme.Replace("On Windows CMake is usually used to create a Visual Studio
     Set-Content -LiteralPath (Join-Path $cjsonPath "README.md") -Encoding UTF8
 
 [PSCustomObject]@{
-    status = "pbe-operation-chain-targets-ready"
+    status = "devview-legacy-operation-chain-targets-ready"
     targets = @(
         "work/native/graph-notes-demo",
         "work/native/graph-counter-demo",

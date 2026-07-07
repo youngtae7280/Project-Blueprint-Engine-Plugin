@@ -1,4 +1,4 @@
-# PBE Operation Chain Outputs
+# DevView Legacy Operation Chain Outputs
 
 This directory contains the local integration smoke for the shared PBE operation
 chain:

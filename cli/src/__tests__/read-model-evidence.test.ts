@@ -23,7 +23,7 @@ import {
   projectStructureOnlyGraphSourceCandidateReadModel,
   reportGraphSourceHealth,
   summarizeReadModelEvidence,
-  todoAppPbeRunStructureOnlyProfile,
+  todoAppDevviewRunStructureOnlyProfile,
   todoSearchReadModelProfile,
   validateAllReadModelEvidence,
   validateReadModelEvidence,
@@ -87,7 +87,7 @@ describe('read-model Evidence builder', () => {
   it('uses the Todo App DevView run structure-only profile for the canonical fixture slice', () => {
     const profile = getSliceReadModelProfile('examples/valid/todo-app-devview-run')
 
-    expect(profile).toBe(todoAppPbeRunStructureOnlyProfile)
+    expect(profile).toBe(todoAppDevviewRunStructureOnlyProfile)
     expect(profile.profileId).toBe('todo-app-devview-run-structure-only')
     expect(profile.policyLevel).toBe('structure-only')
     expect(profile.sourceLayout).toBe('canonical-devview')
@@ -153,9 +153,9 @@ describe('read-model Evidence builder', () => {
     expect(candidate.schemaVersion).toBe(1)
     expect(candidate.artifactRole).toBe('structure-only-graph-source')
     expect(candidate.status).toBe('confirmed-graph-source-backed')
-    expect(candidate.graphSourceScope).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
-    expect(candidate.sourceSlice).toBe(todoAppPbeRunStructureOnlyProfile.supportedSlice)
-    expect(candidate.sourceProfile).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
+    expect(candidate.graphSourceScope).toBe(todoAppDevviewRunStructureOnlyProfile.profileId)
+    expect(candidate.sourceSlice).toBe(todoAppDevviewRunStructureOnlyProfile.supportedSlice)
+    expect(candidate.sourceProfile).toBe(todoAppDevviewRunStructureOnlyProfile.profileId)
     expect(candidate.policyLevel).toBe('structure-only')
     expect(candidate.sourceRecords.nodes).toEqual(generated.nodes)
     expect(candidate.sourceRecords.edges).toEqual(generated.edges)
@@ -165,7 +165,7 @@ describe('read-model Evidence builder', () => {
     expect(candidate.graphSourceBoundaries.validateAllBoundary).toContain('positive validate-all')
     expect(candidate.graphSourceBoundaries.validateAllBoundary).toContain('structure-only')
     const registryTodoAppProfile = registry.profiles.find(
-      (entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId,
+      (entry) => entry.profileId === todoAppDevviewRunStructureOnlyProfile.profileId,
     )
     expect(registryTodoAppProfile?.optionalArtifacts.graphSource).toBe('graph-source.json')
   })
@@ -195,10 +195,10 @@ describe('read-model Evidence builder', () => {
       retirementApprovalPackages: Array<{ scope: string; status: string }>
     }
     const registryTodoAppProfile = registry.profiles.find(
-      (entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId,
+      (entry) => entry.profileId === todoAppDevviewRunStructureOnlyProfile.profileId,
     )
     const transitionTodoApp = transitionStatus.configuredSlices.find(
-      (entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId,
+      (entry) => entry.profileId === todoAppDevviewRunStructureOnlyProfile.profileId,
     )
     const retirementTodoApp = transitionStatus.retirementApprovalPackages.find(
       (entry) => entry.scope === 'todo-app-devview-run-structure-only',
@@ -275,8 +275,8 @@ describe('read-model Evidence builder', () => {
       userAcceptanceBoundary: string
     }
     expect(payload.projection).toBe(outputPath)
-    expect(payload.nodeCount).toBe(todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes)
-    expect(payload.edgeCount).toBe(todoAppPbeRunStructureOnlyProfile.expectedCounts.edges)
+    expect(payload.nodeCount).toBe(todoAppDevviewRunStructureOnlyProfile.expectedCounts.nodes)
+    expect(payload.edgeCount).toBe(todoAppDevviewRunStructureOnlyProfile.expectedCounts.edges)
     expect(payload.coreViewCount).toBe(coreViews.length)
     expect(payload.nonPromotionStatement).toContain('not promote Todo App')
     expect(payload.userAcceptanceBoundary).toContain('User acceptance remains user-controlled')
@@ -308,7 +308,7 @@ describe('read-model Evidence builder', () => {
     expect(projection.coreViewCoverage).toEqual(generated.coreViewCoverage)
     expect(projection.validateAllBoundary).toContain('positive validate-all')
     expect(projection.validateAllBoundary).toContain('structure-only')
-    expect(normalizedProjection.metadata.graphSourceScope).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
+    expect(normalizedProjection.metadata.graphSourceScope).toBe(todoAppDevviewRunStructureOnlyProfile.profileId)
   })
 
   it('validates the committed Todo App candidate projection contract outside validate-all semantics', async () => {
@@ -320,21 +320,21 @@ describe('read-model Evidence builder', () => {
 
     expect(projection.metadata.artifactRole).toBe('structure_only_graph_source_read_model_projection')
     expect(projection.metadata.sourceArtifact).toBe('examples/valid/todo-app-devview-run/graph-source.json')
-    expect(projection.metadata.sourceSlice).toBe(todoAppPbeRunStructureOnlyProfile.supportedSlice)
-    expect(projection.metadata.sourceProfile).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
+    expect(projection.metadata.sourceSlice).toBe(todoAppDevviewRunStructureOnlyProfile.supportedSlice)
+    expect(projection.metadata.sourceProfile).toBe(todoAppDevviewRunStructureOnlyProfile.profileId)
     expect(projection.metadata.policyLevel).toBe('structure-only')
     expect(projection.nodes).toEqual(generated.nodes)
     expect(projection.edges).toEqual(generated.edges)
     expect(projection.coreViewCoverage).toEqual(generated.coreViewCoverage)
-    expect(projection.nodes).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes)
-    expect(projection.edges).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.edges)
+    expect(projection.nodes).toHaveLength(todoAppDevviewRunStructureOnlyProfile.expectedCounts.nodes)
+    expect(projection.edges).toHaveLength(todoAppDevviewRunStructureOnlyProfile.expectedCounts.edges)
     expect(projection.coreViewCoverage).toHaveLength(coreViews.length)
     expect(projection.sourceAuthorityBoundary).toContain('does not create')
     expect(projection.nonPromotionStatement).toContain('not promote Todo App')
     expect(projection.validateAllBoundary).toContain('positive validate-all')
     expect(projection.validateAllBoundary).toContain('structure-only')
     const registryTodoAppProfile = registry.profiles.find(
-      (entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId,
+      (entry) => entry.profileId === todoAppDevviewRunStructureOnlyProfile.profileId,
     )
     expect(registryTodoAppProfile?.optionalArtifacts.graphSourceProjection).toBe(
       'generated/graph-source-read-model-projection.json',
@@ -377,10 +377,10 @@ describe('read-model Evidence builder', () => {
     expect(payload.status).toBe('candidate-observation-pass')
     expect(payload.observedCandidates).toEqual([
       expect.objectContaining({
-        profileId: todoAppPbeRunStructureOnlyProfile.profileId,
+        profileId: todoAppDevviewRunStructureOnlyProfile.profileId,
         status: 'projection-contract-pass',
-        nodeCount: todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes,
-        edgeCount: todoAppPbeRunStructureOnlyProfile.expectedCounts.edges,
+        nodeCount: todoAppDevviewRunStructureOnlyProfile.expectedCounts.nodes,
+        edgeCount: todoAppDevviewRunStructureOnlyProfile.expectedCounts.edges,
         coreViewCount: coreViews.length,
         validateAllBoundary: expect.stringContaining('positive validate-all'),
       }),
@@ -423,7 +423,7 @@ describe('read-model Evidence builder', () => {
     })
     expect(payload.observedCandidates[0].error).toContain('positive validate-all structure-only')
     const todoApp = validateAllResult.perSliceResults.find(
-      (entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId,
+      (entry) => entry.profileId === todoAppDevviewRunStructureOnlyProfile.profileId,
     )
     expect(validateAllResult.status).toBe('aggregate-blocked')
     expect(validateAllResult.aggregateResult.summary.status).toBe('aggregate-pass')
@@ -558,7 +558,7 @@ describe('read-model Evidence builder', () => {
     expect(registry.mutationBoundary).toContain('must not silently mutate')
     expect(registry.profiles.map((entry) => entry.profileId)).toEqual([
       todoSearchReadModelProfile.profileId,
-      todoAppPbeRunStructureOnlyProfile.profileId,
+      todoAppDevviewRunStructureOnlyProfile.profileId,
     ])
     expect(registry.profiles.every((entry) => entry.includedInValidateAll)).toBe(true)
   })
@@ -568,7 +568,7 @@ describe('read-model Evidence builder', () => {
     const entries = new Map(registry.profiles.map((entry) => [entry.profileId, entry]))
 
     const todoSearch = entries.get(todoSearchReadModelProfile.profileId)
-    const todoApp = entries.get(todoAppPbeRunStructureOnlyProfile.profileId)
+    const todoApp = entries.get(todoAppDevviewRunStructureOnlyProfile.profileId)
 
     expect(todoSearch).toMatchObject({
       sourceSlice: todoSearchReadModelProfile.supportedSlice,
@@ -591,16 +591,16 @@ describe('read-model Evidence builder', () => {
     )
 
     expect(todoApp).toMatchObject({
-      sourceSlice: todoAppPbeRunStructureOnlyProfile.supportedSlice,
-      sourceLayout: todoAppPbeRunStructureOnlyProfile.sourceLayout,
-      policyLevel: todoAppPbeRunStructureOnlyProfile.policyLevel,
-      expectedCounts: todoAppPbeRunStructureOnlyProfile.expectedCounts,
+      sourceSlice: todoAppDevviewRunStructureOnlyProfile.supportedSlice,
+      sourceLayout: todoAppDevviewRunStructureOnlyProfile.sourceLayout,
+      policyLevel: todoAppDevviewRunStructureOnlyProfile.policyLevel,
+      expectedCounts: todoAppDevviewRunStructureOnlyProfile.expectedCounts,
       requiredCommands: ['generate', 'validate'],
     })
     expect(todoApp?.requiredArtifacts).toMatchObject({
-      generatedReadModel: todoAppPbeRunStructureOnlyProfile.artifacts.generatedReadModel,
-      validationReport: todoAppPbeRunStructureOnlyProfile.artifacts.validationReport,
-      evidenceManifest: todoAppPbeRunStructureOnlyProfile.artifacts.evidenceManifest,
+      generatedReadModel: todoAppDevviewRunStructureOnlyProfile.artifacts.generatedReadModel,
+      validationReport: todoAppDevviewRunStructureOnlyProfile.artifacts.validationReport,
+      evidenceManifest: todoAppDevviewRunStructureOnlyProfile.artifacts.evidenceManifest,
     })
     expect(todoApp?.optionalArtifacts.graphSource).toBe('graph-source.json')
     expect(todoApp?.optionalArtifacts.graphSourceProjection).toBe('generated/graph-source-read-model-projection.json')
@@ -629,19 +629,19 @@ describe('read-model Evidence builder', () => {
         expectedCounts: todoSearchReadModelProfile.expectedCounts,
       },
       {
-        profileId: todoAppPbeRunStructureOnlyProfile.profileId,
-        sourceSlice: todoAppPbeRunStructureOnlyProfile.supportedSlice,
+        profileId: todoAppDevviewRunStructureOnlyProfile.profileId,
+        sourceSlice: todoAppDevviewRunStructureOnlyProfile.supportedSlice,
         policyLevel: 'structure-only',
         commands: ['generate', 'validate'],
         requiredArtifacts: {
-          generatedReadModel: todoAppPbeRunStructureOnlyProfile.artifacts.generatedReadModel,
-          validationReport: todoAppPbeRunStructureOnlyProfile.artifacts.validationReport,
+          generatedReadModel: todoAppDevviewRunStructureOnlyProfile.artifacts.generatedReadModel,
+          validationReport: todoAppDevviewRunStructureOnlyProfile.artifacts.validationReport,
         },
         optionalArtifacts: {
-          graphSource: todoAppPbeRunStructureOnlyProfile.artifacts.graphSource,
+          graphSource: todoAppDevviewRunStructureOnlyProfile.artifacts.graphSource,
           graphSourceProjection: 'generated/graph-source-read-model-projection.json',
         },
-        expectedCounts: todoAppPbeRunStructureOnlyProfile.expectedCounts,
+        expectedCounts: todoAppDevviewRunStructureOnlyProfile.expectedCounts,
       },
     ])
   })
@@ -680,12 +680,12 @@ describe('read-model Evidence builder', () => {
   it('keeps the Todo App graph-native execution contract report structure-only after the pilot retry', async () => {
     const report = await buildGraphExecutionContractReport(
       resolve('.'),
-      todoAppPbeRunStructureOnlyProfile.supportedSlice,
+      todoAppDevviewRunStructureOnlyProfile.supportedSlice,
     )
 
     expect(report.status).toBe('report-only')
-    expect(report.source.profileId).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
-    expect(report.source.sourceSlice).toBe(todoAppPbeRunStructureOnlyProfile.supportedSlice)
+    expect(report.source.profileId).toBe(todoAppDevviewRunStructureOnlyProfile.profileId)
+    expect(report.source.sourceSlice).toBe(todoAppDevviewRunStructureOnlyProfile.supportedSlice)
     expect(report.source.policyLevel).toBe('structure-only')
     expect(report.selectedSliceSummary).toMatchObject({
       nodeCount: 22,
@@ -799,7 +799,7 @@ describe('read-model Evidence builder', () => {
 
     expect(result.includedProfiles.map((entry) => entry.profileId)).toEqual([
       todoSearchReadModelProfile.profileId,
-      todoAppPbeRunStructureOnlyProfile.profileId,
+      todoAppDevviewRunStructureOnlyProfile.profileId,
     ])
     expect(result.status).toBe('aggregate-pass')
     expect(result.aggregateResult.summary.status).toBe('aggregate-pass')
@@ -814,7 +814,7 @@ describe('read-model Evidence builder', () => {
     expect(result.nonEnforcementStatement).toContain('non-enforcing')
     const todoSearch = result.perSliceResults.find((entry) => entry.profileId === todoSearchReadModelProfile.profileId)
     const todoApp = result.perSliceResults.find(
-      (entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId,
+      (entry) => entry.profileId === todoAppDevviewRunStructureOnlyProfile.profileId,
     )
     expect(todoSearch?.commands.find((entry) => entry.command === 'project-contract')).toMatchObject({
       status: 'projection-contract-pass',
@@ -841,7 +841,7 @@ describe('read-model Evidence builder', () => {
     const result = await validateAllReadModelEvidence(workspace)
     const todoSearch = result.perSliceResults.find((entry) => entry.profileId === todoSearchReadModelProfile.profileId)
     const todoApp = result.perSliceResults.find(
-      (entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId,
+      (entry) => entry.profileId === todoAppDevviewRunStructureOnlyProfile.profileId,
     )
 
     expect(result.includedProfiles).toHaveLength(2)
@@ -915,7 +915,7 @@ describe('read-model Evidence builder', () => {
 
     const missingCandidateResult = await validateAllReadModelEvidence(missingCandidateProjectionWorkspace)
     const missingCandidateTodoApp = missingCandidateResult.perSliceResults.find(
-      (entry) => entry.profileId === todoAppPbeRunStructureOnlyProfile.profileId,
+      (entry) => entry.profileId === todoAppDevviewRunStructureOnlyProfile.profileId,
     )
     expect(missingCandidateResult.status).toBe('aggregate-blocked')
     expect(missingCandidateTodoApp?.commands.find((entry) => entry.command === 'project-contract')).toMatchObject({
@@ -3521,7 +3521,7 @@ describe('read-model Evidence builder', () => {
       nonPromotionStatement: string
     }
 
-    expect(generatedJson.metadata.sliceProfile).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
+    expect(generatedJson.metadata.sliceProfile).toBe(todoAppDevviewRunStructureOnlyProfile.profileId)
     expect(generatedJson.metadata.slicePolicyLevel).toBe('structure-only')
     expect(generatedJson.metadata.readModelSourceMode).toBe('graph-source-backed')
     expect(generatedJson.metadata.graphSourceArtifact).toBe('examples/valid/todo-app-devview-run/graph-source.json')
@@ -3532,8 +3532,8 @@ describe('read-model Evidence builder', () => {
     expect(generatedJson.sourceInputs.map((entry) => entry.relativePath)).toContain(
       'examples/valid/todo-app-devview-run/graph-source.json',
     )
-    expect(generatedJson.nodes).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes)
-    expect(generatedJson.edges).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.edges)
+    expect(generatedJson.nodes).toHaveLength(todoAppDevviewRunStructureOnlyProfile.expectedCounts.nodes)
+    expect(generatedJson.edges).toHaveLength(todoAppDevviewRunStructureOnlyProfile.expectedCounts.edges)
     expect(generatedJson.coreViewCoverage.map((entry) => entry.name)).toEqual(coreViews)
     expect(generatedJson.sourceAuthorityBoundary).toContain('Canonical .devview')
     expect(generatedJson.nonPromotionStatement).toContain('does not change source authority')
@@ -3561,15 +3561,15 @@ describe('read-model Evidence builder', () => {
     }
 
     expect(report.status).toBe('validation-pass')
-    expect(report.summary.checkCount).toBe(todoAppPbeRunStructureOnlyProfile.expectedCounts.validationChecks)
+    expect(report.summary.checkCount).toBe(todoAppDevviewRunStructureOnlyProfile.expectedCounts.validationChecks)
     expect(report.summary.warningCount).toBe(0)
     expect(report.summary.blockingCount).toBe(0)
     expect(report.summary.decisionRequiredCount).toBe(0)
-    expect(report.metadata.sliceProfile).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
-    expect(report.metadata.profileId).toBe(todoAppPbeRunStructureOnlyProfile.profileId)
+    expect(report.metadata.sliceProfile).toBe(todoAppDevviewRunStructureOnlyProfile.profileId)
+    expect(report.metadata.profileId).toBe(todoAppDevviewRunStructureOnlyProfile.profileId)
     expect(report.metadata.sourceLayout).toBe('canonical-devview')
     expect(report.metadata.policyLevel).toBe('structure-only')
-    expect(report.metadata.expectedCounts).toEqual(todoAppPbeRunStructureOnlyProfile.expectedCounts)
+    expect(report.metadata.expectedCounts).toEqual(todoAppDevviewRunStructureOnlyProfile.expectedCounts)
     expect(report.metadata.parityReport).toBe('not-required-for-structure-only')
     expect(report.metadata.pilotMarker).toBe('not-required-for-structure-only')
     expect(report.metadata.parityRequirement).toMatchObject({ required: false, status: 'not-required' })
@@ -3617,8 +3617,8 @@ describe('read-model Evidence builder', () => {
     expect(generatedJson.nodes.find((entry) => entry.id === 'PT-1')?.title).toBe(
       'Todo App candidate graph source backed smoke title',
     )
-    expect(generatedJson.nodes).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes)
-    expect(generatedJson.edges).toHaveLength(todoAppPbeRunStructureOnlyProfile.expectedCounts.edges)
+    expect(generatedJson.nodes).toHaveLength(todoAppDevviewRunStructureOnlyProfile.expectedCounts.nodes)
+    expect(generatedJson.edges).toHaveLength(todoAppDevviewRunStructureOnlyProfile.expectedCounts.edges)
     expect(generatedJson.coreViewCoverage).toHaveLength(coreViews.length)
     expect(generatedJson.sourceAuthorityBoundary).toContain('structure-only')
     expect(generatedJson.nonPromotionStatement).toContain('does not change source authority')
@@ -3641,7 +3641,7 @@ describe('read-model Evidence builder', () => {
     }
 
     expect(report.status).toBe('validation-pass')
-    expect(report.summary.checkCount).toBe(todoAppPbeRunStructureOnlyProfile.expectedCounts.validationChecks)
+    expect(report.summary.checkCount).toBe(todoAppDevviewRunStructureOnlyProfile.expectedCounts.validationChecks)
     expect(report.summary.blockingCount).toBe(0)
     expect(report.summary.decisionRequiredCount).toBe(0)
     expect(report.metadata.policyLevel).toBe('structure-only')
@@ -3732,10 +3732,10 @@ describe('read-model Evidence builder', () => {
         }),
         expect.objectContaining({
           sourceSlice: 'examples/valid/todo-app-devview-run',
-          profileId: todoAppPbeRunStructureOnlyProfile.profileId,
+          profileId: todoAppDevviewRunStructureOnlyProfile.profileId,
           policyLevel: 'structure-only',
           validationStatus: 'validation-pass',
-          checkCount: todoAppPbeRunStructureOnlyProfile.expectedCounts.validationChecks,
+          checkCount: todoAppDevviewRunStructureOnlyProfile.expectedCounts.validationChecks,
           parityRequirement: expect.objectContaining({ required: false, status: 'not-required' }),
           pilotMarkerRequirement: expect.objectContaining({ required: false, status: 'not-required' }),
           runtimeFixtureRequirement: expect.objectContaining({ required: false, status: 'attached-evidence-only' }),
@@ -4180,10 +4180,10 @@ async function createAggregateReportWorkspace(): Promise<string> {
   await writeValidationReportFixture(
     workspace,
     'examples/valid/todo-app-devview-run',
-    todoAppPbeRunStructureOnlyProfile.profileId,
+    todoAppDevviewRunStructureOnlyProfile.profileId,
     'structure-only',
     'canonical-devview',
-    todoAppPbeRunStructureOnlyProfile.expectedCounts.validationChecks,
+    todoAppDevviewRunStructureOnlyProfile.expectedCounts.validationChecks,
     {
       parityRequirement: { required: false, status: 'not-required' },
       pilotMarkerRequirement: { required: false, status: 'not-required' },

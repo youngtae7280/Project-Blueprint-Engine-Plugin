@@ -16,14 +16,14 @@ export async function validateCommand(context: CommandContext): Promise<CommandR
   const issues: ValidationIssue[] = []
   const validators = [
     {
-      name: 'legacy migration validator',
-      code: 'LEGACY_PBE_VALIDATOR_FAILED',
-      script: path.join(context.env.pluginRoot, 'scripts', 'validate-pbe-files.js'),
+      name: 'DevView repository validator',
+      code: 'DEVVIEW_REPOSITORY_VALIDATOR_FAILED',
+      script: path.join(context.env.pluginRoot, 'scripts', 'validate-devview-files.js'),
     },
     {
-      name: 'v2 tree system',
-      code: 'V2_TREE_VALIDATOR_FAILED',
-      script: path.join(context.env.pluginRoot, 'scripts', 'validate-pbe-tree-system.js'),
+      name: 'DevView legacy tree system',
+      code: 'DEVVIEW_LEGACY_TREE_VALIDATOR_FAILED',
+      script: path.join(context.env.pluginRoot, 'scripts', 'validate-devview-legacy-tree-system.js'),
     },
   ]
 

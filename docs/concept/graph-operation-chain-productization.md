@@ -17,7 +17,7 @@ graph-source -> instruction pack -> local change -> graph delta -> graph update 
 - Retrofit change-record schema under `schemas/retrofit/`.
 - Native dogfood examples under `examples/internal-legacy/native/`.
 - Retrofit dogfood examples under `examples/internal-legacy/retrofit/`.
-- Local PowerShell entry point: `scripts/invoke-pbe-v0.ps1`.
+- Local PowerShell entry point: `scripts/invoke-devview-legacy-v0.ps1`.
 - CLI operation-chain entry point: `devview graph operation run-chain`.
 - CLI graph instruction-pack generation entry point: `devview graph operation generate-pack`.
 - CLI graph delta capture entry point: `devview graph operation capture-delta`.

@@ -148,7 +148,7 @@ const targetData = validateOptionalTreeTargets()
 validateTreeLinks(targetData)
 
 if (errors.length > 0) {
-  console.error('PBE v2 tree validation failed:')
+  console.error('DevView legacy tree validation failed:')
   for (const error of errors) {
     console.error(`- ${error}`)
   }
@@ -157,9 +157,9 @@ if (errors.length > 0) {
 
 const targetCount = Object.values(targetData).filter(Boolean).length
 if (targetCount === 0) {
-  console.log('PBE v2 tree validation passed. No .pbe tree artifacts found; templates and schemas are valid.')
+  console.log('DevView legacy tree validation passed. No .pbe tree artifacts found; templates and schemas are valid.')
 } else {
-  console.log(`PBE v2 tree validation passed. Validated ${targetCount} .pbe tree artifact(s).`)
+  console.log(`DevView legacy tree validation passed. Validated ${targetCount} .pbe tree artifact(s).`)
 }
 
 function validateTemplates() {

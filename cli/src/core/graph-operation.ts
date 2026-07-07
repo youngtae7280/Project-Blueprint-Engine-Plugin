@@ -100,7 +100,10 @@ export interface GraphOperationRunChainOptions {
 }
 
 export interface GraphOperationRunChainResult {
-  status: 'pbe-operation-chain-plan-pass' | 'pbe-operation-chain-pass' | 'pbe-dogfood-evaluation-pass'
+  status:
+    | 'devview-legacy-operation-chain-plan-pass'
+    | 'devview-legacy-operation-chain-pass'
+    | 'devview-legacy-dogfood-evaluation-pass'
   chainCommand: GraphOperationChainCommand
   dryRun: boolean
   scriptPath: string
@@ -298,7 +301,7 @@ export async function runGraphOperationChain(
   options: GraphOperationRunChainOptions = {},
 ): Promise<GraphOperationRunChainResult> {
   const command = normalizeChainCommand(options.command)
-  const scriptPath = path.join(pluginRoot, 'scripts', 'invoke-pbe-v0.ps1')
+  const scriptPath = path.join(pluginRoot, 'scripts', 'invoke-devview-legacy-v0.ps1')
   const shell = process.platform === 'win32' ? 'powershell' : 'pwsh'
   const args =
     process.platform === 'win32'
@@ -306,7 +309,7 @@ export async function runGraphOperationChain(
       : ['-NoProfile', '-File', scriptPath, '-Command', command]
 
   const baseResult: GraphOperationRunChainResult = {
-    status: options.dryRun ? 'pbe-operation-chain-plan-pass' : chainStatusFor(command),
+    status: options.dryRun ? 'devview-legacy-operation-chain-plan-pass' : chainStatusFor(command),
     chainCommand: command,
     dryRun: Boolean(options.dryRun),
     scriptPath: relativePath(root, scriptPath),
@@ -597,11 +600,11 @@ function normalizeChainCommand(value?: string): GraphOperationChainCommand {
 
 function chainStatusFor(
   command: GraphOperationChainCommand,
-): 'pbe-operation-chain-pass' | 'pbe-dogfood-evaluation-pass' {
+): 'devview-legacy-operation-chain-pass' | 'devview-legacy-dogfood-evaluation-pass' {
   if (command === 'evaluate-dogfood') {
-    return 'pbe-dogfood-evaluation-pass'
+    return 'devview-legacy-dogfood-evaluation-pass'
   }
-  return 'pbe-operation-chain-pass'
+  return 'devview-legacy-operation-chain-pass'
 }
 
 function runProcess(command: string, args: string[], cwd: string): Promise<{ stdout: string; stderr: string }> {

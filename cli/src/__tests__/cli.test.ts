@@ -21,7 +21,7 @@ import {
   writeUxAudit,
 } from './fixtures/acep'
 import { writeEvidenceTree, writeVisualScreenshotEvidence } from './fixtures/evidence-tree'
-import { writeEmptyAcceptance, writePbeState, writeUserAcceptance } from './fixtures/pbe-state'
+import { writeEmptyAcceptance, writeDevViewState, writeUserAcceptance } from './fixtures/devview-state'
 import {
   writeDecisionQueue,
   writeExecutableProduct,
@@ -453,7 +453,9 @@ describe('PBE CLI', () => {
 
     expect(result.exitCode).toBe(ExitCode.Success)
     const payload = JSON.parse(result.stdout)
-    const legacyReport = payload.validators.find((entry: { name: string }) => entry.name === 'legacy validate:pbe')
+    const legacyReport = payload.validators.find(
+      (entry: { name: string }) => entry.name === 'DevView repository validator',
+    )
     expect(legacyReport.output).toContain('✓ Plugin structure')
     expect(legacyReport.output).toContain('✓ Skills')
     expect(legacyReport.output).toContain('✓ Templates')
@@ -469,7 +471,9 @@ describe('PBE CLI', () => {
 
     expect(result.exitCode).toBe(ExitCode.Success)
     const payload = JSON.parse(result.stdout)
-    const legacyReport = payload.validators.find((entry: { name: string }) => entry.name === 'legacy validate:pbe')
+    const legacyReport = payload.validators.find(
+      (entry: { name: string }) => entry.name === 'DevView repository validator',
+    )
     expect(legacyReport.output).toContain('✓ PBE layout')
     expect(legacyReport.output).toContain('✓ Project compatibility core')
     expect(legacyReport.output).not.toContain('README_LAYOUT_TERM_MISSING')
@@ -491,7 +495,7 @@ describe('PBE CLI', () => {
 
     expect(init.exitCode).toBe(ExitCode.Success)
     const visualProfile = JSON.parse(
-      readFileSync(join(workspace, '.pbe', 'control', 'visual-verification-profile.json'), 'utf8'),
+      readFileSync(join(workspace, '.devview', 'control', 'visual-verification-profile.json'), 'utf8'),
     )
     expect(visualProfile.profiles).toEqual([])
     expect(visualProfile.contractChecks.every((check: { status: string }) => check.status === 'not_required')).toBe(
@@ -502,12 +506,16 @@ describe('PBE CLI', () => {
 
     expect(result.exitCode).toBe(ExitCode.Success)
     const payload = JSON.parse(result.stdout)
-    const legacyReport = payload.validators.find((entry: { name: string }) => entry.name === 'legacy validate:pbe')
+    const legacyReport = payload.validators.find(
+      (entry: { name: string }) => entry.name === 'DevView repository validator',
+    )
     expect(legacyReport.output).not.toContain('README_LAYOUT_TERM_MISSING')
     expect(legacyReport.output).not.toContain('??Skills')
     expect(legacyReport.output).not.toContain('??Templates')
     expect(legacyReport.output).not.toContain('??Examples')
-    expect(payload.validators.find((entry: { name: string }) => entry.name === 'v2 tree system').ok).toBe(true)
+    expect(payload.validators.find((entry: { name: string }) => entry.name === 'DevView legacy tree system').ok).toBe(
+      true,
+    )
     expect(JSON.stringify(payload)).not.toContain('visual profile VVP-001 references missing product node')
   })
 
@@ -524,7 +532,7 @@ describe('PBE CLI', () => {
     )
 
     expect(init.exitCode).toBe(ExitCode.Success)
-    const visualProfilePath = join(workspace, '.pbe', 'control', 'visual-verification-profile.json')
+    const visualProfilePath = join(workspace, '.devview', 'control', 'visual-verification-profile.json')
     const visualProfile = JSON.parse(readFileSync(visualProfilePath, 'utf8'))
     visualProfile.profiles = [
       {
@@ -802,7 +810,7 @@ describe('PBE CLI', () => {
     expect(existsSync(join(emptyWorkspace, '.pbe'))).toBe(false)
 
     const initializedWorkspace = createWorkspace()
-    writePbeState(initializedWorkspace, 'RPD_DONE')
+    writeDevViewState(initializedWorkspace, 'RPD_DONE')
     const beforeState = readStateText(initializedWorkspace)
     const initializedResult = await runPbeCli(['context', 'recommend', '--brief', '검색 기능 검증 설계'], {
       cwd: initializedWorkspace,
@@ -933,7 +941,7 @@ describe('PBE CLI', () => {
     expect(existsSync(join(emptyWorkspace, '.pbe'))).toBe(false)
 
     const initializedWorkspace = createWorkspace()
-    writePbeState(initializedWorkspace, 'RPD_DONE')
+    writeDevViewState(initializedWorkspace, 'RPD_DONE')
     const beforeState = readStateText(initializedWorkspace)
     const initializedResult = await runPbeCli(['context', 'pack', '--brief', 'docs update'], {
       cwd: initializedWorkspace,
@@ -1010,7 +1018,7 @@ describe('PBE CLI', () => {
     ['EXECUTION_IN_PROGRESS', 'pbe execution complete'],
   ])('recommends the next status command for %s', async (state, expectedCommand) => {
     const workspace = createWorkspace()
-    writePbeState(workspace, state)
+    writeDevViewState(workspace, state)
 
     const result = await runPbeCli(['status', '--json'], { cwd: workspace, pluginRoot })
 
@@ -1022,7 +1030,7 @@ describe('PBE CLI', () => {
 
   it('points review result status to acceptance or change routing', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'WAITING_REVIEW_RESULT')
+    writeDevViewState(workspace, 'WAITING_REVIEW_RESULT')
 
     const result = await runPbeCli(['status', '--json'], { cwd: workspace, pluginRoot })
 
@@ -1034,7 +1042,7 @@ describe('PBE CLI', () => {
 
   it('includes active revision and last transition in status JSON', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'REVISION_REQUESTED', {
+    writeDevViewState(workspace, 'REVISION_REQUESTED', {
       activeRevision: {
         changeNodeId: 'CH-001',
         status: 'in_progress',
@@ -1071,7 +1079,7 @@ describe('PBE CLI', () => {
 
   it('reports unknown status state without running full validation', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'UNKNOWN_STATE')
+    writeDevViewState(workspace, 'UNKNOWN_STATE')
 
     const result = await runPbeCli(['status', '--json'], { cwd: workspace, pluginRoot })
 
@@ -1085,7 +1093,7 @@ describe('PBE CLI', () => {
 
   it('keeps existing status JSON fields while adding navigator fields', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'WPD_DONE', {
+    writeDevViewState(workspace, 'WPD_DONE', {
       currentGate: 'wpd',
       nextStep: 'vd',
       deliveryStatus: 'wpd_done',
@@ -1115,7 +1123,7 @@ describe('PBE CLI', () => {
 
   it('adds recommended context to lite VD status JSON without changing the next command', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'VD_IN_PROGRESS', { profile: 'lite' })
+    writeDevViewState(workspace, 'VD_IN_PROGRESS', { profile: 'lite' })
     const beforeState = readStateText(workspace)
 
     const result = await runPbeCli(['status', '--json'], { cwd: workspace, pluginRoot })
@@ -1139,7 +1147,7 @@ describe('PBE CLI', () => {
 
   it('shows a short recommended context section in status text output', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'VD_IN_PROGRESS', { profile: 'lite' })
+    writeDevViewState(workspace, 'VD_IN_PROGRESS', { profile: 'lite' })
 
     const result = await runPbeCli(['status'], { cwd: workspace, pluginRoot })
 
@@ -1152,7 +1160,7 @@ describe('PBE CLI', () => {
 
   it('includes recommended context for full profile without adding the Lite card', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'VD_IN_PROGRESS', { profile: 'full' })
+    writeDevViewState(workspace, 'VD_IN_PROGRESS', { profile: 'full' })
 
     const result = await runPbeCli(['status', '--json'], { cwd: workspace, pluginRoot })
 
@@ -1167,7 +1175,7 @@ describe('PBE CLI', () => {
 
   it('keeps bypass status context minimal', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'VD_IN_PROGRESS', { profile: 'bypass' })
+    writeDevViewState(workspace, 'VD_IN_PROGRESS', { profile: 'bypass' })
 
     const result = await runPbeCli(['status', '--json'], { cwd: workspace, pluginRoot })
 
@@ -1182,7 +1190,7 @@ describe('PBE CLI', () => {
 
   it('shows compact guidance in status text output', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'WPD_DONE', { profile: 'lite' })
+    writeDevViewState(workspace, 'WPD_DONE', { profile: 'lite' })
 
     const result = await runPbeCli(['status'], { cwd: workspace, pluginRoot })
 
@@ -1196,7 +1204,7 @@ describe('PBE CLI', () => {
 
   it('includes compact profile guidance in status JSON without changing next command', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'WPD_DONE', { profile: 'lite' })
+    writeDevViewState(workspace, 'WPD_DONE', { profile: 'lite' })
 
     const result = await runPbeCli(['status', '--json'], { cwd: workspace, pluginRoot })
 
@@ -1222,7 +1230,7 @@ describe('PBE CLI', () => {
     ['bypass', 'No-tracking guidance:'],
   ] as const)('does not fail status for %s profile guidance', async (profile, expectedText) => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'INIT', { profile })
+    writeDevViewState(workspace, 'INIT', { profile })
 
     const textResult = await runPbeCli(['status'], { cwd: workspace, pluginRoot })
     const jsonResult = await runPbeCli(['status', '--json'], { cwd: workspace, pluginRoot })
@@ -1360,7 +1368,7 @@ describe('PBE CLI', () => {
     })
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'INIT')
+    writeDevViewState(workspace, 'INIT')
 
     const result = await runPbeCli(['rpd', 'close', '--json'], { cwd: workspace, pluginRoot })
 
@@ -1398,7 +1406,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace, { visualImpact: true })
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'RPD_DONE')
+    writeDevViewState(workspace, 'RPD_DONE')
     writeText(
       join(workspace, '.pbe', 'blueprint', 'ui-ux-confirmation.md'),
       [
@@ -1441,7 +1449,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace, { visualImpact: true })
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'ACEP_READY')
+    writeDevViewState(workspace, 'ACEP_READY')
     writeText(
       join(workspace, '.pbe', 'blueprint', 'ui-ux-confirmation.md'),
       '# UI/UX Confirmation\n\n- Status: confirmed\n- Confirmed by: user\n',
@@ -1480,7 +1488,7 @@ describe('PBE CLI', () => {
     const workspace = createWorkspace()
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
-    writePbeState(workspace, 'UI_UX_APPROVED')
+    writeDevViewState(workspace, 'UI_UX_APPROVED')
     writeDecisionQueue(workspace)
     writeWorkTree(workspace, { dependencyCycle: true })
 
@@ -1642,7 +1650,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'WPD_DONE')
+    writeDevViewState(workspace, 'WPD_DONE')
     writeWorkTree(workspace)
     writeTestTree(workspace, { verifiesAcceptanceCriteria: false })
 
@@ -1715,7 +1723,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace, { visualImpact: true })
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'UI_UX_APPROVED')
+    writeDevViewState(workspace, 'UI_UX_APPROVED')
     writeVisualContractArtifacts(workspace, { contractOnly: true })
 
     const result = await runPbeCli(['gate', 'wpd', '--json'], { cwd: workspace, pluginRoot })
@@ -1729,7 +1737,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace, { visualImpact: true })
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'WPD_DONE')
+    writeDevViewState(workspace, 'WPD_DONE')
     writeWorkTree(workspace)
     writeVisualContractArtifacts(workspace, { contractOnly: true })
 
@@ -1787,7 +1795,7 @@ describe('PBE CLI', () => {
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeVisualContractArtifacts(workspace, { requiredScreenshot: true })
-    writePbeState(workspace, 'ACEP_RUN_DONE')
+    writeDevViewState(workspace, 'ACEP_RUN_DONE')
     writeVisualScreenshotEvidence(workspace)
 
     const result = await runPbeCli(['gate', 'review-result', '--json'], { cwd: workspace, pluginRoot })
@@ -1803,7 +1811,7 @@ describe('PBE CLI', () => {
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeVisualContractArtifacts(workspace, { requiredScreenshot: true })
-    writePbeState(workspace, 'ACEP_RUN_DONE')
+    writeDevViewState(workspace, 'ACEP_RUN_DONE')
     writeVisualScreenshotEvidence(workspace)
     writeText(
       join(workspace, '.pbe', 'evidence', 'visual-audit.md'),
@@ -1933,7 +1941,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'ACEP_RUN_DONE')
+    writeDevViewState(workspace, 'ACEP_RUN_DONE')
     writeWorkTree(workspace, { workUpdatedAt: '2026-06-12T10:00:00.000Z' })
     writeTestTree(workspace)
     writeEvidenceTree(workspace, {
@@ -1952,7 +1960,7 @@ describe('PBE CLI', () => {
 
   it('passes file guard when changed source file is within Work expectedFiles', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'WPD_DONE')
+    writeDevViewState(workspace, 'WPD_DONE')
     writeWorkTree(workspace)
     writeText(join(workspace, 'src', 'status.ts'), 'export const status = "baseline"\n')
     initGitRepository(workspace)
@@ -1966,7 +1974,7 @@ describe('PBE CLI', () => {
 
   it('fails file guard when changed source file matches forbiddenFiles', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'WPD_DONE')
+    writeDevViewState(workspace, 'WPD_DONE')
     writeWorkTree(workspace)
     addWorkNodeFields(workspace, 'WT-1', { forbiddenFiles: ['src/secret.ts'] })
     writeText(join(workspace, 'src', 'secret.ts'), 'export const secret = "baseline"\n')
@@ -1983,7 +1991,7 @@ describe('PBE CLI', () => {
 
   it('fails file guard for unknown source files when Work scope has no unknownFileTouchRisk', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'WPD_DONE')
+    writeDevViewState(workspace, 'WPD_DONE')
     writeWorkTree(workspace)
     writeText(join(workspace, 'src', 'outside.ts'), 'export const outside = "baseline"\n')
     initGitRepository(workspace)
@@ -1999,7 +2007,7 @@ describe('PBE CLI', () => {
 
   it('does not treat .pbe-only artifact changes as source file violations', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'WPD_DONE')
+    writeDevViewState(workspace, 'WPD_DONE')
     writeWorkTree(workspace)
     initGitRepository(workspace)
     writeText(join(workspace, '.pbe', 'blueprint', 'notes.md'), 'artifact update\n')
@@ -2012,7 +2020,7 @@ describe('PBE CLI', () => {
 
   it('fails file guard for DONE source changes without activeRevision', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'DONE', { deliveryStatus: 'accepted', completedSteps: ['complete'], nextStep: null })
+    writeDevViewState(workspace, 'DONE', { deliveryStatus: 'accepted', completedSteps: ['complete'], nextStep: null })
     writeWorkTree(workspace)
     writeText(join(workspace, 'src', 'status.ts'), 'export const status = "baseline"\n')
     initGitRepository(workspace)
@@ -2028,7 +2036,7 @@ describe('PBE CLI', () => {
 
   it('allows activeRevision source changes inside affected Work expectedFiles', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'REVISION_REQUESTED', {
+    writeDevViewState(workspace, 'REVISION_REQUESTED', {
       activeRevision: {
         changeNodeId: 'CH-001',
         impactNodeIds: ['IM-001'],
@@ -2049,7 +2057,7 @@ describe('PBE CLI', () => {
 
   it('fails activeRevision source changes outside affected Work expectedFiles', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'REVISION_REQUESTED', {
+    writeDevViewState(workspace, 'REVISION_REQUESTED', {
       activeRevision: {
         changeNodeId: 'CH-001',
         impactNodeIds: ['IM-001'],
@@ -2075,7 +2083,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'ACEP_RUN_DONE')
+    writeDevViewState(workspace, 'ACEP_RUN_DONE')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeEvidenceTree(workspace)
@@ -2097,7 +2105,7 @@ describe('PBE CLI', () => {
   it('does not mutate state when accept finds unexplained source changes', async () => {
     const workspace = createWorkspace()
     writeExecutableProduct(workspace)
-    writePbeState(workspace, 'WAITING_REVIEW_RESULT')
+    writeDevViewState(workspace, 'WAITING_REVIEW_RESULT')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeEvidenceTree(workspace)
@@ -2169,7 +2177,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'WAITING_REVIEW_RESULT')
+    writeDevViewState(workspace, 'WAITING_REVIEW_RESULT')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeEvidenceTree(workspace, { status: 'stale' })
@@ -2189,7 +2197,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'EXECUTION_IN_PROGRESS')
+    writeDevViewState(workspace, 'EXECUTION_IN_PROGRESS')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeExecutionManifest(workspace)
@@ -2209,7 +2217,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'ACEP_RUN_DONE')
+    writeDevViewState(workspace, 'ACEP_RUN_DONE')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeEvidenceTree(workspace, { omitTimestamp: true })
@@ -2230,7 +2238,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'WAITING_REVIEW_RESULT')
+    writeDevViewState(workspace, 'WAITING_REVIEW_RESULT')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeEvidenceTree(workspace, { omitTimestamp: true })
@@ -2252,7 +2260,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'ACEP_RUN_DONE')
+    writeDevViewState(workspace, 'ACEP_RUN_DONE')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeEvidenceTree(workspace, { status: 'superseded' })
@@ -2273,7 +2281,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'WAITING_REVIEW_RESULT')
+    writeDevViewState(workspace, 'WAITING_REVIEW_RESULT')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeEvidenceTree(workspace, { status: 'superseded' })
@@ -2295,7 +2303,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'UI_UX_APPROVED')
+    writeDevViewState(workspace, 'UI_UX_APPROVED')
     writeWorkTree(workspace)
 
     const result = await runPbeCli(['wpd', 'close', '--json'], { cwd: workspace, pluginRoot })
@@ -2318,7 +2326,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'WPD_DONE')
+    writeDevViewState(workspace, 'WPD_DONE')
     writeWorkTree(workspace)
     writeTestTree(workspace)
 
@@ -2342,7 +2350,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'SCOPE_SELECTED')
+    writeDevViewState(workspace, 'SCOPE_SELECTED')
     writeWorkTree(workspace)
     writeTestTree(workspace)
 
@@ -2362,7 +2370,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'VD_DONE')
+    writeDevViewState(workspace, 'VD_DONE')
     writeWorkTree(workspace)
     writeTestTree(workspace)
 
@@ -2391,7 +2399,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'RPD_DONE')
+    writeDevViewState(workspace, 'RPD_DONE')
     writeWorkTree(workspace)
     writeTestTree(workspace)
 
@@ -2411,7 +2419,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'VD_DONE')
+    writeDevViewState(workspace, 'VD_DONE')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeDependencyImpactAudit(workspace)
@@ -2459,7 +2467,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'SCOPE_SELECTED', {
+    writeDevViewState(workspace, 'SCOPE_SELECTED', {
       completedSteps: [
         'start',
         'rpd',
@@ -2498,7 +2506,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'ACEP_READY')
+    writeDevViewState(workspace, 'ACEP_READY')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeExecutionManifest(workspace)
@@ -2524,7 +2532,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'SCOPE_SELECTED')
+    writeDevViewState(workspace, 'SCOPE_SELECTED')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeExecutionManifest(workspace)
@@ -2546,7 +2554,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'EXECUTION_IN_PROGRESS')
+    writeDevViewState(workspace, 'EXECUTION_IN_PROGRESS')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeExecutionManifest(workspace)
@@ -2572,7 +2580,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'ACEP_READY')
+    writeDevViewState(workspace, 'ACEP_READY')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeExecutionManifest(workspace)
@@ -2595,7 +2603,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'EXECUTION_IN_PROGRESS')
+    writeDevViewState(workspace, 'EXECUTION_IN_PROGRESS')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeExecutionManifest(workspace)
@@ -2650,7 +2658,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'ACEP_RUN_DONE', {
+    writeDevViewState(workspace, 'ACEP_RUN_DONE', {
       completedSteps: [
         'start',
         'rpd',
@@ -2684,7 +2692,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'SCOPE_SELECTED', {
+    writeDevViewState(workspace, 'SCOPE_SELECTED', {
       completedSteps: ['start', 'rpd', 'wpd', 'vd', 'implementation_scope'],
       nextStep: 'dependency_impact_audit',
     })
@@ -2719,7 +2727,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'SCOPE_SELECTED', {
+    writeDevViewState(workspace, 'SCOPE_SELECTED', {
       completedSteps: ['start', 'rpd', 'wpd', 'vd', 'implementation_scope'],
       nextStep: 'generate_acep',
     })
@@ -2743,7 +2751,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'SCOPE_SELECTED', {
+    writeDevViewState(workspace, 'SCOPE_SELECTED', {
       completedSteps: ['start', 'rpd', 'wpd', 'vd', 'implementation_scope'],
       nextStep: 'dependency_impact_audit',
     })
@@ -2766,7 +2774,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'WPD_DONE')
+    writeDevViewState(workspace, 'WPD_DONE')
 
     const before = JSON.stringify(readState(workspace))
     const result = await runPbeCli(['vd', 'close', '--json'], { cwd: workspace, pluginRoot })
@@ -2781,7 +2789,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'ACEP_READY')
+    writeDevViewState(workspace, 'ACEP_READY')
     writeWorkTree(workspace)
 
     const before = JSON.stringify(readState(workspace))
@@ -2806,7 +2814,7 @@ describe('PBE CLI', () => {
     expect(readStateText(invalidJsonWorkspace)).toBe(invalidJsonBefore)
 
     const unknownStateWorkspace = createWorkspace()
-    writePbeState(unknownStateWorkspace, 'UNKNOWN_STATE')
+    writeDevViewState(unknownStateWorkspace, 'UNKNOWN_STATE')
     const unknownStateBefore = readStateText(unknownStateWorkspace)
     const unknownStateResult = await transitionPbeState(
       unknownStateWorkspace,
@@ -2820,7 +2828,7 @@ describe('PBE CLI', () => {
 
   it('does not mutate state on checkpoint helper blocked state failures', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'VD_DONE')
+    writeDevViewState(workspace, 'VD_DONE')
 
     const before = readStateText(workspace)
     const result = await checkpointPbeState(workspace, 'test checkpoint', [PBE_STATE.SCOPE_SELECTED], {
@@ -2839,7 +2847,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'WPD_DONE', {
+    writeDevViewState(workspace, 'WPD_DONE', {
       stateHistory: [{ from: 'INIT', to: 'RPD_DONE', command: 'rpd close', at: '2026-01-01T00:00:00.000Z' }],
     })
     writeWorkTree(workspace)
@@ -2861,7 +2869,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'WAITING_REVIEW_RESULT')
+    writeDevViewState(workspace, 'WAITING_REVIEW_RESULT')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeEvidenceTree(workspace)
@@ -2893,7 +2901,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'WAITING_REVIEW_RESULT')
+    writeDevViewState(workspace, 'WAITING_REVIEW_RESULT')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeEvidenceTree(workspace)
@@ -2928,7 +2936,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'ACEP_RUN_DONE')
+    writeDevViewState(workspace, 'ACEP_RUN_DONE')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeEvidenceTree(workspace)
@@ -2950,7 +2958,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace)
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'EXECUTION_IN_PROGRESS')
+    writeDevViewState(workspace, 'EXECUTION_IN_PROGRESS')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeEvidenceTree(workspace)
@@ -3479,7 +3487,7 @@ describe('PBE CLI', () => {
 
   it('blocks revision start when the Change node has no Impact analysis', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'WAITING_REVIEW_RESULT')
+    writeDevViewState(workspace, 'WAITING_REVIEW_RESULT')
     writeChangeTree(workspace, [{ id: 'CH-001', type: 'feedback', status: 'proposed', summary: 'Adjust collapse' }])
     writeImpactTree(workspace)
 
@@ -3499,7 +3507,7 @@ describe('PBE CLI', () => {
 
   it('does not mutate state, Evidence, or Acceptance when revision Impact has no affected ids', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'DONE', { deliveryStatus: 'accepted', completedSteps: ['complete'], nextStep: null })
+    writeDevViewState(workspace, 'DONE', { deliveryStatus: 'accepted', completedSteps: ['complete'], nextStep: null })
     writeChangeTree(workspace, [
       { id: 'CH-001', type: 'feedback', status: 'impact_analyzed', summary: 'Adjust collapse' },
     ])
@@ -3535,7 +3543,7 @@ describe('PBE CLI', () => {
 
   it('does not open revision state when affected Evidence Tree is invalid JSON', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'DONE', { deliveryStatus: 'accepted', completedSteps: ['complete'], nextStep: null })
+    writeDevViewState(workspace, 'DONE', { deliveryStatus: 'accepted', completedSteps: ['complete'], nextStep: null })
     writeChangeTree(workspace, [
       { id: 'CH-001', type: 'feedback', status: 'impact_analyzed', summary: 'Adjust collapse' },
     ])
@@ -3570,7 +3578,7 @@ describe('PBE CLI', () => {
 
   it('does not open revision state or invalidate Evidence when affected Acceptance Tree is invalid JSON', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'DONE', { deliveryStatus: 'accepted', completedSteps: ['complete'], nextStep: null })
+    writeDevViewState(workspace, 'DONE', { deliveryStatus: 'accepted', completedSteps: ['complete'], nextStep: null })
     writeChangeTree(workspace, [
       { id: 'CH-001', type: 'feedback', status: 'impact_analyzed', summary: 'Adjust collapse' },
     ])
@@ -3611,7 +3619,7 @@ describe('PBE CLI', () => {
     writeTestTree(workspace)
     writeEvidenceTree(workspace)
     writeUserAcceptance(workspace)
-    writePbeState(workspace, 'DONE', { deliveryStatus: 'accepted', completedSteps: ['complete'], nextStep: null })
+    writeDevViewState(workspace, 'DONE', { deliveryStatus: 'accepted', completedSteps: ['complete'], nextStep: null })
     writeChangeTree(workspace, [
       { id: 'CH-001', type: 'feedback', status: 'impact_analyzed', summary: 'Adjust collapse' },
     ])
@@ -3685,7 +3693,7 @@ describe('PBE CLI', () => {
 
   it('blocks revision complete when activeRevision is missing and leaves artifacts unchanged', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'REVISION_REQUESTED')
+    writeDevViewState(workspace, 'REVISION_REQUESTED')
     writeChangeTree(workspace, [
       { id: 'CH-001', type: 'feedback', status: 'impact_analyzed', summary: 'Adjust collapse' },
     ])
@@ -3720,7 +3728,7 @@ describe('PBE CLI', () => {
 
   it('blocks revision complete when command change id differs from activeRevision', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'REVISION_REQUESTED', {
+    writeDevViewState(workspace, 'REVISION_REQUESTED', {
       activeRevision: {
         changeNodeId: 'CH-001',
         impactNodeIds: ['IM-001'],
@@ -3757,7 +3765,7 @@ describe('PBE CLI', () => {
 
   it('completes revision by returning to WPD flow instead of DONE', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'REVISION_REQUESTED', {
+    writeDevViewState(workspace, 'REVISION_REQUESTED', {
       activeRevision: {
         changeNodeId: 'CH-001',
         impactNodeIds: ['IM-001'],
@@ -3830,7 +3838,7 @@ describe('PBE CLI', () => {
     writeExecutableProduct(workspace, { visualImpact: true })
     writeRequirementCompat(workspace)
     writeDecisionQueue(workspace)
-    writePbeState(workspace, 'ACEP_RUN_DONE')
+    writeDevViewState(workspace, 'ACEP_RUN_DONE')
     writeWorkTree(workspace)
     writeTestTree(workspace)
     writeVisualContractArtifacts(workspace, { requiredScreenshot: true })
@@ -3851,7 +3859,7 @@ describe('PBE CLI', () => {
 
   it('validate reports unknown state and broken state history', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'UNKNOWN_STATE', {
+    writeDevViewState(workspace, 'UNKNOWN_STATE', {
       stateHistory: [{ from: 'INIT', to: 'WPD_DONE', command: 'bad', at: '2026-01-01T00:00:00.000Z' }],
     })
 
@@ -3865,7 +3873,7 @@ describe('PBE CLI', () => {
 
   it('state validator accepts a known canonical state', async () => {
     const workspace = createWorkspace()
-    writePbeState(workspace, 'RPD_DONE')
+    writeDevViewState(workspace, 'RPD_DONE')
 
     const issues = await validateState(workspace)
 

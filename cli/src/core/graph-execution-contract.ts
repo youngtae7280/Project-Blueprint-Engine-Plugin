@@ -3,7 +3,7 @@ import {
   loadGraphSourceProjectionArtifact,
   loadReadModelSliceRegistry,
   loadStructureOnlyGraphSourceCandidateProjectionArtifact,
-  todoAppPbeRunStructureOnlyProfile,
+  todoAppDevviewRunStructureOnlyProfile,
   todoSearchReadModelProfile,
   type ReadModelSliceRegistryProfile,
   type SliceReadModelConfig,
@@ -222,7 +222,7 @@ async function loadProjection(
   if (profile.profileId === todoSearchReadModelProfile.profileId) {
     return loadGraphSourceProjectionArtifact(root, projectionPath, graphSourcePath)
   }
-  if (profile.profileId === todoAppPbeRunStructureOnlyProfile.profileId) {
+  if (profile.profileId === todoAppDevviewRunStructureOnlyProfile.profileId) {
     return loadStructureOnlyGraphSourceCandidateProjectionArtifact(root, projectionPath, graphSourcePath)
   }
   throw new Error(`No graph-native execution contract projection loader is configured for ${profile.profileId}.`)

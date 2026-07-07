@@ -234,11 +234,11 @@ describe('graph operation CLI', () => {
 
     expect(result.exitCode).toBe(ExitCode.Success)
     const payload = JSON.parse(result.stdout)
-    expect(payload.status).toBe('pbe-operation-chain-plan-pass')
+    expect(payload.status).toBe('devview-legacy-operation-chain-plan-pass')
     expect(payload.command).toBe('graph operation run-chain')
     expect(payload.chainCommand).toBe('operation-chain')
     expect(payload.dryRun).toBe(true)
-    expect(payload.scriptPath).toBe('scripts/invoke-pbe-v0.ps1')
+    expect(payload.scriptPath).toBe('scripts/invoke-devview-legacy-v0.ps1')
     expect(payload.args).toContain('operation-chain')
     expect(payload.boundaries.mutatesSourceCode).toBe(false)
     expect(payload.boundaries.appliesGraphProposal).toBe(false)

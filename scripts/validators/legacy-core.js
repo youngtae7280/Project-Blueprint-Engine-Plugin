@@ -4,9 +4,10 @@ import path from 'node:path'
 import process from 'node:process'
 import Ajv2020 from 'ajv/dist/2020.js'
 
-const repoRoot = path.resolve(process.env.PBE_REPO_ROOT || process.cwd())
-const targetRoot = path.resolve(process.env.PBE_TARGET_ROOT || process.cwd())
-const validationTargetKind = process.env.PBE_VALIDATION_TARGET_KIND || 'plugin-repository'
+const repoRoot = path.resolve(process.env.DEVVIEW_LEGACY_REPO_ROOT || process.env.PBE_REPO_ROOT || process.cwd())
+const targetRoot = path.resolve(process.env.DEVVIEW_LEGACY_TARGET_ROOT || process.env.PBE_TARGET_ROOT || process.cwd())
+const validationTargetKind =
+  process.env.DEVVIEW_LEGACY_VALIDATION_TARGET_KIND || process.env.PBE_VALIDATION_TARGET_KIND || 'plugin-repository'
 const projectValidationMode = validationTargetKind === 'initialized-project'
 const root = repoRoot
 const errors = []
@@ -226,7 +227,7 @@ if (errors.length > 0) {
   process.exit(1)
 }
 
-console.log('PBE validation passed.')
+console.log('DevView legacy validation passed.')
 
 function findJsonFiles(baseDir, directories) {
   const files = []

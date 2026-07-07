@@ -527,7 +527,7 @@ function buildGrepAcceptanceCriteria(): string[] {
     'rg -n "PBE|Project Blueprint Engine|\\bpbe\\b|\\.pbe" README.md docs docs/index.md docs/cli-reference.md => zero public-doc matches.',
     'git grep -n "todo-app-pbe-run" -- . => zero active canonical fixture path references outside explicitly allowlisted internal migration fixtures.',
     'git grep -n "\\.pbe" -- examples ":!examples/internal-legacy/**" => zero public/canonical example storage matches after active Todo fixture storage migration.',
-    'rg -n "\\bpbe\\b|PBE_|Project Blueprint Engine|validate:pbe" package.json package-lock.json .github cli scripts => hidden compatibility allowlist only.',
+    'rg -n "\\bpbe\\b|PBE_|Project Blueprint Engine|validate:pbe|validate-pbe|pbe-layout|invoke-pbe" package.json package-lock.json .github cli scripts => state-machine/storage guards or explicitly reviewed internal legacy compatibility only.',
     'rg -n "\\.pbe" cli/src scripts examples docs => legacy storage guard, hidden compatibility, or internal migration fixtures only.',
   ]
 }

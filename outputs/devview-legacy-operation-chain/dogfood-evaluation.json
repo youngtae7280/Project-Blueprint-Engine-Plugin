@@ -1,5 +1,5 @@
 ﻿{
-  "status": "pbe-dogfood-evaluation-pass",
+  "status": "devview-legacy-dogfood-evaluation-pass",
   "criteria": [
     {
       "id": "scope-boundary",

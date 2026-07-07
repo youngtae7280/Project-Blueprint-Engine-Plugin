@@ -1,5 +1,5 @@
 {
-  "status": "pbe-artifact-inventory-pass",
+  "status": "devview-legacy-artifact-inventory-pass",
   "repoRoot": "C:\\Users\\ytkim\\Desktop\\kyt_work\\Project Blueprint Engine Plugin",
   "workspaceGitRepo": true,
   "artifactCount": 265,
@@ -727,11 +727,11 @@
       "bytes": 128
     },
     {
-      "path": "scripts/evaluate-pbe-dogfood-v0.ps1",
+      "path": "scripts/evaluate-devview-legacy-dogfood-v0.ps1",
       "bytes": 4701
     },
     {
-      "path": "scripts/generate-pbe-artifact-inventory-v0.ps1",
+      "path": "scripts/generate-devview-legacy-artifact-inventory-v0.ps1",
       "bytes": 2915
     },
     {
@@ -747,7 +747,7 @@
       "bytes": 7425
     },
     {
-      "path": "scripts/invoke-pbe-v0.ps1",
+      "path": "scripts/invoke-devview-legacy-v0.ps1",
       "bytes": 1341
     },
     {
@@ -755,7 +755,7 @@
       "bytes": 17030
     },
     {
-      "path": "scripts/setup-pbe-operation-chain-targets-v0.ps1",
+      "path": "scripts/setup-devview-legacy-operation-chain-targets-v0.ps1",
       "bytes": 5276
     },
     {
@@ -779,23 +779,23 @@
       "bytes": 6868
     },
     {
-      "path": "scripts/validate-pbe-core-schemas-v0.ps1",
+      "path": "scripts/validate-devview-legacy-core-schemas-v0.ps1",
       "bytes": 1026
     },
     {
-      "path": "scripts/validate-pbe-files.js",
+      "path": "scripts/validate-devview-files.js",
       "bytes": 3516
     },
     {
-      "path": "scripts/validate-pbe-operation-chain-v0.ps1",
+      "path": "scripts/validate-devview-legacy-operation-chain-v0.ps1",
       "bytes": 6962
     },
     {
-      "path": "scripts/validate-pbe-retrofit-smoke-v0.ps1",
+      "path": "scripts/validate-devview-legacy-retrofit-smoke-v0.ps1",
       "bytes": 6019
     },
     {
-      "path": "scripts/validate-pbe-tree-system.js",
+      "path": "scripts/validate-devview-legacy-tree-system.js",
       "bytes": 54287
     },
     {
@@ -851,7 +851,7 @@
       "bytes": 61526
     },
     {
-      "path": "scripts/validators/pbe-layout.js",
+      "path": "scripts/validators/devview-layout.js",
       "bytes": 1608
     },
     {
@@ -963,51 +963,51 @@
       "bytes": 1039
     },
     {
-      "path": "outputs/pbe-operation-chain/artifact-inventory.json",
+      "path": "outputs/devview-legacy-operation-chain/artifact-inventory.json",
       "bytes": 28390
     },
     {
-      "path": "outputs/pbe-operation-chain/artifact-inventory.md",
+      "path": "outputs/devview-legacy-operation-chain/artifact-inventory.md",
       "bytes": 2459
     },
     {
-      "path": "outputs/pbe-operation-chain/dogfood-evaluation.json",
+      "path": "outputs/devview-legacy-operation-chain/dogfood-evaluation.json",
       "bytes": 1854
     },
     {
-      "path": "outputs/pbe-operation-chain/dogfood-evaluation.md",
+      "path": "outputs/devview-legacy-operation-chain/dogfood-evaluation.md",
       "bytes": 774
     },
     {
-      "path": "outputs/pbe-operation-chain/evaluation-criteria.md",
+      "path": "outputs/devview-legacy-operation-chain/evaluation-criteria.md",
       "bytes": 727
     },
     {
-      "path": "outputs/pbe-operation-chain/operation-chain-report.json",
+      "path": "outputs/devview-legacy-operation-chain/operation-chain-report.json",
       "bytes": 2585
     },
     {
-      "path": "outputs/pbe-operation-chain/operation-chain-report.md",
+      "path": "outputs/devview-legacy-operation-chain/operation-chain-report.md",
       "bytes": 1360
     },
     {
-      "path": "outputs/pbe-operation-chain/README.md",
+      "path": "outputs/devview-legacy-operation-chain/README.md",
       "bytes": 641
     },
     {
-      "path": "outputs/retrofit/pbe-retrofit-smoke-report.fixture-only.json",
+      "path": "outputs/retrofit/devview-legacy-retrofit-smoke-report.fixture-only.json",
       "bytes": 1497
     },
     {
-      "path": "outputs/retrofit/pbe-retrofit-smoke-report.fixture-only.md",
+      "path": "outputs/retrofit/devview-legacy-retrofit-smoke-report.fixture-only.md",
       "bytes": 890
     },
     {
-      "path": "outputs/retrofit/pbe-retrofit-smoke-report.json",
+      "path": "outputs/retrofit/devview-legacy-retrofit-smoke-report.json",
       "bytes": 1159
     },
     {
-      "path": "outputs/retrofit/pbe-retrofit-smoke-report.md",
+      "path": "outputs/retrofit/devview-legacy-retrofit-smoke-report.md",
       "bytes": 1099
     },
     {

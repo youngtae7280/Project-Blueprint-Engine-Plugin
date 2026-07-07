@@ -61,7 +61,7 @@ foreach ($instructionPack in $instructionPacks) {
 }
 
 $summary = [PSCustomObject]@{
-    status = "pbe-retrofit-smoke-pass"
+    status = "devview-legacy-retrofit-smoke-pass"
     mode = if ($SkipExternalRepo) { "fixture-only" } else { "fixture-plus-external-repo-check" }
     repoRoot = $repoRoot
     fixtureValidation = $fixtureResult.status

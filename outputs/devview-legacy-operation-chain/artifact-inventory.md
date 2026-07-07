@@ -1,6 +1,6 @@
-﻿# PBE Artifact Inventory
+﻿# DevView Legacy Artifact Inventory
 
-Status: pbe-artifact-inventory-pass
+Status: devview-legacy-artifact-inventory-pass
 
 - Workspace is git repo: True
 - Artifact count: 265

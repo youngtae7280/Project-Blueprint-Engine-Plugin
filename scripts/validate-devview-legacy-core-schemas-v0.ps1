@@ -35,7 +35,7 @@ foreach ($file in $required) {
 }
 
 [PSCustomObject]@{
-    status = "pbe-core-schemas-pass"
+    status = "devview-legacy-core-schemas-pass"
     schemaCount = @($schemas).Count
     schemas = $required
 }

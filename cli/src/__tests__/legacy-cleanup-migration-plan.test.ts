@@ -214,7 +214,7 @@ function createLegacyExamplesWorkspace(options: { includeOldTodoFixture?: boolea
   )
   writeText(join(workspace, 'docs/reference.md'), 'examples/internal-legacy/adoption/todo-search-slice\n')
   writeText(join(workspace, 'package.json'), '{"bin":{"pbe":"./dist/cli/index.js"}}\n')
-  writeText(join(workspace, 'scripts/validate-pbe-files.js'), 'console.log("pbe")\n')
-  writeText(join(workspace, 'scripts/validators/pbe-layout.js'), 'console.log("pbe layout")\n')
+  writeText(join(workspace, 'scripts/validate-devview-files.js'), 'console.log("pbe")\n')
+  writeText(join(workspace, 'scripts/validators/devview-layout.js'), 'console.log("pbe layout")\n')
   return workspace
 }

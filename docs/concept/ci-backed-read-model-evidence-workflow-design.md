@@ -86,7 +86,7 @@ The workflow also captures graph-source health as both machine-readable JSON and
 validate-all/E2E/edgeIntent status, retirement readiness, retirement approval package status, non-enforcement
 boundaries, and reproduction commands without reading the JSON artifact first.
 
-The workflow now also observes the local PBE operation chain by running `scripts/invoke-pbe-v0.ps1` with
+The workflow now also observes the local PBE operation chain by running `scripts/invoke-devview-legacy-v0.ps1` with
 `operation-chain` and `evaluate-dogfood` under `pwsh`. The manifest and Step Summary record `operationChainStatus` and
 `dogfoodEvaluationStatus`, and the artifact bundle includes the generated `outputs/` reports. This keeps
 `graph-source -> instruction pack -> local change -> graph delta -> graph update proposal` visible in CI without making

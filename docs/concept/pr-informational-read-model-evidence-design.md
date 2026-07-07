@@ -25,7 +25,7 @@ triggers, introduce CI enforcement, expand source authority, or approve full Gra
 
 | Baseline item                | Current state                                                                                                                 |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Workflow                     | `PBE Read-Model Evidence`                                                                                                     |
+| Workflow                     | `DevView Read-Model Evidence`                                                                                                 |
 | Implemented trigger          | `workflow_dispatch`; `pull_request` informational with path filters                                                           |
 | Latest reviewed manual run   | `28210541509`                                                                                                                 |
 | Latest reviewed PR run       | `28213236499`                                                                                                                 |
@@ -128,7 +128,7 @@ directories, and should not mutate PR source files.
 The PR informational run currently reuses the same artifact bundle content and writes trigger-specific metadata in the
 CI evidence manifest.
 
-Current artifact upload remains `pbe-todo-search-read-model-evidence` for compatibility with the existing reviewed
+Current artifact upload remains `devview-todo-search-read-model-evidence` for compatibility with the existing reviewed
 manual workflow. The manifest distinguishes `workflow_dispatch` from `pull_request-informational`.
 
 Required artifact content should match the current manual bundle:
@@ -163,7 +163,7 @@ The manifest should not claim source authority, approval, promotion readiness ap
 PR step summary wording:
 
 ```text
-# PBE Read-Model Evidence - PR Informational
+# DevView Read-Model Evidence - PR Informational
 
 - Trigger mode: pull_request-informational
 - PR: <number>

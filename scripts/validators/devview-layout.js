@@ -15,7 +15,7 @@ const requiredReadmeTerms = [
   'Guarded Graph Update',
 ]
 
-export function runPbeLayoutValidator({ root, requireReadmeTerms = true }) {
+export function runDevViewLayoutValidator({ root, requireReadmeTerms = true }) {
   const issues = []
 
   if (requireReadmeTerms && fileExists(root, 'README.md')) {
@@ -53,7 +53,7 @@ export function runPbeLayoutValidator({ root, requireReadmeTerms = true }) {
         createIssue({
           validator,
           file: relativePath,
-          code: 'PBE_TARGET_DIR_MISSING',
+          code: 'DEVVIEW_TARGET_DIR_MISSING',
           message: `${relativePath}/ is missing from an existing DevView workspace.`,
           suggestedFix: `Create ${relativePath}/ or repair the DevView/legacy migration input layout.`,
         }),

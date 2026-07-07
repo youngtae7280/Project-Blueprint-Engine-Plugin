@@ -872,7 +872,7 @@ export const todoSearchReadModelProfile: SliceReadModelConfig = {
   ],
 }
 
-export const todoAppPbeRunStructureOnlyProfile: SliceReadModelConfig = {
+export const todoAppDevviewRunStructureOnlyProfile: SliceReadModelConfig = {
   profileId: 'todo-app-devview-run-structure-only',
   displayName: 'Todo App DevView Golden Run',
   supportedSlice: 'examples/valid/todo-app-devview-run',
@@ -954,13 +954,13 @@ export function getSliceReadModelProfile(slice: string): SliceReadModelConfig {
   if (normalized === todoSearchReadModelProfile.supportedSlice) {
     return todoSearchReadModelProfile
   }
-  if (normalized === todoAppPbeRunStructureOnlyProfile.supportedSlice) {
-    return todoAppPbeRunStructureOnlyProfile
+  if (normalized === todoAppDevviewRunStructureOnlyProfile.supportedSlice) {
+    return todoAppDevviewRunStructureOnlyProfile
   }
   throw new Error(
     `No read-model profile is configured for slice "${slice}". Currently supported profiles: ${[
       todoSearchReadModelProfile.supportedSlice,
-      todoAppPbeRunStructureOnlyProfile.supportedSlice,
+      todoAppDevviewRunStructureOnlyProfile.supportedSlice,
     ].join(', ')}`,
   )
 }
@@ -1060,7 +1060,7 @@ export async function loadGraphSourceArtifact(
 
 export async function loadStructureOnlyGraphSourceCandidateArtifact(
   root: string,
-  graphSourcePath = `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/graph-source.json`,
+  graphSourcePath = `${todoAppDevviewRunStructureOnlyProfile.supportedSlice}/graph-source.json`,
 ): Promise<StructureOnlyGraphSourceCandidateArtifact> {
   const absoluteGraphSourcePath = path.resolve(root, graphSourcePath)
   const parsed = await readJsonSafe<unknown>(absoluteGraphSourcePath)
@@ -1072,8 +1072,8 @@ export async function loadStructureOnlyGraphSourceCandidateArtifact(
 
 export async function loadStructureOnlyGraphSourceCandidateProjectionArtifact(
   root: string,
-  projectionPath = `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/generated/graph-source-read-model-projection.json`,
-  graphSourcePath = `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/graph-source.json`,
+  projectionPath = `${todoAppDevviewRunStructureOnlyProfile.supportedSlice}/generated/graph-source-read-model-projection.json`,
+  graphSourcePath = `${todoAppDevviewRunStructureOnlyProfile.supportedSlice}/graph-source.json`,
 ): Promise<StructureOnlyGraphSourceCandidateProjectionArtifact> {
   const graphSource = await loadStructureOnlyGraphSourceCandidateArtifact(root, graphSourcePath)
   const absoluteProjectionPath = path.resolve(root, projectionPath)
@@ -1104,8 +1104,8 @@ export async function loadGraphSourceProjectionArtifact(
 }
 
 export async function observeReadModelCandidateProjections(root: string): Promise<CandidateObservationResult> {
-  const graphSourceCandidatePath = `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/graph-source.json`
-  const projectionPath = `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/generated/graph-source-read-model-projection.json`
+  const graphSourceCandidatePath = `${todoAppDevviewRunStructureOnlyProfile.supportedSlice}/graph-source.json`
+  const projectionPath = `${todoAppDevviewRunStructureOnlyProfile.supportedSlice}/generated/graph-source-read-model-projection.json`
   try {
     const projection = await loadStructureOnlyGraphSourceCandidateProjectionArtifact(
       root,
@@ -1143,8 +1143,8 @@ export async function observeReadModelCandidateProjections(root: string): Promis
       status: 'candidate-observation-blocked',
       observedCandidates: [
         {
-          profileId: todoAppPbeRunStructureOnlyProfile.profileId,
-          sourceSlice: todoAppPbeRunStructureOnlyProfile.supportedSlice,
+          profileId: todoAppDevviewRunStructureOnlyProfile.profileId,
+          sourceSlice: todoAppDevviewRunStructureOnlyProfile.supportedSlice,
           graphSource: graphSourceCandidatePath,
           projection: projectionPath,
           status: 'projection-contract-blocked',
@@ -1206,7 +1206,7 @@ export function projectGraphSourceReadModel(
 
 export function projectStructureOnlyGraphSourceCandidateReadModel(
   graphSource: StructureOnlyGraphSourceCandidateArtifact,
-  graphSourcePath = `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/graph-source.json`,
+  graphSourcePath = `${todoAppDevviewRunStructureOnlyProfile.supportedSlice}/graph-source.json`,
 ): StructureOnlyGraphSourceCandidateProjectionResult {
   return {
     graphSourcePath: normalizePath(graphSourcePath),
@@ -1264,7 +1264,7 @@ export async function projectGraphSourceReadModelToFile(
         )
   const defaultOutput =
     source.artifactRole === 'structure-only-graph-source'
-      ? `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/generated/graph-source-read-model-projection.json`
+      ? `${todoAppDevviewRunStructureOnlyProfile.supportedSlice}/generated/graph-source-read-model-projection.json`
       : `${todoSearchReadModelProfile.supportedSlice}/generated/graph-source-read-model-projection.json`
   const projectionJsonPath = path.resolve(root, outputPath || defaultOutput)
   await writeFormattedJson(projectionJsonPath, result.projection)
@@ -1390,7 +1390,7 @@ export async function reportGraphSourceHealth(root: string): Promise<GraphSource
   )
   const todoAppGenerated = await readGeneratedReadModelHealth(
     root,
-    `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/generated/generated-read-model.json`,
+    `${todoAppDevviewRunStructureOnlyProfile.supportedSlice}/generated/generated-read-model.json`,
     blockingReasons,
   )
 
@@ -1434,7 +1434,7 @@ export async function reportGraphSourceHealth(root: string): Promise<GraphSource
   )
 
   const todoSearchTransition = findByField(transitionSlices, 'profileId', todoSearchReadModelProfile.profileId)
-  const todoAppTransition = findByField(transitionSlices, 'profileId', todoAppPbeRunStructureOnlyProfile.profileId)
+  const todoAppTransition = findByField(transitionSlices, 'profileId', todoAppDevviewRunStructureOnlyProfile.profileId)
   const todoSearchRetirement = asRecord(todoSearchTransition.retirementReadiness, 'todoSearch.retirementReadiness', [])
   const todoAppRetirement = asRecord(todoAppTransition.retirementReadiness, 'todoApp.retirementReadiness', [])
   const todoSearchPackage = findByField(retirementApprovalPackages, 'scope', 'todo-search-selected-slice')
@@ -2164,8 +2164,8 @@ export function normalizeGraphSourceProjectionArtifact(
 export function normalizeStructureOnlyGraphSourceCandidateProjectionArtifact(
   value: unknown,
   graphSource: StructureOnlyGraphSourceCandidateArtifact,
-  projectionPath = `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/generated/graph-source-read-model-projection.json`,
-  graphSourcePath = `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/graph-source.json`,
+  projectionPath = `${todoAppDevviewRunStructureOnlyProfile.supportedSlice}/generated/graph-source-read-model-projection.json`,
+  graphSourcePath = `${todoAppDevviewRunStructureOnlyProfile.supportedSlice}/graph-source.json`,
 ): StructureOnlyGraphSourceCandidateProjectionArtifact {
   const errors: string[] = []
   const projection = asRecord(value, 'structureOnlyGraphSourceProjection', errors)
@@ -2233,14 +2233,14 @@ export function normalizeStructureOnlyGraphSourceCandidateProjectionArtifact(
   if (metadata.policyLevel !== 'structure-only') {
     errors.push('structureOnlyGraphSourceProjection.metadata.policyLevel must be structure-only')
   }
-  if (nodes.length !== todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes) {
+  if (nodes.length !== todoAppDevviewRunStructureOnlyProfile.expectedCounts.nodes) {
     errors.push(
-      `structureOnlyGraphSourceProjection.nodes must contain ${todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes} nodes`,
+      `structureOnlyGraphSourceProjection.nodes must contain ${todoAppDevviewRunStructureOnlyProfile.expectedCounts.nodes} nodes`,
     )
   }
-  if (edges.length !== todoAppPbeRunStructureOnlyProfile.expectedCounts.edges) {
+  if (edges.length !== todoAppDevviewRunStructureOnlyProfile.expectedCounts.edges) {
     errors.push(
-      `structureOnlyGraphSourceProjection.edges must contain ${todoAppPbeRunStructureOnlyProfile.expectedCounts.edges} edges`,
+      `structureOnlyGraphSourceProjection.edges must contain ${todoAppDevviewRunStructureOnlyProfile.expectedCounts.edges} edges`,
     )
   }
   if (coreViewCoverage.length !== coreViewNames.length) {
@@ -2406,7 +2406,7 @@ export function normalizeGraphSourceArtifact(
 
 export function normalizeStructureOnlyGraphSourceCandidateArtifact(
   value: unknown,
-  graphSourcePath = `${todoAppPbeRunStructureOnlyProfile.supportedSlice}/graph-source.json`,
+  graphSourcePath = `${todoAppDevviewRunStructureOnlyProfile.supportedSlice}/graph-source.json`,
 ): StructureOnlyGraphSourceCandidateArtifact {
   const errors: string[] = []
   const source = asRecord(value, 'structureOnlyGraphSource', errors)
@@ -2463,23 +2463,23 @@ export function normalizeStructureOnlyGraphSourceCandidateArtifact(
   if (graphSourceScope !== 'todo-app-devview-run-structure-only') {
     errors.push('structureOnlyGraphSource.graphSourceScope must be todo-app-devview-run-structure-only')
   }
-  if (normalizePath(sourceSlice) !== todoAppPbeRunStructureOnlyProfile.supportedSlice) {
-    errors.push(`structureOnlyGraphSource.sourceSlice must be ${todoAppPbeRunStructureOnlyProfile.supportedSlice}`)
+  if (normalizePath(sourceSlice) !== todoAppDevviewRunStructureOnlyProfile.supportedSlice) {
+    errors.push(`structureOnlyGraphSource.sourceSlice must be ${todoAppDevviewRunStructureOnlyProfile.supportedSlice}`)
   }
-  if (sourceProfile !== todoAppPbeRunStructureOnlyProfile.profileId) {
-    errors.push(`structureOnlyGraphSource.sourceProfile must be ${todoAppPbeRunStructureOnlyProfile.profileId}`)
+  if (sourceProfile !== todoAppDevviewRunStructureOnlyProfile.profileId) {
+    errors.push(`structureOnlyGraphSource.sourceProfile must be ${todoAppDevviewRunStructureOnlyProfile.profileId}`)
   }
   if (policyLevel !== 'structure-only') {
     errors.push('structureOnlyGraphSource.policyLevel must be structure-only')
   }
-  if (sourceRecords.nodes.length !== todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes) {
+  if (sourceRecords.nodes.length !== todoAppDevviewRunStructureOnlyProfile.expectedCounts.nodes) {
     errors.push(
-      `structureOnlyGraphSource.sourceRecords.nodes must contain ${todoAppPbeRunStructureOnlyProfile.expectedCounts.nodes} nodes`,
+      `structureOnlyGraphSource.sourceRecords.nodes must contain ${todoAppDevviewRunStructureOnlyProfile.expectedCounts.nodes} nodes`,
     )
   }
-  if (sourceRecords.edges.length !== todoAppPbeRunStructureOnlyProfile.expectedCounts.edges) {
+  if (sourceRecords.edges.length !== todoAppDevviewRunStructureOnlyProfile.expectedCounts.edges) {
     errors.push(
-      `structureOnlyGraphSource.sourceRecords.edges must contain ${todoAppPbeRunStructureOnlyProfile.expectedCounts.edges} edges`,
+      `structureOnlyGraphSource.sourceRecords.edges must contain ${todoAppDevviewRunStructureOnlyProfile.expectedCounts.edges} edges`,
     )
   }
   if (sourceRecords.coreViewCoverage.length !== coreViewNames.length) {

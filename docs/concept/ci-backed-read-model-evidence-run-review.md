@@ -9,7 +9,7 @@ This document records reviewed GitHub Actions runs for read-model Evidence, with
 workflow run after Todo App bounded non-authority projection-contract enrollment entered positive validate-all:
 
 ```text
-PBE Read-Model Evidence
+DevView Read-Model Evidence
 ```
 
 The purpose is to verify that a real CI-backed Evidence run exists, that its uploaded artifact bundle is reviewable, that
@@ -52,7 +52,7 @@ It does not:
 | Field          | Observed value                                                                                             |
 | -------------- | ---------------------------------------------------------------------------------------------------------- |
 | Workflow file  | `.github/workflows/read-model-evidence.yml`                                                                |
-| Workflow name  | `PBE Read-Model Evidence`                                                                                  |
+| Workflow name  | `DevView Read-Model Evidence`                                                                              |
 | Pull request   | `#1` / `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/pull/1`                            |
 | PR status      | closed without merge; temporary remote branch deleted                                                      |
 | Run ID         | `28207822252`                                                                                              |
@@ -67,7 +67,7 @@ It does not:
 | Source commit  | `b2c664cfe658eaeb08c3bf28e8c8a22eec864fac`                                                                 |
 | Status         | `completed`                                                                                                |
 | Conclusion     | `success`                                                                                                  |
-| Artifact name  | `pbe-todo-search-read-model-evidence`                                                                      |
+| Artifact name  | `devview-todo-search-read-model-evidence`                                                                  |
 | Job ID         | `83562348328`                                                                                              |
 | Job URL        | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28207822252/job/83562348328` |
 | Job conclusion | `success`                                                                                                  |
@@ -162,7 +162,7 @@ workspace. It contained the expected files:
 | Field          | Observed value                                                                                             |
 | -------------- | ---------------------------------------------------------------------------------------------------------- |
 | Workflow file  | `.github/workflows/read-model-evidence.yml`                                                                |
-| Workflow name  | `PBE Read-Model Evidence`                                                                                  |
+| Workflow name  | `DevView Read-Model Evidence`                                                                              |
 | Run ID         | `28156403793`                                                                                              |
 | Run URL        | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28156403793`                 |
 | Target branch  | `main`                                                                                                     |
@@ -170,7 +170,7 @@ workspace. It contained the expected files:
 | Status         | `completed`                                                                                                |
 | Conclusion     | `success`                                                                                                  |
 | Source commit  | `3673e34d2501f9e10cb79748bdaffe994d09a27a`                                                                 |
-| Artifact name  | `pbe-todo-search-read-model-evidence`                                                                      |
+| Artifact name  | `devview-todo-search-read-model-evidence`                                                                  |
 | Job ID         | `83385952186`                                                                                              |
 | Job URL        | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28156403793/job/83385952186` |
 | Job conclusion | `success`                                                                                                  |
@@ -216,7 +216,7 @@ After the workflow was updated to use `actions/checkout@v7`, `actions/setup-node
 | Field          | Observed value                                                                                             |
 | -------------- | ---------------------------------------------------------------------------------------------------------- |
 | Workflow file  | `.github/workflows/read-model-evidence.yml`                                                                |
-| Workflow name  | `PBE Read-Model Evidence`                                                                                  |
+| Workflow name  | `DevView Read-Model Evidence`                                                                              |
 | Run ID         | `28157938343`                                                                                              |
 | Run URL        | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28157938343`                 |
 | Target branch  | `main`                                                                                                     |
@@ -224,7 +224,7 @@ After the workflow was updated to use `actions/checkout@v7`, `actions/setup-node
 | Status         | `completed`                                                                                                |
 | Conclusion     | `success`                                                                                                  |
 | Source commit  | `96da2c772ce1a662dc65d7b7b7d7b7c6ba98e19c`                                                                 |
-| Artifact name  | `pbe-todo-search-read-model-evidence`                                                                      |
+| Artifact name  | `devview-todo-search-read-model-evidence`                                                                  |
 | Job ID         | `83390977558`                                                                                              |
 | Job URL        | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28157938343/job/83390977558` |
 | Job conclusion | `success`                                                                                                  |
@@ -274,32 +274,32 @@ Reviewed file:
 adoption/todo-search-slice/generated/read-model-ci-evidence-manifest.json
 ```
 
-| Manifest field                          | Observed value / condition                   | Review status |
-| --------------------------------------- | -------------------------------------------- | ------------- |
-| `evidenceLevel`                         | `ci-backed`                                  | pass          |
-| `status`                                | `ci-evidence-pass`                           | pass          |
-| `workflowName`                          | `PBE Read-Model Evidence`                    | pass          |
-| `triggerMode`                           | `workflow_dispatch`                          | pass          |
-| `runId`                                 | `28157938343`                                | pass          |
-| `runAttempt`                            | `1`                                          | pass          |
-| `sourceCommit`                          | `96da2c772ce1a662dc65d7b7b7d7b7c6ba98e19c`   | pass          |
-| `sourceRef`                             | `refs/heads/main`                            | pass          |
-| `includedSlices`                        | Todo Search and Todo App DevView Run         | pass          |
-| `todoSearch.validatorStatus`            | `validation-pass`                            | pass          |
-| `todoSearch.parityStatus`               | `comparison-pass`                            | pass          |
-| `todoSearch.checkCount`                 | 20                                           | pass          |
-| `todoSearch.nodeCount` / `edgeCount`    | 40 / 59                                      | pass          |
-| `todoAppPbeRun.validatorStatus`         | `validation-pass`                            | pass          |
-| `todoAppPbeRun.parityStatus`            | `not-required`                               | pass          |
-| `todoAppPbeRun.checkCount`              | 16                                           | pass          |
-| `todoAppPbeRun.nodeCount` / `edgeCount` | 22 / 38                                      | pass          |
-| `aggregate.status`                      | `aggregate-pass`                             | pass          |
-| `aggregate.includedSliceCount`          | 2                                            | pass          |
-| `aggregate.sourceMode`                  | `existing per-slice validation reports only` | pass          |
-| `retainedWarningsRemainVisible`         | `true`                                       | pass          |
-| `sourceAuthorityBoundary`               | present and scoped                           | pass          |
-| `nonEnforcementStatement`               | present                                      | pass          |
-| `nonPromotionStatement`                 | present                                      | pass          |
+| Manifest field                              | Observed value / condition                   | Review status |
+| ------------------------------------------- | -------------------------------------------- | ------------- |
+| `evidenceLevel`                             | `ci-backed`                                  | pass          |
+| `status`                                    | `ci-evidence-pass`                           | pass          |
+| `workflowName`                              | `DevView Read-Model Evidence`                | pass          |
+| `triggerMode`                               | `workflow_dispatch`                          | pass          |
+| `runId`                                     | `28157938343`                                | pass          |
+| `runAttempt`                                | `1`                                          | pass          |
+| `sourceCommit`                              | `96da2c772ce1a662dc65d7b7b7d7b7c6ba98e19c`   | pass          |
+| `sourceRef`                                 | `refs/heads/main`                            | pass          |
+| `includedSlices`                            | Todo Search and Todo App DevView Run         | pass          |
+| `todoSearch.validatorStatus`                | `validation-pass`                            | pass          |
+| `todoSearch.parityStatus`                   | `comparison-pass`                            | pass          |
+| `todoSearch.checkCount`                     | 20                                           | pass          |
+| `todoSearch.nodeCount` / `edgeCount`        | 40 / 59                                      | pass          |
+| `todoAppDevviewRun.validatorStatus`         | `validation-pass`                            | pass          |
+| `todoAppDevviewRun.parityStatus`            | `not-required`                               | pass          |
+| `todoAppDevviewRun.checkCount`              | 16                                           | pass          |
+| `todoAppDevviewRun.nodeCount` / `edgeCount` | 22 / 38                                      | pass          |
+| `aggregate.status`                          | `aggregate-pass`                             | pass          |
+| `aggregate.includedSliceCount`              | 2                                            | pass          |
+| `aggregate.sourceMode`                      | `existing per-slice validation reports only` | pass          |
+| `retainedWarningsRemainVisible`             | `true`                                       | pass          |
+| `sourceAuthorityBoundary`                   | present and scoped                           | pass          |
+| `nonEnforcementStatement`                   | present                                      | pass          |
+| `nonPromotionStatement`                     | present                                      | pass          |
 
 ## Post-Update Aggregate Artifact Review Result
 
@@ -359,32 +359,32 @@ Reviewed file:
 adoption/todo-search-slice/generated/read-model-ci-evidence-manifest.json
 ```
 
-| Manifest field                          | Observed value / condition                   | Review status |
-| --------------------------------------- | -------------------------------------------- | ------------- |
-| `evidenceLevel`                         | `ci-backed`                                  | pass          |
-| `status`                                | `ci-evidence-pass`                           | pass          |
-| `workflowName`                          | `PBE Read-Model Evidence`                    | pass          |
-| `triggerMode`                           | `workflow_dispatch`                          | pass          |
-| `runId`                                 | `28156403793`                                | pass          |
-| `runAttempt`                            | `1`                                          | pass          |
-| `sourceCommit`                          | `3673e34d2501f9e10cb79748bdaffe994d09a27a`   | pass          |
-| `sourceRef`                             | `refs/heads/main`                            | pass          |
-| `includedSlices`                        | Todo Search and Todo App DevView Run         | pass          |
-| `todoSearch.validatorStatus`            | `validation-pass`                            | pass          |
-| `todoSearch.parityStatus`               | `comparison-pass`                            | pass          |
-| `todoSearch.checkCount`                 | 20                                           | pass          |
-| `todoSearch.nodeCount` / `edgeCount`    | 40 / 59                                      | pass          |
-| `todoAppPbeRun.validatorStatus`         | `validation-pass`                            | pass          |
-| `todoAppPbeRun.parityStatus`            | `not-required`                               | pass          |
-| `todoAppPbeRun.checkCount`              | 16                                           | pass          |
-| `todoAppPbeRun.nodeCount` / `edgeCount` | 22 / 38                                      | pass          |
-| `aggregate.status`                      | `aggregate-pass`                             | pass          |
-| `aggregate.includedSliceCount`          | 2                                            | pass          |
-| `aggregate.sourceMode`                  | `existing per-slice validation reports only` | pass          |
-| `retainedWarningsRemainVisible`         | `true`                                       | pass          |
-| `sourceAuthorityBoundary`               | present and scoped                           | pass          |
-| `nonEnforcementStatement`               | present                                      | pass          |
-| `nonPromotionStatement`                 | present                                      | pass          |
+| Manifest field                              | Observed value / condition                   | Review status |
+| ------------------------------------------- | -------------------------------------------- | ------------- |
+| `evidenceLevel`                             | `ci-backed`                                  | pass          |
+| `status`                                    | `ci-evidence-pass`                           | pass          |
+| `workflowName`                              | `DevView Read-Model Evidence`                | pass          |
+| `triggerMode`                               | `workflow_dispatch`                          | pass          |
+| `runId`                                     | `28156403793`                                | pass          |
+| `runAttempt`                                | `1`                                          | pass          |
+| `sourceCommit`                              | `3673e34d2501f9e10cb79748bdaffe994d09a27a`   | pass          |
+| `sourceRef`                                 | `refs/heads/main`                            | pass          |
+| `includedSlices`                            | Todo Search and Todo App DevView Run         | pass          |
+| `todoSearch.validatorStatus`                | `validation-pass`                            | pass          |
+| `todoSearch.parityStatus`                   | `comparison-pass`                            | pass          |
+| `todoSearch.checkCount`                     | 20                                           | pass          |
+| `todoSearch.nodeCount` / `edgeCount`        | 40 / 59                                      | pass          |
+| `todoAppDevviewRun.validatorStatus`         | `validation-pass`                            | pass          |
+| `todoAppDevviewRun.parityStatus`            | `not-required`                               | pass          |
+| `todoAppDevviewRun.checkCount`              | 16                                           | pass          |
+| `todoAppDevviewRun.nodeCount` / `edgeCount` | 22 / 38                                      | pass          |
+| `aggregate.status`                          | `aggregate-pass`                             | pass          |
+| `aggregate.includedSliceCount`              | 2                                            | pass          |
+| `aggregate.sourceMode`                      | `existing per-slice validation reports only` | pass          |
+| `retainedWarningsRemainVisible`             | `true`                                       | pass          |
+| `sourceAuthorityBoundary`                   | present and scoped                           | pass          |
+| `nonEnforcementStatement`                   | present                                      | pass          |
+| `nonPromotionStatement`                     | present                                      | pass          |
 
 ## Aggregate Artifact Review Result
 
@@ -409,23 +409,23 @@ read-model-aggregate/generated/read-model-aggregate-summary.json
 
 ## Historical Todo Search-Only Workflow Run
 
-| Field            | Observed value                                                                                                          |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Workflow file    | `.github/workflows/read-model-evidence.yml`                                                                             |
-| Workflow name    | `PBE Read-Model Evidence`                                                                                               |
-| Run ID           | `28151296796`                                                                                                           |
-| Run URL          | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28151296796`                              |
-| Target branch    | `main`                                                                                                                  |
-| Event            | `workflow_dispatch`                                                                                                     |
-| Status           | `completed`                                                                                                             |
-| Conclusion       | `success`                                                                                                               |
-| Source commit    | `f7ab62d06ba33056a33cb433134353b9ed8a5cd4`                                                                              |
-| Artifact name    | `pbe-todo-search-read-model-evidence`                                                                                   |
-| Job name         | `Todo Search Read-Model Evidence`                                                                                       |
-| Job URL          | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28151296796/job/83369398505`              |
-| Download path    | `.tmp/read-model-evidence-run-28151296796`                                                                              |
-| Review command   | `gh run view 28151296796 --json databaseId,status,conclusion,event,headBranch,headSha,url`                              |
-| Download command | `gh run download 28151296796 --name pbe-todo-search-read-model-evidence --dir .tmp/read-model-evidence-run-28151296796` |
+| Field            | Observed value                                                                                                              |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Workflow file    | `.github/workflows/read-model-evidence.yml`                                                                                 |
+| Workflow name    | `DevView Read-Model Evidence`                                                                                               |
+| Run ID           | `28151296796`                                                                                                               |
+| Run URL          | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28151296796`                                  |
+| Target branch    | `main`                                                                                                                      |
+| Event            | `workflow_dispatch`                                                                                                         |
+| Status           | `completed`                                                                                                                 |
+| Conclusion       | `success`                                                                                                                   |
+| Source commit    | `f7ab62d06ba33056a33cb433134353b9ed8a5cd4`                                                                                  |
+| Artifact name    | `devview-todo-search-read-model-evidence`                                                                                   |
+| Job name         | `Todo Search Read-Model Evidence`                                                                                           |
+| Job URL          | `https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28151296796/job/83369398505`                  |
+| Download path    | `.tmp/read-model-evidence-run-28151296796`                                                                                  |
+| Review command   | `gh run view 28151296796 --json databaseId,status,conclusion,event,headBranch,headSha,url`                                  |
+| Download command | `gh run download 28151296796 --name devview-todo-search-read-model-evidence --dir .tmp/read-model-evidence-run-28151296796` |
 
 The downloaded artifact stays under `.tmp/` and is not committed.
 
@@ -500,7 +500,7 @@ Reviewed file:
 | ------------------------------- | ----------------------------------------------------- | ------------- |
 | `evidenceLevel`                 | `ci-backed`                                           | pass          |
 | `status`                        | `ci-evidence-pass`                                    | pass          |
-| `workflowName`                  | `PBE Read-Model Evidence`                             | pass          |
+| `workflowName`                  | `DevView Read-Model Evidence`                         | pass          |
 | `triggerMode`                   | `workflow_dispatch`                                   | pass          |
 | `runId`                         | `28151296796`                                         | pass          |
 | `runAttempt`                    | `1`                                                   | pass          |
@@ -566,7 +566,7 @@ Run identity:
 
 | Field      | Value                                                                                                      |
 | ---------- | ---------------------------------------------------------------------------------------------------------- |
-| Workflow   | `PBE Read-Model Evidence`                                                                                  |
+| Workflow   | `DevView Read-Model Evidence`                                                                              |
 | Run ID     | `28210541509`                                                                                              |
 | Run URL    | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28210541509>                 |
 | Event      | `workflow_dispatch`                                                                                        |
@@ -596,7 +596,7 @@ runtime fixture tests, PBE validation, CI manifest writing, Step Summary writing
 Artifact:
 
 ```text
-pbe-todo-search-read-model-evidence
+devview-todo-search-read-model-evidence
 ```
 
 Reviewed files included:
@@ -678,7 +678,7 @@ Run identity:
 
 | Field             | Value                                                                                                      |
 | ----------------- | ---------------------------------------------------------------------------------------------------------- |
-| Workflow          | `PBE Read-Model Evidence`                                                                                  |
+| Workflow          | `DevView Read-Model Evidence`                                                                              |
 | PR                | `#2`; draft smoke PR; closed without merge                                                                 |
 | PR URL            | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/pull/2>                                   |
 | Run ID            | `28210904900`                                                                                              |
@@ -705,7 +705,7 @@ validation, CI manifest writing, Step Summary writing, and artifact upload.
 Artifact:
 
 ```text
-pbe-todo-search-read-model-evidence
+devview-todo-search-read-model-evidence
 ```
 
 Reviewed files included:
@@ -791,7 +791,7 @@ Run identity:
 
 | Field             | Value                                                                                                      |
 | ----------------- | ---------------------------------------------------------------------------------------------------------- |
-| Workflow          | `PBE Read-Model Evidence`                                                                                  |
+| Workflow          | `DevView Read-Model Evidence`                                                                              |
 | PR                | `#3`; draft smoke PR; closed without merge                                                                 |
 | PR URL            | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/pull/3>                                   |
 | Run ID            | `28213236499`                                                                                              |
@@ -818,7 +818,7 @@ validation, CI manifest writing, Step Summary writing, and artifact upload.
 Artifact:
 
 ```text
-pbe-todo-search-read-model-evidence
+devview-todo-search-read-model-evidence
 ```
 
 The artifact bundle was downloaded, reviewed, and removed from `.tmp/` after inspection. It contained the expected
@@ -1354,10 +1354,10 @@ parsing before this successful rerun.
 | Commit                    | `c407bff`                                                                                  |
 | Conclusion                | `success`                                                                                  |
 | Manifest                  | `ci-evidence-pass`                                                                         |
-| Operation-chain status    | `pbe-operation-chain-pass`                                                                 |
-| Dogfood evaluation status | `pbe-dogfood-evaluation-pass`                                                              |
-| Operation report          | `outputs/pbe-operation-chain/operation-chain-report.json` present                          |
-| Dogfood report            | `outputs/pbe-operation-chain/dogfood-evaluation.json` present                              |
+| Operation-chain status    | `devview-legacy-operation-chain-pass`                                                      |
+| Dogfood evaluation status | `devview-legacy-dogfood-evaluation-pass`                                                   |
+| Operation report          | `outputs/devview-legacy-operation-chain/operation-chain-report.json` present               |
+| Dogfood report            | `outputs/devview-legacy-operation-chain/dogfood-evaluation.json` present                   |
 | Cleanup                   | Artifact temp directory removed                                                            |
 | Review result             | Manual CI confirms operation-chain and dogfood status visibility in manifest/artifacts     |
 
@@ -1375,59 +1375,59 @@ the remote smoke branch plus downloaded temp artifacts were removed.
 | Source branch             | `pbe/pr-info-operation-chain-smoke-20260630`                                               |
 | Conclusion                | `success`                                                                                  |
 | Manifest                  | `ci-evidence-pass`; PR metadata present                                                    |
-| Operation-chain status    | `pbe-operation-chain-pass`                                                                 |
-| Dogfood evaluation status | `pbe-dogfood-evaluation-pass`                                                              |
-| Operation report          | `outputs/pbe-operation-chain/operation-chain-report.json` present                          |
-| Dogfood report            | `outputs/pbe-operation-chain/dogfood-evaluation.json` present                              |
+| Operation-chain status    | `devview-legacy-operation-chain-pass`                                                      |
+| Dogfood evaluation status | `devview-legacy-dogfood-evaluation-pass`                                                   |
+| Operation report          | `outputs/devview-legacy-operation-chain/operation-chain-report.json` present               |
+| Dogfood report            | `outputs/devview-legacy-operation-chain/dogfood-evaluation.json` present                   |
 | Cleanup                   | PR closed unmerged; remote branch and artifact temp directory removed                      |
 | Review result             | PR CI confirms operation-chain and dogfood status visibility with PR metadata              |
 
 ## Gate Self-Check
 
-| Gate                              | Status | Result                                                                                                              |
-| --------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------- |
-| Manual Workflow Run Gate          | pass   | Run `28156403793` completed successfully on `workflow_dispatch`.                                                    |
-| Validate-All Manual Run Gate      | pass   | Run `28210541509` completed successfully on `workflow_dispatch` after the workflow switched to validate-all.        |
-| Projection-Status Manual Gate     | pass   | Run `28218687289` captured Todo Search `projection-contract-pass` in manifest and validate-all output.              |
-| Graph-Source-Backed Manual Gate   | pass   | Run `28219396764` confirmed graph-source-backed Todo Search generation in CI artifacts.                             |
-| Todo App Projection Manual Gate   | pass   | Run `28222731063` confirmed Todo App `candidate-projection-contract-pass` in positive validate-all artifacts.       |
-| E2E Smoke Manual Gate             | pass   | Run `28223860233` confirmed `e2eSmokeStatus: e2e-smoke-pass` in manifest and uploaded smoke output.                 |
-| E2E Intent Report Manual Gate     | pass   | Run `28348764191` confirmed E2E output contains `intentReport: intent-report-pass` with zero missing counts.        |
-| Health Report Manual Gate         | pass   | Run `28350824272` confirmed `healthReportStatus: graph-source-health-pass` and uploaded health report artifact.     |
-| Health Markdown Manual Gate       | pass   | Run `28351612200` confirmed uploaded `read-model-health-report-output.md` and manifest path visibility.             |
-| Operation-Chain Manual Gate       | pass   | Run `28423595270` confirmed `pbe-operation-chain-pass` and `pbe-dogfood-evaluation-pass` in artifacts.              |
-| Todo App Generation Manual Gate   | pass   | Run `28224636333` confirmed Todo App `graph-source-backed` / `non-authority-structure-only` metadata.               |
-| Todo App Confirmed Manual Gate    | pass   | Run `28226270934` confirmed Todo App `projection-contract-pass` / `confirmed-structure-only-graph-source`.          |
-| edgeIntent Projection Manual Gate | pass   | Run `28346777344` confirmed native/retrofit `edge-intent-projection-pass` in manifest and artifacts.                |
-| Graph-Source-Backed PR Gate       | pass   | PR #5 run `28219583619` confirmed graph-source-backed Todo Search generation in PR artifacts.                       |
-| Todo App Projection PR Gate       | pass   | PR #7 run `28223010185` confirmed Todo App `candidate-projection-contract-pass` in PR artifacts.                    |
-| E2E Smoke PR Gate                 | pass   | PR #8 run `28224088829` confirmed `e2eSmokeStatus: e2e-smoke-pass` in PR artifacts.                                 |
-| Todo App Generation PR Gate       | pass   | PR #9 run `28224878648` confirmed Todo App `graph-source-backed` / `non-authority-structure-only` metadata.         |
-| Todo App Confirmed PR Gate        | pass   | PR #10 run `28226357099` confirmed Todo App `projection-contract-pass` / `confirmed-structure-only-graph-source`.   |
-| edgeIntent Projection PR Gate     | pass   | PR #11 run `28346897073` confirmed native/retrofit `edge-intent-projection-pass` in PR artifacts.                   |
-| E2E Intent Report PR Gate         | pass   | PR #12 run `28348903718` confirmed E2E output contains `intentReport: intent-report-pass` with zero missing counts. |
-| Health Report PR Gate             | pass   | PR #13 run `28351078223` confirmed `graph-source-health-pass` and uploaded health report artifact.                  |
-| Health Markdown PR Gate           | pass   | PR #14 run `28351775566` confirmed uploaded `read-model-health-report-output.md` and manifest path visibility.      |
-| Operation-Chain PR Gate           | pass   | PR #15 run `28423731988` confirmed operation-chain and dogfood status visibility with PR metadata.                  |
-| PR Informational Run Gate         | pass   | PR #1, PR #2, PR #3, PR #4, and PR #5 triggered `pull_request` runs and completed successfully.                     |
-| CI-Backed Artifact Review Gate    | pass   | Expanded artifact bundle `pbe-todo-search-read-model-evidence` was downloaded and inspected.                        |
-| CI Manifest Integrity Gate        | pass   | Manifest is `ci-backed` / `ci-evidence-pass` and includes Todo Search, Todo App, aggregate, and boundaries.         |
-| Validation Report Gate            | pass   | Todo Search and Todo App validation reports are `validation-pass` with 20 and 16 checks.                            |
-| Parity Report Gate                | pass   | Todo Search parity is `comparison-pass`; Todo App parity remains `not-required`.                                    |
-| Aggregate Report Gate             | pass   | Aggregate summary is `aggregate-pass`, 2 slices, 0 warning/blocking/decision-required.                              |
-| Validate-All Manifest Gate        | pass   | Manifest records `sourceMode: registry-backed validate-all` and `validateAllStatus: aggregate-pass`.                |
-| Validate-All PR Run Gate          | pass   | PR #2 run `28210904900` and PR #3 run `28213236499` record validate-all `pull_request` success.                     |
-| Projection-Status PR Gate         | pass   | PR #4 run `28218854329` captured Todo Search `projection-contract-pass` in PR informational artifacts.              |
-| Observation Threshold Gate        | pass   | Three real PR informational runs are reviewed; refinement may be considered but is not automatic.                   |
-| Non-Enforcing CI Gate             | pass   | Workflow remains informational only for manual and PR runs.                                                         |
-| Non-Required-Check Gate           | pass   | No required check or branch protection was added.                                                                   |
-| Source Authority Boundary Gate    | pass   | Source authority remains unchanged; Todo App remains structure-only.                                                |
-| Non-Full-Promotion Gate           | pass   | No full Graph-source promotion is recorded.                                                                         |
-| Scope Containment Gate            | pass   | Source-authority pilot remains bounded to Todo Search only.                                                         |
-| Node 24 CI Hygiene Gate           | pass   | Run `28157938343` succeeded after the workflow moved to Node 24 action/runtime settings.                            |
-| Retained Warning Visibility Gate  | pass   | Retained Evidence/source warnings remain documented; Node.js 20 deprecation is no longer active.                    |
-| User Approval Boundary Gate       | pass   | CI pass is not treated as user approval.                                                                            |
-| Evidence Honesty Gate             | pass   | Only the observed CI run and downloaded artifact are recorded as reviewed Evidence.                                 |
+| Gate                              | Status | Result                                                                                                                       |
+| --------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| Manual Workflow Run Gate          | pass   | Run `28156403793` completed successfully on `workflow_dispatch`.                                                             |
+| Validate-All Manual Run Gate      | pass   | Run `28210541509` completed successfully on `workflow_dispatch` after the workflow switched to validate-all.                 |
+| Projection-Status Manual Gate     | pass   | Run `28218687289` captured Todo Search `projection-contract-pass` in manifest and validate-all output.                       |
+| Graph-Source-Backed Manual Gate   | pass   | Run `28219396764` confirmed graph-source-backed Todo Search generation in CI artifacts.                                      |
+| Todo App Projection Manual Gate   | pass   | Run `28222731063` confirmed Todo App `candidate-projection-contract-pass` in positive validate-all artifacts.                |
+| E2E Smoke Manual Gate             | pass   | Run `28223860233` confirmed `e2eSmokeStatus: e2e-smoke-pass` in manifest and uploaded smoke output.                          |
+| E2E Intent Report Manual Gate     | pass   | Run `28348764191` confirmed E2E output contains `intentReport: intent-report-pass` with zero missing counts.                 |
+| Health Report Manual Gate         | pass   | Run `28350824272` confirmed `healthReportStatus: graph-source-health-pass` and uploaded health report artifact.              |
+| Health Markdown Manual Gate       | pass   | Run `28351612200` confirmed uploaded `read-model-health-report-output.md` and manifest path visibility.                      |
+| Operation-Chain Manual Gate       | pass   | Run `28423595270` confirmed `devview-legacy-operation-chain-pass` and `devview-legacy-dogfood-evaluation-pass` in artifacts. |
+| Todo App Generation Manual Gate   | pass   | Run `28224636333` confirmed Todo App `graph-source-backed` / `non-authority-structure-only` metadata.                        |
+| Todo App Confirmed Manual Gate    | pass   | Run `28226270934` confirmed Todo App `projection-contract-pass` / `confirmed-structure-only-graph-source`.                   |
+| edgeIntent Projection Manual Gate | pass   | Run `28346777344` confirmed native/retrofit `edge-intent-projection-pass` in manifest and artifacts.                         |
+| Graph-Source-Backed PR Gate       | pass   | PR #5 run `28219583619` confirmed graph-source-backed Todo Search generation in PR artifacts.                                |
+| Todo App Projection PR Gate       | pass   | PR #7 run `28223010185` confirmed Todo App `candidate-projection-contract-pass` in PR artifacts.                             |
+| E2E Smoke PR Gate                 | pass   | PR #8 run `28224088829` confirmed `e2eSmokeStatus: e2e-smoke-pass` in PR artifacts.                                          |
+| Todo App Generation PR Gate       | pass   | PR #9 run `28224878648` confirmed Todo App `graph-source-backed` / `non-authority-structure-only` metadata.                  |
+| Todo App Confirmed PR Gate        | pass   | PR #10 run `28226357099` confirmed Todo App `projection-contract-pass` / `confirmed-structure-only-graph-source`.            |
+| edgeIntent Projection PR Gate     | pass   | PR #11 run `28346897073` confirmed native/retrofit `edge-intent-projection-pass` in PR artifacts.                            |
+| E2E Intent Report PR Gate         | pass   | PR #12 run `28348903718` confirmed E2E output contains `intentReport: intent-report-pass` with zero missing counts.          |
+| Health Report PR Gate             | pass   | PR #13 run `28351078223` confirmed `graph-source-health-pass` and uploaded health report artifact.                           |
+| Health Markdown PR Gate           | pass   | PR #14 run `28351775566` confirmed uploaded `read-model-health-report-output.md` and manifest path visibility.               |
+| Operation-Chain PR Gate           | pass   | PR #15 run `28423731988` confirmed operation-chain and dogfood status visibility with PR metadata.                           |
+| PR Informational Run Gate         | pass   | PR #1, PR #2, PR #3, PR #4, and PR #5 triggered `pull_request` runs and completed successfully.                              |
+| CI-Backed Artifact Review Gate    | pass   | Expanded artifact bundle `devview-todo-search-read-model-evidence` was downloaded and inspected.                             |
+| CI Manifest Integrity Gate        | pass   | Manifest is `ci-backed` / `ci-evidence-pass` and includes Todo Search, Todo App, aggregate, and boundaries.                  |
+| Validation Report Gate            | pass   | Todo Search and Todo App validation reports are `validation-pass` with 20 and 16 checks.                                     |
+| Parity Report Gate                | pass   | Todo Search parity is `comparison-pass`; Todo App parity remains `not-required`.                                             |
+| Aggregate Report Gate             | pass   | Aggregate summary is `aggregate-pass`, 2 slices, 0 warning/blocking/decision-required.                                       |
+| Validate-All Manifest Gate        | pass   | Manifest records `sourceMode: registry-backed validate-all` and `validateAllStatus: aggregate-pass`.                         |
+| Validate-All PR Run Gate          | pass   | PR #2 run `28210904900` and PR #3 run `28213236499` record validate-all `pull_request` success.                              |
+| Projection-Status PR Gate         | pass   | PR #4 run `28218854329` captured Todo Search `projection-contract-pass` in PR informational artifacts.                       |
+| Observation Threshold Gate        | pass   | Three real PR informational runs are reviewed; refinement may be considered but is not automatic.                            |
+| Non-Enforcing CI Gate             | pass   | Workflow remains informational only for manual and PR runs.                                                                  |
+| Non-Required-Check Gate           | pass   | No required check or branch protection was added.                                                                            |
+| Source Authority Boundary Gate    | pass   | Source authority remains unchanged; Todo App remains structure-only.                                                         |
+| Non-Full-Promotion Gate           | pass   | No full Graph-source promotion is recorded.                                                                                  |
+| Scope Containment Gate            | pass   | Source-authority pilot remains bounded to Todo Search only.                                                                  |
+| Node 24 CI Hygiene Gate           | pass   | Run `28157938343` succeeded after the workflow moved to Node 24 action/runtime settings.                                     |
+| Retained Warning Visibility Gate  | pass   | Retained Evidence/source warnings remain documented; Node.js 20 deprecation is no longer active.                             |
+| User Approval Boundary Gate       | pass   | CI pass is not treated as user approval.                                                                                     |
+| Evidence Honesty Gate             | pass   | Only the observed CI run and downloaded artifact are recorded as reviewed Evidence.                                          |
 
 ## Final Statement
 
