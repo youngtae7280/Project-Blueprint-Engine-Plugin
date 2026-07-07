@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/surface-completion-ledger.schema.json",
+  "$id": "https://local/devview/surface-completion-ledger.schema.json",
   "title": "DevView Surface Completion Ledger",
   "type": "object",
   "required": ["version", "surfaces"],

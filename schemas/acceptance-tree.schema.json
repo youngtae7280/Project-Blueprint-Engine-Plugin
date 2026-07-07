@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/acceptance-tree.schema.json",
+  "$id": "https://local/devview/acceptance-tree.schema.json",
   "title": "DevView Acceptance Tree",
   "type": "object",
   "required": ["version", "branches"],

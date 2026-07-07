@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/ui-ux-spec.schema.json",
+  "$id": "https://local/devview/ui-ux-spec.schema.json",
   "title": "UI/UX Spec",
   "type": "object",
   "required": ["schemaVersion", "screens"],

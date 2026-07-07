@@ -66,11 +66,11 @@ Do not use this skill to directly edit `.devview` state artifacts, and do not re
 Use this skill for:
 
 ```text
-@project-blueprint-engine status
-@project-blueprint-engine continue
-@project-blueprint-engine approve
-@project-blueprint-engine revise "..."
-@project-blueprint-engine stop
+@devview status
+@devview continue
+@devview approve
+@devview revise "..."
+@devview stop
 ```
 
 Also use it for natural-language gate responses such as:

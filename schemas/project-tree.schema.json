@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/project-tree.schema.json",
+  "$id": "https://local/devview/project-tree.schema.json",
   "title": "DevView Project Tree",
   "type": "object",
   "required": ["version", "rootNodeId", "nodes"],

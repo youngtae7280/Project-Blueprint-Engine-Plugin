@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/visual-reference.schema.json",
+  "$id": "https://local/devview/visual-reference.schema.json",
   "title": "DevView Visual Reference",
   "type": "object",
   "required": ["schemaVersion", "artifactType", "status", "visualWorkRequired", "primarySource"],

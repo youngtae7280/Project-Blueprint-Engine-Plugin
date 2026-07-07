@@ -2,6 +2,9 @@ const CODES = {
   productName: [
     80, 114, 111, 106, 101, 99, 116, 32, 66, 108, 117, 101, 112, 114, 105, 110, 116, 32, 69, 110, 103, 105, 110, 101,
   ],
+  productSlug: [
+    112, 114, 111, 106, 101, 99, 116, 45, 98, 108, 117, 101, 112, 114, 105, 110, 116, 45, 101, 110, 103, 105, 110, 101,
+  ],
   productAcronymUpper: [80, 66, 69],
   productAcronymLower: [112, 98, 101],
   productIntakeAcronym: [82, 80, 68],
@@ -11,6 +14,7 @@ const CODES = {
 }
 
 export const RETIRED_PRODUCT_NAME = textFromCodes(CODES.productName)
+export const RETIRED_PRODUCT_SLUG = textFromCodes(CODES.productSlug)
 export const RETIRED_PRODUCT_ACRONYM_UPPER = textFromCodes(CODES.productAcronymUpper)
 export const RETIRED_PRODUCT_ACRONYM_LOWER = textFromCodes(CODES.productAcronymLower)
 export const RETIRED_STORAGE_ROOT = `.${RETIRED_PRODUCT_ACRONYM_LOWER}`
@@ -27,6 +31,7 @@ export interface RetiredTermPattern {
 export function createRetiredTermPatterns(): RetiredTermPattern[] {
   return [
     { id: 'retired-product-name', pattern: new RegExp(escapeRegExp(RETIRED_PRODUCT_NAME), 'g') },
+    { id: 'retired-product-slug', pattern: new RegExp(escapeRegExp(RETIRED_PRODUCT_SLUG), 'g') },
     { id: 'retired-product-acronym-upper', pattern: retiredWordPattern(RETIRED_PRODUCT_ACRONYM_UPPER) },
     { id: 'retired-product-acronym-lower', pattern: retiredWordPattern(RETIRED_PRODUCT_ACRONYM_LOWER) },
     { id: 'retired-storage-root', pattern: new RegExp(escapeRegExp(RETIRED_STORAGE_ROOT), 'g') },
@@ -42,6 +47,7 @@ export function createRetiredCombinedPattern(): RegExp {
     [
       escapeRegExp(RETIRED_PRODUCT_ACRONYM_UPPER),
       escapeRegExp(RETIRED_PRODUCT_NAME),
+      escapeRegExp(RETIRED_PRODUCT_SLUG),
       retiredWordSource(RETIRED_PRODUCT_ACRONYM_LOWER),
       escapeRegExp(RETIRED_STORAGE_ROOT),
     ].join('|'),

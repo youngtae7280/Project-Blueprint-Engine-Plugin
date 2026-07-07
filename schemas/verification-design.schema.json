@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/verification-design.schema.json",
+  "$id": "https://local/devview/verification-design.schema.json",
   "title": "Verification Design",
   "type": "object",
   "required": ["schemaVersion", "verificationItems"],

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/traceability-matrix.schema.json",
+  "$id": "https://local/devview/traceability-matrix.schema.json",
   "title": "Traceability Matrix",
   "type": "object",
   "required": ["schemaVersion", "items"],

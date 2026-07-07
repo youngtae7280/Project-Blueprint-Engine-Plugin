@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/legacy-control-inventory.schema.json",
+  "$id": "https://local/devview/legacy-control-inventory.schema.json",
   "title": "DevView Legacy Control Inventory",
   "type": "object",
   "required": ["version", "inventories"],

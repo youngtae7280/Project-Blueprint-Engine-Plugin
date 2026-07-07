@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/impact-tree.schema.json",
+  "$id": "https://local/devview/impact-tree.schema.json",
   "title": "DevView Impact Tree",
   "type": "object",
   "required": ["version", "impacts"],

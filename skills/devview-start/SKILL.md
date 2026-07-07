@@ -32,13 +32,13 @@ For start specifically:
 Use this skill when the user asks to start DevView, for example:
 
 ```text
-@project-blueprint-engine start
+@devview start
 ```
 
 or:
 
 ```text
-@project-blueprint-engine start
+@devview start
 Add order cancellation to this existing project.
 ```
 

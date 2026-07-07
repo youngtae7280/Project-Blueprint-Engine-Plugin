@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/revision-manifest.schema.json",
+  "$id": "https://local/devview/revision-manifest.schema.json",
   "title": "Revision Manifest",
   "type": "object",
   "required": ["schemaVersion", "revisionId", "sourceFeedbackItems", "tasks"],

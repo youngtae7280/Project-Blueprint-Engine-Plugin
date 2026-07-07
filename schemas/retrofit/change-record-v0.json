@@ -1,5 +1,5 @@
 {
-  "$id": "https://project-blueprint-engine.local/schemas/retrofit/change-record-v0.json",
+  "$id": "https://devview.local/schemas/retrofit/change-record-v0.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "schemaVersion": 1,
   "artifactRole": "retrofit-change-record-schema-v0",

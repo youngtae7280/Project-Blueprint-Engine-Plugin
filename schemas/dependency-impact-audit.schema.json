@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/dependency-impact-audit.schema.json",
+  "$id": "https://local/devview/dependency-impact-audit.schema.json",
   "title": "Dependency Impact Audit",
   "type": "object",
   "required": [

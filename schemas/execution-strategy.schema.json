@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/execution-strategy.schema.json",
+  "$id": "https://local/devview/execution-strategy.schema.json",
   "title": "DevView Execution Strategy",
   "type": "object",
   "required": ["schemaVersion", "executionStrategy", "phases", "parallelGroups"],

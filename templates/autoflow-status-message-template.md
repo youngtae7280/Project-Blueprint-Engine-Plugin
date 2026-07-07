@@ -3,7 +3,7 @@
 Use this template when the user asks for status, for example:
 
 ```text
-@project-blueprint-engine status
+@devview status
 ?占쎌옱 ?占쏀깭占??占쎈젮二쇱꽭???占쎌쓬??占??占쎌빞 ?占쎈굹??
 ```
 

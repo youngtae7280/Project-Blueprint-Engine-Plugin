@@ -5,6 +5,7 @@ import path from 'node:path'
 
 const forbiddenPatterns = [
   { id: 'retired-product-name', pattern: literalPattern(retiredProductName()) },
+  { id: 'retired-product-slug', pattern: literalPattern(retiredProductSlug()) },
   { id: 'retired-product-acronym-upper', pattern: wordPattern(retiredProductAcronymUpper()) },
   { id: 'retired-product-acronym-lower', pattern: wordPattern(retiredProductAcronymLower()) },
   { id: 'retired-storage-root', pattern: literalPattern(retiredStorageRoot()) },
@@ -176,6 +177,12 @@ function retiredStorageRoot() {
 function retiredProductName() {
   return fromCodes([
     80, 114, 111, 106, 101, 99, 116, 32, 66, 108, 117, 101, 112, 114, 105, 110, 116, 32, 69, 110, 103, 105, 110, 101,
+  ])
+}
+
+function retiredProductSlug() {
+  return fromCodes([
+    112, 114, 111, 106, 101, 99, 116, 45, 98, 108, 117, 101, 112, 114, 105, 110, 116, 45, 101, 110, 103, 105, 110, 101,
   ])
 }
 

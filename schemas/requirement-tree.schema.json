@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/requirement-tree.schema.json",
+  "$id": "https://local/devview/requirement-tree.schema.json",
   "title": "Requirement Tree",
   "type": "object",
   "required": ["schemaVersion", "rootNodeId", "nodes"],

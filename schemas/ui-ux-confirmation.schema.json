@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/ui-ux-confirmation.schema.json",
+  "$id": "https://local/devview/ui-ux-confirmation.schema.json",
   "title": "UI/UX Confirmation",
   "type": "object",
   "required": ["schemaVersion", "items"],

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/final-coverage-check.schema.json",
+  "$id": "https://local/devview/final-coverage-check.schema.json",
   "title": "Final Coverage Check",
   "type": "object",
   "required": [

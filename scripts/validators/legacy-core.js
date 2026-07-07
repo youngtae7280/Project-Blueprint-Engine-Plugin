@@ -13,106 +13,52 @@ const errors = []
 const targetContext = {}
 const schemaIdByTargetLabel = new Map([
   ['.devview/blueprint/devview-state.json', 'https://local/devview/devview-state.schema.json'],
-  ['.devview/blueprint/requirement-tree.json', 'https://local/project-blueprint-engine/requirement-tree.schema.json'],
-  ['.devview/blueprint/requirement-tree.json', 'https://local/project-blueprint-engine/requirement-tree.schema.json'],
-  ['.devview/blueprint/ui-ux-preview.json', 'https://local/project-blueprint-engine/ui-ux-preview.schema.json'],
-  ['.devview/blueprint/ui-ux-preview.json', 'https://local/project-blueprint-engine/ui-ux-preview.schema.json'],
-  ['.devview/blueprint/work-design.json', 'https://local/project-blueprint-engine/work-design.schema.json'],
-  ['.devview/blueprint/work-design.json', 'https://local/project-blueprint-engine/work-design.schema.json'],
-  ['.devview/blueprint/work-graph.json', 'https://local/project-blueprint-engine/work-graph.schema.json'],
-  ['.devview/blueprint/work-graph.json', 'https://local/project-blueprint-engine/work-graph.schema.json'],
+  ['.devview/blueprint/requirement-tree.json', 'https://local/devview/requirement-tree.schema.json'],
+  ['.devview/blueprint/requirement-tree.json', 'https://local/devview/requirement-tree.schema.json'],
+  ['.devview/blueprint/ui-ux-preview.json', 'https://local/devview/ui-ux-preview.schema.json'],
+  ['.devview/blueprint/ui-ux-preview.json', 'https://local/devview/ui-ux-preview.schema.json'],
+  ['.devview/blueprint/work-design.json', 'https://local/devview/work-design.schema.json'],
+  ['.devview/blueprint/work-design.json', 'https://local/devview/work-design.schema.json'],
+  ['.devview/blueprint/work-graph.json', 'https://local/devview/work-graph.schema.json'],
+  ['.devview/blueprint/work-graph.json', 'https://local/devview/work-graph.schema.json'],
+  ['.devview/blueprint/verification-design.json', 'https://local/devview/verification-design.schema.json'],
+  ['.devview/blueprint/verification-design.json', 'https://local/devview/verification-design.schema.json'],
+  ['.devview/blueprint/dependency-impact-audit.json', 'https://local/devview/dependency-impact-audit.schema.json'],
+  ['.devview/blueprint/dependency-impact-audit.json', 'https://local/devview/dependency-impact-audit.schema.json'],
+  ['.devview/blueprint/execution-strategy.json', 'https://local/devview/execution-strategy.schema.json'],
+  ['.devview/blueprint/execution-strategy.json', 'https://local/devview/execution-strategy.schema.json'],
+  ['.devview/blueprint/traceability-matrix.json', 'https://local/devview/traceability-matrix.schema.json'],
+  ['.devview/blueprint/traceability-matrix.json', 'https://local/devview/traceability-matrix.schema.json'],
+  ['.devview/codex-execution-pack/execution-manifest.json', 'https://local/devview/execution-manifest.schema.json'],
+  ['.devview/codex-execution-pack/execution-manifest.json', 'https://local/devview/execution-manifest.schema.json'],
   [
-    '.devview/blueprint/verification-design.json',
-    'https://local/project-blueprint-engine/verification-design.schema.json',
-  ],
-  [
-    '.devview/blueprint/verification-design.json',
-    'https://local/project-blueprint-engine/verification-design.schema.json',
-  ],
-  [
-    '.devview/blueprint/dependency-impact-audit.json',
-    'https://local/project-blueprint-engine/dependency-impact-audit.schema.json',
-  ],
-  [
-    '.devview/blueprint/dependency-impact-audit.json',
-    'https://local/project-blueprint-engine/dependency-impact-audit.schema.json',
-  ],
-  [
-    '.devview/blueprint/execution-strategy.json',
-    'https://local/project-blueprint-engine/execution-strategy.schema.json',
-  ],
-  [
-    '.devview/blueprint/execution-strategy.json',
-    'https://local/project-blueprint-engine/execution-strategy.schema.json',
-  ],
-  [
-    '.devview/blueprint/traceability-matrix.json',
-    'https://local/project-blueprint-engine/traceability-matrix.schema.json',
-  ],
-  [
-    '.devview/blueprint/traceability-matrix.json',
-    'https://local/project-blueprint-engine/traceability-matrix.schema.json',
-  ],
-  [
-    '.devview/codex-execution-pack/execution-manifest.json',
-    'https://local/project-blueprint-engine/execution-manifest.schema.json',
-  ],
-  [
-    '.devview/codex-execution-pack/execution-manifest.json',
-    'https://local/project-blueprint-engine/execution-manifest.schema.json',
+    '.devview/codex-execution-pack/04-traceability-matrix.json',
+    'https://local/devview/traceability-matrix.schema.json',
   ],
   [
     '.devview/codex-execution-pack/04-traceability-matrix.json',
-    'https://local/project-blueprint-engine/traceability-matrix.schema.json',
+    'https://local/devview/traceability-matrix.schema.json',
   ],
+  ['.devview/codex-execution-pack/05-ui-ux-spec.json', 'https://local/devview/ui-ux-spec.schema.json'],
+  ['.devview/codex-execution-pack/05-ui-ux-spec.json', 'https://local/devview/ui-ux-spec.schema.json'],
+  ['.devview/review/feedback-items.json', 'https://local/devview/feedback-items.schema.json'],
+  ['.devview/review/feedback-items.json', 'https://local/devview/feedback-items.schema.json'],
+  ['.devview/control/legacy-control-inventory.json', 'https://local/devview/legacy-control-inventory.schema.json'],
+  ['.devview/control/legacy-control-inventory.json', 'https://local/devview/legacy-control-inventory.schema.json'],
+  ['.devview/control/surface-completion-ledger.json', 'https://local/devview/surface-completion-ledger.schema.json'],
+  ['.devview/control/surface-completion-ledger.json', 'https://local/devview/surface-completion-ledger.schema.json'],
+  ['.devview/control/hardware-readiness-ledger.json', 'https://local/devview/hardware-readiness-ledger.schema.json'],
+  ['.devview/control/hardware-readiness-ledger.json', 'https://local/devview/hardware-readiness-ledger.schema.json'],
   [
-    '.devview/codex-execution-pack/04-traceability-matrix.json',
-    'https://local/project-blueprint-engine/traceability-matrix.schema.json',
-  ],
-  ['.devview/codex-execution-pack/05-ui-ux-spec.json', 'https://local/project-blueprint-engine/ui-ux-spec.schema.json'],
-  ['.devview/codex-execution-pack/05-ui-ux-spec.json', 'https://local/project-blueprint-engine/ui-ux-spec.schema.json'],
-  ['.devview/review/feedback-items.json', 'https://local/project-blueprint-engine/feedback-items.schema.json'],
-  ['.devview/review/feedback-items.json', 'https://local/project-blueprint-engine/feedback-items.schema.json'],
-  [
-    '.devview/control/legacy-control-inventory.json',
-    'https://local/project-blueprint-engine/legacy-control-inventory.schema.json',
-  ],
-  [
-    '.devview/control/legacy-control-inventory.json',
-    'https://local/project-blueprint-engine/legacy-control-inventory.schema.json',
-  ],
-  [
-    '.devview/control/surface-completion-ledger.json',
-    'https://local/project-blueprint-engine/surface-completion-ledger.schema.json',
-  ],
-  [
-    '.devview/control/surface-completion-ledger.json',
-    'https://local/project-blueprint-engine/surface-completion-ledger.schema.json',
-  ],
-  [
-    '.devview/control/hardware-readiness-ledger.json',
-    'https://local/project-blueprint-engine/hardware-readiness-ledger.schema.json',
-  ],
-  [
-    '.devview/control/hardware-readiness-ledger.json',
-    'https://local/project-blueprint-engine/hardware-readiness-ledger.schema.json',
+    '.devview/control/visual-verification-profile.json',
+    'https://local/devview/visual-verification-profile.schema.json',
   ],
   [
     '.devview/control/visual-verification-profile.json',
-    'https://local/project-blueprint-engine/visual-verification-profile.schema.json',
+    'https://local/devview/visual-verification-profile.schema.json',
   ],
-  [
-    '.devview/control/visual-verification-profile.json',
-    'https://local/project-blueprint-engine/visual-verification-profile.schema.json',
-  ],
-  [
-    '.devview/control/verification-miss-log.json',
-    'https://local/project-blueprint-engine/verification-miss-log.schema.json',
-  ],
-  [
-    '.devview/control/verification-miss-log.json',
-    'https://local/project-blueprint-engine/verification-miss-log.schema.json',
-  ],
+  ['.devview/control/verification-miss-log.json', 'https://local/devview/verification-miss-log.schema.json'],
+  ['.devview/control/verification-miss-log.json', 'https://local/devview/verification-miss-log.schema.json'],
 ])
 const schemaFiles = new Map()
 let ajv = null
@@ -653,7 +599,7 @@ function validateTargetAgainstSchema(value, label) {
 
 function getSchemaIdForTargetLabel(label) {
   if (label.startsWith('.devview/revisions/') && label.endsWith('/revision-manifest.json')) {
-    return 'https://local/project-blueprint-engine/revision-manifest.schema.json'
+    return 'https://local/devview/revision-manifest.schema.json'
   }
   return schemaIdByTargetLabel.get(label)
 }

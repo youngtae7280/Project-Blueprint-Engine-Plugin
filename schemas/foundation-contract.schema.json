@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://local/project-blueprint-engine/foundation-contract.schema.json",
+  "$id": "https://local/devview/foundation-contract.schema.json",
   "title": "DevView Foundation Contract",
   "type": "object",
   "required": ["schemaVersion", "mayCreate", "mustNot"],
