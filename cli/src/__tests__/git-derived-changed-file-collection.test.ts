@@ -330,8 +330,8 @@ describe('git-derived changed-file collection', () => {
 function createCommittedWorkspace(filePath: string, contents: string): string {
   const workspace = createWorkspace()
   execFileSync('git', ['init'], { cwd: workspace, stdio: 'ignore' })
-  execFileSync('git', ['config', 'user.email', 'pbe@example.test'], { cwd: workspace, stdio: 'ignore' })
-  execFileSync('git', ['config', 'user.name', 'PBE Test'], { cwd: workspace, stdio: 'ignore' })
+  execFileSync('git', ['config', 'user.email', 'devview@example.test'], { cwd: workspace, stdio: 'ignore' })
+  execFileSync('git', ['config', 'user.name', 'DevView Test'], { cwd: workspace, stdio: 'ignore' })
   writeText(join(workspace, filePath), contents)
   execFileSync('git', ['add', '.'], { cwd: workspace, stdio: 'ignore' })
   execFileSync('git', ['commit', '-m', 'baseline'], { cwd: workspace, stdio: 'ignore' })
