@@ -1,5 +1,11 @@
 import path from 'node:path'
 import { readJsonSafe, relativePath, writeJsonAtomic, writeTextAtomic } from './fs.js'
+import {
+  hasCodexControlDirectory,
+  hasDevViewControlDirectory,
+  hasHiddenControlDirectorySegment,
+  isCodexHookOrConfigPath,
+} from './path-safety.js'
 import type { IssueSeverity } from './types.js'
 
 const RENDERER_NAME = 'DevViewGraphHtmlRenderer'
@@ -2412,6 +2418,11 @@ async function assertDevViewGraphOutputAuthority(root: string, input: GraphInput
         `DevViewGraph ${target.kind} path is unsafe: ${relativePath(root, target.resolvedPath)} would overwrite ${protectedReason}.`,
       )
     }
+    if (isProtectedControlPath(root, target.resolvedPath)) {
+      throw new Error(
+        `DevViewGraph ${target.kind} path is unsafe: ${relativePath(root, target.resolvedPath)} is inside a protected source/control path.`,
+      )
+    }
     const existingAuthority = await classifyExistingSourceAuthority(target.resolvedPath)
     if (existingAuthority) {
       throw new Error(
@@ -2477,8 +2488,20 @@ async function classifyExistingSourceAuthority(filePath: string): Promise<string
   if (artifactRole === 'devview-graph-html-data-preview') {
     return null
   }
+  if (asRecord(record.sourceRecords)) {
+    return 'source-authority-shaped sourceRecords'
+  }
   if (artifactRole.includes('graph-source')) {
     return `graph-source artifactRole "${artifactRole}"`
+  }
+  if (artifactRole.includes('read-model')) {
+    return `read-model artifactRole "${artifactRole}"`
+  }
+  if (artifactRole.includes('evidence')) {
+    return `evidence artifactRole "${artifactRole}"`
+  }
+  if (artifactRole.includes('source-authority')) {
+    return `source-authority artifactRole "${artifactRole}"`
   }
   if (artifactRole.includes('project-memory')) {
     return `project-memory artifactRole "${artifactRole}"`
@@ -2489,6 +2512,9 @@ async function classifyExistingSourceAuthority(filePath: string): Promise<string
   if (artifactRole.includes('boundary') || artifactRole.includes('readiness') || artifactRole.includes('proposal')) {
     return `generated authority artifactRole "${artifactRole}"`
   }
+  if (artifactRole.startsWith('devview-')) {
+    return `generated DevView artifactRole "${artifactRole}"`
+  }
   if (Array.isArray(record.nodes) && Array.isArray(record.edges)) {
     return 'graph-shaped source artifact'
   }
@@ -2496,6 +2522,17 @@ async function classifyExistingSourceAuthority(filePath: string): Promise<string
     return 'retrofit graph-source-shaped artifact'
   }
   return null
+}
+
+function isProtectedControlPath(root: string, filePath: string): boolean {
+  const relative = relativePath(root, filePath)
+  return (
+    hasDevViewControlDirectory(relative) ||
+    hasCodexControlDirectory(relative) ||
+    hasHiddenControlDirectorySegment(relative) ||
+    isCodexHookOrConfigPath(relative) ||
+    /(^|\/)(graph-source|source-authority|project-memory)(\.|-)/i.test(relative)
+  )
 }
 
 function collectSelectedNodeIds(instructionPack: JsonRecord, recordId: string): Set<string> {

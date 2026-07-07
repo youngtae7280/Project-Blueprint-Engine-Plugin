@@ -242,6 +242,109 @@ describe('DevViewGraph HTML inspector CLI', () => {
     expect(existsSync(join(workspace, '.tmp/same-path'))).toBe(false)
   })
 
+  it('blocks outputs inside DevView control storage with zero writes', async () => {
+    const workspace = createWorkspace()
+    writeCardPrinterConfigFixture(workspace)
+
+    const result = await runDevViewCli(
+      [
+        'graph',
+        'read-model',
+        'render-devview-graph',
+        '--graph-source',
+        'examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json',
+        '--record',
+        'change.laminator-tag-layout',
+        '--instruction-pack',
+        'outputs/retrofit/instruction-packs/laminator-tag-layout.instruction-pack.json',
+        '--output',
+        '.devview/generated/devviewgraph.html',
+        '--data-output',
+        '.tmp/should-not-exist.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.ok).toBe(false)
+    expect(payload.issues[0].message).toContain('protected source/control path')
+    expect(existsSync(join(workspace, '.devview/generated/devviewgraph.html'))).toBe(false)
+    expect(existsSync(join(workspace, '.tmp/should-not-exist.json'))).toBe(false)
+  })
+
+  it('blocks outputs inside Codex control storage with zero writes', async () => {
+    const workspace = createWorkspace()
+    writeCardPrinterConfigFixture(workspace)
+
+    const result = await runDevViewCli(
+      [
+        'graph',
+        'read-model',
+        'render-devview-graph',
+        '--graph-source',
+        'examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json',
+        '--record',
+        'change.laminator-tag-layout',
+        '--instruction-pack',
+        'outputs/retrofit/instruction-packs/laminator-tag-layout.instruction-pack.json',
+        '--output',
+        '.tmp/should-not-exist.html',
+        '--data-output',
+        '.codex/hooks/devviewgraph.data.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.ok).toBe(false)
+    expect(payload.issues[0].message).toContain('protected source/control path')
+    expect(existsSync(join(workspace, '.tmp/should-not-exist.html'))).toBe(false)
+    expect(existsSync(join(workspace, '.codex/hooks/devviewgraph.data.json'))).toBe(false)
+  })
+
+  it('blocks existing generated authority JSON outputs before writing partial HTML', async () => {
+    const workspace = createWorkspace()
+    writeCardPrinterConfigFixture(workspace)
+    writeJson(join(workspace, 'generated/read-model.json'), {
+      artifactRole: 'devview-read-model-projection',
+      status: 'devview-read-model-projected',
+      nodes: [],
+      edges: [],
+    })
+    const before = readFileSync(join(workspace, 'generated/read-model.json'), 'utf8')
+
+    const result = await runDevViewCli(
+      [
+        'graph',
+        'read-model',
+        'render-devview-graph',
+        '--graph-source',
+        'examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json',
+        '--record',
+        'change.laminator-tag-layout',
+        '--instruction-pack',
+        'outputs/retrofit/instruction-packs/laminator-tag-layout.instruction-pack.json',
+        '--output',
+        '.tmp/should-not-exist.html',
+        '--data-output',
+        'generated/read-model.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stderr)
+
+    expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(payload.ok).toBe(false)
+    expect(payload.issues[0].message).toContain('read-model artifactRole')
+    expect(readFileSync(join(workspace, 'generated/read-model.json'), 'utf8')).toBe(before)
+    expect(existsSync(join(workspace, '.tmp/should-not-exist.html'))).toBe(false)
+  })
+
   it('renders WindowsUtility Project Memory as read-only inspector context', async () => {
     const workspace = createWorkspace()
     copyWindowsUtilityDemoFixture(workspace)
