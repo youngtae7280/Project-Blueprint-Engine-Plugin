@@ -372,8 +372,10 @@ Options:
                        Graph-aware Request IR validation file for graph read-model plan-traversal.
   --traversal-plan <file>
                        Graph Traversal Plan file for graph read-model generate-view-tree or select-slice.
-  --selected-slice <file>
+  --view-tree <file>
                        View Tree preview file for graph read-model generate-contract-input.
+  --selected-slice <file>
+                       Compatibility alias for --view-tree.
   --contract-input <file>
                        Contract Compiler Input file for graph read-model generate-instruction-pack.
   --scaffold <file>    Hook script scaffold preview for graph read-model generate-hook-script-templates.

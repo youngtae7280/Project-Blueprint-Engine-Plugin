@@ -121,6 +121,7 @@ export interface CliOptions {
   schemaValidation?: string
   graphValidation?: string
   traversalPlan?: string
+  viewTree?: string
   selectedSlice?: string
   contractInput?: string
   approvedState?: string

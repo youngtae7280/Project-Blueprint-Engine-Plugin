@@ -81,7 +81,7 @@
       "remaining": "No LLM provider execution or automatic Request IR generation is implemented; external candidate import remains candidate-only."
     },
     {
-      "phase": "Phase 8 Graph Traversal Plan / Selected Graph Slice",
+      "phase": "Phase 8 Graph Traversal Plan / View Tree",
       "status": "implemented",
       "evidence": [
         "cli/src/core/graph-traversal-plan.ts",
@@ -164,6 +164,7 @@
     "graph read-model validate-request-ir",
     "graph read-model validate-request-ir-graph",
     "graph read-model plan-traversal",
+    "graph read-model generate-view-tree",
     "graph read-model select-slice",
     "graph read-model generate-contract-input",
     "graph read-model generate-instruction-pack",

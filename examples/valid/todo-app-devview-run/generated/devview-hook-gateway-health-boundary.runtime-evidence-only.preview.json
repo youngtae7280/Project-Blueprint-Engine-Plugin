@@ -158,15 +158,15 @@
       "path": "examples/valid/todo-app-devview-run/generated/graph-traversal-plan.add-todo-runtime-evidence-only.preview.json"
     },
     {
-      "name": "Selected Graph Slice",
-      "status": "implemented-deterministic-slice",
-      "command": "graph read-model select-slice --traversal-plan <planPath> --json",
+      "name": "View Tree preview",
+      "status": "implemented-deterministic-view-tree",
+      "command": "graph read-model generate-view-tree --traversal-plan <planPath> --json",
       "path": "examples/valid/todo-app-devview-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json"
     },
     {
       "name": "Contract Compiler Input",
       "status": "implemented-frontend-input",
-      "command": "graph read-model generate-contract-input --selected-slice <selectedSlicePath> --json",
+      "command": "graph read-model generate-contract-input --view-tree <viewTreePath> --json",
       "path": "examples/valid/todo-app-devview-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json"
     },
     {

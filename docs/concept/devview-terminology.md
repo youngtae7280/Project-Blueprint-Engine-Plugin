@@ -29,9 +29,10 @@ View Tree can narrow context, but it does not replace the Maintainability Graph 
 it.
 
 The canonical CLI transition surface is `graph read-model generate-view-tree`. The transitional compatibility command
-`graph read-model select-slice` writes the same preview. Its stored compatibility artifact role remains
-`selected-graph-slice`, while generated artifacts carry `viewTreeArtifactRole: devview-view-tree-preview` and should be
-treated as View Tree previews.
+`graph read-model select-slice` writes the same preview. The contract compiler step consumes the preview with canonical
+`--view-tree`; compatibility `--selected-slice` remains accepted while older artifact roles are retired in small
+slices. Its stored compatibility artifact role remains `selected-graph-slice`, while generated artifacts carry
+`viewTreeArtifactRole: devview-view-tree-preview` and should be treated as View Tree previews.
 
 ## Context Pack
 

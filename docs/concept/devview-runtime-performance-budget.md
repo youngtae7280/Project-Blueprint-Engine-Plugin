@@ -132,8 +132,8 @@ Current lanes:
   `generate-ai-request-analyzer-pack`. It is not a Request IR Candidate and not automatically part of every request's
   critical path unless the pack is missing or stale.
 - `core-critical-lane`: the deterministic request-to-instruction-pack frontend path after a Request IR Candidate exists:
-  `validate-request-ir`, `validate-request-ir-graph`, `plan-traversal`, `select-slice`, `generate-contract-input`, and
-  `generate-instruction-pack`.
+  `validate-request-ir`, `validate-request-ir-graph`, `plan-traversal`, `generate-view-tree`,
+  `generate-contract-input`, and `generate-instruction-pack`.
 - `activation-readiness-lane`: report-only hook gateway readiness checks and advisory context preparation, currently
   `report-hook-gateway-health`, `prepare-user-prompt-context`, `generate-hook-script-scaffold`, and
   `generate-hook-script-templates`.
@@ -528,26 +528,28 @@ examples/valid/todo-app-devview-run/generated/graph-traversal-plan.add-todo-runt
 It generates a plan only. It does not produce final selected nodes/edges, generate contract input, or generate
 instruction packs.
 
-The deterministic selected graph slice generator is also part of the measured advisory runtime path:
+The deterministic View Tree preview generator is also part of the measured advisory runtime path:
 
 ```text
-graph read-model select-slice --traversal-plan <planPath> --json
+graph read-model generate-view-tree --traversal-plan <planPath> --json
 ```
 
-The tracked Todo App generated selected slice is:
+The tracked Todo App generated View Tree preview is:
 
 ```text
 examples/valid/todo-app-devview-run/generated/selected-graph-slice.add-todo-runtime-evidence-only.preview.json
 ```
 
-It selects a bounded graph-source/read-model slice from a ready traversal plan and records selection trace. It does not
-generate contract compiler input, generate instruction packs, mutate graph-source, apply graph deltas, approve work,
-satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.
+It derives a bounded task View Tree from a ready traversal plan and records selection trace. The compatibility
+`select-slice` command currently writes the same preview object, but canonical examples should use
+`generate-view-tree`. Neither command generates contract compiler input, generates instruction packs, mutates
+graph-source, applies graph deltas, approves work, satisfies runtime Evidence, proves equivalence, enforces scope, or
+configures CI.
 
-The deterministic selected-slice-to-contract-input generator is now part of the measured advisory runtime path:
+The deterministic View-Tree-to-Contract-Compiler-Input generator is now part of the measured advisory runtime path:
 
 ```text
-graph read-model generate-contract-input --selected-slice <selectedSlicePath> --json
+graph read-model generate-contract-input --view-tree <viewTreePath> --json
 ```
 
 The tracked Todo App generated Contract Compiler Input is:
@@ -556,8 +558,9 @@ The tracked Todo App generated Contract Compiler Input is:
 examples/valid/todo-app-devview-run/generated/contract-compiler-input.add-todo-runtime-evidence-only.preview.json
 ```
 
-It maps the selected graph slice into existing Contract Compiler Input groups and trace fields. For the
-runtime-Evidence-only calibration, broad selected-slice context can remain in `targetScopeCandidates`, but `allowedScope`
+It maps the View Tree preview into existing Contract Compiler Input groups and trace fields. Compatibility
+`--selected-slice` remains accepted for older scripts. For the runtime-Evidence-only calibration, broad View Tree
+context can remain in `targetScopeCandidates`, but `allowedScope`
 is narrowed to check/evidence/report-oriented artifacts and does not authorize change-tree or work-tree edits. The
 frontend artifact reports field-group compatibility only; backend dry-run validation is not run because this is not the
 legacy dry-run artifact role. The command does not generate instruction packs, trigger Codex execution, mutate

@@ -36,8 +36,8 @@
         "graph read-model validate-request-ir --candidate <candidatePath> --json",
         "graph read-model validate-request-ir-graph --candidate <candidatePath> --schema-validation <schemaValidationPath> --json",
         "graph read-model plan-traversal --graph-validation <graphAwareValidationPath> --json",
-        "graph read-model select-slice --traversal-plan <planPath> --json",
-        "graph read-model generate-contract-input --selected-slice <selectedSlicePath> --json",
+        "graph read-model generate-view-tree --traversal-plan <planPath> --json",
+        "graph read-model generate-contract-input --view-tree <viewTreePath> --json",
         "graph read-model generate-instruction-pack --contract-input <contractInputPath> --json"
       ],
       "classification": "core deterministic frontend path after a Request IR Candidate exists"

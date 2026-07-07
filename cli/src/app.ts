@@ -163,6 +163,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     schemaValidation: undefined as string | undefined,
     graphValidation: undefined as string | undefined,
     traversalPlan: undefined as string | undefined,
+    viewTree: undefined as string | undefined,
     selectedSlice: undefined as string | undefined,
     contractInput: undefined as string | undefined,
     approvedState: undefined as string | undefined,
@@ -666,6 +667,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--traversal-plan requires a file path.' }
       }
       options.traversalPlan = value
+      index += 1
+    } else if (arg === '--view-tree') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--view-tree requires a file path.' }
+      }
+      options.viewTree = value
       index += 1
     } else if (arg === '--selected-slice') {
       const value = argv[index + 1]

@@ -2485,12 +2485,24 @@ async function graphReadModelViewTreeCommand(
 }
 
 export async function graphReadModelGenerateContractInputCommand(context: CommandContext): Promise<CommandResult> {
-  if (!context.options.selectedSlice) {
-    return invalidCommand('graph read-model generate-contract-input requires --selected-slice <selectedSlicePath>.')
+  const viewTreePath = context.options.viewTree ?? context.options.selectedSlice
+  if (!viewTreePath) {
+    return invalidCommand(
+      'graph read-model generate-contract-input requires --view-tree <viewTreePath> (or compatibility --selected-slice <selectedSlicePath>).',
+    )
+  }
+  if (
+    context.options.viewTree &&
+    context.options.selectedSlice &&
+    context.options.viewTree !== context.options.selectedSlice
+  ) {
+    return invalidCommand(
+      'graph read-model generate-contract-input received different --view-tree and --selected-slice paths.',
+    )
   }
 
   try {
-    const input = await generateContractCompilerInputFile(context.options.root, context.options.selectedSlice, {
+    const input = await generateContractCompilerInputFile(context.options.root, viewTreePath, {
       output: context.options.output,
     })
     const blocked = input.result.status !== 'contract-compiler-input-generated' || !input.result.contractInputGenerated
@@ -2519,9 +2531,10 @@ export async function graphReadModelGenerateContractInputCommand(context: Comman
         : [],
       data: {
         ...input.result,
+        sourceViewTreeInput: viewTreePath,
         ...(input.outputPath ? { outputPath: input.outputPath } : {}),
         next: blocked
-          ? 'Fix selected slice prerequisites. No instruction pack, Codex execution, graph apply, approval, runtime Evidence satisfaction, or enforcement was generated.'
+          ? 'Fix View Tree prerequisites. No instruction pack, Codex execution, graph apply, approval, runtime Evidence satisfaction, or enforcement was generated.'
           : 'A later frontend pass may consume this Contract Compiler Input. This command did not generate instruction packs, trigger Codex execution, mutate graph-source, apply graph deltas, approve work, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI.',
       },
     }
@@ -2539,7 +2552,7 @@ export async function graphReadModelGenerateContractInputCommand(context: Comman
           severity: 'error',
           message,
           suggestedFix:
-            'Provide a readable generated Selected Graph Slice artifact. Contract input generation does not create instruction packs or execute Codex.',
+            'Provide a readable generated View Tree preview artifact. Contract input generation does not create instruction packs or execute Codex.',
         }),
       ],
     }
