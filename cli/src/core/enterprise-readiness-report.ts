@@ -34,6 +34,8 @@ const SIGNING_READINESS_ROLE = 'devview-signing-readiness-report'
 const SIGNING_READINESS_STATUS = 'devview-signing-readiness-reported'
 const RBAC_POLICY_VALIDATION_ROLE = 'devview-rbac-policy-validation-report'
 const RBAC_POLICY_VALIDATION_STATUS = 'devview-rbac-policy-validation-passed'
+const RELEASE_PROVENANCE_READINESS_ROLE = 'devview-release-provenance-readiness-report'
+const RELEASE_PROVENANCE_READINESS_STATUS = 'devview-release-provenance-readiness-reported'
 
 const unsafeAuthorityFields = [
   'enterpriseGateActivated',
@@ -89,6 +91,26 @@ const signingReadinessAuthorityFields = [
   'rbacPermissionVerified',
 ]
 
+const releaseProvenanceAuthorityFields = [
+  'sbomGenerated',
+  'sbomPresent',
+  'sbomAttested',
+  'sbomCreated',
+  'sbomFileWritten',
+  'packageSigningPresent',
+  'packageSigned',
+  'packageSignaturePresent',
+  'packageSignatureVerified',
+  'packagePublished',
+  'publishingPerformed',
+  'provenanceAttestationPresent',
+  'provenanceAttested',
+  'releaseProvenanceAttested',
+  'npmProvenanceEnabled',
+  'slsaProvenanceGenerated',
+  ...signingReadinessAuthorityFields,
+]
+
 export interface EnterpriseReadinessReportOptions {
   benchmarkGovernanceVerification?: string
   releaseSurfaceValidation?: string
@@ -97,6 +119,7 @@ export interface EnterpriseReadinessReportOptions {
   recordEnvelopeVerification?: string
   signingReadiness?: string
   rbacPolicyValidation?: string
+  releaseProvenanceReadiness?: string
   output?: string
   markdown?: string
 }
@@ -236,11 +259,54 @@ export interface EnterpriseReadinessReport {
     cryptographicSignaturePresent: boolean | null
     cryptographicSignatureVerified: boolean | null
   }>
+  sourceReleaseProvenanceReadinessReports: Array<{
+    supplied: true
+    path: string
+    artifactRole: string | null
+    status: string | null
+    releaseProvenanceReadinessStatus: string | null
+    packageName: string | null
+    packageVersion: string | null
+    packageFilesAllowlistPresent: boolean | null
+    packageFilesAllowlistCount: number | null
+    releaseSurfaceScriptPresent: boolean | null
+    releaseSurfaceCheckerPresent: boolean | null
+    sbomGenerated: boolean | null
+    sbomPresent: boolean | null
+    sbomAttested: boolean | null
+    packageSigningPresent: boolean | null
+    packageSignatureVerified: boolean | null
+    provenanceAttestationPresent: boolean | null
+    provenanceAttested: boolean | null
+    findingCount: number | null
+    downstreamActionCount: number | null
+  }>
   releaseSurfaceReadiness: {
     status: 'satisfied' | 'failed' | 'not-supplied'
     packageAllowlistPresent: boolean
     releaseSurfaceCheckerAvailable: true
     forbiddenFindingCount: number | null
+    gaps: string[]
+  }
+  releaseProvenanceReadiness: {
+    status: 'gap' | 'readiness-recorded'
+    sourceCount: number
+    sourceStatuses: string[]
+    packageName: string | null
+    packageVersion: string | null
+    packageFilesAllowlistPresentCount: number
+    packageFilesAllowlistCount: number
+    releaseSurfaceScriptPresentCount: number
+    releaseSurfaceCheckerPresentCount: number
+    sbomGeneratedCount: number
+    sbomPresentCount: number
+    sbomAttestedCount: number
+    packageSigningPresentCount: number
+    packageSignatureVerifiedCount: number
+    provenanceAttestationPresentCount: number
+    provenanceAttestedCount: number
+    findingCount: number
+    downstreamActionCount: number
     gaps: string[]
   }
   extensionExecutionReadiness: {
@@ -390,6 +456,7 @@ interface LoadedSource {
     | 'record-envelope-verification'
     | 'signing-readiness-report'
     | 'rbac-policy-validation-report'
+    | 'release-provenance-readiness-report'
   record: JsonRecord | null
   readError: string | null
 }
@@ -412,6 +479,7 @@ export async function reportEnterpriseReadiness(
   const recordEnvelopeVerificationPaths = parseList(options.recordEnvelopeVerification)
   const signingReadinessPaths = parseList(options.signingReadiness)
   const rbacPolicyValidationPaths = parseList(options.rbacPolicyValidation)
+  const releaseProvenanceReadinessPaths = parseList(options.releaseProvenanceReadiness)
   const sourcePaths = [
     options.benchmarkGovernanceVerification,
     options.releaseSurfaceValidation,
@@ -420,6 +488,7 @@ export async function reportEnterpriseReadiness(
     ...recordEnvelopeVerificationPaths,
     ...signingReadinessPaths,
     ...rbacPolicyValidationPaths,
+    ...releaseProvenanceReadinessPaths,
   ].filter((entry): entry is string => Boolean(entry))
   await assertOutputAuthority(
     root,
@@ -448,6 +517,9 @@ export async function reportEnterpriseReadiness(
   const rbacPolicyValidationReports = await Promise.all(
     rbacPolicyValidationPaths.map((entry) => loadSource(root, entry, 'rbac-policy-validation-report')),
   )
+  const releaseProvenanceReadinessReports = await Promise.all(
+    releaseProvenanceReadinessPaths.map((entry) => loadSource(root, entry, 'release-provenance-readiness-report')),
+  )
   const blockingFindings = validateSources(
     benchmarkGovernance,
     releaseSurface,
@@ -456,6 +528,7 @@ export async function reportEnterpriseReadiness(
     recordEnvelopeVerifications,
     signingReadinessReports,
     rbacPolicyValidationReports,
+    releaseProvenanceReadinessReports,
   )
   if (blockingFindings.length > 0) {
     throw new EnterpriseReadinessReportValidationError(
@@ -467,6 +540,7 @@ export async function reportEnterpriseReadiness(
         recordEnvelopeVerifications,
         signingReadinessReports,
         rbacPolicyValidationReports,
+        releaseProvenanceReadinessReports,
         blockingFindings,
         true,
       ),
@@ -481,6 +555,7 @@ export async function reportEnterpriseReadiness(
     recordEnvelopeVerifications,
     signingReadinessReports,
     rbacPolicyValidationReports,
+    releaseProvenanceReadinessReports,
     buildFindings(
       benchmarkGovernance,
       releaseSurface,
@@ -489,6 +564,7 @@ export async function reportEnterpriseReadiness(
       recordEnvelopeVerifications,
       signingReadinessReports,
       rbacPolicyValidationReports,
+      releaseProvenanceReadinessReports,
     ),
   )
   const outputPath = resolveRepoPath(root, options.output ?? '')
@@ -511,6 +587,7 @@ function buildReport(
   recordEnvelopeVerifications: LoadedSource[],
   signingReadinessReports: LoadedSource[],
   rbacPolicyValidationReports: LoadedSource[],
+  releaseProvenanceReadinessReports: LoadedSource[],
   findings: EnterpriseReadinessFinding[],
   blocked = false,
 ): EnterpriseReadinessReport {
@@ -523,6 +600,9 @@ function buildReport(
     .filter(isJsonRecord)
   const signingReadinessRecords = signingReadinessReports.map((entry) => entry.record).filter(isJsonRecord)
   const rbacPolicyValidationRecords = rbacPolicyValidationReports.map((entry) => entry.record).filter(isJsonRecord)
+  const releaseProvenanceReadinessRecords = releaseProvenanceReadinessReports
+    .map((entry) => entry.record)
+    .filter(isJsonRecord)
   const releaseStatus = releaseReadinessStatus(releaseRecord)
   const benchmarkStatus = benchmarkReadinessStatus(benchmarkRecord)
   const benchmarkDigestSummary = asRecord(benchmarkRecord?.sourceDigestVerificationSummary)
@@ -573,12 +653,70 @@ function buildReport(
     ),
     sourceSigningReadinessReports: signingReadinessReports.map((source) => signingReadinessSummary(source)),
     sourceRbacPolicyValidationReports: rbacPolicyValidationReports.map((source) => rbacPolicyValidationSummary(source)),
+    sourceReleaseProvenanceReadinessReports: releaseProvenanceReadinessReports.map((source) =>
+      releaseProvenanceReadinessSummary(source),
+    ),
     releaseSurfaceReadiness: {
       status: releaseStatus,
       packageAllowlistPresent: true,
       releaseSurfaceCheckerAvailable: true,
       forbiddenFindingCount: numberValue(releaseRecord?.forbiddenFindingCount),
       gaps: ['Package signing, SBOM, and package provenance attestations are not recorded in this v1 report.'],
+    },
+    releaseProvenanceReadiness: {
+      status: releaseProvenanceReadinessRecords.length > 0 ? 'readiness-recorded' : 'gap',
+      sourceCount: releaseProvenanceReadinessRecords.length,
+      sourceStatuses: uniqueStrings(
+        releaseProvenanceReadinessRecords.map((record) => stringValue(record.releaseProvenanceReadinessStatus)),
+      ),
+      packageName: stringValue(asRecord(releaseProvenanceReadinessRecords[0]?.packageMetadataSummary)?.packageName),
+      packageVersion: stringValue(
+        asRecord(releaseProvenanceReadinessRecords[0]?.packageMetadataSummary)?.packageVersion,
+      ),
+      packageFilesAllowlistPresentCount: releaseProvenanceReadinessRecords.filter((record) =>
+        booleanValue(asRecord(record.packageMetadataSummary)?.packageFilesAllowlistPresent),
+      ).length,
+      packageFilesAllowlistCount: releaseProvenanceReadinessRecords.reduce(
+        (total, record) =>
+          total + (numberValue(asRecord(record.packageMetadataSummary)?.packageFilesAllowlistCount) ?? 0),
+        0,
+      ),
+      releaseSurfaceScriptPresentCount: releaseProvenanceReadinessRecords.filter((record) =>
+        booleanValue(asRecord(record.packageMetadataSummary)?.releaseSurfaceScriptPresent),
+      ).length,
+      releaseSurfaceCheckerPresentCount: releaseProvenanceReadinessRecords.filter((record) =>
+        booleanValue(asRecord(record.packageMetadataSummary)?.releaseSurfaceCheckerPresent),
+      ).length,
+      sbomGeneratedCount: releaseProvenanceReadinessRecords.filter((record) =>
+        booleanValue(asRecord(record.sbomReadiness)?.sbomGenerated),
+      ).length,
+      sbomPresentCount: releaseProvenanceReadinessRecords.filter((record) =>
+        booleanValue(asRecord(record.sbomReadiness)?.sbomPresent),
+      ).length,
+      sbomAttestedCount: releaseProvenanceReadinessRecords.filter((record) =>
+        booleanValue(asRecord(record.sbomReadiness)?.sbomAttested),
+      ).length,
+      packageSigningPresentCount: releaseProvenanceReadinessRecords.filter((record) =>
+        booleanValue(asRecord(record.packageSigningReadiness)?.packageSigningPresent),
+      ).length,
+      packageSignatureVerifiedCount: releaseProvenanceReadinessRecords.filter((record) =>
+        booleanValue(asRecord(record.packageSigningReadiness)?.packageSignatureVerified),
+      ).length,
+      provenanceAttestationPresentCount: releaseProvenanceReadinessRecords.filter((record) =>
+        booleanValue(asRecord(record.provenanceAttestationReadiness)?.provenanceAttestationPresent),
+      ).length,
+      provenanceAttestedCount: releaseProvenanceReadinessRecords.filter((record) =>
+        booleanValue(asRecord(record.provenanceAttestationReadiness)?.provenanceAttested),
+      ).length,
+      findingCount: releaseProvenanceReadinessRecords.reduce(
+        (total, record) => total + (arrayLength(record.releaseProvenanceFindings) ?? 0),
+        0,
+      ),
+      downstreamActionCount: releaseProvenanceReadinessRecords.reduce(
+        (total, record) => total + (arrayLength(record.downstreamActionPlan) ?? 0),
+        0,
+      ),
+      gaps: releaseProvenanceReadinessGaps(releaseProvenanceReadinessRecords),
     },
     extensionExecutionReadiness: {
       status: 'partial',
@@ -793,6 +931,7 @@ function validateSources(
   recordEnvelopeVerifications: LoadedSource[],
   signingReadinessReports: LoadedSource[],
   rbacPolicyValidationReports: LoadedSource[],
+  releaseProvenanceReadinessReports: LoadedSource[],
 ): EnterpriseReadinessFinding[] {
   const findings: EnterpriseReadinessFinding[] = []
   for (const source of [
@@ -803,6 +942,7 @@ function validateSources(
     ...recordEnvelopeVerifications,
     ...signingReadinessReports,
     ...rbacPolicyValidationReports,
+    ...releaseProvenanceReadinessReports,
   ].filter((entry): entry is LoadedSource => Boolean(entry))) {
     if (source.readError) {
       findings.push(blockingFinding('ENTERPRISE_READINESS_SOURCE_READ_FAILED', source.readError, source.relativePath))
@@ -843,8 +983,10 @@ function validateSources(
       validateRecordEnvelopeVerificationSource(source, record, findings)
     } else if (source.sourceKind === 'signing-readiness-report') {
       validateSigningReadinessSource(source, record, findings)
-    } else {
+    } else if (source.sourceKind === 'rbac-policy-validation-report') {
       validateRbacPolicyValidationSource(source, record, findings)
+    } else {
+      validateReleaseProvenanceReadinessSource(source, record, findings)
     }
     for (const hit of collectUnsafeAuthorityHits(record)) {
       findings.push({
@@ -867,6 +1009,7 @@ function buildFindings(
   recordEnvelopeVerifications: LoadedSource[],
   signingReadinessReports: LoadedSource[],
   rbacPolicyValidationReports: LoadedSource[],
+  releaseProvenanceReadinessReports: LoadedSource[],
 ): EnterpriseReadinessFinding[] {
   const findings: EnterpriseReadinessFinding[] = []
   const benchmarkRecord = benchmarkGovernance?.record ?? null
@@ -878,6 +1021,9 @@ function buildFindings(
     .filter(isJsonRecord)
   const signingReadinessRecords = signingReadinessReports.map((entry) => entry.record).filter(isJsonRecord)
   const rbacPolicyValidationRecords = rbacPolicyValidationReports.map((entry) => entry.record).filter(isJsonRecord)
+  const releaseProvenanceReadinessRecords = releaseProvenanceReadinessReports
+    .map((entry) => entry.record)
+    .filter(isJsonRecord)
 
   if (!releaseSurface) {
     findings.push({
@@ -1017,7 +1163,30 @@ function buildFindings(
     })
   }
 
+  if (releaseProvenanceReadinessRecords.length === 0) {
+    findings.push({
+      severity: 'blocker',
+      code: 'ENTERPRISE_RELEASE_PROVENANCE_READINESS_NOT_SUPPLIED',
+      message:
+        'Release provenance readiness report was not supplied, so SBOM/package signing/provenance readiness is not source-governed.',
+    })
+  } else {
+    findings.push({
+      severity: 'satisfied',
+      code: 'ENTERPRISE_RELEASE_PROVENANCE_READINESS_RECORDED',
+      message:
+        'Release provenance readiness source is recorded as report-only readiness, not as SBOM, package signing, or provenance attestation.',
+      path: releaseProvenanceReadinessReports[0]?.relativePath,
+    })
+  }
+
   findings.push(
+    {
+      severity: 'blocker',
+      code: 'ENTERPRISE_RELEASE_PROVENANCE_ARTIFACTS_MISSING',
+      message:
+        'Actual SBOM generation, package signing, and provenance attestation remain missing and are not enterprise-ready.',
+    },
     {
       severity: 'blocker',
       code: 'ENTERPRISE_RBAC_SIGNING_MISSING',
@@ -1244,6 +1413,35 @@ function validateRbacPolicyValidationSource(
   }
 }
 
+function validateReleaseProvenanceReadinessSource(
+  source: LoadedSource,
+  record: JsonRecord,
+  findings: EnterpriseReadinessFinding[],
+): void {
+  if (
+    record.artifactRole !== RELEASE_PROVENANCE_READINESS_ROLE ||
+    record.status !== RELEASE_PROVENANCE_READINESS_STATUS
+  ) {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_RELEASE_PROVENANCE_SOURCE_ROLE_STATUS_INVALID',
+        `${source.relativePath} must be ${RELEASE_PROVENANCE_READINESS_ROLE} with reported status.`,
+        source.relativePath,
+      ),
+    )
+  }
+  for (const hit of collectTrueFieldHits(record, releaseProvenanceAuthorityFields)) {
+    findings.push(
+      blockingFinding(
+        'ENTERPRISE_READINESS_RELEASE_PROVENANCE_AUTHORITY_CLAIM_UNSUPPORTED',
+        `${source.relativePath} claims release provenance/signing authority field ${hit.field}: true; enterprise v1 only accepts false-only readiness source facts.`,
+        source.relativePath,
+        hit.field,
+      ),
+    )
+  }
+}
+
 async function loadSource(
   root: string,
   requestedPath: string,
@@ -1332,6 +1530,7 @@ function renderMarkdown(report: EnterpriseReadinessReport): string {
     `- recordEnvelopeVerifications: ${report.auditAndTamperEvidenceReadiness.envelopeVerificationCount}`,
     `- signingReadinessReports: ${report.rbacAndSigningReadiness.signingReadinessReportCount}`,
     `- rbacPolicyValidationReports: ${report.rbacAndSigningReadiness.rbacPolicyValidationReportCount}`,
+    `- releaseProvenanceReadinessReports: ${report.releaseProvenanceReadiness.sourceCount}`,
     '',
     '## Findings',
     ...report.enterpriseReadinessFindings.map((entry) => `- [${entry.severity}] ${entry.code}: ${entry.message}`),
@@ -1387,6 +1586,35 @@ function providerNetworkPolicyGaps(record: JsonRecord | null): string[] {
     'Provider/network audit enforcement is not activated.',
     'Signed policy, RBAC, sandboxing, and provider isolation remain future requirements before any allow policy.',
   ]
+}
+
+function releaseProvenanceReadinessGaps(records: JsonRecord[]): string[] {
+  if (records.length === 0) {
+    return ['Release provenance readiness report is not supplied.']
+  }
+  const gaps = [
+    'Release provenance readiness is source-fact-only and does not create package signatures, SBOMs, or attestations.',
+  ]
+  if (!records.some((record) => booleanValue(asRecord(record.packageMetadataSummary)?.packageFilesAllowlistPresent))) {
+    gaps.push('Package files allowlist was not confirmed by release provenance readiness sources.')
+  }
+  if (!records.some((record) => booleanValue(asRecord(record.packageMetadataSummary)?.releaseSurfaceCheckerPresent))) {
+    gaps.push('Release-surface checker presence was not confirmed by release provenance readiness sources.')
+  }
+  if (!records.some((record) => booleanValue(asRecord(record.sbomReadiness)?.sbomGenerated))) {
+    gaps.push('Actual SBOM generation remains missing.')
+  }
+  if (!records.some((record) => booleanValue(asRecord(record.packageSigningReadiness)?.packageSigningPresent))) {
+    gaps.push('Actual package signing remains missing.')
+  }
+  if (
+    !records.some((record) =>
+      booleanValue(asRecord(record.provenanceAttestationReadiness)?.provenanceAttestationPresent),
+    )
+  ) {
+    gaps.push('Actual provenance attestation remains missing.')
+  }
+  return gaps
 }
 
 function rbacAndSigningGaps(
@@ -1583,6 +1811,38 @@ function rbacPolicyValidationSummary(
   }
 }
 
+function releaseProvenanceReadinessSummary(
+  source: LoadedSource,
+): EnterpriseReadinessReport['sourceReleaseProvenanceReadinessReports'][number] {
+  const record = source.record ?? {}
+  const packageMetadata = asRecord(record.packageMetadataSummary)
+  const sbomReadiness = asRecord(record.sbomReadiness)
+  const packageSigning = asRecord(record.packageSigningReadiness)
+  const provenance = asRecord(record.provenanceAttestationReadiness)
+  return {
+    supplied: true,
+    path: source.relativePath,
+    artifactRole: stringValue(record.artifactRole),
+    status: stringValue(record.status),
+    releaseProvenanceReadinessStatus: stringValue(record.releaseProvenanceReadinessStatus),
+    packageName: stringValue(packageMetadata?.packageName),
+    packageVersion: stringValue(packageMetadata?.packageVersion),
+    packageFilesAllowlistPresent: booleanOrNull(packageMetadata?.packageFilesAllowlistPresent),
+    packageFilesAllowlistCount: numberValue(packageMetadata?.packageFilesAllowlistCount),
+    releaseSurfaceScriptPresent: booleanOrNull(packageMetadata?.releaseSurfaceScriptPresent),
+    releaseSurfaceCheckerPresent: booleanOrNull(packageMetadata?.releaseSurfaceCheckerPresent),
+    sbomGenerated: booleanOrNull(sbomReadiness?.sbomGenerated),
+    sbomPresent: booleanOrNull(sbomReadiness?.sbomPresent),
+    sbomAttested: booleanOrNull(sbomReadiness?.sbomAttested),
+    packageSigningPresent: booleanOrNull(packageSigning?.packageSigningPresent),
+    packageSignatureVerified: booleanOrNull(packageSigning?.packageSignatureVerified),
+    provenanceAttestationPresent: booleanOrNull(provenance?.provenanceAttestationPresent),
+    provenanceAttested: booleanOrNull(provenance?.provenanceAttested),
+    findingCount: arrayLength(record.releaseProvenanceFindings),
+    downstreamActionCount: arrayLength(record.downstreamActionPlan),
+  }
+}
+
 function payloadDigestVerifiedCount(records: JsonRecord[]): number {
   return records.filter((record) => booleanValue(asRecord(record.payloadVerification)?.digestMatches)).length
 }
@@ -1618,6 +1878,9 @@ function downstreamActionPlan(findings: EnterpriseReadinessFinding[]): string[] 
   }
   if (openFindings.some((entry) => entry.code.includes('PROVIDER_NETWORK'))) {
     actions.add('Attach a provider/network default-deny policy report before enterprise release review.')
+  }
+  if (openFindings.some((entry) => entry.code.includes('RELEASE_PROVENANCE'))) {
+    actions.add('Attach release provenance readiness and plan real SBOM/signing/provenance only behind governance.')
   }
   if (openFindings.some((entry) => entry.code.includes('RBAC_POLICY_VALIDATION'))) {
     actions.add('Attach RBAC policy validation before planning RBAC enforcement or signed policy rollout.')

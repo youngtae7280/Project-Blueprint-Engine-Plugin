@@ -220,6 +220,7 @@ export interface CliOptions {
   providerNetworkPolicyReport?: string
   rbacReadiness?: string
   rbacPolicyValidation?: string
+  releaseProvenanceReadiness?: string
   recordEnvelopePreview?: string
   recordEnvelopeVerification?: string
   signingReadiness?: string

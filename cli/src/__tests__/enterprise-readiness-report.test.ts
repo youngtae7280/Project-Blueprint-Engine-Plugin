@@ -431,6 +431,174 @@ describe('security report-enterprise-readiness CLI', () => {
     expectSafetyFalse(payload)
   })
 
+  it('summarizes release provenance readiness without treating it as attestation', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, '.tmp/release-provenance-readiness.json'), releaseProvenanceReadinessReport())
+
+    const result = await runDevViewCli(
+      [
+        'security',
+        'report-enterprise-readiness',
+        '--release-provenance-readiness',
+        '.tmp/release-provenance-readiness.json',
+        '--output',
+        '.tmp/enterprise-readiness.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.readinessLevel).toBe('not-ready')
+    expect(payload.sourceReleaseProvenanceReadinessReports).toHaveLength(1)
+    expect(payload.sourceReleaseProvenanceReadinessReports[0]).toEqual(
+      expect.objectContaining({
+        path: '.tmp/release-provenance-readiness.json',
+        artifactRole: 'devview-release-provenance-readiness-report',
+        status: 'devview-release-provenance-readiness-reported',
+        releaseProvenanceReadinessStatus: 'not-ready-sbom-and-signing-missing',
+        packageName: 'devview',
+        packageVersion: '0.2.0-alpha',
+        packageFilesAllowlistPresent: true,
+        packageFilesAllowlistCount: 14,
+        releaseSurfaceScriptPresent: true,
+        releaseSurfaceCheckerPresent: true,
+        sbomGenerated: false,
+        sbomPresent: false,
+        sbomAttested: false,
+        packageSigningPresent: false,
+        packageSignatureVerified: false,
+        provenanceAttestationPresent: false,
+        provenanceAttested: false,
+        findingCount: 3,
+        downstreamActionCount: 2,
+      }),
+    )
+    expect(payload.releaseProvenanceReadiness.status).toBe('readiness-recorded')
+    expect(payload.releaseProvenanceReadiness.sourceCount).toBe(1)
+    expect(payload.releaseProvenanceReadiness.sourceStatuses).toEqual(['not-ready-sbom-and-signing-missing'])
+    expect(payload.releaseProvenanceReadiness.packageName).toBe('devview')
+    expect(payload.releaseProvenanceReadiness.packageVersion).toBe('0.2.0-alpha')
+    expect(payload.releaseProvenanceReadiness.packageFilesAllowlistPresentCount).toBe(1)
+    expect(payload.releaseProvenanceReadiness.packageFilesAllowlistCount).toBe(14)
+    expect(payload.releaseProvenanceReadiness.releaseSurfaceScriptPresentCount).toBe(1)
+    expect(payload.releaseProvenanceReadiness.releaseSurfaceCheckerPresentCount).toBe(1)
+    expect(payload.releaseProvenanceReadiness.sbomGeneratedCount).toBe(0)
+    expect(payload.releaseProvenanceReadiness.sbomPresentCount).toBe(0)
+    expect(payload.releaseProvenanceReadiness.sbomAttestedCount).toBe(0)
+    expect(payload.releaseProvenanceReadiness.packageSigningPresentCount).toBe(0)
+    expect(payload.releaseProvenanceReadiness.packageSignatureVerifiedCount).toBe(0)
+    expect(payload.releaseProvenanceReadiness.provenanceAttestationPresentCount).toBe(0)
+    expect(payload.releaseProvenanceReadiness.provenanceAttestedCount).toBe(0)
+    expect(payload.releaseProvenanceReadiness.findingCount).toBe(3)
+    expect(payload.releaseProvenanceReadiness.downstreamActionCount).toBe(2)
+    expect(payload.enterpriseReadinessFindings.map((entry: { code: string }) => entry.code)).toEqual(
+      expect.arrayContaining([
+        'ENTERPRISE_RELEASE_PROVENANCE_READINESS_RECORDED',
+        'ENTERPRISE_RELEASE_PROVENANCE_ARTIFACTS_MISSING',
+        'ENTERPRISE_RBAC_SIGNING_MISSING',
+      ]),
+    )
+    expect(payload.enterpriseReadinessFindings.map((entry: { code: string }) => entry.code)).not.toContain(
+      'ENTERPRISE_RELEASE_PROVENANCE_READINESS_NOT_SUPPLIED',
+    )
+    expectSafetyFalse(payload)
+  })
+
+  it('blocks invalid or authority-claiming release provenance readiness sources with zero writes', async () => {
+    const workspace = createWorkspace()
+    writeJson(join(workspace, '.tmp/wrong-release-provenance.json'), {
+      ...releaseProvenanceReadinessReport(),
+      status: 'wrong',
+    })
+    writeJson(join(workspace, '.tmp/sbom-release-provenance.json'), {
+      ...releaseProvenanceReadinessReport(),
+      sbomReadiness: {
+        ...(releaseProvenanceReadinessReport().sbomReadiness as Record<string, unknown>),
+        sbomGenerated: true,
+      },
+    })
+    writeJson(join(workspace, '.tmp/signing-release-provenance.json'), {
+      ...releaseProvenanceReadinessReport(),
+      packageSigningReadiness: {
+        ...(releaseProvenanceReadinessReport().packageSigningReadiness as Record<string, unknown>),
+        packageSigningPresent: true,
+      },
+    })
+    writeJson(join(workspace, '.tmp/attestation-release-provenance.json'), {
+      ...releaseProvenanceReadinessReport(),
+      provenanceAttestationReadiness: {
+        ...(releaseProvenanceReadinessReport().provenanceAttestationReadiness as Record<string, unknown>),
+        provenanceAttestationPresent: true,
+      },
+    })
+    writeJson(join(workspace, '.tmp/crypto-release-provenance.json'), {
+      ...releaseProvenanceReadinessReport(),
+      cryptographicSignatureVerified: true,
+    })
+    writeJson(join(workspace, '.tmp/network-release-provenance.json'), {
+      ...releaseProvenanceReadinessReport(),
+      networkCallMade: true,
+    })
+
+    const wrong = await runEnterpriseWithReleaseProvenance(
+      workspace,
+      '.tmp/wrong-release-provenance.json',
+      '.tmp/wrong-release-enterprise.json',
+    )
+    const sbom = await runEnterpriseWithReleaseProvenance(
+      workspace,
+      '.tmp/sbom-release-provenance.json',
+      '.tmp/sbom-release-enterprise.json',
+    )
+    const signing = await runEnterpriseWithReleaseProvenance(
+      workspace,
+      '.tmp/signing-release-provenance.json',
+      '.tmp/signing-release-enterprise.json',
+    )
+    const attestation = await runEnterpriseWithReleaseProvenance(
+      workspace,
+      '.tmp/attestation-release-provenance.json',
+      '.tmp/attestation-release-enterprise.json',
+    )
+    const crypto = await runEnterpriseWithReleaseProvenance(
+      workspace,
+      '.tmp/crypto-release-provenance.json',
+      '.tmp/crypto-release-enterprise.json',
+    )
+    const network = await runEnterpriseWithReleaseProvenance(
+      workspace,
+      '.tmp/network-release-provenance.json',
+      '.tmp/network-release-enterprise.json',
+    )
+
+    expect(wrong.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(wrong.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_RELEASE_PROVENANCE_SOURCE_ROLE_STATUS_INVALID',
+    )
+    expect(existsSync(join(workspace, '.tmp/wrong-release-enterprise.json'))).toBe(false)
+
+    for (const [result, output] of [
+      [sbom, '.tmp/sbom-release-enterprise.json'],
+      [signing, '.tmp/signing-release-enterprise.json'],
+      [attestation, '.tmp/attestation-release-enterprise.json'],
+      [crypto, '.tmp/crypto-release-enterprise.json'],
+    ] as const) {
+      expect(result.exitCode).toBe(ExitCode.ValidationFailed)
+      expect(JSON.parse(result.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+        'ENTERPRISE_READINESS_RELEASE_PROVENANCE_AUTHORITY_CLAIM_UNSUPPORTED',
+      )
+      expect(existsSync(join(workspace, output))).toBe(false)
+    }
+
+    expect(network.exitCode).toBe(ExitCode.ValidationFailed)
+    expect(JSON.parse(network.stderr).issues.map((entry: { code: string }) => entry.code)).toContain(
+      'ENTERPRISE_READINESS_UNSAFE_SOURCE_AUTHORITY_FLAG',
+    )
+    expect(existsSync(join(workspace, '.tmp/network-release-enterprise.json'))).toBe(false)
+  })
+
   it('blocks invalid or authority-claiming RBAC policy validation sources with zero writes', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, '.tmp/wrong-rbac-policy-validation.json'), {
@@ -863,6 +1031,7 @@ describe('security report-enterprise-readiness CLI', () => {
     writeJson(join(workspace, '.tmp/record-envelope-verification.json'), recordEnvelopeVerification())
     writeJson(join(workspace, '.tmp/signing-readiness.json'), signingReadinessReport())
     writeJson(join(workspace, '.tmp/rbac-policy-validation.json'), rbacPolicyValidationReport())
+    writeJson(join(workspace, '.tmp/release-provenance-readiness.json'), releaseProvenanceReadinessReport())
     const cases = [
       { output: '.tmp/benchmark-governance.json', expected: 'would overwrite a source input' },
       {
@@ -883,6 +1052,11 @@ describe('security report-enterprise-readiness CLI', () => {
       {
         sourceArgs: ['--rbac-policy-validation', '.tmp/rbac-policy-validation.json'],
         output: '.tmp/rbac-policy-validation.json',
+        expected: 'would overwrite a source input',
+      },
+      {
+        sourceArgs: ['--release-provenance-readiness', '.tmp/release-provenance-readiness.json'],
+        output: '.tmp/release-provenance-readiness.json',
         expected: 'would overwrite a source input',
       },
       { output: '.tmp/enterprise.json', markdown: '.tmp/enterprise.json', expected: 'must be different' },
@@ -1366,6 +1540,96 @@ function rbacPolicyValidationReport(overrides: Record<string, unknown> = {}): Re
   }
 }
 
+function releaseProvenanceReadinessReport(overrides: Record<string, unknown> = {}): Record<string, unknown> {
+  return {
+    schemaVersion: 1,
+    artifactRole: 'devview-release-provenance-readiness-report',
+    status: 'devview-release-provenance-readiness-reported',
+    readinessScope: 'release-provenance-sbom-readiness-report-only',
+    sourceFactsOnly: true,
+    reportOnly: true,
+    releaseProvenanceReadinessStatus: 'not-ready-sbom-and-signing-missing',
+    packageMetadataSummary: {
+      packageName: 'devview',
+      packageVersion: '0.2.0-alpha',
+      packagePrivate: true,
+      packageJsonPath: 'package.json',
+      packageFilesAllowlistPresent: true,
+      packageFilesAllowlistCount: 14,
+      packageFilesAllowlistEntries: ['skills/**'],
+      releaseSurfaceScriptPresent: true,
+      releaseSurfaceScript: 'node scripts/check-devview-release-surface.js --pack-dry-run',
+      releaseSurfaceCheckerPresent: true,
+      releaseSurfaceCheckerPath: 'scripts/check-devview-release-surface.js',
+    },
+    releaseSurfaceReadiness: {
+      checkerPresent: true,
+      packageDryRunExecuted: false,
+      packageDryRunReadiness: 'not-executed-report-only',
+      packageDryRunSourceSupplied: false,
+      publicIdentityScanExecuted: false,
+      publicIdentityScanStatus: 'not-executed-report-only',
+      limitations: [],
+    },
+    sbomReadiness: {
+      sbomPresent: false,
+      sbomGenerated: false,
+      sbomAttested: false,
+      supportedFormatsFutureCandidates: ['SPDX', 'CycloneDX'],
+      requiredFutureFields: [],
+      gaps: [],
+    },
+    packageSigningReadiness: {
+      packageSigningPresent: false,
+      packageSignatureVerified: false,
+      signingReadinessSourceStatus: 'not-ready-policy-and-key-governance-missing',
+      keyRegistryPresent: false,
+      trustRootPresent: false,
+      privateKeyStoragePresent: false,
+      requiredKeyTrustPolicyGaps: [],
+    },
+    provenanceAttestationReadiness: {
+      provenanceAttestationPresent: false,
+      provenanceAttested: false,
+      npmProvenanceEnabled: false,
+      slsaProvenanceGenerated: false,
+      requiredFutureFields: [],
+      futureOnlyPolicy: 'future-only',
+    },
+    releaseProvenanceFindings: [
+      { severity: 'blocker', code: 'RELEASE_PROVENANCE_SBOM_MISSING', message: 'No SBOM.' },
+      { severity: 'blocker', code: 'RELEASE_PROVENANCE_PACKAGE_SIGNING_MISSING', message: 'No signing.' },
+      { severity: 'blocker', code: 'RELEASE_PROVENANCE_ATTESTATION_MISSING', message: 'No attestation.' },
+    ],
+    downstreamActionPlan: ['Integrate into enterprise readiness.', 'Plan real SBOM and provenance later.'],
+    sbomGenerated: false,
+    sbomPresent: false,
+    sbomAttested: false,
+    packageSigningPresent: false,
+    packageSigned: false,
+    packageSignaturePresent: false,
+    packageSignatureVerified: false,
+    provenanceAttestationPresent: false,
+    provenanceAttested: false,
+    releaseProvenanceAttested: false,
+    npmProvenanceEnabled: false,
+    slsaProvenanceGenerated: false,
+    cryptographicSigningImplemented: false,
+    cryptographicSignaturePresent: false,
+    cryptographicSignatureVerified: false,
+    keyGenerated: false,
+    privateKeyStored: false,
+    keyManagementImplemented: false,
+    keyRegistryCreated: false,
+    trustRootCreated: false,
+    rbacEnforced: false,
+    permissionVerified: false,
+    rbacPermissionVerified: false,
+    ...safetyFlags(),
+    ...overrides,
+  }
+}
+
 function safetyFlags(): Record<string, unknown> {
   return {
     benchmarkExecuted: false,
@@ -1490,6 +1754,21 @@ function runEnterpriseWithRbacPolicyValidation(workspace: string, rbacPolicyVali
       'report-enterprise-readiness',
       '--rbac-policy-validation',
       rbacPolicyValidation,
+      '--output',
+      output,
+      '--json',
+    ],
+    { cwd: workspace, pluginRoot },
+  )
+}
+
+function runEnterpriseWithReleaseProvenance(workspace: string, releaseProvenanceReadiness: string, output: string) {
+  return runDevViewCli(
+    [
+      'security',
+      'report-enterprise-readiness',
+      '--release-provenance-readiness',
+      releaseProvenanceReadiness,
       '--output',
       output,
       '--json',
