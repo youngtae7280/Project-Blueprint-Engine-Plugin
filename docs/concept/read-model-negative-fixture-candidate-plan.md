@@ -22,7 +22,7 @@ It follows the storage policy in
 
 Current read-model baseline:
 
-- candidate positive registry exists at `examples/read-model-aggregate/read-model-slices.json`
+- candidate positive registry exists at `examples/internal-legacy/read-model-aggregate/read-model-slices.json`
 - parser/normalization tests already cover duplicate IDs, missing top-level boundaries, and unknown policy levels
 - local non-enforcing `pbe graph read-model validate --all` exists
 - manual and PR validate-all workflow runs are reviewed as `ci-evidence-pass`
@@ -282,7 +282,7 @@ Current implementation status:
   blocking `core-view-coverage-present` result while `view-scoped-tags-allowed` remains passing.
 - A focused test removes the scoped pilot marker from a temp Todo Search validation workspace and expects a blocking
   `pilot-marker-exists` result while parity remains `comparison-pass`.
-- None of these fixtures is included in `examples/read-model-aggregate/read-model-slices.json`, `validate --all`, or CI.
+- None of these fixtures is included in `examples/internal-legacy/read-model-aggregate/read-model-slices.json`, `validate --all`, or CI.
 
 Inline/temp coverage now established:
 

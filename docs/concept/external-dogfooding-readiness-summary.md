@@ -15,14 +15,14 @@ artifacts, or replace user acceptance.
 
 Current configured read-model slices are graph-source-backed, but not all with the same authority level.
 
-| Surface                    | Current state                                                                                             | Boundary                                                                                                                                              |
-| -------------------------- | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Todo Search selected slice | Limited Graph-source promoted selected-slice authority surface.                                           | Scoped only to the Todo Search selected slice. Tree-native selected-slice artifacts remain deprecated fallback/reference records and are not deleted. |
-| Todo App PBE Run           | Graph-source-backed `structure-only` profile.                                                             | Not source-authority-bearing, not parity-backed, not pilot-marker-backed, and not promoted beyond `structure-only`.                                   |
-| Positive registry          | `examples/read-model-aggregate/read-model-slices.json` with Todo Search and Todo App only.                | Registry-backed `validate --all` is positive Evidence only and does not expand authority.                                                             |
-| CI/read-model Evidence     | Manual/PR informational observation with health, E2E, validate-all, intent projection, and focused tests. | Non-enforcing; not a required check, branch protection rule, or merge gate.                                                                           |
-| Candidate B                | Prepared soft-required package: `report-health` plus `test:read-model:e2e`.                               | Not enabled; explicit approval, waiver/failure policy, and branch protection decision are still required.                                             |
-| Invalid fixtures           | Local focused negative test inputs.                                                                       | Not in positive registry, positive validate-all, CI enrollment, or source-authority evidence.                                                         |
+| Surface                    | Current state                                                                                              | Boundary                                                                                                                                              |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Todo Search selected slice | Limited Graph-source promoted selected-slice authority surface.                                            | Scoped only to the Todo Search selected slice. Tree-native selected-slice artifacts remain deprecated fallback/reference records and are not deleted. |
+| Todo App PBE Run           | Graph-source-backed `structure-only` profile.                                                              | Not source-authority-bearing, not parity-backed, not pilot-marker-backed, and not promoted beyond `structure-only`.                                   |
+| Positive registry          | `examples/internal-legacy/read-model-aggregate/read-model-slices.json` with Todo Search and Todo App only. | Registry-backed `validate --all` is positive Evidence only and does not expand authority.                                                             |
+| CI/read-model Evidence     | Manual/PR informational observation with health, E2E, validate-all, intent projection, and focused tests.  | Non-enforcing; not a required check, branch protection rule, or merge gate.                                                                           |
+| Candidate B                | Prepared soft-required package: `report-health` plus `test:read-model:e2e`.                                | Not enabled; explicit approval, waiver/failure policy, and branch protection decision are still required.                                             |
+| Invalid fixtures           | Local focused negative test inputs.                                                                        | Not in positive registry, positive validate-all, CI enrollment, or source-authority evidence.                                                         |
 
 ## Public Documentation Expectation
 
@@ -50,7 +50,7 @@ The current external dogfooding readiness picture is assembled from these packag
 - [Todo App Structure-Only Next-Step Package](todo-app-structure-only-next-step-package.md)
 - [Graph-Source Registry / Projection Generalization Readiness](graph-source-registry-projection-generalization-readiness.md)
 - [Read-Model Invalid Fixture Boundary Readiness](read-model-invalid-fixture-boundary-readiness.md)
-- `examples/read-model-aggregate/graph-source-transition-status.json`
+- `examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json`
 
 ## Remaining Approval Branches
 
@@ -84,7 +84,7 @@ This summary does not:
 - execute dogfooding on an external project;
 - add source-authority scope;
 - change README behavior or command semantics;
-- change `examples/read-model-aggregate/read-model-slices.json`;
+- change `examples/internal-legacy/read-model-aggregate/read-model-slices.json`;
 - change `.github/workflows/read-model-evidence.yml`;
 - enable required checks, branch protection, merge gates, or CI enforcement;
 - modify CLI, schemas, validators, or tests;

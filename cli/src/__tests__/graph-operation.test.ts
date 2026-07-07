@@ -23,7 +23,7 @@ describe('graph operation CLI', () => {
         'operation',
         'generate-pack',
         '--graph-source',
-        'examples/retrofit/cardprinterconfig/graph-source.json',
+        'examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json',
         '--record',
         'change.laminator-tag-layout',
         '--output',
@@ -259,7 +259,10 @@ describe('graph operation CLI', () => {
   })
 
   it('previews a committed graph update proposal without mutating graph-source', async () => {
-    const graphSourcePath = join(pluginRoot, 'examples/retrofit/open-source/escape-html/graph-source.json')
+    const graphSourcePath = join(
+      pluginRoot,
+      'examples/internal-legacy/retrofit/open-source/escape-html/graph-source.json',
+    )
     const before = readFileSync(graphSourcePath, 'utf8')
 
     const result = await runPbeCli(

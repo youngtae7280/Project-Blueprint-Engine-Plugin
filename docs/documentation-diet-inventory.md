@@ -178,12 +178,12 @@ Docs archive candidates:
 
 Example archive candidates:
 
-- `examples/adoption/todo-search-slice/README.md`
-- `examples/adoption/todo-search-slice/rpd-interview-summary.md`
-- `examples/adoption/todo-search-slice/*.json`
-- `examples/dogfooding/windows-validation-sequential-run/README.md`
-- `examples/dogfooding/windows-validation-sequential-run/rpd-interview-summary.md`
-- `examples/dogfooding/windows-validation-sequential-run/*.json`
+- `examples/internal-legacy/adoption/todo-search-slice/README.md`
+- `examples/internal-legacy/adoption/todo-search-slice/rpd-interview-summary.md`
+- `examples/internal-legacy/adoption/todo-search-slice/*.json`
+- `examples/internal-legacy/dogfooding/windows-validation-sequential-run/README.md`
+- `examples/internal-legacy/dogfooding/windows-validation-sequential-run/rpd-interview-summary.md`
+- `examples/internal-legacy/dogfooding/windows-validation-sequential-run/*.json`
 
 Archive themes to preserve as candidates:
 

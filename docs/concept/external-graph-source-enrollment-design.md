@@ -218,7 +218,7 @@ the gap.
 The graph-native execution contract report is currently configured-slice scoped. It works for repo examples such as:
 
 ```powershell
-node dist/cli/index.js graph execution-contract report --slice examples/adoption/todo-search-slice --json
+node dist/cli/index.js graph execution-contract report --slice examples/internal-legacy/adoption/todo-search-slice --json
 ```
 
 Future external enrollment should let an external slice produce a graph execution-contract report only after enrollment

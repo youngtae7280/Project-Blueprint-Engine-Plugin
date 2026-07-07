@@ -40,7 +40,6 @@ describe('DevView legacy cleanup migration plan CLI', () => {
     expect(payload.networkCallMade).toBe(false)
     expect(payload.operationCount).toBeGreaterThan(0)
     expect(payload.operationSummaryByKind['rename-path']).toBeGreaterThan(0)
-    expect(payload.operationSummaryByKind['move-to-internal-legacy']).toBeGreaterThan(0)
     expect(payload.operationSummaryByKind['keep-internal-hidden-compatibility']).toBeGreaterThan(0)
   })
 
@@ -66,6 +65,31 @@ describe('DevView legacy cleanup migration plan CLI', () => {
     })
     expect(existsSync(join(workspace, 'examples/valid/todo-app-pbe-run'))).toBe(true)
     expect(existsSync(join(workspace, 'examples/valid/todo-app-devview-run'))).toBe(false)
+  })
+
+  it('classifies the internal legacy examples boundary as hidden compatibility', async () => {
+    const workspace = createLegacyExamplesWorkspace()
+    writeText(
+      join(workspace, 'examples/internal-legacy/adoption/todo-search-slice/README.md'),
+      'Historical migration fixture with pbe wording.\n',
+    )
+
+    const result = await runPbeCli(['cleanup-legacy', '--dry-run', '--scope', 'examples', '--json'], {
+      cwd: workspace,
+      pluginRoot,
+    })
+    const payload = JSON.parse(result.stdout)
+    const operation = payload.operations.find(
+      (entry: Record<string, unknown>) => entry.sourcePath === 'examples/internal-legacy',
+    )
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(operation).toMatchObject({
+      operationKind: 'keep-internal-hidden-compatibility',
+      classification: 'internal-hidden-compatibility',
+      riskLevel: 'high',
+      collisionStatus: 'not-applicable',
+    })
   })
 
   it('marks path collisions for planned targets', async () => {
@@ -159,10 +183,10 @@ function createLegacyExamplesWorkspace(): string {
     '{"artifact":"legacy pbe tree"}\n',
   )
   writeText(
-    join(workspace, 'examples/adoption/todo-search-slice/README.md'),
+    join(workspace, 'examples/internal-legacy/adoption/todo-search-slice/README.md'),
     'Historical adoption example with pbe command text.\n',
   )
-  writeText(join(workspace, 'docs/reference.md'), 'examples/adoption/todo-search-slice\n')
+  writeText(join(workspace, 'docs/reference.md'), 'examples/internal-legacy/adoption/todo-search-slice\n')
   writeText(join(workspace, 'package.json'), '{"bin":{"pbe":"./dist/cli/index.js"}}\n')
   writeText(join(workspace, 'scripts/validate-pbe-files.js'), 'console.log("pbe")\n')
   writeText(join(workspace, 'scripts/validators/pbe-layout.js'), 'console.log("pbe layout")\n')

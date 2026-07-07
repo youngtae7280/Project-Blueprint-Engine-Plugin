@@ -19,7 +19,7 @@ describe('graph retrofit CLI', () => {
         'retrofit',
         'plan',
         '--graph-source',
-        'examples/retrofit/cardprinterconfig/graph-source.json',
+        'examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json',
         '--json',
       ],
       { cwd: pluginRoot, pluginRoot },
@@ -49,7 +49,7 @@ describe('graph retrofit CLI', () => {
         'retrofit',
         'plan',
         '--graph-source',
-        'examples/retrofit/open-source/kubernetes-sidecar-kep/graph-source.json',
+        'examples/internal-legacy/retrofit/open-source/kubernetes-sidecar-kep/graph-source.json',
         '--json',
       ],
       { cwd: pluginRoot, pluginRoot },
@@ -76,7 +76,10 @@ describe('graph retrofit CLI', () => {
 
     const sourceMap = JSON.parse(
       readFileSync(
-        resolve(pluginRoot, 'examples/retrofit/open-source/kubernetes-sidecar-kep/support/kep753-source-map.json'),
+        resolve(
+          pluginRoot,
+          'examples/internal-legacy/retrofit/open-source/kubernetes-sidecar-kep/support/kep753-source-map.json',
+        ),
         'utf8',
       ),
     )
@@ -100,7 +103,7 @@ describe('graph retrofit CLI', () => {
         'operation',
         'generate-pack',
         '--graph-source',
-        'examples/retrofit/open-source/kubernetes-sidecar-kep/graph-source.json',
+        'examples/internal-legacy/retrofit/open-source/kubernetes-sidecar-kep/graph-source.json',
         '--record',
         'change.kep753.sidecar-intent-map',
         '--json',

@@ -1,6 +1,6 @@
 param(
     [string]$InstructionPackPath,
-    [string]$GraphSourcePath = "examples/retrofit/cardprinterconfig/graph-source.json"
+    [string]$GraphSourcePath = "examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json"
 )
 
 $ErrorActionPreference = "Stop"

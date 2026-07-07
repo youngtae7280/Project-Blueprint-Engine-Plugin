@@ -7,7 +7,7 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $cjsonRepo = Join-Path $repoRoot "work/open-source/cJSON"
-$graphSourcePath = "examples/retrofit/open-source/cjson/graph-source.json"
+$graphSourcePath = "examples/internal-legacy/retrofit/open-source/cjson/graph-source.json"
 $instructionPackPath = "outputs/retrofit/open-source/cjson/instruction-packs/readme-build-tooling-boundary.instruction-pack.json"
 $graphDeltaPath = "outputs/retrofit/open-source/cjson/graph-deltas/readme-build-tooling-boundary.graph-delta.json"
 

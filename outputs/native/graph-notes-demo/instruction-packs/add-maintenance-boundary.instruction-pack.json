@@ -4,7 +4,7 @@
   "status": "generated-from-graph-source",
   "graphSourcePath": "examples\\native\\graph-notes-demo\\graph-source.json",
   "sourceRecordId": "change.native-maintenance-boundary",
-  "sourceRecordPath": "examples/native/graph-notes-demo/records/add-maintenance-boundary.planned.json",
+  "sourceRecordPath": "examples/internal-legacy/native/graph-notes-demo/records/add-maintenance-boundary.planned.json",
   "target": {
     "projectName": "Graph Notes Demo",
     "repoPath": "work/native/graph-notes-demo",

@@ -55,10 +55,10 @@ import { resolveStopConditionsFromSourceAuthority } from '../core/stop-condition
 
 const workspaces: string[] = []
 const exampleWorkspacePaths = [
-  'examples/adoption/todo-search-slice',
-  'examples/adoption/compatibility-mismatch-slice',
+  'examples/internal-legacy/adoption/todo-search-slice',
+  'examples/internal-legacy/adoption/compatibility-mismatch-slice',
   'examples/valid/todo-app-pbe-run',
-  'examples/read-model-aggregate',
+  'examples/internal-legacy/read-model-aggregate',
   'docs/concept',
   '.github/workflows/read-model-evidence.yml',
 ]
@@ -75,13 +75,13 @@ const coreViews = [
 
 describe('read-model Evidence builder', () => {
   it('uses the Todo Search read-model profile for the bounded selected slice', () => {
-    const profile = getSliceReadModelProfile('examples/adoption/todo-search-slice')
+    const profile = getSliceReadModelProfile('examples/internal-legacy/adoption/todo-search-slice')
 
     expect(profile).toBe(todoSearchReadModelProfile)
     expect(profile.profileId).toBe('todo-search-selected-slice')
     expect(profile.expectedCounts).toEqual({ nodes: 40, edges: 59, validationChecks: 20 })
     expect(profile.artifacts.nodeExecutionContract).toBe('node-execution-contracts/wt-search-001.md')
-    expect(profile.artifacts.compatibilitySlice).toBe('examples/adoption/compatibility-mismatch-slice')
+    expect(profile.artifacts.compatibilitySlice).toBe('examples/internal-legacy/adoption/compatibility-mismatch-slice')
   })
 
   it('uses the Todo App PBE run structure-only profile for the canonical fixture slice', () => {
@@ -110,14 +110,14 @@ describe('read-model Evidence builder', () => {
     expect(graphSource.sourceRecords.edges).toHaveLength(todoSearchReadModelProfile.expectedCounts.edges)
     expect(graphSource.sourceRecords.coreViewCoverage.map((entry) => entry.name)).toEqual(coreViews)
     expect(graphSource.projectionTargets.map((entry) => entry.path)).toContain(
-      'examples/adoption/todo-search-slice/generated/generated-read-model.json',
+      'examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json',
     )
   })
 
   it('projects graph source records to the current Todo Search read-model shape', async () => {
     const graphSource = await loadGraphSourceArtifact(resolve('.'))
     const generated = JSON.parse(
-      await readFile('examples/adoption/todo-search-slice/generated/generated-read-model.json', 'utf8'),
+      await readFile('examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json', 'utf8'),
     ) as {
       nodes: unknown[]
       edges: unknown[]
@@ -126,12 +126,14 @@ describe('read-model Evidence builder', () => {
 
     const result = projectGraphSourceReadModel(graphSource)
 
-    expect(result.graphSourcePath).toBe('examples/adoption/todo-search-slice/graph-source.json')
+    expect(result.graphSourcePath).toBe('examples/internal-legacy/adoption/todo-search-slice/graph-source.json')
     expect(result.projection.nodes).toEqual(generated.nodes)
     expect(result.projection.edges).toEqual(generated.edges)
     expect(result.projection.coreViewCoverage).toEqual(generated.coreViewCoverage)
     expect(result.projection.metadata.artifactRole).toBe('graph_source_read_model_projection')
-    expect(result.projection.fallbackReferences).toContain('examples/adoption/todo-search-slice/product-tree.json')
+    expect(result.projection.fallbackReferences).toContain(
+      'examples/internal-legacy/adoption/todo-search-slice/product-tree.json',
+    )
     expect(result.projection.userAcceptanceBoundary).toContain('cannot accept product results')
     expect(result.projection.sourceAuthorityBoundary).toContain('limited source model')
     expect(result.projection.nonPromotionStatement).toContain('repo-wide promotion')
@@ -183,7 +185,7 @@ describe('read-model Evidence builder', () => {
       nonPromotionStatement: string
     }
     const transitionStatus = JSON.parse(
-      await readFile('examples/read-model-aggregate/graph-source-transition-status.json', 'utf8'),
+      await readFile('examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json', 'utf8'),
     ) as {
       configuredSlices: Array<{
         profileId: string
@@ -430,14 +432,15 @@ describe('read-model Evidence builder', () => {
 
   it('writes graph source projection output through the CLI without changing default generation', async () => {
     const workspace = await createExampleWorkspace()
-    const outputPath = 'examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json'
+    const outputPath =
+      'examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json'
     const result = await runPbeCli(
       [
         'graph',
         'read-model',
         'project',
         '--graph-source',
-        'examples/adoption/todo-search-slice/graph-source.json',
+        'examples/internal-legacy/adoption/todo-search-slice/graph-source.json',
         '--output',
         outputPath,
         '--json',
@@ -461,11 +464,13 @@ describe('read-model Evidence builder', () => {
     expect(payload.coreViewCount).toBe(coreViews.length)
     expect(payload.sourceAuthorityBoundary).toContain('Todo Search selected-slice')
     expect(payload.nonPromotionStatement).toContain('repo-wide promotion')
-    expect(payload.fallbackReferences).toContain('examples/adoption/todo-search-slice/product-tree.json')
+    expect(payload.fallbackReferences).toContain(
+      'examples/internal-legacy/adoption/todo-search-slice/product-tree.json',
+    )
 
     const generated = JSON.parse(
       await readFile(
-        join(workspace, 'examples/adoption/todo-search-slice/generated/generated-read-model.json'),
+        join(workspace, 'examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json'),
         'utf8',
       ),
     ) as { nodes: unknown[]; edges: unknown[]; coreViewCoverage: unknown[] }
@@ -482,7 +487,9 @@ describe('read-model Evidence builder', () => {
     expect(projection.nodes).toEqual(generated.nodes)
     expect(projection.edges).toEqual(generated.edges)
     expect(projection.coreViewCoverage).toEqual(generated.coreViewCoverage)
-    expect(projection.fallbackReferences).toContain('examples/adoption/todo-search-slice/product-tree.json')
+    expect(projection.fallbackReferences).toContain(
+      'examples/internal-legacy/adoption/todo-search-slice/product-tree.json',
+    )
     expect(projection.userAcceptanceBoundary).toContain('cannot accept product results')
   })
 
@@ -490,15 +497,19 @@ describe('read-model Evidence builder', () => {
     const projection = await loadGraphSourceProjectionArtifact(resolve('.'))
 
     expect(projection.metadata.artifactRole).toBe('graph_source_read_model_projection')
-    expect(projection.metadata.sourceArtifact).toBe('examples/adoption/todo-search-slice/graph-source.json')
+    expect(projection.metadata.sourceArtifact).toBe(
+      'examples/internal-legacy/adoption/todo-search-slice/graph-source.json',
+    )
     expect(projection.metadata.sourceSlice).toBe(todoSearchReadModelProfile.supportedSlice)
     expect(projection.metadata.sourceProfile).toBe(todoSearchReadModelProfile.profileId)
     expect(projection.nodes).toHaveLength(todoSearchReadModelProfile.expectedCounts.nodes)
     expect(projection.edges).toHaveLength(todoSearchReadModelProfile.expectedCounts.edges)
     expect(projection.coreViewCoverage.map((entry) => entry.name)).toEqual(coreViews)
-    expect(projection.fallbackReferences).toContain('examples/adoption/todo-search-slice/acceptance-tree.json')
+    expect(projection.fallbackReferences).toContain(
+      'examples/internal-legacy/adoption/todo-search-slice/acceptance-tree.json',
+    )
     expect(projection.retainedCompatibilityArtifacts).toContain(
-      'examples/adoption/todo-search-slice/view-instance-manifest.json',
+      'examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.json',
     )
     expect(projection.sourceAuthorityBoundary).toContain('limited source model')
     expect(projection.nonPromotionStatement).toContain('repo-wide promotion')
@@ -507,7 +518,8 @@ describe('read-model Evidence builder', () => {
 
   it('rejects projection artifacts with missing boundaries or source drift', async () => {
     const graphSource = await loadGraphSourceArtifact(resolve('.'))
-    const projectionPath = 'examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json'
+    const projectionPath =
+      'examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json'
     const projection = JSON.parse(await readFile(projectionPath, 'utf8')) as Record<string, unknown>
 
     delete projection.userAcceptanceBoundary
@@ -523,7 +535,7 @@ describe('read-model Evidence builder', () => {
   })
 
   it('rejects malformed graph source artifacts and does not mutate the positive artifact', async () => {
-    const graphSourcePath = 'examples/adoption/todo-search-slice/graph-source.json'
+    const graphSourcePath = 'examples/internal-legacy/adoption/todo-search-slice/graph-source.json'
     const before = await readFile(graphSourcePath, 'utf8')
     const source = JSON.parse(before) as Record<string, unknown>
     delete source.sourceAuthorityBoundary
@@ -639,19 +651,19 @@ describe('read-model Evidence builder', () => {
     expect(report.source.sourceSlice).toBe(todoSearchReadModelProfile.supportedSlice)
     expect(report.source.policyLevel).toBe('pilot-marker-backed')
     expect(report.source.readModelProjection).toBe(
-      'examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json',
+      'examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json',
     )
     expect(report.references.productNodeIds).toContain('PT-SEARCH-001')
     expect(report.references.workNodeIds).toContain('WT-SEARCH-001')
     expect(report.verificationRequirements.testNodeIds).toContain('TT-SEARCH-001')
     expect(report.fileChangeGuardContract.sourceFiles).toContain(
-      'examples/adoption/todo-search-slice/product-tree.json',
+      'examples/internal-legacy/adoption/todo-search-slice/product-tree.json',
     )
     expect(report.fileChangeGuardContract.sourceFiles).toContain(
-      'examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md',
+      'examples/internal-legacy/adoption/compatibility-mismatch-slice/compatibility-control-node.md',
     )
     expect(report.fileChangeGuardContract.sourceFiles).not.toContain(
-      'examples/adoption/todo-search-slice/examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md',
+      'examples/internal-legacy/adoption/todo-search-slice/examples/internal-legacy/adoption/compatibility-mismatch-slice/compatibility-control-node.md',
     )
     expect(report.verificationRequirements.requiredCommands).toContain('graph read-model compare')
     expect(report.verificationRequirements.requiredArtifacts).toHaveProperty('parityReport')
@@ -767,7 +779,7 @@ describe('read-model Evidence builder', () => {
 
   it('does not mutate the registry fixture while parsing or planning', async () => {
     const workspace = await createExampleWorkspace()
-    const registryPath = join(workspace, 'examples/read-model-aggregate/read-model-slices.json')
+    const registryPath = join(workspace, 'examples/internal-legacy/read-model-aggregate/read-model-slices.json')
     const before = await readFile(registryPath, 'utf8')
 
     const registry = await loadReadModelSliceRegistry(workspace)
@@ -803,8 +815,9 @@ describe('read-model Evidence builder', () => {
     )
     expect(todoSearch?.commands.find((entry) => entry.command === 'project-contract')).toMatchObject({
       status: 'projection-contract-pass',
-      graphSource: 'examples/adoption/todo-search-slice/graph-source.json',
-      projection: 'examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json',
+      graphSource: 'examples/internal-legacy/adoption/todo-search-slice/graph-source.json',
+      projection:
+        'examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json',
       nodeCount: 40,
       edgeCount: 59,
       coreViewCount: 7,
@@ -838,7 +851,7 @@ describe('read-model Evidence builder', () => {
     ])
     expect(todoSearch?.commands.find((entry) => entry.command === 'compare')).toMatchObject({
       status: 'comparison-pass',
-      parityReport: 'examples/adoption/todo-search-slice/generated/read-model-parity-report.json',
+      parityReport: 'examples/internal-legacy/adoption/todo-search-slice/generated/read-model-parity-report.json',
       parityReportMatchesRegistry: true,
       mismatchCount: 0,
     })
@@ -852,7 +865,7 @@ describe('read-model Evidence builder', () => {
     await rm(
       join(
         missingProjectionWorkspace,
-        'examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json',
+        'examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json',
       ),
       { force: true },
     )
@@ -872,7 +885,7 @@ describe('read-model Evidence builder', () => {
     const corruptProjectionWorkspace = await createExampleWorkspace()
     const projectionPath = join(
       corruptProjectionWorkspace,
-      'examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json',
+      'examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json',
     )
     const projection = JSON.parse(await readFile(projectionPath, 'utf8')) as Record<string, unknown>
     delete projection.sourceAuthorityBoundary
@@ -934,7 +947,7 @@ describe('read-model Evidence builder', () => {
 
   it('does not mutate the registry while running validate-all', async () => {
     const workspace = await createExampleWorkspace()
-    const registryPath = join(workspace, 'examples/read-model-aggregate/read-model-slices.json')
+    const registryPath = join(workspace, 'examples/internal-legacy/read-model-aggregate/read-model-slices.json')
     const before = await readFile(registryPath, 'utf8')
 
     await validateAllReadModelEvidence(workspace)
@@ -945,7 +958,7 @@ describe('read-model Evidence builder', () => {
 
   it('reports non-enforcing graph-source health across validate-all, intent, and retirement readiness', async () => {
     const workspace = await createExampleWorkspace()
-    await copyWorkspacePath('examples/intent-critical', workspace)
+    await copyWorkspacePath('examples/internal-legacy/intent-critical', workspace)
 
     const report = await reportGraphSourceHealth(workspace)
 
@@ -1041,7 +1054,10 @@ describe('read-model Evidence builder', () => {
 
   it('isolates Compiler Boundary registry drift in the task registry bucket', async () => {
     const workspace = await createExampleWorkspace()
-    const registryPath = join(workspace, 'examples/read-model-aggregate/compiler-boundary-task-registry.json')
+    const registryPath = join(
+      workspace,
+      'examples/internal-legacy/read-model-aggregate/compiler-boundary-task-registry.json',
+    )
     const registry = JSON.parse(await readFile(registryPath, 'utf8')) as Record<string, unknown>
     registry.status = 'drifted'
     registry.boundaryPrinciple = {
@@ -1067,7 +1083,7 @@ describe('read-model Evidence builder', () => {
 
   it('isolates Compiler Boundary schema drift in the contract schema bucket', async () => {
     const workspace = await createExampleWorkspace()
-    const schemaPath = join(workspace, 'examples/read-model-aggregate/execution-contract-schema.json')
+    const schemaPath = join(workspace, 'examples/internal-legacy/read-model-aggregate/execution-contract-schema.json')
     const schema = JSON.parse(await readFile(schemaPath, 'utf8')) as {
       status: string
       nonEnforcementStatement: string
@@ -1118,7 +1134,7 @@ describe('read-model Evidence builder', () => {
   })
 
   it('blocks Compiler Boundary MVP when advisory tasks claim execution authority', async () => {
-    const registryPath = 'examples/read-model-aggregate/compiler-boundary-task-registry.json'
+    const registryPath = 'examples/internal-legacy/read-model-aggregate/compiler-boundary-task-registry.json'
     const registry = JSON.parse(await readFile(registryPath, 'utf8')) as { tasks: Array<Record<string, unknown>> }
     const advisory = registry.tasks.find((task) => task.classification === 'ai-advisory')
     expect(advisory).toBeTruthy()
@@ -1130,7 +1146,7 @@ describe('read-model Evidence builder', () => {
   })
 
   it('blocks Compiler Boundary schema entries that omit source or authority', async () => {
-    const schemaPath = 'examples/read-model-aggregate/execution-contract-schema.json'
+    const schemaPath = 'examples/internal-legacy/read-model-aggregate/execution-contract-schema.json'
     const schema = JSON.parse(await readFile(schemaPath, 'utf8')) as {
       fieldDefinitions: Record<string, Record<string, unknown>>
     }
@@ -1146,7 +1162,10 @@ describe('read-model Evidence builder', () => {
 
   it('blocks dry-run contracts with status or sourceMode drift in the dry-run bucket', async () => {
     const workspace = await createExampleWorkspace()
-    const contractPath = join(workspace, 'examples/read-model-aggregate/generated/execution-contract-dry-run.json')
+    const contractPath = join(
+      workspace,
+      'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json',
+    )
     const contract = JSON.parse(await readFile(contractPath, 'utf8')) as Record<string, unknown>
     contract.status = 'drifted'
     contract.sourceMode = 'ai-authored'
@@ -1168,7 +1187,7 @@ describe('read-model Evidence builder', () => {
   })
 
   it('blocks dry-run contracts with invalid scope, check, evidence, or stop-condition shapes', async () => {
-    const contractPath = 'examples/read-model-aggregate/generated/execution-contract-dry-run.json'
+    const contractPath = 'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json'
     const contract = JSON.parse(await readFile(contractPath, 'utf8')) as {
       allowedScope: Array<Record<string, unknown>>
       requiredChecks: Array<Record<string, unknown>>
@@ -1196,7 +1215,7 @@ describe('read-model Evidence builder', () => {
   })
 
   it('blocks dry-run contracts with critical or blocking unknowns and unresolved high risks', async () => {
-    const contractPath = 'examples/read-model-aggregate/generated/execution-contract-dry-run.json'
+    const contractPath = 'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json'
     const contract = JSON.parse(await readFile(contractPath, 'utf8')) as Record<string, unknown>
 
     const criticalUnknownContract = {
@@ -1252,7 +1271,7 @@ describe('read-model Evidence builder', () => {
 
   it('blocks durable invalid compiler-boundary fixture when high risk lacks linked human decision', async () => {
     const fixturePath =
-      'examples/read-model-aggregate/invalid-compiler-boundary-fixtures/high-risk-mitigated-without-human-decision.json'
+      'examples/internal-legacy/read-model-aggregate/invalid-compiler-boundary-fixtures/high-risk-mitigated-without-human-decision.json'
     const contract = JSON.parse(await readFile(fixturePath, 'utf8')) as Record<string, unknown>
 
     const validation = validateExecutionContract(contract)
@@ -1263,7 +1282,7 @@ describe('read-model Evidence builder', () => {
   })
 
   it('blocks human decisions that point at unknown contract targets', async () => {
-    const contractPath = 'examples/read-model-aggregate/generated/execution-contract-dry-run.json'
+    const contractPath = 'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json'
     const contract = JSON.parse(await readFile(contractPath, 'utf8')) as Record<string, unknown>
     contract.humanDecisions = [
       {
@@ -1324,8 +1343,8 @@ describe('read-model Evidence builder', () => {
   })
 
   it('blocks Compiler Input Model schema authority drift and dry-run contract output claims', async () => {
-    const schemaPath = 'examples/read-model-aggregate/compiler-input-model-schema.json'
-    const inputPath = 'examples/read-model-aggregate/generated/compiler-input-model-dry-run.json'
+    const schemaPath = 'examples/internal-legacy/read-model-aggregate/compiler-input-model-schema.json'
+    const inputPath = 'examples/internal-legacy/read-model-aggregate/generated/compiler-input-model-dry-run.json'
     const schema = JSON.parse(await readFile(schemaPath, 'utf8')) as {
       inputDefinitions: Record<string, Record<string, unknown>>
     }
@@ -1341,7 +1360,7 @@ describe('read-model Evidence builder', () => {
   })
 
   it('blocks Compiler Input Model dry-run inputs with broken artifact and graph references', async () => {
-    const inputPath = 'examples/read-model-aggregate/generated/compiler-input-model-dry-run.json'
+    const inputPath = 'examples/internal-legacy/read-model-aggregate/generated/compiler-input-model-dry-run.json'
     const input = JSON.parse(await readFile(inputPath, 'utf8')) as {
       graphSnapshot: { artifacts: Array<Record<string, unknown>> }
       evidenceIndex: { entries: Array<Record<string, unknown>> }
@@ -1427,15 +1446,17 @@ describe('read-model Evidence builder', () => {
     expect(report.candidateDiff.reviewStatus).toBe('non-blocking-review-diff')
     expect(report.candidateDiff.equivalenceStatus).toBe('compiler-equivalence-not-proven')
     expect(report.candidateDiff.reviewBoundary).toContain('equivalence with the hand-written contract')
-    expect(report.paths.diffReport).toBe('examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json')
+    expect(report.paths.diffReport).toBe(
+      'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.diff.json',
+    )
     expect(report.paths.outputRequirementSourceAuthorityPreview).toBe(
-      'examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json',
+      'examples/internal-legacy/read-model-aggregate/generated/output-requirement-source-authority.preview.json',
     )
     expect(report.paths.sourceAuthorityGapPreview).toBe(
-      'examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json',
+      'examples/internal-legacy/read-model-aggregate/generated/contract-source-authority-gap.preview.json',
     )
     expect(report.paths.promotionReviewPacket).toBe(
-      'examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
+      'examples/internal-legacy/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
     )
     expect(report.outputRequirementSourceAuthorityPreview).toMatchObject({
       status: 'output-requirement-source-authority-preview-pass',
@@ -1470,7 +1491,9 @@ describe('read-model Evidence builder', () => {
         action: 'stop-and-record-missing-evidence',
       },
     ])
-    expect(JSON.stringify(candidate)).toContain('examples/adoption/todo-search-slice/runtime-fixture/todo-search.js')
+    expect(JSON.stringify(candidate)).toContain(
+      'examples/internal-legacy/adoption/todo-search-slice/runtime-fixture/todo-search.js',
+    )
     expect(JSON.stringify(candidate)).toContain('work:WT-SEARCH-001')
     const outputRequirementPreview = JSON.parse(
       await readFile(join(workspace, report.paths.outputRequirementSourceAuthorityPreview), 'utf8'),
@@ -1717,7 +1740,8 @@ describe('read-model Evidence builder', () => {
     expect(report.promotionReview).toMatchObject({
       status: 'promotion-review-ready-for-human',
       approvalStatus: 'not-approved',
-      packetPath: 'examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
+      packetPath:
+        'examples/internal-legacy/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
       equivalenceCandidate: true,
       equivalenceProven: false,
       reviewOnlyDiffCount: 3,
@@ -1738,10 +1762,14 @@ describe('read-model Evidence builder', () => {
     expect(promotionReviewPacket.status).toBe('promotion-review-ready-for-human')
     expect(promotionReviewPacket.approvalStatus).toBe('not-approved')
     expect(promotionReviewPacket.reviewedArtifacts).toMatchObject({
-      compilerCandidate: 'examples/read-model-aggregate/generated/execution-contract-dry-run.generated.json',
-      handWrittenComparisonFixture: 'examples/read-model-aggregate/generated/execution-contract-dry-run.json',
-      semanticDiffReport: 'examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json',
-      sourceAuthorityGapPreview: 'examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json',
+      compilerCandidate:
+        'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.generated.json',
+      handWrittenComparisonFixture:
+        'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json',
+      semanticDiffReport:
+        'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.diff.json',
+      sourceAuthorityGapPreview:
+        'examples/internal-legacy/read-model-aggregate/generated/contract-source-authority-gap.preview.json',
     })
     expect(promotionReviewPacket.equivalencePolicyStatus).toMatchObject({
       sourceAuthorityPreservationStatus: 'source-authority-preserved',
@@ -1983,7 +2011,10 @@ describe('read-model Evidence builder', () => {
 
   it('derives output requirements from source authority rather than hand-written comparison text', async () => {
     const workspace = await createExampleWorkspace()
-    const dryRunInputPath = join(workspace, 'examples/read-model-aggregate/generated/compiler-input-model-dry-run.json')
+    const dryRunInputPath = join(
+      workspace,
+      'examples/internal-legacy/read-model-aggregate/generated/compiler-input-model-dry-run.json',
+    )
     const input = JSON.parse(await readFile(dryRunInputPath, 'utf8')) as {
       outputRequirementSources: Array<Record<string, unknown>>
     }
@@ -2001,7 +2032,10 @@ describe('read-model Evidence builder', () => {
 
   it('derives required Evidence from source authority rather than hand-written comparison evidence', async () => {
     const workspace = await createExampleWorkspace()
-    const handWrittenPath = join(workspace, 'examples/read-model-aggregate/generated/execution-contract-dry-run.json')
+    const handWrittenPath = join(
+      workspace,
+      'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json',
+    )
     const handWritten = JSON.parse(await readFile(handWrittenPath, 'utf8')) as {
       requiredEvidence: Array<Record<string, unknown>>
     }
@@ -2039,14 +2073,17 @@ describe('read-model Evidence builder', () => {
 
   it('derives required context from graph snapshot source authority rather than hand-written comparison context', async () => {
     const workspace = await createExampleWorkspace()
-    const handWrittenPath = join(workspace, 'examples/read-model-aggregate/generated/execution-contract-dry-run.json')
+    const handWrittenPath = join(
+      workspace,
+      'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json',
+    )
     const handWritten = JSON.parse(await readFile(handWrittenPath, 'utf8')) as {
       requiredContext: Array<Record<string, unknown>>
     }
     handWritten.requiredContext = [
       {
         id: 'context-hand-written-comparison-only',
-        artifact: 'examples/read-model-aggregate/read-model-slices.json',
+        artifact: 'examples/internal-legacy/read-model-aggregate/read-model-slices.json',
         role: 'comparison fixture only',
       },
     ]
@@ -2060,12 +2097,12 @@ describe('read-model Evidence builder', () => {
     expect(candidate.requiredContext).toEqual([
       {
         id: 'context-read-model-health',
-        artifact: 'examples/read-model-aggregate/generated/read-model-health-report-output.json',
+        artifact: 'examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.json',
         role: 'non-enforcing status context',
       },
       {
         id: 'context-todo-search-graph-source',
-        artifact: 'examples/adoption/todo-search-slice/graph-source.json',
+        artifact: 'examples/internal-legacy/adoption/todo-search-slice/graph-source.json',
         role: 'limited graph-source context',
       },
     ])
@@ -2074,7 +2111,10 @@ describe('read-model Evidence builder', () => {
 
   it('derives known risks from risk source authority rather than hand-written comparison risks', async () => {
     const workspace = await createExampleWorkspace()
-    const handWrittenPath = join(workspace, 'examples/read-model-aggregate/generated/execution-contract-dry-run.json')
+    const handWrittenPath = join(
+      workspace,
+      'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json',
+    )
     const handWritten = JSON.parse(await readFile(handWrittenPath, 'utf8')) as {
       knownRisks: Array<Record<string, unknown>>
     }
@@ -2106,7 +2146,10 @@ describe('read-model Evidence builder', () => {
 
   it('derives allowed scope from target scope source authority rather than hand-written comparison scope', async () => {
     const workspace = await createExampleWorkspace()
-    const handWrittenPath = join(workspace, 'examples/read-model-aggregate/generated/execution-contract-dry-run.json')
+    const handWrittenPath = join(
+      workspace,
+      'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json',
+    )
     const handWritten = JSON.parse(await readFile(handWrittenPath, 'utf8')) as {
       allowedScope: Array<Record<string, unknown>>
     }
@@ -2114,7 +2157,7 @@ describe('read-model Evidence builder', () => {
       {
         id: 'scope-hand-written-comparison-only',
         scopeKind: 'graph',
-        paths: ['examples/read-model-aggregate/graph-source-transition-status.json'],
+        paths: ['examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json'],
         derivedFrom: ['comparison-fixture:not-compiler-source'],
       },
     ]
@@ -2131,7 +2174,7 @@ describe('read-model Evidence builder', () => {
       'scope-todo-search-evidence',
     ])
     expect(candidate.allowedScope.flatMap((entry) => entry.paths)).toContain(
-      'examples/adoption/todo-search-slice/runtime-evidence.md',
+      'examples/internal-legacy/adoption/todo-search-slice/runtime-evidence.md',
     )
     expect(candidate.allowedScope.flatMap((entry) => entry.derivedFrom)).toContain('evidence:EV-SEARCH-RUNTIME-001')
     expect(candidate.allowedScope.map((entry) => entry.id)).not.toContain('scope-hand-written-comparison-only')
@@ -2141,7 +2184,7 @@ describe('read-model Evidence builder', () => {
     const resolution = resolveRequiredContextFromSourceAuthority([
       {
         id: 'read-model-health',
-        path: 'examples/read-model-aggregate/generated/read-model-health-report-output.json',
+        path: 'examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.json',
         role: 'non-enforcing status context',
       },
       {
@@ -2154,7 +2197,7 @@ describe('read-model Evidence builder', () => {
     expect(resolution.requiredContext).toEqual([
       {
         id: 'context-read-model-health',
-        artifact: 'examples/read-model-aggregate/generated/read-model-health-report-output.json',
+        artifact: 'examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.json',
         role: 'non-enforcing status context',
       },
     ])
@@ -2180,7 +2223,7 @@ describe('read-model Evidence builder', () => {
         id: 'scope-todo-search-evidence',
         scopeKind: 'evidence',
         paths: [
-          'examples/adoption/todo-search-slice/runtime-evidence.md',
+          'examples/internal-legacy/adoption/todo-search-slice/runtime-evidence.md',
           'docs/concept/tiny-behavior-change-dogfood.md',
         ],
         derivedFrom: ['graph-source:node:EV-SEARCH-NOTE-TEST'],
@@ -2190,7 +2233,7 @@ describe('read-model Evidence builder', () => {
       {
         id: 'scope-bad-kind',
         scopeKind: 'database',
-        paths: ['examples/adoption/todo-search-slice/runtime-evidence.md'],
+        paths: ['examples/internal-legacy/adoption/todo-search-slice/runtime-evidence.md'],
         derivedFrom: ['graph-source:node:EV-SEARCH-NOTE-TEST'],
         confidence: 'graph-backed-candidate',
       },
@@ -2201,7 +2244,7 @@ describe('read-model Evidence builder', () => {
         id: 'scope-todo-search-evidence',
         scopeKind: 'evidence',
         paths: [
-          'examples/adoption/todo-search-slice/runtime-evidence.md',
+          'examples/internal-legacy/adoption/todo-search-slice/runtime-evidence.md',
           'docs/concept/tiny-behavior-change-dogfood.md',
         ],
         derivedFrom: ['evidence:EV-SEARCH-RUNTIME-001'],
@@ -2293,13 +2336,13 @@ describe('read-model Evidence builder', () => {
       evidenceEntries: [
         {
           id: 'evidence-validate-all-result',
-          artifact: 'examples/read-model-aggregate/generated/read-model-aggregate-summary.json',
+          artifact: 'examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.json',
           evidenceType: 'validate_all_result',
           freshness: 'required-after-graph-or-artifact-change',
         },
         {
           id: 'evidence-unmapped',
-          artifact: 'examples/read-model-aggregate/generated/missing.json',
+          artifact: 'examples/internal-legacy/read-model-aggregate/generated/missing.json',
           evidenceType: 'not_mapped',
           freshness: 'required-after-source-change',
         },
@@ -2344,7 +2387,10 @@ describe('read-model Evidence builder', () => {
 
   it('derives forbidden scope from policy source authority rather than hand-written comparison scope', async () => {
     const workspace = await createExampleWorkspace()
-    const handWrittenPath = join(workspace, 'examples/read-model-aggregate/generated/execution-contract-dry-run.json')
+    const handWrittenPath = join(
+      workspace,
+      'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json',
+    )
     const handWritten = JSON.parse(await readFile(handWrittenPath, 'utf8')) as {
       forbiddenScope: Array<Record<string, unknown>>
     }
@@ -2352,7 +2398,7 @@ describe('read-model Evidence builder', () => {
       {
         id: 'scope-hand-written-comparison-only',
         scopeKind: 'graph',
-        paths: ['examples/read-model-aggregate/graph-source-transition-status.json'],
+        paths: ['examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json'],
         derivedFrom: ['comparison-fixture:not-compiler-source'],
       },
     ]
@@ -2409,7 +2455,10 @@ describe('read-model Evidence builder', () => {
 
   it('derives stop conditions from source authority rather than hand-written comparison stops', async () => {
     const workspace = await createExampleWorkspace()
-    const handWrittenPath = join(workspace, 'examples/read-model-aggregate/generated/execution-contract-dry-run.json')
+    const handWrittenPath = join(
+      workspace,
+      'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json',
+    )
     const handWritten = JSON.parse(await readFile(handWrittenPath, 'utf8')) as {
       stopConditions: Array<Record<string, unknown>>
     }
@@ -2846,17 +2895,19 @@ describe('read-model Evidence builder', () => {
     expect(output.inputModelStatus).toBe('compiler-input-model-pass')
     expect(output.candidateStatus).toBe('contract-candidate-pass')
     expect(output.paths.outputCandidate).toBe(
-      'examples/read-model-aggregate/generated/execution-contract-dry-run.generated.json',
+      'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.generated.json',
     )
-    expect(output.paths.diffReport).toBe('examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json')
+    expect(output.paths.diffReport).toBe(
+      'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.diff.json',
+    )
     expect(output.paths.outputRequirementSourceAuthorityPreview).toBe(
-      'examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json',
+      'examples/internal-legacy/read-model-aggregate/generated/output-requirement-source-authority.preview.json',
     )
     expect(output.paths.sourceAuthorityGapPreview).toBe(
-      'examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json',
+      'examples/internal-legacy/read-model-aggregate/generated/contract-source-authority-gap.preview.json',
     )
     expect(output.paths.promotionReviewPacket).toBe(
-      'examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
+      'examples/internal-legacy/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
     )
     expect(output.outputRequirementSourceAuthorityPreview).toMatchObject({
       status: 'output-requirement-source-authority-preview-pass',
@@ -2920,7 +2971,8 @@ describe('read-model Evidence builder', () => {
     expect(output.promotionReview).toMatchObject({
       status: 'promotion-review-ready-for-human',
       approvalStatus: 'not-approved',
-      packetPath: 'examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
+      packetPath:
+        'examples/internal-legacy/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
       equivalenceCandidate: true,
       equivalenceProven: false,
       reviewOnlyDiffCount: 3,
@@ -2943,7 +2995,10 @@ describe('read-model Evidence builder', () => {
 
   it('blocks Contract Compiler Dry-Run v0.1 for unsupported compiler input change types', async () => {
     const workspace = await createExampleWorkspace()
-    const inputPath = join(workspace, 'examples/read-model-aggregate/generated/compiler-input-model-dry-run.json')
+    const inputPath = join(
+      workspace,
+      'examples/internal-legacy/read-model-aggregate/generated/compiler-input-model-dry-run.json',
+    )
     const input = JSON.parse(await readFile(inputPath, 'utf8')) as {
       packSchema: { id: string; changeType: string }
     }
@@ -2963,7 +3018,10 @@ describe('read-model Evidence builder', () => {
 
   it('blocks Contract Compiler Dry-Run v0.1 candidate generation for supported inputs with bad policy mappings', async () => {
     const workspace = await createExampleWorkspace()
-    const inputPath = join(workspace, 'examples/read-model-aggregate/generated/compiler-input-model-dry-run.json')
+    const inputPath = join(
+      workspace,
+      'examples/internal-legacy/read-model-aggregate/generated/compiler-input-model-dry-run.json',
+    )
     const input = JSON.parse(await readFile(inputPath, 'utf8')) as {
       policySnapshot: { evidenceCheckMappings: Array<Record<string, unknown>> }
     }
@@ -2983,8 +3041,11 @@ describe('read-model Evidence builder', () => {
 
   it('exposes graph-source health through the CLI without creating enforcement', async () => {
     const workspace = await createExampleWorkspace()
-    await copyWorkspacePath('examples/intent-critical', workspace)
-    const markdownPath = join(workspace, 'examples/read-model-aggregate/generated/read-model-health-report-output.md')
+    await copyWorkspacePath('examples/internal-legacy/intent-critical', workspace)
+    const markdownPath = join(
+      workspace,
+      'examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.md',
+    )
 
     const result = await runPbeCli(['graph', 'read-model', 'report-health', '--json', '--markdown', markdownPath], {
       cwd: workspace,
@@ -3086,7 +3147,9 @@ describe('read-model Evidence builder', () => {
     expect(result.exitCode).toBe(0)
     expect(output.ok).toBe(true)
     expect(output.status).toBe('graph-source-health-pass')
-    expect(output.markdownReport).toBe('examples/read-model-aggregate/generated/read-model-health-report-output.md')
+    expect(output.markdownReport).toBe(
+      'examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.md',
+    )
     expect(output.enforcementStatus).toBe('non-enforcing')
     expect(output.compilerBoundary.status).toBe('compiler-boundary-mvp-pass')
     expect(output.compilerBoundary.dryRunChangeId).toBe('change-todo-search-whitespace-normalization-dogfood')
@@ -3141,7 +3204,7 @@ describe('read-model Evidence builder', () => {
       generatedPreservationStatus: 'generated-output-requirements-preserved',
     })
     expect(output.contractCompilerDryRun.outputRequirementSourceAuthorityPreviewPath).toBe(
-      'examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json',
+      'examples/internal-legacy/read-model-aggregate/generated/output-requirement-source-authority.preview.json',
     )
     expect(output.contractCompilerDryRun.sourceAuthorityGapPreview).toMatchObject({
       status: 'contract-source-authority-gap-preview-pass',
@@ -3152,12 +3215,13 @@ describe('read-model Evidence builder', () => {
     })
     expect(output.contractCompilerDryRun.sourceAuthorityGapPreview.fieldsRequiringSourceAuthority).toEqual([])
     expect(output.contractCompilerDryRun.sourceAuthorityGapPreviewPath).toBe(
-      'examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json',
+      'examples/internal-legacy/read-model-aggregate/generated/contract-source-authority-gap.preview.json',
     )
     expect(output.contractCompilerDryRun.promotionReview).toMatchObject({
       status: 'promotion-review-ready-for-human',
       approvalStatus: 'not-approved',
-      packetPath: 'examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
+      packetPath:
+        'examples/internal-legacy/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
       equivalenceCandidate: true,
       equivalenceProven: false,
       reviewOnlyDiffCount: 3,
@@ -3169,7 +3233,7 @@ describe('read-model Evidence builder', () => {
     expect(output.contractCompilerDryRun.promotionReview.checklistPassCount).toBeGreaterThan(0)
     expect(output.contractCompilerDryRun.promotionReview.checklistDecisionRequiredCount).toBeGreaterThan(0)
     expect(output.contractCompilerDryRun.promotionReviewPacketPath).toBe(
-      'examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
+      'examples/internal-legacy/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json',
     )
     expect(output.contractCompilerDryRun.highestReviewSeverity).toBe('medium')
     expect(output.contractCompilerDryRun.semanticClassificationCounts['semantic-loss']).toBeUndefined()
@@ -3186,7 +3250,7 @@ describe('read-model Evidence builder', () => {
     expect(output.contractCompilerDryRun.semanticDiffRuleCoverage.unknownFields).toEqual([])
     expect(output.contractCompilerDryRun.differingFieldCount).toBeGreaterThan(0)
     expect(output.contractCompilerDryRun.diffReport).toBe(
-      'examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json',
+      'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.diff.json',
     )
     expect(output.contractCompilerDryRun.diffReviewBoundary).toContain('equivalence with the hand-written contract')
     expect(output.contractCompilerDryRun.dryRunChangeId).toBe('change-todo-search-whitespace-normalization-dogfood')
@@ -3225,13 +3289,15 @@ describe('read-model Evidence builder', () => {
     expect(markdown).toContain('approval `not-approved`')
     expect(markdown).toContain('boundary wording review required `true`')
     expect(markdown).toContain(
-      '`examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json`',
+      '`examples/internal-legacy/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json`',
     )
     expect(markdown).toContain('Equivalence candidate status is review metadata only')
     expect(markdown).toContain('Promotion review packet is non-enforcing preview Evidence only')
-    expect(markdown).toContain('`examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json`')
     expect(markdown).toContain(
-      '`examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json`',
+      '`examples/internal-legacy/read-model-aggregate/generated/contract-source-authority-gap.preview.json`',
+    )
+    expect(markdown).toContain(
+      '`examples/internal-legacy/read-model-aggregate/generated/output-requirement-source-authority.preview.json`',
     )
     expect(markdown).toContain('`compiler-promotion-review-required`')
     expect(markdown).not.toContain('semantic-loss: 1')
@@ -3257,8 +3323,11 @@ describe('read-model Evidence builder', () => {
 
   it('blocks graph-source health when retirement approval package status drifts', async () => {
     const workspace = await createExampleWorkspace()
-    await copyWorkspacePath('examples/intent-critical', workspace)
-    const statusPath = join(workspace, 'examples/read-model-aggregate/graph-source-transition-status.json')
+    await copyWorkspacePath('examples/internal-legacy/intent-critical', workspace)
+    const statusPath = join(
+      workspace,
+      'examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json',
+    )
     const status = JSON.parse(await readFile(statusPath, 'utf8')) as {
       retirementApprovalPackages: Array<{ scope: string; status: string }>
     }
@@ -3278,7 +3347,7 @@ describe('read-model Evidence builder', () => {
   it('generates bounded read-model Evidence with source authority boundaries', async () => {
     const workspace = await createExampleWorkspace()
 
-    const result = await generateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const result = await generateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
     const generated = JSON.parse(await readFile(result.generatedJsonPath, 'utf8')) as {
       nodes: Array<{ viewScopedTags?: string[]; includedInViewIds?: string[] }>
       edges: unknown[]
@@ -3301,10 +3370,12 @@ describe('read-model Evidence builder', () => {
     expect(generated.edges).toHaveLength(todoSearchReadModelProfile.expectedCounts.edges)
     expect(generated.metadata.sliceProfile).toBe(todoSearchReadModelProfile.profileId)
     expect(generated.metadata.readModelSourceMode).toBe('graph-source-backed')
-    expect(generated.metadata.graphSourceArtifact).toBe('examples/adoption/todo-search-slice/graph-source.json')
+    expect(generated.metadata.graphSourceArtifact).toBe(
+      'examples/internal-legacy/adoption/todo-search-slice/graph-source.json',
+    )
     expect(generated.metadata.graphSourceProjectionRole).toBe('graph_source_read_model_projection')
     expect(generated.sourceInputs.map((entry) => entry.relativePath)).toContain(
-      'examples/adoption/todo-search-slice/graph-source.json',
+      'examples/internal-legacy/adoption/todo-search-slice/graph-source.json',
     )
     expect(generated.nodes.length).toBeGreaterThan(0)
     expect(
@@ -3320,7 +3391,7 @@ describe('read-model Evidence builder', () => {
 
   it('uses Todo Search graph source records for generated read-model output', async () => {
     const workspace = await createExampleWorkspace()
-    const graphSourcePath = join(workspace, 'examples/adoption/todo-search-slice/graph-source.json')
+    const graphSourcePath = join(workspace, 'examples/internal-legacy/adoption/todo-search-slice/graph-source.json')
     const graphSource = JSON.parse(await readFile(graphSourcePath, 'utf8')) as {
       sourceRecords: { nodes: Array<{ id: string; title: string }> }
     }
@@ -3329,7 +3400,7 @@ describe('read-model Evidence builder', () => {
     targetNode!.title = 'Graph source backed generation smoke title'
     await writeFile(graphSourcePath, JSON.stringify(graphSource, null, 2))
 
-    const result = await generateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const result = await generateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
     const generated = JSON.parse(await readFile(result.generatedJsonPath, 'utf8')) as {
       nodes: Array<{ id: string; title: string }>
       edges: unknown[]
@@ -3348,9 +3419,9 @@ describe('read-model Evidence builder', () => {
 
   it('writes a parity report without mutating manual artifacts', async () => {
     const workspace = await createExampleWorkspace()
-    const manualPath = 'examples/adoption/todo-search-slice/maintainability-graph-read-model.json'
+    const manualPath = 'examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json'
     const beforeManual = await readFile(join(workspace, manualPath), 'utf8')
-    const generated = await generateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const generated = await generateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
 
     const result = await compareReadModelEvidence(workspace, generated.generatedJsonPath, manualPath)
     const afterManual = await readFile(join(workspace, manualPath), 'utf8')
@@ -3373,14 +3444,14 @@ describe('read-model Evidence builder', () => {
 
   it('validates Todo Search generated read-model Evidence as validator-backed Evidence', async () => {
     const workspace = await createExampleWorkspace()
-    const generated = await generateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const generated = await generateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
     await compareReadModelEvidence(
       workspace,
       generated.generatedJsonPath,
-      'examples/adoption/todo-search-slice/maintainability-graph-read-model.json',
+      'examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json',
     )
 
-    const result = await validateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const result = await validateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
     const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
       status: string
       evidenceLevel: string
@@ -3413,7 +3484,7 @@ describe('read-model Evidence builder', () => {
     expect(report.metadata.runtimeFixtureRequirement).toMatchObject({ required: true, status: 'present' })
     expect(report.sliceValidationContract).toMatchObject({
       reportUnit: 'per-slice-validation-report',
-      sourceSlice: 'examples/adoption/todo-search-slice',
+      sourceSlice: 'examples/internal-legacy/adoption/todo-search-slice',
       policyLevel: 'pilot-marker-backed',
     })
     expect(report.sourceAuthorityBoundary).toContain('does not change source authority')
@@ -3549,7 +3620,7 @@ describe('read-model Evidence builder', () => {
   it('validates the structure-only fixture without Todo Search generated, manual parity, or pilot marker artifacts', async () => {
     const workspace = await createExampleWorkspace()
     await generateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
-    await rm(join(workspace, 'examples/adoption/todo-search-slice'), { recursive: true, force: true })
+    await rm(join(workspace, 'examples/internal-legacy/adoption/todo-search-slice'), { recursive: true, force: true })
 
     const result = await validateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
     const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
@@ -3573,15 +3644,15 @@ describe('read-model Evidence builder', () => {
 
   it('validates Todo Search without depending on the Todo App generated directory', async () => {
     const workspace = await createExampleWorkspace()
-    const generated = await generateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const generated = await generateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
     await compareReadModelEvidence(
       workspace,
       generated.generatedJsonPath,
-      'examples/adoption/todo-search-slice/maintainability-graph-read-model.json',
+      'examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json',
     )
     await rm(join(workspace, 'examples/valid/todo-app-pbe-run/generated'), { recursive: true, force: true })
 
-    const result = await validateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const result = await validateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
     const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
       status: string
       summary: { checkCount: number; blockingCount: number; decisionRequiredCount: number }
@@ -3606,7 +3677,7 @@ describe('read-model Evidence builder', () => {
     await prepareTwoSliceValidationReports(workspace)
 
     const result = await summarizeReadModelEvidence(workspace, [
-      'examples/adoption/todo-search-slice',
+      'examples/internal-legacy/adoption/todo-search-slice',
       'examples/valid/todo-app-pbe-run',
     ])
     const summary = JSON.parse(await readFile(result.summaryJsonPath, 'utf8')) as {
@@ -3643,7 +3714,7 @@ describe('read-model Evidence builder', () => {
     expect(summary.perSliceSummaries).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          sourceSlice: 'examples/adoption/todo-search-slice',
+          sourceSlice: 'examples/internal-legacy/adoption/todo-search-slice',
           profileId: todoSearchReadModelProfile.profileId,
           policyLevel: 'pilot-marker-backed',
           validationStatus: 'validation-pass',
@@ -3671,7 +3742,7 @@ describe('read-model Evidence builder', () => {
     await mutateValidationReport(workspace, 'examples/valid/todo-app-pbe-run', 'validation-warning', 'warningCount', 1)
 
     const result = await summarizeReadModelEvidence(workspace, [
-      'examples/adoption/todo-search-slice',
+      'examples/internal-legacy/adoption/todo-search-slice',
       'examples/valid/todo-app-pbe-run',
     ])
 
@@ -3683,7 +3754,7 @@ describe('read-model Evidence builder', () => {
     await mutateValidationReport(workspace, 'examples/valid/todo-app-pbe-run', 'validation-blocked', 'blockingCount', 1)
 
     const result = await summarizeReadModelEvidence(workspace, [
-      'examples/adoption/todo-search-slice',
+      'examples/internal-legacy/adoption/todo-search-slice',
       'examples/valid/todo-app-pbe-run',
     ])
 
@@ -3701,7 +3772,7 @@ describe('read-model Evidence builder', () => {
     )
 
     const result = await summarizeReadModelEvidence(workspace, [
-      'examples/adoption/todo-search-slice',
+      'examples/internal-legacy/adoption/todo-search-slice',
       'examples/valid/todo-app-pbe-run',
     ])
 
@@ -3712,13 +3783,16 @@ describe('read-model Evidence builder', () => {
     const workspace = await createExampleWorkspace()
     await prepareTwoSliceValidationReports(workspace)
     const reportPaths = [
-      join(workspace, 'examples/adoption/todo-search-slice/generated/read-model-validation-report.json'),
+      join(
+        workspace,
+        'examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validation-report.json',
+      ),
       join(workspace, 'examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json'),
     ]
     const before = await Promise.all(reportPaths.map((entry) => readFile(entry, 'utf8')))
 
     await summarizeReadModelEvidence(workspace, [
-      'examples/adoption/todo-search-slice',
+      'examples/internal-legacy/adoption/todo-search-slice',
       'examples/valid/todo-app-pbe-run',
     ])
     const after = await Promise.all(reportPaths.map((entry) => readFile(entry, 'utf8')))
@@ -3729,13 +3803,16 @@ describe('read-model Evidence builder', () => {
   it('summarizes from validation reports only without reading generated read-model files', async () => {
     const workspace = await createExampleWorkspace()
     await prepareTwoSliceValidationReports(workspace)
-    await rm(join(workspace, 'examples/adoption/todo-search-slice/generated/generated-read-model.json'), {
-      force: true,
-    })
+    await rm(
+      join(workspace, 'examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json'),
+      {
+        force: true,
+      },
+    )
     await rm(join(workspace, 'examples/valid/todo-app-pbe-run/generated/generated-read-model.json'), { force: true })
 
     const result = await summarizeReadModelEvidence(workspace, [
-      'examples/adoption/todo-search-slice',
+      'examples/internal-legacy/adoption/todo-search-slice',
       'examples/valid/todo-app-pbe-run',
     ])
 
@@ -3750,7 +3827,7 @@ describe('read-model Evidence builder', () => {
     })
 
     const missingResult = await summarizeReadModelEvidence(missingWorkspace, [
-      'examples/adoption/todo-search-slice',
+      'examples/internal-legacy/adoption/todo-search-slice',
       'examples/valid/todo-app-pbe-run',
     ])
 
@@ -3767,7 +3844,7 @@ describe('read-model Evidence builder', () => {
     )
 
     const malformedResult = await summarizeReadModelEvidence(malformedWorkspace, [
-      'examples/adoption/todo-search-slice',
+      'examples/internal-legacy/adoption/todo-search-slice',
       'examples/valid/todo-app-pbe-run',
     ])
 
@@ -3780,11 +3857,11 @@ describe('read-model Evidence builder', () => {
 
   it('blocks validation when viewScopedTags or Core View coverage are invalid', async () => {
     const workspace = await createExampleWorkspace()
-    const generated = await generateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const generated = await generateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
     await compareReadModelEvidence(
       workspace,
       generated.generatedJsonPath,
-      'examples/adoption/todo-search-slice/maintainability-graph-read-model.json',
+      'examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json',
     )
     const generatedJson = JSON.parse(await readFile(generated.generatedJsonPath, 'utf8')) as {
       nodes: Array<{ viewScopedTags?: string[] }>
@@ -3794,7 +3871,7 @@ describe('read-model Evidence builder', () => {
     generatedJson.coreViewCoverage = generatedJson.coreViewCoverage.slice(0, -1)
     await writeFile(generated.generatedJsonPath, JSON.stringify(generatedJson, null, 2))
 
-    const result = await validateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const result = await validateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
     const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
       status: string
       summary: { blockingCount: number }
@@ -3813,7 +3890,7 @@ describe('read-model Evidence builder', () => {
       'examples/invalid/read-model-invalid-view-scoped-tags/fixtures/invalid-generated-read-model.json',
     )
     const positiveGeneratedPath = resolve('examples/valid/todo-app-pbe-run/generated/generated-read-model.json')
-    const registryPath = resolve('examples/read-model-aggregate/read-model-slices.json')
+    const registryPath = resolve('examples/internal-legacy/read-model-aggregate/read-model-slices.json')
     const positiveGeneratedBefore = await readFile(positiveGeneratedPath, 'utf8')
     const registryBefore = await readFile(registryPath, 'utf8')
 
@@ -3827,7 +3904,7 @@ describe('read-model Evidence builder', () => {
       checks: Array<{ id: string; status: string; message: string }>
     }
     const workspaceRegistry = JSON.parse(
-      await readFile(join(workspace, 'examples/read-model-aggregate/read-model-slices.json'), 'utf8'),
+      await readFile(join(workspace, 'examples/internal-legacy/read-model-aggregate/read-model-slices.json'), 'utf8'),
     ) as { profiles: Array<{ sourceSlice: string }> }
 
     expect(report.status).toBe('validation-blocked')
@@ -3849,7 +3926,7 @@ describe('read-model Evidence builder', () => {
       'examples/invalid/read-model-core-view-missing/fixtures/invalid-generated-read-model.json',
     )
     const positiveGeneratedPath = resolve('examples/valid/todo-app-pbe-run/generated/generated-read-model.json')
-    const registryPath = resolve('examples/read-model-aggregate/read-model-slices.json')
+    const registryPath = resolve('examples/internal-legacy/read-model-aggregate/read-model-slices.json')
     const positiveGeneratedBefore = await readFile(positiveGeneratedPath, 'utf8')
     const registryBefore = await readFile(registryPath, 'utf8')
 
@@ -3863,7 +3940,7 @@ describe('read-model Evidence builder', () => {
       checks: Array<{ id: string; status: string; message: string }>
     }
     const workspaceRegistry = JSON.parse(
-      await readFile(join(workspace, 'examples/read-model-aggregate/read-model-slices.json'), 'utf8'),
+      await readFile(join(workspace, 'examples/internal-legacy/read-model-aggregate/read-model-slices.json'), 'utf8'),
     ) as { profiles: Array<{ sourceSlice: string }> }
 
     expect(report.status).toBe('validation-blocked')
@@ -3884,11 +3961,11 @@ describe('read-model Evidence builder', () => {
 
   it('blocks active scoped validation when parity is not comparison-pass', async () => {
     const workspace = await createExampleWorkspace()
-    const generated = await generateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const generated = await generateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
     const parity = await compareReadModelEvidence(
       workspace,
       generated.generatedJsonPath,
-      'examples/adoption/todo-search-slice/maintainability-graph-read-model.json',
+      'examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json',
     )
     const parityJson = JSON.parse(await readFile(parity.reportJsonPath, 'utf8')) as {
       summary: { status: string; mismatchCount: number }
@@ -3897,7 +3974,7 @@ describe('read-model Evidence builder', () => {
     parityJson.summary.mismatchCount = 1
     await writeFile(parity.reportJsonPath, JSON.stringify(parityJson, null, 2))
 
-    const result = await validateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const result = await validateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
     const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
       status: string
       checks: Array<{ id: string; status: string }>
@@ -3910,26 +3987,26 @@ describe('read-model Evidence builder', () => {
 
   it('blocks pilot-marker-backed validation when the scoped pilot marker is missing', async () => {
     const workspace = await createExampleWorkspace()
-    const registryPath = resolve('examples/read-model-aggregate/read-model-slices.json')
+    const registryPath = resolve('examples/internal-legacy/read-model-aggregate/read-model-slices.json')
     const markerPath = resolve(
-      'examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json',
+      'examples/internal-legacy/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json',
     )
     const registryBefore = await readFile(registryPath, 'utf8')
     const markerBefore = await readFile(markerPath, 'utf8')
 
-    const generated = await generateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const generated = await generateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
     const parity = await compareReadModelEvidence(
       workspace,
       generated.generatedJsonPath,
-      'examples/adoption/todo-search-slice/maintainability-graph-read-model.json',
+      'examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json',
     )
     const workspaceMarkerPath = join(
       workspace,
-      'examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json',
+      'examples/internal-legacy/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json',
     )
     await rm(workspaceMarkerPath)
 
-    const result = await validateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const result = await validateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
     const report = JSON.parse(await readFile(result.reportJsonPath, 'utf8')) as {
       status: string
       summary: { blockingCount: number }
@@ -3939,7 +4016,7 @@ describe('read-model Evidence builder', () => {
       summary: { status: string }
     }
     const workspaceRegistry = JSON.parse(
-      await readFile(join(workspace, 'examples/read-model-aggregate/read-model-slices.json'), 'utf8'),
+      await readFile(join(workspace, 'examples/internal-legacy/read-model-aggregate/read-model-slices.json'), 'utf8'),
     ) as { profiles: Array<{ sourceSlice: string }> }
 
     expect(parityReport.summary.status).toBe('comparison-pass')
@@ -3948,7 +4025,9 @@ describe('read-model Evidence builder', () => {
     expect(report.checks.find((entry) => entry.id === 'parity-status-pass')).toMatchObject({ status: 'pass' })
     expect(report.checks.find((entry) => entry.id === 'pilot-marker-exists')).toMatchObject({
       status: 'blocking',
-      sourceRefs: ['examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json'],
+      sourceRefs: [
+        'examples/internal-legacy/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json',
+      ],
     })
     expect(workspaceRegistry.profiles.some((entry) => entry.sourceSlice.startsWith('examples/invalid/'))).toBe(false)
     expect(await readFile(registryPath, 'utf8')).toBe(registryBefore)
@@ -3957,28 +4036,31 @@ describe('read-model Evidence builder', () => {
 
   it('does not mutate generated, manual, parity, manifest, or marker inputs while writing validation reports', async () => {
     const workspace = await createExampleWorkspace()
-    const generated = await generateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    const generated = await generateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
     const parity = await compareReadModelEvidence(
       workspace,
       generated.generatedJsonPath,
-      'examples/adoption/todo-search-slice/maintainability-graph-read-model.json',
+      'examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json',
     )
     const manifestPath = join(
       workspace,
-      'examples/adoption/todo-search-slice/generated/read-model-evidence-manifest.json',
+      'examples/internal-legacy/adoption/todo-search-slice/generated/read-model-evidence-manifest.json',
     )
     const markerPath = join(
       workspace,
-      'examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json',
+      'examples/internal-legacy/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json',
     )
-    const manualPath = join(workspace, 'examples/adoption/todo-search-slice/maintainability-graph-read-model.json')
+    const manualPath = join(
+      workspace,
+      'examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json',
+    )
     const before = await Promise.all(
       [generated.generatedJsonPath, parity.reportJsonPath, manifestPath, markerPath, manualPath].map((entry) =>
         readFile(entry, 'utf8'),
       ),
     )
 
-    await validateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+    await validateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
     const after = await Promise.all(
       [generated.generatedJsonPath, parity.reportJsonPath, manifestPath, markerPath, manualPath].map((entry) =>
         readFile(entry, 'utf8'),
@@ -4006,7 +4088,9 @@ async function readRegistryFixtureObject(): Promise<{
   sourceAuthorityBoundary?: string
   profiles: Array<{ profileId: string; policyLevel: string }>
 }> {
-  return JSON.parse(await readFile(resolve('examples/read-model-aggregate/read-model-slices.json'), 'utf8')) as {
+  return JSON.parse(
+    await readFile(resolve('examples/internal-legacy/read-model-aggregate/read-model-slices.json'), 'utf8'),
+  ) as {
     sourceAuthorityBoundary?: string
     profiles: Array<{ profileId: string; policyLevel: string }>
   }
@@ -4029,7 +4113,7 @@ async function mutateRegistry(
     [key: string]: unknown
   }) => void,
 ): Promise<void> {
-  const registryPath = join(workspace, 'examples/read-model-aggregate/read-model-slices.json')
+  const registryPath = join(workspace, 'examples/internal-legacy/read-model-aggregate/read-model-slices.json')
   const registry = JSON.parse(await readFile(registryPath, 'utf8')) as {
     profiles: Array<{
       profileId: string
@@ -4049,7 +4133,7 @@ async function createAggregateReportWorkspace(): Promise<string> {
   workspaces.push(workspace)
   await writeValidationReportFixture(
     workspace,
-    'examples/adoption/todo-search-slice',
+    'examples/internal-legacy/adoption/todo-search-slice',
     todoSearchReadModelProfile.profileId,
     'pilot-marker-backed',
     'flat-demo-support',
@@ -4159,13 +4243,13 @@ async function writeValidationReportFixture(
 }
 
 async function prepareTwoSliceValidationReports(workspace: string): Promise<void> {
-  const todoSearch = await generateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+  const todoSearch = await generateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
   await compareReadModelEvidence(
     workspace,
     todoSearch.generatedJsonPath,
-    'examples/adoption/todo-search-slice/maintainability-graph-read-model.json',
+    'examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json',
   )
-  await validateReadModelEvidence(workspace, 'examples/adoption/todo-search-slice')
+  await validateReadModelEvidence(workspace, 'examples/internal-legacy/adoption/todo-search-slice')
   await generateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
   await validateReadModelEvidence(workspace, 'examples/valid/todo-app-pbe-run')
 }

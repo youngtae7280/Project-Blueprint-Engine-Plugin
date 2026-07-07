@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "execution-contract-dry-run-diff-report",
+  "status": "contract-diff-detected",
+  "reviewStatus": "non-blocking-review-diff",
+  "equivalenceStatus": "compiler-equivalence-not-proven",
+  "sourceCandidate": "examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.generated.json",
+  "comparedWith": "examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json",
+  "differingFields": ["sourceMode", "requiredChecks", "nonExecutionStatement"],
+  "comparedFields": [
+    { "field": "sourceMode", "status": "different" },
+    { "field": "changeType", "status": "same" },
+    { "field": "goal", "status": "same" },
+    { "field": "allowedScope", "status": "same" },
+    { "field": "forbiddenScope", "status": "same" },
+    { "field": "requiredContext", "status": "same" },
+    { "field": "requiredChecks", "status": "different" },
+    { "field": "requiredEvidence", "status": "same" },
+    { "field": "knownRisks", "status": "same" },
+    { "field": "openUnknowns", "status": "same" },
+    { "field": "humanDecisions", "status": "same" },
+    { "field": "stopConditions", "status": "same" },
+    { "field": "outputRequirements", "status": "same" },
+    { "field": "nonExecutionStatement", "status": "different" }
+  ],
+  "idBasedSummaries": [
+    {
+      "field": "allowedScope",
+      "handWrittenCount": 3,
+      "generatedCount": 3,
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
+    },
+    {
+      "field": "forbiddenScope",
+      "handWrittenCount": 2,
+      "generatedCount": 2,
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
+    },
+    {
+      "field": "requiredContext",
+      "handWrittenCount": 2,
+      "generatedCount": 2,
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
+    },
+    {
+      "field": "requiredChecks",
+      "handWrittenCount": 3,
+      "generatedCount": 4,
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": ["check-read-model-health-report"]
+    },
+    {
+      "field": "requiredEvidence",
+      "handWrittenCount": 2,
+      "generatedCount": 2,
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
+    },
+    {
+      "field": "knownRisks",
+      "handWrittenCount": 1,
+      "generatedCount": 1,
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
+    },
+    {
+      "field": "stopConditions",
+      "handWrittenCount": 2,
+      "generatedCount": 2,
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
+    }
+  ],
+  "semanticDiffs": [
+    {
+      "field": "requiredChecks",
+      "targetField": "requiredChecks",
+      "diffDirection": "extraIdsInGenerated",
+      "matchedRuleId": "semantic-diff-rule-required-checks-extra-safe-additive",
+      "classification": "validation-superset-review-only",
+      "reviewSeverity": "low",
+      "promotionImpact": "review-required",
+      "reason": "The generated candidate adds the read-model health check beyond the hand-written contract; this is a validation superset for review only, not execution approval.",
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": ["check-read-model-health-report"]
+    },
+    {
+      "field": "sourceMode",
+      "targetField": "sourceMode",
+      "diffDirection": "fieldDifferent",
+      "matchedRuleId": "semantic-diff-rule-source-mode-field-metadata-only",
+      "classification": "source-mode-metadata-only",
+      "reviewSeverity": "low",
+      "promotionImpact": "review-required",
+      "reason": "The sourceMode differs because one artifact is hand-written and the other is compiler-produced; review provenance but do not treat this as execution-scope loss.",
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
+    },
+    {
+      "field": "nonExecutionStatement",
+      "targetField": "nonExecutionStatement",
+      "diffDirection": "fieldDifferent",
+      "matchedRuleId": "semantic-diff-rule-non-execution-statement-field-metadata-only",
+      "classification": "boundary-wording-review-required",
+      "reviewSeverity": "medium",
+      "promotionImpact": "review-required",
+      "reason": "The nonExecutionStatement wording differs between hand-written and compiler-produced artifacts; a human reviewer must confirm the wording preserves non-execution, non-approval, non-enforcement, and no graph-delta boundaries.",
+      "missingIdsInGenerated": [],
+      "extraIdsInGenerated": []
+    }
+  ],
+  "semanticClassificationCounts": {
+    "validation-superset-review-only": 1,
+    "source-mode-metadata-only": 1,
+    "boundary-wording-review-required": 1
+  },
+  "highestReviewSeverity": "medium",
+  "compilerPromotionReadiness": "compiler-promotion-review-required",
+  "promotionReadiness": "compiler-promotion-review-required",
+  "semanticDiffRuleCoverage": {
+    "totalDiffs": 3,
+    "classifiedDiffs": 3,
+    "unknownDiffs": 0,
+    "matchedRuleIds": [
+      "semantic-diff-rule-non-execution-statement-field-metadata-only",
+      "semantic-diff-rule-required-checks-extra-safe-additive",
+      "semantic-diff-rule-source-mode-field-metadata-only"
+    ],
+    "unknownFields": []
+  },
+  "v01CloseoutStatus": "contract-compiler-dry-run-v0.1-classification-complete",
+  "semanticDiffUnknownsStatus": "semantic-diff-unknowns-zero",
+  "semanticDiffUnknownsResolved": true,
+  "semanticDiffCoverageComplete": true,
+  "equivalenceProven": false,
+  "equivalencePolicy": {
+    "sourceAuthorityPreservationStatus": "source-authority-preserved",
+    "semanticDiffPolicyStatus": "semantic-diff-clean",
+    "reviewOnlyDiffStatus": "review-only-diff-detected",
+    "blockingSemanticLossCount": 0,
+    "reviewOnlyDiffCount": 3,
+    "unknownDiffCount": 0,
+    "equivalenceCandidate": true,
+    "equivalenceProven": false,
+    "equivalenceProofStatus": "equivalence-proof-policy-not-approved",
+    "compilerPromotionReadiness": "compiler-promotion-review-required",
+    "policyBoundary": "Equivalence candidate status is review metadata only. equivalenceProven remains false until an approved equivalence policy and human review explicitly promote it."
+  },
+  "reviewBoundary": "The compiler candidate is valid, but equivalence with the hand-written contract is not proven. Review the differing fields before relying on the candidate.",
+  "nonExecutionStatement": "This diff report is review Evidence only and does not execute work, accept changes, or make the compiled candidate authoritative."
+}

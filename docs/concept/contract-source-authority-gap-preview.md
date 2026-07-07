@@ -17,7 +17,7 @@ remaining source-authority resolver work; the remaining differences are handled 
 The compiler writes:
 
 ```text
-examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json
+examples/internal-legacy/read-model-aggregate/generated/contract-source-authority-gap.preview.json
 ```
 
 The artifact records:

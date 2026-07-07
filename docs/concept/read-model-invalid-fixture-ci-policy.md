@@ -29,10 +29,10 @@ blocking by itself.
 
 Current positive CI / validate-all path:
 
-- registry: `examples/read-model-aggregate/read-model-slices.json`
+- registry: `examples/internal-legacy/read-model-aggregate/read-model-slices.json`
 - command: `pbe graph read-model validate --all`
 - included positive slices:
-  - `examples/adoption/todo-search-slice`
+  - `examples/internal-legacy/adoption/todo-search-slice`
   - `examples/valid/todo-app-pbe-run`
 - expected aggregate status: `aggregate-pass`
 - source mode: registry-backed positive read-model Evidence only
@@ -187,7 +187,7 @@ Current `validate --all` remains positive-registry only:
 read-model-slices.json -> configured positive profiles -> aggregate summary
 ```
 
-Invalid fixtures must not be added to `examples/read-model-aggregate/read-model-slices.json` or to aggregate-pass
+Invalid fixtures must not be added to `examples/internal-legacy/read-model-aggregate/read-model-slices.json` or to aggregate-pass
 calculation unless a separate invalid-fixture mode is designed.
 
 If a future invalid-fixture mode exists, it should use a separate command, option, or job identity rather than changing
@@ -243,7 +243,7 @@ For future invalid-fixture CI modes:
 This policy does not:
 
 - modify `.github/workflows/read-model-evidence.yml`
-- add invalid fixtures to `examples/read-model-aggregate/read-model-slices.json`
+- add invalid fixtures to `examples/internal-legacy/read-model-aggregate/read-model-slices.json`
 - change `pbe graph read-model validate --all`
 - regenerate generated artifacts
 - create a PR

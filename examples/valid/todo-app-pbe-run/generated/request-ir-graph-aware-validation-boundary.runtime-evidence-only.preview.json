@@ -36,7 +36,7 @@
   "graphAwareValidationInputs": {
     "requestIrCandidateFixture": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json",
     "schemaOnlyRequestIrValidationResult": "examples/valid/todo-app-pbe-run/generated/request-ir-validation.add-todo-runtime-evidence-only.preview.json",
-    "readModelAggregateSummary": "examples/read-model-aggregate/generated/read-model-aggregate-summary.json",
+    "readModelAggregateSummary": "examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.json",
     "todoAppGraphSourceMetadata": "examples/valid/todo-app-pbe-run/graph-source.json",
     "todoAppGraphSourceProjection": "examples/valid/todo-app-pbe-run/generated/graph-source-read-model-projection.json",
     "compilerInputCalibrationDraft": "examples/valid/todo-app-pbe-run/generated/compiler-input-model-calibration-draft.runtime-evidence-only.json",

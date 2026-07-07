@@ -25,7 +25,7 @@ Current observations are strong enough for a readiness discussion:
 - tree-native retirement: not executed
 
 The machine-readable status lives in
-`examples/read-model-aggregate/graph-source-transition-status.json.enforcementReadiness`.
+`examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json.enforcementReadiness`.
 
 ## Candidate Options
 

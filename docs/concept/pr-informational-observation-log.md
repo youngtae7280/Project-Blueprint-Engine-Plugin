@@ -11,19 +11,19 @@ Evidence without changing workflow behavior.
 
 ## Current Baseline
 
-| Baseline item             | Current value                                                                                            |
-| ------------------------- | -------------------------------------------------------------------------------------------------------- |
-| Manual dispatch baseline  | Run `28207696557`, `workflow_dispatch`, `success`, `ci-evidence-pass`                                    |
-| First real PR run         | PR `#1`, run `28207822252`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`  |
-| Latest PR run             | PR `#12`, run `28348903718`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass` |
-| Current workflow mode     | `workflow_dispatch` plus non-enforcing `pull_request-informational`                                      |
-| Included slices           | `examples/adoption/todo-search-slice`; `examples/valid/todo-app-pbe-run`; aggregate summary              |
-| Workflow command mode     | registry-backed `validate --all` after manual run `28210541509`                                          |
-| Observation policy        | [pr-informational-observation-policy.md](pr-informational-observation-policy.md)                         |
-| Refinement design         | [pr-informational-path-filter-refinement.md](pr-informational-path-filter-refinement.md)                 |
-| Current real PR run count | 9 reviewed real PR informational runs                                                                    |
-| Target before refinement  | Run-count threshold satisfied; refinement may be considered but is not automatic.                        |
-| Enforcement / authority   | Not approved. PR Evidence is informational only and does not change source authority.                    |
+| Baseline item             | Current value                                                                                               |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Manual dispatch baseline  | Run `28207696557`, `workflow_dispatch`, `success`, `ci-evidence-pass`                                       |
+| First real PR run         | PR `#1`, run `28207822252`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`     |
+| Latest PR run             | PR `#12`, run `28348903718`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`    |
+| Current workflow mode     | `workflow_dispatch` plus non-enforcing `pull_request-informational`                                         |
+| Included slices           | `examples/internal-legacy/adoption/todo-search-slice`; `examples/valid/todo-app-pbe-run`; aggregate summary |
+| Workflow command mode     | registry-backed `validate --all` after manual run `28210541509`                                             |
+| Observation policy        | [pr-informational-observation-policy.md](pr-informational-observation-policy.md)                            |
+| Refinement design         | [pr-informational-path-filter-refinement.md](pr-informational-path-filter-refinement.md)                    |
+| Current real PR run count | 9 reviewed real PR informational runs                                                                       |
+| Target before refinement  | Run-count threshold satisfied; refinement may be considered but is not automatic.                           |
+| Enforcement / authority   | Not approved. PR Evidence is informational only and does not change source authority.                       |
 
 Negative fixture policy is documented separately in
 [read-model-negative-fixture-storage-decision.md](read-model-negative-fixture-storage-decision.md). Current PR
@@ -186,7 +186,7 @@ unchanged after three successful PR observations.
 | Evidence level               | `ci-backed`                                                                                                                                           |
 | Source mode                  | `registry-backed validate-all`; `validateAllStatus: aggregate-pass`                                                                                   |
 | Generated source mode        | Todo Search generated read-model metadata records `readModelSourceMode: graph-source-backed`                                                          |
-| Graph source artifact        | Todo Search generated read-model metadata records `examples/adoption/todo-search-slice/graph-source.json`                                             |
+| Graph source artifact        | Todo Search generated read-model metadata records `examples/internal-legacy/adoption/todo-search-slice/graph-source.json`                             |
 | Projection contract status   | Todo Search `projection-contract-pass`; Todo App PBE Run `not-configured`                                                                             |
 | Todo Search status           | `validation-pass`, `comparison-pass`, 40 nodes / 59 edges, 20 checks                                                                                  |
 | Todo App PBE Run status      | `validation-pass`, `not-required` parity, 22 nodes / 38 edges, 16 checks                                                                              |
@@ -387,9 +387,9 @@ Record changed paths by category instead of only listing filenames:
 | --------------------- | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
 | Workflow              | `.github/workflows/read-model-evidence.yml`                                                | Must keep manual and PR informational boundaries visible.              |
 | CLI / read-model core | `cli/src/**`, `scripts/**`                                                                 | High signal; should normally trigger read-model Evidence.              |
-| Todo Search slice     | `examples/adoption/todo-search-slice/**`                                                   | High signal for parity-backed scoped pilot Evidence.                   |
+| Todo Search slice     | `examples/internal-legacy/adoption/todo-search-slice/**`                                   | High signal for parity-backed scoped pilot Evidence.                   |
 | Todo App structure    | `examples/valid/todo-app-pbe-run/**`                                                       | High signal for structure-only profile Evidence.                       |
-| Aggregate summary     | `examples/read-model-aggregate/**`                                                         | Useful for aggregate artifact drift; watch for artifact churn.         |
+| Aggregate summary     | `examples/internal-legacy/read-model-aggregate/**`                                         | Useful for aggregate artifact drift; watch for artifact churn.         |
 | Concept docs          | `docs/concept/**`                                                                          | Useful while policies are changing; may be noisy after policy settles. |
 | Other docs / files    | Files outside current filters or outside the declared graph read-model Evidence boundaries | Use to decide whether filters are too broad or too narrow.             |
 

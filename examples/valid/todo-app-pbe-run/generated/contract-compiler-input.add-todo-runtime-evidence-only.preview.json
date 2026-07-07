@@ -10,7 +10,7 @@
   "sourceRequestIrCandidate": "examples/valid/todo-app-pbe-run/generated/request-ir-candidate.add-todo-runtime-evidence-only.preview.json",
   "graphSourcePath": "examples/valid/todo-app-pbe-run/graph-source.json",
   "generatedReadModelPath": "examples/valid/todo-app-pbe-run/generated/generated-read-model.json",
-  "compatibleInputModelSchema": "examples/read-model-aggregate/compiler-input-model-schema.json",
+  "compatibleInputModelSchema": "examples/internal-legacy/read-model-aggregate/compiler-input-model-schema.json",
   "sourceMode": "selected-graph-slice-contract-input-preview",
   "changeId": "change-ch-001-contract-input-preview",
   "contractInputGenerated": true,

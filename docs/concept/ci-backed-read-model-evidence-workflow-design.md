@@ -22,10 +22,10 @@ Graph-source promotion.
 
 | Baseline item              | Current state                                                                                                                                                                                                                                                                                              |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Scoped pilot               | `examples/adoption/todo-search-slice` only                                                                                                                                                                                                                                                                 |
+| Scoped pilot               | `examples/internal-legacy/adoption/todo-search-slice` only                                                                                                                                                                                                                                                 |
 | Active observation status  | `keep-active-with-retained-warnings`                                                                                                                                                                                                                                                                       |
 | Generated/manual parity    | `comparison-pass`                                                                                                                                                                                                                                                                                          |
-| Local validator command    | `pbe graph read-model validate --slice examples/adoption/todo-search-slice`                                                                                                                                                                                                                                |
+| Local validator command    | `pbe graph read-model validate --slice examples/internal-legacy/adoption/todo-search-slice`                                                                                                                                                                                                                |
 | Validator-backed status    | `validation-pass`                                                                                                                                                                                                                                                                                          |
 | Validator check count      | 20                                                                                                                                                                                                                                                                                                         |
 | Warning/blocking/decision  | 0 / 0 / 0                                                                                                                                                                                                                                                                                                  |
@@ -160,19 +160,19 @@ aggregate summary from existing per-slice validation reports:
 
 ```text
 npm run build:cli
-node dist/cli/index.js graph read-model generate --slice examples/adoption/todo-search-slice --json
-node dist/cli/index.js graph read-model compare --generated examples/adoption/todo-search-slice/generated/generated-read-model.json --manual examples/adoption/todo-search-slice/maintainability-graph-read-model.json --json
-node dist/cli/index.js graph read-model validate --slice examples/adoption/todo-search-slice --json
+node dist/cli/index.js graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice --json
+node dist/cli/index.js graph read-model compare --generated examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json --manual examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json --json
+node dist/cli/index.js graph read-model validate --slice examples/internal-legacy/adoption/todo-search-slice --json
 node dist/cli/index.js graph read-model generate --slice examples/valid/todo-app-pbe-run --json
 node dist/cli/index.js graph read-model validate --slice examples/valid/todo-app-pbe-run --json
-node dist/cli/index.js graph read-model summarize --slices examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run --json
+node dist/cli/index.js graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run --json
 ```
 
 Implemented supporting commands:
 
 ```text
 npx vitest run cli/src/__tests__/read-model-evidence.test.ts
-npx vitest run examples/adoption/todo-search-slice/runtime-fixture
+npx vitest run examples/internal-legacy/adoption/todo-search-slice/runtime-fixture
 npm run validate:pbe
 npm run validate:pbe:v2
 ```
@@ -282,7 +282,7 @@ committed generated Evidence, the mismatch should be reported rather than auto-c
 The first CI-backed Evidence target should remain:
 
 ```text
-examples/adoption/todo-search-slice
+examples/internal-legacy/adoption/todo-search-slice
 ```
 
 This follows the current bounded scoped pilot and avoids accidental repo-wide promotion or enforcement.

@@ -28,7 +28,7 @@
     "examples/valid/todo-app-pbe-run/generated/generated-read-model.json",
     "examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json",
     "examples/valid/todo-app-pbe-run/generated/read-model-evidence-manifest.json",
-    "examples/read-model-aggregate/read-model-slices.json"
+    "examples/internal-legacy/read-model-aggregate/read-model-slices.json"
   ],
   "sourceRecords": {
     "nodes": [

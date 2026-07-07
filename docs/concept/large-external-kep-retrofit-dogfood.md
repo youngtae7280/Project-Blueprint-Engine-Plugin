@@ -12,18 +12,18 @@ intent, goals, non-goals, risks, test plans, and rollout strategy are documented
 
 ## Selected KEP
 
-| Field                 | Value                                                                                 |
-| --------------------- | ------------------------------------------------------------------------------------- |
-| KEP                   | `KEP-753: Sidecar containers`                                                         |
-| KEP repo              | `https://github.com/kubernetes/enhancements`                                          |
-| KEP path              | `keps/sig-node/753-sidecar-containers/README.md`                                      |
-| KEP observed ref      | `481e3710995d9996e27c7364b14d9ab870b65e74`                                            |
-| Code repo             | `https://github.com/kubernetes/kubernetes`                                            |
-| Code observed ref     | `2846ba9cdbbde11f02435cfdfccf1850d99be47b`                                            |
-| PBE fixture           | `examples/retrofit/open-source/kubernetes-sidecar-kep/graph-source.json`              |
-| Source map            | `examples/retrofit/open-source/kubernetes-sidecar-kep/support/kep753-source-map.json` |
-| Selected record       | `change.kep753.sidecar-intent-map`                                                    |
-| External repo mutated | no                                                                                    |
+| Field                 | Value                                                                                                 |
+| --------------------- | ----------------------------------------------------------------------------------------------------- |
+| KEP                   | `KEP-753: Sidecar containers`                                                                         |
+| KEP repo              | `https://github.com/kubernetes/enhancements`                                                          |
+| KEP path              | `keps/sig-node/753-sidecar-containers/README.md`                                                      |
+| KEP observed ref      | `481e3710995d9996e27c7364b14d9ab870b65e74`                                                            |
+| Code repo             | `https://github.com/kubernetes/kubernetes`                                                            |
+| Code observed ref     | `2846ba9cdbbde11f02435cfdfccf1850d99be47b`                                                            |
+| PBE fixture           | `examples/internal-legacy/retrofit/open-source/kubernetes-sidecar-kep/graph-source.json`              |
+| Source map            | `examples/internal-legacy/retrofit/open-source/kubernetes-sidecar-kep/support/kep753-source-map.json` |
+| Selected record       | `change.kep753.sidecar-intent-map`                                                                    |
+| External repo mutated | no                                                                                                    |
 
 ## What Was Recovered
 

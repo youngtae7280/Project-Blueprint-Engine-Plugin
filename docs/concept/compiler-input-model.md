@@ -22,8 +22,8 @@ This layer exists so future contract compilation does not start from AI prose. I
 
 ## Current MVP Artifacts
 
-- `examples/read-model-aggregate/compiler-input-model-schema.json`
-- `examples/read-model-aggregate/generated/compiler-input-model-dry-run.json`
+- `examples/internal-legacy/read-model-aggregate/compiler-input-model-schema.json`
+- `examples/internal-legacy/read-model-aggregate/generated/compiler-input-model-dry-run.json`
 
 The local report command is:
 

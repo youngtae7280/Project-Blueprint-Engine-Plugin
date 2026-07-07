@@ -37,7 +37,7 @@ This approval authorizes this observation record. It does not approve scoped sou
 ### Primary Scope
 
 ```text
-examples/adoption/todo-search-slice
+examples/internal-legacy/adoption/todo-search-slice
 ```
 
 The dry-run observes the Todo Search representative demo-support slice only.
@@ -45,7 +45,7 @@ The dry-run observes the Todo Search representative demo-support slice only.
 ### Supplemental Evidence Only
 
 ```text
-examples/adoption/compatibility-mismatch-slice
+examples/internal-legacy/adoption/compatibility-mismatch-slice
 ```
 
 The compatibility mismatch slice supports compatibility-path observation. It is not pilot source scope.
@@ -78,26 +78,26 @@ This dry-run does not include:
 
 The dry-run used reviewable artifacts, not AI self-report.
 
-| Artifact                                                                                 | Role in observation                                              |
-| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`              | Manual Node/Edge/Tag read-model parity output.                   |
-| `examples/adoption/todo-search-slice/maintainability-graph-read-model.md`                | Human-readable read-model summary and retained warnings.         |
-| `examples/adoption/todo-search-slice/view-instance-manifest.json`                        | 7 Core View membership and role-tag projection evidence.         |
-| `examples/adoption/todo-search-slice/view-instance-manifest.md`                          | Human-readable View Instance Manifest.                           |
-| `examples/adoption/todo-search-slice/parity-check.md`                                    | Node/Edge/Tag parity and limited-pilot readiness check.          |
-| `examples/adoption/todo-search-slice/runtime-evidence.md`                                | Bounded Vitest command Evidence for title + note/content search. |
-| `examples/adoption/todo-search-slice/product-tree.json`                                  | Product and acceptance meaning source input.                     |
-| `examples/adoption/todo-search-slice/project-tree.json`                                  | Project/boundary source input.                                   |
-| `examples/adoption/todo-search-slice/work-tree.json`                                     | Work responsibility source input.                                |
-| `examples/adoption/todo-search-slice/test-tree.json`                                     | Check source input.                                              |
-| `examples/adoption/todo-search-slice/evidence-tree.json`                                 | Evidence source input.                                           |
-| `examples/adoption/todo-search-slice/acceptance-tree.json`                               | Demo-support Acceptance source input.                            |
-| `examples/adoption/todo-search-slice/change-tree.json`                                   | PP-001 change source input.                                      |
-| `examples/adoption/todo-search-slice/impact-tree.json`                                   | Impact/stale/reopen source input.                                |
-| `examples/adoption/todo-search-slice/approval-brief.md`                                  | User-facing judgment summary input.                              |
-| `examples/adoption/todo-search-slice/evidence-exceptions.md`                             | Missing/partial/deferred Evidence visibility.                    |
-| `examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md`           | Supplemental Compatibility Control Node evidence.                |
-| `examples/adoption/compatibility-mismatch-slice/legacy-compatibility-map-application.md` | Legacy/canonical mismatch interpretation evidence.               |
+| Artifact                                                                                                 | Role in observation                                              |
+| -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json`              | Manual Node/Edge/Tag read-model parity output.                   |
+| `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.md`                | Human-readable read-model summary and retained warnings.         |
+| `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.json`                        | 7 Core View membership and role-tag projection evidence.         |
+| `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.md`                          | Human-readable View Instance Manifest.                           |
+| `examples/internal-legacy/adoption/todo-search-slice/parity-check.md`                                    | Node/Edge/Tag parity and limited-pilot readiness check.          |
+| `examples/internal-legacy/adoption/todo-search-slice/runtime-evidence.md`                                | Bounded Vitest command Evidence for title + note/content search. |
+| `examples/internal-legacy/adoption/todo-search-slice/product-tree.json`                                  | Product and acceptance meaning source input.                     |
+| `examples/internal-legacy/adoption/todo-search-slice/project-tree.json`                                  | Project/boundary source input.                                   |
+| `examples/internal-legacy/adoption/todo-search-slice/work-tree.json`                                     | Work responsibility source input.                                |
+| `examples/internal-legacy/adoption/todo-search-slice/test-tree.json`                                     | Check source input.                                              |
+| `examples/internal-legacy/adoption/todo-search-slice/evidence-tree.json`                                 | Evidence source input.                                           |
+| `examples/internal-legacy/adoption/todo-search-slice/acceptance-tree.json`                               | Demo-support Acceptance source input.                            |
+| `examples/internal-legacy/adoption/todo-search-slice/change-tree.json`                                   | PP-001 change source input.                                      |
+| `examples/internal-legacy/adoption/todo-search-slice/impact-tree.json`                                   | Impact/stale/reopen source input.                                |
+| `examples/internal-legacy/adoption/todo-search-slice/approval-brief.md`                                  | User-facing judgment summary input.                              |
+| `examples/internal-legacy/adoption/todo-search-slice/evidence-exceptions.md`                             | Missing/partial/deferred Evidence visibility.                    |
+| `examples/internal-legacy/adoption/compatibility-mismatch-slice/compatibility-control-node.md`           | Supplemental Compatibility Control Node evidence.                |
+| `examples/internal-legacy/adoption/compatibility-mismatch-slice/legacy-compatibility-map-application.md` | Legacy/canonical mismatch interpretation evidence.               |
 
 ## Command Evidence
 
@@ -106,7 +106,7 @@ The runtime fixture command was rerun during this dry-run observation.
 Command:
 
 ```bash
-npx vitest run examples/adoption/todo-search-slice/runtime-fixture
+npx vitest run examples/internal-legacy/adoption/todo-search-slice/runtime-fixture
 ```
 
 Observed result:

@@ -29,11 +29,11 @@ if ($graphSourceResult.status -ne "retrofit-graph-source-pass") {
 
 if ($SkipExternalRepo) {
     $smart51Result = & $recordValidator `
-        -RecordPath "examples/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json"
+        -RecordPath "examples/internal-legacy/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json"
 }
 else {
     $smart51Result = & $recordValidator `
-        -RecordPath "examples/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json" `
+        -RecordPath "examples/internal-legacy/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json" `
         -CheckExternalRepo
 }
 if (-not $smart51Result.recordStatus) {
@@ -41,7 +41,7 @@ if (-not $smart51Result.recordStatus) {
 }
 
 $laminatorResult = & $recordValidator `
-    -RecordPath "examples/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json"
+    -RecordPath "examples/internal-legacy/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json"
 if (-not $laminatorResult.recordStatus) {
     Fail "Laminator layout active record validation failed"
 }

@@ -6,7 +6,7 @@ This fixture is a durable negative read-model input used to prove that missing r
 read-model validation.
 
 It is not generated Evidence, not source authority, not a source promotion record, not CI enforcement, and not user
-acceptance. It must not be added to `examples/read-model-aggregate/read-model-slices.json`, `validate --all`, or the
+acceptance. It must not be added to `examples/internal-legacy/read-model-aggregate/read-model-slices.json`, `validate --all`, or the
 GitHub Actions read-model Evidence workflow unless a later explicit task approves an invalid-fixture test mode.
 
 Expected failure:

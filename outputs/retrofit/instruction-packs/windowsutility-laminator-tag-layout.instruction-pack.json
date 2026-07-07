@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "artifactRole": "retrofit-instruction-pack-v0",
   "status": "generated-from-graph-source",
-  "graphSourcePath": "examples/retrofit/windowsutility/graph-source.json",
+  "graphSourcePath": "examples/internal-legacy/retrofit/windowsutility/graph-source.json",
   "sourceRecordId": "change.laminator-tag-layout",
-  "sourceRecordPath": "examples/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json",
+  "sourceRecordPath": "examples/internal-legacy/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json",
   "target": {
     "projectName": "WindowsUtility / CardPrinterConfig",
     "repoPath": "C:/Users/ytkim/Desktop/kyt_work/Utility_Windows",

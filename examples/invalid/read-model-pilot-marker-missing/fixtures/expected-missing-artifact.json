@@ -1,10 +1,10 @@
 {
   "fixtureRole": "missing-required-artifact",
   "status": "invalid-local-test-input",
-  "sourceSlice": "examples/adoption/todo-search-slice",
+  "sourceSlice": "examples/internal-legacy/adoption/todo-search-slice",
   "profileId": "todo-search-selected-slice",
   "policyLevel": "pilot-marker-backed",
-  "intentionallyMissingArtifact": "examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json",
+  "intentionallyMissingArtifact": "examples/internal-legacy/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json",
   "expectedFailure": {
     "validationStatus": "validation-blocked",
     "blockingCheckId": "pilot-marker-exists",

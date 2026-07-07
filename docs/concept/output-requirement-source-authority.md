@@ -17,7 +17,7 @@ guesswork or copied hand-written comparison text.
 The v0.2 surface adds `outputRequirementSources[]` to the Compiler Input Model dry-run fixture and writes:
 
 ```text
-examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json
+examples/internal-legacy/read-model-aggregate/generated/output-requirement-source-authority.preview.json
 ```
 
 The report records:

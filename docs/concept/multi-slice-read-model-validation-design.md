@@ -26,7 +26,7 @@ workflow behavior, enforcement, source-authority expansion, and full promotion r
 
 | Baseline item                 | Current state                                                                                                    |
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Primary scoped pilot          | `examples/adoption/todo-search-slice`                                                                            |
+| Primary scoped pilot          | `examples/internal-legacy/adoption/todo-search-slice`                                                            |
 | Generated read-model Evidence | present for Todo Search                                                                                          |
 | Manual parity artifact        | present for Todo Search                                                                                          |
 | View Instance Manifest        | present for Todo Search                                                                                          |
@@ -73,13 +73,13 @@ level visible.
 
 ## Candidate Slice Analysis
 
-| Candidate                                               | Role                                                    | Strengths                                                                                                                                                                 | Gaps / risks                                                                                                               | Design decision                                                                            |
-| ------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `examples/adoption/todo-search-slice`                   | Current baseline slice                                  | Full generated/manual read-model shape, View Instance Manifest, pilot marker, local validator, reviewed CI artifact.                                                      | Todo-shaped hardcoding in builder and validator policy.                                                                    | Remains first profile and regression baseline.                                             |
-| `examples/valid/todo-app-pbe-run`                       | Second structure-only validation fixture                | Canonical `.pbe` layout; Product/Project/Work/Test/Evidence/Acceptance/Change/Impact/Cycle Tree, Cycle Contract, WorkGraph, source-of-truth matrix, evidence text output. | No manual parity artifact, no View Instance Manifest, no pilot marker, no CI-backed Evidence, no runnable runtime fixture. | Implemented as a `structure-only` profile/fixture, not parity-backed or authority-bearing. |
-| `examples/dogfooding/windows-validation-sequential-run` | Medium later candidate                                  | Useful dogfooding example and Windows validation context.                                                                                                                 | Missing or weaker Project/Cycle/Change/Impact coverage for first multi-slice expansion.                                    | Defer until after the canonical `.pbe` layout candidate is understood.                     |
-| `examples/adoption/compatibility-mismatch-slice`        | Supplemental compatibility warning/control-node fixture | Real ACEP/task-card wording mismatch and compatibility boundary Evidence.                                                                                                 | Not a full Product/Project/Work/Test/Evidence/Acceptance slice.                                                            | Keep as warning/control-node supplemental fixture only.                                    |
-| `examples/invalid/*`                                    | Later negative validation fixture family                | Useful for proving failure modes and error messages.                                                                                                                      | Invalid by design; not a read-model generation target.                                                                     | Use later for negative validation tests, not for first positive multi-slice generation.    |
+| Candidate                                                               | Role                                                    | Strengths                                                                                                                                                                 | Gaps / risks                                                                                                               | Design decision                                                                            |
+| ----------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `examples/internal-legacy/adoption/todo-search-slice`                   | Current baseline slice                                  | Full generated/manual read-model shape, View Instance Manifest, pilot marker, local validator, reviewed CI artifact.                                                      | Todo-shaped hardcoding in builder and validator policy.                                                                    | Remains first profile and regression baseline.                                             |
+| `examples/valid/todo-app-pbe-run`                                       | Second structure-only validation fixture                | Canonical `.pbe` layout; Product/Project/Work/Test/Evidence/Acceptance/Change/Impact/Cycle Tree, Cycle Contract, WorkGraph, source-of-truth matrix, evidence text output. | No manual parity artifact, no View Instance Manifest, no pilot marker, no CI-backed Evidence, no runnable runtime fixture. | Implemented as a `structure-only` profile/fixture, not parity-backed or authority-bearing. |
+| `examples/internal-legacy/dogfooding/windows-validation-sequential-run` | Medium later candidate                                  | Useful dogfooding example and Windows validation context.                                                                                                                 | Missing or weaker Project/Cycle/Change/Impact coverage for first multi-slice expansion.                                    | Defer until after the canonical `.pbe` layout candidate is understood.                     |
+| `examples/internal-legacy/adoption/compatibility-mismatch-slice`        | Supplemental compatibility warning/control-node fixture | Real ACEP/task-card wording mismatch and compatibility boundary Evidence.                                                                                                 | Not a full Product/Project/Work/Test/Evidence/Acceptance slice.                                                            | Keep as warning/control-node supplemental fixture only.                                    |
+| `examples/invalid/*`                                                    | Later negative validation fixture family                | Useful for proving failure modes and error messages.                                                                                                                      | Invalid by design; not a read-model generation target.                                                                     | Use later for negative validation tests, not for first positive multi-slice generation.    |
 
 ## Selected Next Candidate
 
@@ -122,7 +122,7 @@ Current implementation summary:
 
 ### Compatibility Mismatch Slice
 
-`examples/adoption/compatibility-mismatch-slice` remains a supplemental warning/control-node fixture.
+`examples/internal-legacy/adoption/compatibility-mismatch-slice` remains a supplemental warning/control-node fixture.
 
 It can provide:
 
@@ -180,7 +180,7 @@ SliceReadModelConfig
 
 `cli/src/core/read-model-evidence.ts` defines the Todo Search profile/config explicitly and keeps generated output,
 parity, validation, retained warnings, and source-authority boundaries behaviorally unchanged for
-`examples/adoption/todo-search-slice`.
+`examples/internal-legacy/adoption/todo-search-slice`.
 
 This remains a single-slice profile extraction. It is not a second slice implementation, aggregate validator, CI workflow
 change, enforcement mode, source authority expansion, or full promotion.
@@ -237,13 +237,13 @@ The first aggregate summary contract is now implemented in
 Implemented command:
 
 ```text
-pbe graph read-model summarize --slices examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run
+pbe graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run
 ```
 
 Implemented outputs:
 
-- `examples/read-model-aggregate/generated/read-model-aggregate-summary.json`
-- `examples/read-model-aggregate/generated/read-model-aggregate-summary.md`
+- `examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.json`
+- `examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.md`
 
 The command reads existing per-slice validation reports only. It does not run generation, comparison, validation,
 `validate --all`, source authority transition, or promotion readiness approval. The non-enforcing manual workflow now
@@ -282,10 +282,10 @@ declared by this profile.
 
 Current report independence status:
 
-| Slice                                 | Profile id                        | Policy level          | Independence status | Notes                                                                                  |
-| ------------------------------------- | --------------------------------- | --------------------- | ------------------- | -------------------------------------------------------------------------------------- |
-| `examples/adoption/todo-search-slice` | `todo-search-selected-slice`      | `pilot-marker-backed` | implemented         | Requires its own parity report, pilot marker, runtime fixture, fallback references.    |
-| `examples/valid/todo-app-pbe-run`     | `todo-app-pbe-run-structure-only` | `structure-only`      | implemented         | Does not require Todo Search generated files, manual parity, pilot marker, or fixture. |
+| Slice                                                 | Profile id                        | Policy level          | Independence status | Notes                                                                                  |
+| ----------------------------------------------------- | --------------------------------- | --------------------- | ------------------- | -------------------------------------------------------------------------------------- |
+| `examples/internal-legacy/adoption/todo-search-slice` | `todo-search-selected-slice`      | `pilot-marker-backed` | implemented         | Requires its own parity report, pilot marker, runtime fixture, fallback references.    |
+| `examples/valid/todo-app-pbe-run`                     | `todo-app-pbe-run-structure-only` | `structure-only`      | implemented         | Does not require Todo Search generated files, manual parity, pilot marker, or fixture. |
 
 Focused tests prove:
 
@@ -308,10 +308,10 @@ Proposed aggregate statuses:
 
 Current aggregate result:
 
-| Aggregate artifact                                                          | Included slices | Status           | Warning / blocking / decision-required |
-| --------------------------------------------------------------------------- | --------------- | ---------------- | -------------------------------------- |
-| `examples/read-model-aggregate/generated/read-model-aggregate-summary.json` | 2               | `aggregate-pass` | 0 / 0 / 0                              |
-| `examples/read-model-aggregate/generated/read-model-aggregate-summary.md`   | 2               | `aggregate-pass` | 0 / 0 / 0                              |
+| Aggregate artifact                                                                          | Included slices | Status           | Warning / blocking / decision-required |
+| ------------------------------------------------------------------------------------------- | --------------- | ---------------- | -------------------------------------- |
+| `examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.json` | 2               | `aggregate-pass` | 0 / 0 / 0                              |
+| `examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.md`   | 2               | `aggregate-pass` | 0 / 0 / 0                              |
 
 Rules:
 
@@ -378,7 +378,7 @@ The staged path is:
 7. Use [read-model-slice-registry-test-strategy.md](read-model-slice-registry-test-strategy.md) to preserve registry
    fixtures, positive/negative fixture strategy, and non-mutation tests before any broader registry consumption.
 8. Use [read-model-slice-registry-storage-decision.md](read-model-slice-registry-storage-decision.md) for the selected
-   candidate registry location, now materialized as `examples/read-model-aggregate/read-model-slices.json`.
+   candidate registry location, now materialized as `examples/internal-legacy/read-model-aggregate/read-model-slices.json`.
 9. Use [read-model-negative-fixture-storage-decision.md](read-model-negative-fixture-storage-decision.md) before creating
    durable invalid read-model fixtures; negative fixture execution remains local test Evidence only.
 10. Use [read-model-negative-fixture-candidate-plan.md](read-model-negative-fixture-candidate-plan.md) for the selected

@@ -24,7 +24,7 @@ describe('DevViewGraph HTML inspector CLI', () => {
         'read-model',
         'render-devview-graph',
         '--graph-source',
-        'examples/retrofit/cardprinterconfig/graph-source.json',
+        'examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json',
         '--record',
         'change.laminator-tag-layout',
         '--instruction-pack',
@@ -143,7 +143,7 @@ describe('DevViewGraph HTML inspector CLI', () => {
   it('blocks HTML output that would overwrite the graph-source before writing data output', async () => {
     const workspace = createWorkspace()
     writeCardPrinterConfigFixture(workspace)
-    const graphSourcePath = join(workspace, 'examples/retrofit/cardprinterconfig/graph-source.json')
+    const graphSourcePath = join(workspace, 'examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json')
     const before = readFileSync(graphSourcePath, 'utf8')
 
     const result = await runPbeCli(
@@ -152,13 +152,13 @@ describe('DevViewGraph HTML inspector CLI', () => {
         'read-model',
         'render-devview-graph',
         '--graph-source',
-        'examples/retrofit/cardprinterconfig/graph-source.json',
+        'examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json',
         '--record',
         'change.laminator-tag-layout',
         '--instruction-pack',
         'outputs/retrofit/instruction-packs/laminator-tag-layout.instruction-pack.json',
         '--output',
-        'examples/retrofit/cardprinterconfig/graph-source.json',
+        'examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json',
         '--data-output',
         '.tmp/should-not-exist.json',
         '--json',
@@ -189,7 +189,7 @@ describe('DevViewGraph HTML inspector CLI', () => {
         'read-model',
         'render-devview-graph',
         '--graph-source',
-        'examples/retrofit/cardprinterconfig/graph-source.json',
+        'examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json',
         '--record',
         'change.laminator-tag-layout',
         '--instruction-pack',
@@ -221,7 +221,7 @@ describe('DevViewGraph HTML inspector CLI', () => {
         'read-model',
         'render-devview-graph',
         '--graph-source',
-        'examples/retrofit/cardprinterconfig/graph-source.json',
+        'examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json',
         '--record',
         'change.laminator-tag-layout',
         '--instruction-pack',
@@ -254,13 +254,13 @@ describe('DevViewGraph HTML inspector CLI', () => {
         'read-model',
         'render-devview-graph',
         '--graph-source',
-        'examples/retrofit/windowsutility/graph-source.json',
+        'examples/internal-legacy/retrofit/windowsutility/graph-source.json',
         '--record',
         'change.laminator-tag-layout',
         '--instruction-pack',
         'outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json',
         '--project-memory',
-        'examples/retrofit/windowsutility/devview-project-memory.preview.json',
+        'examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json',
         '--output',
         htmlOutput,
         '--data-output',
@@ -276,7 +276,9 @@ describe('DevViewGraph HTML inspector CLI', () => {
 
     expect(result.exitCode).toBe(ExitCode.Success)
     expect(payload.ok).toBe(true)
-    expect(data.sourceProjectMemory).toBe('examples/retrofit/windowsutility/devview-project-memory.preview.json')
+    expect(data.sourceProjectMemory).toBe(
+      'examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json',
+    )
     expect(data.projectMemorySummary.devviewMode).toBe('retrofit')
     expect(data.projectMemorySummary.currentDirection).toBe('legacy-preserving-retrofit')
     expect(data.projectMemorySummary.taxonomyProfileId).toBe('legacy-retrofit-windowsutility-v0')
@@ -307,7 +309,10 @@ describe('DevViewGraph HTML inspector CLI', () => {
   it('blocks DevViewGraph output that would overwrite Project Memory before writing partial HTML', async () => {
     const workspace = createWorkspace()
     copyWindowsUtilityDemoFixture(workspace)
-    const projectMemoryPath = join(workspace, 'examples/retrofit/windowsutility/devview-project-memory.preview.json')
+    const projectMemoryPath = join(
+      workspace,
+      'examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json',
+    )
     const before = readFileSync(projectMemoryPath, 'utf8')
 
     const result = await runPbeCli(
@@ -316,17 +321,17 @@ describe('DevViewGraph HTML inspector CLI', () => {
         'read-model',
         'render-devview-graph',
         '--graph-source',
-        'examples/retrofit/windowsutility/graph-source.json',
+        'examples/internal-legacy/retrofit/windowsutility/graph-source.json',
         '--record',
         'change.laminator-tag-layout',
         '--instruction-pack',
         'outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json',
         '--project-memory',
-        'examples/retrofit/windowsutility/devview-project-memory.preview.json',
+        'examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json',
         '--output',
         '.tmp/should-not-exist.html',
         '--data-output',
-        'examples/retrofit/windowsutility/devview-project-memory.preview.json',
+        'examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json',
         '--json',
       ],
       { cwd: workspace, pluginRoot },
@@ -342,7 +347,7 @@ describe('DevViewGraph HTML inspector CLI', () => {
 })
 
 function writeCardPrinterConfigFixture(workspace: string): void {
-  writeJson(join(workspace, 'examples/retrofit/cardprinterconfig/graph-source.json'), {
+  writeJson(join(workspace, 'examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json'), {
     schemaVersion: 1,
     artifactRole: 'retrofit-graph-source-v0',
     status: 'active-retrofit-graph-source',
@@ -354,13 +359,13 @@ function writeCardPrinterConfigFixture(workspace: string): void {
     records: [
       {
         id: 'change.smart51-test-setting',
-        path: 'examples/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json',
+        path: 'examples/internal-legacy/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json',
         expectedStatus: 'validated-then-reverted',
         expectedActiveCodeState: 'reverted',
       },
       {
         id: 'change.laminator-tag-layout',
-        path: 'examples/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json',
+        path: 'examples/internal-legacy/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json',
         expectedStatus: 'implemented-build-pass-ui-review-pass',
         expectedActiveCodeState: 'active',
       },
@@ -419,14 +424,15 @@ function writeCardPrinterConfigFixture(workspace: string): void {
         id: 'change.smart51-test-setting',
         kind: 'retrofit-change-record',
         state: 'validated-then-reverted',
-        recordPath: 'examples/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json',
+        recordPath:
+          'examples/internal-legacy/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json',
         intentClaim: 'A hardware-validated SMART-51 test display was implemented, confirmed, then reverted.',
       },
       {
         id: 'change.laminator-tag-layout',
         kind: 'retrofit-change-record',
         state: 'implemented-build-pass-ui-review-pass',
-        recordPath: 'examples/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json',
+        recordPath: 'examples/internal-legacy/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json',
         intentClaim: 'A resource-only Laminator Tag tab alignment fix remains active.',
       },
     ],
@@ -540,9 +546,9 @@ function writeCardPrinterConfigFixture(workspace: string): void {
     schemaVersion: 1,
     artifactRole: 'retrofit-instruction-pack-v0',
     status: 'generated-from-graph-source',
-    graphSourcePath: 'examples/retrofit/cardprinterconfig/graph-source.json',
+    graphSourcePath: 'examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json',
     sourceRecordId: 'change.laminator-tag-layout',
-    sourceRecordPath: 'examples/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json',
+    sourceRecordPath: 'examples/internal-legacy/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json',
     target: {
       projectName: 'CardPrinterConfig',
       repoPath: 'Utility_Windows',
@@ -589,9 +595,13 @@ function writeCardPrinterConfigFixture(workspace: string): void {
 }
 
 function copyWindowsUtilityDemoFixture(workspace: string): void {
-  cpSync(join(pluginRoot, 'examples/retrofit/windowsutility'), join(workspace, 'examples/retrofit/windowsutility'), {
-    recursive: true,
-  })
+  cpSync(
+    join(pluginRoot, 'examples/internal-legacy/retrofit/windowsutility'),
+    join(workspace, 'examples/internal-legacy/retrofit/windowsutility'),
+    {
+      recursive: true,
+    },
+  )
   cpSync(
     join(pluginRoot, 'outputs/retrofit/instruction-packs'),
     join(workspace, 'outputs/retrofit/instruction-packs'),

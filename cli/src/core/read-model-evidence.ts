@@ -621,8 +621,8 @@ interface EdgeIntentProjectionFixtureSummary {
 }
 
 const defaultIntentCriticalGraphSourcePaths = [
-  'examples/intent-critical/native-pbe-maintenance/graph-source-intent.json',
-  'examples/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json',
+  'examples/internal-legacy/intent-critical/native-pbe-maintenance/graph-source-intent.json',
+  'examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json',
 ]
 
 interface TreeNode {
@@ -758,7 +758,7 @@ export interface ReadModelRegistryCommandPlan {
 export const todoSearchReadModelProfile: SliceReadModelConfig = {
   profileId: 'todo-search-selected-slice',
   displayName: 'Todo Search Adoption + Product Meaning Feedback',
-  supportedSlice: 'examples/adoption/todo-search-slice',
+  supportedSlice: 'examples/internal-legacy/adoption/todo-search-slice',
   policyLevel: 'pilot-marker-backed',
   sourceLayout: 'flat-demo-support',
   expectedCounts: {
@@ -806,9 +806,11 @@ export const todoSearchReadModelProfile: SliceReadModelConfig = {
     scopedPilotReview: 'docs/concept/scoped-source-authority-pilot-review.md',
     scopedPilotActiveObservation: 'docs/concept/scoped-source-authority-pilot-active-observation.md',
     generatedEvidenceRequirement: 'docs/concept/generated-read-model-evidence-requirement.md',
-    compatibilitySlice: 'examples/adoption/compatibility-mismatch-slice',
-    compatibilityControlNode: 'examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md',
-    compatibilityEvidenceExceptions: 'examples/adoption/compatibility-mismatch-slice/evidence-exceptions.md',
+    compatibilitySlice: 'examples/internal-legacy/adoption/compatibility-mismatch-slice',
+    compatibilityControlNode:
+      'examples/internal-legacy/adoption/compatibility-mismatch-slice/compatibility-control-node.md',
+    compatibilityEvidenceExceptions:
+      'examples/internal-legacy/adoption/compatibility-mismatch-slice/evidence-exceptions.md',
     graphSource: 'graph-source.json',
   },
   sourceArtifactRelativePaths: [
@@ -830,7 +832,7 @@ export const todoSearchReadModelProfile: SliceReadModelConfig = {
     'docs/concept/scoped-source-authority-pilot-execution-record.md',
     'docs/concept/scoped-source-authority-pilot-review.md',
     'docs/concept/scoped-source-authority-pilot-active-observation.md',
-    'examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md',
+    'examples/internal-legacy/adoption/compatibility-mismatch-slice/compatibility-control-node.md',
     'graph-source.json',
   ],
   retainedWarnings: [
@@ -863,7 +865,7 @@ export const todoSearchReadModelProfile: SliceReadModelConfig = {
   compatibilityWarnings: [
     {
       id: 'CCN-ACEP-TASK-CARD-AUTHORITY-001',
-      source: 'examples/adoption/compatibility-mismatch-slice',
+      source: 'examples/internal-legacy/adoption/compatibility-mismatch-slice',
       role: 'supplemental warning only',
       summary: 'Legacy ACEP/task-card wording remains a compatibility warning, not pilot source scope.',
     },
@@ -965,7 +967,7 @@ export function getSliceReadModelProfile(slice: string): SliceReadModelConfig {
 
 export async function loadReadModelSliceRegistry(
   root: string,
-  registryPath = 'examples/read-model-aggregate/read-model-slices.json',
+  registryPath = 'examples/internal-legacy/read-model-aggregate/read-model-slices.json',
 ): Promise<ReadModelSliceRegistry> {
   const absoluteRegistryPath = path.resolve(root, registryPath)
   const parsed = await readJsonSafe<unknown>(absoluteRegistryPath)
@@ -1342,7 +1344,7 @@ export async function reportIntentCriticalProjection(
 
 export async function reportGraphSourceHealth(root: string): Promise<GraphSourceHealthReport> {
   const blockingReasons: string[] = []
-  const aggregatePath = 'examples/read-model-aggregate/generated/read-model-aggregate-summary.json'
+  const aggregatePath = 'examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.json'
   const aggregateResult = await readJsonSafe<AggregateReadModelSummary>(path.resolve(root, aggregatePath))
   const aggregate =
     aggregateResult.ok && typeof aggregateResult.value === 'object'
@@ -1357,7 +1359,7 @@ export async function reportGraphSourceHealth(root: string): Promise<GraphSource
     blockingReasons.push(`validate-all aggregate status is ${aggregate.status}`)
   }
 
-  const transitionPath = 'examples/read-model-aggregate/graph-source-transition-status.json'
+  const transitionPath = 'examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json'
   const transitionResult = await readJsonSafe<unknown>(path.resolve(root, transitionPath))
   const transition = transitionResult.ok ? asRecord(transitionResult.value, 'graphSourceTransitionStatus', []) : {}
   if (!transitionResult.ok) {
@@ -1743,7 +1745,7 @@ node dist/cli/index.js graph read-model validate --all --json
 npm run test:read-model:e2e
 node dist/cli/index.js graph read-model report-compiler-boundary --json
 node dist/cli/index.js graph read-model compile-contract --dry-run --json
-node dist/cli/index.js graph read-model report-health --json --markdown examples/read-model-aggregate/generated/read-model-health-report-output.md
+node dist/cli/index.js graph read-model report-health --json --markdown examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.md
 \`\`\`
 `
 }
@@ -2796,7 +2798,7 @@ export async function summarizeReadModelEvidence(root: string, slices: string[])
 
 export async function validateAllReadModelEvidence(
   root: string,
-  registryPath = 'examples/read-model-aggregate/read-model-slices.json',
+  registryPath = 'examples/internal-legacy/read-model-aggregate/read-model-slices.json',
 ): Promise<ValidateAllResult> {
   const registry = await loadReadModelSliceRegistry(root, registryPath)
   const plans = buildReadModelRegistryCommandPlans(registry)

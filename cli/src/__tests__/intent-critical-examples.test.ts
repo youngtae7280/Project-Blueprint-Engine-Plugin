@@ -228,16 +228,18 @@ function expectProjectionPreservesEdgeIntent(
 
 describe('intent-critical Graph-source examples', () => {
   it('records native PBE intent before maintenance can erase UX acceptance meaning', async () => {
-    const example = await readIntentExample('examples/intent-critical/native-pbe-maintenance/graph-source-intent.json')
+    const example = await readIntentExample(
+      'examples/internal-legacy/intent-critical/native-pbe-maintenance/graph-source-intent.json',
+    )
     const projection = await readProjection(
-      'examples/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json',
+      'examples/internal-legacy/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json',
     )
 
     expectIntentPreservationFixture(example)
     expectProjectionPreservesEdgeIntent(
       example,
       projection,
-      'examples/intent-critical/native-pbe-maintenance/graph-source-intent.json',
+      'examples/internal-legacy/intent-critical/native-pbe-maintenance/graph-source-intent.json',
     )
     expect(example.exampleKind).toBe('native-pbe')
     expect(example.sourceMode).toBe('graph-source-intent-first')
@@ -253,17 +255,17 @@ describe('intent-critical Graph-source examples', () => {
 
   it('records retrofit PBE recovered intent before cleanup can delete fallback compatibility evidence', async () => {
     const example = await readIntentExample(
-      'examples/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json',
+      'examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json',
     )
     const projection = await readProjection(
-      'examples/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json',
+      'examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json',
     )
 
     expectIntentPreservationFixture(example)
     expectProjectionPreservesEdgeIntent(
       example,
       projection,
-      'examples/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json',
+      'examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json',
     )
     expect(example.exampleKind).toBe('retrofit-pbe')
     expect(example.sourceMode).toBe('retrofit-intent-recovered')
@@ -280,13 +282,15 @@ describe('intent-critical Graph-source examples', () => {
   it('projects native and retrofit edgeIntent fixtures through the CLI without changing claim text', async () => {
     const tempRoot = await mkdtemp(join(tmpdir(), 'pbe-intent-projection-'))
     try {
-      const nativeGraphSource = 'examples/intent-critical/native-pbe-maintenance/graph-source-intent.json'
-      const retrofitGraphSource = 'examples/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json'
+      const nativeGraphSource =
+        'examples/internal-legacy/intent-critical/native-pbe-maintenance/graph-source-intent.json'
+      const retrofitGraphSource =
+        'examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json'
       const nativeCommittedProjection = await readProjection(
-        'examples/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json',
+        'examples/internal-legacy/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json',
       )
       const retrofitCommittedProjection = await readProjection(
-        'examples/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json',
+        'examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json',
       )
 
       const nativeProjected = await runProjectIntentCli(
@@ -341,7 +345,9 @@ describe('intent-critical Graph-source examples', () => {
   it('blocks project-intent when vocabulary classification or anchors are missing', async () => {
     const tempRoot = await mkdtemp(join(tmpdir(), 'pbe-intent-projection-invalid-'))
     try {
-      const source = await readIntentExample('examples/intent-critical/native-pbe-maintenance/graph-source-intent.json')
+      const source = await readIntentExample(
+        'examples/internal-legacy/intent-critical/native-pbe-maintenance/graph-source-intent.json',
+      )
       delete (
         source.intentRecords[0].edgeIntent as Partial<IntentCriticalExample['intentRecords'][number]['edgeIntent']>
       ).riskKind
@@ -374,7 +380,9 @@ describe('intent-critical Graph-source examples', () => {
   it('reports blocked intent projection summary when classification or anchors are missing', async () => {
     const tempRoot = await mkdtemp(join(tmpdir(), 'pbe-intent-report-invalid-'))
     try {
-      const source = await readIntentExample('examples/intent-critical/native-pbe-maintenance/graph-source-intent.json')
+      const source = await readIntentExample(
+        'examples/internal-legacy/intent-critical/native-pbe-maintenance/graph-source-intent.json',
+      )
       delete (
         source.intentRecords[0].edgeIntent as Partial<IntentCriticalExample['intentRecords'][number]['edgeIntent']>
       ).intentKind

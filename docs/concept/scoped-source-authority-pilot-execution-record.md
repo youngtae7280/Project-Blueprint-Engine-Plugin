@@ -29,28 +29,28 @@ change, not public-doc cleanup, not validator/CI enforcement, and not tree-nativ
 ### Primary Pilot Scope
 
 ```text
-examples/adoption/todo-search-slice
+examples/internal-legacy/adoption/todo-search-slice
 ```
 
 The pilot applies only to the Todo Search selected slice and its generated Evidence outputs.
 
 ### Generated Evidence Input
 
-- `examples/adoption/todo-search-slice/generated/generated-read-model.json`
-- `examples/adoption/todo-search-slice/generated/read-model-evidence-manifest.json`
-- `examples/adoption/todo-search-slice/generated/read-model-parity-report.json`
-- `examples/adoption/todo-search-slice/generated/parity-warning-resolution.md`
+- `examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json`
+- `examples/internal-legacy/adoption/todo-search-slice/generated/read-model-evidence-manifest.json`
+- `examples/internal-legacy/adoption/todo-search-slice/generated/read-model-parity-report.json`
+- `examples/internal-legacy/adoption/todo-search-slice/generated/parity-warning-resolution.md`
 
 ### Manual / Reference Inputs
 
-- tree-native selected-slice artifacts under `examples/adoption/todo-search-slice`
-- `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
-- `examples/adoption/todo-search-slice/view-instance-manifest.json`
+- tree-native selected-slice artifacts under `examples/internal-legacy/adoption/todo-search-slice`
+- `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.json`
 
 ### Supplemental Warning Only
 
 ```text
-examples/adoption/compatibility-mismatch-slice
+examples/internal-legacy/adoption/compatibility-mismatch-slice
 ```
 
 The compatibility mismatch slice remains warning Evidence only. It is not pilot source scope.
@@ -178,7 +178,7 @@ accept product results, source authority changes, broader promotion, or warning 
 
 ## Final Non-Promotion Statement
 
-This record executes a bounded scoped source-authority pilot for `examples/adoption/todo-search-slice` only.
+This record executes a bounded scoped source-authority pilot for `examples/internal-legacy/adoption/todo-search-slice` only.
 
 It does not promote the Maintainability Graph as the repository-wide source model, does not change full PBE source
 authority, does not retire tree-native artifacts, does not clean up public docs, does not introduce validator/CI

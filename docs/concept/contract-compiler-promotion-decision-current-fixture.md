@@ -20,18 +20,18 @@ required checks, CI enforcement, branch protection, graph delta application, use
 
 ## Reviewed Scope
 
-| Item                            | Reviewed value                                                                                 |
-| ------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Fixture scope                   | Current Todo Search whitespace-normalization `bug_fix` dry-run fixture only                    |
-| Generated compiler candidate    | `examples/read-model-aggregate/generated/execution-contract-dry-run.generated.json`            |
-| Hand-written comparison fixture | `examples/read-model-aggregate/generated/execution-contract-dry-run.json`                      |
-| Semantic diff artifact          | `examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json`                 |
-| Source-authority gap preview    | `examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json`           |
-| Output requirement preview      | `examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json`     |
-| Promotion review packet         | `examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json`      |
-| Health report                   | `examples/read-model-aggregate/generated/read-model-health-report-output.md`                   |
-| Policy                          | [contract-compiler-promotion-review-policy.md](contract-compiler-promotion-review-policy.md)   |
-| Boundary audit                  | [migration-pbe-to-devview.md](../migration-pbe-to-devview.md) and [README.md](../../README.md) |
+| Item                            | Reviewed value                                                                                             |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Fixture scope                   | Current Todo Search whitespace-normalization `bug_fix` dry-run fixture only                                |
+| Generated compiler candidate    | `examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.generated.json`        |
+| Hand-written comparison fixture | `examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json`                  |
+| Semantic diff artifact          | `examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.diff.json`             |
+| Source-authority gap preview    | `examples/internal-legacy/read-model-aggregate/generated/contract-source-authority-gap.preview.json`       |
+| Output requirement preview      | `examples/internal-legacy/read-model-aggregate/generated/output-requirement-source-authority.preview.json` |
+| Promotion review packet         | `examples/internal-legacy/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json`  |
+| Health report                   | `examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.md`               |
+| Policy                          | [contract-compiler-promotion-review-policy.md](contract-compiler-promotion-review-policy.md)               |
+| Boundary audit                  | [migration-pbe-to-devview.md](../migration-pbe-to-devview.md) and [README.md](../../README.md)             |
 
 ## Validation Reviewed
 
@@ -41,7 +41,7 @@ The decision is based on the current local verification chain remaining green:
 - `npx vitest run cli/src/__tests__/read-model-evidence.test.ts`: pass, 95 tests
 - `node dist/cli/index.js graph read-model report-compiler-input --json`: pass
 - `node dist/cli/index.js graph read-model compile-contract --dry-run --json`: pass
-- `node dist/cli/index.js graph read-model report-health --json --markdown examples/read-model-aggregate/generated/read-model-health-report-output.md`:
+- `node dist/cli/index.js graph read-model report-health --json --markdown examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.md`:
   pass
 - `npm run test:read-model:e2e`: pass
 - `node dist/cli/index.js graph read-model validate --all --json`: pass

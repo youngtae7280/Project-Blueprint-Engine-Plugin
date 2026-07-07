@@ -52,13 +52,13 @@ This review uses the following observable sources:
 - [approval-brief.md](approval-brief.md)
 - [graph-node-edge-tag-policy.md](graph-node-edge-tag-policy.md)
 - [retrofit-graph-bootstrap.md](retrofit-graph-bootstrap.md)
-- `examples/adoption/todo-search-slice/*`
-- `examples/adoption/compatibility-mismatch-slice/*`
-- `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
-- `examples/adoption/todo-search-slice/maintainability-graph-read-model.md`
-- `examples/adoption/todo-search-slice/parity-check.md`
-- `examples/adoption/todo-search-slice/view-instance-manifest.json`
-- `examples/adoption/todo-search-slice/view-instance-manifest.md`
+- `examples/internal-legacy/adoption/todo-search-slice/*`
+- `examples/internal-legacy/adoption/compatibility-mismatch-slice/*`
+- `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json`
+- `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.md`
+- `examples/internal-legacy/adoption/todo-search-slice/parity-check.md`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.json`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.md`
 - [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md)
 - [dry-run-scoped-limited-pilot-observation-record.md](dry-run-scoped-limited-pilot-observation-record.md)
 - [scoped-source-authority-pilot-preparation-package.md](scoped-source-authority-pilot-preparation-package.md)
@@ -87,7 +87,7 @@ Current decision outcome after the user response:
 Approve limited pilot promotion decision
 ```
 
-This outcome is bounded to `examples/adoption/todo-search-slice` and is recorded in
+This outcome is bounded to `examples/internal-legacy/adoption/todo-search-slice` and is recorded in
 [limited-pilot-transition-record.md](limited-pilot-transition-record.md). It is not full Graph-source promotion and does
 not change source authority.
 
@@ -220,11 +220,11 @@ resolved for limited pilot review by manual Node/Edge/Tag parity artifact
 
 Evidence:
 
-- `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
-- `examples/adoption/todo-search-slice/maintainability-graph-read-model.md`
-- `examples/adoption/todo-search-slice/parity-check.md`
-- `examples/adoption/todo-search-slice/view-instance-manifest.json`
-- `examples/adoption/todo-search-slice/view-instance-manifest.md`
+- `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json`
+- `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.md`
+- `examples/internal-legacy/adoption/todo-search-slice/parity-check.md`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.json`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.md`
 
 These artifacts show durable node kinds, durable edge types, view-scoped tags, confidence/freshness separation, 7 Core
 View coverage, retained warnings, and source-authority boundaries. They do not implement a generated graph builder and
@@ -238,7 +238,7 @@ do not justify full promotion by themselves.
 | Representative demo slice selected                                          | ready              | `representative-runtime-feasibility-demo.md` selects `Todo Search Adoption + Product Meaning Feedback`.                                                                                                                                            |
 | Actual representative demo result recorded                                  | ready              | `actual-runtime-feasibility-demo-result.md` records a manual Evidence pack and final `demonstrated` status with retained warnings.                                                                                                                 |
 | Missing Project/Contract/Change/Impact evidence strengthened                | ready              | Todo Search selected-slice support artifacts include Project Tree, Cycle Contract, Node Execution Contract, Change Tree, and Impact Tree snapshots.                                                                                                |
-| Compatibility mismatch path demonstrated with real repo wording             | ready              | `examples/adoption/compatibility-mismatch-slice` records ACEP task-card-only authority wording and a Compatibility Control Node candidate.                                                                                                         |
+| Compatibility mismatch path demonstrated with real repo wording             | ready              | `examples/internal-legacy/adoption/compatibility-mismatch-slice` records ACEP task-card-only authority wording and a Compatibility Control Node candidate.                                                                                         |
 | PP-001 product meaning decision confirmed                                   | ready              | Product Patch and Change Tree record parent orchestration approval for title + note/content search on 2026-06-24.                                                                                                                                  |
 | Title + note/content runtime fixture Evidence present/fresh                 | ready              | `EV-SEARCH-NOTE-TEST` points to `runtime-evidence.md`; Vitest fixture command passed 1 file and 6 tests.                                                                                                                                           |
 | Renewed user Acceptance approved with retained warnings                     | ready with warning | `acceptance-tree.json` records `renewed_acceptance_approved_with_warnings`; warnings remain carried to this readiness review.                                                                                                                      |

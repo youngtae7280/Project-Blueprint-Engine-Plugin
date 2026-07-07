@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "intent-critical-graph-source-example",
+  "exampleKind": "retrofit-pbe",
+  "status": "intent-preservation-fixture",
+  "sourceMode": "retrofit-intent-recovered",
+  "sourceSlice": "examples/internal-legacy/intent-critical/retrofit-pbe-maintenance",
+  "maintenanceScenario": "A maintainer removes a compatibility export because the graph-source projection already contains the same visible fields.",
+  "vibeCodingRisk": "Without the recovered compatibility intent, an AI-assisted cleanup may delete fallback evidence needed for rollback, audit comparison, or external consumers.",
+  "intentRecords": [
+    {
+      "id": "INTENT-RETROFIT-COMPATIBILITY-EXPORT-RETAINED",
+      "intentType": "compatibility-rollback-intent",
+      "statement": "Retain the compatibility export until rollback/fallback and external audit consumers have an explicit retirement decision.",
+      "maintenanceRiskIfMissing": "The export may be deleted as duplicate, breaking rollback review or audit traceability even though current generated views still pass.",
+      "preservationRule": "Do not retire compatibility exports during graph-source cleanup without an explicit retirement decision and replacement evidence.",
+      "nonGoal": "Do not interpret graph-source-backed generation as permission to delete tree-native or compatibility artifacts.",
+      "fallbackReason": "The compatibility export remains the fallback/reference artifact when generated graph-source projections are stale, blocked, or disputed.",
+      "evidenceReason": "Maintenance review should show both the graph-source projection and the retained compatibility export when evaluating retirement readiness.",
+      "compatibilityReason": "Retrofit PBE must preserve legacy/audit vocabulary long enough for users to compare old and new maintenance surfaces.",
+      "edgeIntent": {
+        "edgeType": "preserves-intent",
+        "intentKind": "compatibility-retention",
+        "riskKind": "fallback-loss",
+        "claim": "compatibility export remains until explicit retirement approval and replacement evidence",
+        "confidence": "history-derived",
+        "enforcement": "review-required",
+        "anchors": [
+          {
+            "signalKind": "compatibility",
+            "sourceRole": "retrofit-compat-signal",
+            "artifact": "legacy compatibility export"
+          },
+          {
+            "signalKind": "fallback",
+            "sourceRole": "rollback-reference-signal",
+            "artifact": "rollback/audit and replacement-evidence review history"
+          }
+        ]
+      }
+    }
+  ],
+  "readModelIntentFields": {
+    "required": ["intentType", "statement", "maintenanceRiskIfMissing", "preservationRule", "fallbackReason"],
+    "projectionBoundary": "Read-model projections may expose recovered intent as maintenance Evidence, but cannot silently approve artifact retirement."
+  },
+  "boundaries": {
+    "sourceAuthorityBoundary": "This fixture demonstrates retrofit intent recovery only; it does not retire compatibility artifacts or expand source authority.",
+    "nonPromotionStatement": "This fixture is not Graph-source promotion, enforcement, required-check configuration, or tree retirement.",
+    "userAcceptanceBoundary": "Only the user can approve retiring the compatibility/fallback artifact."
+  }
+}

@@ -7,7 +7,7 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $targetRepo = Join-Path $repoRoot "work/external/todo-vue"
-$graphSourcePath = "examples/retrofit/open-source/todo-vue/graph-source.json"
+$graphSourcePath = "examples/internal-legacy/retrofit/open-source/todo-vue/graph-source.json"
 $instructionPackPath = "outputs/retrofit/open-source/todo-vue/instruction-packs/readme-local-command-boundary.instruction-pack.json"
 $graphDeltaPath = "outputs/retrofit/open-source/todo-vue/graph-deltas/readme-local-command-boundary.graph-delta.json"
 $graphProposalPath = "outputs/retrofit/open-source/todo-vue/graph-update-proposals/readme-local-command-boundary.graph-update-proposal.json"
@@ -32,7 +32,7 @@ if (-not (Test-Path $targetRepo)) {
 $graphResult = & (Join-Path $PSScriptRoot "validate-retrofit-graph-source-v0.ps1") -GraphSourcePath $graphSourcePath
 if ($graphResult.status -ne "retrofit-graph-source-pass") { Fail "todo-vue graph-source validation failed" }
 
-$recordResult = & (Join-Path $PSScriptRoot "validate-retrofit-change-record-v0.ps1") -RecordPath "examples/retrofit/open-source/todo-vue/records/readme-local-command-boundary.implemented.json"
+$recordResult = & (Join-Path $PSScriptRoot "validate-retrofit-change-record-v0.ps1") -RecordPath "examples/internal-legacy/retrofit/open-source/todo-vue/records/readme-local-command-boundary.implemented.json"
 if ($recordResult.status -ne "retrofit-change-record-pass") { Fail "todo-vue change record validation failed" }
 
 $packResult = & (Join-Path $PSScriptRoot "validate-retrofit-instruction-pack-v0.ps1") -GraphSourcePath $graphSourcePath -InstructionPackPath $instructionPackPath
@@ -58,7 +58,7 @@ foreach ($dirtyFile in $dirtyFiles) {
 $nodeVersion = (node --version)
 $npmCiStatus = "passed-before-validator"
 $buildStatus = $recordResult.recordStatus
-$sourceRecord = Get-Content -LiteralPath (Resolve-RepoPath "examples/retrofit/open-source/todo-vue/records/readme-local-command-boundary.implemented.json") -Raw | ConvertFrom-Json
+$sourceRecord = Get-Content -LiteralPath (Resolve-RepoPath "examples/internal-legacy/retrofit/open-source/todo-vue/records/readme-local-command-boundary.implemented.json") -Raw | ConvertFrom-Json
 
 $summary = [PSCustomObject]@{
     status = "open-source-todo-vue-dogfood-pass"

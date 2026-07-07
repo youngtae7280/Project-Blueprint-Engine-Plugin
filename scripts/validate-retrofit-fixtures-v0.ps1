@@ -1,6 +1,6 @@
 param(
     [string]$SchemaPath = "schemas/retrofit/change-record-v0.json",
-    [string]$RecordsRoot = "examples/retrofit",
+    [string]$RecordsRoot = "examples/internal-legacy/retrofit",
     [switch]$CheckExternalRepo
 )
 

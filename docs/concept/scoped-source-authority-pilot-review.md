@@ -12,18 +12,18 @@ introduce validator/CI enforcement, clean up public docs, or replace user accept
 
 ## Review Basis
 
-| Item                    | Reviewed artifact                                                                                      |
-| ----------------------- | ------------------------------------------------------------------------------------------------------ |
-| Pilot execution record  | `docs/concept/scoped-source-authority-pilot-execution-record.md`                                       |
-| Pilot marker            | `examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json`              |
-| Generated read model    | `examples/adoption/todo-search-slice/generated/generated-read-model.json`                              |
-| Evidence manifest       | `examples/adoption/todo-search-slice/generated/read-model-evidence-manifest.json`                      |
-| Parity report           | `examples/adoption/todo-search-slice/generated/read-model-parity-report.json`                          |
-| Warning resolution      | `examples/adoption/todo-search-slice/generated/parity-warning-resolution.md`                           |
-| Tree-native fallback    | Product, Project, Work, Test, Evidence, Acceptance, Change, and Impact artifacts under the pilot slice |
-| Manual parity reference | `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`                            |
-| View manifest reference | `examples/adoption/todo-search-slice/view-instance-manifest.json`                                      |
-| Compatibility warning   | `examples/adoption/compatibility-mismatch-slice`                                                       |
+| Item                    | Reviewed artifact                                                                                         |
+| ----------------------- | --------------------------------------------------------------------------------------------------------- |
+| Pilot execution record  | `docs/concept/scoped-source-authority-pilot-execution-record.md`                                          |
+| Pilot marker            | `examples/internal-legacy/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json` |
+| Generated read model    | `examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json`                 |
+| Evidence manifest       | `examples/internal-legacy/adoption/todo-search-slice/generated/read-model-evidence-manifest.json`         |
+| Parity report           | `examples/internal-legacy/adoption/todo-search-slice/generated/read-model-parity-report.json`             |
+| Warning resolution      | `examples/internal-legacy/adoption/todo-search-slice/generated/parity-warning-resolution.md`              |
+| Tree-native fallback    | Product, Project, Work, Test, Evidence, Acceptance, Change, and Impact artifacts under the pilot slice    |
+| Manual parity reference | `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json`               |
+| View manifest reference | `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.json`                         |
+| Compatibility warning   | `examples/internal-legacy/adoption/compatibility-mismatch-slice`                                          |
 
 ## Review Outcome
 
@@ -41,17 +41,17 @@ changes.
 
 ## Required Review Questions
 
-| Question                                                                            | Answer                                                                                                                                                               |
-| ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Did generated read-model interpretation stay bounded to Todo Search selected slice? | Yes. The pilot marker and execution record limit the interpretation boundary to `examples/adoption/todo-search-slice`; the compatibility slice remains warning-only. |
-| Did generated/manual parity remain `comparison-pass`?                               | Yes. The regenerated parity report remains `comparison-pass` with zero mismatches, zero blocking issues, and zero decision-required issues.                          |
-| Did fallback/reference tree-native artifacts remain preserved and usable?           | Yes. The Product, Project, Work, Test, Evidence, Acceptance, Change, and Impact artifacts remain present and are not retired or superseded.                          |
-| Did retained warnings remain visible?                                               | Yes. Bounded fixture scope, partial UI evidence, CI enforcement absence, and ACEP public-doc cleanup deferment remain carried forward.                               |
-| Did user acceptance authority remain user-controlled?                               | Yes. Demo-support Acceptance remains a user approval record and is not replaced by generated graph authority or Codex/PBE judgment.                                  |
-| Did the supplemental compatibility mismatch slice remain warning-only?              | Yes. It remains supplemental compatibility Evidence and is not included in the pilot source scope.                                                                   |
-| Is validator/CI-backed Evidence required before broader use?                        | Yes for broader execution, enforcement, or full promotion planning. It is not required to keep this bounded pilot active.                                            |
-| Is public-doc cleanup required before broader promotion, or still safely deferred?  | It is safely deferred for the current scoped pilot, but broader promotion should revisit whether cleanup becomes a blocker.                                          |
-| Is the scoped pilot safe to keep active?                                            | Yes, with retained warnings and fallback ready.                                                                                                                      |
+| Question                                                                            | Answer                                                                                                                                                                               |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Did generated read-model interpretation stay bounded to Todo Search selected slice? | Yes. The pilot marker and execution record limit the interpretation boundary to `examples/internal-legacy/adoption/todo-search-slice`; the compatibility slice remains warning-only. |
+| Did generated/manual parity remain `comparison-pass`?                               | Yes. The regenerated parity report remains `comparison-pass` with zero mismatches, zero blocking issues, and zero decision-required issues.                                          |
+| Did fallback/reference tree-native artifacts remain preserved and usable?           | Yes. The Product, Project, Work, Test, Evidence, Acceptance, Change, and Impact artifacts remain present and are not retired or superseded.                                          |
+| Did retained warnings remain visible?                                               | Yes. Bounded fixture scope, partial UI evidence, CI enforcement absence, and ACEP public-doc cleanup deferment remain carried forward.                                               |
+| Did user acceptance authority remain user-controlled?                               | Yes. Demo-support Acceptance remains a user approval record and is not replaced by generated graph authority or Codex/PBE judgment.                                                  |
+| Did the supplemental compatibility mismatch slice remain warning-only?              | Yes. It remains supplemental compatibility Evidence and is not included in the pilot source scope.                                                                                   |
+| Is validator/CI-backed Evidence required before broader use?                        | Yes for broader execution, enforcement, or full promotion planning. It is not required to keep this bounded pilot active.                                                            |
+| Is public-doc cleanup required before broader promotion, or still safely deferred?  | It is safely deferred for the current scoped pilot, but broader promotion should revisit whether cleanup becomes a blocker.                                                          |
+| Is the scoped pilot safe to keep active?                                            | Yes, with retained warnings and fallback ready.                                                                                                                                      |
 
 ## Observation Summary
 

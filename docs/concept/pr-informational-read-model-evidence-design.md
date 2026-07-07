@@ -67,9 +67,9 @@ on:
       - '.github/workflows/read-model-evidence.yml'
       - 'cli/src/**'
       - 'scripts/**'
-      - 'examples/adoption/todo-search-slice/**'
+      - 'examples/internal-legacy/adoption/todo-search-slice/**'
       - 'examples/valid/todo-app-pbe-run/**'
-      - 'examples/read-model-aggregate/**'
+      - 'examples/internal-legacy/read-model-aggregate/**'
       - 'docs/concept/**'
 ```
 
@@ -78,15 +78,15 @@ expansion, or promotion gate.
 
 ### Trigger Scope Tradeoff
 
-| Path candidate                              | Why include it                                                   | Noise risk                                                    | Drift risk if excluded                                        | Recommendation                                                   |
-| ------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| `.github/workflows/read-model-evidence.yml` | Workflow changes directly affect CI-backed Evidence.             | Low.                                                          | High: workflow changes could break Evidence runs silently.    | Include.                                                         |
-| `cli/src/**`                                | Read-model generate/compare/validate/summarize code lives here.  | Medium if unrelated CLI internals change.                     | High: graph Evidence behavior can drift.                      | Include.                                                         |
-| `scripts/**`                                | PBE validation and support validators can affect Evidence trust. | Medium/high because many scripts are not read-model-specific. | Medium: validator/root behavior can affect reported Evidence. | Include initially; revisit if noisy.                             |
-| `examples/adoption/todo-search-slice/**`    | Primary pilot-backed slice and manual parity source.             | Low/medium.                                                   | High: primary Evidence inputs could drift.                    | Include.                                                         |
-| `examples/valid/todo-app-pbe-run/**`        | Second structure-only profile input/output.                      | Low/medium.                                                   | Medium/high: second slice aggregate status could drift.       | Include.                                                         |
-| `examples/read-model-aggregate/**`          | Aggregate summary output contract and committed artifact.        | Low.                                                          | Medium: aggregate output/contract changes could drift.        | Include.                                                         |
-| `docs/concept/**`                           | Source-boundary and policy docs define Evidence semantics.       | High for unrelated concept edits.                             | Medium: boundary wording can drift without signal.            | Include in first informational design; consider narrowing later. |
+| Path candidate                                           | Why include it                                                   | Noise risk                                                    | Drift risk if excluded                                        | Recommendation                                                   |
+| -------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `.github/workflows/read-model-evidence.yml`              | Workflow changes directly affect CI-backed Evidence.             | Low.                                                          | High: workflow changes could break Evidence runs silently.    | Include.                                                         |
+| `cli/src/**`                                             | Read-model generate/compare/validate/summarize code lives here.  | Medium if unrelated CLI internals change.                     | High: graph Evidence behavior can drift.                      | Include.                                                         |
+| `scripts/**`                                             | PBE validation and support validators can affect Evidence trust. | Medium/high because many scripts are not read-model-specific. | Medium: validator/root behavior can affect reported Evidence. | Include initially; revisit if noisy.                             |
+| `examples/internal-legacy/adoption/todo-search-slice/**` | Primary pilot-backed slice and manual parity source.             | Low/medium.                                                   | High: primary Evidence inputs could drift.                    | Include.                                                         |
+| `examples/valid/todo-app-pbe-run/**`                     | Second structure-only profile input/output.                      | Low/medium.                                                   | Medium/high: second slice aggregate status could drift.       | Include.                                                         |
+| `examples/internal-legacy/read-model-aggregate/**`       | Aggregate summary output contract and committed artifact.        | Low.                                                          | Medium: aggregate output/contract changes could drift.        | Include.                                                         |
+| `docs/concept/**`                                        | Source-boundary and policy docs define Evidence semantics.       | High for unrelated concept edits.                             | Medium: boundary wording can drift without signal.            | Include in first informational design; consider narrowing later. |
 
 Recommended first PR informational path policy:
 
@@ -108,14 +108,14 @@ The PR informational mode reuses the current aggregate-enabled command sequence:
 
 ```text
 npm run build:cli
-node dist/cli/index.js graph read-model generate --slice examples/adoption/todo-search-slice --json
-node dist/cli/index.js graph read-model compare --generated examples/adoption/todo-search-slice/generated/generated-read-model.json --manual examples/adoption/todo-search-slice/maintainability-graph-read-model.json --json
-node dist/cli/index.js graph read-model validate --slice examples/adoption/todo-search-slice --json
+node dist/cli/index.js graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice --json
+node dist/cli/index.js graph read-model compare --generated examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json --manual examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json --json
+node dist/cli/index.js graph read-model validate --slice examples/internal-legacy/adoption/todo-search-slice --json
 node dist/cli/index.js graph read-model generate --slice examples/valid/todo-app-pbe-run --json
 node dist/cli/index.js graph read-model validate --slice examples/valid/todo-app-pbe-run --json
-node dist/cli/index.js graph read-model summarize --slices examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run --json
+node dist/cli/index.js graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run --json
 npx vitest run cli/src/__tests__/read-model-evidence.test.ts
-npx vitest run examples/adoption/todo-search-slice/runtime-fixture
+npx vitest run examples/internal-legacy/adoption/todo-search-slice/runtime-fixture
 npm run validate:pbe
 npm run validate:pbe:v2
 ```

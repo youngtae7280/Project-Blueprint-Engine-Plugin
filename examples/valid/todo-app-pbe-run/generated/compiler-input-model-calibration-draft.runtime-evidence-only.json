@@ -143,7 +143,7 @@
         "id": "scope-no-registry-or-profile-promotion",
         "scopeKind": "configuration",
         "paths": [
-          "examples/read-model-aggregate/read-model-slices.json",
+          "examples/internal-legacy/read-model-aggregate/read-model-slices.json",
           "examples/valid/todo-app-pbe-run/graph-source.json"
         ],
         "derivedFrom": ["policy:todo-app-structure-only-boundary"]

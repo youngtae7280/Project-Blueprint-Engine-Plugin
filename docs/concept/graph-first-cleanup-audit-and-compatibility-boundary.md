@@ -19,7 +19,7 @@ Current graph-source status:
 
 - Todo Search selected slice is limited Graph-source promoted.
 - Todo App PBE Run is graph-source-backed for `structure-only`.
-- `examples/read-model-aggregate/read-model-slices.json` is the positive read-model registry.
+- `examples/internal-legacy/read-model-aggregate/read-model-slices.json` is the positive read-model registry.
 - `graph read-model validate --all`, `graph read-model report-health`, and `test:read-model:e2e` provide local and CI
   observation Evidence.
 - CI/read-model Evidence remains non-enforcing.
@@ -30,7 +30,7 @@ Current graph-source status:
 Keep these as current graph-first surfaces:
 
 - `graph-source.json` fixtures for configured slices.
-- `examples/read-model-aggregate/read-model-slices.json`.
+- `examples/internal-legacy/read-model-aggregate/read-model-slices.json`.
 - Graph read-model projection commands.
 - Graph read-model validation and health report commands.
 - EdgeIntent projection and report surfaces.

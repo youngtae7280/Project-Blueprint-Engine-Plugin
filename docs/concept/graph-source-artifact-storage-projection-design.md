@@ -36,28 +36,28 @@ pilot-marker-backed, not enforcement, and not promotion beyond `structure-only`.
 | Promoted scope        | Todo Search selected-slice authority surface.                                                                                                        |
 | Source model in scope | Maintainability Graph, as recorded by [broader-graph-source-promotion-execution-record.md](broader-graph-source-promotion-execution-record.md).      |
 | Fallback/reference    | Tree-native selected-slice artifacts retained as maintained compatibility / fallback / reference artifacts.                                          |
-| Graph source artifact | `examples/adoption/todo-search-slice/graph-source.json` exists as non-generated limited source artifact.                                             |
+| Graph source artifact | `examples/internal-legacy/adoption/todo-search-slice/graph-source.json` exists as non-generated limited source artifact.                             |
 | Generated projections | Existing generated read-model artifacts and the graph-source projection output remain Evidence/projection outputs, not independent source authority. |
-| Positive registry     | `examples/read-model-aggregate/read-model-slices.json` includes Todo Search and Todo App PBE Run only.                                               |
+| Positive registry     | `examples/internal-legacy/read-model-aggregate/read-model-slices.json` includes Todo Search and Todo App PBE Run only.                               |
 | Todo App PBE Run      | `structure-only`, graph-source-backed with a confirmed projection contract in local positive validate-all; not parity-backed or pilot-marker-backed. |
 | CI                    | Manual and PR informational, non-enforcing.                                                                                                          |
 
 ## Candidate Storage Locations
 
-| Candidate location                                                | Pros                                                                    | Risks / caveats                                                                                  | Recommendation                   |
-| ----------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------- |
-| `examples/adoption/todo-search-slice/graph-source.json`           | Co-located with promoted scope; clearly non-generated if at slice root. | Needs schema and projection rules before creation.                                               | Preferred first candidate.       |
-| `examples/adoption/todo-search-slice/generated/graph-source.json` | Close to generated Evidence.                                            | Bad boundary: source artifact under `generated/` can imply generated output is source authority. | Avoid.                           |
-| `examples/read-model-aggregate/graph-source-registry.json`        | Could support future multi-slice source registry.                       | Too broad for first limited promoted scope.                                                      | Defer.                           |
-| `.pbe/graph/source.json`                                          | Closer to future canonical repo layout.                                 | Repo has no active `.pbe/` artifacts here; premature for example-scope branch.                   | Future-only.                     |
-| Docs-only concept record                                          | Lowest risk.                                                            | Cannot support projection generation.                                                            | Already covered by current docs. |
+| Candidate location                                                                | Pros                                                                    | Risks / caveats                                                                                  | Recommendation                   |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | -------------------------------- |
+| `examples/internal-legacy/adoption/todo-search-slice/graph-source.json`           | Co-located with promoted scope; clearly non-generated if at slice root. | Needs schema and projection rules before creation.                                               | Preferred first candidate.       |
+| `examples/internal-legacy/adoption/todo-search-slice/generated/graph-source.json` | Close to generated Evidence.                                            | Bad boundary: source artifact under `generated/` can imply generated output is source authority. | Avoid.                           |
+| `examples/internal-legacy/read-model-aggregate/graph-source-registry.json`        | Could support future multi-slice source registry.                       | Too broad for first limited promoted scope.                                                      | Defer.                           |
+| `.pbe/graph/source.json`                                                          | Closer to future canonical repo layout.                                 | Repo has no active `.pbe/` artifacts here; premature for example-scope branch.                   | Future-only.                     |
+| Docs-only concept record                                                          | Lowest risk.                                                            | Cannot support projection generation.                                                            | Already covered by current docs. |
 
 ## Recommended First Artifact Shape
 
 The first graph source artifact is strict JSON, non-generated, and located outside `generated/`:
 
 ```text
-examples/adoption/todo-search-slice/graph-source.json
+examples/internal-legacy/adoption/todo-search-slice/graph-source.json
 ```
 
 Implemented shape:
@@ -84,7 +84,7 @@ Current projection helper and CLI surface:
 
 ```text
 loadGraphSourceArtifact -> projectGraphSourceReadModel -> projectGraphSourceReadModelToFile
-pbe graph read-model project --graph-source examples/adoption/todo-search-slice/graph-source.json --output examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
+pbe graph read-model project --graph-source examples/internal-legacy/adoption/todo-search-slice/graph-source.json --output examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
 ```
 
 Focused tests prove that projection from `graph-source.json` preserves the current Todo Search generated read-model
@@ -95,10 +95,10 @@ contract check for the Todo Search profile and exposes `projectionContractStatus
 projection artifact is:
 
 ```text
-examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
+examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
 ```
 
-Todo Search `graph read-model generate --slice examples/adoption/todo-search-slice` now uses the same bounded graph
+Todo Search `graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice` now uses the same bounded graph
 source records for generated nodes, edges, and Core View coverage while preserving the existing generated Evidence role,
 manual parity pass, validation pass, and 40-node / 59-edge / 7-Core-View shape.
 Manual CI run `28219396764` and PR #5 run `28219583619` reviewed this graph-source-backed generation path with
@@ -160,7 +160,7 @@ The non-enforcing read-model Evidence workflow now runs the same observation com
 uploads:
 
 ```text
-examples/read-model-aggregate/generated/read-model-candidate-observation-output.json
+examples/internal-legacy/read-model-aggregate/generated/read-model-candidate-observation-output.json
 examples/valid/todo-app-pbe-run/generated/graph-source-read-model-projection.json
 ```
 

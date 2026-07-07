@@ -23,7 +23,7 @@ Use this before touching the target project.
 
 ```bash
 node dist/cli/index.js graph retrofit plan \
-  --graph-source examples/retrofit/cardprinterconfig/graph-source.json \
+  --graph-source examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json \
   --json
 ```
 
@@ -38,7 +38,7 @@ Check:
 
 ```bash
 node dist/cli/index.js graph operation generate-pack \
-  --graph-source examples/retrofit/cardprinterconfig/graph-source.json \
+  --graph-source examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json \
   --record change.laminator-tag-layout \
   --output outputs/retrofit/instruction-packs/laminator-tag-layout.instruction-pack.json \
   --markdown outputs/retrofit/instruction-packs/laminator-tag-layout.instruction-pack.md \
@@ -59,7 +59,7 @@ first instead of silently widening scope.
 
 ```bash
 node dist/cli/index.js graph operation capture-delta \
-  --graph-source examples/retrofit/cardprinterconfig/graph-source.json \
+  --graph-source examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json \
   --instruction-pack outputs/retrofit/instruction-packs/laminator-tag-layout.instruction-pack.json \
   --target-repo C:/path/to/target \
   --output outputs/retrofit/graph-deltas/laminator-tag-layout.graph-delta.json \

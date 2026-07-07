@@ -30,11 +30,11 @@ promotion.
 
 The representative slice now also has manual equivalent read-model parity artifacts:
 
-- `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
-- `examples/adoption/todo-search-slice/maintainability-graph-read-model.md`
-- `examples/adoption/todo-search-slice/parity-check.md`
-- `examples/adoption/todo-search-slice/view-instance-manifest.json`
-- `examples/adoption/todo-search-slice/view-instance-manifest.md`
+- `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json`
+- `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.md`
+- `examples/internal-legacy/adoption/todo-search-slice/parity-check.md`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.json`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.md`
 
 These artifacts now support renewed limited pilot user decision preparation with warnings under the Node/Edge/Tag
 taxonomy, but they are not generated builder implementation and do not promote source authority.
@@ -115,13 +115,13 @@ execute CLI commands, or write `.pbe` artifacts.
 Source documents and snapshots:
 
 - [../dogfooding-existing-project.md](../dogfooding-existing-project.md)
-- [../../examples/adoption/todo-search-slice/README.md](../../examples/adoption/todo-search-slice/README.md)
-- [../../examples/adoption/todo-search-slice/product-tree.json](../../examples/adoption/todo-search-slice/product-tree.json)
-- [../../examples/adoption/todo-search-slice/work-tree.json](../../examples/adoption/todo-search-slice/work-tree.json)
-- [../../examples/adoption/todo-search-slice/test-tree.json](../../examples/adoption/todo-search-slice/test-tree.json)
-- [../../examples/adoption/todo-search-slice/evidence-tree.json](../../examples/adoption/todo-search-slice/evidence-tree.json)
-- [../../examples/adoption/todo-search-slice/acceptance-tree.json](../../examples/adoption/todo-search-slice/acceptance-tree.json)
-- [../../examples/adoption/todo-search-slice/product-patch-tree.json](../../examples/adoption/todo-search-slice/product-patch-tree.json)
+- [../../examples/internal-legacy/adoption/todo-search-slice/README.md](../../examples/internal-legacy/adoption/todo-search-slice/README.md)
+- [../../examples/internal-legacy/adoption/todo-search-slice/product-tree.json](../../examples/internal-legacy/adoption/todo-search-slice/product-tree.json)
+- [../../examples/internal-legacy/adoption/todo-search-slice/work-tree.json](../../examples/internal-legacy/adoption/todo-search-slice/work-tree.json)
+- [../../examples/internal-legacy/adoption/todo-search-slice/test-tree.json](../../examples/internal-legacy/adoption/todo-search-slice/test-tree.json)
+- [../../examples/internal-legacy/adoption/todo-search-slice/evidence-tree.json](../../examples/internal-legacy/adoption/todo-search-slice/evidence-tree.json)
+- [../../examples/internal-legacy/adoption/todo-search-slice/acceptance-tree.json](../../examples/internal-legacy/adoption/todo-search-slice/acceptance-tree.json)
+- [../../examples/internal-legacy/adoption/todo-search-slice/product-patch-tree.json](../../examples/internal-legacy/adoption/todo-search-slice/product-patch-tree.json)
 
 Summary:
 
@@ -287,7 +287,7 @@ Todo Search Adoption + Product Meaning Feedback
 - [../change-impact-revision.md](../change-impact-revision.md)
 - [../user-acceptance.md](../user-acceptance.md)
 - [../acep.md](../acep.md)
-- [../../examples/adoption/todo-search-slice/README.md](../../examples/adoption/todo-search-slice/README.md)
+- [../../examples/internal-legacy/adoption/todo-search-slice/README.md](../../examples/internal-legacy/adoption/todo-search-slice/README.md)
 
 ### Included Lifecycle Claims
 

@@ -18,7 +18,7 @@ views, Cycle Contracts, and Node Execution Contracts remain compatibility/execut
 The first implementation is intentionally small and report-only:
 
 ```powershell
-node dist/cli/index.js graph execution-contract report --slice examples/adoption/todo-search-slice --json
+node dist/cli/index.js graph execution-contract report --slice examples/internal-legacy/adoption/todo-search-slice --json
 ```
 
 The command reads configured read-model registry/profile/projection data and reports a graph-native execution contract

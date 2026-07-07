@@ -14,13 +14,13 @@ authority, or examples.
 ## Current Graph-Source Authority Status
 
 Current machine-readable status is recorded in
-`examples/read-model-aggregate/graph-source-transition-status.json`.
+`examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json`.
 
 The current boundary is:
 
 - Todo Search selected slice is limited Graph-source promoted.
 - Todo App PBE Run is graph-source-backed for `structure-only`.
-- `examples/read-model-aggregate/read-model-slices.json` is the positive read-model registry.
+- `examples/internal-legacy/read-model-aggregate/read-model-slices.json` is the positive read-model registry.
 - `graph read-model validate --all`, `graph read-model report-health`, and `test:read-model:e2e` provide local and CI
   observation Evidence.
 - CI/read-model Evidence remains non-enforcing.

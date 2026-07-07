@@ -15,15 +15,15 @@ enable CI enforcement, enroll invalid fixtures in positive CI, or retire tree-na
 The current registry surface is:
 
 ```text
-examples/read-model-aggregate/read-model-slices.json
+examples/internal-legacy/read-model-aggregate/read-model-slices.json
 ```
 
 It contains exactly two positive validate-all profiles:
 
-| Profile                           | Slice                                 | Policy level          | Current role                                                                        |
-| --------------------------------- | ------------------------------------- | --------------------- | ----------------------------------------------------------------------------------- |
-| `todo-search-selected-slice`      | `examples/adoption/todo-search-slice` | `pilot-marker-backed` | Limited graph-source promoted selected slice with parity and pilot marker.          |
-| `todo-app-pbe-run-structure-only` | `examples/valid/todo-app-pbe-run`     | `structure-only`      | Confirmed Graph-source-backed structure-only fixture; not source-authority-bearing. |
+| Profile                           | Slice                                                 | Policy level          | Current role                                                                        |
+| --------------------------------- | ----------------------------------------------------- | --------------------- | ----------------------------------------------------------------------------------- |
+| `todo-search-selected-slice`      | `examples/internal-legacy/adoption/todo-search-slice` | `pilot-marker-backed` | Limited graph-source promoted selected slice with parity and pilot marker.          |
+| `todo-app-pbe-run-structure-only` | `examples/valid/todo-app-pbe-run`                     | `structure-only`      | Confirmed Graph-source-backed structure-only fixture; not source-authority-bearing. |
 
 The current projection contract surface is useful but still fixture-shaped. It proves repeatability for these two
 configured slices; it is not yet a generic external-project registry system.
@@ -56,7 +56,7 @@ The first implementation pass keeps the two positive profiles fixed, but reduces
 validate-all path:
 
 - registry command plans now carry required artifacts, optional artifacts, and expected counts from
-  `examples/read-model-aggregate/read-model-slices.json`;
+  `examples/internal-legacy/read-model-aggregate/read-model-slices.json`;
 - compare input paths are resolved from registry-declared artifacts, including the Todo Search manual read-model;
 - projection contract inputs use registry-declared `graphSource` and `graphSourceProjection` paths;
 - registry parsing rejects compare plans without `requiredArtifacts.manualReadModel`;

@@ -33,12 +33,12 @@ Prior workflow triggers:
 Prior explicit read-model command sequence:
 
 1. `npm run build:cli`
-2. `node dist/cli/index.js graph read-model generate --slice examples/adoption/todo-search-slice --json`
-3. `node dist/cli/index.js graph read-model compare --generated examples/adoption/todo-search-slice/generated/generated-read-model.json --manual examples/adoption/todo-search-slice/maintainability-graph-read-model.json --json`
-4. `node dist/cli/index.js graph read-model validate --slice examples/adoption/todo-search-slice --json`
+2. `node dist/cli/index.js graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice --json`
+3. `node dist/cli/index.js graph read-model compare --generated examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json --manual examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json --json`
+4. `node dist/cli/index.js graph read-model validate --slice examples/internal-legacy/adoption/todo-search-slice --json`
 5. `node dist/cli/index.js graph read-model generate --slice examples/valid/todo-app-pbe-run --json`
 6. `node dist/cli/index.js graph read-model validate --slice examples/valid/todo-app-pbe-run --json`
-7. `node dist/cli/index.js graph read-model summarize --slices examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run --json`
+7. `node dist/cli/index.js graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run --json`
 8. focused read-model Evidence tests
 9. Todo Search runtime fixture tests
 10. `npm run validate:pbe`
@@ -69,7 +69,7 @@ workflow.
 Current projection-contract observation:
 
 - Validate-all JSON is captured as
-  `examples/read-model-aggregate/generated/read-model-validate-all-output.json`.
+  `examples/internal-legacy/read-model-aggregate/generated/read-model-validate-all-output.json`.
 - CI manifest and Step Summary now expose `projectionContractStatus`.
 - Todo Search is expected to report `projection-contract-pass`.
 - Todo App PBE Run now reports `candidate-projection-contract-pass` as a bounded non-authority structure-only projection
@@ -81,7 +81,7 @@ Current projection-contract observation:
 Current candidate-observation capture:
 
 - The workflow also runs `graph read-model observe-candidates --json` after positive validate-all.
-- Output is captured at `examples/read-model-aggregate/generated/read-model-candidate-observation-output.json`.
+- Output is captured at `examples/internal-legacy/read-model-aggregate/generated/read-model-candidate-observation-output.json`.
 - CI manifest and Step Summary expose `candidateObservationStatus` and the Todo App candidate projection status.
 - This remains separate from `candidateObservationStatus` and does not promote Todo App PBE Run or add source authority.
   The same candidate projection is now also locally checked by positive validate-all as non-authority structure-only
@@ -158,25 +158,25 @@ Projection-contract PR informational observation:
 
 ## Command Sequence Comparison
 
-| Concern                         | Prior explicit sequence                           | Validate-all sequence                                                             |
-| ------------------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------- |
-| Slice selection                 | Hardcoded commands in workflow                    | Registry-driven via `examples/read-model-aggregate/read-model-slices.json`        |
-| Todo Search generate            | Explicit command                                  | Covered by registry profile `todo-search-selected-slice`                          |
-| Todo Search compare             | Explicit command                                  | Covered by required `compare` command in registry                                 |
-| Todo Search validate            | Explicit command                                  | Covered by required `validate` command in registry                                |
-| Todo App generate               | Explicit command                                  | Covered by registry profile `todo-app-pbe-run-structure-only`                     |
-| Todo App validate               | Explicit command                                  | Covered by required `validate` command in registry                                |
-| Aggregate summarize             | Explicit command over per-slice reports           | Covered after registry profile commands complete                                  |
-| Todo Search graph projection    | Not present                                       | Captured as `projectionContractStatus` from validate-all JSON output              |
-| Focused tests                   | Outside read-model command sequence               | Still outside validate-all and still explicit                                     |
-| Runtime fixture tests           | Outside read-model command sequence               | Still outside validate-all and still explicit                                     |
-| PBE plugin validation           | Outside read-model command sequence               | Still outside validate-all and still explicit                                     |
-| PBE v2 tree validation          | Outside read-model command sequence               | Still outside validate-all and still explicit                                     |
-| Artifact upload                 | Workflow-managed                                  | Workflow-managed                                                                  |
-| CI manifest / Step Summary      | Workflow-managed                                  | Workflow-managed, with validate-all status added                                  |
-| Failure display                 | Individual command step failures identify command | validate-all JSON provides per-slice/per-command status for comparable visibility |
-| Workflow source of slice policy | Workflow command list plus in-code profiles       | Registry plus validate-all output                                                 |
-| Source authority boundary       | Summary/manifest wording                          | Same Evidence-only / non-promotion / non-enforcement boundaries                   |
+| Concern                         | Prior explicit sequence                           | Validate-all sequence                                                                      |
+| ------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Slice selection                 | Hardcoded commands in workflow                    | Registry-driven via `examples/internal-legacy/read-model-aggregate/read-model-slices.json` |
+| Todo Search generate            | Explicit command                                  | Covered by registry profile `todo-search-selected-slice`                                   |
+| Todo Search compare             | Explicit command                                  | Covered by required `compare` command in registry                                          |
+| Todo Search validate            | Explicit command                                  | Covered by required `validate` command in registry                                         |
+| Todo App generate               | Explicit command                                  | Covered by registry profile `todo-app-pbe-run-structure-only`                              |
+| Todo App validate               | Explicit command                                  | Covered by required `validate` command in registry                                         |
+| Aggregate summarize             | Explicit command over per-slice reports           | Covered after registry profile commands complete                                           |
+| Todo Search graph projection    | Not present                                       | Captured as `projectionContractStatus` from validate-all JSON output                       |
+| Focused tests                   | Outside read-model command sequence               | Still outside validate-all and still explicit                                              |
+| Runtime fixture tests           | Outside read-model command sequence               | Still outside validate-all and still explicit                                              |
+| PBE plugin validation           | Outside read-model command sequence               | Still outside validate-all and still explicit                                              |
+| PBE v2 tree validation          | Outside read-model command sequence               | Still outside validate-all and still explicit                                              |
+| Artifact upload                 | Workflow-managed                                  | Workflow-managed                                                                           |
+| CI manifest / Step Summary      | Workflow-managed                                  | Workflow-managed, with validate-all status added                                           |
+| Failure display                 | Individual command step failures identify command | validate-all JSON provides per-slice/per-command status for comparable visibility          |
+| Workflow source of slice policy | Workflow command list plus in-code profiles       | Registry plus validate-all output                                                          |
+| Source authority boundary       | Summary/manifest wording                          | Same Evidence-only / non-promotion / non-enforcement boundaries                            |
 
 ## What Validate-All Covers
 

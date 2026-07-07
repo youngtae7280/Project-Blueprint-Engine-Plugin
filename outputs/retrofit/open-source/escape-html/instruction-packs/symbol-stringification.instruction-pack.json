@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "artifactRole": "retrofit-instruction-pack-v0",
   "status": "generated-from-graph-source",
-  "graphSourcePath": "examples/retrofit/open-source/escape-html/graph-source.json",
+  "graphSourcePath": "examples/internal-legacy/retrofit/open-source/escape-html/graph-source.json",
   "sourceRecordId": "change.escape-html-symbol-stringification",
-  "sourceRecordPath": "examples/retrofit/open-source/escape-html/records/symbol-stringification.implemented.json",
+  "sourceRecordPath": "examples/internal-legacy/retrofit/open-source/escape-html/records/symbol-stringification.implemented.json",
   "target": {
     "projectName": "component/escape-html",
     "repoPath": "work/external/escape-html",

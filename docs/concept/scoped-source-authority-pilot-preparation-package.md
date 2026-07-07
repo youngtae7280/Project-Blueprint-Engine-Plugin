@@ -47,7 +47,7 @@ The approval authorizes this preparation package only.
 ### Primary Scope
 
 ```text
-examples/adoption/todo-search-slice
+examples/internal-legacy/adoption/todo-search-slice
 ```
 
 The preparation package applies only to the Todo Search representative demo-support slice.
@@ -55,7 +55,7 @@ The preparation package applies only to the Todo Search representative demo-supp
 ### Supplemental Evidence Only
 
 ```text
-examples/adoption/compatibility-mismatch-slice
+examples/internal-legacy/adoption/compatibility-mismatch-slice
 ```
 
 The compatibility mismatch slice remains supporting Evidence for compatibility warning handling. It is not pilot source
@@ -89,7 +89,7 @@ Current state remains unchanged:
 ### Candidate Boundary For Future Scoped Pilot Execution
 
 A future scoped source-authority pilot could define a candidate boundary only inside
-`examples/adoption/todo-search-slice`.
+`examples/internal-legacy/adoption/todo-search-slice`.
 
 Two possible candidate standards remain:
 
@@ -143,14 +143,14 @@ Approval Brief, source boundary, fallback rule, and rollback/fallback gate.
 
 ### Evidence Gate
 
-| Requirement                           | Current status  | Notes                                                                                             |
-| ------------------------------------- | --------------- | ------------------------------------------------------------------------------------------------- |
-| Runtime fixture command Evidence      | present / fresh | `npx vitest run examples/adoption/todo-search-slice/runtime-fixture` passes 1 file/6 tests.       |
-| Node/Edge/Tag parity                  | present         | Manual read-model separates `nodeKind`, `edgeType`, and allowed `viewScopedTags`.                 |
-| 7 Core View coverage                  | present         | Intent, Behavior, Structure, Scope/Execution, Impact, Verification, Evidence/Acceptance.          |
-| Check/Evidence separation             | visible         | Checks and Evidence are separated through Test/Evidence artifacts and read-model edges.           |
-| Retained warnings                     | visible         | Bounded fixture, UI visual partial, validator/CI repeatability open, public-doc cleanup deferred. |
-| Generated builder / CLI-backed output | present         | Bounded Todo Search generated output exists; execution approval remains separate.                 |
+| Requirement                           | Current status  | Notes                                                                                                       |
+| ------------------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------- |
+| Runtime fixture command Evidence      | present / fresh | `npx vitest run examples/internal-legacy/adoption/todo-search-slice/runtime-fixture` passes 1 file/6 tests. |
+| Node/Edge/Tag parity                  | present         | Manual read-model separates `nodeKind`, `edgeType`, and allowed `viewScopedTags`.                           |
+| 7 Core View coverage                  | present         | Intent, Behavior, Structure, Scope/Execution, Impact, Verification, Evidence/Acceptance.                    |
+| Check/Evidence separation             | visible         | Checks and Evidence are separated through Test/Evidence artifacts and read-model edges.                     |
+| Retained warnings                     | visible         | Bounded fixture, UI visual partial, validator/CI repeatability open, public-doc cleanup deferred.           |
+| Generated builder / CLI-backed output | present         | Bounded Todo Search generated output exists; execution approval remains separate.                           |
 
 ### Authority Gate
 

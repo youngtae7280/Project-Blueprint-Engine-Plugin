@@ -10,7 +10,7 @@ creation; the first invalid `viewScopedTags` fixture is now implemented under th
 
 The current baseline already has:
 
-- candidate registry fixture: `examples/read-model-aggregate/read-model-slices.json`
+- candidate registry fixture: `examples/internal-legacy/read-model-aggregate/read-model-slices.json`
 - parser and normalization tests for the candidate registry
 - local non-enforcing `pbe graph read-model validate --all`
 - non-enforcing manual and PR validate-all CI reviews
@@ -27,10 +27,10 @@ local-only invalid fixture coverage; manual or PR CI execution remains a separat
 
 Current positive fixtures:
 
-| Profile                           | Slice                                 | Policy level          | Status                                             |
-| --------------------------------- | ------------------------------------- | --------------------- | -------------------------------------------------- |
-| `todo-search-selected-slice`      | `examples/adoption/todo-search-slice` | `pilot-marker-backed` | Generated, parity-backed, validated, CI-reviewed   |
-| `todo-app-pbe-run-structure-only` | `examples/valid/todo-app-pbe-run`     | `structure-only`      | Generated, structure-validated, aggregate-included |
+| Profile                           | Slice                                                 | Policy level          | Status                                             |
+| --------------------------------- | ----------------------------------------------------- | --------------------- | -------------------------------------------------- |
+| `todo-search-selected-slice`      | `examples/internal-legacy/adoption/todo-search-slice` | `pilot-marker-backed` | Generated, parity-backed, validated, CI-reviewed   |
+| `todo-app-pbe-run-structure-only` | `examples/valid/todo-app-pbe-run`                     | `structure-only`      | Generated, structure-validated, aggregate-included |
 
 Current negative coverage mostly uses focused tests that create or mutate temporary registry data. That is appropriate
 for parser-level shape checks, but it may not be enough for future end-to-end `validate --all` robustness, cross-slice
@@ -93,7 +93,7 @@ Best fit:
 - invalid `viewScopedTags` in a realistic report or generated read-model
 - missing Core View coverage in a realistic generated read-model
 
-### Option C: `examples/read-model-aggregate/invalid-fixtures/*`
+### Option C: `examples/internal-legacy/read-model-aggregate/invalid-fixtures/*`
 
 Invalid fixtures near the aggregate registry.
 
@@ -106,7 +106,7 @@ Benefits:
 Costs:
 
 - may blur positive aggregate Evidence with invalid test fixtures
-- can make `examples/read-model-aggregate` feel partly source/config and partly test data
+- can make `examples/internal-legacy/read-model-aggregate` feel partly source/config and partly test data
 - less aligned with existing `examples/invalid` naming
 
 Best fit:
@@ -241,9 +241,9 @@ Negative tests must not mutate positive fixtures.
 Required rules:
 
 - copy positive fixtures to a temp workspace before corrupting them
-- never rewrite `examples/adoption/todo-search-slice`
+- never rewrite `examples/internal-legacy/adoption/todo-search-slice`
 - never rewrite `examples/valid/todo-app-pbe-run`
-- never rewrite `examples/read-model-aggregate/read-model-slices.json` during negative tests
+- never rewrite `examples/internal-legacy/read-model-aggregate/read-model-slices.json` during negative tests
 - keep durable invalid fixtures outside `generated/`
 - delete temp workspaces after tests
 

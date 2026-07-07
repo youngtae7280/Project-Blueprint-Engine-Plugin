@@ -1,0 +1,230 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "compiler-input-model-dry-run",
+  "status": "compiler-input-model-dry-run-valid",
+  "sourceMode": "compiler-input-model-mvp-dry-run",
+  "changeId": "change-todo-search-whitespace-normalization-dogfood",
+  "humanRequest": {
+    "id": "request-todo-search-whitespace-normalization",
+    "source": "bounded-maintenance-dogfood",
+    "text": "Preserve Todo Search matching when a multi-word query contains repeated whitespace."
+  },
+  "graphSnapshot": {
+    "id": "graph-snapshot-todo-search-selected-slice",
+    "artifacts": [
+      {
+        "id": "read-model-health",
+        "path": "examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.json",
+        "role": "non-enforcing status context"
+      },
+      {
+        "id": "todo-search-graph-source",
+        "path": "examples/internal-legacy/adoption/todo-search-slice/graph-source.json",
+        "role": "limited graph-source context"
+      }
+    ]
+  },
+  "packSchema": {
+    "id": "pack-schema-bug-fix",
+    "changeType": "bug_fix",
+    "requiredInputGroups": [
+      "humanRequest",
+      "graphSnapshot",
+      "policySnapshot",
+      "evidenceIndex",
+      "targetScopeCandidates",
+      "outputRequirementSources",
+      "stopConditionSources",
+      "riskSources"
+    ]
+  },
+  "policySnapshot": {
+    "id": "policy-snapshot-compiler-boundary-mvp",
+    "policies": [
+      {
+        "id": "compiler-boundary-task-registry",
+        "authority": "compiler-boundary-validator",
+        "status": "compiler-boundary-mvp-pass"
+      },
+      {
+        "id": "execution-contract-schema",
+        "authority": "contract-fixture-validator",
+        "status": "contract-schema-pass"
+      },
+      {
+        "id": "non-enforcing-read-model-evidence",
+        "authority": "policy",
+        "status": "non-enforcing"
+      }
+    ],
+    "evidenceCheckMappings": [
+      {
+        "evidenceType": "runtime_fixture_result",
+        "requiredCheckId": "check-todo-search-runtime-fixture",
+        "compiledEvidenceType": "unit_test_result"
+      },
+      {
+        "evidenceType": "validate_all_result",
+        "requiredCheckId": "check-read-model-validate-all",
+        "compiledEvidenceType": "validator_output"
+      }
+    ],
+    "forbiddenScopeRules": [
+      {
+        "id": "scope-no-product-meaning-expansion",
+        "scopeKind": "product",
+        "paths": ["examples/internal-legacy/adoption/todo-search-slice/product-tree.json"],
+        "derivedFrom": ["intent:todo-search-selected-slice"]
+      },
+      {
+        "id": "scope-no-ci-enforcement",
+        "scopeKind": "workflow",
+        "paths": [".github/workflows/read-model-evidence.yml"],
+        "derivedFrom": ["policy:non-enforcing-read-model-evidence"]
+      }
+    ]
+  },
+  "evidenceIndex": {
+    "id": "evidence-index-todo-search-whitespace-normalization",
+    "entries": [
+      {
+        "id": "evidence-runtime-fixture-result",
+        "artifact": "examples/internal-legacy/adoption/todo-search-slice/runtime-evidence.md",
+        "evidenceType": "runtime_fixture_result",
+        "freshness": "required-after-source-change"
+      },
+      {
+        "id": "evidence-validate-all-result",
+        "artifact": "examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.json",
+        "evidenceType": "validate_all_result",
+        "freshness": "required-after-graph-or-artifact-change"
+      }
+    ]
+  },
+  "targetScopeCandidates": [
+    {
+      "id": "scope-runtime-search-filter",
+      "scopeKind": "code",
+      "paths": ["examples/internal-legacy/adoption/todo-search-slice/runtime-fixture/todo-search.js"],
+      "derivedFrom": ["graph-source:node:CODE-RUNTIME-SEARCH-HELPER"],
+      "contractDerivedFrom": ["work:WT-SEARCH-001", "test:VT-SEARCH-001"],
+      "confidence": "graph-backed-candidate"
+    },
+    {
+      "id": "scope-runtime-search-test",
+      "scopeKind": "test",
+      "paths": ["examples/internal-legacy/adoption/todo-search-slice/runtime-fixture/todo-search.test.js"],
+      "derivedFrom": ["graph-source:node:CODE-RUNTIME-SEARCH-TEST"],
+      "contractDerivedFrom": ["test:VT-SEARCH-001"],
+      "confidence": "graph-backed-candidate"
+    },
+    {
+      "id": "scope-todo-search-evidence",
+      "scopeKind": "evidence",
+      "paths": [
+        "examples/internal-legacy/adoption/todo-search-slice/runtime-evidence.md",
+        "docs/concept/tiny-behavior-change-dogfood.md"
+      ],
+      "derivedFrom": ["graph-source:node:EV-SEARCH-NOTE-TEST"],
+      "contractDerivedFrom": ["evidence:EV-SEARCH-RUNTIME-001"],
+      "confidence": "graph-backed-candidate"
+    }
+  ],
+  "outputRequirementSources": [
+    {
+      "sourceId": "output-source-git-diff-changed-files",
+      "sourceType": "git-diff",
+      "derivedOutputRequirementId": "output-report-changed-files",
+      "obligationType": "changed-files-report",
+      "requiredReportTarget": "actual git diff changed files",
+      "diffBinding": {
+        "mode": "actual-git-diff-only"
+      },
+      "handWrittenRequirement": "Report changed files from actual git diff only."
+    },
+    {
+      "sourceId": "output-source-command-evidence-status",
+      "sourceType": "evidence",
+      "derivedOutputRequirementId": "output-report-command-evidence-status",
+      "obligationType": "command-output-evidence-status",
+      "requiredReportTarget": "check and evidence status from command output",
+      "evidenceBinding": {
+        "evidenceId": "evidence-runtime-fixture-result"
+      },
+      "commandBinding": {
+        "requiredCheckId": "check-todo-search-runtime-fixture"
+      },
+      "handWrittenRequirement": "Report check and evidence status from command output only."
+    },
+    {
+      "sourceId": "output-source-validate-all-summary",
+      "sourceType": "check",
+      "derivedOutputRequirementId": "output-report-validation-result-summary",
+      "obligationType": "validation-result-summary",
+      "requiredReportTarget": "validate-all command result summary",
+      "commandBinding": {
+        "requiredCheckId": "check-read-model-validate-all"
+      },
+      "handWrittenRequirement": "Report check and evidence status from command output only."
+    },
+    {
+      "sourceId": "output-source-non-execution-boundary",
+      "sourceType": "boundary",
+      "derivedOutputRequirementId": "output-report-non-execution-boundary",
+      "obligationType": "non-execution-boundary-statement",
+      "requiredReportTarget": "dry-run non-execution, non-acceptance, and non-enforcement boundary",
+      "handWrittenRequirement": "Do not treat this dry-run contract as user acceptance or branch protection."
+    }
+  ],
+  "stopConditionSources": [
+    {
+      "sourceId": "stop-source-scope-expands",
+      "sourceType": "policy",
+      "derivedStopConditionId": "stop-if-scope-expands",
+      "triggerType": "scope-expansion",
+      "condition": "Any production, workflow, source-authority, or tree-retirement change is required.",
+      "action": "stop-and-request-human-decision",
+      "policyBinding": {
+        "policyId": "non-enforcing-read-model-evidence"
+      },
+      "relatedFields": ["allowedScope", "forbiddenScope"]
+    },
+    {
+      "sourceId": "stop-source-required-check-unavailable",
+      "sourceType": "validator",
+      "derivedStopConditionId": "stop-if-required-check-unavailable",
+      "triggerType": "required-check-unavailable",
+      "condition": "Required runtime or read-model checks cannot be executed.",
+      "action": "stop-and-record-missing-evidence",
+      "commandBinding": {
+        "requiredCheckIds": [
+          "check-todo-search-runtime-fixture",
+          "check-read-model-validate-all",
+          "check-read-model-e2e"
+        ]
+      },
+      "relatedFields": ["requiredChecks", "requiredEvidence"]
+    }
+  ],
+  "riskSources": [
+    {
+      "sourceId": "risk-source-query-tokenization-regression",
+      "sourceType": "evidence",
+      "derivedRiskId": "risk-query-tokenization-regression",
+      "riskType": "query-tokenization-regression",
+      "severity": "warning",
+      "status": "mitigated",
+      "mitigation": "Runtime fixture must prove repeated whitespace does not prevent matching.",
+      "contextBinding": {
+        "requiredContextIds": ["context-todo-search-graph-source"]
+      },
+      "evidenceBinding": {
+        "evidenceIds": ["evidence-runtime-fixture-result"]
+      },
+      "scopeBinding": {
+        "targetScopeCandidateIds": ["scope-runtime-search-test"]
+      }
+    }
+  ],
+  "nonExecutionStatement": "This compiler input dry-run validates Actual Contract Compiler inputs only and does not compile an execution contract, execute AI, apply graph deltas, accept work, enable required checks, or retire tree-native artifacts."
+}

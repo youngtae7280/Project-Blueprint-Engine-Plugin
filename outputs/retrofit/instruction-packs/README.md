@@ -2,9 +2,9 @@
 
 Instruction packs are generated from:
 
-1. `examples/retrofit/cardprinterconfig/graph-source.json`
+1. `examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json`
 2. a selected formal change record under
-   `examples/retrofit/cardprinterconfig/records/`
+   `examples/internal-legacy/retrofit/cardprinterconfig/records/`
 
 They are the bridge from graph knowledge to bounded execution guidance.
 

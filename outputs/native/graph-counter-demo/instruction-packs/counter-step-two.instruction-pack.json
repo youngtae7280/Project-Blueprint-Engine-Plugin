@@ -4,7 +4,7 @@
   "status": "generated-from-graph-source",
   "graphSourcePath": "examples\\native\\graph-counter-demo\\graph-source.json",
   "sourceRecordId": "change.counter-step-two",
-  "sourceRecordPath": "examples/native/graph-counter-demo/records/counter-step-two.active.json",
+  "sourceRecordPath": "examples/internal-legacy/native/graph-counter-demo/records/counter-step-two.active.json",
   "target": {
     "projectName": "Graph Counter Demo",
     "repoPath": "work/native/graph-counter-demo",

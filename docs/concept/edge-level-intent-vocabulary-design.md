@@ -78,8 +78,8 @@ tree-native artifacts, or expand source authority.
 
 The first fixture projection surface is intentionally small:
 
-- `examples/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json`
-- `examples/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json`
+- `examples/internal-legacy/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json`
+- `examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json`
 
 Each projection keeps classification fields (`edgeType`, `intentKind`, `riskKind`, `confidence`, `enforcement`, and
 anchor signal kinds) as vocabulary-style values while preserving `claim` as short project-specific text.
@@ -111,8 +111,8 @@ in broad `validate --all` enforcement.
 
 The current fixture alignment is:
 
-- `examples/intent-critical/native-pbe-maintenance/graph-source-intent.json`
-- `examples/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json`
+- `examples/internal-legacy/intent-critical/native-pbe-maintenance/graph-source-intent.json`
+- `examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json`
 
 Both fixtures use `edgeIntent` with:
 

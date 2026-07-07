@@ -7,7 +7,7 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $targetRepo = Join-Path $repoRoot "work/native/graph-counter-demo"
-$graphSourcePath = "examples/native/graph-counter-demo/graph-source.json"
+$graphSourcePath = "examples/internal-legacy/native/graph-counter-demo/graph-source.json"
 $instructionPackPath = "outputs/native/graph-counter-demo/instruction-packs/counter-step-two.instruction-pack.json"
 $graphDeltaPath = "outputs/native/graph-counter-demo/graph-deltas/counter-step-two.graph-delta.json"
 $proposalPath = "outputs/native/graph-counter-demo/graph-update-proposals/counter-step-two.graph-update-proposal.json"
@@ -28,7 +28,7 @@ function Fail($Message) {
 $graphResult = & (Join-Path $PSScriptRoot "validate-retrofit-graph-source-v0.ps1") -GraphSourcePath $graphSourcePath
 if ($graphResult.status -ne "native-graph-source-pass") { Fail "counter graph-source validation failed" }
 
-$recordResult = & (Join-Path $PSScriptRoot "validate-retrofit-change-record-v0.ps1") -RecordPath "examples/native/graph-counter-demo/records/counter-step-two.active.json"
+$recordResult = & (Join-Path $PSScriptRoot "validate-retrofit-change-record-v0.ps1") -RecordPath "examples/internal-legacy/native/graph-counter-demo/records/counter-step-two.active.json"
 if ($recordResult.status -ne "retrofit-change-record-pass") { Fail "counter change record validation failed" }
 
 $packResult = & (Join-Path $PSScriptRoot "validate-retrofit-instruction-pack-v0.ps1") -GraphSourcePath $graphSourcePath -InstructionPackPath $instructionPackPath

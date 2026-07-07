@@ -91,11 +91,11 @@ available, and how validation proves projection health.
 The first decision surface for that branch is
 [graph-source-artifact-storage-projection-design.md](graph-source-artifact-storage-projection-design.md).
 
-The first concrete steps are now implemented as `examples/adoption/todo-search-slice/graph-source.json`, focused
+The first concrete steps are now implemented as `examples/internal-legacy/adoption/todo-search-slice/graph-source.json`, focused
 parser/projection tests, and the minimal CLI projection path:
 
 ```bash
-pbe graph read-model project --graph-source examples/adoption/todo-search-slice/graph-source.json --output examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
+pbe graph read-model project --graph-source examples/internal-legacy/adoption/todo-search-slice/graph-source.json --output examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
 ```
 
 The next branch now includes a candidate-only Todo App PBE Run graph-source artifact at

@@ -51,7 +51,7 @@ The graph-native execution contract report was also exercised from the PBE repos
 repo example slice:
 
 ```powershell
-node dist/cli/index.js graph execution-contract report --slice examples/adoption/todo-search-slice --json
+node dist/cli/index.js graph execution-contract report --slice examples/internal-legacy/adoption/todo-search-slice --json
 ```
 
 The external project was not enrolled as a graph-source/read-model slice.
@@ -160,7 +160,7 @@ This confirms the fresh-init visual placeholder blocker is resolved for this ext
 The graph-native execution contract report was exercised against the safe configured Todo Search repo example slice:
 
 ```text
-examples/adoption/todo-search-slice
+examples/internal-legacy/adoption/todo-search-slice
 ```
 
 Observed result:

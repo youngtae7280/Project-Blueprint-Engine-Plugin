@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "artifactRole": "edge-intent-read-model-projection",
+  "projectionStatus": "intent-projection-pass",
+  "sourceArtifact": "examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json",
+  "sourceExampleKind": "retrofit-pbe",
+  "projectionBoundary": "This projection exposes edge-level maintenance intent for human review. It does not create a separate intent ledger, replace graph source, add enforcement, or approve compatibility retirement.",
+  "edgeIntentProjections": [
+    {
+      "sourceIntentRecordId": "INTENT-RETROFIT-COMPATIBILITY-EXPORT-RETAINED",
+      "edgeType": "preserves-intent",
+      "intentKind": "compatibility-retention",
+      "riskKind": "fallback-loss",
+      "claim": "compatibility export remains until explicit retirement approval and replacement evidence",
+      "confidence": "history-derived",
+      "enforcement": "review-required",
+      "anchors": [
+        {
+          "signalKind": "compatibility",
+          "sourceRole": "retrofit-compat-signal",
+          "artifact": "legacy compatibility export"
+        },
+        {
+          "signalKind": "fallback",
+          "sourceRole": "rollback-reference-signal",
+          "artifact": "rollback/audit and replacement-evidence review history"
+        }
+      ],
+      "humanReadableSummary": "Compatibility-retention intent: compatibility export remains until explicit retirement approval and replacement evidence. Risk: fallback-loss. Confidence: history-derived. Enforcement: review-required."
+    }
+  ],
+  "vocabularyBoundary": {
+    "classificationFields": ["edgeType", "intentKind", "riskKind", "confidence", "enforcement", "anchors.signalKind"],
+    "projectSpecificClaimField": "claim",
+    "claimBoundary": "The claim is preserved as short project-specific language and is not replaced by a global enum or table."
+  }
+}

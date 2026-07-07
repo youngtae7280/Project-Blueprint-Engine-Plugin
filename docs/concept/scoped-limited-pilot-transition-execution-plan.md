@@ -39,7 +39,7 @@ and does not approve implementation.
 ### Primary Scope
 
 ```text
-examples/adoption/todo-search-slice
+examples/internal-legacy/adoption/todo-search-slice
 ```
 
 The plan applies only to the Todo Search representative demo-support slice and its bounded Graph-first read/alignment
@@ -48,7 +48,7 @@ artifacts.
 ### Supplemental Evidence Only
 
 ```text
-examples/adoption/compatibility-mismatch-slice
+examples/internal-legacy/adoption/compatibility-mismatch-slice
 ```
 
 The compatibility mismatch slice remains supporting Evidence for compatibility handling. It is not pilot source scope.

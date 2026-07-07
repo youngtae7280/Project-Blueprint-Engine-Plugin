@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "artifactRole": "retrofit-instruction-pack-v0",
   "status": "generated-from-graph-source",
-  "graphSourcePath": "examples/retrofit/cardprinterconfig/graph-source.json",
+  "graphSourcePath": "examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json",
   "sourceRecordId": "change.smart51-test-setting",
-  "sourceRecordPath": "examples/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json",
+  "sourceRecordPath": "examples/internal-legacy/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json",
   "target": {
     "projectName": "CardPrinterConfig",
     "repoPath": "C:/Users/ytkim/Desktop/kyt_work/Utility_Windows",

@@ -1,5 +1,5 @@
 param(
-    [string]$GraphSourcePath = "examples/retrofit/cardprinterconfig/graph-source.json",
+    [string]$GraphSourcePath = "examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json",
     [string]$RecordId = "change.laminator-tag-layout",
     [string]$JsonOutputPath,
     [string]$MarkdownOutputPath

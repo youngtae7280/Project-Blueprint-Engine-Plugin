@@ -47,8 +47,8 @@ Forbidden scope:
 
 | Artifact              | Path                                                                                                                  |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Graph source          | `examples/retrofit/open-source/todo-vue/graph-source.json`                                                            |
-| Change record         | `examples/retrofit/open-source/todo-vue/records/readme-local-command-boundary.implemented.json`                       |
+| Graph source          | `examples/internal-legacy/retrofit/open-source/todo-vue/graph-source.json`                                            |
+| Change record         | `examples/internal-legacy/retrofit/open-source/todo-vue/records/readme-local-command-boundary.implemented.json`       |
 | Instruction pack      | `outputs/retrofit/open-source/todo-vue/instruction-packs/readme-local-command-boundary.instruction-pack.md`           |
 | Graph delta           | `outputs/retrofit/open-source/todo-vue/graph-deltas/readme-local-command-boundary.graph-delta.md`                     |
 | Graph update proposal | `outputs/retrofit/open-source/todo-vue/graph-update-proposals/readme-local-command-boundary.graph-update-proposal.md` |

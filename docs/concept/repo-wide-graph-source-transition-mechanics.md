@@ -15,7 +15,7 @@ remain present and rollback-capable.
 
 The transition status artifact is:
 
-- `examples/read-model-aggregate/graph-source-transition-status.json`
+- `examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json`
 
 The artifact records:
 
@@ -56,7 +56,7 @@ The approval decision surface is prepared in
 
 ## Registry Alignment
 
-`examples/read-model-aggregate/read-model-slices.json` is now recorded as
+`examples/internal-legacy/read-model-aggregate/read-model-slices.json` is now recorded as
 `active-consumed-by-validate-all`.
 
 The registry still has exactly two positive validate-all profiles:

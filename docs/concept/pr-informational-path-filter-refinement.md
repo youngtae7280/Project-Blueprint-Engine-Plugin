@@ -52,23 +52,23 @@ Current workflow trigger scope:
 .github/workflows/read-model-evidence.yml
 cli/src/**
 scripts/**
-examples/adoption/todo-search-slice/**
+examples/internal-legacy/adoption/todo-search-slice/**
 examples/valid/todo-app-pbe-run/**
-examples/read-model-aggregate/**
+examples/internal-legacy/read-model-aggregate/**
 docs/concept/**
 ```
 
 Intended coverage:
 
-| Path filter                                 | Intended signal                                                                 | Current observation                                                             |
-| ------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `.github/workflows/read-model-evidence.yml` | Workflow changes can directly break CI-backed Evidence.                         | Keep. Low noise and high drift risk if excluded.                                |
-| `cli/src/**`                                | Read-model generate/compare/validate/summarize and registry behavior live here. | Keep. High drift risk if excluded.                                              |
-| `scripts/**`                                | PBE validation support can affect Evidence trust.                               | Keep for now. Ownership is broader than read-model, but no noise is proven yet. |
-| `examples/adoption/todo-search-slice/**`    | Todo Search is the pilot-marker-backed slice.                                   | Keep. Direct Evidence input/output surface.                                     |
-| `examples/valid/todo-app-pbe-run/**`        | Todo App PBE Run is the structure-only second profile.                          | Keep. Direct Evidence input/output surface.                                     |
-| `examples/read-model-aggregate/**`          | Registry and aggregate artifacts live here.                                     | Keep. Direct validate-all and aggregate surface.                                |
-| `docs/concept/**`                           | Concept docs define Evidence boundaries and workflow policy.                    | Keep for now. Three smoke observations used this path intentionally.            |
+| Path filter                                              | Intended signal                                                                 | Current observation                                                             |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `.github/workflows/read-model-evidence.yml`              | Workflow changes can directly break CI-backed Evidence.                         | Keep. Low noise and high drift risk if excluded.                                |
+| `cli/src/**`                                             | Read-model generate/compare/validate/summarize and registry behavior live here. | Keep. High drift risk if excluded.                                              |
+| `scripts/**`                                             | PBE validation support can affect Evidence trust.                               | Keep for now. Ownership is broader than read-model, but no noise is proven yet. |
+| `examples/internal-legacy/adoption/todo-search-slice/**` | Todo Search is the pilot-marker-backed slice.                                   | Keep. Direct Evidence input/output surface.                                     |
+| `examples/valid/todo-app-pbe-run/**`                     | Todo App PBE Run is the structure-only second profile.                          | Keep. Direct Evidence input/output surface.                                     |
+| `examples/internal-legacy/read-model-aggregate/**`       | Registry and aggregate artifacts live here.                                     | Keep. Direct validate-all and aggregate surface.                                |
+| `docs/concept/**`                                        | Concept docs define Evidence boundaries and workflow policy.                    | Keep for now. Three smoke observations used this path intentionally.            |
 
 ## Refinement Options
 

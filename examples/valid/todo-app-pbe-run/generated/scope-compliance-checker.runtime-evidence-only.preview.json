@@ -171,7 +171,7 @@
     ],
     "expectedForbiddenScopePaths": [
       "src/todos.ts",
-      "examples/read-model-aggregate/read-model-slices.json",
+      "examples/internal-legacy/read-model-aggregate/read-model-slices.json",
       "examples/valid/todo-app-pbe-run/graph-source.json",
       "examples/valid/todo-app-pbe-run/.pbe/control/acceptance-tree.json"
     ],

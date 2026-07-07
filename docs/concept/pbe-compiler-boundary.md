@@ -19,9 +19,9 @@ Human decides.
 
 The MVP adds a machine-readable boundary package:
 
-- `examples/read-model-aggregate/compiler-boundary-task-registry.json`
-- `examples/read-model-aggregate/execution-contract-schema.json`
-- `examples/read-model-aggregate/generated/execution-contract-dry-run.json`
+- `examples/internal-legacy/read-model-aggregate/compiler-boundary-task-registry.json`
+- `examples/internal-legacy/read-model-aggregate/execution-contract-schema.json`
+- `examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json`
 
 The local report command is:
 

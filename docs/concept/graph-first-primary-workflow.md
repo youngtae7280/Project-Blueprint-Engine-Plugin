@@ -27,12 +27,12 @@ Current status:
 - Candidate B is prepared as a soft-required policy candidate, but it is not a required check.
 
 The machine-readable status is recorded in
-`examples/read-model-aggregate/graph-source-transition-status.json`.
+`examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json`.
 
 The positive registry is:
 
 ```text
-examples/read-model-aggregate/read-model-slices.json
+examples/internal-legacy/read-model-aggregate/read-model-slices.json
 ```
 
 It currently contains only the configured Todo Search and Todo App profiles.

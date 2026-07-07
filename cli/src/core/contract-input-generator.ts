@@ -3,7 +3,7 @@ import { readJsonSafe, relativePath, writeJsonAtomic } from './fs.js'
 import type { IssueSeverity } from './types.js'
 
 const GENERATOR_NAME = 'ContractCompilerInputGenerator'
-const COMPILER_INPUT_SCHEMA_PATH = 'examples/read-model-aggregate/compiler-input-model-schema.json'
+const COMPILER_INPUT_SCHEMA_PATH = 'examples/internal-legacy/read-model-aggregate/compiler-input-model-schema.json'
 const REQUIRED_INPUT_GROUPS = [
   'humanRequest',
   'graphSnapshot',

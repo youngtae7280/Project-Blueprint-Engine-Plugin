@@ -112,7 +112,7 @@ Impact:
 - `docs/cli-reference.md`
 - `docs/index.md`
 - `examples/README.md`
-- `examples/adoption/todo-search-slice/README.md`
+- `examples/internal-legacy/adoption/todo-search-slice/README.md`
 - `docs/beta-readiness.md`
 - `docs/known-limits.md`
 - `docs/complexity-governance.md`
@@ -137,8 +137,8 @@ High-impact index links include:
 - `docs/evidence-quality-rubric.md`
 - `docs/complexity-governance.md`
 - `examples/README.md`
-- `examples/adoption/todo-search-slice/README.md`
-- `examples/dogfooding/windows-validation-sequential-run/README.md`
+- `examples/internal-legacy/adoption/todo-search-slice/README.md`
+- `examples/internal-legacy/dogfooding/windows-validation-sequential-run/README.md`
 
 Impact:
 
@@ -151,8 +151,8 @@ Impact:
 
 - `examples/valid/todo-app-pbe-run` as the valid golden fixture
 - `examples/invalid/*` as invalid regression fixtures
-- `examples/adoption/todo-search-slice` as narrative adoption material
-- `examples/dogfooding/windows-validation-sequential-run` as a historical dogfooding record
+- `examples/internal-legacy/adoption/todo-search-slice` as narrative adoption material
+- `examples/internal-legacy/dogfooding/windows-validation-sequential-run` as a historical dogfooding record
 
 Validation-sensitive references:
 
@@ -212,7 +212,7 @@ Archive candidates and likely link updates:
 
 - Dogfooding records
   - `docs/dogfooding-existing-project.md`
-  - `examples/dogfooding/windows-validation-sequential-run/README.md`
+  - `examples/internal-legacy/dogfooding/windows-validation-sequential-run/README.md`
   - Linked from `docs/index.md`, `examples/README.md`, and adoption/dogfooding references.
 - Beta readiness
   - `docs/beta-readiness.md`
@@ -221,7 +221,7 @@ Archive candidates and likely link updates:
   - `docs/v0.5.0-beta-readiness-snapshot.md`
   - Linked from `docs/index.md`.
 - Existing project adoption examples
-  - `examples/adoption/todo-search-slice/README.md`
+  - `examples/internal-legacy/adoption/todo-search-slice/README.md`
   - Linked from `README.md`, `docs/index.md`, `docs/dogfooding-existing-project.md`, and `examples/README.md`.
 - Historical reports
   - `docs/direction-correction-report.md`

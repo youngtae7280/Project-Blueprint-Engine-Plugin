@@ -12,7 +12,7 @@ deprecation mechanics that were applied without file deletion, plus what would s
 retirement/deletion. Todo App PBE Run and repo-wide scope remain not ready.
 
 The machine-readable counterpart is
-`examples/read-model-aggregate/graph-source-transition-status.json`.
+`examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json`.
 
 ## Shared Approval Criteria
 

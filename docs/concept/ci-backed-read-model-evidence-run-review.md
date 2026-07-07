@@ -39,7 +39,7 @@ It does not:
 - add push or schedule triggers
 - introduce CI enforcement
 - change source authority
-- expand the source-authority pilot scope beyond `examples/adoption/todo-search-slice`
+- expand the source-authority pilot scope beyond `examples/internal-legacy/adoption/todo-search-slice`
 - make `examples/valid/todo-app-pbe-run` parity-backed, pilot-marker-backed, or authority-bearing
 - approve full Graph-source promotion
 - perform public-doc cleanup
@@ -496,22 +496,22 @@ Reviewed file:
 .tmp/read-model-evidence-run-28151296796/read-model-ci-evidence-manifest.json
 ```
 
-| Manifest field                  | Observed value / condition                 | Review status |
-| ------------------------------- | ------------------------------------------ | ------------- |
-| `evidenceLevel`                 | `ci-backed`                                | pass          |
-| `status`                        | `ci-evidence-pass`                         | pass          |
-| `workflowName`                  | `PBE Read-Model Evidence`                  | pass          |
-| `triggerMode`                   | `workflow_dispatch`                        | pass          |
-| `runId`                         | `28151296796`                              | pass          |
-| `runAttempt`                    | `1`                                        | pass          |
-| `sourceCommit`                  | `f7ab62d06ba33056a33cb433134353b9ed8a5cd4` | pass          |
-| `sourceRef`                     | `refs/heads/main`                          | pass          |
-| `sourceSlice`                   | `examples/adoption/todo-search-slice`      | pass          |
-| `validatorStatus`               | `validation-pass`                          | pass          |
-| `parityStatus`                  | `comparison-pass`                          | pass          |
-| `retainedWarningsRemainVisible` | `true`                                     | pass          |
-| `sourceAuthorityBoundary`       | present                                    | pass          |
-| `nonPromotionStatement`         | present                                    | pass          |
+| Manifest field                  | Observed value / condition                            | Review status |
+| ------------------------------- | ----------------------------------------------------- | ------------- |
+| `evidenceLevel`                 | `ci-backed`                                           | pass          |
+| `status`                        | `ci-evidence-pass`                                    | pass          |
+| `workflowName`                  | `PBE Read-Model Evidence`                             | pass          |
+| `triggerMode`                   | `workflow_dispatch`                                   | pass          |
+| `runId`                         | `28151296796`                                         | pass          |
+| `runAttempt`                    | `1`                                                   | pass          |
+| `sourceCommit`                  | `f7ab62d06ba33056a33cb433134353b9ed8a5cd4`            | pass          |
+| `sourceRef`                     | `refs/heads/main`                                     | pass          |
+| `sourceSlice`                   | `examples/internal-legacy/adoption/todo-search-slice` | pass          |
+| `validatorStatus`               | `validation-pass`                                     | pass          |
+| `parityStatus`                  | `comparison-pass`                                     | pass          |
+| `retainedWarningsRemainVisible` | `true`                                                | pass          |
+| `sourceAuthorityBoundary`       | present                                               | pass          |
+| `nonPromotionStatement`         | present                                               | pass          |
 
 CI manifest summary:
 
@@ -519,7 +519,7 @@ CI manifest summary:
 {
   "evidenceLevel": "ci-backed",
   "status": "ci-evidence-pass",
-  "sourceSlice": "examples/adoption/todo-search-slice",
+  "sourceSlice": "examples/internal-legacy/adoption/todo-search-slice",
   "validatorStatus": "validation-pass",
   "parityStatus": "comparison-pass",
   "retainedWarningsRemainVisible": true
@@ -583,7 +583,7 @@ The run executed the switched read-model command sequence:
 npm run build:cli
 node dist/cli/index.js graph read-model validate --all --json
 npx vitest run cli/src/__tests__/read-model-evidence.test.ts
-npx vitest run examples/adoption/todo-search-slice/runtime-fixture
+npx vitest run examples/internal-legacy/adoption/todo-search-slice/runtime-fixture
 npm run validate:pbe
 npm run validate:pbe:v2
 ```
@@ -991,45 +991,45 @@ PR run `28218854329` then reviewed the same projection-status capture path throu
 Manual run `28219396764` reviewed the workflow after Todo Search default read-model generation became graph-source-backed
 for the limited promoted scope.
 
-| Field                 | Value                                                                                               |
-| --------------------- | --------------------------------------------------------------------------------------------------- |
-| Run ID                | `28219396764`                                                                                       |
-| Run URL               | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28219396764>          |
-| Event                 | `workflow_dispatch`                                                                                 |
-| Commit                | `e2456e3338c55f0390a426af8179082f8bba1629`                                                          |
-| Conclusion            | `success`                                                                                           |
-| Job ID                | `83597142022`                                                                                       |
-| Manifest              | `ci-evidence-pass`; `validateAllStatus: aggregate-pass`; `aggregateStatus: aggregate-pass`          |
-| Todo Search           | 40 nodes / 59 edges; `comparison-pass`; `validation-pass`; 20 checks                                |
-| Generation source     | Generated read-model metadata records `readModelSourceMode: graph-source-backed`                    |
-| Graph source metadata | Generated read-model metadata records `examples/adoption/todo-search-slice/graph-source.json`       |
-| Projection            | Todo Search `projection-contract-pass`; Todo App PBE Run `not-configured`                           |
-| Artifact              | Generated read-model, evidence manifest, validate-all output, and graph projection present          |
-| Boundary              | Non-enforcing Evidence only; no repo-wide promotion, enforcement, retirement, or Todo App promotion |
-| Cleanup               | Artifact temp directory removed                                                                     |
-| Review result         | Manual CI confirms graph-source-backed Todo Search generation health                                |
+| Field                 | Value                                                                                                         |
+| --------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Run ID                | `28219396764`                                                                                                 |
+| Run URL               | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28219396764>                    |
+| Event                 | `workflow_dispatch`                                                                                           |
+| Commit                | `e2456e3338c55f0390a426af8179082f8bba1629`                                                                    |
+| Conclusion            | `success`                                                                                                     |
+| Job ID                | `83597142022`                                                                                                 |
+| Manifest              | `ci-evidence-pass`; `validateAllStatus: aggregate-pass`; `aggregateStatus: aggregate-pass`                    |
+| Todo Search           | 40 nodes / 59 edges; `comparison-pass`; `validation-pass`; 20 checks                                          |
+| Generation source     | Generated read-model metadata records `readModelSourceMode: graph-source-backed`                              |
+| Graph source metadata | Generated read-model metadata records `examples/internal-legacy/adoption/todo-search-slice/graph-source.json` |
+| Projection            | Todo Search `projection-contract-pass`; Todo App PBE Run `not-configured`                                     |
+| Artifact              | Generated read-model, evidence manifest, validate-all output, and graph projection present                    |
+| Boundary              | Non-enforcing Evidence only; no repo-wide promotion, enforcement, retirement, or Todo App promotion           |
+| Cleanup               | Artifact temp directory removed                                                                               |
+| Review result         | Manual CI confirms graph-source-backed Todo Search generation health                                          |
 
 PR run `28219583619` then reviewed graph-source-backed Todo Search generation through the non-enforcing
 `pull_request-informational` trigger.
 
-| Field                 | Value                                                                                               |
-| --------------------- | --------------------------------------------------------------------------------------------------- |
-| PR                    | `#5`; draft temporary smoke PR; closed without merge                                                |
-| Run ID                | `28219583619`                                                                                       |
-| Run URL               | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28219583619>          |
-| Event                 | `pull_request`                                                                                      |
-| Trigger mode          | `pull_request-informational`                                                                        |
-| Head SHA              | `47ed16a208bde2881145c53e1758a00a73483078`                                                          |
-| Base SHA              | `673edf81ddad20d2cfbd5cadb54597f0a2ebf447`                                                          |
-| Manifest ref          | `refs/pull/5/merge`                                                                                 |
-| Manifest              | `ci-evidence-pass`; `validateAllStatus: aggregate-pass`; `aggregateStatus: aggregate-pass`          |
-| Todo Search           | 40 nodes / 59 edges; `comparison-pass`; `validation-pass`; 20 checks                                |
-| Generation source     | Generated read-model metadata records `readModelSourceMode: graph-source-backed`                    |
-| Graph source metadata | Generated read-model metadata records `examples/adoption/todo-search-slice/graph-source.json`       |
-| Projection            | Todo Search `projection-contract-pass`; Todo App PBE Run `not-configured`                           |
-| Boundary              | Non-enforcing Evidence only; no repo-wide promotion, enforcement, retirement, or Todo App promotion |
-| Cleanup               | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted               |
-| Review result         | PR informational CI confirms graph-source-backed Todo Search generation health                      |
+| Field                 | Value                                                                                                         |
+| --------------------- | ------------------------------------------------------------------------------------------------------------- |
+| PR                    | `#5`; draft temporary smoke PR; closed without merge                                                          |
+| Run ID                | `28219583619`                                                                                                 |
+| Run URL               | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28219583619>                    |
+| Event                 | `pull_request`                                                                                                |
+| Trigger mode          | `pull_request-informational`                                                                                  |
+| Head SHA              | `47ed16a208bde2881145c53e1758a00a73483078`                                                                    |
+| Base SHA              | `673edf81ddad20d2cfbd5cadb54597f0a2ebf447`                                                                    |
+| Manifest ref          | `refs/pull/5/merge`                                                                                           |
+| Manifest              | `ci-evidence-pass`; `validateAllStatus: aggregate-pass`; `aggregateStatus: aggregate-pass`                    |
+| Todo Search           | 40 nodes / 59 edges; `comparison-pass`; `validation-pass`; 20 checks                                          |
+| Generation source     | Generated read-model metadata records `readModelSourceMode: graph-source-backed`                              |
+| Graph source metadata | Generated read-model metadata records `examples/internal-legacy/adoption/todo-search-slice/graph-source.json` |
+| Projection            | Todo Search `projection-contract-pass`; Todo App PBE Run `not-configured`                                     |
+| Boundary              | Non-enforcing Evidence only; no repo-wide promotion, enforcement, retirement, or Todo App promotion           |
+| Cleanup               | Artifact temp directory removed; PR closed without merge; remote smoke branch deleted                         |
+| Review result         | PR informational CI confirms graph-source-backed Todo Search generation health                                |
 
 Manual run `28222731063` reviewed the workflow after Todo App bounded non-authority projection-contract enrollment
 entered local positive validate-all.
@@ -1308,20 +1308,20 @@ and the remote smoke branch plus downloaded temp artifacts were removed.
 Manual workflow run `28351612200` reviewed the workflow after the graph-source health report gained a human-readable
 Markdown companion artifact.
 
-| Field                   | Value                                                                                       |
-| ----------------------- | ------------------------------------------------------------------------------------------- |
-| Run ID                  | `28351612200`                                                                               |
-| Run URL                 | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28351612200>  |
-| Event                   | `workflow_dispatch`                                                                         |
-| Commit                  | `c1b20f7`                                                                                   |
-| Conclusion              | `success`                                                                                   |
-| Manifest                | `ci-evidence-pass`; `healthReportStatus: graph-source-health-pass`                          |
-| Markdown artifact path  | `examples/read-model-aggregate/generated/read-model-health-report-output.md`                |
-| Artifact review         | Markdown file present; manifest `artifactPaths` includes it                                 |
-| Markdown content review | Overall status, Todo Search/Todo App status, aggregate, edgeIntent, retirement, boundaries  |
-| Reproduction command    | `graph read-model report-health --json --markdown <path>` present                           |
-| Cleanup                 | Artifact temp directory removed                                                             |
-| Review result           | Manual CI confirms health Markdown summary is visible in artifact bundle and manifest paths |
+| Field                   | Value                                                                                        |
+| ----------------------- | -------------------------------------------------------------------------------------------- |
+| Run ID                  | `28351612200`                                                                                |
+| Run URL                 | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28351612200>   |
+| Event                   | `workflow_dispatch`                                                                          |
+| Commit                  | `c1b20f7`                                                                                    |
+| Conclusion              | `success`                                                                                    |
+| Manifest                | `ci-evidence-pass`; `healthReportStatus: graph-source-health-pass`                           |
+| Markdown artifact path  | `examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.md` |
+| Artifact review         | Markdown file present; manifest `artifactPaths` includes it                                  |
+| Markdown content review | Overall status, Todo Search/Todo App status, aggregate, edgeIntent, retirement, boundaries   |
+| Reproduction command    | `graph read-model report-health --json --markdown <path>` present                            |
+| Cleanup                 | Artifact temp directory removed                                                              |
+| Review result           | Manual CI confirms health Markdown summary is visible in artifact bundle and manifest paths  |
 
 PR #14 run `28351775566` reviewed the same health Markdown artifact visibility in `pull_request-informational` mode.
 The temporary draft PR used branch `pbe/pr-info-health-markdown-smoke-20260629`, was closed without merge after review,
@@ -1335,7 +1335,7 @@ and the remote smoke branch plus downloaded temp artifacts were removed.
 | Run URL                 | <https://github.com/youngtae7280/Project-Blueprint-Engine-Plugin/actions/runs/28351775566>               |
 | Manifest                | `ci-evidence-pass`; PR number, head/base refs, and head/base SHAs present                                |
 | Health status           | `graph-source-health-pass`                                                                               |
-| Markdown artifact path  | `examples/read-model-aggregate/generated/read-model-health-report-output.md`                             |
+| Markdown artifact path  | `examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.md`             |
 | Artifact review         | Markdown file present; manifest `artifactPaths` includes it                                              |
 | Markdown content review | `graph-source-health-pass`, `aggregate-pass`, `intent-report-pass`, retirement packages, `non-enforcing` |
 | Cleanup                 | PR closed unmerged; remote branch and artifact temp directory removed                                    |

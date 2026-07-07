@@ -15,8 +15,8 @@ graph-source -> instruction pack -> local change -> graph delta -> graph update 
 
 - Common schema notes under `schemas/pbe/`.
 - Retrofit change-record schema under `schemas/retrofit/`.
-- Native dogfood examples under `examples/native/`.
-- Retrofit dogfood examples under `examples/retrofit/`.
+- Native dogfood examples under `examples/internal-legacy/native/`.
+- Retrofit dogfood examples under `examples/internal-legacy/retrofit/`.
 - Local PowerShell entry point: `scripts/invoke-pbe-v0.ps1`.
 - CLI operation-chain entry point: `pbe graph operation run-chain`.
 - CLI graph instruction-pack generation entry point: `pbe graph operation generate-pack`.

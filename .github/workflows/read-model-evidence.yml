@@ -9,11 +9,11 @@ on:
       - scripts/**
       - package.json
       - schemas/**
-      - examples/adoption/todo-search-slice/**
+      - examples/internal-legacy/adoption/todo-search-slice/**
       - examples/valid/todo-app-pbe-run/**
-      - examples/read-model-aggregate/**
-      - examples/native/**
-      - examples/retrofit/**
+      - examples/internal-legacy/read-model-aggregate/**
+      - examples/internal-legacy/native/**
+      - examples/internal-legacy/retrofit/**
       - examples/README.md
       - outputs/**
       - docs/index.md
@@ -27,25 +27,25 @@ jobs:
     name: Read-Model Evidence
     runs-on: ubuntu-latest
     env:
-      PBE_TODO_SEARCH_SLICE: examples/adoption/todo-search-slice
-      PBE_TODO_SEARCH_GENERATED_DIR: examples/adoption/todo-search-slice/generated
+      PBE_TODO_SEARCH_SLICE: examples/internal-legacy/adoption/todo-search-slice
+      PBE_TODO_SEARCH_GENERATED_DIR: examples/internal-legacy/adoption/todo-search-slice/generated
       PBE_TODO_APP_SLICE: examples/valid/todo-app-pbe-run
       PBE_TODO_APP_GENERATED_DIR: examples/valid/todo-app-pbe-run/generated
-      PBE_AGGREGATE_DIR: examples/read-model-aggregate/generated
-      PBE_VALIDATE_ALL_OUTPUT: examples/read-model-aggregate/generated/read-model-validate-all-output.json
-      PBE_CANDIDATE_OBSERVATION_OUTPUT: examples/read-model-aggregate/generated/read-model-candidate-observation-output.json
-      PBE_AGGREGATE_SLICES: examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run
-      PBE_E2E_SMOKE_OUTPUT: examples/read-model-aggregate/generated/read-model-e2e-smoke-output.json
-      PBE_INTENT_NATIVE_GRAPH_SOURCE: examples/intent-critical/native-pbe-maintenance/graph-source-intent.json
-      PBE_INTENT_NATIVE_PROJECTION: examples/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json
-      PBE_INTENT_NATIVE_OUTPUT: examples/read-model-aggregate/generated/read-model-edge-intent-native-output.json
-      PBE_INTENT_RETROFIT_GRAPH_SOURCE: examples/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json
-      PBE_INTENT_RETROFIT_PROJECTION: examples/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json
-      PBE_INTENT_RETROFIT_OUTPUT: examples/read-model-aggregate/generated/read-model-edge-intent-retrofit-output.json
-      PBE_EDGE_INTENT_OBSERVATION_OUTPUT: examples/read-model-aggregate/generated/read-model-edge-intent-observation-output.json
-      PBE_HEALTH_REPORT_OUTPUT: examples/read-model-aggregate/generated/read-model-health-report-output.json
-      PBE_HEALTH_REPORT_MARKDOWN: examples/read-model-aggregate/generated/read-model-health-report-output.md
-      PBE_COMPILER_BOUNDARY_OUTPUT: examples/read-model-aggregate/generated/read-model-compiler-boundary-output.json
+      PBE_AGGREGATE_DIR: examples/internal-legacy/read-model-aggregate/generated
+      PBE_VALIDATE_ALL_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-validate-all-output.json
+      PBE_CANDIDATE_OBSERVATION_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-candidate-observation-output.json
+      PBE_AGGREGATE_SLICES: examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run
+      PBE_E2E_SMOKE_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-e2e-smoke-output.json
+      PBE_INTENT_NATIVE_GRAPH_SOURCE: examples/internal-legacy/intent-critical/native-pbe-maintenance/graph-source-intent.json
+      PBE_INTENT_NATIVE_PROJECTION: examples/internal-legacy/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json
+      PBE_INTENT_NATIVE_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-edge-intent-native-output.json
+      PBE_INTENT_RETROFIT_GRAPH_SOURCE: examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json
+      PBE_INTENT_RETROFIT_PROJECTION: examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json
+      PBE_INTENT_RETROFIT_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-edge-intent-retrofit-output.json
+      PBE_EDGE_INTENT_OBSERVATION_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-edge-intent-observation-output.json
+      PBE_HEALTH_REPORT_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.json
+      PBE_HEALTH_REPORT_MARKDOWN: examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.md
+      PBE_COMPILER_BOUNDARY_OUTPUT: examples/internal-legacy/read-model-aggregate/generated/read-model-compiler-boundary-output.json
       PBE_OPERATION_CHAIN_REPORT: outputs/pbe-operation-chain/operation-chain-report.json
       PBE_DOGFOOD_EVALUATION_REPORT: outputs/pbe-operation-chain/dogfood-evaluation.json
     steps:
@@ -563,36 +563,36 @@ jobs:
         with:
           name: pbe-todo-search-read-model-evidence
           path: |
-            examples/adoption/todo-search-slice/generated/generated-read-model.json
-            examples/adoption/todo-search-slice/generated/generated-read-model.md
-            examples/adoption/todo-search-slice/generated/read-model-evidence-manifest.json
-            examples/adoption/todo-search-slice/generated/read-model-parity-report.json
-            examples/adoption/todo-search-slice/generated/read-model-parity-report.md
-            examples/adoption/todo-search-slice/generated/read-model-validation-report.json
-            examples/adoption/todo-search-slice/generated/read-model-validation-report.md
-            examples/adoption/todo-search-slice/generated/read-model-ci-evidence-manifest.json
-            examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json
-            examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
+            examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json
+            examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.md
+            examples/internal-legacy/adoption/todo-search-slice/generated/read-model-evidence-manifest.json
+            examples/internal-legacy/adoption/todo-search-slice/generated/read-model-parity-report.json
+            examples/internal-legacy/adoption/todo-search-slice/generated/read-model-parity-report.md
+            examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validation-report.json
+            examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validation-report.md
+            examples/internal-legacy/adoption/todo-search-slice/generated/read-model-ci-evidence-manifest.json
+            examples/internal-legacy/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json
+            examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json
             examples/valid/todo-app-pbe-run/generated/generated-read-model.json
             examples/valid/todo-app-pbe-run/generated/generated-read-model.md
             examples/valid/todo-app-pbe-run/generated/read-model-evidence-manifest.json
             examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json
             examples/valid/todo-app-pbe-run/generated/read-model-validation-report.md
             examples/valid/todo-app-pbe-run/generated/graph-source-read-model-projection.json
-            examples/read-model-aggregate/generated/read-model-aggregate-summary.json
-            examples/read-model-aggregate/generated/read-model-aggregate-summary.md
-            examples/read-model-aggregate/generated/read-model-validate-all-output.json
-            examples/read-model-aggregate/generated/read-model-candidate-observation-output.json
-            examples/read-model-aggregate/generated/read-model-e2e-smoke-output.json
-            examples/read-model-aggregate/generated/read-model-edge-intent-observation-output.json
-            examples/read-model-aggregate/generated/read-model-edge-intent-native-output.json
-            examples/read-model-aggregate/generated/read-model-edge-intent-retrofit-output.json
-            examples/read-model-aggregate/generated/read-model-health-report-output.json
-            examples/read-model-aggregate/generated/read-model-health-report-output.md
-            examples/read-model-aggregate/generated/read-model-compiler-boundary-output.json
-            examples/read-model-aggregate/generated/execution-contract-dry-run.json
+            examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.json
+            examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.md
+            examples/internal-legacy/read-model-aggregate/generated/read-model-validate-all-output.json
+            examples/internal-legacy/read-model-aggregate/generated/read-model-candidate-observation-output.json
+            examples/internal-legacy/read-model-aggregate/generated/read-model-e2e-smoke-output.json
+            examples/internal-legacy/read-model-aggregate/generated/read-model-edge-intent-observation-output.json
+            examples/internal-legacy/read-model-aggregate/generated/read-model-edge-intent-native-output.json
+            examples/internal-legacy/read-model-aggregate/generated/read-model-edge-intent-retrofit-output.json
+            examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.json
+            examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.md
+            examples/internal-legacy/read-model-aggregate/generated/read-model-compiler-boundary-output.json
+            examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json
             outputs/pbe-operation-chain/**
             outputs/native/**
             outputs/retrofit/**
-            examples/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json
-            examples/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json
+            examples/internal-legacy/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json
+            examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json

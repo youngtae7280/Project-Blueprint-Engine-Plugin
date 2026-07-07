@@ -1,0 +1,46 @@
+{
+  "version": "0.2.0-tree-control",
+  "rootNodeId": "AT-ROOT",
+  "nodes": [
+    {
+      "id": "AT-ROOT",
+      "type": "acceptance_group",
+      "title": "Todo search acceptance",
+      "status": "renewed_acceptance_approved_with_warnings",
+      "previousStatus": "accepted",
+      "actor": "user",
+      "acceptedAt": "2026-06-13T00:00:00.000Z",
+      "acceptedScope": "title-only search",
+      "reopenedAt": "2026-06-24T00:00:00.000Z",
+      "reopenedByProductPatchId": "PP-001",
+      "reopenSource": "user approved PP-001 in parent orchestration chat on 2026-06-24",
+      "renewedAcceptedAt": "2026-06-24T00:00:00.000Z",
+      "renewedAcceptanceSource": "user approved renewed acceptance in parent orchestration chat on 2026-06-24",
+      "renewedAcceptedScope": "representative demo-support title + note/content search slice with retained warnings",
+      "productNodeIds": ["PT-SEARCH-001"],
+      "workNodeIds": ["WT-SEARCH-001"],
+      "testNodeIds": ["TT-SEARCH-001", "TT-SEARCH-002", "TT-SEARCH-003", "TT-SEARCH-004"],
+      "evidenceNodeIds": ["EV-SEARCH-TEST", "EV-SEARCH-REVIEW", "EV-SEARCH-NOTE-TEST"],
+      "decisionSource": "User approved the title-only search slice after review.",
+      "currentMeaning": "title + note/content search after PP-001 confirmation",
+      "renewedAcceptance": {
+        "status": "approved_with_retained_warnings",
+        "actor": "user",
+        "approvedAt": "2026-06-24T00:00:00.000Z",
+        "approvalSource": "user approved renewed acceptance in parent orchestration chat on 2026-06-24",
+        "approvalScope": "Todo Search Adoption + Product Meaning Feedback representative demo-support slice",
+        "refreshedEvidenceNodeIds": ["EV-SEARCH-NOTE-TEST"],
+        "refreshedEvidenceArtifact": "examples/internal-legacy/adoption/todo-search-slice/runtime-evidence.md",
+        "retainedWarnings": [
+          "Bounded fixture Evidence is representative demo evidence, not full Todo app implementation.",
+          "UI screenshot/manual visual evidence for no-result empty state remains partial.",
+          "Generated Maintainability Graph/read-model output is missing.",
+          "ACEP task-card public-doc cleanup remains deferred."
+        ],
+        "carriedToNextReview": "Graph-source Promotion Readiness Review",
+        "nonPromotionStatement": "This renewed Acceptance approves the representative demo-support slice with retained warnings only. It is not Graph-source promotion, source authority change, or public-doc cleanup completion.",
+        "selfAcceptanceProhibited": true
+      }
+    }
+  ]
+}

@@ -4,9 +4,9 @@
   "status": "devview-graph-html-data-generated",
   "rendererName": "DevViewGraphHtmlRenderer",
   "renderScope": "retrofit-graph-source-to-readonly-html-inspector",
-  "sourceGraphSource": "examples/retrofit/windowsutility/graph-source.json",
+  "sourceGraphSource": "examples/internal-legacy/retrofit/windowsutility/graph-source.json",
   "sourceInstructionPack": "outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json",
-  "sourceProjectMemory": "examples/retrofit/windowsutility/devview-project-memory.preview.json",
+  "sourceProjectMemory": "examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json",
   "sourceRecordId": "change.laminator-tag-layout",
   "requestSummary": {
     "sourceRecordId": "change.laminator-tag-layout",
@@ -29,7 +29,7 @@
     "selectedEdgeIds": ["edge.tag-layout-drives-laminator-record", "edge.laminator-record-guards-logic"]
   },
   "projectMemorySummary": {
-    "sourceProjectMemory": "examples/retrofit/windowsutility/devview-project-memory.preview.json",
+    "sourceProjectMemory": "examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json",
     "artifactRole": "devview-project-memory-preview",
     "status": "project-memory-preview-candidate-not-approved",
     "projectMemoryId": "windowsutility-retrofit-project-memory-v0",
@@ -53,7 +53,7 @@
       "label": "smart51-test-setting",
       "status": "validated-then-reverted",
       "activeCodeState": "reverted",
-      "recordPath": "examples/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json",
+      "recordPath": "examples/internal-legacy/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json",
       "nodeKind": "retrofit-change-record",
       "isCurrentRequest": false
     },
@@ -63,7 +63,7 @@
       "label": "laminator-tag-layout",
       "status": "implemented-build-pass-ui-review-pass",
       "activeCodeState": "active",
-      "recordPath": "examples/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json",
+      "recordPath": "examples/internal-legacy/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json",
       "nodeKind": "retrofit-change-record",
       "isCurrentRequest": true
     }
@@ -742,9 +742,9 @@
         "kind": "retrofit-change-record",
         "state": "validated-then-reverted",
         "intentClaim": "A bounded hardware-validated SMART-51 test display was implemented, confirmed, then reverted by user request.",
-        "recordPath": "examples/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json",
+        "recordPath": "examples/internal-legacy/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json",
         "codeLocations": [
-          "examples/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json"
+          "examples/internal-legacy/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json"
         ],
         "packRole": "",
         "packSections": [],
@@ -763,10 +763,10 @@
         "kind": "retrofit-change-record",
         "state": "implemented-build-pass-ui-review-pass",
         "intentClaim": "A bounded resource-only Laminator Tag tab alignment fix remains active after build and user UI confirmation.",
-        "recordPath": "examples/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json",
+        "recordPath": "examples/internal-legacy/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json",
         "codeLocations": [
           "src/CardPrinterConfig/CardPrinterConfig.rc",
-          "examples/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json"
+          "examples/internal-legacy/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json"
         ],
         "packRole": "source-record",
         "packSections": ["sourceRecordId", "target", "graphContext.nodes"],
@@ -1415,7 +1415,7 @@
         "tree.selected-pack-context"
       ],
       "packPath": "outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json",
-      "recordPath": "examples/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json",
+      "recordPath": "examples/internal-legacy/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json",
       "allowedFiles": ["src/CardPrinterConfig/CardPrinterConfig.rc"],
       "forbiddenFlows": [
         "SubDlg51LAMINATOR.cpp / SubDlg52LAMINATOR.cpp logic",
@@ -1569,7 +1569,7 @@
   "compilationTrace": [
     {
       "step": "read graph-source",
-      "input": "examples/retrofit/windowsutility/graph-source.json",
+      "input": "examples/internal-legacy/retrofit/windowsutility/graph-source.json",
       "output": "graph.nodes / graph.edges",
       "status": "read-only",
       "authority": "retrofit-graph-source-v0 source context, not mutation authority"
@@ -1775,10 +1775,10 @@
   "artifacts": {
     "htmlOutputPath": "outputs/devview-graph/windowsutility.devviewgraph.html",
     "dataOutputPath": "outputs/devview-graph/windowsutility.devviewgraph.data.json",
-    "graphSourcePath": "examples/retrofit/windowsutility/graph-source.json",
+    "graphSourcePath": "examples/internal-legacy/retrofit/windowsutility/graph-source.json",
     "instructionPackPath": "outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json",
-    "projectMemoryPath": "examples/retrofit/windowsutility/devview-project-memory.preview.json",
-    "sourceRecordPath": "examples/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json"
+    "projectMemoryPath": "examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json",
+    "sourceRecordPath": "examples/internal-legacy/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json"
   },
   "validationFindings": [],
   "nonExecutionBoundary": "DevViewGraph renders a read-only HTML/data inspector from graph-source and instruction-pack artifacts. It does not trigger Codex execution, mutate graph-source, apply graph deltas, approve work, record human decisions, satisfy runtime Evidence, prove equivalence, enforce scope, or configure CI."

@@ -1,0 +1,128 @@
+{
+  "version": "0.2.0-tree-control",
+  "artifactRole": "demo_support_snapshot",
+  "sourceAuthority": "non-authoritative evidence snapshot; does not invalidate runtime artifacts or promote Maintainability Graph",
+  "createdFor": "Actual Representative Runtime Feasibility Demo evidence strengthening",
+  "createdAt": "2026-06-24T00:00:00.000Z",
+  "sourceReferences": [
+    "examples/internal-legacy/adoption/todo-search-slice/change-tree.json",
+    "examples/internal-legacy/adoption/todo-search-slice/product-patch-tree.json",
+    "examples/internal-legacy/adoption/todo-search-slice/product-tree.json",
+    "examples/internal-legacy/adoption/todo-search-slice/project-tree.json",
+    "examples/internal-legacy/adoption/todo-search-slice/work-tree.json",
+    "examples/internal-legacy/adoption/todo-search-slice/test-tree.json",
+    "examples/internal-legacy/adoption/todo-search-slice/evidence-tree.json",
+    "examples/internal-legacy/adoption/todo-search-slice/acceptance-tree.json",
+    "docs/change-impact-revision.md",
+    "docs/revision-flow.md",
+    "docs/evidence-and-coverage.md"
+  ],
+  "derivationNotes": [
+    "Impact is manually classified from PP-001 and existing selected-slice links.",
+    "PP-001 was user-confirmed in the parent orchestration chat on 2026-06-24.",
+    "Existing title-only evidence remains current for historical title-only acceptance but stale or partial for the confirmed expanded meaning.",
+    "EV-SEARCH-NOTE-TEST now provides bounded runtime fixture evidence for title + note/content matching.",
+    "Renewed Acceptance was user-approved with retained warnings on 2026-06-24."
+  ],
+  "limitations": [
+    "This is not the output of `pbe impact analyze`.",
+    "It does not mark real runtime Evidence or Acceptance nodes invalidated.",
+    "It does not prove a full Todo application implementation exists.",
+    "It records renewed Acceptance for the representative demo-support slice only."
+  ],
+  "impacts": [
+    {
+      "id": "IM-SEARCH-001",
+      "changeNodeId": "CH-001",
+      "changeId": "CH-001",
+      "productPatchId": "PP-001",
+      "status": "closed_with_retained_warnings",
+      "userConfirmed": true,
+      "confirmedAt": "2026-06-24T00:00:00.000Z",
+      "confirmationSource": "user approved PP-001 in parent orchestration chat on 2026-06-24",
+      "overallImpact": "runtime_fixture_evidence_refreshed_acceptance_approved_with_warnings",
+      "affectedProductNodeIds": ["PT-SEARCH-001"],
+      "affectedProjectNodeIds": ["PJ-TODO-LIST-SURFACE", "PJ-TODO-SEARCH-HELPER"],
+      "affectedWorkNodeIds": ["WT-SEARCH-001"],
+      "affectedTestNodeIds": ["TT-SEARCH-001", "TT-SEARCH-003", "TT-SEARCH-004"],
+      "unaffectedTestNodeIds": ["TT-SEARCH-002"],
+      "affectedEvidenceNodeIds": ["EV-SEARCH-TEST", "EV-SEARCH-REVIEW", "EV-SEARCH-NOTE-TEST"],
+      "affectedAcceptanceNodeIds": ["AT-ROOT"],
+      "affectedAcceptanceCriteriaIds": ["AC-SEARCH-001", "AC-SEARCH-003"],
+      "nodeClassifications": [
+        {
+          "nodeId": "PT-SEARCH-001",
+          "nodeType": "product",
+          "classification": "requires-review",
+          "reason": "PP-001 confirms changing search target from title-only to title + note/content."
+        },
+        {
+          "nodeId": "PJ-TODO-SEARCH-HELPER",
+          "nodeType": "project",
+          "classification": "reviewed",
+          "reason": "The helper boundary now records title + note/content scope in the demo-support Project Tree and contracts."
+        },
+        {
+          "nodeId": "WT-SEARCH-001",
+          "nodeType": "work",
+          "classification": "refreshed-ready-for-review",
+          "reason": "A bounded runtime fixture now provides fresh Evidence for title + note/content search; renewed Acceptance is approved with retained warnings."
+        },
+        {
+          "nodeId": "TT-SEARCH-001",
+          "nodeType": "test",
+          "classification": "refreshed",
+          "reason": "The bounded runtime fixture reruns title matching with the expanded search target."
+        },
+        {
+          "nodeId": "TT-SEARCH-002",
+          "nodeType": "test",
+          "classification": "unaffected",
+          "reason": "Empty query restores the full list regardless of title-only or title + note search target."
+        },
+        {
+          "nodeId": "TT-SEARCH-003",
+          "nodeType": "test",
+          "classification": "partial-runtime-behavior-present",
+          "reason": "The bounded runtime fixture verifies empty result data behavior, but no UI screenshot or manual visual review is attached."
+        },
+        {
+          "nodeId": "TT-SEARCH-004",
+          "nodeType": "test",
+          "classification": "refreshed",
+          "reason": "The bounded runtime fixture passed note/content query tests."
+        },
+        {
+          "nodeId": "EV-SEARCH-TEST",
+          "nodeType": "evidence",
+          "classification": "historical-supplemented",
+          "reason": "Historical automated output remains title-only, while EV-SEARCH-NOTE-TEST supplements it for the expanded fixture."
+        },
+        {
+          "nodeId": "EV-SEARCH-REVIEW",
+          "nodeType": "evidence",
+          "classification": "partial-visual-review-pending",
+          "reason": "Runtime no-match behavior is covered by fixture tests, but UI empty-state screenshot/manual visual review remains pending."
+        },
+        {
+          "nodeId": "EV-SEARCH-NOTE-TEST",
+          "nodeType": "evidence",
+          "classification": "refreshed",
+          "reason": "Runtime fixture command passed and is recorded in runtime-evidence.md."
+        },
+        {
+          "nodeId": "AT-ROOT",
+          "nodeType": "acceptance",
+          "classification": "accepted-with-warnings",
+          "reason": "User approved renewed Acceptance with retained warnings in the parent orchestration chat on 2026-06-24."
+        }
+      ],
+      "requiredActions": [
+        "Update Product acceptance criteria for title + note/content search.",
+        "Revise Work scope for note/content matching.",
+        "Keep runtime fixture Evidence attached to EV-SEARCH-NOTE-TEST.",
+        "Carry retained warnings into Graph-source Promotion Readiness Review."
+      ]
+    }
+  ]
+}

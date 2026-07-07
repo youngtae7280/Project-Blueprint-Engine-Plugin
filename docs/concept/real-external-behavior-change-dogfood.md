@@ -78,8 +78,8 @@ Forbidden scope:
 
 | Artifact              | Path                                                                                                              |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Graph source          | `examples/retrofit/open-source/escape-html/graph-source.json`                                                     |
-| Change record         | `examples/retrofit/open-source/escape-html/records/symbol-stringification.implemented.json`                       |
+| Graph source          | `examples/internal-legacy/retrofit/open-source/escape-html/graph-source.json`                                     |
+| Change record         | `examples/internal-legacy/retrofit/open-source/escape-html/records/symbol-stringification.implemented.json`       |
 | Instruction pack      | `outputs/retrofit/open-source/escape-html/instruction-packs/symbol-stringification.instruction-pack.md`           |
 | Graph delta           | `outputs/retrofit/open-source/escape-html/graph-deltas/symbol-stringification.graph-delta.md`                     |
 | Graph update proposal | `outputs/retrofit/open-source/escape-html/graph-update-proposals/symbol-stringification.graph-update-proposal.md` |

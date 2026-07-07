@@ -35,16 +35,16 @@ It is not currently:
 
 ## Current Evidence References
 
-| Surface             | Current Todo App signal                                                                          |
-| ------------------- | ------------------------------------------------------------------------------------------------ |
-| Registry profile    | `examples/read-model-aggregate/read-model-slices.json` profile `todo-app-pbe-run-structure-only` |
-| Transition status   | `graph-source-transition-status.json` says Todo App is `confirmed-structure-only-graph-source`   |
-| Generated source    | `examples/valid/todo-app-pbe-run/graph-source.json` and generated read-model artifacts           |
-| Projection contract | `projection-contract-pass` for 22 nodes, 38 edges, 7 Core Views                                  |
-| Validation report   | `validation-pass`, 16 checks, 0 warnings/blocking/decision-required                              |
-| Retained warnings   | structure-only limitation and no runnable runtime fixture requirement                            |
-| Retirement package  | `not-ready-structure-only`; no Todo App retirement/deprecation action requested                  |
-| CI mode             | manual/PR informational Evidence only; no enforcement or required check                          |
+| Surface             | Current Todo App signal                                                                                          |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Registry profile    | `examples/internal-legacy/read-model-aggregate/read-model-slices.json` profile `todo-app-pbe-run-structure-only` |
+| Transition status   | `graph-source-transition-status.json` says Todo App is `confirmed-structure-only-graph-source`                   |
+| Generated source    | `examples/valid/todo-app-pbe-run/graph-source.json` and generated read-model artifacts                           |
+| Projection contract | `projection-contract-pass` for 22 nodes, 38 edges, 7 Core Views                                                  |
+| Validation report   | `validation-pass`, 16 checks, 0 warnings/blocking/decision-required                                              |
+| Retained warnings   | structure-only limitation and no runnable runtime fixture requirement                                            |
+| Retirement package  | `not-ready-structure-only`; no Todo App retirement/deprecation action requested                                  |
+| CI mode             | manual/PR informational Evidence only; no enforcement or required check                                          |
 
 ## Conditions To Move Beyond Structure-Only
 

@@ -25,12 +25,12 @@ before adding broad compiler support.
 
 The current baseline remains the Todo Search whitespace-normalization `bug_fix` dry-run fixture:
 
-- input: `examples/read-model-aggregate/generated/compiler-input-model-dry-run.json`
-- generated candidate: `examples/read-model-aggregate/generated/execution-contract-dry-run.generated.json`
-- comparison fixture: `examples/read-model-aggregate/generated/execution-contract-dry-run.json`
-- semantic diff: `examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json`
+- input: `examples/internal-legacy/read-model-aggregate/generated/compiler-input-model-dry-run.json`
+- generated candidate: `examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.generated.json`
+- comparison fixture: `examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json`
+- semantic diff: `examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.diff.json`
 - promotion review packet:
-  `examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json`
+  `examples/internal-legacy/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json`
 - human decision record:
   `docs/concept/contract-compiler-promotion-decision-current-fixture.md`
 
@@ -43,13 +43,13 @@ Current baseline status:
 
 ## Candidate Scan
 
-| Candidate                                                                  | Calibration value                                                                                                        | Decision                                                                                                       |
-| -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
-| Todo Search whitespace-normalization `bug_fix`                             | Baseline fixture with complete source-authority reconstruction.                                                          | Not selected because it is the baseline.                                                                       |
-| `examples/valid/todo-app-pbe-run`                                          | Existing read-model structure fixture with positive validate-all coverage.                                               | Deferred because it is structure-only and lacks a different behavior/evidence contract.                        |
-| `examples/retrofit/cardprinterconfig`                                      | Realistic retrofit records with UI/hardware-adjacent scope and local validation records.                                 | Deferred because it is larger, hardware-adjacent, and less suitable as the first compiler calibration fixture. |
-| `examples/retrofit/open-source/kubernetes-sidecar-kep`                     | Large external design-doc retrofit with formal KEP context.                                                              | Deferred because it is read-only and too broad for the first second-fixture calibration pass.                  |
-| `examples/retrofit/open-source/escape-html` plus `outputs/.../escape-html` | Existing external behavior-change dogfood with graph source, instruction pack, graph delta, proposal, and test evidence. | Selected as the second calibration fixture candidate.                                                          |
+| Candidate                                                                                  | Calibration value                                                                                                        | Decision                                                                                                       |
+| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| Todo Search whitespace-normalization `bug_fix`                                             | Baseline fixture with complete source-authority reconstruction.                                                          | Not selected because it is the baseline.                                                                       |
+| `examples/valid/todo-app-pbe-run`                                                          | Existing read-model structure fixture with positive validate-all coverage.                                               | Deferred because it is structure-only and lacks a different behavior/evidence contract.                        |
+| `examples/internal-legacy/retrofit/cardprinterconfig`                                      | Realistic retrofit records with UI/hardware-adjacent scope and local validation records.                                 | Deferred because it is larger, hardware-adjacent, and less suitable as the first compiler calibration fixture. |
+| `examples/internal-legacy/retrofit/open-source/kubernetes-sidecar-kep`                     | Large external design-doc retrofit with formal KEP context.                                                              | Deferred because it is read-only and too broad for the first second-fixture calibration pass.                  |
+| `examples/internal-legacy/retrofit/open-source/escape-html` plus `outputs/.../escape-html` | Existing external behavior-change dogfood with graph source, instruction pack, graph delta, proposal, and test evidence. | Selected as the second calibration fixture candidate.                                                          |
 
 ## Selected Calibration Fixture
 
@@ -62,9 +62,9 @@ component/escape-html Symbol stringification behavior-change dogfood
 Primary paths:
 
 - `docs/concept/real-external-behavior-change-dogfood.md`
-- `examples/retrofit/open-source/escape-html/graph-source.json`
-- `examples/retrofit/open-source/escape-html/records/symbol-stringification.implemented.json`
-- `examples/retrofit/open-source/escape-html/generated/compiler-input-model-calibration-draft.json`
+- `examples/internal-legacy/retrofit/open-source/escape-html/graph-source.json`
+- `examples/internal-legacy/retrofit/open-source/escape-html/records/symbol-stringification.implemented.json`
+- `examples/internal-legacy/retrofit/open-source/escape-html/generated/compiler-input-model-calibration-draft.json`
 - `outputs/retrofit/open-source/escape-html/instruction-packs/symbol-stringification.instruction-pack.json`
 - `outputs/retrofit/open-source/escape-html/graph-deltas/symbol-stringification.graph-delta.json`
 - `outputs/retrofit/open-source/escape-html/graph-update-proposals/symbol-stringification.graph-update-proposal.json`
@@ -86,49 +86,49 @@ Why this fixture is different:
 The first input-model draft is:
 
 ```text
-examples/retrofit/open-source/escape-html/generated/compiler-input-model-calibration-draft.json
+examples/internal-legacy/retrofit/open-source/escape-html/generated/compiler-input-model-calibration-draft.json
 ```
 
 The first static observation report is:
 
 ```text
-examples/retrofit/open-source/escape-html/generated/compiler-input-calibration-observation.preview.json
+examples/internal-legacy/retrofit/open-source/escape-html/generated/compiler-input-calibration-observation.preview.json
 ```
 
 The first behavior-change calibration policy preview is:
 
 ```text
-examples/retrofit/open-source/escape-html/generated/behavior-change-calibration-policy.preview.json
+examples/internal-legacy/retrofit/open-source/escape-html/generated/behavior-change-calibration-policy.preview.json
 ```
 
 The first external required-check binding preview is:
 
 ```text
-examples/retrofit/open-source/escape-html/generated/external-required-check-binding.preview.json
+examples/internal-legacy/retrofit/open-source/escape-html/generated/external-required-check-binding.preview.json
 ```
 
 The first external checkout path authority preview is:
 
 ```text
-examples/retrofit/open-source/escape-html/generated/external-checkout-path-authority.preview.json
+examples/internal-legacy/retrofit/open-source/escape-html/generated/external-checkout-path-authority.preview.json
 ```
 
 The first anchor-level context preview is:
 
 ```text
-examples/retrofit/open-source/escape-html/generated/anchor-level-context.preview.json
+examples/internal-legacy/retrofit/open-source/escape-html/generated/anchor-level-context.preview.json
 ```
 
 The first risk vocabulary preview is:
 
 ```text
-examples/retrofit/open-source/escape-html/generated/risk-vocabulary.preview.json
+examples/internal-legacy/retrofit/open-source/escape-html/generated/risk-vocabulary.preview.json
 ```
 
 The first graph-delta review binding preview is:
 
 ```text
-examples/retrofit/open-source/escape-html/generated/graph-delta-review-binding.preview.json
+examples/internal-legacy/retrofit/open-source/escape-html/generated/graph-delta-review-binding.preview.json
 ```
 
 This draft is `calibration-draft`, `not-supported`, `not-approved`, and `equivalenceProven: false`. It is not wired into
@@ -521,17 +521,17 @@ fixture is supported, compile-eligible, approved, or equivalence-proven.
 Completed preview axes:
 
 - behavior-change calibration policy:
-  `examples/retrofit/open-source/escape-html/generated/behavior-change-calibration-policy.preview.json`
+  `examples/internal-legacy/retrofit/open-source/escape-html/generated/behavior-change-calibration-policy.preview.json`
 - external required-check binding:
-  `examples/retrofit/open-source/escape-html/generated/external-required-check-binding.preview.json`
+  `examples/internal-legacy/retrofit/open-source/escape-html/generated/external-required-check-binding.preview.json`
 - external checkout path authority:
-  `examples/retrofit/open-source/escape-html/generated/external-checkout-path-authority.preview.json`
+  `examples/internal-legacy/retrofit/open-source/escape-html/generated/external-checkout-path-authority.preview.json`
 - anchor-level context:
-  `examples/retrofit/open-source/escape-html/generated/anchor-level-context.preview.json`
+  `examples/internal-legacy/retrofit/open-source/escape-html/generated/anchor-level-context.preview.json`
 - risk vocabulary:
-  `examples/retrofit/open-source/escape-html/generated/risk-vocabulary.preview.json`
+  `examples/internal-legacy/retrofit/open-source/escape-html/generated/risk-vocabulary.preview.json`
 - graph-delta review binding:
-  `examples/retrofit/open-source/escape-html/generated/graph-delta-review-binding.preview.json`
+  `examples/internal-legacy/retrofit/open-source/escape-html/generated/graph-delta-review-binding.preview.json`
 
 Current second-fixture status remains:
 
@@ -2852,7 +2852,7 @@ outputs/devview-graph/windowsutility.devviewgraph.data.json
 They are generated with:
 
 ```text
-graph read-model render-devview-graph --graph-source examples/retrofit/windowsutility/graph-source.json --record change.laminator-tag-layout --instruction-pack outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json --project-memory examples/retrofit/windowsutility/devview-project-memory.preview.json --output outputs/devview-graph/windowsutility.devviewgraph.html --data-output outputs/devview-graph/windowsutility.devviewgraph.data.json --json
+graph read-model render-devview-graph --graph-source examples/internal-legacy/retrofit/windowsutility/graph-source.json --record change.laminator-tag-layout --instruction-pack outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json --project-memory examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json --output outputs/devview-graph/windowsutility.devviewgraph.html --data-output outputs/devview-graph/windowsutility.devviewgraph.data.json --json
 ```
 
 The inspector renders one full WindowsUtility portfolio graph with a deterministic network/orbit layout and highlights
@@ -2892,7 +2892,7 @@ examples/valid/todo-app-pbe-run/generated/devview-project-direction-change-bound
 The WindowsUtility retrofit project memory preview is:
 
 ```text
-examples/retrofit/windowsutility/devview-project-memory.preview.json
+examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json
 ```
 
 Project Memory is the persistent profile store for project identity, DevView mode, direction, preservation policy,
@@ -2909,22 +2909,22 @@ equivalence, scope enforcement, or CI enforcement.
 The first report-only diagnostics are:
 
 ```text
-examples/retrofit/windowsutility/project-memory-extension-gaps.preview.json
-examples/retrofit/windowsutility/project-memory-extension-gaps.preview.md
-examples/retrofit/windowsutility/project-direction-change.behavior-preserving-refactor.preview.json
-examples/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.json
-examples/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.md
+examples/internal-legacy/retrofit/windowsutility/project-memory-extension-gaps.preview.json
+examples/internal-legacy/retrofit/windowsutility/project-memory-extension-gaps.preview.md
+examples/internal-legacy/retrofit/windowsutility/project-direction-change.behavior-preserving-refactor.preview.json
+examples/internal-legacy/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.json
+examples/internal-legacy/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.md
 ```
 
 They are generated with:
 
 ```text
-graph read-model report-project-memory-extension-gaps --project-memory examples/retrofit/windowsutility/devview-project-memory.preview.json --graph-source examples/retrofit/windowsutility/graph-source.json --output examples/retrofit/windowsutility/project-memory-extension-gaps.preview.json --markdown examples/retrofit/windowsutility/project-memory-extension-gaps.preview.md --json
-graph read-model report-project-memory-impact --project-memory examples/retrofit/windowsutility/devview-project-memory.preview.json --direction-change examples/retrofit/windowsutility/project-direction-change.behavior-preserving-refactor.preview.json --output examples/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.json --markdown examples/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.md --json
+graph read-model report-project-memory-extension-gaps --project-memory examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json --graph-source examples/internal-legacy/retrofit/windowsutility/graph-source.json --output examples/internal-legacy/retrofit/windowsutility/project-memory-extension-gaps.preview.json --markdown examples/internal-legacy/retrofit/windowsutility/project-memory-extension-gaps.preview.md --json
+graph read-model report-project-memory-impact --project-memory examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json --direction-change examples/internal-legacy/retrofit/windowsutility/project-direction-change.behavior-preserving-refactor.preview.json --output examples/internal-legacy/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.json --markdown examples/internal-legacy/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.md --json
 ```
 
 The DevViewGraph demo command now includes optional Project Memory context:
 
 ```text
-graph read-model render-devview-graph --graph-source examples/retrofit/windowsutility/graph-source.json --record change.laminator-tag-layout --instruction-pack outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json --project-memory examples/retrofit/windowsutility/devview-project-memory.preview.json --output outputs/devview-graph/windowsutility.devviewgraph.html --data-output outputs/devview-graph/windowsutility.devviewgraph.data.json --json
+graph read-model render-devview-graph --graph-source examples/internal-legacy/retrofit/windowsutility/graph-source.json --record change.laminator-tag-layout --instruction-pack outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json --project-memory examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json --output outputs/devview-graph/windowsutility.devviewgraph.html --data-output outputs/devview-graph/windowsutility.devviewgraph.data.json --json
 ```

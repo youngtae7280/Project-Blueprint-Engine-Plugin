@@ -1,0 +1,63 @@
+{
+  "version": "0.2.0-tree-control",
+  "rootNodeId": "EV-ROOT",
+  "nodes": [
+    {
+      "id": "EV-ROOT",
+      "type": "evidence_group",
+      "title": "Todo search evidence root",
+      "status": "accepted_with_retained_warnings",
+      "provesProductNodeIds": ["PT-ROOT"],
+      "provesWorkNodeIds": ["WT-ROOT"],
+      "provesTestNodeIds": ["TT-ROOT"]
+    },
+    {
+      "id": "EV-SEARCH-TEST",
+      "type": "test_output",
+      "title": "Todo search automated test output",
+      "status": "present_historical_supplemented_by_runtime_fixture",
+      "provesProductNodeIds": ["PT-SEARCH-001"],
+      "provesWorkNodeIds": ["WT-SEARCH-001"],
+      "provesTestNodeIds": ["TT-SEARCH-001", "TT-SEARCH-002"],
+      "provesAcceptanceCriteriaIds": ["AC-SEARCH-001", "AC-SEARCH-002"],
+      "artifact": "npm test -- todo-search passed",
+      "staleReason": "Evidence proves historical title-only and empty-query behavior. PP-001 is now supplemented by EV-SEARCH-NOTE-TEST for the bounded title + note/content runtime fixture."
+    },
+    {
+      "id": "EV-SEARCH-REVIEW",
+      "type": "review_note",
+      "title": "No-result empty state review",
+      "status": "partial_visual_review_refresh_pending",
+      "provesProductNodeIds": ["PT-SEARCH-001"],
+      "provesWorkNodeIds": ["WT-SEARCH-001"],
+      "provesTestNodeIds": ["TT-SEARCH-003"],
+      "provesAcceptanceCriteriaIds": ["AC-SEARCH-003"],
+      "artifact": "Manual review confirmed no-result empty state for title-only behavior.",
+      "staleReason": "PP-001 requires refreshed review for no-result behavior when title and note/content are searched."
+    },
+    {
+      "id": "EV-SEARCH-NOTE-TEST",
+      "type": "test_output",
+      "title": "Todo note/content search automated test output",
+      "status": "present_fresh",
+      "createdByProductPatchId": "PP-001",
+      "provesProductNodeIds": ["PT-SEARCH-001"],
+      "provesWorkNodeIds": ["WT-SEARCH-001"],
+      "provesTestNodeIds": ["TT-SEARCH-001", "TT-SEARCH-002", "TT-SEARCH-004"],
+      "provesAcceptanceCriteriaIds": ["AC-SEARCH-001"],
+      "artifact": "examples/internal-legacy/adoption/todo-search-slice/runtime-evidence.md",
+      "command": "npx vitest run examples/internal-legacy/adoption/todo-search-slice/runtime-fixture",
+      "testFile": "examples/internal-legacy/adoption/todo-search-slice/runtime-fixture/todo-search.test.js",
+      "observedAt": "2026-06-24T17:00:11+09:00",
+      "resultSummary": "Vitest passed 1 test file and 7 tests for title, note, content, whitespace-normalized query, no-match, scope-boundary, and blank-query checks.",
+      "limitations": [
+        "Bounded representative fixture only; not full Todo app runtime.",
+        "Does not provide UI screenshot evidence for the no-result empty state.",
+        "Fixture Evidence did not close renewed Acceptance by itself; user approval is recorded in acceptance-tree.json.",
+        "Does not promote Maintainability Graph."
+      ],
+      "requiredForRenewedAcceptance": true
+    }
+  ],
+  "edges": []
+}

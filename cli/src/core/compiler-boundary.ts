@@ -183,9 +183,9 @@ interface CompilerBoundaryIssueBucket<TStatus extends CompilerBoundaryBucketStat
   status: TStatus
 }
 
-const taskRegistryPath = 'examples/read-model-aggregate/compiler-boundary-task-registry.json'
-const contractSchemaPath = 'examples/read-model-aggregate/execution-contract-schema.json'
-const dryRunContractPath = 'examples/read-model-aggregate/generated/execution-contract-dry-run.json'
+const taskRegistryPath = 'examples/internal-legacy/read-model-aggregate/compiler-boundary-task-registry.json'
+const contractSchemaPath = 'examples/internal-legacy/read-model-aggregate/execution-contract-schema.json'
+const dryRunContractPath = 'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json'
 
 const requiredContractFields = [
   'changeId',

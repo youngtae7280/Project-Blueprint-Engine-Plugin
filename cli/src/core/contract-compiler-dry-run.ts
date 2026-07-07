@@ -135,17 +135,20 @@ export interface ContractCompilerDryRunReport {
   compilerBoundary: string
 }
 
-const inputSchemaPath = 'examples/read-model-aggregate/compiler-input-model-schema.json'
-const dryRunInputPath = 'examples/read-model-aggregate/generated/compiler-input-model-dry-run.json'
-const handWrittenDryRunContractPath = 'examples/read-model-aggregate/generated/execution-contract-dry-run.json'
-const defaultOutputCandidatePath = 'examples/read-model-aggregate/generated/execution-contract-dry-run.generated.json'
-const defaultDiffReportPath = 'examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json'
+const inputSchemaPath = 'examples/internal-legacy/read-model-aggregate/compiler-input-model-schema.json'
+const dryRunInputPath = 'examples/internal-legacy/read-model-aggregate/generated/compiler-input-model-dry-run.json'
+const handWrittenDryRunContractPath =
+  'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json'
+const defaultOutputCandidatePath =
+  'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.generated.json'
+const defaultDiffReportPath =
+  'examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.diff.json'
 const defaultOutputRequirementPreviewPath =
-  'examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json'
+  'examples/internal-legacy/read-model-aggregate/generated/output-requirement-source-authority.preview.json'
 const defaultSourceAuthorityGapPreviewPath =
-  'examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json'
+  'examples/internal-legacy/read-model-aggregate/generated/contract-source-authority-gap.preview.json'
 const defaultPromotionReviewPacketPath =
-  'examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json'
+  'examples/internal-legacy/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json'
 
 export async function compileExecutionContractDryRun(
   root: string,
@@ -375,17 +378,17 @@ function compileBugFixContractCandidate(input: Record<string, unknown>): {
     {
       id: 'check-read-model-validate-all',
       command: 'node dist/cli/index.js graph read-model validate --all --json',
-      validates: ['examples/read-model-aggregate/read-model-slices.json'],
+      validates: ['examples/internal-legacy/read-model-aggregate/read-model-slices.json'],
     },
     {
       id: 'check-read-model-health-report',
       command: 'node dist/cli/index.js graph read-model report-health --json',
-      validates: ['examples/read-model-aggregate/generated/read-model-health-report-output.json'],
+      validates: ['examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.json'],
     },
     {
       id: 'check-read-model-e2e',
       command: 'npm run test:read-model:e2e',
-      validates: ['examples/read-model-aggregate/graph-source-transition-status.json'],
+      validates: ['examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json'],
     },
   ]
   const requiredCheckIds = new Set(requiredChecks.map((check) => check.id))
@@ -821,7 +824,7 @@ function buildContractCompilerPromotionReviewPacket(input: {
         {
           id: 'report-health',
           command:
-            'node dist/cli/index.js graph read-model report-health --json --markdown examples/read-model-aggregate/generated/read-model-health-report-output.md',
+            'node dist/cli/index.js graph read-model report-health --json --markdown examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.md',
           status: 'required-before-approval',
           validates: 'non-enforcing health summary includes compiler equivalence and promotion review metadata',
         },

@@ -10,7 +10,7 @@ read-model examples into a temporary workspace, runs the CLI against that worksp
 the run so the repository's generated artifacts do not churn.
 
 The non-enforcing `PBE Read-Model Evidence` workflow now also runs the smoke and writes
-`examples/read-model-aggregate/generated/read-model-e2e-smoke-output.json` as an uploaded observation artifact.
+`examples/internal-legacy/read-model-aggregate/generated/read-model-e2e-smoke-output.json` as an uploaded observation artifact.
 
 Manual workflow run `28223860233` reviewed the CI observation path after integration. The artifact manifest recorded
 `e2eSmokeStatus: e2e-smoke-pass`, and the uploaded `read-model-e2e-smoke-output.json` confirmed Todo Search 40/59/7
@@ -37,7 +37,7 @@ The smoke checks:
 - Todo App PBE Run structure-only generation and validation, 22 nodes / 38 edges / 7 Core Views
 - Todo App positive validate-all projection status `projection-contract-pass`
 - registry-backed `graph read-model validate --all --json` status `aggregate-pass`
-- `examples/read-model-aggregate/graph-source-transition-status.json` source roles and no-deletion/no-enforcement
+- `examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json` source roles and no-deletion/no-enforcement
   boundaries
 - tree-native retirement readiness criteria/status: overall `retirement-not-ready`, Todo Search
   `deprecated-fallback-reference-not-deleted`, and Todo App `not-retirement-ready`

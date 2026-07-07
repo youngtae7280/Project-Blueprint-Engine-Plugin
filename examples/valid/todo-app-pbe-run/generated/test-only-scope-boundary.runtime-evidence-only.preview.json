@@ -56,7 +56,7 @@
       {
         "id": "forbidden-todo-app-source-authority-promotion",
         "paths": [
-          "examples/read-model-aggregate/read-model-slices.json",
+          "examples/internal-legacy/read-model-aggregate/read-model-slices.json",
           "examples/valid/todo-app-pbe-run/graph-source.json"
         ],
         "reason": "Runtime evidence calibration must not promote Todo App beyond structure-only."

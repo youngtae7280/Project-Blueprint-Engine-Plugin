@@ -817,7 +817,7 @@
     "examples/valid/todo-app-pbe-run/generated/generated-read-model.json",
     "examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json",
     "examples/valid/todo-app-pbe-run/generated/read-model-evidence-manifest.json",
-    "examples/read-model-aggregate/read-model-slices.json"
+    "examples/internal-legacy/read-model-aggregate/read-model-slices.json"
   ],
   "sourceAuthorityBoundary": "This Todo App PBE Run graph source is confirmed for structure-only graph-source-backed generation. Canonical .pbe artifacts remain compatibility/fallback/reference, and this graph source does not create parity backing, pilot marker backing, CI enforcement, or broader source authority.",
   "nonPromotionStatement": "This confirmed structure-only graph source does not promote Todo App PBE Run beyond structure-only, does not add parity or pilot marker requirements, does not approve repo-wide Graph-source promotion, and does not replace user acceptance.",

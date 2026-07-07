@@ -14,7 +14,7 @@ It extends [read-model-validate-all-contract.md](read-model-validate-all-contrac
 registry fixture should look like, what positive and negative fixtures should prove, and which focused tests should
 protect source-authority, aggregate, and non-mutation boundaries.
 
-The candidate registry file now exists at `examples/read-model-aggregate/read-model-slices.json`, and internal
+The candidate registry file now exists at `examples/internal-legacy/read-model-aggregate/read-model-slices.json`, and internal
 parser/normalization plus profile-comparison tests now cover it. The local `validate --all` command is the first
 registry-consuming CLI surface and remains non-enforcing Evidence only. This strategy does not make the existing
 single-slice generate/compare/validate/summarize commands registry-driven, change workflows, dispatch GitHub Actions,
@@ -72,7 +72,7 @@ The intended sequence is:
 ## Proposed Registry Fixture Shape
 
 Prefer a small explicit registry fixture over directory discovery. The current candidate file uses strict JSON at
-`examples/read-model-aggregate/read-model-slices.json`; future schema changes should be explicit reviewed changes.
+`examples/internal-legacy/read-model-aggregate/read-model-slices.json`; future schema changes should be explicit reviewed changes.
 
 Conceptual shape:
 
@@ -85,7 +85,7 @@ Conceptual shape:
   "profiles": [
     {
       "profileId": "todo-search-selected-slice",
-      "sourceSlice": "examples/adoption/todo-search-slice",
+      "sourceSlice": "examples/internal-legacy/adoption/todo-search-slice",
       "sourceLayout": "flat-demo-support",
       "policyLevel": "pilot-marker-backed",
       "includedInValidateAll": true,
@@ -136,7 +136,7 @@ Required profile fields:
 | Field                 | Expected value                                                                                 |
 | --------------------- | ---------------------------------------------------------------------------------------------- |
 | `profileId`           | `todo-search-selected-slice`                                                                   |
-| `sourceSlice`         | `examples/adoption/todo-search-slice`                                                          |
+| `sourceSlice`         | `examples/internal-legacy/adoption/todo-search-slice`                                          |
 | `sourceLayout`        | `flat-demo-support`                                                                            |
 | `policyLevel`         | `pilot-marker-backed`                                                                          |
 | Required commands     | `generate`, `compare`, `validate`                                                              |

@@ -9,7 +9,7 @@ reversible runtime fixture behavior change.
 
 Selected behavior change:
 
-- fixture: `examples/adoption/todo-search-slice/runtime-fixture`
+- fixture: `examples/internal-legacy/adoption/todo-search-slice/runtime-fixture`
 - previous behavior: multi-word search queries matched only when spacing matched the stored title/note/content text.
 - new behavior: repeated whitespace inside multi-word queries is collapsed before matching.
 - example: `runtime    evidence` now matches the note `Summarize PP-001 runtime evidence`.
@@ -23,7 +23,7 @@ The change stays inside the existing Todo Search selected scope:
 - Work node: `WT-SEARCH-001`
 - Test node: `TT-SEARCH-004`
 - Evidence node: `EV-SEARCH-NOTE-TEST`
-- Source graph: `examples/adoption/todo-search-slice/graph-source.json`
+- Source graph: `examples/internal-legacy/adoption/todo-search-slice/graph-source.json`
 
 The graph-source boundary kept the change small: title + note/content search behavior changed only by query
 normalization. Tag, date, fuzzy, server-side, and saved search stayed out of scope.
@@ -56,7 +56,7 @@ No UI, full app runtime, source-authority policy, required check, enforcement, o
 
 Required passing signals:
 
-- `npx vitest run examples/adoption/todo-search-slice/runtime-fixture`: runtime behavior proof.
+- `npx vitest run examples/internal-legacy/adoption/todo-search-slice/runtime-fixture`: runtime behavior proof.
 - `graph read-model validate --all --json`: Todo Search remains `projection-contract-pass` with `40` nodes, `59` edges,
   and `7` Core Views.
 - `graph read-model report-health --json`: `graph-source-health-pass`, `aggregate-pass`, `non-enforcing`.

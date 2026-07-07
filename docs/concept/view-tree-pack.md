@@ -182,8 +182,8 @@ The manifest is a durable record candidate, not an execution engine.
 
 The Todo Search representative slice now includes a manual example:
 
-- `examples/adoption/todo-search-slice/view-instance-manifest.json`
-- `examples/adoption/todo-search-slice/view-instance-manifest.md`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.json`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.md`
 
 That example is review evidence only. It does not define a schema, generator, renderer, CLI output, or source authority.
 

@@ -207,223 +207,223 @@
       "bytes": 4796
     },
     {
-      "path": "examples/adoption/compatibility-mismatch-slice/approval-brief.md",
+      "path": "examples/internal-legacy/adoption/compatibility-mismatch-slice/approval-brief.md",
       "bytes": 3451
     },
     {
-      "path": "examples/adoption/compatibility-mismatch-slice/compatibility-control-node.md",
+      "path": "examples/internal-legacy/adoption/compatibility-mismatch-slice/compatibility-control-node.md",
       "bytes": 4547
     },
     {
-      "path": "examples/adoption/compatibility-mismatch-slice/evidence-exceptions.md",
+      "path": "examples/internal-legacy/adoption/compatibility-mismatch-slice/evidence-exceptions.md",
       "bytes": 3598
     },
     {
-      "path": "examples/adoption/compatibility-mismatch-slice/legacy-compatibility-map-application.md",
+      "path": "examples/internal-legacy/adoption/compatibility-mismatch-slice/legacy-compatibility-map-application.md",
       "bytes": 4890
     },
     {
-      "path": "examples/adoption/compatibility-mismatch-slice/README.md",
+      "path": "examples/internal-legacy/adoption/compatibility-mismatch-slice/README.md",
       "bytes": 4537
     },
     {
-      "path": "examples/adoption/compatibility-mismatch-slice/source-observations.md",
+      "path": "examples/internal-legacy/adoption/compatibility-mismatch-slice/source-observations.md",
       "bytes": 5760
     },
     {
-      "path": "examples/adoption/todo-search-slice/acceptance-tree.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/acceptance-tree.json",
       "bytes": 2556
     },
     {
-      "path": "examples/adoption/todo-search-slice/approval-brief.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/approval-brief.md",
       "bytes": 5709
     },
     {
-      "path": "examples/adoption/todo-search-slice/change-tree.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/change-tree.json",
       "bytes": 3783
     },
     {
-      "path": "examples/adoption/todo-search-slice/compatibility-review.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/compatibility-review.md",
       "bytes": 3214
     },
     {
-      "path": "examples/adoption/todo-search-slice/cycle-contract.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/cycle-contract.md",
       "bytes": 6623
     },
     {
-      "path": "examples/adoption/todo-search-slice/evidence-exceptions.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/evidence-exceptions.md",
       "bytes": 6157
     },
     {
-      "path": "examples/adoption/todo-search-slice/evidence-tree.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/evidence-tree.json",
       "bytes": 2967
     },
     {
-      "path": "examples/adoption/todo-search-slice/graph-source.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/graph-source.json",
       "bytes": 53456
     },
     {
-      "path": "examples/adoption/todo-search-slice/impact-tree.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/impact-tree.json",
       "bytes": 6068
     },
     {
-      "path": "examples/adoption/todo-search-slice/maintainability-graph-read-model.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json",
       "bytes": 61974
     },
     {
-      "path": "examples/adoption/todo-search-slice/maintainability-graph-read-model.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.md",
       "bytes": 14472
     },
     {
-      "path": "examples/adoption/todo-search-slice/parity-check.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/parity-check.md",
       "bytes": 7436
     },
     {
-      "path": "examples/adoption/todo-search-slice/product-patch-tree.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/product-patch-tree.json",
       "bytes": 2224
     },
     {
-      "path": "examples/adoption/todo-search-slice/product-tree.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/product-tree.json",
       "bytes": 4920
     },
     {
-      "path": "examples/adoption/todo-search-slice/project-tree.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/project-tree.json",
       "bytes": 4536
     },
     {
-      "path": "examples/adoption/todo-search-slice/README.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/README.md",
       "bytes": 2030
     },
     {
-      "path": "examples/adoption/todo-search-slice/rpd-interview-summary.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/rpd-interview-summary.md",
       "bytes": 2696
     },
     {
-      "path": "examples/adoption/todo-search-slice/runtime-evidence.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/runtime-evidence.md",
       "bytes": 4441
     },
     {
-      "path": "examples/adoption/todo-search-slice/test-tree.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/test-tree.json",
       "bytes": 2878
     },
     {
-      "path": "examples/adoption/todo-search-slice/view-instance-manifest.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.json",
       "bytes": 10246
     },
     {
-      "path": "examples/adoption/todo-search-slice/view-instance-manifest.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.md",
       "bytes": 4653
     },
     {
-      "path": "examples/adoption/todo-search-slice/work-tree.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/work-tree.json",
       "bytes": 2244
     },
     {
-      "path": "examples/adoption/todo-search-slice/generated/generated-read-model.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json",
       "bytes": 60757
     },
     {
-      "path": "examples/adoption/todo-search-slice/generated/generated-read-model.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.md",
       "bytes": 4674
     },
     {
-      "path": "examples/adoption/todo-search-slice/generated/graph-source-read-model-projection.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/generated/graph-source-read-model-projection.json",
       "bytes": 50181
     },
     {
-      "path": "examples/adoption/todo-search-slice/generated/parity-warning-resolution.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/generated/parity-warning-resolution.md",
       "bytes": 4227
     },
     {
-      "path": "examples/adoption/todo-search-slice/generated/read-model-evidence-manifest.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/generated/read-model-evidence-manifest.json",
       "bytes": 7677
     },
     {
-      "path": "examples/adoption/todo-search-slice/generated/read-model-parity-report.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/generated/read-model-parity-report.json",
       "bytes": 2378
     },
     {
-      "path": "examples/adoption/todo-search-slice/generated/read-model-parity-report.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/generated/read-model-parity-report.md",
       "bytes": 1454
     },
     {
-      "path": "examples/adoption/todo-search-slice/generated/read-model-validation-report.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validation-report.json",
       "bytes": 14321
     },
     {
-      "path": "examples/adoption/todo-search-slice/generated/read-model-validation-report.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validation-report.md",
       "bytes": 5543
     },
     {
-      "path": "examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json",
       "bytes": 4309
     },
     {
-      "path": "examples/adoption/todo-search-slice/node-execution-contracts/wt-search-001.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/node-execution-contracts/wt-search-001.md",
       "bytes": 4611
     },
     {
-      "path": "examples/adoption/todo-search-slice/runtime-fixture/README.md",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/runtime-fixture/README.md",
       "bytes": 1075
     },
     {
-      "path": "examples/adoption/todo-search-slice/runtime-fixture/todo-search.js",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/runtime-fixture/todo-search.js",
       "bytes": 600
     },
     {
-      "path": "examples/adoption/todo-search-slice/runtime-fixture/todo-search.test.js",
+      "path": "examples/internal-legacy/adoption/todo-search-slice/runtime-fixture/todo-search.test.js",
       "bytes": 1679
     },
     {
-      "path": "examples/dogfooding/windows-validation-sequential-run/acceptance-tree.json",
+      "path": "examples/internal-legacy/dogfooding/windows-validation-sequential-run/acceptance-tree.json",
       "bytes": 706
     },
     {
-      "path": "examples/dogfooding/windows-validation-sequential-run/evidence-tree.json",
+      "path": "examples/internal-legacy/dogfooding/windows-validation-sequential-run/evidence-tree.json",
       "bytes": 1376
     },
     {
-      "path": "examples/dogfooding/windows-validation-sequential-run/product-tree.json",
+      "path": "examples/internal-legacy/dogfooding/windows-validation-sequential-run/product-tree.json",
       "bytes": 4633
     },
     {
-      "path": "examples/dogfooding/windows-validation-sequential-run/README.md",
+      "path": "examples/internal-legacy/dogfooding/windows-validation-sequential-run/README.md",
       "bytes": 1002
     },
     {
-      "path": "examples/dogfooding/windows-validation-sequential-run/rpd-interview-summary.md",
+      "path": "examples/internal-legacy/dogfooding/windows-validation-sequential-run/rpd-interview-summary.md",
       "bytes": 1783
     },
     {
-      "path": "examples/dogfooding/windows-validation-sequential-run/test-tree.json",
+      "path": "examples/internal-legacy/dogfooding/windows-validation-sequential-run/test-tree.json",
       "bytes": 1800
     },
     {
-      "path": "examples/dogfooding/windows-validation-sequential-run/work-tree.json",
+      "path": "examples/internal-legacy/dogfooding/windows-validation-sequential-run/work-tree.json",
       "bytes": 2007
     },
     {
-      "path": "examples/intent-critical/native-pbe-maintenance/graph-source-intent.json",
+      "path": "examples/internal-legacy/intent-critical/native-pbe-maintenance/graph-source-intent.json",
       "bytes": 2986
     },
     {
-      "path": "examples/intent-critical/native-pbe-maintenance/README.md",
+      "path": "examples/internal-legacy/intent-critical/native-pbe-maintenance/README.md",
       "bytes": 953
     },
     {
-      "path": "examples/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json",
+      "path": "examples/internal-legacy/intent-critical/native-pbe-maintenance/generated/edge-intent-read-model-projection.json",
       "bytes": 1749
     },
     {
-      "path": "examples/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json",
+      "path": "examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/graph-source-intent.json",
       "bytes": 3324
     },
     {
-      "path": "examples/intent-critical/retrofit-pbe-maintenance/README.md",
+      "path": "examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/README.md",
       "bytes": 1001
     },
     {
-      "path": "examples/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json",
+      "path": "examples/internal-legacy/intent-critical/retrofit-pbe-maintenance/generated/edge-intent-read-model-projection.json",
       "bytes": 1850
     },
     {
@@ -483,139 +483,139 @@
       "bytes": 219
     },
     {
-      "path": "examples/native/README.md",
+      "path": "examples/internal-legacy/native/README.md",
       "bytes": 520
     },
     {
-      "path": "examples/native/graph-counter-demo/graph-source.json",
+      "path": "examples/internal-legacy/native/graph-counter-demo/graph-source.json",
       "bytes": 3735
     },
     {
-      "path": "examples/native/graph-counter-demo/README.md",
+      "path": "examples/internal-legacy/native/graph-counter-demo/README.md",
       "bytes": 414
     },
     {
-      "path": "examples/native/graph-counter-demo/records/counter-step-two.active.json",
+      "path": "examples/internal-legacy/native/graph-counter-demo/records/counter-step-two.active.json",
       "bytes": 3259
     },
     {
-      "path": "examples/native/graph-notes-demo/graph-source.json",
+      "path": "examples/internal-legacy/native/graph-notes-demo/graph-source.json",
       "bytes": 3235
     },
     {
-      "path": "examples/native/graph-notes-demo/README.md",
+      "path": "examples/internal-legacy/native/graph-notes-demo/README.md",
       "bytes": 397
     },
     {
-      "path": "examples/native/graph-notes-demo/records/add-maintenance-boundary.planned.json",
+      "path": "examples/internal-legacy/native/graph-notes-demo/records/add-maintenance-boundary.planned.json",
       "bytes": 3307
     },
     {
-      "path": "examples/read-model-aggregate/graph-source-transition-status.json",
+      "path": "examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json",
       "bytes": 13967
     },
     {
-      "path": "examples/read-model-aggregate/read-model-slices.json",
+      "path": "examples/internal-legacy/read-model-aggregate/read-model-slices.json",
       "bytes": 6038
     },
     {
-      "path": "examples/read-model-aggregate/generated/read-model-aggregate-summary.json",
+      "path": "examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.json",
       "bytes": 8750
     },
     {
-      "path": "examples/read-model-aggregate/generated/read-model-aggregate-summary.md",
+      "path": "examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.md",
       "bytes": 5750
     },
     {
-      "path": "examples/read-model-aggregate/generated/read-model-health-report-output.json",
+      "path": "examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.json",
       "bytes": 2477
     },
     {
-      "path": "examples/read-model-aggregate/generated/read-model-health-report-output.md",
+      "path": "examples/internal-legacy/read-model-aggregate/generated/read-model-health-report-output.md",
       "bytes": 3340
     },
     {
-      "path": "examples/retrofit/README.md",
+      "path": "examples/internal-legacy/retrofit/README.md",
       "bytes": 843
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/graph-source.json",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/graph-source.json",
       "bytes": 8602
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/README.md",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/README.md",
       "bytes": 2613
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/records/laminator-tag-layout.active.json",
       "bytes": 5850
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/records/laminator-tag-layout.active.md",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/records/laminator-tag-layout.active.md",
       "bytes": 1478
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/records/README.md",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/records/README.md",
       "bytes": 428
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.json",
       "bytes": 12845
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.md",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/records/smart51-test-setting.validated-then-reverted.md",
       "bytes": 3346
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/support/cardprinterconfig-retrofit-graph-candidate-v0.json",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/support/cardprinterconfig-retrofit-graph-candidate-v0.json",
       "bytes": 15009
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/support/cardprinterconfig-retrofit-intake-v0.json",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/support/cardprinterconfig-retrofit-intake-v0.json",
       "bytes": 8521
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/support/README.md",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/support/README.md",
       "bytes": 680
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/support/retrofit-confirmation-protocol-v0.md",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/support/retrofit-confirmation-protocol-v0.md",
       "bytes": 3980
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/support/smart51-intake-view-v0.json",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/support/smart51-intake-view-v0.json",
       "bytes": 4967
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/support/smart51-setting-change-intake-v0.md",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/support/smart51-setting-change-intake-v0.md",
       "bytes": 3231
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/support/smart51-test-setting-candidate-match-v0.json",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/support/smart51-test-setting-candidate-match-v0.json",
       "bytes": 6121
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/support/smart51-test-setting-candidate-match-v0.md",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/support/smart51-test-setting-candidate-match-v0.md",
       "bytes": 2640
     },
     {
-      "path": "examples/retrofit/cardprinterconfig/support/smart51-test-setting-confirmation-v0.json",
+      "path": "examples/internal-legacy/retrofit/cardprinterconfig/support/smart51-test-setting-confirmation-v0.json",
       "bytes": 1528
     },
     {
-      "path": "examples/retrofit/open-source/README.md",
+      "path": "examples/internal-legacy/retrofit/open-source/README.md",
       "bytes": 331
     },
     {
-      "path": "examples/retrofit/open-source/cjson/graph-source.json",
+      "path": "examples/internal-legacy/retrofit/open-source/cjson/graph-source.json",
       "bytes": 5642
     },
     {
-      "path": "examples/retrofit/open-source/cjson/README.md",
+      "path": "examples/internal-legacy/retrofit/open-source/cjson/README.md",
       "bytes": 573
     },
     {
-      "path": "examples/retrofit/open-source/cjson/records/readme-build-tooling-boundary.planned.json",
+      "path": "examples/internal-legacy/retrofit/open-source/cjson/records/readme-build-tooling-boundary.planned.json",
       "bytes": 5593
     },
     {

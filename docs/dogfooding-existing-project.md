@@ -16,7 +16,7 @@ An existing Todo app already lists and creates todos. The next feature request i
 - The first slice stays small enough to review and accept.
 
 See also: [RPD Interview Mode](rpd-interview-mode.md), [Product Patch Proposals](product-patch-proposals.md), and the
-artifact snapshot in [Todo search adoption example](../examples/adoption/todo-search-slice/README.md).
+artifact snapshot in [Todo search adoption example](../examples/internal-legacy/adoption/todo-search-slice/README.md).
 
 ## Rough User Request
 
@@ -78,7 +78,8 @@ The selected Product branch can be represented as:
 - `AC-SEARCH-002`: WHEN the search query is empty, THE SYSTEM SHALL show the full Todo list.
 - `AC-SEARCH-003`: WHEN no Todo title matches the query, THE SYSTEM SHALL show an empty search result state.
 
-The example artifact is in [product-tree.json](../examples/adoption/todo-search-slice/product-tree.json).
+The example artifact is in
+[product-tree.json](../examples/internal-legacy/adoption/todo-search-slice/product-tree.json).
 
 ## Step 4. Work / Test / Evidence Planning
 

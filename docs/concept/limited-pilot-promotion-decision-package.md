@@ -30,11 +30,11 @@ This package was originally prepared under the previous read-model parity baseli
 
 The relevant Todo Search read-model parity artifact has now been refreshed under the Graph-first Node/Edge/Tag baseline:
 
-- `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
-- `examples/adoption/todo-search-slice/maintainability-graph-read-model.md`
-- `examples/adoption/todo-search-slice/parity-check.md`
-- `examples/adoption/todo-search-slice/view-instance-manifest.json`
-- `examples/adoption/todo-search-slice/view-instance-manifest.md`
+- `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json`
+- `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.md`
+- `examples/internal-legacy/adoption/todo-search-slice/parity-check.md`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.json`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.md`
 
 Current state:
 
@@ -77,7 +77,7 @@ implementation approval.
 The primary pilot scope is limited to:
 
 ```text
-examples/adoption/todo-search-slice
+examples/internal-legacy/adoption/todo-search-slice
 ```
 
 That slice covers the representative demo-support lifecycle:
@@ -96,7 +96,7 @@ That slice covers the representative demo-support lifecycle:
 The supplemental compatibility scope is:
 
 ```text
-examples/adoption/compatibility-mismatch-slice
+examples/internal-legacy/adoption/compatibility-mismatch-slice
 ```
 
 This supplemental slice demonstrates a real legacy/canonical compatibility mismatch path. It is supporting Evidence for
@@ -121,7 +121,7 @@ The pilot scope does not include:
 The user-approved limited pilot promotion decision means:
 
 1. The user accepts this decision package as the judgment surface for the scoped pilot decision.
-2. The user accepts that the primary pilot scope is limited to `examples/adoption/todo-search-slice`.
+2. The user accepts that the primary pilot scope is limited to `examples/internal-legacy/adoption/todo-search-slice`.
 3. The user accepts that the compatibility mismatch supplemental slice is supporting Evidence only.
 4. The user accepts that the Maintainability Graph manual read-model parity artifact is sufficient for the limited pilot
    decision target, with retained warnings.
@@ -151,18 +151,18 @@ Approval of this package option or the limited pilot decision does not mean:
 Evidence in this package is based on observable artifacts, linked records, command output, and reviewable files. AI
 self-report is not Evidence.
 
-| Evidence area                               | Observable artifact / record                                                                                                                                                                                                          | Status for package      | Decision relevance                                                                                                                                                 |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Actual representative demo result           | [actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md)                                                                                                                                                | present                 | Records representative demo result as demonstrated with retained warnings.                                                                                         |
-| Strengthened selected-slice artifacts       | `examples/adoption/todo-search-slice/product-tree.json`, `project-tree.json`, `work-tree.json`, `test-tree.json`, `evidence-tree.json`, `acceptance-tree.json`, `change-tree.json`, `impact-tree.json`, contracts, and approval brief | present                 | Makes Product -> Project -> Work -> Test -> Evidence -> Acceptance trace reviewable.                                                                               |
-| Real compatibility mismatch supplement      | `examples/adoption/compatibility-mismatch-slice/*`                                                                                                                                                                                    | present                 | Demonstrates real ACEP task-card-only wording mismatch as bounded compatibility Evidence.                                                                          |
-| `PP-001` confirmation                       | `examples/adoption/todo-search-slice/product-patch-tree.json`, `change-tree.json`                                                                                                                                                     | present                 | Shows user-confirmed product meaning expansion to title + note/content search.                                                                                     |
-| Refreshed runtime fixture Evidence          | `examples/adoption/todo-search-slice/runtime-evidence.md`, `runtime-fixture/todo-search.js`, `runtime-fixture/todo-search.test.js`                                                                                                    | present / fresh         | Shows bounded title + note/content search behavior with Vitest command Evidence.                                                                                   |
-| Renewed user Acceptance                     | `examples/adoption/todo-search-slice/acceptance-tree.json`, `approval-brief.md`                                                                                                                                                       | present with warnings   | Records user-renewed demo-support Acceptance with warnings retained.                                                                                               |
-| Maintainability Graph read-model parity     | `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`, `maintainability-graph-read-model.md`, `view-instance-manifest.json`, `view-instance-manifest.md`                                                        | present manual artifact | Shows `nodeKind`, `edgeType`, view-scoped tags, 7 Core Views, warnings, and source-authority boundary for limited pilot readiness.                                 |
-| Parity check                                | `examples/adoption/todo-search-slice/parity-check.md`                                                                                                                                                                                 | present                 | Judges Node/Edge/Tag parity demonstrated for limited pilot review with retained warnings.                                                                          |
-| Graph-source Promotion Readiness Review     | [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md)                                                                                                                                              | present                 | Records the earlier recommendation and the refreshed status `ready for renewed limited pilot user decision with warnings`.                                         |
-| Generated builder / CLI-backed graph output | Bounded Todo Search generated read-model output now exists under `examples/adoption/todo-search-slice/generated/`.                                                                                                                    | present with warnings   | Supports scoped Evidence discussion; full promotion may still require broader/multi-slice validation, enforcement decisions, cleanup judgment, or explicit waiver. |
+| Evidence area                               | Observable artifact / record                                                                                                                                                                                                                          | Status for package      | Decision relevance                                                                                                                                                 |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Actual representative demo result           | [actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md)                                                                                                                                                                | present                 | Records representative demo result as demonstrated with retained warnings.                                                                                         |
+| Strengthened selected-slice artifacts       | `examples/internal-legacy/adoption/todo-search-slice/product-tree.json`, `project-tree.json`, `work-tree.json`, `test-tree.json`, `evidence-tree.json`, `acceptance-tree.json`, `change-tree.json`, `impact-tree.json`, contracts, and approval brief | present                 | Makes Product -> Project -> Work -> Test -> Evidence -> Acceptance trace reviewable.                                                                               |
+| Real compatibility mismatch supplement      | `examples/internal-legacy/adoption/compatibility-mismatch-slice/*`                                                                                                                                                                                    | present                 | Demonstrates real ACEP task-card-only wording mismatch as bounded compatibility Evidence.                                                                          |
+| `PP-001` confirmation                       | `examples/internal-legacy/adoption/todo-search-slice/product-patch-tree.json`, `change-tree.json`                                                                                                                                                     | present                 | Shows user-confirmed product meaning expansion to title + note/content search.                                                                                     |
+| Refreshed runtime fixture Evidence          | `examples/internal-legacy/adoption/todo-search-slice/runtime-evidence.md`, `runtime-fixture/todo-search.js`, `runtime-fixture/todo-search.test.js`                                                                                                    | present / fresh         | Shows bounded title + note/content search behavior with Vitest command Evidence.                                                                                   |
+| Renewed user Acceptance                     | `examples/internal-legacy/adoption/todo-search-slice/acceptance-tree.json`, `approval-brief.md`                                                                                                                                                       | present with warnings   | Records user-renewed demo-support Acceptance with warnings retained.                                                                                               |
+| Maintainability Graph read-model parity     | `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json`, `maintainability-graph-read-model.md`, `view-instance-manifest.json`, `view-instance-manifest.md`                                                        | present manual artifact | Shows `nodeKind`, `edgeType`, view-scoped tags, 7 Core Views, warnings, and source-authority boundary for limited pilot readiness.                                 |
+| Parity check                                | `examples/internal-legacy/adoption/todo-search-slice/parity-check.md`                                                                                                                                                                                 | present                 | Judges Node/Edge/Tag parity demonstrated for limited pilot review with retained warnings.                                                                          |
+| Graph-source Promotion Readiness Review     | [graph-source-promotion-readiness-review.md](graph-source-promotion-readiness-review.md)                                                                                                                                                              | present                 | Records the earlier recommendation and the refreshed status `ready for renewed limited pilot user decision with warnings`.                                         |
+| Generated builder / CLI-backed graph output | Bounded Todo Search generated read-model output now exists under `examples/internal-legacy/adoption/todo-search-slice/generated/`.                                                                                                                    | present with warnings   | Supports scoped Evidence discussion; full promotion may still require broader/multi-slice validation, enforcement decisions, cleanup judgment, or explicit waiver. |
 
 ## Retained Warnings Classification
 
@@ -272,17 +272,17 @@ This package does not decide:
 
 ## Gate Self-Check
 
-| Gate                           | Result | Notes                                                                                                         |
-| ------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------- |
-| Non-Promotion Gate             | PASS   | This package does not declare promotion or source authority change.                                           |
-| Pilot Scope Clarity Gate       | PASS   | Primary pilot scope is limited to `examples/adoption/todo-search-slice`; compatibility slice is supplemental. |
-| Source Authority Boundary Gate | PASS   | Tree-native artifacts remain current operational source.                                                      |
-| Evidence Reality Gate          | PASS   | Evidence points to observable docs, selected-slice artifacts, command Evidence, and parity artifacts.         |
-| Warning Retention Gate         | PASS   | All retained warnings remain visible and classified.                                                          |
-| User Decision Clarity Gate     | PASS   | User options and their next effects are explicit.                                                             |
-| Graph-First Refresh Gate       | PASS   | Node/Edge/Tag parity artifact and View Instance Manifest are refreshed for limited pilot review.              |
-| Rollback / Compatibility Gate  | PASS   | Rollback/compatibility boundaries remain separate from this package and future approval.                      |
-| Implementation Boundary Gate   | PASS   | No CLI, schema, runtime, validator, generator, migration, public-doc cleanup, or full Todo app is added.      |
+| Gate                           | Result | Notes                                                                                                                         |
+| ------------------------------ | ------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| Non-Promotion Gate             | PASS   | This package does not declare promotion or source authority change.                                                           |
+| Pilot Scope Clarity Gate       | PASS   | Primary pilot scope is limited to `examples/internal-legacy/adoption/todo-search-slice`; compatibility slice is supplemental. |
+| Source Authority Boundary Gate | PASS   | Tree-native artifacts remain current operational source.                                                                      |
+| Evidence Reality Gate          | PASS   | Evidence points to observable docs, selected-slice artifacts, command Evidence, and parity artifacts.                         |
+| Warning Retention Gate         | PASS   | All retained warnings remain visible and classified.                                                                          |
+| User Decision Clarity Gate     | PASS   | User options and their next effects are explicit.                                                                             |
+| Graph-First Refresh Gate       | PASS   | Node/Edge/Tag parity artifact and View Instance Manifest are refreshed for limited pilot review.                              |
+| Rollback / Compatibility Gate  | PASS   | Rollback/compatibility boundaries remain separate from this package and future approval.                                      |
+| Implementation Boundary Gate   | PASS   | No CLI, schema, runtime, validator, generator, migration, public-doc cleanup, or full Todo app is added.                      |
 
 ## Final Non-Promotion Statement
 

@@ -2,17 +2,17 @@
   "version": "0.1.0-generated-read-model-evidence",
   "metadata": {
     "artifactRole": "invalid_read_model_test_fixture",
-    "sourceSlice": "examples/valid/todo-app-pbe-run",
-    "sliceProfile": "todo-app-pbe-run-structure-only",
+    "sourceSlice": "examples/invalid/read-model-core-view-missing",
+    "sliceProfile": "devview-invalid-core-view-missing",
     "slicePolicyLevel": "structure-only",
-    "sourceLayout": "canonical-pbe",
+    "sourceLayout": "devview-invalid-fixture",
     "generatedStatus": "invalid-test-fixture",
     "fixtureBoundary": "This is invalid local test input, not generated Evidence or source authority.",
     "intentionallyMissingCoreView": "Evidence / Acceptance View"
   },
   "sourceInputs": [
     {
-      "relativePath": "examples/valid/todo-app-pbe-run/.pbe/tree/product-tree.json",
+      "relativePath": "examples/invalid/read-model-core-view-missing/fixtures/product-tree.json",
       "absolutePath": "fixture-non-authoritative",
       "status": "present"
     }
@@ -26,7 +26,7 @@
     {
       "id": "PT-1",
       "nodeKind": "product",
-      "sourceArtifact": ".pbe/tree/product-tree.json",
+      "sourceArtifact": "fixtures/product-tree.json",
       "title": "Todo App product root",
       "status": "present",
       "confidence": "tool-confirmed",
@@ -42,7 +42,7 @@
     {
       "id": "ACCEPT-PT-1",
       "nodeKind": "acceptance",
-      "sourceArtifact": ".pbe/control/acceptance-tree.json",
+      "sourceArtifact": "fixtures/acceptance-tree.json",
       "title": "Todo App acceptance root",
       "status": "present",
       "confidence": "user-confirmed",
@@ -137,6 +137,6 @@
     }
   ],
   "compatibilityWarnings": [],
-  "sourceAuthorityBoundary": "Canonical .pbe artifacts remain current operational source; this invalid fixture is local test input only.",
+  "sourceAuthorityBoundary": "DevView invalid fixture artifacts are local negative test input only and do not become operational source.",
   "nonPromotionStatement": "This invalid fixture does not promote Graph source authority, does not change source authority, and does not approve user acceptance."
 }

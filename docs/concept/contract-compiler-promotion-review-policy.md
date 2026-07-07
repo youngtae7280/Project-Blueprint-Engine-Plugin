@@ -46,7 +46,7 @@ not set `equivalenceProven: true`, does not update generated `approvalStatus`, a
 `graph read-model compile-contract --dry-run --json` writes:
 
 ```text
-examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json
+examples/internal-legacy/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json
 ```
 
 The packet collects:

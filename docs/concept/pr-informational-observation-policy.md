@@ -52,7 +52,7 @@ fixtures local-only for now, so PR informational observation continues to cover 
 | Validate-all PR review        | PR #2, run `28210904900`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`                |
 | Third PR informational review | PR #3, run `28213236499`, `pull_request`, `pull_request-informational`, `success`, `ci-evidence-pass`                |
 | Workflow mode                 | `workflow_dispatch` + non-enforcing `pull_request` informational trigger                                             |
-| Included slices               | `examples/adoption/todo-search-slice`; `examples/valid/todo-app-pbe-run`; aggregate summary                          |
+| Included slices               | `examples/internal-legacy/adoption/todo-search-slice`; `examples/valid/todo-app-pbe-run`; aggregate summary          |
 | Todo Search status            | `validation-pass`, `comparison-pass`, 40 nodes / 59 edges / 20 checks                                                |
 | Todo App PBE Run status       | `validation-pass`, parity `not-required`, 22 nodes / 38 edges / 16 checks                                            |
 | Aggregate status              | `aggregate-pass`, 2 slices, 0 warning / 0 blocking / 0 decision-required                                             |
@@ -129,9 +129,9 @@ The current path set intentionally favors visibility over minimizing every run:
 .github/workflows/read-model-evidence.yml
 cli/src/**
 scripts/**
-examples/adoption/todo-search-slice/**
+examples/internal-legacy/adoption/todo-search-slice/**
 examples/valid/todo-app-pbe-run/**
-examples/read-model-aggregate/**
+examples/internal-legacy/read-model-aggregate/**
 docs/concept/**
 ```
 

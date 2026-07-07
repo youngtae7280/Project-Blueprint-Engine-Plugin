@@ -60,11 +60,11 @@ function commandResult(profile, command) {
 
 try {
   copyPath('docs/concept')
-  copyPath('examples/adoption/todo-search-slice')
-  copyPath('examples/adoption/compatibility-mismatch-slice')
+  copyPath('examples/internal-legacy/adoption/todo-search-slice')
+  copyPath('examples/internal-legacy/adoption/compatibility-mismatch-slice')
   copyPath('examples/valid/todo-app-pbe-run')
-  copyPath('examples/read-model-aggregate')
-  copyPath('examples/intent-critical')
+  copyPath('examples/internal-legacy/read-model-aggregate')
+  copyPath('examples/internal-legacy/intent-critical')
   copyPath('.github/workflows/read-model-evidence.yml')
 
   const todoSearchGenerate = runCli([
@@ -72,17 +72,19 @@ try {
     'read-model',
     'generate',
     '--slice',
-    'examples/adoption/todo-search-slice',
+    'examples/internal-legacy/adoption/todo-search-slice',
     '--json',
   ])
   assertEqual(todoSearchGenerate.nodeCount, 40, 'Todo Search generated node count')
   assertEqual(todoSearchGenerate.edgeCount, 59, 'Todo Search generated edge count')
 
-  const todoSearchGenerated = readJson('examples/adoption/todo-search-slice/generated/generated-read-model.json')
+  const todoSearchGenerated = readJson(
+    'examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json',
+  )
   assertEqual(todoSearchGenerated.metadata.readModelSourceMode, 'graph-source-backed', 'Todo Search source mode')
   assertEqual(
     todoSearchGenerated.metadata.graphSourceArtifact,
-    'examples/adoption/todo-search-slice/graph-source.json',
+    'examples/internal-legacy/adoption/todo-search-slice/graph-source.json',
     'Todo Search graph source artifact',
   )
   assertEqual(todoSearchGenerated.coreViewCoverage.length, 7, 'Todo Search Core View count')
@@ -92,9 +94,9 @@ try {
     'read-model',
     'compare',
     '--generated',
-    'examples/adoption/todo-search-slice/generated/generated-read-model.json',
+    'examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json',
     '--manual',
-    'examples/adoption/todo-search-slice/maintainability-graph-read-model.json',
+    'examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json',
     '--json',
   ])
   assertEqual(todoSearchCompare.status, 'comparison-pass', 'Todo Search parity status')
@@ -105,7 +107,7 @@ try {
     'read-model',
     'validate',
     '--slice',
-    'examples/adoption/todo-search-slice',
+    'examples/internal-legacy/adoption/todo-search-slice',
     '--json',
   ])
   assertEqual(todoSearchValidate.status, 'validation-pass', 'Todo Search validation status')
@@ -153,7 +155,7 @@ try {
   assertEqual(validateAll.aggregateStatus, 'aggregate-pass', 'aggregate summary status')
   assertEqual(validateAll.sliceCount, 2, 'validate-all slice count')
 
-  const transitionStatus = readJson('examples/read-model-aggregate/graph-source-transition-status.json')
+  const transitionStatus = readJson('examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json')
   assertEqual(
     transitionStatus.status,
     'confirmed-graph-source-transition-mechanics',

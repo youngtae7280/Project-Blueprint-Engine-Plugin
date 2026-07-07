@@ -4,7 +4,7 @@
   "status": "generated-from-graph-source",
   "graphSourcePath": "examples\\retrofit\\open-source\\cjson\\graph-source.json",
   "sourceRecordId": "change.cjson-readme-build-tooling-boundary",
-  "sourceRecordPath": "examples/retrofit/open-source/cjson/records/readme-build-tooling-boundary.planned.json",
+  "sourceRecordPath": "examples/internal-legacy/retrofit/open-source/cjson/records/readme-build-tooling-boundary.planned.json",
   "target": {
     "projectName": "cJSON",
     "repoPath": "work/open-source/cJSON",

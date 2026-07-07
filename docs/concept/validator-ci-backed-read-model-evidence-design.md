@@ -8,7 +8,7 @@ This document defines the concept-level design for validator-backed and CI-backe
 considers broader execution, enforcement, or full Graph-source promotion review.
 
 It builds on the Todo Search scoped source-authority pilot, which is currently active under observation with retained
-warnings. The bounded scoped validator command is implemented for `examples/adoption/todo-search-slice`, and the manual
+warnings. The bounded scoped validator command is implemented for `examples/internal-legacy/adoption/todo-search-slice`, and the manual
 non-enforcing workflow now also runs the Todo App PBE Run structure-only validator plus aggregate summarize. This does
 not enforce CI gates, does not expand source authority, and does not change promotion state.
 
@@ -16,7 +16,7 @@ not enforce CI gates, does not expand source authority, and does not change prom
 
 | Baseline item                 | Current state                                                                                              |
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Scoped pilot                  | `examples/adoption/todo-search-slice` only                                                                 |
+| Scoped pilot                  | `examples/internal-legacy/adoption/todo-search-slice` only                                                 |
 | Active observation status     | `keep-active-with-retained-warnings`                                                                       |
 | Generated/manual parity       | `comparison-pass`                                                                                          |
 | Mismatch count                | 0                                                                                                          |
@@ -43,7 +43,7 @@ and CI-backed Evidence runs continue to cover positive configured profiles only.
 CLI command success means a local command ran and produced a reviewable output. For the current scoped pilot, examples
 include:
 
-- `pbe graph read-model generate --slice examples/adoption/todo-search-slice`
+- `pbe graph read-model generate --slice examples/internal-legacy/adoption/todo-search-slice`
 - `pbe graph read-model compare --generated <file> --manual <file>`
 
 This is observable Evidence, but it is not the same as validator-backed Evidence or CI-backed Evidence.
@@ -68,7 +68,7 @@ supports repeatability discussions for broader execution or full promotion revie
 
 | Scope level                                | Meaning                                                                                           | Design stance                                                            |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| `scoped-slice-validation`                  | Validate one selected slice such as `examples/adoption/todo-search-slice`.                        | First target for validator-backed Evidence design.                       |
+| `scoped-slice-validation`                  | Validate one selected slice such as `examples/internal-legacy/adoption/todo-search-slice`.        | First target for validator-backed Evidence design.                       |
 | `multi-slice-validation`                   | Validate multiple generated read-model outputs without claiming repository-wide source authority. | Later expansion after scoped-slice validation is stable.                 |
 | `repo-wide-promotion-readiness-validation` | Validate readiness evidence for full Graph-source promotion discussion.                           | Later stage; likely requires CI-backed Evidence or explicit user waiver. |
 
@@ -99,7 +99,7 @@ promotion readiness.
 ## Proposed Report Artifacts
 
 The scoped Todo Search validator creates the first two artifacts below under
-`examples/adoption/todo-search-slice/generated/`. The CI manifest is implemented for the manual workflow and now carries
+`examples/internal-legacy/adoption/todo-search-slice/generated/`. The CI manifest is implemented for the manual workflow and now carries
 Todo Search, Todo App PBE Run, and aggregate summary fields for the next workflow run. Repo-wide CI evidence and
 enforcement remain future-only.
 
@@ -121,8 +121,8 @@ pbe graph read-model validate --slice <path>
 For the current bounded pilot this produces:
 
 ```text
-examples/adoption/todo-search-slice/generated/read-model-validation-report.json
-examples/adoption/todo-search-slice/generated/read-model-validation-report.md
+examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validation-report.json
+examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validation-report.md
 ```
 
 Future command candidates:
@@ -285,7 +285,7 @@ Registry fixture and test planning for that path is recorded in
 [read-model-slice-registry-test-strategy.md](read-model-slice-registry-test-strategy.md).
 Registry storage/location tradeoffs are recorded in
 [read-model-slice-registry-storage-decision.md](read-model-slice-registry-storage-decision.md).
-The candidate registry fixture now exists at `examples/read-model-aggregate/read-model-slices.json`. Local
+The candidate registry fixture now exists at `examples/internal-legacy/read-model-aggregate/read-model-slices.json`. Local
 `validate --all` consumes it after comparing entries against the in-code profiles; existing single-slice validator
 behavior still uses the implemented profile configuration directly.
 Negative fixture storage policy is recorded in

@@ -28,10 +28,10 @@ The local command answers:
 
 ## Current Known Profiles
 
-| Profile ID                        | Source slice                          | Source layout       | Policy level          | Current status                                                                                     |
-| --------------------------------- | ------------------------------------- | ------------------- | --------------------- | -------------------------------------------------------------------------------------------------- |
-| `todo-search-selected-slice`      | `examples/adoption/todo-search-slice` | `flat-demo-support` | `pilot-marker-backed` | 40 nodes / 59 edges; `comparison-pass`; `validation-pass`; active bounded scoped pilot for review. |
-| `todo-app-pbe-run-structure-only` | `examples/valid/todo-app-pbe-run`     | `canonical-pbe`     | `structure-only`      | 22 nodes / 38 edges; `validation-pass`; no manual parity, pilot marker, or runtime fixture.        |
+| Profile ID                        | Source slice                                          | Source layout       | Policy level          | Current status                                                                                     |
+| --------------------------------- | ----------------------------------------------------- | ------------------- | --------------------- | -------------------------------------------------------------------------------------------------- |
+| `todo-search-selected-slice`      | `examples/internal-legacy/adoption/todo-search-slice` | `flat-demo-support` | `pilot-marker-backed` | 40 nodes / 59 edges; `comparison-pass`; `validation-pass`; active bounded scoped pilot for review. |
+| `todo-app-pbe-run-structure-only` | `examples/valid/todo-app-pbe-run`                     | `canonical-pbe`     | `structure-only`      | 22 nodes / 38 edges; `validation-pass`; no manual parity, pilot marker, or runtime fixture.        |
 
 ### Todo Search Profile Requirements
 
@@ -91,7 +91,7 @@ Registry fields:
 | `fallbackReferencePolicy` | Required fallback/reference artifacts for the profile.                                                  |
 | `promotionBoundary`       | Explicit statement that validation pass is not source promotion or user approval.                       |
 
-The candidate registry now exists at `examples/read-model-aggregate/read-model-slices.json` and includes only the two
+The candidate registry now exists at `examples/internal-legacy/read-model-aggregate/read-model-slices.json` and includes only the two
 current profiles above. It is strict JSON, non-generated execution metadata. Internal parser/normalization and
 profile-comparison tests read it, and local `validate --all` is the first registry-consuming CLI surface. Existing
 individual generate/compare/validate/summarize commands still keep their existing behavior.
@@ -112,7 +112,7 @@ local test inputs and are not part of current `validate --all`. The implemented 
 `examples/invalid/read-model-invalid-view-scoped-tags`, `examples/invalid/read-model-core-view-missing`, and
 `examples/invalid/read-model-pilot-marker-missing` prove invalid role tags, missing Core View coverage, and missing
 required pilot marker coverage block validation through focused tests only; they are intentionally absent from
-`examples/read-model-aggregate/read-model-slices.json`.
+`examples/internal-legacy/read-model-aggregate/read-model-slices.json`.
 Invalid fixture CI inclusion policy is recorded in
 [read-model-invalid-fixture-ci-policy.md](read-model-invalid-fixture-ci-policy.md). Current `validate --all` remains the
 positive-registry command; invalid fixture execution would require a separate future mode.
@@ -136,7 +136,7 @@ Rules:
 Current related implementation:
 
 ```text
-pbe graph read-model summarize --slices examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run
+pbe graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run
 ```
 
 This is not `validate --all`; it remains existing-report aggregation.

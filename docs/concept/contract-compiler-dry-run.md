@@ -17,10 +17,10 @@ through the Contract Fixture Validator and compare it against the hand-written d
 
 The current dry-run compiler supports only the committed Todo Search whitespace-normalization `bug_fix` fixture:
 
-- input: `examples/read-model-aggregate/generated/compiler-input-model-dry-run.json`
-- output candidate: `examples/read-model-aggregate/generated/execution-contract-dry-run.generated.json`
-- hand-written comparison target: `examples/read-model-aggregate/generated/execution-contract-dry-run.json`
-- diff report: `examples/read-model-aggregate/generated/execution-contract-dry-run.diff.json`
+- input: `examples/internal-legacy/read-model-aggregate/generated/compiler-input-model-dry-run.json`
+- output candidate: `examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.generated.json`
+- hand-written comparison target: `examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.json`
+- diff report: `examples/internal-legacy/read-model-aggregate/generated/execution-contract-dry-run.diff.json`
 - validator: `validateExecutionContract`
 
 The local command is:
@@ -177,7 +177,7 @@ The first v0.2 preview is now recorded in
 [output-requirement-source-authority.md](output-requirement-source-authority.md) and emitted as:
 
 ```text
-examples/read-model-aggregate/generated/output-requirement-source-authority.preview.json
+examples/internal-legacy/read-model-aggregate/generated/output-requirement-source-authority.preview.json
 ```
 
 This surface maps hand-written output obligations to `outputRequirementSources[]` for comparison and now uses those
@@ -197,7 +197,7 @@ The remaining-loss preview is recorded in
 [contract-source-authority-gap-preview.md](contract-source-authority-gap-preview.md) and emitted as:
 
 ```text
-examples/read-model-aggregate/generated/contract-source-authority-gap.preview.json
+examples/internal-legacy/read-model-aggregate/generated/contract-source-authority-gap.preview.json
 ```
 
 It explains source-authority gaps by field and currently recommends `none` for the current fixture because allowed scope
@@ -266,7 +266,7 @@ means the current candidate is ready to be reviewed, not that it has been approv
 `graph read-model compile-contract --dry-run --json` now also emits:
 
 ```text
-examples/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json
+examples/internal-legacy/read-model-aggregate/generated/contract-compiler-promotion-review.preview.json
 ```
 
 The packet references the generated candidate, hand-written comparison fixture, semantic diff artifact, output

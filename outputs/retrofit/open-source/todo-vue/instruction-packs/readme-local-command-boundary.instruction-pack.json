@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "artifactRole": "retrofit-instruction-pack-v0",
   "status": "generated-from-graph-source",
-  "graphSourcePath": "examples/retrofit/open-source/todo-vue/graph-source.json",
+  "graphSourcePath": "examples/internal-legacy/retrofit/open-source/todo-vue/graph-source.json",
   "sourceRecordId": "change.todo-vue-readme-local-command-boundary",
-  "sourceRecordPath": "examples/retrofit/open-source/todo-vue/records/readme-local-command-boundary.implemented.json",
+  "sourceRecordPath": "examples/internal-legacy/retrofit/open-source/todo-vue/records/readme-local-command-boundary.implemented.json",
   "target": {
     "projectName": "mdn/todo-vue",
     "repoPath": "work/external/todo-vue",

@@ -1,0 +1,273 @@
+{
+  "version": "0.1.0-view-instance-manifest",
+  "metadata": {
+    "artifactRole": "manual_view_instance_candidate",
+    "createdAt": "2026-06-25T00:00:00.000Z",
+    "selectedSlice": "Todo Search Adoption + Product Meaning Feedback",
+    "sourceAuthority": "Tree-native selected-slice artifacts remain the current operational source.",
+    "nonPromotionStatement": "This manifest describes task-scoped projections for review. It does not promote Maintainability Graph, does not change source authority, and does not implement a view renderer, generator, CLI, schema, runtime, or validator.",
+    "taxonomyBasis": "docs/concept/graph-node-edge-tag-policy.md",
+    "coreViewBasis": "docs/concept/view-tree-pack.md",
+    "readModelArtifact": "examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json",
+    "viewMembershipBoundary": "Each object in viewInstances is the view membership record. Its viewScopedTags map contains node ids as keys and allowed role tags as values; Core View ids are never tag values."
+  },
+  "allowedViewScopedTags": ["target", "context", "candidate", "guard", "required", "stale", "blocked", "output"],
+  "tagBoundary": "Tags in this manifest are temporary roles inside the listed view instance. They do not encode durable semantic relationships.",
+  "viewInstances": [
+    {
+      "id": "intent-view",
+      "name": "Intent View",
+      "purpose": "Show the user-approved product meaning, acceptance criteria, and remaining limited pilot user decision.",
+      "includedNodeIds": [
+        "TASK-TODO-SEARCH-PILOT",
+        "PT-SEARCH-001",
+        "AC-SEARCH-001",
+        "AC-SEARCH-002",
+        "AC-SEARCH-003",
+        "PP-001",
+        "AT-ROOT",
+        "DEC-SCOPED-PILOT-EXECUTION",
+        "DOC-LIMITED-PILOT-PACKAGE",
+        "DOC-LIMITED-PILOT-TRANSITION-RECORD"
+      ],
+      "includedEdgeIds": [
+        "E-TASK-TARGETS-REQ",
+        "E-PT-REQUIRES-AC1",
+        "E-PT-REQUIRES-AC2",
+        "E-PT-REQUIRES-AC3",
+        "E-PP-APPROVES-CH",
+        "E-AT-APPROVES-PT",
+        "E-DEC-APPROVES-TRANSITION-RECORD"
+      ],
+      "viewScopedTags": {
+        "TASK-TODO-SEARCH-PILOT": ["target"],
+        "AC-SEARCH-001": ["required"],
+        "AC-SEARCH-002": ["required"],
+        "AC-SEARCH-003": ["required"],
+        "DOC-LIMITED-PILOT-PACKAGE": ["output"],
+        "DEC-SCOPED-PILOT-EXECUTION": ["output"],
+        "DOC-LIMITED-PILOT-TRANSITION-RECORD": ["output"]
+      },
+      "coverageStatus": "present",
+      "boundaryNotes": "The view is a user judgment projection only; it records bounded limited pilot approval without approving full Graph-source promotion."
+    },
+    {
+      "id": "behavior-view",
+      "name": "Behavior View",
+      "purpose": "Show required and observed behavior for title + note/content search and non-scope guards.",
+      "includedNodeIds": [
+        "PT-SEARCH-001",
+        "BEH-SEARCH-TITLE-NOTE",
+        "BEH-EMPTY-QUERY",
+        "BEH-NO-RESULT",
+        "BEH-NON-SCOPE-GUARD",
+        "CODE-RUNTIME-SEARCH-HELPER",
+        "DATA-TODO-ITEM"
+      ],
+      "includedEdgeIds": [
+        "E-BEH-SEARCH-SATISFIES-AC1",
+        "E-BEH-EMPTY-SATISFIES-AC2",
+        "E-BEH-NO-RESULT-SATISFIES-AC3",
+        "E-CODE-IMPLEMENTS-SEARCH",
+        "E-CODE-IMPLEMENTS-EMPTY",
+        "E-CODE-IMPLEMENTS-NO-RESULT",
+        "E-CODE-PRESERVES-GUARD",
+        "E-CODE-READS-DATA",
+        "E-CODE-TAKES-INPUT-DATA",
+        "E-CODE-RETURNS-DATA"
+      ],
+      "viewScopedTags": {
+        "BEH-SEARCH-TITLE-NOTE": ["target"],
+        "BEH-EMPTY-QUERY": ["target"],
+        "BEH-NO-RESULT": ["target"],
+        "BEH-NON-SCOPE-GUARD": ["guard"],
+        "PT-SEARCH-001": ["context"]
+      },
+      "coverageStatus": "present",
+      "boundaryNotes": "Behavior Evidence is bounded to the representative runtime fixture."
+    },
+    {
+      "id": "structure-view",
+      "name": "Structure View",
+      "purpose": "Show code/data/boundary anchors used by the selected slice.",
+      "includedNodeIds": [
+        "PJ-TODO-LIST-SURFACE",
+        "PJ-TODO-SEARCH-HELPER",
+        "WT-SEARCH-001",
+        "CODE-RUNTIME-SEARCH-HELPER",
+        "CODE-RUNTIME-SEARCH-TEST",
+        "DATA-TODO-ITEM"
+      ],
+      "includedEdgeIds": [
+        "E-PT-DERIVES-PJ-SURFACE",
+        "E-PT-DERIVES-PJ-HELPER",
+        "E-WT-TOUCHES-CODE",
+        "E-PJ-HELPER-TOUCHES-CODE",
+        "E-CODE-READS-DATA"
+      ],
+      "viewScopedTags": {
+        "PJ-TODO-SEARCH-HELPER": ["target"],
+        "WT-SEARCH-001": ["target"],
+        "PJ-TODO-LIST-SURFACE": ["context"],
+        "DATA-TODO-ITEM": ["context"]
+      },
+      "coverageStatus": "present",
+      "boundaryNotes": "Project boundary nodes are manual demo-support anchors, not full app proof."
+    },
+    {
+      "id": "scope-execution-view",
+      "name": "Scope / Execution View",
+      "purpose": "Show selected scope, contract boundaries, required evidence, forbidden behavior, and stop/change guardrails.",
+      "includedNodeIds": [
+        "TASK-TODO-SEARCH-PILOT",
+        "WT-SEARCH-001",
+        "CYCLE-TODO-SEARCH",
+        "NEC-WT-SEARCH-001",
+        "BEH-NON-SCOPE-GUARD",
+        "TT-SEARCH-001",
+        "TT-SEARCH-002",
+        "TT-SEARCH-003",
+        "TT-SEARCH-004",
+        "EV-SEARCH-NOTE-TEST",
+        "FIND-GENERATED-BUILDER-MISSING"
+      ],
+      "includedEdgeIds": [
+        "E-TASK-REQUIRES-CYCLE",
+        "E-TASK-REQUIRES-NEC",
+        "E-CYCLE-REQUIRES-WT",
+        "E-CYCLE-REQUIRES-EV",
+        "E-NEC-REQUIRES-WT",
+        "E-NEC-PRESERVES-GUARD",
+        "E-WT-PRESERVES-GUARD",
+        "E-FIND-BUILDER-REPORTS-ON-DOC"
+      ],
+      "viewScopedTags": {
+        "TASK-TODO-SEARCH-PILOT": ["target", "required"],
+        "CYCLE-TODO-SEARCH": ["required", "guard"],
+        "NEC-WT-SEARCH-001": ["required", "guard"],
+        "BEH-NON-SCOPE-GUARD": ["guard"],
+        "FIND-GENERATED-BUILDER-MISSING": ["blocked"]
+      },
+      "coverageStatus": "present",
+      "boundaryNotes": "The generated-builder gap is blocked only for full promotion/repeatability, not for this manual limited pilot review surface."
+    },
+    {
+      "id": "impact-view",
+      "name": "Impact View",
+      "purpose": "Show PP-001 change, impact classification, stale evidence, renewed acceptance, and compatibility warning carry-forward.",
+      "includedNodeIds": [
+        "PP-001",
+        "CH-001",
+        "IM-SEARCH-001",
+        "PT-SEARCH-001",
+        "WT-SEARCH-001",
+        "EV-SEARCH-TEST",
+        "EV-SEARCH-REVIEW",
+        "EV-SEARCH-NOTE-TEST",
+        "AT-ROOT",
+        "CCN-ACEP-TASK-CARD-AUTHORITY-001",
+        "FIND-ACEP-CLEANUP-DEFERRED"
+      ],
+      "includedEdgeIds": [
+        "E-PP-APPROVES-CH",
+        "E-CH-TOUCHES-BEH-SEARCH",
+        "E-CH-INVALIDATES-EV-HISTORICAL",
+        "E-CH-INVALIDATES-OLD-ACCEPTANCE",
+        "E-CH-PRESERVES-NON-SCOPE",
+        "E-CH-REQUIRES-EV-NOTE",
+        "E-IM-REPORTS-ON-CH",
+        "E-IM-REPORTS-ON-EV-REVIEW",
+        "E-FIND-ACEP-REPORTS-ON-CCN"
+      ],
+      "viewScopedTags": {
+        "PP-001": ["target"],
+        "CH-001": ["target"],
+        "IM-SEARCH-001": ["output"],
+        "EV-SEARCH-TEST": ["stale"],
+        "EV-SEARCH-REVIEW": ["stale"],
+        "CCN-ACEP-TASK-CARD-AUTHORITY-001": ["context"],
+        "FIND-ACEP-CLEANUP-DEFERRED": ["stale"]
+      },
+      "coverageStatus": "present",
+      "boundaryNotes": "Impact is demonstrated as a manual control/readiness view; no public-doc cleanup is performed."
+    },
+    {
+      "id": "verification-view",
+      "name": "Verification View",
+      "purpose": "Show checks, behavior targets, and observable Evidence links.",
+      "includedNodeIds": [
+        "BEH-SEARCH-TITLE-NOTE",
+        "BEH-EMPTY-QUERY",
+        "BEH-NO-RESULT",
+        "TT-SEARCH-001",
+        "TT-SEARCH-002",
+        "TT-SEARCH-003",
+        "TT-SEARCH-004",
+        "EV-SEARCH-NOTE-TEST",
+        "CODE-RUNTIME-SEARCH-TEST"
+      ],
+      "includedEdgeIds": [
+        "E-TT-001-VERIFIES-SEARCH",
+        "E-TT-002-VERIFIES-EMPTY",
+        "E-TT-003-VERIFIES-NO-RESULT",
+        "E-TT-004-VERIFIES-SEARCH",
+        "E-EV-NOTE-EVIDENCES-TT001",
+        "E-EV-NOTE-EVIDENCES-TT002",
+        "E-EV-NOTE-EVIDENCES-TT004",
+        "E-EV-REVIEW-EVIDENCES-TT003"
+      ],
+      "viewScopedTags": {
+        "BEH-SEARCH-TITLE-NOTE": ["target"],
+        "TT-SEARCH-001": ["required"],
+        "TT-SEARCH-002": ["required"],
+        "TT-SEARCH-003": ["required", "stale"],
+        "TT-SEARCH-004": ["required"],
+        "EV-SEARCH-NOTE-TEST": ["output"]
+      },
+      "coverageStatus": "present",
+      "boundaryNotes": "UI visual verification remains partial even though runtime behavior evidence is present/fresh."
+    },
+    {
+      "id": "evidence-acceptance-view",
+      "name": "Evidence / Acceptance View",
+      "purpose": "Show Evidence, user acceptance, warnings, and unresolved promotion decision state.",
+      "includedNodeIds": [
+        "EV-SEARCH-TEST",
+        "EV-SEARCH-REVIEW",
+        "EV-SEARCH-NOTE-TEST",
+        "AT-ROOT",
+        "AB-TODO-SEARCH",
+        "FIND-BOUNDED-FIXTURE",
+        "FIND-PARTIAL-UI",
+        "FIND-GENERATED-BUILDER-MISSING",
+        "FIND-ACEP-CLEANUP-DEFERRED",
+        "DEC-SCOPED-PILOT-EXECUTION",
+        "DOC-LIMITED-PILOT-TRANSITION-RECORD"
+      ],
+      "includedEdgeIds": [
+        "E-EV-NOTE-EVIDENCES-TT001",
+        "E-EV-NOTE-EVIDENCES-TT002",
+        "E-EV-NOTE-EVIDENCES-TT004",
+        "E-EV-REVIEW-EVIDENCES-TT003",
+        "E-AT-APPROVES-PT",
+        "E-AT-APPROVES-EV-NOTE",
+        "E-AB-REPORTS-ON-AT",
+        "E-FIND-BOUNDED-REPORTS-ON-EV",
+        "E-FIND-UI-REPORTS-ON-EV",
+        "E-FIND-BUILDER-REPORTS-ON-DOC",
+        "E-DEC-APPROVES-TRANSITION-RECORD"
+      ],
+      "viewScopedTags": {
+        "EV-SEARCH-NOTE-TEST": ["output"],
+        "AT-ROOT": ["output"],
+        "AB-TODO-SEARCH": ["output"],
+        "FIND-PARTIAL-UI": ["stale"],
+        "FIND-GENERATED-BUILDER-MISSING": ["stale"],
+        "DEC-SCOPED-PILOT-EXECUTION": ["output"],
+        "DOC-LIMITED-PILOT-TRANSITION-RECORD": ["output"]
+      },
+      "coverageStatus": "present",
+      "boundaryNotes": "Renewed acceptance is recorded with warnings; bounded limited pilot decision approval is recorded separately and full promotion remains unapproved."
+    }
+  ]
+}

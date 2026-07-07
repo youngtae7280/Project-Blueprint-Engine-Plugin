@@ -9,7 +9,7 @@ keeps behavior and enforcement unchanged.
 
 Selected maintenance change:
 
-- file: `examples/adoption/todo-search-slice/README.md`
+- file: `examples/internal-legacy/adoption/todo-search-slice/README.md`
 - old wording: demo-support files are "not Graph-source promotion"
 - new wording: demo-support files are not the promotion action; current limited Graph-source status is represented by
   `graph-source.json` and generated read-model Evidence under `generated/`.
@@ -18,7 +18,7 @@ Selected maintenance change:
 
 Todo Search is the bounded selected-slice Graph-source example:
 
-- source artifact: `examples/adoption/todo-search-slice/graph-source.json`
+- source artifact: `examples/internal-legacy/adoption/todo-search-slice/graph-source.json`
 - source mode: `graph-source-backed`
 - projection contract: `projection-contract-pass`
 - expected shape: `40` nodes, `59` edges, `7` Core Views

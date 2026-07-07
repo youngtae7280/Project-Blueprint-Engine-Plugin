@@ -7,7 +7,7 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $targetRepo = Join-Path $repoRoot "work/native/graph-notes-demo"
-$graphSourcePath = "examples/native/graph-notes-demo/graph-source.json"
+$graphSourcePath = "examples/internal-legacy/native/graph-notes-demo/graph-source.json"
 $instructionPackPath = "outputs/native/graph-notes-demo/instruction-packs/add-maintenance-boundary.instruction-pack.json"
 $graphDeltaPath = "outputs/native/graph-notes-demo/graph-deltas/add-maintenance-boundary.graph-delta.json"
 

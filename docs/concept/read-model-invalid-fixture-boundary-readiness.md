@@ -17,7 +17,7 @@ change tests, modify GitHub Actions, or create a required check.
 
 Current positive registry-backed read-model validation is scoped to:
 
-- `examples/read-model-aggregate/read-model-slices.json`
+- `examples/internal-legacy/read-model-aggregate/read-model-slices.json`
 - `node dist/cli/index.js graph read-model validate --all --json`
 - `.github/workflows/read-model-evidence.yml`
 
@@ -51,7 +51,7 @@ Structure-only policy conflict remains inline / temp focused coverage rather tha
 
 Invalid fixtures must stay out of:
 
-- `examples/read-model-aggregate/read-model-slices.json`
+- `examples/internal-legacy/read-model-aggregate/read-model-slices.json`
 - positive `graph read-model validate --all`
 - positive aggregate summaries
 - CI artifact bundles whose role is positive read-model Evidence

@@ -12,7 +12,7 @@ It follows:
 - [read-model-validate-all-contract.md](read-model-validate-all-contract.md)
 - [read-model-slice-registry-test-strategy.md](read-model-slice-registry-test-strategy.md)
 
-The approved candidate registry file now exists at `examples/read-model-aggregate/read-model-slices.json`, and internal
+The approved candidate registry file now exists at `examples/internal-legacy/read-model-aggregate/read-model-slices.json`, and internal
 parser/normalization plus profile-comparison tests now cover it. The local non-enforcing `pbe graph read-model validate
 --all` command now consumes it for configured profile execution and aggregate Evidence. This document still does not
 modify workflows, dispatch GitHub Actions, create PRs, introduce CI enforcement, expand source authority, perform
@@ -34,21 +34,21 @@ promotion approval.
 
 ## Candidate Locations
 
-| Candidate location                                                 | Strengths                                                                                   | Risks / drawbacks                                                                                              | Current judgment                                   |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
-| `examples/read-model-aggregate/read-model-slices.json`             | Repo-local, non-generated, near aggregate Evidence, outside any single slice, easy to parse | Creates a new config-like artifact under `examples`; requires parser support later                             | Recommended candidate for actual registry file     |
-| `examples/read-model-aggregate/generated/read-model-slices.json`   | Near aggregate output files                                                                 | Generated directory implies output, may be overwritten, mixes config/source metadata with churn artifacts      | Avoid                                              |
-| `examples/read-model-slices.json`                                  | Simple top-level examples registry                                                          | Less clearly tied to read-model aggregate path; may look like registry for all examples, not read-model slices | Acceptable fallback but less precise               |
-| `docs/concept/read-model-slices.md/json`                           | Safe for design-only discussion                                                             | Documentation path is not ideal for future executable config; parser reading docs/concept would blur docs/code | Good for concept samples only, not execution input |
-| Future `.pbe/read-model-slices.json` or `.pbe/graph/registry.json` | Closer to PBE runtime artifacts and future repo-level config                                | No repo root `.pbe` artifact exists here; could imply source authority or active runtime state too early       | Future-only after runtime artifact policy          |
-| CLI internal hardcoded profile list                                | No new file; current behavior is stable                                                     | Does not scale; hides profile registry from review; makes `validate --all` less transparent                    | Short-term fallback only                           |
+| Candidate location                                                               | Strengths                                                                                   | Risks / drawbacks                                                                                              | Current judgment                                   |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `examples/internal-legacy/read-model-aggregate/read-model-slices.json`           | Repo-local, non-generated, near aggregate Evidence, outside any single slice, easy to parse | Creates a new config-like artifact under `examples`; requires parser support later                             | Recommended candidate for actual registry file     |
+| `examples/internal-legacy/read-model-aggregate/generated/read-model-slices.json` | Near aggregate output files                                                                 | Generated directory implies output, may be overwritten, mixes config/source metadata with churn artifacts      | Avoid                                              |
+| `examples/read-model-slices.json`                                                | Simple top-level examples registry                                                          | Less clearly tied to read-model aggregate path; may look like registry for all examples, not read-model slices | Acceptable fallback but less precise               |
+| `docs/concept/read-model-slices.md/json`                                         | Safe for design-only discussion                                                             | Documentation path is not ideal for future executable config; parser reading docs/concept would blur docs/code | Good for concept samples only, not execution input |
+| Future `.pbe/read-model-slices.json` or `.pbe/graph/registry.json`               | Closer to PBE runtime artifacts and future repo-level config                                | No repo root `.pbe` artifact exists here; could imply source authority or active runtime state too early       | Future-only after runtime artifact policy          |
+| CLI internal hardcoded profile list                                              | No new file; current behavior is stable                                                     | Does not scale; hides profile registry from review; makes `validate --all` less transparent                    | Short-term fallback only                           |
 
 ## Recommendation
 
 Approved candidate registry location:
 
 ```text
-examples/read-model-aggregate/read-model-slices.json
+examples/internal-legacy/read-model-aggregate/read-model-slices.json
 ```
 
 Rationale:
@@ -60,7 +60,7 @@ Rationale:
 - It is repo-local and easy for future CLI code to read without implying `.pbe` source authority.
 - It can be introduced as a candidate fixture before parser support consumes it.
 
-Do not place the registry under `examples/read-model-aggregate/generated/`. A registry is configuration/execution
+Do not place the registry under `examples/internal-legacy/read-model-aggregate/generated/`. A registry is configuration/execution
 metadata, while `generated/` is output Evidence. Mixing them would make mutation and source boundary harder to review.
 
 ## File Format Comparison
@@ -151,19 +151,19 @@ Recommended compatibility sequence:
 
 ## Decision Options
 
-| Option | Choice                                              | Meaning                                                                         | Tradeoff                                                                                      |
-| ------ | --------------------------------------------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| A      | Create actual registry file as candidate fixture    | Add `examples/read-model-aggregate/read-model-slices.json` as candidate fixture | Completed by DEC-071; adds a real config artifact before parser exists                        |
-| B      | Implement parser against in-code fixture first      | Keep fixture data in tests/code before adding a repo artifact                   | Reduces artifact churn, but hides review surface and delays registry-as-artifact verification |
-| C      | Continue hardcoded profiles until more slices exist | Avoid registry work while only two profiles exist                               | Lowest immediate cost, but delays `validate --all` readiness                                  |
-| D      | Defer registry work                                 | Keep current aggregate/report-only path and PR observation only                 | Safe, but no progress toward all-slice validation implementation                              |
+| Option | Choice                                              | Meaning                                                                                         | Tradeoff                                                                                      |
+| ------ | --------------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| A      | Create actual registry file as candidate fixture    | Add `examples/internal-legacy/read-model-aggregate/read-model-slices.json` as candidate fixture | Completed by DEC-071; adds a real config artifact before parser exists                        |
+| B      | Implement parser against in-code fixture first      | Keep fixture data in tests/code before adding a repo artifact                                   | Reduces artifact churn, but hides review surface and delays registry-as-artifact verification |
+| C      | Continue hardcoded profiles until more slices exist | Avoid registry work while only two profiles exist                                               | Lowest immediate cost, but delays `validate --all` readiness                                  |
+| D      | Defer registry work                                 | Keep current aggregate/report-only path and PR observation only                                 | Safe, but no progress toward all-slice validation implementation                              |
 
 ## Current Candidate Fixture State
 
 Current candidate fixture:
 
 ```text
-examples/read-model-aggregate/read-model-slices.json
+examples/internal-legacy/read-model-aggregate/read-model-slices.json
 ```
 
 The fixture is strict JSON, outside `generated/`, and contains only:

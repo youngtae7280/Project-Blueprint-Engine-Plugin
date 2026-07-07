@@ -105,7 +105,7 @@ status. The user approved the bounded limited pilot option for the Todo Search s
 broad source authority change remain not approved. It does not promote Maintainability Graph or change current runtime
 authority.
 
-Manual Node/Edge/Tag read-model parity artifacts now exist under `examples/adoption/todo-search-slice/`, so the
+Manual Node/Edge/Tag read-model parity artifacts now exist under `examples/internal-legacy/adoption/todo-search-slice/`, so the
 readiness recommendation can return to a limited pilot user decision surface. Generated builder or CLI-backed output
 remains a later full-promotion/repeatability question rather than current runtime authority.
 

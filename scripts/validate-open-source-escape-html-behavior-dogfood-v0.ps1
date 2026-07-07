@@ -8,8 +8,8 @@ $ErrorActionPreference = "Stop"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $targetRepo = Join-Path $repoRoot "work/external/escape-html"
-$graphSourcePath = "examples/retrofit/open-source/escape-html/graph-source.json"
-$recordPath = "examples/retrofit/open-source/escape-html/records/symbol-stringification.implemented.json"
+$graphSourcePath = "examples/internal-legacy/retrofit/open-source/escape-html/graph-source.json"
+$recordPath = "examples/internal-legacy/retrofit/open-source/escape-html/records/symbol-stringification.implemented.json"
 $instructionPackPath = "outputs/retrofit/open-source/escape-html/instruction-packs/symbol-stringification.instruction-pack.json"
 $graphDeltaPath = "outputs/retrofit/open-source/escape-html/graph-deltas/symbol-stringification.graph-delta.json"
 $graphProposalPath = "outputs/retrofit/open-source/escape-html/graph-update-proposals/symbol-stringification.graph-update-proposal.json"

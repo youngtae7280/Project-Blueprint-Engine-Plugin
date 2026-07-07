@@ -24,9 +24,9 @@ describe('Project Memory impact report CLI', () => {
         'read-model',
         'report-project-memory-impact',
         '--project-memory',
-        'examples/retrofit/windowsutility/devview-project-memory.preview.json',
+        'examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json',
         '--direction-change',
-        'examples/retrofit/windowsutility/project-direction-change.behavior-preserving-refactor.preview.json',
+        'examples/internal-legacy/retrofit/windowsutility/project-direction-change.behavior-preserving-refactor.preview.json',
         '--output',
         output,
         '--markdown',
@@ -65,7 +65,10 @@ describe('Project Memory impact report CLI', () => {
   it('blocks unsafe output before writing partial reports', async () => {
     const workspace = createWorkspace()
     copyWindowsUtilityFixture(workspace)
-    const projectMemoryPath = join(workspace, 'examples/retrofit/windowsutility/devview-project-memory.preview.json')
+    const projectMemoryPath = join(
+      workspace,
+      'examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json',
+    )
     const before = readFileSync(projectMemoryPath, 'utf8')
 
     const result = await runPbeCli(
@@ -74,11 +77,11 @@ describe('Project Memory impact report CLI', () => {
         'read-model',
         'report-project-memory-impact',
         '--project-memory',
-        'examples/retrofit/windowsutility/devview-project-memory.preview.json',
+        'examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json',
         '--direction-change',
-        'examples/retrofit/windowsutility/project-direction-change.behavior-preserving-refactor.preview.json',
+        'examples/internal-legacy/retrofit/windowsutility/project-direction-change.behavior-preserving-refactor.preview.json',
         '--output',
-        'examples/retrofit/windowsutility/devview-project-memory.preview.json',
+        'examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json',
         '--markdown',
         '.tmp/should-not-exist.md',
         '--json',
@@ -96,7 +99,11 @@ describe('Project Memory impact report CLI', () => {
 })
 
 function copyWindowsUtilityFixture(workspace: string): void {
-  cpSync(join(pluginRoot, 'examples/retrofit/windowsutility'), join(workspace, 'examples/retrofit/windowsutility'), {
-    recursive: true,
-  })
+  cpSync(
+    join(pluginRoot, 'examples/internal-legacy/retrofit/windowsutility'),
+    join(workspace, 'examples/internal-legacy/retrofit/windowsutility'),
+    {
+      recursive: true,
+    },
+  )
 }

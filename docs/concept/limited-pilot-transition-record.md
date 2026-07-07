@@ -27,7 +27,7 @@ parity artifact remains read/alignment Evidence for this record.
 | Approval source | parent orchestration chat                                    |
 | Approval date   | 2026-06-25                                                   |
 | Approved option | `Approve limited pilot promotion decision`                   |
-| Approved scope  | `examples/adoption/todo-search-slice` only                   |
+| Approved scope  | `examples/internal-legacy/adoption/todo-search-slice` only   |
 | Non-approval    | Not full Graph-source promotion or broad source change       |
 | Record effect   | Scoped pilot transition record may be prepared and reviewed. |
 
@@ -36,7 +36,7 @@ parity artifact remains read/alignment Evidence for this record.
 ### Primary Pilot Scope
 
 ```text
-examples/adoption/todo-search-slice
+examples/internal-legacy/adoption/todo-search-slice
 ```
 
 The primary scope includes the `Todo Search Adoption + Product Meaning Feedback` selected slice:
@@ -52,7 +52,7 @@ The primary scope includes the `Todo Search Adoption + Product Meaning Feedback`
 ### Supplemental Evidence Only
 
 ```text
-examples/adoption/compatibility-mismatch-slice
+examples/internal-legacy/adoption/compatibility-mismatch-slice
 ```
 
 The compatibility mismatch slice remains supporting Evidence for the compatibility path. It is not pilot source scope
@@ -89,17 +89,17 @@ reviewed, must preserve fallback/reference boundaries, and must not be inferred 
 The user approval accepts the following observable Evidence as sufficient for preparing the scoped limited pilot
 transition record, with retained warnings:
 
-| Evidence area                          | Artifact / record                                                                                                                                                                                                                 | Status for this record     |
-| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
-| Actual runtime feasibility demo result | [actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md)                                                                                                                                            | accepted for pilot context |
-| Strengthened selected-slice artifacts  | `examples/adoption/todo-search-slice/product-tree.json`, `project-tree.json`, `work-tree.json`, `test-tree.json`, `evidence-tree.json`, `acceptance-tree.json`, `change-tree.json`, `impact-tree.json`, contracts, Approval Brief | accepted for pilot context |
-| PP-001 confirmation                    | `examples/adoption/todo-search-slice/product-patch-tree.json`, `change-tree.json`                                                                                                                                                 | accepted for pilot context |
-| Runtime fixture Evidence               | `examples/adoption/todo-search-slice/runtime-evidence.md`, `runtime-fixture/todo-search.js`, `runtime-fixture/todo-search.test.js`                                                                                                | present / fresh            |
-| Renewed Acceptance with warnings       | `examples/adoption/todo-search-slice/acceptance-tree.json`, `approval-brief.md`                                                                                                                                                   | accepted with warnings     |
-| Node/Edge/Tag read-model parity        | `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`, `maintainability-graph-read-model.md`, `parity-check.md`                                                                                             | accepted for pilot context |
-| View Instance Manifest                 | `examples/adoption/todo-search-slice/view-instance-manifest.json`, `view-instance-manifest.md`                                                                                                                                    | accepted for pilot context |
-| Compatibility mismatch supplemental    | `examples/adoption/compatibility-mismatch-slice/*`                                                                                                                                                                                | supporting Evidence only   |
-| Limited pilot decision package         | [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md)                                                                                                                                        | approved option recorded   |
+| Evidence area                          | Artifact / record                                                                                                                                                                                                                                 | Status for this record     |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| Actual runtime feasibility demo result | [actual-runtime-feasibility-demo-result.md](actual-runtime-feasibility-demo-result.md)                                                                                                                                                            | accepted for pilot context |
+| Strengthened selected-slice artifacts  | `examples/internal-legacy/adoption/todo-search-slice/product-tree.json`, `project-tree.json`, `work-tree.json`, `test-tree.json`, `evidence-tree.json`, `acceptance-tree.json`, `change-tree.json`, `impact-tree.json`, contracts, Approval Brief | accepted for pilot context |
+| PP-001 confirmation                    | `examples/internal-legacy/adoption/todo-search-slice/product-patch-tree.json`, `change-tree.json`                                                                                                                                                 | accepted for pilot context |
+| Runtime fixture Evidence               | `examples/internal-legacy/adoption/todo-search-slice/runtime-evidence.md`, `runtime-fixture/todo-search.js`, `runtime-fixture/todo-search.test.js`                                                                                                | present / fresh            |
+| Renewed Acceptance with warnings       | `examples/internal-legacy/adoption/todo-search-slice/acceptance-tree.json`, `approval-brief.md`                                                                                                                                                   | accepted with warnings     |
+| Node/Edge/Tag read-model parity        | `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json`, `maintainability-graph-read-model.md`, `parity-check.md`                                                                                             | accepted for pilot context |
+| View Instance Manifest                 | `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.json`, `view-instance-manifest.md`                                                                                                                                    | accepted for pilot context |
+| Compatibility mismatch supplemental    | `examples/internal-legacy/adoption/compatibility-mismatch-slice/*`                                                                                                                                                                                | supporting Evidence only   |
+| Limited pilot decision package         | [limited-pilot-promotion-decision-package.md](limited-pilot-promotion-decision-package.md)                                                                                                                                                        | approved option recorded   |
 
 AI self-report is not Evidence for this record.
 

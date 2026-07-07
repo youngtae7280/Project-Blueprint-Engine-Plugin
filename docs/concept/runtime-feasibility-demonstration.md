@@ -216,7 +216,7 @@ Manifest were refreshed for limited pilot review. The user later approved the bo
 Search selected slice; full promotion and broad source authority change remain separate.
 
 The representative slice now includes manual equivalent read-model parity artifacts in
-`examples/adoption/todo-search-slice/`. Those artifacts resolve the read-model output blocker for limited pilot promotion
+`examples/internal-legacy/adoption/todo-search-slice/`. Those artifacts resolve the read-model output blocker for limited pilot promotion
 decision preparation, while generated builder / CLI-backed output remains a later question for full promotion or
 repeatability.
 

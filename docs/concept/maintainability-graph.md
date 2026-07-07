@@ -178,7 +178,7 @@ user-approved preparation package for a possible scoped source-authority pilot. 
 CLI-backed read-model output before authority-bearing execution and keeps current source authority unchanged.
 
 [scoped-source-authority-pilot-execution-record.md](scoped-source-authority-pilot-execution-record.md) records the later
-user-approved bounded execution for `examples/adoption/todo-search-slice` only. In that scoped pilot, generated
+user-approved bounded execution for `examples/internal-legacy/adoption/todo-search-slice` only. In that scoped pilot, generated
 read-model Evidence is accepted as the bounded pilot interpretation record for Node/Edge/Tag interpretation and 7 Core
 View traversal, while tree-native selected-slice artifacts remain fallback/reference. This is not full Maintainability
 Graph promotion and does not make the graph the repository-wide source model.
@@ -217,11 +217,11 @@ Evidence only; it does not change source authority.
 
 The representative slice now includes manual equivalent read-model parity artifacts:
 
-- `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
-- `examples/adoption/todo-search-slice/maintainability-graph-read-model.md`
-- `examples/adoption/todo-search-slice/parity-check.md`
-- `examples/adoption/todo-search-slice/view-instance-manifest.json`
-- `examples/adoption/todo-search-slice/view-instance-manifest.md`
+- `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json`
+- `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.md`
+- `examples/internal-legacy/adoption/todo-search-slice/parity-check.md`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.json`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.md`
 
 These artifacts now separate durable Node kinds, durable Edge types, and view-scoped Tags for the 7 Core Views. They
 resolve the Graph-first parity refresh blocker for limited pilot review only. They do not implement a generated graph

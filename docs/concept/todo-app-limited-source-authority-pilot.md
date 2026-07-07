@@ -86,7 +86,7 @@ After the first graph-native execution contract report surface was added, the re
 and Todo App slices with:
 
 ```text
-node dist/cli/index.js graph execution-contract report --slice examples/adoption/todo-search-slice --json
+node dist/cli/index.js graph execution-contract report --slice examples/internal-legacy/adoption/todo-search-slice --json
 node dist/cli/index.js graph execution-contract report --slice examples/valid/todo-app-pbe-run --json
 ```
 

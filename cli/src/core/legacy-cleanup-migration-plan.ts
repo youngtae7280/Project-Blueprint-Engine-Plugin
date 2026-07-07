@@ -191,9 +191,10 @@ function buildOperations(root: string, files: TextFile[]): LegacyCleanupOperatio
 
   addIfRelevant(operations, buildTodoFixtureRename(root, files))
   addIfRelevant(operations, buildRewriteOperation(root, files, 'examples/README.md'))
-  addIfRelevant(operations, buildRewriteOperation(root, files, 'examples/read-model-aggregate'))
+  addIfRelevant(operations, buildRewriteOperation(root, files, 'examples/internal-legacy/read-model-aggregate'))
   addIfRelevant(operations, buildRewriteOperation(root, files, 'examples/valid/todo-app-pbe-run/generated'))
   addIfRelevant(operations, buildPbeStorageCompatibilityOperation(root, files))
+  addIfRelevant(operations, buildInternalLegacyBoundaryOperation(root, files))
 
   for (const group of ['adoption', 'dogfooding', 'native', 'retrofit', 'intent-critical']) {
     addIfRelevant(operations, buildExampleGroupOperation(root, files, `examples/${group}`))
@@ -287,6 +288,32 @@ function buildPbeStorageCompatibilityOperation(
     collisionStatus: 'not-applicable',
     rationale:
       'Storage paths are currently part of validators, sourceArtifact provenance, output guards, and migration fixtures.',
+  }
+}
+
+function buildInternalLegacyBoundaryOperation(
+  root: string,
+  files: TextFile[],
+): Omit<LegacyCleanupOperation, 'operationId'> | null {
+  const sourcePath = 'examples/internal-legacy'
+  if (!existsSync(join(root, sourcePath))) return null
+  const internalFiles = files.filter((file) => file.relativePath.startsWith(`${sourcePath}/`))
+  if (internalFiles.length === 0) return null
+  const legacyCount = internalFiles.reduce((count, file) => count + countLegacyMatches(file.text), 0)
+  const refs = findReferences(files, sourcePath, { excludePrefix: `${sourcePath}/` })
+  return {
+    operationKind: 'keep-internal-hidden-compatibility',
+    sourcePath,
+    recommendedAction:
+      'Keep historical example groups behind the internal boundary until selected migration fixtures are renamed, rewritten, or deleted by reviewed follow-up slices.',
+    classification: 'internal-hidden-compatibility',
+    riskLevel: 'high',
+    dependencyRefs: refs.slice(0, MAX_REFS),
+    dependencyRefCount: refs.length,
+    blockingRefs: refs.slice(0, MAX_REFS),
+    blockingRefCount: refs.length,
+    collisionStatus: 'not-applicable',
+    rationale: `Internal boundary contains ${internalFiles.length} text files with ${legacyCount} remaining legacy references for migration audit coverage.`,
   }
 }
 
@@ -482,7 +509,7 @@ function buildScopeLimitations(scope: LegacyCleanupScope): string[] {
 function buildGrepAcceptanceCriteria(): string[] {
   return [
     'rg -n "PBE|Project Blueprint Engine|\\bpbe\\b|\\.pbe" README.md docs docs/index.md docs/cli-reference.md => zero public-doc matches.',
-    'git grep -n -E "PBE|Project Blueprint Engine|\\bpbe\\b|\\.pbe" -- examples ":!examples/internal-legacy/**" => zero public examples matches after migration slices.',
+    'git grep -n -E "PBE|Project Blueprint Engine|\\bpbe\\b|\\.pbe" -- examples ":!examples/internal-legacy/**" ":!examples/valid/todo-app-pbe-run/**" => zero public examples matches before the canonical fixture path migration slice.',
     'rg -n "\\bpbe\\b|PBE_|Project Blueprint Engine|validate:pbe" package.json package-lock.json .github cli scripts => hidden compatibility allowlist only.',
     'rg -n "\\.pbe" cli/src scripts examples docs => storage migration resolver, output guards, or internal migration fixtures only.',
   ]

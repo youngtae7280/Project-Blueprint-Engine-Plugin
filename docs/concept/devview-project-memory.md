@@ -26,7 +26,7 @@ examples/valid/todo-app-pbe-run/generated/devview-project-direction-change-bound
 The first WindowsUtility retrofit memory preview is:
 
 ```text
-examples/retrofit/windowsutility/devview-project-memory.preview.json
+examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json
 ```
 
 These artifacts are preview-only. They do not approve a profile, apply taxonomy extensions, change traversal behavior,
@@ -108,7 +108,7 @@ mutate graph-source, change traversal, or authorize contracts.
 The WindowsUtility calibration report is:
 
 ```text
-examples/retrofit/windowsutility/project-memory-extension-gaps.preview.json
+examples/internal-legacy/retrofit/windowsutility/project-memory-extension-gaps.preview.json
 ```
 
 ## Impact Report
@@ -125,6 +125,6 @@ impact before any future revision can be reviewed. It does not approve or apply 
 The WindowsUtility behavior-preserving refactor candidate and impact report are:
 
 ```text
-examples/retrofit/windowsutility/project-direction-change.behavior-preserving-refactor.preview.json
-examples/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.json
+examples/internal-legacy/retrofit/windowsutility/project-direction-change.behavior-preserving-refactor.preview.json
+examples/internal-legacy/retrofit/windowsutility/project-memory-impact.behavior-preserving-refactor.preview.json
 ```

@@ -57,10 +57,10 @@
     "subgraphClick": "highlight selected task subgraph and show task type, start node, selected node/edge chips, required viewpoint tree breakdown, allowed files, forbidden flows, and verification requirements"
   },
   "demoCalibration": {
-    "graphSource": "examples/retrofit/windowsutility/graph-source.json",
+    "graphSource": "examples/internal-legacy/retrofit/windowsutility/graph-source.json",
     "record": "change.laminator-tag-layout",
     "instructionPack": "outputs/retrofit/instruction-packs/windowsutility-laminator-tag-layout.instruction-pack.json",
-    "projectMemory": "examples/retrofit/windowsutility/devview-project-memory.preview.json",
+    "projectMemory": "examples/internal-legacy/retrofit/windowsutility/devview-project-memory.preview.json",
     "htmlOutput": "outputs/devview-graph/windowsutility.devviewgraph.html",
     "dataOutput": "outputs/devview-graph/windowsutility.devviewgraph.data.json",
     "portfolioGraphMustInclude": [

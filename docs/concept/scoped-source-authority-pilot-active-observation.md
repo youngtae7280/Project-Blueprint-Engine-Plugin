@@ -19,13 +19,13 @@ keep-active-with-retained-warnings
 The pilot remains active only for:
 
 ```text
-examples/adoption/todo-search-slice
+examples/internal-legacy/adoption/todo-search-slice
 ```
 
 The supplemental compatibility mismatch slice remains warning Evidence only:
 
 ```text
-examples/adoption/compatibility-mismatch-slice
+examples/internal-legacy/adoption/compatibility-mismatch-slice
 ```
 
 ## Observation Scope
@@ -51,15 +51,15 @@ examples/adoption/compatibility-mismatch-slice
 
 ## Observed Authority Record
 
-| Role                                          | Artifact                                                                                  |
-| --------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| Generated bounded pilot interpretation record | `examples/adoption/todo-search-slice/generated/generated-read-model.json`                 |
-| Pilot marker                                  | `examples/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json` |
-| Required parity report                        | `examples/adoption/todo-search-slice/generated/read-model-parity-report.json`             |
-| Validator-backed Evidence report              | `examples/adoption/todo-search-slice/generated/read-model-validation-report.json`         |
-| Evidence manifest                             | `examples/adoption/todo-search-slice/generated/read-model-evidence-manifest.json`         |
-| Todo Search read-model profile                | `cli/src/core/read-model-evidence.ts`                                                     |
-| Review record                                 | `docs/concept/scoped-source-authority-pilot-review.md`                                    |
+| Role                                          | Artifact                                                                                                  |
+| --------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Generated bounded pilot interpretation record | `examples/internal-legacy/adoption/todo-search-slice/generated/generated-read-model.json`                 |
+| Pilot marker                                  | `examples/internal-legacy/adoption/todo-search-slice/generated/scoped-source-authority-pilot-marker.json` |
+| Required parity report                        | `examples/internal-legacy/adoption/todo-search-slice/generated/read-model-parity-report.json`             |
+| Validator-backed Evidence report              | `examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validation-report.json`         |
+| Evidence manifest                             | `examples/internal-legacy/adoption/todo-search-slice/generated/read-model-evidence-manifest.json`         |
+| Todo Search read-model profile                | `cli/src/core/read-model-evidence.ts`                                                                     |
+| Review record                                 | `docs/concept/scoped-source-authority-pilot-review.md`                                                    |
 
 The Todo Search read-model profile is an implementation structure for the bounded builder/validator path. It preserves
 the active observation boundary and does not add a second slice, aggregation, CI enforcement, or broader source
@@ -69,16 +69,16 @@ authority.
 
 Tree-native selected-slice artifacts remain preserved and usable as fallback/reference:
 
-- `examples/adoption/todo-search-slice/product-tree.json`
-- `examples/adoption/todo-search-slice/project-tree.json`
-- `examples/adoption/todo-search-slice/work-tree.json`
-- `examples/adoption/todo-search-slice/test-tree.json`
-- `examples/adoption/todo-search-slice/evidence-tree.json`
-- `examples/adoption/todo-search-slice/acceptance-tree.json`
-- `examples/adoption/todo-search-slice/change-tree.json`
-- `examples/adoption/todo-search-slice/impact-tree.json`
-- `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
-- `examples/adoption/todo-search-slice/view-instance-manifest.json`
+- `examples/internal-legacy/adoption/todo-search-slice/product-tree.json`
+- `examples/internal-legacy/adoption/todo-search-slice/project-tree.json`
+- `examples/internal-legacy/adoption/todo-search-slice/work-tree.json`
+- `examples/internal-legacy/adoption/todo-search-slice/test-tree.json`
+- `examples/internal-legacy/adoption/todo-search-slice/evidence-tree.json`
+- `examples/internal-legacy/adoption/todo-search-slice/acceptance-tree.json`
+- `examples/internal-legacy/adoption/todo-search-slice/change-tree.json`
+- `examples/internal-legacy/adoption/todo-search-slice/impact-tree.json`
+- `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.json`
 
 ## Retained Warnings
 
@@ -93,21 +93,21 @@ Tree-native selected-slice artifacts remain preserved and usable as fallback/ref
 
 Run or review these checks whenever the pilot is observed again:
 
-| Check                                    | Expected state                                            |
-| ---------------------------------------- | --------------------------------------------------------- |
-| Generated/manual parity                  | `comparison-pass`                                         |
-| Mismatch count                           | 0                                                         |
-| Blocking count                           | 0                                                         |
-| Decision-required count                  | 0                                                         |
-| Validator-backed Evidence status         | `validation-pass`                                         |
-| Generated interpretation boundary        | bounded to `examples/adoption/todo-search-slice`          |
-| Tree-native fallback/reference artifacts | present and usable                                        |
-| Retained warnings                        | visible in marker, review records, and concept docs       |
-| User acceptance authority                | remains user-controlled                                   |
-| Compatibility mismatch slice             | warning-only, not pilot source scope                      |
-| Public-doc cleanup                       | not performed silently                                    |
-| CI enforcement                           | not introduced silently                                   |
-| Broader promotion                        | not implied by marker, read-model, parity report, or docs |
+| Check                                    | Expected state                                                   |
+| ---------------------------------------- | ---------------------------------------------------------------- |
+| Generated/manual parity                  | `comparison-pass`                                                |
+| Mismatch count                           | 0                                                                |
+| Blocking count                           | 0                                                                |
+| Decision-required count                  | 0                                                                |
+| Validator-backed Evidence status         | `validation-pass`                                                |
+| Generated interpretation boundary        | bounded to `examples/internal-legacy/adoption/todo-search-slice` |
+| Tree-native fallback/reference artifacts | present and usable                                               |
+| Retained warnings                        | visible in marker, review records, and concept docs              |
+| User acceptance authority                | remains user-controlled                                          |
+| Compatibility mismatch slice             | warning-only, not pilot source scope                             |
+| Public-doc cleanup                       | not performed silently                                           |
+| CI enforcement                           | not introduced silently                                          |
+| Broader promotion                        | not implied by marker, read-model, parity report, or docs        |
 
 ## Triggers For Re-Review
 
@@ -194,7 +194,7 @@ user wants PR integration, broader use, enforcement, cleanup, promotion review, 
 
 Multi-slice follow-up status: `examples/valid/todo-app-pbe-run` now has structure-only generated/validation Evidence.
 That fixture does not expand this active Todo Search pilot, does not create a second pilot marker, and does not add
-CI-backed Evidence or source-authority claims outside `examples/adoption/todo-search-slice`. The validation reports for
+CI-backed Evidence or source-authority claims outside `examples/internal-legacy/adoption/todo-search-slice`. The validation reports for
 both slices now carry per-slice independence metadata, preserving the Todo Search active-observation boundary before any
 future aggregation.
 

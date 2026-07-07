@@ -55,7 +55,7 @@ It is not:
 - tree-native artifact retirement.
 
 The current machine-readable transition status remains
-`examples/read-model-aggregate/graph-source-transition-status.json.enforcementReadiness.status`:
+`examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json.enforcementReadiness.status`:
 
 ```text
 candidate-b-repo-side-check-surface-present

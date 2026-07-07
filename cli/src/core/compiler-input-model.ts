@@ -29,8 +29,8 @@ export interface CompilerInputModelReport {
   compilerInputBoundary: string
 }
 
-const inputSchemaPath = 'examples/read-model-aggregate/compiler-input-model-schema.json'
-const dryRunInputPath = 'examples/read-model-aggregate/generated/compiler-input-model-dry-run.json'
+const inputSchemaPath = 'examples/internal-legacy/read-model-aggregate/compiler-input-model-schema.json'
+const dryRunInputPath = 'examples/internal-legacy/read-model-aggregate/generated/compiler-input-model-dry-run.json'
 
 const requiredInputGroups = [
   'humanRequest',

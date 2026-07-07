@@ -137,7 +137,7 @@ change source authority.
 
 The repo-wide transition mechanics status is recorded in
 [repo-wide-graph-source-transition-mechanics.md](repo-wide-graph-source-transition-mechanics.md) and
-`examples/read-model-aggregate/graph-source-transition-status.json`. That artifact records Graph-source as confirmed for
+`examples/internal-legacy/read-model-aggregate/graph-source-transition-status.json`. That artifact records Graph-source as confirmed for
 the configured read-model slices while preserving tree-native compatibility/fallback/reference roles, no tree
 retirement, no required checks, no CI enforcement, no invalid-fixture CI, and no Todo App promotion beyond
 `structure-only`. It now also records tree-native retirement readiness criteria and current per-slice readiness:
@@ -351,7 +351,7 @@ Those outputs support readiness review only; they do not execute or approve scop
 
 [scoped-source-authority-pilot-execution-record.md](scoped-source-authority-pilot-execution-record.md) records the
 later user-approved Todo Search scoped source-authority pilot execution. It is bounded to
-`examples/adoption/todo-search-slice`, keeps tree-native selected-slice artifacts as fallback/reference, and does not
+`examples/internal-legacy/adoption/todo-search-slice`, keeps tree-native selected-slice artifacts as fallback/reference, and does not
 promote Maintainability Graph as the repository-wide source model.
 
 [scoped-source-authority-pilot-review.md](scoped-source-authority-pilot-review.md) records the first review-only
@@ -385,11 +385,11 @@ records progressively without requiring complete upfront graph reconstruction.
 
 Manual equivalent read-model parity artifacts are now recorded for the representative slice:
 
-- `examples/adoption/todo-search-slice/maintainability-graph-read-model.json`
-- `examples/adoption/todo-search-slice/maintainability-graph-read-model.md`
-- `examples/adoption/todo-search-slice/parity-check.md`
-- `examples/adoption/todo-search-slice/view-instance-manifest.json`
-- `examples/adoption/todo-search-slice/view-instance-manifest.md`
+- `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.json`
+- `examples/internal-legacy/adoption/todo-search-slice/maintainability-graph-read-model.md`
+- `examples/internal-legacy/adoption/todo-search-slice/parity-check.md`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.json`
+- `examples/internal-legacy/adoption/todo-search-slice/view-instance-manifest.md`
 
 After the Node/Edge/Tag refresh, the artifacts show durable node kinds, durable edge types, view-scoped tags,
 confidence/freshness separation, and 7 Core View coverage. Generated builder/CLI-backed output, scoped

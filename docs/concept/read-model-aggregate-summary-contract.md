@@ -17,28 +17,28 @@ then reuses this aggregate summary behavior. The standalone `summarize --slices 
 ## Implemented Command
 
 ```text
-pbe graph read-model summarize --slices examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run
+pbe graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run
 ```
 
 The command reads only:
 
-- `examples/adoption/todo-search-slice/generated/read-model-validation-report.json`
+- `examples/internal-legacy/adoption/todo-search-slice/generated/read-model-validation-report.json`
 - `examples/valid/todo-app-pbe-run/generated/read-model-validation-report.json`
 
 The command writes:
 
-- `examples/read-model-aggregate/generated/read-model-aggregate-summary.json`
-- `examples/read-model-aggregate/generated/read-model-aggregate-summary.md`
+- `examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.json`
+- `examples/internal-legacy/read-model-aggregate/generated/read-model-aggregate-summary.md`
 
 The output directory is outside either slice because the aggregate summary is a cross-slice Evidence summary, not a
 slice-owned source artifact.
 
 ## Included Slices
 
-| Slice                                 | Profile id                        | Policy level          | Source layout       | Current validation |
-| ------------------------------------- | --------------------------------- | --------------------- | ------------------- | ------------------ |
-| `examples/adoption/todo-search-slice` | `todo-search-selected-slice`      | `pilot-marker-backed` | `flat-demo-support` | `validation-pass`  |
-| `examples/valid/todo-app-pbe-run`     | `todo-app-pbe-run-structure-only` | `structure-only`      | `canonical-pbe`     | `validation-pass`  |
+| Slice                                                 | Profile id                        | Policy level          | Source layout       | Current validation |
+| ----------------------------------------------------- | --------------------------------- | --------------------- | ------------------- | ------------------ |
+| `examples/internal-legacy/adoption/todo-search-slice` | `todo-search-selected-slice`      | `pilot-marker-backed` | `flat-demo-support` | `validation-pass`  |
+| `examples/valid/todo-app-pbe-run`                     | `todo-app-pbe-run-structure-only` | `structure-only`      | `canonical-pbe`     | `validation-pass`  |
 
 Todo Search remains the only active scoped source-authority pilot. Todo App PBE Run remains structure-only and is not
 parity-backed, pilot-marker-backed, or authority-bearing, even when included in the reviewed aggregate-enabled CI
@@ -117,7 +117,7 @@ The manual `PBE Read-Model Evidence` workflow now runs the aggregate summarize c
 the Todo Search and Todo App PBE Run per-slice reports:
 
 ```text
-node dist/cli/index.js graph read-model summarize --slices examples/adoption/todo-search-slice,examples/valid/todo-app-pbe-run --json
+node dist/cli/index.js graph read-model summarize --slices examples/internal-legacy/adoption/todo-search-slice,examples/valid/todo-app-pbe-run --json
 ```
 
 The workflow is still non-enforcing manual/PR informational Evidence. Running aggregate summarize in CI does not turn
@@ -156,7 +156,7 @@ Recommended next work remains bounded:
    future `validate --all` implementation decision
 5. use [read-model-slice-registry-test-strategy.md](read-model-slice-registry-test-strategy.md) before implementing
    parser/planner tests against the candidate registry fixture
-6. use `examples/read-model-aggregate/read-model-slices.json` only as reviewable metadata until parser consumption is
+6. use `examples/internal-legacy/read-model-aggregate/read-model-slices.json` only as reviewable metadata until parser consumption is
    separately approved
 7. decide whether to strengthen Todo App PBE Run beyond structure-only
 8. keep source authority expansion and full promotion as separate explicit decisions

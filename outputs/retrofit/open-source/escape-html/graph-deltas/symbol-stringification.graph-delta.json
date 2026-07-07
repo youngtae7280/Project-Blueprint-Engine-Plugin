@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "artifactRole": "retrofit-graph-delta-v0",
   "status": "generated-from-target-diff",
-  "graphSourcePath": "examples/retrofit/open-source/escape-html/graph-source.json",
+  "graphSourcePath": "examples/internal-legacy/retrofit/open-source/escape-html/graph-source.json",
   "instructionPackPath": "outputs/retrofit/open-source/escape-html/instruction-packs/symbol-stringification.instruction-pack.json",
   "sourceRecordId": "change.escape-html-symbol-stringification",
   "targetRepoPath": "work/external/escape-html",
