@@ -125,6 +125,8 @@ Commands:
                        Validate a wrapped preexisting SBOM artifact without generating SBOMs or attestations
   security record-package-provenance-inputs
                        Record package/source/build input facts without creating package artifacts or attestations
+  security record-package-artifact-digest
+                       Record a preexisting package artifact digest without running npm pack, signing, or attesting
   security validate-rbac-policy
                        Validate declarative RBAC role assignment policy without enforcing RBAC
   security report-rbac-readiness
@@ -444,12 +446,16 @@ Options:
   --release-provenance-readiness <file>
                        Release provenance/SBOM readiness report for security report-enterprise-readiness; repeat or comma-separate for multiples.
   --sbom <file>        Wrapped static SBOM source fact for security validate-sbom-artifact.
+  --package-artifact <file>
+                       Preexisting package artifact for security record-package-artifact-digest; bytes are hashed only.
+  --expected-sha256 <sha256>
+                       Optional expected package artifact sha256 for security record-package-artifact-digest.
   --package-json <file>
                        Package metadata source for security validate-sbom-artifact or record-package-provenance-inputs; defaults to the plugin package.json.
   --sbom-validation <file>
                        SBOM validation report for security report-enterprise-readiness or record-package-provenance-inputs; repeat or comma-separate for multiples.
   --package-provenance-inputs <file>
-                       Package provenance inputs record for security report-enterprise-readiness; repeat or comma-separate for multiples.
+                       Package provenance inputs record for security report-enterprise-readiness or record-package-artifact-digest; repeat or comma-separate for multiples where supported.
   --source-ref <value>
                        Explicit source ref label for security record-package-provenance-inputs; metadata only, not verified.
   --build-command <value>

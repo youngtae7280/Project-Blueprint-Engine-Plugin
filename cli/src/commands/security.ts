@@ -10,6 +10,10 @@ import {
   PackageProvenanceInputsRecordValidationError,
   recordPackageProvenanceInputs,
 } from '../core/package-provenance-inputs-record.js'
+import {
+  PackageArtifactDigestRecordValidationError,
+  recordPackageArtifactDigest,
+} from '../core/package-artifact-digest-record.js'
 import { RbacPolicyValidationError, validateRbacPolicy } from '../core/rbac-policy-validation.js'
 import { RbacReadinessReportValidationError, reportRbacReadiness } from '../core/rbac-readiness-report.js'
 import { RecordEnvelopePreviewValidationError, previewRecordEnvelope } from '../core/record-envelope-preview.js'
@@ -346,6 +350,70 @@ export async function securityRecordPackageProvenanceInputsCommand(context: Comm
           message,
           suggestedFix:
             'Provide --output and write package provenance input outputs outside source/control artifacts and source inputs.',
+        }),
+      ],
+    }
+  }
+}
+
+export async function securityRecordPackageArtifactDigestCommand(context: CommandContext): Promise<CommandResult> {
+  try {
+    const report = await recordPackageArtifactDigest(context.options.root, {
+      packageArtifact: context.options.packageArtifact,
+      expectedSha256: context.options.expectedSha256,
+      packageProvenanceInputs: context.options.packageProvenanceInputs,
+      releaseSurfaceValidation: context.options.releaseSurfaceValidation,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+
+    return {
+      ok: true,
+      command: 'security record-package-artifact-digest',
+      exitCode: ExitCode.Success,
+      message: 'Package artifact digest recorded from a preexisting artifact without packing, signing, or attesting.',
+      issues: [],
+      data: { ...report },
+    }
+  } catch (error) {
+    if (error instanceof PackageArtifactDigestRecordValidationError) {
+      const report = error.report
+      const blockers = report.packageDigestRecordFindings.filter((finding) => finding.severity === 'blocker')
+      return {
+        ok: false,
+        command: 'security record-package-artifact-digest',
+        exitCode: ExitCode.ValidationFailed,
+        message: 'Package artifact digest recording is blocked before any output write.',
+        issues: blockers.map((finding) =>
+          issue({
+            validator: 'PackageArtifactDigest',
+            code: finding.code,
+            severity: 'error',
+            message: finding.message,
+            file: finding.path,
+            reason: finding.field ? `Field: ${finding.field}` : undefined,
+            suggestedFix:
+              'Provide a preexisting package artifact and exact report-only source facts with no package generation, signing, SBOM, provenance, provider/network, or lifecycle authority claims.',
+          }),
+        ),
+        data: { ...report },
+      }
+    }
+
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'security record-package-artifact-digest',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Package artifact digest recording could not run.',
+      issues: [
+        issue({
+          validator: 'PackageArtifactDigest',
+          code: 'PACKAGE_ARTIFACT_DIGEST_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide --package-artifact and --output and write package artifact digest outputs outside source/control artifacts and source inputs.',
         }),
       ],
     }

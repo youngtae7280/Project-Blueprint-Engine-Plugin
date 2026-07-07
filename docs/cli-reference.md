@@ -303,6 +303,27 @@ provenance attestations, create keys, enforce RBAC, call providers, make network
 and matching package identity, with package signing, SBOM generation/attestation, provenance attestation, key/RBAC,
 provider/network, graph/lifecycle, CI, hook, and approval authority flags false.
 
+### Package Artifact Digest Record
+
+```bash
+devview security record-package-artifact-digest \
+  --package-artifact <package.tgz> \
+  --expected-sha256 <sha256> \
+  --package-provenance-inputs <package-provenance-inputs.json> \
+  --release-surface-validation <release-surface-validation.json> \
+  --output <package-artifact-digest-record.json> \
+  --markdown <package-artifact-digest-record.md> \
+  --json
+```
+
+Records the byte digest of a preexisting package artifact as a report-only source fact for future provenance
+attestation. The command hashes only the explicit `--package-artifact` file and optionally verifies it against
+`--expected-sha256`; it does not run `npm pack`, create package tarballs, publish packages, sign packages, generate
+SBOMs, create provenance attestations, create keys, enforce RBAC, call providers, make network calls, or activate
+enterprise gates. Optional package provenance inputs and release-surface validation sources must use exact report-only
+artifact roles/statuses and keep package generation, publishing, signing, SBOM generation/attestation, provenance
+attestation, key/RBAC, provider/network, graph/lifecycle, CI, hook, and approval authority flags false.
+
 ### Provider/Network Default-Deny Policy
 
 ```bash

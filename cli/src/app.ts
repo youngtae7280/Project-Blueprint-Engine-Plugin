@@ -261,6 +261,8 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     releaseSurfaceValidation: undefined as string | undefined,
     providerNetworkPolicyReport: undefined as string | undefined,
     sbom: undefined as string | undefined,
+    packageArtifact: undefined as string | undefined,
+    expectedSha256: undefined as string | undefined,
     packageJson: undefined as string | undefined,
     sbomValidation: undefined as string | undefined,
     packageProvenanceInputs: undefined as string | undefined,
@@ -1416,6 +1418,20 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--sbom requires a file path.' }
       }
       options.sbom = value
+      index += 1
+    } else if (arg === '--package-artifact') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--package-artifact requires a file path.' }
+      }
+      options.packageArtifact = value
+      index += 1
+    } else if (arg === '--expected-sha256') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--expected-sha256 requires a sha256 digest.' }
+      }
+      options.expectedSha256 = value
       index += 1
     } else if (arg === '--package-json') {
       const value = argv[index + 1]
