@@ -156,6 +156,74 @@ describe('graph extract-code-subgraph CLI', () => {
     )
   })
 
+  it('extracts TypeScript AST declarations, NodeNext .js imports, re-exports, and imported calls', async () => {
+    const workspace = createWorkspace()
+    writeAstFixtureProject(workspace)
+
+    const result = await runDevViewCli(
+      [
+        'graph',
+        'extract-code-subgraph',
+        '--target-repo',
+        'target',
+        '--include',
+        'src/**/*.ts',
+        '--output',
+        '.tmp/ast-code-subgraph.json',
+        '--validation-output',
+        '.tmp/ast-validation.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+    const codeSubgraph = JSON.parse(readFileSync(join(workspace, '.tmp/ast-code-subgraph.json'), 'utf8'))
+    const nodes = codeSubgraph.nodes as Array<{ id: string; kind: string; label: string; sourceFile: string }>
+    const edges = codeSubgraph.edges as Array<{ from: string; to: string; kind: string }>
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.extractionMode).toBe('native-static-js-ts-ast')
+    expect(payload.astExtractorExecuted).toBe(false)
+    expect(payload.extractionSummary.interfaceNodeCount).toBeGreaterThanOrEqual(2)
+    expect(payload.extractionSummary.typeNodeCount).toBeGreaterThanOrEqual(3)
+    expect(payload.extractionSummary.methodNodeCount).toBeGreaterThanOrEqual(4)
+    expect(payload.extractionSummary.constructEdgeCount).toBeGreaterThanOrEqual(1)
+    expect(payload.extractionSummary.callLikeEdgeCount).toBeGreaterThanOrEqual(5)
+
+    for (const label of [
+      'readTextSafe',
+      'readJsonSafe',
+      'writeJsonAtomic',
+      'writeTextAtomic',
+      'ensureDir',
+      'resolveRoot',
+      'relativePath',
+      'findPluginRoot',
+    ]) {
+      expect(nodes).toContainEqual(expect.objectContaining({ label, sourceFile: 'src/fs-like.ts' }))
+    }
+    expect(nodes).toContainEqual(expect.objectContaining({ kind: 'interface', label: 'Reader' }))
+    expect(nodes).toContainEqual(expect.objectContaining({ kind: 'type', label: 'SafeResult' }))
+    expect(nodes).toContainEqual(expect.objectContaining({ kind: 'type', label: 'FileMode' }))
+    expect(nodes).toContainEqual(expect.objectContaining({ kind: 'class', label: 'Store' }))
+    expect(nodes).toContainEqual(expect.objectContaining({ kind: 'method', label: 'Store.constructor' }))
+    expect(nodes).toContainEqual(expect.objectContaining({ kind: 'method', label: 'Store.read' }))
+
+    const readJson = nodes.find((entry) => entry.label === 'readJsonSafe')
+    const writeText = nodes.find((entry) => entry.label === 'writeTextAtomic')
+    const store = nodes.find((entry) => entry.label === 'Store')
+    expect(edges).toContainEqual(expect.objectContaining({ kind: 're_exports' }))
+    expect(edges).toContainEqual(expect.objectContaining({ kind: 'calls', to: readJson?.id }))
+    expect(edges).toContainEqual(expect.objectContaining({ kind: 'calls', to: writeText?.id }))
+    expect(edges).toContainEqual(expect.objectContaining({ kind: 'constructs', to: store?.id }))
+    expect(
+      edges.some(
+        (entry) =>
+          entry.kind === 'imports' && nodes.find((node) => node.id === entry.to)?.sourceFile === 'src/re-export.ts',
+      ),
+    ).toBe(true)
+  })
+
   it('blocks output collisions, protected paths, included source overwrite, and source-authority-shaped outputs', async () => {
     const cases = [
       {
@@ -283,6 +351,95 @@ function writeFixtureProject(workspace: string): void {
     ['export function saveTodo(label: string) {', '  return label', '}', ''].join('\n'),
   )
   writeText(join(workspace, 'target/src/unused.ts'), 'export const unused = () => { return true }\n')
+}
+
+function writeAstFixtureProject(workspace: string): void {
+  writeText(
+    join(workspace, 'target/src/fs-like.ts'),
+    [
+      'export async function readTextSafe(filePath: string): Promise<string> {',
+      '  return filePath',
+      '}',
+      '',
+      'export async function readJsonSafe<T = unknown>(filePath: string): Promise<T> {',
+      '  return JSON.parse(await readTextSafe(filePath)) as T',
+      '}',
+      '',
+      'export function writeJsonAtomic(filePath: string, value: unknown): Promise<void> {',
+      '  return writeTextAtomic(filePath, JSON.stringify(value))',
+      '}',
+      '',
+      'export const writeTextAtomic = async (filePath: string, value: string): Promise<void> => {',
+      '  await Promise.resolve(`${filePath}:${value}`)',
+      '}',
+      '',
+      'export function ensureDir(dirPath: string): void {',
+      '  resolveRoot(dirPath)',
+      '}',
+      '',
+      'export const resolveRoot = (root: string): string => root',
+      '',
+      'export function relativePath(root: string, filePath: string): string {',
+      '  return `${root}/${filePath}`',
+      '}',
+      '',
+      'export function findPluginRoot(startUrl: string): string {',
+      '  return resolveRoot(startUrl)',
+      '}',
+      '',
+      'export interface Reader<T> {',
+      '  read(): Promise<T>',
+      '}',
+      '',
+      'export type SafeResult<T> = { ok: true; value: T } | { ok: false; error: string }',
+      '',
+      "export enum FileMode { Text = 'text' }",
+      '',
+      'export class Store implements Reader<string> {',
+      '  constructor(private readonly root: string) {}',
+      '',
+      '  get base(): string {',
+      '    return this.root',
+      '  }',
+      '',
+      '  set base(value: string) {',
+      '    this.write(value)',
+      '  }',
+      '',
+      '  write(value: string): string {',
+      '    return value.trim()',
+      '  }',
+      '',
+      '  async read(): Promise<string> {',
+      '    return readTextSafe(this.base)',
+      '  }',
+      '}',
+      '',
+    ].join('\n'),
+  )
+  writeText(
+    join(workspace, 'target/src/re-export.ts'),
+    ["export { readJsonSafe as loadJson, Store } from './fs-like.js'", "export * from './types.js'", ''].join('\n'),
+  )
+  writeText(
+    join(workspace, 'target/src/types.ts'),
+    ['export interface Port {', '  name: string', '}', '', 'export type PortMap = Record<string, Port>', ''].join('\n'),
+  )
+  writeText(
+    join(workspace, 'target/src/consumer.ts'),
+    [
+      "import { loadJson, Store } from './re-export.js'",
+      "import { readTextSafe, writeTextAtomic } from './fs-like.js'",
+      '',
+      'export const runConsumer = async (): Promise<void> => {',
+      "  const store = new Store('root')",
+      "  await loadJson<{ ok: true }>('config.json')",
+      '  await readTextSafe(store.base)',
+      "  await writeTextAtomic('x', 'y')",
+      '}',
+      '',
+    ].join('\n'),
+  )
 }
 
 function expectSafetyFalse(payload: Record<string, unknown>): void {

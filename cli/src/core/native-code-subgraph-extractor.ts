@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import { readdir, readFile } from 'node:fs/promises'
 import path from 'node:path'
+import * as ts from 'typescript'
 import { relativePath, writeJsonAtomic, writeTextAtomic } from './fs.js'
 import {
   hasCodexControlDirectory,
@@ -15,6 +16,10 @@ import {
 import { matchScopeCompliancePathPattern } from './scope-compliance-path-pattern.js'
 
 type JsonRecord = Record<string, unknown>
+type CodeNodeKind = 'file' | 'class' | 'interface' | 'type' | 'function' | 'method' | 'external_dependency'
+type SymbolNodeKind = Exclude<CodeNodeKind, 'file' | 'external_dependency'>
+type Confidence = 'extracted' | 'inferred' | 'ambiguous'
+type ImportBindingKind = 'default' | 'named' | 'namespace' | 'require'
 
 const REPORT_ROLE = 'devview-native-code-subgraph-extraction-report'
 const PASSED_STATUS = 'devview-native-code-subgraph-extraction-passed'
@@ -23,9 +28,11 @@ const REPORT_SCOPE = 'native-js-ts-code-subgraph-static-extraction-report-only'
 const CODE_SUBGRAPH_ROLE = 'devview-code-subgraph'
 const CODE_SUBGRAPH_STATUS = 'devview-code-subgraph-supplied'
 const CODE_SUBGRAPH_SCOPE = 'code-subgraph-source-fact-only'
-const EXTRACTOR_ID = 'native-static-js-ts-text-scan'
+const EXTRACTOR_ID = 'native-static-js-ts-ast'
 
 const supportedExtensions = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs'])
+const importLikeEdgeKinds = new Set(['imports', 'imports_from', 're_exports'])
+const callLikeEdgeKinds = new Set(['calls', 'constructs', 'references'])
 const skippedDirectories = new Set([
   '.git',
   '.devview',
@@ -40,25 +47,7 @@ const skippedDirectories = new Set([
 ])
 const maxFileBytes = 1_000_000
 const maxSupportedFiles = 1_000
-const callKeywordExclusions = new Set([
-  'if',
-  'for',
-  'while',
-  'switch',
-  'catch',
-  'function',
-  'return',
-  'typeof',
-  'new',
-  'super',
-  'import',
-  'require',
-  'describe',
-  'it',
-  'test',
-  'expect',
-])
-const methodKeywordExclusions = new Set(['if', 'for', 'while', 'switch', 'catch', 'function', 'constructor', 'return'])
+const maxAmbiguousNamesInFinding = 50
 
 export interface NativeCodeSubgraphExtractorOptions {
   targetRepo?: string
@@ -107,11 +96,17 @@ export interface NativeCodeSubgraphExtractionReport extends JsonRecord {
   extractionSummary: {
     fileNodeCount: number
     classNodeCount: number
+    interfaceNodeCount: number
+    typeNodeCount: number
     functionNodeCount: number
     methodNodeCount: number
     externalDependencyNodeCount: number
+    filesWithSymbolNodeCount: number
     importEdgeCount: number
     callEdgeCount: number
+    constructEdgeCount: number
+    referenceEdgeCount: number
+    callLikeEdgeCount: number
     containsEdgeCount: number
     unsupportedExtensions: Record<string, number>
     includePatterns: string[]
@@ -145,22 +140,57 @@ export interface NativeCodeSubgraphExtractionReport extends JsonRecord {
   writtenMarkdownPath?: string
 }
 
-interface SourceFile {
+interface SourceFileRecord {
   relativePath: string
   absolutePath: string
   content: string
   digest: string
   byteLength: number
-  lineStarts: number[]
+  ast: ts.SourceFile
 }
 
 interface SymbolRecord {
   id: string
   name: string
-  kind: 'class' | 'function' | 'method'
+  qualifiedName: string
+  kind: SymbolNodeKind
   sourceFile: string
-  bodyText: string
-  bodyStartIndex: number
+  declaration: ts.Node
+  parentClassId?: string
+}
+
+interface ImportBinding {
+  localName: string
+  importedName: string
+  specifier: string
+  targetFile: string | null
+  kind: ImportBindingKind
+  typeOnly: boolean
+}
+
+interface ReExportBinding {
+  exportedName: string
+  importedName: string
+  targetFile: string | null
+}
+
+interface FileIndex {
+  sourceFile: SourceFileRecord
+  fileNodeId: string
+  symbols: SymbolRecord[]
+  localSymbolsByName: Map<string, SymbolRecord[]>
+  exportedSymbolsByName: Map<string, SymbolRecord[]>
+  importedBindingsByLocalName: Map<string, ImportBinding[]>
+  namespaceImportsByLocalName: Map<string, ImportBinding[]>
+  reExportsByName: Map<string, ReExportBinding[]>
+  starReExportTargets: string[]
+  classMethodsByClassIdAndName: Map<string, SymbolRecord[]>
+  classSymbolsByName: Map<string, SymbolRecord[]>
+}
+
+interface ResolvedTarget {
+  id: string
+  confidence: Confidence
 }
 
 interface ExtractionState {
@@ -168,7 +198,10 @@ interface ExtractionState {
   nodes: JsonRecord[]
   edges: JsonRecord[]
   symbols: SymbolRecord[]
+  symbolsByName: Map<string, SymbolRecord[]>
+  symbolsByDeclaration: Map<ts.Node, SymbolRecord>
   fileNodesByRelativePath: Map<string, string>
+  fileIndexesByRelativePath: Map<string, FileIndex>
   externalNodeIdsBySpecifier: Map<string, string>
   seenNodeIds: Set<string>
   seenEdgeIds: Set<string>
@@ -287,7 +320,10 @@ async function extractCodeSubgraph(targetRepoPath: string, includePatterns: stri
     nodes: [],
     edges: [],
     symbols: [],
+    symbolsByName: new Map(),
+    symbolsByDeclaration: new Map(),
     fileNodesByRelativePath: new Map(),
+    fileIndexesByRelativePath: new Map(),
     externalNodeIdsBySpecifier: new Map(),
     seenNodeIds: new Set(),
     seenEdgeIds: new Set(),
@@ -343,7 +379,7 @@ async function extractCodeSubgraph(targetRepoPath: string, includePatterns: stri
     return state
   }
 
-  const sourceFiles: SourceFile[] = []
+  const sourceFiles: SourceFileRecord[] = []
   for (const absolutePath of supported.sort()) {
     const bytes = await readFile(absolutePath)
     if (bytes.byteLength > maxFileBytes) {
@@ -366,7 +402,7 @@ async function extractCodeSubgraph(targetRepoPath: string, includePatterns: stri
       content,
       digest: `sha256:${createHash('sha256').update(bytes).digest('hex')}`,
       byteLength: bytes.byteLength,
-      lineStarts: lineStarts(content),
+      ast: ts.createSourceFile(relative, content, ts.ScriptTarget.Latest, true, scriptKindForPath(relative)),
     })
     state.includedSourcePaths.push(absolutePath)
     state.scannedByteCount += bytes.byteLength
@@ -376,10 +412,22 @@ async function extractCodeSubgraph(targetRepoPath: string, includePatterns: stri
     addFileNode(state, sourceFile)
   }
   for (const sourceFile of sourceFiles) {
-    extractImports(state, targetRepoPath, sourceFile)
-    extractSymbols(state, sourceFile)
+    const fileNodeId = state.fileNodesByRelativePath.get(normalizePath(sourceFile.relativePath))
+    if (!fileNodeId) continue
+    state.fileIndexesByRelativePath.set(normalizePath(sourceFile.relativePath), createFileIndex(sourceFile, fileNodeId))
   }
-  addCallEdges(state)
+  for (const fileIndex of sortedFileIndexes(state)) {
+    extractImportsAndExports(state, targetRepoPath, fileIndex)
+  }
+  for (const fileIndex of sortedFileIndexes(state)) {
+    extractSymbols(state, fileIndex)
+  }
+  for (const fileIndex of sortedFileIndexes(state)) {
+    addHeritageEdges(state, fileIndex)
+  }
+  for (const fileIndex of sortedFileIndexes(state)) {
+    addCallLikeEdges(state, fileIndex)
+  }
 
   if (Object.keys(state.unsupportedExtensions).length > 0) {
     state.findings.push(
@@ -392,10 +440,13 @@ async function extractCodeSubgraph(targetRepoPath: string, includePatterns: stri
     )
   }
   if (state.ambiguousCallNames.size > 0) {
+    const names = [...state.ambiguousCallNames].sort()
+    const displayed = names.slice(0, maxAmbiguousNamesInFinding)
+    const suffix = names.length > displayed.length ? `, ... (${names.length - displayed.length} more)` : ''
     state.findings.push(
       warning(
         'NATIVE_CODE_SUBGRAPH_AMBIGUOUS_CALLS_SKIPPED',
-        `Skipped call edges for ambiguous callee names: ${[...state.ambiguousCallNames].sort().join(', ')}.`,
+        `Skipped exact call/reference edges for ambiguous symbol names: ${displayed.join(', ')}${suffix}.`,
         'calls',
         targetRepoPath,
       ),
@@ -410,6 +461,28 @@ async function extractCodeSubgraph(targetRepoPath: string, includePatterns: stri
     })
   }
   return state
+}
+
+function createFileIndex(sourceFile: SourceFileRecord, fileNodeId: string): FileIndex {
+  return {
+    sourceFile,
+    fileNodeId,
+    symbols: [],
+    localSymbolsByName: new Map(),
+    exportedSymbolsByName: new Map(),
+    importedBindingsByLocalName: new Map(),
+    namespaceImportsByLocalName: new Map(),
+    reExportsByName: new Map(),
+    starReExportTargets: [],
+    classMethodsByClassIdAndName: new Map(),
+    classSymbolsByName: new Map(),
+  }
+}
+
+function sortedFileIndexes(state: ExtractionState): FileIndex[] {
+  return [...state.fileIndexesByRelativePath.values()].sort((left, right) =>
+    left.sourceFile.relativePath.localeCompare(right.sourceFile.relativePath),
+  )
 }
 
 async function discoverFiles(
@@ -459,7 +532,7 @@ async function discoverFiles(
   return files
 }
 
-function addFileNode(state: ExtractionState, sourceFile: SourceFile): void {
+function addFileNode(state: ExtractionState, sourceFile: SourceFileRecord): void {
   const id = uniqueNodeId(state, `code.file.${sanitizeId(sourceFile.relativePath)}`)
   state.fileNodesByRelativePath.set(normalizePath(sourceFile.relativePath), id)
   state.nodes.push({
@@ -474,192 +547,721 @@ function addFileNode(state: ExtractionState, sourceFile: SourceFile): void {
   })
 }
 
-function extractImports(state: ExtractionState, targetRepoPath: string, sourceFile: SourceFile): void {
-  const fileNodeId = state.fileNodesByRelativePath.get(normalizePath(sourceFile.relativePath))
-  if (!fileNodeId) return
-  const importRegex =
-    /\b(?:import\s+(?:[^'"]+?\s+from\s+)?|export\s+[^'"]+?\s+from\s+|require\s*\(\s*|import\s*\(\s*)['"]([^'"]+)['"]/g
-  for (const match of sourceFile.content.matchAll(importRegex)) {
-    const specifier = match[1]
-    if (!specifier) continue
-    const targetFile = resolveLocalImport(
-      targetRepoPath,
-      sourceFile.relativePath,
-      specifier,
-      state.fileNodesByRelativePath,
-    )
-    const targetNodeId = targetFile ? state.fileNodesByRelativePath.get(normalizePath(targetFile)) : null
-    const to = targetNodeId ?? externalDependencyNode(state, sourceFile, specifier)
-    addEdge(state, {
-      from: fileNodeId,
-      to,
-      kind: 'imports',
-      sourceFile: sourceFile.relativePath,
-      sourceDigest: sourceFile.digest,
-      sourceLocation: locationAt(sourceFile, match.index ?? 0),
-      confidence: targetNodeId ? 'extracted' : 'inferred',
-    })
+function extractImportsAndExports(state: ExtractionState, targetRepoPath: string, fileIndex: FileIndex): void {
+  const sourceFile = fileIndex.sourceFile
+  for (const statement of sourceFile.ast.statements) {
+    if (ts.isImportDeclaration(statement)) {
+      const specifier = moduleSpecifierText(statement.moduleSpecifier)
+      if (!specifier) continue
+      const targetFile = resolveLocalImport(
+        targetRepoPath,
+        sourceFile.relativePath,
+        specifier,
+        state.fileNodesByRelativePath,
+      )
+      addImportEdge(state, fileIndex, specifier, targetFile, 'imports', statement.moduleSpecifier)
+      const clause = statement.importClause
+      if (!clause) continue
+      if (clause.name) {
+        const binding = {
+          localName: clause.name.text,
+          importedName: 'default',
+          specifier,
+          targetFile,
+          kind: 'default',
+          typeOnly: clause.isTypeOnly,
+        } satisfies ImportBinding
+        addImportBinding(fileIndex, binding)
+        addImportEdge(state, fileIndex, specifier, targetFile, 'imports_from', clause.name)
+      }
+      if (clause.namedBindings && ts.isNamedImports(clause.namedBindings)) {
+        for (const element of clause.namedBindings.elements) {
+          const binding = {
+            localName: element.name.text,
+            importedName: element.propertyName?.text ?? element.name.text,
+            specifier,
+            targetFile,
+            kind: 'named',
+            typeOnly: clause.isTypeOnly || element.isTypeOnly,
+          } satisfies ImportBinding
+          addImportBinding(fileIndex, binding)
+          addImportEdge(state, fileIndex, specifier, targetFile, 'imports_from', element)
+        }
+      } else if (clause.namedBindings && ts.isNamespaceImport(clause.namedBindings)) {
+        const binding = {
+          localName: clause.namedBindings.name.text,
+          importedName: '*',
+          specifier,
+          targetFile,
+          kind: 'namespace',
+          typeOnly: clause.isTypeOnly,
+        } satisfies ImportBinding
+        addNamespaceImport(fileIndex, binding)
+        addImportEdge(state, fileIndex, specifier, targetFile, 'imports_from', clause.namedBindings)
+      }
+      continue
+    }
+
+    if (ts.isImportEqualsDeclaration(statement)) {
+      const requireSpecifier = externalModuleReferenceText(statement.moduleReference)
+      if (!requireSpecifier) continue
+      const targetFile = resolveLocalImport(
+        targetRepoPath,
+        sourceFile.relativePath,
+        requireSpecifier,
+        state.fileNodesByRelativePath,
+      )
+      addImportEdge(state, fileIndex, requireSpecifier, targetFile, 'imports', statement.moduleReference)
+      const binding = {
+        localName: statement.name.text,
+        importedName: '*',
+        specifier: requireSpecifier,
+        targetFile,
+        kind: 'namespace',
+        typeOnly: statement.isTypeOnly,
+      } satisfies ImportBinding
+      addNamespaceImport(fileIndex, binding)
+      addImportEdge(state, fileIndex, requireSpecifier, targetFile, 'imports_from', statement.name)
+      continue
+    }
+
+    if (ts.isExportDeclaration(statement)) {
+      const moduleSpecifier = statement.moduleSpecifier
+      const specifier = moduleSpecifierText(moduleSpecifier)
+      if (specifier) {
+        const targetFile = resolveLocalImport(
+          targetRepoPath,
+          sourceFile.relativePath,
+          specifier,
+          state.fileNodesByRelativePath,
+        )
+        if (moduleSpecifier) {
+          addImportEdge(state, fileIndex, specifier, targetFile, 're_exports', moduleSpecifier)
+        }
+        if (statement.exportClause && ts.isNamedExports(statement.exportClause)) {
+          for (const element of statement.exportClause.elements) {
+            addReExport(fileIndex, {
+              exportedName: element.name.text,
+              importedName: element.propertyName?.text ?? element.name.text,
+              targetFile,
+            })
+          }
+        } else if (!statement.exportClause && targetFile) {
+          fileIndex.starReExportTargets.push(normalizePath(targetFile))
+        }
+      }
+      continue
+    }
   }
-}
 
-function extractSymbols(state: ExtractionState, sourceFile: SourceFile): void {
-  const fileNodeId = state.fileNodesByRelativePath.get(normalizePath(sourceFile.relativePath))
-  if (!fileNodeId) return
-
-  const classRegex = /\b(?:export\s+)?(?:abstract\s+)?class\s+([A-Za-z_$][\w$]*)([^{]*)\{/g
-  for (const match of sourceFile.content.matchAll(classRegex)) {
-    const name = match[1]
-    const braceIndex = (match.index ?? 0) + match[0].lastIndexOf('{')
-    const endIndex = findMatchingBrace(sourceFile.content, braceIndex)
-    const classId = uniqueNodeId(state, `code.class.${sanitizeId(sourceFile.relativePath)}.${sanitizeId(name)}`)
-    state.nodes.push(symbolNode(classId, 'class', name, sourceFile, braceIndex, endIndex))
-    state.symbols.push({
-      id: classId,
-      name,
-      kind: 'class',
-      sourceFile: sourceFile.relativePath,
-      bodyText: endIndex > braceIndex ? sourceFile.content.slice(braceIndex + 1, endIndex) : '',
-      bodyStartIndex: braceIndex + 1,
-    })
-    addEdge(state, {
-      from: fileNodeId,
-      to: classId,
-      kind: 'contains',
-      sourceFile: sourceFile.relativePath,
-      sourceDigest: sourceFile.digest,
-      sourceLocation: locationAt(sourceFile, match.index ?? 0),
-      confidence: 'extracted',
-    })
-    extractMethods(state, sourceFile, classId, name, braceIndex + 1, endIndex)
-  }
-
-  const functionRegex = /\b(?:export\s+)?(?:async\s+)?function\s+([A-Za-z_$][\w$]*)\s*\([^)]*\)\s*\{/g
-  for (const match of sourceFile.content.matchAll(functionRegex)) {
-    const name = match[1]
-    const braceIndex = (match.index ?? 0) + match[0].lastIndexOf('{')
-    addFunctionSymbol(state, sourceFile, fileNodeId, name, match.index ?? 0, braceIndex)
-  }
-
-  const arrowRegex =
-    /\b(?:export\s+)?(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s*)?(?:\([^)]*\)|[A-Za-z_$][\w$]*)\s*=>\s*\{/g
-  for (const match of sourceFile.content.matchAll(arrowRegex)) {
-    const name = match[1]
-    const braceIndex = (match.index ?? 0) + match[0].lastIndexOf('{')
-    addFunctionSymbol(state, sourceFile, fileNodeId, name, match.index ?? 0, braceIndex)
-  }
-}
-
-function extractMethods(
-  state: ExtractionState,
-  sourceFile: SourceFile,
-  classId: string,
-  className: string,
-  classBodyStart: number,
-  classBodyEnd: number,
-): void {
-  if (classBodyEnd <= classBodyStart) return
-  const body = sourceFile.content.slice(classBodyStart, classBodyEnd)
-  const methodRegex =
-    /(?:^|\n)\s*(?:(?:public|private|protected|static|async|get|set|override|readonly)\s+)*([A-Za-z_$][\w$]*)\s*\([^)]*\)\s*\{/g
-  for (const match of body.matchAll(methodRegex)) {
-    const name = match[1]
-    if (methodKeywordExclusions.has(name)) continue
-    const globalMatchIndex = classBodyStart + (match.index ?? 0)
-    const braceIndex = globalMatchIndex + match[0].lastIndexOf('{')
-    const endIndex = findMatchingBrace(sourceFile.content, braceIndex)
-    const methodId = uniqueNodeId(
-      state,
-      `code.method.${sanitizeId(sourceFile.relativePath)}.${sanitizeId(className)}.${sanitizeId(name)}`,
-    )
-    state.nodes.push(symbolNode(methodId, 'method', `${className}.${name}`, sourceFile, braceIndex, endIndex))
-    state.symbols.push({
-      id: methodId,
-      name,
-      kind: 'method',
-      sourceFile: sourceFile.relativePath,
-      bodyText: endIndex > braceIndex ? sourceFile.content.slice(braceIndex + 1, endIndex) : '',
-      bodyStartIndex: braceIndex + 1,
-    })
-    addEdge(state, {
-      from: classId,
-      to: methodId,
-      kind: 'contains',
-      sourceFile: sourceFile.relativePath,
-      sourceDigest: sourceFile.digest,
-      sourceLocation: locationAt(sourceFile, globalMatchIndex),
-      confidence: 'extracted',
-    })
-  }
-}
-
-function addFunctionSymbol(
-  state: ExtractionState,
-  sourceFile: SourceFile,
-  fileNodeId: string,
-  name: string,
-  matchIndex: number,
-  braceIndex: number,
-): void {
-  const endIndex = findMatchingBrace(sourceFile.content, braceIndex)
-  const functionId = uniqueNodeId(state, `code.function.${sanitizeId(sourceFile.relativePath)}.${sanitizeId(name)}`)
-  state.nodes.push(symbolNode(functionId, 'function', name, sourceFile, braceIndex, endIndex))
-  state.symbols.push({
-    id: functionId,
-    name,
-    kind: 'function',
-    sourceFile: sourceFile.relativePath,
-    bodyText: endIndex > braceIndex ? sourceFile.content.slice(braceIndex + 1, endIndex) : '',
-    bodyStartIndex: braceIndex + 1,
+  visitSourceFile(sourceFile.ast, (node) => {
+    const requireSpecifier = requireCallSpecifier(node)
+    if (requireSpecifier && ts.isCallExpression(node)) {
+      const targetFile = resolveLocalImport(
+        targetRepoPath,
+        sourceFile.relativePath,
+        requireSpecifier,
+        state.fileNodesByRelativePath,
+      )
+      addImportEdge(state, fileIndex, requireSpecifier, targetFile, 'imports', node)
+      addRequireBindings(fileIndex, node, requireSpecifier, targetFile)
+      return
+    }
+    const dynamicImportSpecifier = dynamicImportCallSpecifier(node)
+    if (dynamicImportSpecifier) {
+      const targetFile = resolveLocalImport(
+        targetRepoPath,
+        sourceFile.relativePath,
+        dynamicImportSpecifier,
+        state.fileNodesByRelativePath,
+      )
+      addImportEdge(state, fileIndex, dynamicImportSpecifier, targetFile, 'imports', node)
+    }
   })
+}
+
+function extractSymbols(state: ExtractionState, fileIndex: FileIndex): void {
+  function visit(node: ts.Node, currentClass: SymbolRecord | null): void {
+    if (ts.isFunctionDeclaration(node)) {
+      const name = node.name?.text ?? (hasDefaultModifier(node) ? 'default' : null)
+      if (name && node.body) {
+        addSymbol(state, fileIndex, {
+          name,
+          qualifiedName: name,
+          kind: 'function',
+          declaration: node,
+          exported: hasExportModifier(node),
+          defaultExport: hasDefaultModifier(node),
+        })
+      }
+      ts.forEachChild(node, (child) => visit(child, currentClass))
+      return
+    }
+
+    if (ts.isClassDeclaration(node)) {
+      const name = node.name?.text ?? (hasDefaultModifier(node) ? 'default' : null)
+      const classSymbol = name
+        ? addSymbol(state, fileIndex, {
+            name,
+            qualifiedName: name,
+            kind: 'class',
+            declaration: node,
+            exported: hasExportModifier(node),
+            defaultExport: hasDefaultModifier(node),
+          })
+        : null
+      ts.forEachChild(node, (child) => visit(child, classSymbol))
+      return
+    }
+
+    if (ts.isInterfaceDeclaration(node)) {
+      addSymbol(state, fileIndex, {
+        name: node.name.text,
+        qualifiedName: node.name.text,
+        kind: 'interface',
+        declaration: node,
+        exported: hasExportModifier(node),
+        defaultExport: false,
+      })
+      ts.forEachChild(node, (child) => visit(child, currentClass))
+      return
+    }
+
+    if (ts.isTypeAliasDeclaration(node)) {
+      addSymbol(state, fileIndex, {
+        name: node.name.text,
+        qualifiedName: node.name.text,
+        kind: 'type',
+        declaration: node,
+        exported: hasExportModifier(node),
+        defaultExport: false,
+      })
+      ts.forEachChild(node, (child) => visit(child, currentClass))
+      return
+    }
+
+    if (ts.isEnumDeclaration(node)) {
+      addSymbol(state, fileIndex, {
+        name: node.name.text,
+        qualifiedName: node.name.text,
+        kind: 'type',
+        declaration: node,
+        exported: hasExportModifier(node),
+        defaultExport: false,
+      })
+      ts.forEachChild(node, (child) => visit(child, currentClass))
+      return
+    }
+
+    if (ts.isVariableStatement(node)) {
+      ts.forEachChild(node, (child) => visit(child, currentClass))
+      return
+    }
+
+    if (ts.isVariableDeclaration(node)) {
+      addVariableDeclarationSymbols(state, fileIndex, node, isExportedVariableDeclaration(node), currentClass)
+      ts.forEachChild(node, (child) => visit(child, currentClass))
+      return
+    }
+
+    if (currentClass && ts.isConstructorDeclaration(node) && node.body) {
+      addClassMemberSymbol(state, fileIndex, node, currentClass, 'constructor')
+      ts.forEachChild(node, (child) => visit(child, currentClass))
+      return
+    }
+
+    if (currentClass && ts.isMethodDeclaration(node) && node.body) {
+      const name = propertyNameText(node.name, fileIndex.sourceFile.ast)
+      if (name) {
+        addClassMemberSymbol(state, fileIndex, node, currentClass, name)
+      }
+      ts.forEachChild(node, (child) => visit(child, currentClass))
+      return
+    }
+
+    if (currentClass && (ts.isGetAccessorDeclaration(node) || ts.isSetAccessorDeclaration(node)) && node.body) {
+      const name = propertyNameText(node.name, fileIndex.sourceFile.ast)
+      if (name) {
+        addClassMemberSymbol(state, fileIndex, node, currentClass, name)
+      }
+      ts.forEachChild(node, (child) => visit(child, currentClass))
+      return
+    }
+
+    if (currentClass && ts.isPropertyDeclaration(node)) {
+      const name = propertyNameText(node.name, fileIndex.sourceFile.ast)
+      const initializer = skipOuterExpressions(node.initializer)
+      if (name && initializer && isFunctionLikeExpression(initializer)) {
+        addClassMemberSymbol(state, fileIndex, node, currentClass, name)
+      }
+      ts.forEachChild(node, (child) => visit(child, currentClass))
+      return
+    }
+
+    ts.forEachChild(node, (child) => visit(child, currentClass))
+  }
+
+  visit(fileIndex.sourceFile.ast, null)
+  applyLocalExportDeclarations(fileIndex)
+}
+
+function addVariableDeclarationSymbols(
+  state: ExtractionState,
+  fileIndex: FileIndex,
+  declaration: ts.VariableDeclaration,
+  exported: boolean,
+  currentClass: SymbolRecord | null,
+): void {
+  if (!ts.isIdentifier(declaration.name)) return
+  const name = declaration.name.text
+  const initializer = skipOuterExpressions(declaration.initializer)
+  if (!initializer) return
+  if (isFunctionLikeExpression(initializer)) {
+    addSymbol(state, fileIndex, {
+      name,
+      qualifiedName: name,
+      kind: 'function',
+      declaration,
+      exported,
+      defaultExport: false,
+      parentClass: currentClass,
+    })
+    return
+  }
+  if (ts.isObjectLiteralExpression(initializer)) {
+    addObjectLiteralFunctionSymbols(state, fileIndex, initializer, name, exported, currentClass)
+  }
+}
+
+function addObjectLiteralFunctionSymbols(
+  state: ExtractionState,
+  fileIndex: FileIndex,
+  objectLiteral: ts.ObjectLiteralExpression,
+  baseName: string,
+  exported: boolean,
+  currentClass: SymbolRecord | null,
+): void {
+  for (const property of objectLiteral.properties) {
+    if (ts.isMethodDeclaration(property) && property.body) {
+      const name = propertyNameText(property.name, fileIndex.sourceFile.ast)
+      if (!name) continue
+      addSymbol(state, fileIndex, {
+        name,
+        qualifiedName: `${baseName}.${name}`,
+        kind: 'function',
+        declaration: property,
+        exported,
+        defaultExport: false,
+        parentClass: currentClass,
+      })
+      continue
+    }
+    if (!ts.isPropertyAssignment(property)) continue
+    const name = propertyNameText(property.name, fileIndex.sourceFile.ast)
+    if (!name) continue
+    const initializer = skipOuterExpressions(property.initializer)
+    if (!initializer) continue
+    if (isFunctionLikeExpression(initializer)) {
+      addSymbol(state, fileIndex, {
+        name,
+        qualifiedName: `${baseName}.${name}`,
+        kind: 'function',
+        declaration: property,
+        exported,
+        defaultExport: false,
+        parentClass: currentClass,
+      })
+    } else if (ts.isObjectLiteralExpression(initializer)) {
+      addObjectLiteralFunctionSymbols(state, fileIndex, initializer, `${baseName}.${name}`, exported, currentClass)
+    }
+  }
+}
+
+function addClassMemberSymbol(
+  state: ExtractionState,
+  fileIndex: FileIndex,
+  declaration: ts.Node,
+  parentClass: SymbolRecord,
+  name: string,
+): SymbolRecord {
+  return addSymbol(state, fileIndex, {
+    name,
+    qualifiedName: `${parentClass.name}.${name}`,
+    kind: 'method',
+    declaration,
+    exported: false,
+    defaultExport: false,
+    parentClass,
+  })
+}
+
+function addSymbol(
+  state: ExtractionState,
+  fileIndex: FileIndex,
+  input: {
+    name: string
+    qualifiedName: string
+    kind: SymbolNodeKind
+    declaration: ts.Node
+    exported: boolean
+    defaultExport: boolean
+    parentClass?: SymbolRecord | null
+  },
+): SymbolRecord {
+  const sourceFile = fileIndex.sourceFile
+  const startIndex = input.declaration.getStart(sourceFile.ast)
+  const endIndex = input.declaration.getEnd()
+  const id = uniqueNodeId(
+    state,
+    `code.${input.kind}.${sanitizeId(sourceFile.relativePath)}.${sanitizeId(input.qualifiedName)}.${lineColumnId(
+      sourceFile,
+      startIndex,
+    )}`,
+  )
+  const record: SymbolRecord = {
+    id,
+    name: input.name,
+    qualifiedName: input.qualifiedName,
+    kind: input.kind,
+    sourceFile: sourceFile.relativePath,
+    declaration: input.declaration,
+    ...(input.parentClass ? { parentClassId: input.parentClass.id } : {}),
+  }
+  state.nodes.push(symbolNode(id, input.kind, input.qualifiedName, sourceFile, startIndex, endIndex))
+  state.symbols.push(record)
+  state.symbolsByDeclaration.set(input.declaration, record)
+  fileIndex.symbols.push(record)
+  addMapEntry(fileIndex.localSymbolsByName, normalizeToken(input.name), record)
+  addMapEntry(state.symbolsByName, normalizeToken(input.name), record)
+  if (input.qualifiedName !== input.name) {
+    addMapEntry(state.symbolsByName, normalizeToken(input.qualifiedName), record)
+  }
+  if (input.kind === 'class') {
+    addMapEntry(fileIndex.classSymbolsByName, normalizeToken(input.name), record)
+  }
+  if (input.kind === 'method' && input.parentClass) {
+    addMapEntry(fileIndex.classMethodsByClassIdAndName, classMethodKey(input.parentClass.id, input.name), record)
+  }
+  if (input.exported) {
+    addMapEntry(fileIndex.exportedSymbolsByName, normalizeToken(input.name), record)
+  }
+  if (input.defaultExport) {
+    addMapEntry(fileIndex.exportedSymbolsByName, 'default', record)
+  }
   addEdge(state, {
-    from: fileNodeId,
-    to: functionId,
+    from: fileIndex.fileNodeId,
+    to: id,
     kind: 'contains',
     sourceFile: sourceFile.relativePath,
     sourceDigest: sourceFile.digest,
-    sourceLocation: locationAt(sourceFile, matchIndex),
+    sourceLocation: locationRange(sourceFile, startIndex, startIndex),
     confidence: 'extracted',
   })
+  if (input.parentClass) {
+    addEdge(state, {
+      from: input.parentClass.id,
+      to: id,
+      kind: 'contains',
+      sourceFile: sourceFile.relativePath,
+      sourceDigest: sourceFile.digest,
+      sourceLocation: locationRange(sourceFile, startIndex, startIndex),
+      confidence: 'extracted',
+    })
+  }
+  return record
 }
 
-function addCallEdges(state: ExtractionState): void {
-  const symbolsByName = new Map<string, SymbolRecord[]>()
-  for (const symbol of state.symbols) {
-    const key = normalizeToken(symbol.name)
-    symbolsByName.set(key, [...(symbolsByName.get(key) ?? []), symbol])
-  }
-
-  for (const symbol of state.symbols.filter((entry) => entry.kind !== 'class')) {
-    const callRegex = /\b([A-Za-z_$][\w$]*)\s*\(/g
-    for (const match of symbol.bodyText.matchAll(callRegex)) {
-      const callName = match[1]
-      if (callKeywordExclusions.has(callName)) continue
-      const targets = symbolsByName.get(normalizeToken(callName)) ?? []
-      const nonSelfTargets = targets.filter((target) => target.id !== symbol.id)
-      if (nonSelfTargets.length > 1) {
-        state.ambiguousCallNames.add(callName)
-        continue
+function applyLocalExportDeclarations(fileIndex: FileIndex): void {
+  for (const statement of fileIndex.sourceFile.ast.statements) {
+    if (!ts.isExportDeclaration(statement) || statement.moduleSpecifier) continue
+    if (!statement.exportClause || !ts.isNamedExports(statement.exportClause)) continue
+    for (const element of statement.exportClause.elements) {
+      const localName = element.propertyName?.text ?? element.name.text
+      const localSymbols = fileIndex.localSymbolsByName.get(normalizeToken(localName)) ?? []
+      for (const symbol of localSymbols) {
+        addMapEntry(fileIndex.exportedSymbolsByName, normalizeToken(element.name.text), symbol)
       }
-      const target = nonSelfTargets[0]
-      if (target) {
-        addEdge(state, {
-          from: symbol.id,
-          to: target.id,
-          kind: 'calls',
-          sourceFile: symbol.sourceFile,
-          sourceLocationStatus: 'call-site-static-text-scan',
-          confidence: 'inferred',
-        })
+    }
+  }
+  for (const statement of fileIndex.sourceFile.ast.statements) {
+    if (!ts.isExportAssignment(statement) || statement.isExportEquals) continue
+    const expression = skipOuterExpressions(statement.expression)
+    if (expression && ts.isIdentifier(expression)) {
+      const localSymbols = fileIndex.localSymbolsByName.get(normalizeToken(expression.text)) ?? []
+      for (const symbol of localSymbols) {
+        addMapEntry(fileIndex.exportedSymbolsByName, 'default', symbol)
       }
     }
   }
 }
 
+function addHeritageEdges(state: ExtractionState, fileIndex: FileIndex): void {
+  for (const symbol of fileIndex.symbols) {
+    if (symbol.kind !== 'class' && symbol.kind !== 'interface') continue
+    const declaration = symbol.declaration
+    if (!hasHeritageClauses(declaration)) continue
+    for (const clause of declaration.heritageClauses ?? []) {
+      const edgeKind = clause.token === ts.SyntaxKind.ImplementsKeyword ? 'implements' : 'inherits'
+      for (const type of clause.types) {
+        const targets = resolveExpressionTargets(state, fileIndex, type.expression, {
+          kinds: ['class', 'interface', 'type'],
+          currentClass: symbol.kind === 'class' ? symbol : null,
+        })
+        addResolvedEdges(state, symbol.id, edgeKind, type.expression, fileIndex.sourceFile, targets)
+      }
+    }
+  }
+}
+
+function addCallLikeEdges(state: ExtractionState, fileIndex: FileIndex): void {
+  const sourceFile = fileIndex.sourceFile
+
+  function visit(node: ts.Node, currentOwner: SymbolRecord | null, currentClass: SymbolRecord | null): void {
+    const symbol = state.symbolsByDeclaration.get(node)
+    const nextOwner = symbol && (symbol.kind === 'function' || symbol.kind === 'method') ? symbol : currentOwner
+    const nextClass = symbol?.kind === 'class' ? symbol : currentClass
+    const from = nextOwner?.id ?? fileIndex.fileNodeId
+
+    if (ts.isCallExpression(node)) {
+      const targets = resolveExpressionTargets(state, fileIndex, node.expression, {
+        kinds: ['function', 'method', 'class'],
+        currentClass: nextClass,
+      })
+      addResolvedEdges(state, from, 'calls', node.expression, sourceFile, targets)
+    } else if (ts.isNewExpression(node) && node.expression) {
+      const targets = resolveExpressionTargets(state, fileIndex, node.expression, {
+        kinds: ['class', 'function'],
+        currentClass: nextClass,
+      })
+      addResolvedEdges(state, from, 'constructs', node.expression, sourceFile, targets)
+    }
+
+    if (ts.isPropertyAccessExpression(node) && isReferencePropertyAccess(node)) {
+      const targets = resolveExpressionTargets(state, fileIndex, node, {
+        kinds: ['class', 'interface', 'type', 'function', 'method'],
+        currentClass: nextClass,
+      })
+      addResolvedEdges(state, from, 'references', node, sourceFile, targets)
+    } else if (ts.isIdentifier(node) && isReferenceIdentifier(node)) {
+      const targets = resolveIdentifierTargets(state, fileIndex, node.text, {
+        kinds: ['class', 'interface', 'type', 'function', 'method'],
+        currentClass: nextClass,
+      })
+      addResolvedEdges(state, from, 'references', node, sourceFile, targets)
+    }
+
+    ts.forEachChild(node, (child) => visit(child, nextOwner, nextClass))
+  }
+
+  visit(sourceFile.ast, null, null)
+}
+
+function resolveExpressionTargets(
+  state: ExtractionState,
+  fileIndex: FileIndex,
+  expression: ts.Expression,
+  options: { kinds: SymbolNodeKind[]; currentClass: SymbolRecord | null },
+): ResolvedTarget[] | 'ambiguous' {
+  const unwrapped = skipOuterExpressions(expression)
+  if (!unwrapped) return []
+  if (ts.isIdentifier(unwrapped)) {
+    return resolveIdentifierTargets(state, fileIndex, unwrapped.text, options)
+  }
+  if (ts.isPropertyAccessExpression(unwrapped)) {
+    return resolvePropertyAccessTargets(state, fileIndex, unwrapped, options)
+  }
+  if (unwrapped.kind === ts.SyntaxKind.ThisKeyword || unwrapped.kind === ts.SyntaxKind.SuperKeyword) {
+    return options.currentClass ? [{ id: options.currentClass.id, confidence: 'inferred' }] : []
+  }
+  return []
+}
+
+function resolveIdentifierTargets(
+  state: ExtractionState,
+  fileIndex: FileIndex,
+  name: string,
+  options: { kinds: SymbolNodeKind[]; currentClass: SymbolRecord | null },
+): ResolvedTarget[] | 'ambiguous' {
+  const key = normalizeToken(name)
+  const localTargets = filterSymbolsByKind(fileIndex.localSymbolsByName.get(key) ?? [], options.kinds)
+  if (localTargets.length > 0) return resolvedFromSymbolsOrAmbiguous(state, name, localTargets, 'extracted')
+
+  const importedTargets = resolveImportedBindings(
+    state,
+    fileIndex,
+    fileIndex.importedBindingsByLocalName.get(key) ?? [],
+  )
+  if (importedTargets === 'ambiguous' || importedTargets.length > 0) return importedTargets
+
+  const namespaceTargets = resolveImportedBindings(
+    state,
+    fileIndex,
+    fileIndex.namespaceImportsByLocalName.get(key) ?? [],
+  )
+  if (namespaceTargets === 'ambiguous' || namespaceTargets.length > 0) return namespaceTargets
+
+  const projectTargets = filterSymbolsByKind(state.symbolsByName.get(key) ?? [], options.kinds)
+  if (projectTargets.length > 0) return resolvedFromSymbolsOrAmbiguous(state, name, projectTargets, 'inferred')
+  return []
+}
+
+function resolvePropertyAccessTargets(
+  state: ExtractionState,
+  fileIndex: FileIndex,
+  expression: ts.PropertyAccessExpression,
+  options: { kinds: SymbolNodeKind[]; currentClass: SymbolRecord | null },
+): ResolvedTarget[] | 'ambiguous' {
+  const propertyName = expression.name.text
+  const base = skipOuterExpressions(expression.expression)
+  if (!base) return []
+
+  if (base.kind === ts.SyntaxKind.ThisKeyword || base.kind === ts.SyntaxKind.SuperKeyword) {
+    if (!options.currentClass) return []
+    const methodTargets = filterSymbolsByKind(
+      fileIndex.classMethodsByClassIdAndName.get(classMethodKey(options.currentClass.id, propertyName)) ?? [],
+      options.kinds,
+    )
+    return resolvedFromSymbolsOrAmbiguous(state, propertyName, methodTargets, 'extracted')
+  }
+
+  if (!ts.isIdentifier(base)) return []
+  const namespaceBindings = fileIndex.namespaceImportsByLocalName.get(normalizeToken(base.text)) ?? []
+  if (namespaceBindings.length > 0) {
+    return resolveNamespacePropertyTargets(state, fileIndex, namespaceBindings, propertyName, options.kinds)
+  }
+
+  const importedObjectBindings = fileIndex.importedBindingsByLocalName.get(normalizeToken(base.text)) ?? []
+  if (importedObjectBindings.some((binding) => !binding.targetFile)) {
+    return uniqueResolvedTargets(
+      importedObjectBindings
+        .filter((binding) => !binding.targetFile)
+        .map((binding) => ({
+          id: externalDependencyNode(state, fileIndex.sourceFile, binding.specifier),
+          confidence: 'inferred',
+        })),
+    )
+  }
+
+  const classTargets = filterSymbolsByKind(fileIndex.classSymbolsByName.get(normalizeToken(base.text)) ?? [], ['class'])
+  if (classTargets.length === 1) {
+    const methodTargets = filterSymbolsByKind(
+      fileIndex.classMethodsByClassIdAndName.get(classMethodKey(classTargets[0].id, propertyName)) ?? [],
+      options.kinds,
+    )
+    return resolvedFromSymbolsOrAmbiguous(state, `${base.text}.${propertyName}`, methodTargets, 'extracted')
+  }
+  if (classTargets.length > 1) {
+    recordAmbiguous(state, `${base.text}.${propertyName}`)
+    return 'ambiguous'
+  }
+
+  return []
+}
+
+function resolveNamespacePropertyTargets(
+  state: ExtractionState,
+  fileIndex: FileIndex,
+  bindings: ImportBinding[],
+  propertyName: string,
+  kinds: SymbolNodeKind[],
+): ResolvedTarget[] | 'ambiguous' {
+  const resolved: ResolvedTarget[] = []
+  for (const binding of bindings) {
+    if (!binding.targetFile) {
+      resolved.push({
+        id: externalDependencyNode(state, fileIndex.sourceFile, binding.specifier),
+        confidence: 'inferred',
+      })
+      continue
+    }
+    const symbols = filterSymbolsByKind(resolveExportedSymbols(state, binding.targetFile, propertyName), kinds)
+    const target = resolvedFromSymbolsOrAmbiguous(state, `${binding.localName}.${propertyName}`, symbols, 'extracted')
+    if (target === 'ambiguous') return target
+    resolved.push(...target)
+  }
+  return uniqueResolvedTargets(resolved)
+}
+
+function resolveImportedBindings(
+  state: ExtractionState,
+  fileIndex: FileIndex,
+  bindings: ImportBinding[],
+): ResolvedTarget[] | 'ambiguous' {
+  const resolved: ResolvedTarget[] = []
+  for (const binding of bindings) {
+    if (!binding.targetFile) {
+      resolved.push({
+        id: externalDependencyNode(state, fileIndex.sourceFile, binding.specifier),
+        confidence: 'inferred',
+      })
+      continue
+    }
+    const symbols = resolveExportedSymbols(state, binding.targetFile, binding.importedName)
+    const target = resolvedFromSymbolsOrAmbiguous(
+      state,
+      `${binding.specifier}:${binding.importedName}`,
+      symbols,
+      'extracted',
+    )
+    if (target === 'ambiguous') return target
+    resolved.push(...target)
+  }
+  return uniqueResolvedTargets(resolved)
+}
+
+function resolveExportedSymbols(
+  state: ExtractionState,
+  relativePathValue: string,
+  exportedName: string,
+  seen = new Set<string>(),
+): SymbolRecord[] {
+  const key = `${normalizePath(relativePathValue)}:${normalizeToken(exportedName)}`
+  if (seen.has(key)) return []
+  seen.add(key)
+  const fileIndex = state.fileIndexesByRelativePath.get(normalizePath(relativePathValue))
+  if (!fileIndex) return []
+  const direct = fileIndex.exportedSymbolsByName.get(normalizeToken(exportedName)) ?? []
+  if (direct.length > 0) return direct
+
+  const reExports = fileIndex.reExportsByName.get(normalizeToken(exportedName)) ?? []
+  const resolved = reExports.flatMap((entry) =>
+    entry.targetFile ? resolveExportedSymbols(state, entry.targetFile, entry.importedName, seen) : [],
+  )
+  if (resolved.length > 0) return resolved
+
+  const starResolved = fileIndex.starReExportTargets.flatMap((targetFile) =>
+    resolveExportedSymbols(state, targetFile, exportedName, seen),
+  )
+  return uniqueSymbols(starResolved)
+}
+
+function addResolvedEdges(
+  state: ExtractionState,
+  from: string,
+  kind: string,
+  locationNode: ts.Node,
+  sourceFile: SourceFileRecord,
+  targets: ResolvedTarget[] | 'ambiguous',
+): void {
+  if (targets === 'ambiguous') return
+  for (const target of targets) {
+    addEdge(state, {
+      from,
+      to: target.id,
+      kind,
+      sourceFile: sourceFile.relativePath,
+      sourceDigest: sourceFile.digest,
+      sourceLocation: locationRange(sourceFile, locationNode.getStart(sourceFile.ast), locationNode.getEnd()),
+      confidence: target.confidence,
+    })
+  }
+}
+
 function symbolNode(
   id: string,
-  kind: 'class' | 'function' | 'method',
+  kind: SymbolNodeKind,
   label: string,
-  sourceFile: SourceFile,
+  sourceFile: SourceFileRecord,
   startIndex: number,
   endIndex: number,
 ): JsonRecord {
@@ -675,7 +1277,32 @@ function symbolNode(
   }
 }
 
-function externalDependencyNode(state: ExtractionState, sourceFile: SourceFile, specifier: string): string {
+function addImportEdge(
+  state: ExtractionState,
+  fileIndex: FileIndex,
+  specifier: string,
+  targetFile: string | null,
+  kind: 'imports' | 'imports_from' | 're_exports',
+  locationNode: ts.Node,
+): void {
+  const targetNodeId = targetFile ? state.fileNodesByRelativePath.get(normalizePath(targetFile)) : null
+  const to = targetNodeId ?? externalDependencyNode(state, fileIndex.sourceFile, specifier)
+  addEdge(state, {
+    from: fileIndex.fileNodeId,
+    to,
+    kind,
+    sourceFile: fileIndex.sourceFile.relativePath,
+    sourceDigest: fileIndex.sourceFile.digest,
+    sourceLocation: locationRange(
+      fileIndex.sourceFile,
+      locationNode.getStart(fileIndex.sourceFile.ast),
+      locationNode.getEnd(),
+    ),
+    confidence: targetNodeId ? 'extracted' : 'inferred',
+  })
+}
+
+function externalDependencyNode(state: ExtractionState, sourceFile: SourceFileRecord, specifier: string): string {
   const existing = state.externalNodeIdsBySpecifier.get(specifier)
   if (existing) return existing
   const id = uniqueNodeId(state, `code.external.${sanitizeId(specifier)}`)
@@ -703,7 +1330,7 @@ function addEdge(
     sourceDigest?: string
     sourceLocation?: JsonRecord
     sourceLocationStatus?: string
-    confidence: string
+    confidence: Confidence
   },
 ): void {
   const id = uniqueEdgeId(state, `code-edge.${sanitizeId(input.from)}.${input.kind}.${sanitizeId(input.to)}`)
@@ -714,7 +1341,7 @@ function addEdge(
     kind: input.kind,
     sourceFile: input.sourceFile,
     ...(input.sourceLocation ? { sourceLocation: input.sourceLocation } : {}),
-    ...(!input.sourceLocation ? { sourceLocationStatus: input.sourceLocationStatus ?? 'native-static-text-scan' } : {}),
+    ...(!input.sourceLocation ? { sourceLocationStatus: input.sourceLocationStatus ?? 'native-static-ast' } : {}),
     ...(input.sourceDigest ? { sourceDigest: input.sourceDigest } : {}),
     confidence: input.confidence,
     extractor: EXTRACTOR_ID,
@@ -767,6 +1394,7 @@ function buildReport(
   blocked: boolean,
   options: NativeCodeSubgraphExtractorOptions,
 ): NativeCodeSubgraphExtractionReport {
+  const summary = extractionSummary(state)
   return {
     schemaVersion: 1,
     artifactRole: REPORT_ROLE,
@@ -795,26 +1423,13 @@ function buildReport(
       status: validationReport?.status ?? null,
       codeSubgraphValidationStatus: validationReport?.codeSubgraphValidationStatus ?? null,
     },
-    extractionSummary: {
-      fileNodeCount: state.nodes.filter((entry) => entry.kind === 'file').length,
-      classNodeCount: state.nodes.filter((entry) => entry.kind === 'class').length,
-      functionNodeCount: state.nodes.filter((entry) => entry.kind === 'function').length,
-      methodNodeCount: state.nodes.filter((entry) => entry.kind === 'method').length,
-      externalDependencyNodeCount: state.nodes.filter((entry) => entry.kind === 'external_dependency').length,
-      importEdgeCount: state.edges.filter((entry) => entry.kind === 'imports').length,
-      callEdgeCount: state.edges.filter((entry) => entry.kind === 'calls').length,
-      containsEdgeCount: state.edges.filter((entry) => entry.kind === 'contains').length,
-      unsupportedExtensions: state.unsupportedExtensions,
-      includePatterns: state.includePatterns,
-      ambiguousCallCount: state.ambiguousCallNames.size,
-      ambiguousCallNames: [...state.ambiguousCallNames].sort(),
-    },
+    extractionSummary: summary,
     extractionFindings: state.findings,
     downstreamActionPlan: blocked
       ? ['Fix blocking target-repo, source file limit, output authority, or generated validation findings, then rerun.']
       : [
           'Use the written devview-code-subgraph artifact and validation report as source facts for a future unified Maintainability Graph merge plan.',
-          'Unsupported language extraction, richer TypeScript type references, and watch activation remain future report-only slices.',
+          'Unsupported language extraction, semantic type-checker resolution, and watch activation remain future report-only slices.',
         ],
     graphifyExecuted: false,
     astExtractorExecuted: false,
@@ -836,6 +1451,36 @@ function buildReport(
     permissionVerified: false,
     cryptographicSignatureVerified: false,
     enterpriseGateActivated: false,
+  }
+}
+
+function extractionSummary(state: ExtractionState): NativeCodeSubgraphExtractionReport['extractionSummary'] {
+  const symbolNodeKinds = new Set(['class', 'interface', 'type', 'function', 'method'])
+  const filesWithSymbols = new Set(
+    state.nodes
+      .filter((entry) => symbolNodeKinds.has(String(entry.kind)))
+      .map((entry) => stringValue(entry.sourceFile))
+      .filter((entry): entry is string => Boolean(entry)),
+  )
+  return {
+    fileNodeCount: state.nodes.filter((entry) => entry.kind === 'file').length,
+    classNodeCount: state.nodes.filter((entry) => entry.kind === 'class').length,
+    interfaceNodeCount: state.nodes.filter((entry) => entry.kind === 'interface').length,
+    typeNodeCount: state.nodes.filter((entry) => entry.kind === 'type').length,
+    functionNodeCount: state.nodes.filter((entry) => entry.kind === 'function').length,
+    methodNodeCount: state.nodes.filter((entry) => entry.kind === 'method').length,
+    externalDependencyNodeCount: state.nodes.filter((entry) => entry.kind === 'external_dependency').length,
+    filesWithSymbolNodeCount: filesWithSymbols.size,
+    importEdgeCount: state.edges.filter((entry) => importLikeEdgeKinds.has(String(entry.kind))).length,
+    callEdgeCount: state.edges.filter((entry) => entry.kind === 'calls').length,
+    constructEdgeCount: state.edges.filter((entry) => entry.kind === 'constructs').length,
+    referenceEdgeCount: state.edges.filter((entry) => entry.kind === 'references').length,
+    callLikeEdgeCount: state.edges.filter((entry) => callLikeEdgeKinds.has(String(entry.kind))).length,
+    containsEdgeCount: state.edges.filter((entry) => entry.kind === 'contains').length,
+    unsupportedExtensions: state.unsupportedExtensions,
+    includePatterns: state.includePatterns,
+    ambiguousCallCount: state.ambiguousCallNames.size,
+    ambiguousCallNames: [...state.ambiguousCallNames].sort(),
   }
 }
 
@@ -929,8 +1574,10 @@ function renderMarkdown(report: NativeCodeSubgraphExtractionReport): string {
     `- Supported JS/TS files: ${report.targetRepo.supportedFileCount}`,
     `- Nodes: ${report.outputCodeSubgraph.nodeCount}`,
     `- Edges: ${report.outputCodeSubgraph.edgeCount}`,
-    `- Files/classes/functions/methods: ${report.extractionSummary.fileNodeCount}/${report.extractionSummary.classNodeCount}/${report.extractionSummary.functionNodeCount}/${report.extractionSummary.methodNodeCount}`,
-    `- Imports/calls/contains: ${report.extractionSummary.importEdgeCount}/${report.extractionSummary.callEdgeCount}/${report.extractionSummary.containsEdgeCount}`,
+    `- Files/classes/interfaces/types/functions/methods: ${report.extractionSummary.fileNodeCount}/${report.extractionSummary.classNodeCount}/${report.extractionSummary.interfaceNodeCount}/${report.extractionSummary.typeNodeCount}/${report.extractionSummary.functionNodeCount}/${report.extractionSummary.methodNodeCount}`,
+    `- Files with symbols: ${report.extractionSummary.filesWithSymbolNodeCount}`,
+    `- Imports/calls/constructs/references/contains: ${report.extractionSummary.importEdgeCount}/${report.extractionSummary.callEdgeCount}/${report.extractionSummary.constructEdgeCount}/${report.extractionSummary.referenceEdgeCount}/${report.extractionSummary.containsEdgeCount}`,
+    `- Call-like edges: ${report.extractionSummary.callLikeEdgeCount}`,
     `- Validation: ${report.validationOutput.codeSubgraphValidationStatus ?? 'not-run'}`,
     '',
     '## Findings',
@@ -959,11 +1606,7 @@ function resolveLocalImport(
   if (!specifier.startsWith('.')) return null
   const fromDir = path.dirname(path.join(targetRepoPath, fromRelativePath))
   const baseAbsolute = path.resolve(fromDir, specifier)
-  const candidates = [
-    baseAbsolute,
-    ...[...supportedExtensions].map((ext) => `${baseAbsolute}${ext}`),
-    ...[...supportedExtensions].map((ext) => path.join(baseAbsolute, `index${ext}`)),
-  ]
+  const candidates = localImportCandidates(baseAbsolute)
   for (const candidate of candidates) {
     const relative = relativePath(targetRepoPath, candidate)
     if (fileNodesByRelativePath.has(normalizePath(relative))) {
@@ -973,62 +1616,284 @@ function resolveLocalImport(
   return null
 }
 
+function localImportCandidates(baseAbsolute: string): string[] {
+  const ext = path.extname(baseAbsolute).toLowerCase()
+  const candidates = [baseAbsolute]
+  if (ext) {
+    const withoutExt = baseAbsolute.slice(0, -ext.length)
+    candidates.push(
+      ...['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs'].map((replacementExt) => `${withoutExt}${replacementExt}`),
+    )
+  } else {
+    candidates.push(
+      ...[...supportedExtensions].map((candidateExt) => `${baseAbsolute}${candidateExt}`),
+      ...[...supportedExtensions].map((candidateExt) => path.join(baseAbsolute, `index${candidateExt}`)),
+    )
+  }
+  if (ext === '.js' || ext === '.jsx' || ext === '.mjs' || ext === '.cjs') {
+    const withoutExt = baseAbsolute.slice(0, -ext.length)
+    candidates.push(`${withoutExt}.ts`, `${withoutExt}.tsx`)
+  }
+  return [...new Set(candidates)]
+}
+
 function matchesInclude(relativeFilePath: string, includePatterns: string[]): boolean {
   return includePatterns.some((pattern) => matchScopeCompliancePathPattern(pattern, relativeFilePath).matched)
 }
 
-function findMatchingBrace(text: string, openBraceIndex: number): number {
-  let depth = 0
-  for (let index = openBraceIndex; index < text.length; index += 1) {
-    const char = text[index]
-    if (char === '{') depth += 1
-    if (char === '}') {
-      depth -= 1
-      if (depth === 0) return index
+function scriptKindForPath(filePath: string): ts.ScriptKind {
+  const ext = path.extname(filePath).toLowerCase()
+  if (ext === '.tsx') return ts.ScriptKind.TSX
+  if (ext === '.jsx') return ts.ScriptKind.JSX
+  if (ext === '.js' || ext === '.mjs' || ext === '.cjs') return ts.ScriptKind.JS
+  return ts.ScriptKind.TS
+}
+
+function visitSourceFile(sourceFile: ts.SourceFile, visitor: (node: ts.Node) => void): void {
+  function visit(node: ts.Node): void {
+    visitor(node)
+    ts.forEachChild(node, visit)
+  }
+  visit(sourceFile)
+}
+
+function moduleSpecifierText(moduleSpecifier: ts.Expression | undefined): string | null {
+  return moduleSpecifier && ts.isStringLiteralLike(moduleSpecifier) ? moduleSpecifier.text : null
+}
+
+function externalModuleReferenceText(moduleReference: ts.ModuleReference): string | null {
+  if (!ts.isExternalModuleReference(moduleReference)) return null
+  return moduleSpecifierText(moduleReference.expression)
+}
+
+function requireCallSpecifier(node: ts.Node): string | null {
+  if (!ts.isCallExpression(node)) return null
+  if (!ts.isIdentifier(node.expression) || node.expression.text !== 'require') return null
+  const [firstArg] = node.arguments
+  return firstArg && ts.isStringLiteralLike(firstArg) ? firstArg.text : null
+}
+
+function dynamicImportCallSpecifier(node: ts.Node): string | null {
+  if (!ts.isCallExpression(node)) return null
+  if (node.expression.kind !== ts.SyntaxKind.ImportKeyword) return null
+  const [firstArg] = node.arguments
+  return firstArg && ts.isStringLiteralLike(firstArg) ? firstArg.text : null
+}
+
+function addRequireBindings(
+  fileIndex: FileIndex,
+  callExpression: ts.CallExpression,
+  specifier: string,
+  targetFile: string | null,
+): void {
+  const parent = callExpression.parent
+  if (!parent || !ts.isVariableDeclaration(parent)) return
+  if (ts.isIdentifier(parent.name)) {
+    addNamespaceImport(fileIndex, {
+      localName: parent.name.text,
+      importedName: '*',
+      specifier,
+      targetFile,
+      kind: 'require',
+      typeOnly: false,
+    })
+    return
+  }
+  if (ts.isObjectBindingPattern(parent.name)) {
+    for (const element of parent.name.elements) {
+      if (!ts.isIdentifier(element.name)) continue
+      const importedName = propertyNameText(element.propertyName, fileIndex.sourceFile.ast) ?? element.name.text
+      addImportBinding(fileIndex, {
+        localName: element.name.text,
+        importedName,
+        specifier,
+        targetFile,
+        kind: 'require',
+        typeOnly: false,
+      })
     }
   }
-  return openBraceIndex
 }
 
-function lineStarts(text: string): number[] {
-  const starts = [0]
-  for (let index = 0; index < text.length; index += 1) {
-    if (text[index] === '\n') starts.push(index + 1)
+function addImportBinding(fileIndex: FileIndex, binding: ImportBinding): void {
+  addMapEntry(fileIndex.importedBindingsByLocalName, normalizeToken(binding.localName), binding)
+}
+
+function addNamespaceImport(fileIndex: FileIndex, binding: ImportBinding): void {
+  addMapEntry(fileIndex.namespaceImportsByLocalName, normalizeToken(binding.localName), binding)
+}
+
+function addReExport(fileIndex: FileIndex, binding: ReExportBinding): void {
+  addMapEntry(fileIndex.reExportsByName, normalizeToken(binding.exportedName), binding)
+}
+
+function hasExportModifier(node: ts.Node): boolean {
+  return Boolean(
+    ts.canHaveModifiers(node) && ts.getModifiers(node)?.some((entry) => entry.kind === ts.SyntaxKind.ExportKeyword),
+  )
+}
+
+function hasDefaultModifier(node: ts.Node): boolean {
+  return Boolean(
+    ts.canHaveModifiers(node) && ts.getModifiers(node)?.some((entry) => entry.kind === ts.SyntaxKind.DefaultKeyword),
+  )
+}
+
+function isExportedVariableDeclaration(node: ts.VariableDeclaration): boolean {
+  const declarationList = node.parent
+  const statement = declarationList?.parent
+  return Boolean(statement && ts.isVariableStatement(statement) && hasExportModifier(statement))
+}
+
+function hasHeritageClauses(node: ts.Node): node is ts.ClassDeclaration | ts.InterfaceDeclaration {
+  return ts.isClassDeclaration(node) || ts.isInterfaceDeclaration(node)
+}
+
+function isFunctionLikeExpression(expression: ts.Expression): expression is ts.ArrowFunction | ts.FunctionExpression {
+  return ts.isArrowFunction(expression) || ts.isFunctionExpression(expression)
+}
+
+function skipOuterExpressions(expression: ts.Expression | undefined): ts.Expression | undefined {
+  let current = expression
+  while (
+    current &&
+    (ts.isParenthesizedExpression(current) ||
+      ts.isAsExpression(current) ||
+      ts.isTypeAssertionExpression(current) ||
+      ts.isSatisfiesExpression(current) ||
+      ts.isNonNullExpression(current))
+  ) {
+    current = current.expression
   }
-  return starts
+  return current
 }
 
-function locationAt(sourceFile: SourceFile, index: number): JsonRecord {
-  const line = lineColumnAt(sourceFile.lineStarts, index)
+function propertyNameText(
+  name: ts.PropertyName | ts.BindingName | undefined,
+  sourceFile: ts.SourceFile,
+): string | null {
+  if (!name) return null
+  if (ts.isIdentifier(name) || ts.isStringLiteral(name) || ts.isNumericLiteral(name)) return name.text
+  if (ts.isPrivateIdentifier(name)) return name.text
+  if (ts.isComputedPropertyName(name)) {
+    const expression = skipOuterExpressions(name.expression)
+    if (expression && (ts.isStringLiteral(expression) || ts.isNumericLiteral(expression))) return expression.text
+  }
+  if (ts.isObjectBindingPattern(name) || ts.isArrayBindingPattern(name)) return null
+  return name.getText(sourceFile)
+}
+
+function isReferencePropertyAccess(node: ts.PropertyAccessExpression): boolean {
+  return !ts.isQualifiedName(node.parent)
+}
+
+function isReferenceIdentifier(node: ts.Identifier): boolean {
+  const parent = node.parent
+  if (!parent) return true
+  if (isDeclarationName(node, parent)) return false
+  if (ts.isPropertyAccessExpression(parent) && parent.name === node) return false
+  if (ts.isPropertyAssignment(parent) && parent.name === node) return false
+  if (ts.isShorthandPropertyAssignment(parent) && parent.name === node) return true
+  if (ts.isImportClause(parent) || ts.isImportSpecifier(parent) || ts.isNamespaceImport(parent)) return false
+  if (ts.isExportSpecifier(parent)) return false
+  if (ts.isLiteralTypeNode(parent)) return false
+  if (ts.isPropertySignature(parent) && parent.name === node) return false
+  if (ts.isMethodSignature(parent) && parent.name === node) return false
+  if (ts.isTypeParameterDeclaration(parent) && parent.name === node) return false
+  if (ts.isLabeledStatement(parent)) return false
+  return true
+}
+
+function isDeclarationName(node: ts.Identifier, parent: ts.Node): boolean {
+  return (
+    (ts.isFunctionDeclaration(parent) && parent.name === node) ||
+    (ts.isClassDeclaration(parent) && parent.name === node) ||
+    (ts.isInterfaceDeclaration(parent) && parent.name === node) ||
+    (ts.isTypeAliasDeclaration(parent) && parent.name === node) ||
+    (ts.isEnumDeclaration(parent) && parent.name === node) ||
+    (ts.isVariableDeclaration(parent) && parent.name === node) ||
+    (ts.isParameter(parent) && parent.name === node) ||
+    (ts.isBindingElement(parent) && parent.name === node) ||
+    (ts.isMethodDeclaration(parent) && parent.name === node) ||
+    (ts.isPropertyDeclaration(parent) && parent.name === node) ||
+    (ts.isGetAccessorDeclaration(parent) && parent.name === node) ||
+    (ts.isSetAccessorDeclaration(parent) && parent.name === node)
+  )
+}
+
+function filterSymbolsByKind(symbols: SymbolRecord[], kinds: SymbolNodeKind[]): SymbolRecord[] {
+  const kindSet = new Set(kinds)
+  return symbols.filter((symbol) => kindSet.has(symbol.kind))
+}
+
+function resolvedFromSymbolsOrAmbiguous(
+  state: ExtractionState,
+  name: string,
+  symbols: SymbolRecord[],
+  confidence: Confidence,
+): ResolvedTarget[] | 'ambiguous' {
+  const unique = uniqueSymbols(symbols)
+  if (unique.length > 1) {
+    recordAmbiguous(state, name)
+    return 'ambiguous'
+  }
+  return unique.map((symbol) => ({ id: symbol.id, confidence }))
+}
+
+function uniqueSymbols(symbols: SymbolRecord[]): SymbolRecord[] {
+  const seen = new Set<string>()
+  const unique: SymbolRecord[] = []
+  for (const symbol of symbols) {
+    if (seen.has(symbol.id)) continue
+    seen.add(symbol.id)
+    unique.push(symbol)
+  }
+  return unique
+}
+
+function uniqueResolvedTargets(targets: ResolvedTarget[]): ResolvedTarget[] {
+  const seen = new Set<string>()
+  const unique: ResolvedTarget[] = []
+  for (const target of targets) {
+    if (seen.has(target.id)) continue
+    seen.add(target.id)
+    unique.push(target)
+  }
+  return unique
+}
+
+function recordAmbiguous(state: ExtractionState, name: string): void {
+  if (name.trim().length > 0) {
+    state.ambiguousCallNames.add(name)
+  }
+}
+
+function addMapEntry<T>(map: Map<string, T[]>, key: string, value: T): void {
+  map.set(key, [...(map.get(key) ?? []), value])
+}
+
+function classMethodKey(classId: string, methodName: string): string {
+  return `${classId}:${normalizeToken(methodName)}`
+}
+
+function locationRange(sourceFile: SourceFileRecord, startIndex: number, endIndex: number): JsonRecord {
+  const start = sourceFile.ast.getLineAndCharacterOfPosition(clampIndex(sourceFile, startIndex))
+  const end = sourceFile.ast.getLineAndCharacterOfPosition(clampIndex(sourceFile, endIndex))
   return {
-    startLine: line.line,
-    startColumn: line.column,
-    endLine: line.line,
-    endColumn: line.column + 1,
+    startLine: start.line + 1,
+    startColumn: start.character + 1,
+    endLine: end.line + 1,
+    endColumn: end.character + 1,
   }
 }
 
-function locationRange(sourceFile: SourceFile, startIndex: number, endIndex: number): JsonRecord {
-  const start = lineColumnAt(sourceFile.lineStarts, startIndex)
-  const end = lineColumnAt(sourceFile.lineStarts, endIndex)
-  return {
-    startLine: start.line,
-    startColumn: start.column,
-    endLine: end.line,
-    endColumn: end.column,
-  }
+function clampIndex(sourceFile: SourceFileRecord, index: number): number {
+  return Math.max(0, Math.min(index, sourceFile.content.length))
 }
 
-function lineColumnAt(starts: number[], index: number): { line: number; column: number } {
-  let low = 0
-  let high = starts.length - 1
-  while (low <= high) {
-    const mid = Math.floor((low + high) / 2)
-    if (starts[mid] <= index) low = mid + 1
-    else high = mid - 1
-  }
-  const lineIndex = Math.max(0, high)
-  return { line: lineIndex + 1, column: index - starts[lineIndex] + 1 }
+function lineColumnId(sourceFile: SourceFileRecord, index: number): string {
+  const location = sourceFile.ast.getLineAndCharacterOfPosition(clampIndex(sourceFile, index))
+  return `l${location.line + 1}c${location.character + 1}`
 }
 
 function blocker(
