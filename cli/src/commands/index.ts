@@ -2,6 +2,7 @@ import type { CommandResult } from '../core/types.js'
 import { validateEvidence, validateTraceability, validateVisualDesign } from '../validators/devview-validators.js'
 import { acceptCommand } from './accept.js'
 import {
+  benchmarkCompareCodeGraphParityCommand,
   benchmarkEvaluateResultCommand,
   benchmarkLockSuiteCommand,
   benchmarkSummarizeComparisonCommand,
@@ -183,6 +184,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'benchmark' && subcommand === 'evaluate-result') {
     return benchmarkEvaluateResultCommand(context)
+  }
+  if (command === 'benchmark' && subcommand === 'compare-code-graph-parity') {
+    return benchmarkCompareCodeGraphParityCommand(context)
   }
   if (command === 'benchmark' && subcommand === 'summarize-comparison') {
     return benchmarkSummarizeComparisonCommand(context)

@@ -40,6 +40,7 @@ const edgeTypes = [
   'references',
   'inherits',
   'implements',
+  'method',
   'constructs',
   'reads',
   'writes',

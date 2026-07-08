@@ -711,6 +711,22 @@ alignment, and expected context coverage hints for future `codex-graphify` and `
 fixtures. The command is report-only and blocks executable/provider/network instructions or unsafe authority flags
 before output is written.
 
+### Code Graph Parity Benchmark
+
+```bash
+devview benchmark compare-code-graph-parity \
+  --code-subgraph <devview-code-subgraph.json> \
+  --graphify <graphify-out/graph.json> \
+  --output <code-graph-parity.json> \
+  --markdown <code-graph-parity.md> \
+  --json
+```
+
+Compares an existing DevView code subgraph source fact with a raw Graphify `graph.json`. The report emits node, edge,
+call-like edge, relation, ratio, and gap summaries, including Graphify-backed node/edge preservation counts. It does not
+run Graphify, run native extraction, execute benchmark tasks, call providers/network/API, mutate graph-source, satisfy
+Evidence, prove equivalence, enforce scope/CI, activate hooks, or automate approval.
+
 ### Graphify Code Subgraph Import
 
 ```bash
@@ -723,9 +739,11 @@ devview graph import-graphify-code-subgraph \
 ```
 
 Converts a static Graphify-style export into a `devview-code-subgraph` source fact, then validates the generated
-artifact with the same code subgraph boundary used by `graph validate-code-subgraph`. The importer maps supported
-Graphify node kinds and relations into DevView code node/edge vocabulary, preserves Graphify ids in provenance fields,
-requires source-file/source-location status/confidence provenance, and reports unsupported vocabulary as blocking
+artifact with the same code subgraph boundary used by `graph validate-code-subgraph`. The importer accepts real Graphify
+`graphify extract --no-cluster` output whose nodes do not carry `kind`; it infers conservative DevView node kinds from
+file labels, source files, endpoints, and relations. It preserves Graphify ids and original relations in provenance
+fields, maps supported relations including `contains`, `imports`, `imports_from`, `re_exports`, `calls`,
+`indirect_call`, `references`, `inherits`, `implements`, and `method`, and reports unsupported vocabulary as blocking
 findings before writing outputs. It does not run Graphify, run AST extractors, call providers/network/API, mutate
 graph-source, generate View Trees or Context Packs, satisfy Evidence, enforce RBAC, verify signatures, configure CI, or
 automate approval.

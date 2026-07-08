@@ -148,6 +148,9 @@ const edgeTypeMap: Record<string, { kind: string; invert?: true }> = {
   inherits: { kind: 'inherits' },
   extends: { kind: 'inherits' },
   implements: { kind: 'implements' },
+  method: { kind: 'method' },
+  indirect_call: { kind: 'calls' },
+  indirect_calls: { kind: 'calls' },
   constructs: { kind: 'constructs' },
   instantiates: { kind: 'constructs' },
   new: { kind: 'constructs' },
@@ -264,6 +267,7 @@ interface ConvertedNode {
   kind: string
   sourceFile: string
   record: JsonRecord
+  synthetic: boolean
 }
 
 interface ConvertedEdge {
@@ -280,6 +284,28 @@ interface ConversionResult {
   convertedEdges: ConvertedEdge[]
   sourceNodeCount: number
   sourceEdgeCount: number
+}
+
+interface GraphifyNodeKindInference {
+  rawKind: string | null
+  kind: string | null
+  confidence: 'extracted' | 'inferred' | 'ambiguous'
+  reason: string
+}
+
+interface GraphifyGraphContext {
+  root: string
+  sourceSha256: string | null
+  originalNodeIds: Set<string>
+  incomingRelations: Map<string, Set<string>>
+  outgoingRelations: Map<string, Set<string>>
+  fileNodeHints: FileNodeHint[]
+}
+
+interface FileNodeHint {
+  id: string
+  symbolPrefix: string
+  sourceFile: string
 }
 
 export class GraphifyCodeSubgraphImportError extends Error {
@@ -300,7 +326,7 @@ export async function importGraphifyCodeSubgraphFile(
   await assertOutputAuthority(root, [sourcePath], options)
 
   const source = await loadGraphifyExport(root, options.graphifyExport ?? '')
-  const conversion = convertGraphifyExport(source)
+  const conversion = convertGraphifyExport(root, source)
   let blocked = conversion.findings.some((finding) => finding.severity === 'blocker')
   let validationReport: CodeSubgraphValidationReport | null = null
 
@@ -395,7 +421,7 @@ async function loadGraphifyExport(root: string, requestedPath: string): Promise<
   }
 }
 
-function convertGraphifyExport(source: LoadedGraphifyExport): ConversionResult {
+function convertGraphifyExport(root: string, source: LoadedGraphifyExport): ConversionResult {
   const findings: GraphifyCodeSubgraphImportFinding[] = []
   const convertedNodes: ConvertedNode[] = []
   const convertedEdges: ConvertedEdge[] = []
@@ -435,10 +461,10 @@ function convertGraphifyExport(source: LoadedGraphifyExport): ConversionResult {
   }
 
   validateCollectionShape(record, source.relativePath, findings)
-  const graphifyNodes = recordsFromCollection(record.nodes ?? record.graphNodes)
+  const sourceGraphifyNodes = recordsFromCollection(record.nodes ?? record.graphNodes)
   const graphifyEdges = recordsFromCollection(record.edges ?? record.graphEdges)
 
-  if (graphifyNodes.length === 0) {
+  if (sourceGraphifyNodes.length === 0) {
     findings.push(
       blocker(
         'GRAPHIFY_CODE_SUBGRAPH_NO_NODES',
@@ -449,6 +475,8 @@ function convertGraphifyExport(source: LoadedGraphifyExport): ConversionResult {
     )
   }
 
+  const graphifyNodes = addSyntheticEndpointNodes(root, sourceGraphifyNodes, graphifyEdges, source.sha256)
+  const context = buildGraphifyContext(root, source.sha256, sourceGraphifyNodes, graphifyNodes, graphifyEdges)
   const seenGraphifyNodeIds = new Set<string>()
   const nodeByGraphifyId = new Map<string, ConvertedNode>()
   for (const [index, entry] of graphifyNodes.entries()) {
@@ -471,13 +499,14 @@ function convertGraphifyExport(source: LoadedGraphifyExport): ConversionResult {
     }
     seenGraphifyNodeIds.add(normalize(graphifyNodeId))
 
-    const rawKind = graphifyKind(entry)
-    const mappedKind = rawKind ? nodeKindMap[normalizeToken(rawKind)] : null
-    if (!rawKind || !mappedKind) {
+    const inferred = inferGraphifyNodeKind(entry, context)
+    if (!inferred.kind) {
       findings.push(
         blocker(
           'GRAPHIFY_CODE_SUBGRAPH_NODE_KIND_UNMAPPED',
-          `Graphify ${prefix}.kind could not be mapped to DevView code node vocabulary: ${rawKind || 'missing'}.`,
+          `Graphify ${prefix}.kind could not be mapped or inferred for DevView code node vocabulary: ${
+            inferred.rawKind || 'missing'
+          }.`,
           `${prefix}.kind`,
           source.relativePath,
         ),
@@ -485,8 +514,8 @@ function convertGraphifyExport(source: LoadedGraphifyExport): ConversionResult {
       continue
     }
 
-    const sourceFile = sourceFileFor(entry)
-    if (!sourceFile) {
+    const sourceFile = normalizedSourceFileFor(root, entry)
+    if (!sourceFile.value) {
       findings.push(
         blocker(
           'GRAPHIFY_CODE_SUBGRAPH_NODE_SOURCE_FILE_MISSING',
@@ -499,23 +528,30 @@ function convertGraphifyExport(source: LoadedGraphifyExport): ConversionResult {
     }
 
     const devviewNodeId = `code.${sanitizeId(graphifyNodeId)}`
+    const rawConfidence = confidenceFor(entry)
+    const confidence =
+      inferred.confidence === 'extracted' && rawConfidence !== 'ambiguous' ? rawConfidence : inferred.confidence
     const converted: ConvertedNode = {
       graphifyNodeId,
       devviewNodeId,
-      kind: mappedKind,
-      sourceFile,
+      kind: inferred.kind,
+      sourceFile: sourceFile.value,
+      synthetic: Boolean(entry.sourceGraphifyNodeSynthetic),
       record: {
         id: devviewNodeId,
-        kind: mappedKind,
+        kind: inferred.kind,
         label:
           stringValue(entry.label) ?? stringValue(entry.name) ?? stringValue(entry.qualifiedName) ?? graphifyNodeId,
-        sourceFile,
+        sourceFile: sourceFile.value,
+        ...(sourceFile.original ? { originalSourceFile: sourceFile.original } : {}),
         ...locationFields(entry),
         sourceDigest: sourceDigestFor(entry, source.sha256),
-        confidence: confidenceFor(entry),
+        confidence,
         extractor: 'graphify-static-import',
         sourceGraphifyNodeId: graphifyNodeId,
-        sourceGraphifyNodeKind: rawKind,
+        ...(inferred.rawKind ? { sourceGraphifyNodeKind: inferred.rawKind } : {}),
+        sourceGraphifyNodeKindInference: inferred.reason,
+        ...(entry.sourceGraphifyNodeSynthetic ? { sourceGraphifyNodeSynthetic: true } : {}),
       },
     }
     convertedNodes.push(converted)
@@ -597,8 +633,9 @@ function convertGraphifyExport(source: LoadedGraphifyExport): ConversionResult {
       continue
     }
 
-    const sourceFile = sourceFileFor(entry) ?? sourceNode.sourceFile ?? targetNode.sourceFile
-    if (!sourceFile) {
+    const sourceFile = normalizedSourceFileFor(root, entry)
+    const edgeSourceFile = sourceFile.value ?? sourceNode.sourceFile ?? targetNode.sourceFile
+    if (!edgeSourceFile) {
       findings.push(
         blocker(
           'GRAPHIFY_CODE_SUBGRAPH_EDGE_SOURCE_FILE_MISSING',
@@ -621,13 +658,15 @@ function convertGraphifyExport(source: LoadedGraphifyExport): ConversionResult {
         from: sourceNode.devviewNodeId,
         to: targetNode.devviewNodeId,
         kind: mapping.kind,
-        sourceFile,
+        sourceFile: edgeSourceFile,
+        ...(sourceFile.original ? { originalSourceFile: sourceFile.original } : {}),
         ...locationFields(entry),
         sourceDigest: sourceDigestFor(entry, source.sha256),
         confidence: confidenceFor(entry),
         extractor: 'graphify-static-import',
         sourceGraphifyEdgeId: graphifyEdgeId,
         sourceGraphifyEdgeKind: rawKind,
+        ...(mapping.kind !== normalizeToken(rawKind) ? { sourceGraphifyEdgeKindMappedTo: mapping.kind } : {}),
       },
     }
     convertedEdges.push(converted)
@@ -681,9 +720,235 @@ function convertGraphifyExport(source: LoadedGraphifyExport): ConversionResult {
     findings,
     convertedNodes,
     convertedEdges,
-    sourceNodeCount: graphifyNodes.length,
+    sourceNodeCount: sourceGraphifyNodes.length,
     sourceEdgeCount: graphifyEdges.length,
   }
+}
+
+function addSyntheticEndpointNodes(
+  root: string,
+  graphifyNodes: JsonRecord[],
+  graphifyEdges: JsonRecord[],
+  sourceSha256: string | null,
+): JsonRecord[] {
+  const nodes = [...graphifyNodes]
+  const nodeById = new Map<string, JsonRecord>()
+  for (const node of graphifyNodes) {
+    const id = stringValue(node.id) ?? stringValue(node.nodeId) ?? stringValue(node.key)
+    if (id) nodeById.set(normalize(id), node)
+  }
+
+  const fileNodeHints = fileNodeHintsFor(root, graphifyNodes)
+  for (const edge of graphifyEdges) {
+    for (const endpoint of [
+      endpointValue(edge, ['from', 'source', 'sourceId', 'sourceNodeId', 'sourceNode']),
+      endpointValue(edge, ['to', 'target', 'targetId', 'targetNodeId', 'targetNode']),
+    ]) {
+      if (!endpoint || nodeById.has(normalize(endpoint))) continue
+      const synthetic = syntheticEndpointNode(root, endpoint, edge, fileNodeHints, sourceSha256)
+      nodeById.set(normalize(endpoint), synthetic)
+      nodes.push(synthetic)
+    }
+  }
+  return nodes
+}
+
+function syntheticEndpointNode(
+  root: string,
+  graphifyNodeId: string,
+  edge: JsonRecord,
+  fileNodeHints: FileNodeHint[],
+  sourceSha256: string | null,
+): JsonRecord {
+  const matchedFile = fileHintForEndpoint(graphifyNodeId, fileNodeHints)
+  const edgeSourceFile = normalizedSourceFileFor(root, edge)
+  const reference = isReferenceGraphifyId(graphifyNodeId)
+  const sourceFile = reference
+    ? (edgeSourceFile.value ?? matchedFile?.sourceFile ?? 'graphify-external-reference')
+    : (matchedFile?.sourceFile ?? edgeSourceFile.value ?? 'graphify-missing-endpoint')
+  return {
+    id: graphifyNodeId,
+    label: reference ? referenceLabel(graphifyNodeId) : missingEndpointLabel(graphifyNodeId, matchedFile),
+    sourceFile,
+    ...(edgeSourceFile.original && edgeSourceFile.value === sourceFile
+      ? { originalSourceFile: edgeSourceFile.original }
+      : {}),
+    sourceLocationStatus: reference
+      ? 'graphify-external-reference-endpoint-node-not-emitted'
+      : 'graphify-internal-endpoint-node-not-emitted',
+    sourceDigest: sourceSha256 ? `sha256:${sourceSha256}` : undefined,
+    confidence: 'AMBIGUOUS',
+    sourceGraphifyNodeSynthetic: true,
+  }
+}
+
+function buildGraphifyContext(
+  root: string,
+  sourceSha256: string | null,
+  originalGraphifyNodes: JsonRecord[],
+  graphifyNodes: JsonRecord[],
+  graphifyEdges: JsonRecord[],
+): GraphifyGraphContext {
+  const originalNodeIds = new Set<string>()
+  const incomingRelations = new Map<string, Set<string>>()
+  const outgoingRelations = new Map<string, Set<string>>()
+  for (const node of graphifyNodes) {
+    const id = stringValue(node.id) ?? stringValue(node.nodeId) ?? stringValue(node.key)
+    if (!id) continue
+    incomingRelations.set(normalize(id), new Set())
+    outgoingRelations.set(normalize(id), new Set())
+  }
+  for (const node of originalGraphifyNodes) {
+    const id = stringValue(node.id) ?? stringValue(node.nodeId) ?? stringValue(node.key)
+    if (id) originalNodeIds.add(normalize(id))
+  }
+  for (const edge of graphifyEdges) {
+    const relation = graphifyKind(edge)
+    const source = endpointValue(edge, ['from', 'source', 'sourceId', 'sourceNodeId', 'sourceNode'])
+    const target = endpointValue(edge, ['to', 'target', 'targetId', 'targetNodeId', 'targetNode'])
+    if (!relation) continue
+    if (source) outgoingRelations.get(normalize(source))?.add(normalizeToken(relation))
+    if (target) incomingRelations.get(normalize(target))?.add(normalizeToken(relation))
+  }
+  return {
+    root,
+    sourceSha256,
+    originalNodeIds,
+    incomingRelations,
+    outgoingRelations,
+    fileNodeHints: fileNodeHintsFor(root, originalGraphifyNodes),
+  }
+}
+
+function inferGraphifyNodeKind(record: JsonRecord, context: GraphifyGraphContext): GraphifyNodeKindInference {
+  const rawKind = graphifyKind(record)
+  const mappedKind = rawKind ? nodeKindMap[normalizeToken(rawKind)] : null
+  if (mappedKind) {
+    return { rawKind, kind: mappedKind, confidence: 'extracted', reason: 'graphify-explicit-kind' }
+  }
+  if (rawKind) {
+    return { rawKind, kind: null, confidence: 'ambiguous', reason: 'graphify-explicit-kind-unsupported' }
+  }
+
+  const id = stringValue(record.id) ?? stringValue(record.nodeId) ?? stringValue(record.key) ?? ''
+  const label = stringValue(record.label) ?? stringValue(record.name) ?? stringValue(record.qualifiedName) ?? id
+  const normalizedId = normalize(id)
+  const incoming = context.incomingRelations.get(normalizedId) ?? new Set<string>()
+  const outgoing = context.outgoingRelations.get(normalizedId) ?? new Set<string>()
+
+  if (isReferenceGraphifyId(id)) {
+    return { rawKind, kind: 'external_dependency', confidence: 'inferred', reason: 'graphify-reference-endpoint' }
+  }
+  if (isFileNode(record, context.root)) {
+    return { rawKind, kind: 'file', confidence: 'extracted', reason: 'graphify-file-label-and-source-file' }
+  }
+  if (incoming.has('method') || looksLikeMethodLabel(label)) {
+    return { rawKind, kind: 'method', confidence: 'inferred', reason: 'graphify-method-relation-or-label' }
+  }
+  if (incoming.has('implements')) {
+    return { rawKind, kind: 'interface', confidence: 'inferred', reason: 'graphify-implements-target' }
+  }
+  if (outgoing.has('implements') || outgoing.has('method')) {
+    return { rawKind, kind: 'class', confidence: 'inferred', reason: 'graphify-class-like-relation' }
+  }
+  if (incoming.has('inherits') || outgoing.has('inherits')) {
+    return { rawKind, kind: 'type', confidence: 'ambiguous', reason: 'graphify-inheritance-endpoint' }
+  }
+  if (looksLikeCallableLabel(label)) {
+    return { rawKind, kind: 'function', confidence: 'extracted', reason: 'graphify-callable-label' }
+  }
+  if (looksLikeTypeLabel(label)) {
+    return { rawKind, kind: 'type', confidence: 'ambiguous', reason: 'graphify-type-like-label' }
+  }
+  if (context.originalNodeIds.has(normalizedId)) {
+    return { rawKind, kind: 'field', confidence: 'ambiguous', reason: 'graphify-code-symbol-without-kind' }
+  }
+  return { rawKind, kind: 'external_dependency', confidence: 'ambiguous', reason: 'graphify-missing-endpoint' }
+}
+
+function fileNodeHintsFor(root: string, nodes: JsonRecord[]): FileNodeHint[] {
+  const hints: FileNodeHint[] = []
+  for (const node of nodes) {
+    const id = stringValue(node.id) ?? stringValue(node.nodeId) ?? stringValue(node.key)
+    const sourceFile = normalizedSourceFileFor(root, node).value
+    if (!id || !sourceFile || !isFileNode(node, root)) continue
+    hints.push({
+      id: normalize(id),
+      symbolPrefix: graphifyFileSymbolPrefix(id, sourceFile),
+      sourceFile,
+    })
+  }
+  return hints.sort((left, right) => right.symbolPrefix.length - left.symbolPrefix.length)
+}
+
+function fileHintForEndpoint(graphifyNodeId: string, hints: FileNodeHint[]): FileNodeHint | null {
+  const id = normalize(graphifyNodeId)
+  for (const hint of hints) {
+    if (id === hint.id || id.startsWith(`${hint.symbolPrefix}_`)) return hint
+  }
+  return null
+}
+
+function graphifyFileSymbolPrefix(graphifyNodeId: string, sourceFile: string): string {
+  const id = normalize(graphifyNodeId)
+  const extension = path.extname(sourceFile).replace('.', '').toLowerCase()
+  if (extension && id.endsWith(`_${extension}`)) {
+    return id.slice(0, -`_${extension}`.length)
+  }
+  return id.replace(/_(?:c|m)?[jt]sx?$/, '')
+}
+
+function isFileNode(record: JsonRecord, root: string): boolean {
+  const label = stringValue(record.label) ?? stringValue(record.name)
+  const sourceFile = normalizedSourceFileFor(root, record).value
+  if (!label || !sourceFile) return false
+  const baseName = path.basename(sourceFile).toLowerCase()
+  return looksLikeSourcePath(label) || label.toLowerCase() === baseName
+}
+
+function looksLikeCallableLabel(label: string): boolean {
+  return /\(\)$/.test(label)
+}
+
+function looksLikeMethodLabel(label: string): boolean {
+  return /^\./.test(label) && looksLikeCallableLabel(label)
+}
+
+function looksLikeTypeLabel(label: string): boolean {
+  return /^[A-Z][A-Za-z0-9_$]*$/.test(label)
+}
+
+function isReferenceGraphifyId(id: string): boolean {
+  return /^ref(?:_|$)/i.test(id)
+}
+
+function referenceLabel(id: string): string {
+  const normalizedId = id.replace(/^ref_?/i, '')
+  if (normalizedId.startsWith('node_')) {
+    return `node:${normalizedId.slice('node_'.length).replace(/_promises$/, '/promises')}`
+  }
+  return normalizedId.replace(/_/g, '-')
+}
+
+function missingEndpointLabel(id: string, matchedFile: FileNodeHint | null): string {
+  const normalizedId = normalize(id)
+  if (matchedFile && normalizedId.startsWith(`${matchedFile.symbolPrefix}_`)) {
+    return normalizedId.slice(matchedFile.symbolPrefix.length + 1) || id
+  }
+  return id
+}
+
+function normalizedSourceFileFor(root: string, record: JsonRecord): { value: string | null; original?: string } {
+  const sourceFile = sourceFileFor(record)
+  if (!sourceFile) return { value: null }
+  const normalized = sourceFile.replaceAll('\\', '/')
+  if (!path.isAbsolute(sourceFile)) return { value: normalized }
+
+  const rootRelative = path.relative(root, sourceFile)
+  if (rootRelative && !rootRelative.startsWith('..') && !path.isAbsolute(rootRelative)) {
+    return { value: rootRelative.replaceAll('\\', '/'), original: sourceFile }
+  }
+  return { value: normalized, original: sourceFile }
 }
 
 function emptyConversion(findings: GraphifyCodeSubgraphImportFinding[]): ConversionResult {
@@ -975,6 +1240,12 @@ function sourceFileFor(record: JsonRecord): string | null {
 }
 
 function locationFields(record: JsonRecord): JsonRecord {
+  const rawLineLocation =
+    stringValue(record.sourceLocation) ?? stringValue(record.source_location) ?? stringValue(record.location)
+  const parsedLineLocation = rawLineLocation ? graphifyLineLocation(rawLineLocation) : null
+  if (parsedLineLocation) {
+    return { sourceLocation: parsedLineLocation }
+  }
   const sourceLocation =
     asRecord(record.sourceLocation) ??
     asRecord(record.source_location) ??
@@ -989,6 +1260,16 @@ function locationFields(record: JsonRecord): JsonRecord {
       stringValue(record.sourceLocationStatus) ??
       stringValue(record.locationStatus) ??
       'graphify-source-location-not-modeled',
+  }
+}
+
+function graphifyLineLocation(value: string): JsonRecord | null {
+  const match = /^L(\d+)$/i.exec(value.trim())
+  if (!match) return null
+  return {
+    line: Number(match[1]),
+    raw: value,
+    granularity: 'line',
   }
 }
 

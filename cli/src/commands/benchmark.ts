@@ -1,4 +1,5 @@
 import { BenchmarkComparisonValidationError, summarizeBenchmarkComparison } from '../core/benchmark-comparison.js'
+import { CodeGraphParityBenchmarkError, compareCodeGraphParityFile } from '../core/code-graph-parity-benchmark.js'
 import { BenchmarkEvaluationValidationError, evaluateBenchmarkResult } from '../core/benchmark-evaluation.js'
 import {
   BenchmarkGovernanceVerificationValidationError,
@@ -9,6 +10,68 @@ import { GraphifyImportValidationError, validateGraphifyImport } from '../core/g
 import type { CommandResult } from '../core/types.js'
 import { ExitCode, issue } from '../core/types.js'
 import type { CommandContext } from './shared.js'
+
+export async function benchmarkCompareCodeGraphParityCommand(context: CommandContext): Promise<CommandResult> {
+  try {
+    const report = await compareCodeGraphParityFile(context.options.root, {
+      codeSubgraph: context.options.codeSubgraph,
+      graphifyExport: context.options.graphifyExport,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+
+    return {
+      ok: true,
+      command: 'benchmark compare-code-graph-parity',
+      exitCode: ExitCode.Success,
+      message: 'Code graph parity benchmark report generated without running Graphify or mutating graph-source.',
+      issues: [],
+      data: { ...report },
+    }
+  } catch (error) {
+    if (error instanceof CodeGraphParityBenchmarkError) {
+      const report = error.report
+      const blockingFindings = report.findings.filter((finding) => finding.severity === 'blocker')
+      return {
+        ok: false,
+        command: 'benchmark compare-code-graph-parity',
+        exitCode: ExitCode.ValidationFailed,
+        message: 'Code graph parity benchmark report is blocked before any live benchmark activity.',
+        issues: blockingFindings.map((finding) =>
+          issue({
+            validator: 'CodeGraphParityBenchmark',
+            code: finding.code,
+            severity: 'error',
+            message: finding.message,
+            file: finding.path,
+            reason: finding.field ? `Field: ${finding.field}` : undefined,
+            suggestedFix:
+              'Provide a valid DevView code subgraph, a raw Graphify graph.json, and dedicated report outputs with no unsafe authority flags.',
+          }),
+        ),
+        data: { ...report },
+      }
+    }
+
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'benchmark compare-code-graph-parity',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Code graph parity benchmark report could not run.',
+      issues: [
+        issue({
+          validator: 'CodeGraphParityBenchmark',
+          code: 'CODE_GRAPH_PARITY_BENCHMARK_FAILED',
+          severity: 'error',
+          message,
+          suggestedFix:
+            'Provide --code-subgraph, --graphify/--graphify-export, and --output paths outside source/control artifacts.',
+        }),
+      ],
+    }
+  }
+}
 
 export async function benchmarkEvaluateResultCommand(context: CommandContext): Promise<CommandResult> {
   try {

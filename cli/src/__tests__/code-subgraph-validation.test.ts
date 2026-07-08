@@ -56,6 +56,8 @@ describe('graph validate-code-subgraph CLI', () => {
         nodes: [
           codeNode('file.todo-service', 'file', 'src/todo-service.ts'),
           codeNode('module.todo-store', 'module', 'src/todo-store.ts'),
+          codeNode('class.todo-service', 'class', 'src/todo-service.ts'),
+          codeNode('method.addTodo', 'method', 'src/todo-service.ts'),
           codeNode('function.addTodo', 'function', 'src/todo-service.ts'),
           codeNode('function.saveTodo', 'function', 'src/todo-store.ts'),
           codeNode('test.addTodo', 'test', 'src/todo-service.test.ts', 'ambiguous'),
@@ -75,6 +77,7 @@ describe('graph validate-code-subgraph CLI', () => {
             'imports',
             'src/todo-service.ts',
           ),
+          codeEdge('edge.service-method-add', 'class.todo-service', 'method.addTodo', 'method', 'src/todo-service.ts'),
           codeEdge('edge.add-calls-save', 'function.addTodo', 'function.saveTodo', 'calls', 'src/todo-service.ts'),
           codeEdge('edge.test-covers-add', 'test.addTodo', 'function.addTodo', 'covers', 'src/todo-service.test.ts'),
         ],
@@ -98,6 +101,7 @@ describe('graph validate-code-subgraph CLI', () => {
     expect(result.exitCode).toBe(ExitCode.Success)
     expect(payload.edgeSummary.codeEdgeTypeCounts.calls).toBe(1)
     expect(payload.edgeSummary.codeEdgeTypeCounts.imports).toBe(1)
+    expect(payload.edgeSummary.codeEdgeTypeCounts.method).toBe(1)
     expect(payload.edgeSummary.codeEdgeTypeCounts.covers).toBe(1)
     expect(payload.provenanceSummary.confidenceCounts.extracted).toBeGreaterThan(0)
     expect(payload.provenanceSummary.confidenceCounts.ambiguous).toBeGreaterThan(0)
