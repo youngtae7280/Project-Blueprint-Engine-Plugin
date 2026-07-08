@@ -781,14 +781,17 @@ devview graph extract-code-subgraph \
   --json
 ```
 
-Scans JavaScript and TypeScript source files directly and emits a validated `devview-code-subgraph` source fact with
-file, class, function, method, import, contains, and call facts. The default `graphify-compatible` extraction profile
-keeps declaration coverage while bounding noisy call/reference edges by skipping broad identifier references, filtering
-external dependency calls, and collapsing duplicate call-like `(from, kind, to)` relations. Use
-`--extraction-profile rich` when a diagnostic run needs broader identifier reference and call-site facts. The command
-skips common build/control directories, records unsupported extensions as limitations, and does not execute project
-code, run package scripts, invoke Graphify, call providers/network/API, mutate graph-source, generate View Trees or
-Context Packs, satisfy Evidence, enforce RBAC, verify signatures, configure CI, activate hooks, or automate approval.
+Scans JavaScript, TypeScript, and C# source files directly and emits a validated `devview-code-subgraph` source fact
+with file, class, interface, function, method, field/property, import, contains, heritage, construct, and call facts.
+The default `graphify-compatible` extraction profile keeps declaration coverage while bounding noisy call/reference
+edges by skipping broad identifier references, filtering external dependency calls, and collapsing duplicate call-like
+`(from, kind, to)` relations. C# extraction is static and conservative; it records using directives, type/member
+declarations, simple inheritance/implements links, constructor calls, and same-file method calls without compiling or
+running the project. Use `--extraction-profile rich` when a diagnostic run needs broader identifier reference and
+call-site facts. The command skips common build/control directories, records unsupported extensions as limitations, and
+does not execute project code, run package scripts, invoke Graphify, call providers/network/API, mutate graph-source,
+generate View Trees or Context Packs, satisfy Evidence, enforce RBAC, verify signatures, configure CI, activate hooks,
+or automate approval.
 
 ### Code Subgraph Merge Plan
 
@@ -809,6 +812,31 @@ duplicate edges, and emits `devview-code-subgraph-merge-plan-report`. It does no
 graph-source, apply a graph delta, generate View Trees or Context Packs, execute Graphify or project code, call
 providers/network/API, satisfy Evidence, enforce RBAC, verify signatures, configure CI, activate hooks, or automate
 approval.
+
+### Code Symbol Link Derivation
+
+```bash
+devview graph derive-code-symbol-links \
+  --code-subgraph <devview-code-subgraph.json> \
+  --graph-source <maintainability-graph.json> \
+  --devview-graph-data <devviewgraph.data.json> \
+  --output <code-symbol-links.json> \
+  --markdown <code-symbol-links.md> \
+  --json
+```
+
+Derives a report-only `devview-code-symbol-links` source fact from a supplied code subgraph plus either a graph-source
+artifact or DevView Graph HTML data preview. The command uses deterministic file-path and token hints from maintenance
+nodes, workflow steps, subgraphs, and pack mappings to connect requirements, tasks, changes, checks, evidence,
+decisions, risks, tests, documents, modules, or projects to concrete code nodes. The output is designed to be
+immediately validated with `graph validate-code-symbol-links`.
+
+This is not a separate code graph and it does not mutate graph-source. It produces candidate first-class code links for
+the unified DevView Maintainability Graph, then downstream validation decides whether those source facts can be consumed
+by View Tree symbol selection, Context Pack generation, code impact analysis, or unified graph queries. It does not
+execute Graphify, run AST extractors, execute project code, generate View Trees or Context Packs, apply Graph Delta,
+accept Evidence, satisfy runtime Evidence, enforce scope/RBAC, verify signatures, configure CI, activate hooks, call
+providers/network/API, execute shell/project code, or automate approval.
 
 ### Code Symbol Link Validation
 

@@ -5,6 +5,8 @@ import type { DevViewProject, ValidationIssue } from './types.js'
 import { issue } from './types.js'
 
 export const defaultArtifacts = {
+  maintainabilityGraph: '.devview/graph/maintainability-graph.json',
+  canonicalGraphBoundary: '.devview/graph/canonical-graph-boundary.md',
   productTree: '.devview/tree/product-tree.json',
   projectTree: '.devview/tree/project-tree.json',
   workTree: '.devview/tree/work-tree.json',

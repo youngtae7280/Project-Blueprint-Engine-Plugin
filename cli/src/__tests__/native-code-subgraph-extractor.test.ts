@@ -85,6 +85,88 @@ describe('graph extract-code-subgraph CLI', () => {
     expect(revalidation.exitCode).toBe(ExitCode.Success)
   })
 
+  it('extracts C# file, type, member, import, heritage, call, and construct facts into a validated code subgraph', async () => {
+    const workspace = createWorkspace()
+    writeText(
+      join(workspace, 'target/src/Printing/PrinterService.cs'),
+      [
+        'using System;',
+        '',
+        'namespace Demo.Printing;',
+        '',
+        'public interface IPrinter',
+        '{',
+        '    void Print();',
+        '}',
+        '',
+        'public class PrinterSession',
+        '{',
+        '    public void Open() { }',
+        '}',
+        '',
+        'public class PrinterService : IPrinter',
+        '{',
+        '    public string Name { get; set; }',
+        '',
+        '    public void Print()',
+        '    {',
+        '        Helper();',
+        '        var session = new PrinterSession();',
+        '        session.Open();',
+        '    }',
+        '',
+        '    private void Helper() { }',
+        '}',
+        '',
+      ].join('\n'),
+    )
+
+    const result = await runDevViewCli(
+      [
+        'graph',
+        'extract-code-subgraph',
+        '--target-repo',
+        'target',
+        '--include',
+        'src/**/*.cs',
+        '--output',
+        '.tmp/csharp-code-subgraph.json',
+        '--validation-output',
+        '.tmp/csharp-code-subgraph-validation.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+    const codeSubgraph = JSON.parse(readFileSync(join(workspace, '.tmp/csharp-code-subgraph.json'), 'utf8'))
+    const nodes = codeSubgraph.nodes as Array<{ id: string; kind: string; label: string; sourceFile: string }>
+    const edges = codeSubgraph.edges as Array<{ from: string; to: string; kind: string }>
+    const validation = JSON.parse(readFileSync(join(workspace, '.tmp/csharp-code-subgraph-validation.json'), 'utf8'))
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.extractionMode).toBe('native-static-code-extractor')
+    expect(payload.extractionSummary.fileNodeCount).toBe(1)
+    expect(payload.extractionSummary.classNodeCount).toBeGreaterThanOrEqual(2)
+    expect(payload.extractionSummary.interfaceNodeCount).toBe(1)
+    expect(payload.extractionSummary.methodNodeCount).toBeGreaterThanOrEqual(3)
+    expect(payload.extractionSummary.fieldNodeCount).toBeGreaterThanOrEqual(1)
+    expect(payload.extractionSummary.importEdgeCount).toBeGreaterThanOrEqual(1)
+    expect(payload.extractionSummary.callEdgeCount).toBeGreaterThanOrEqual(2)
+    expect(payload.extractionSummary.constructEdgeCount).toBeGreaterThanOrEqual(1)
+
+    expect(nodes).toContainEqual(expect.objectContaining({ kind: 'interface', label: 'Demo.Printing.IPrinter' }))
+    expect(nodes).toContainEqual(expect.objectContaining({ kind: 'class', label: 'Demo.Printing.PrinterService' }))
+    expect(nodes).toContainEqual(
+      expect.objectContaining({ kind: 'method', label: 'Demo.Printing.PrinterService.Print' }),
+    )
+    expect(nodes).toContainEqual(expect.objectContaining({ kind: 'field', label: 'Demo.Printing.PrinterService.Name' }))
+    expect(nodes.some((entry) => entry.kind === 'external_dependency' && entry.label === 'System')).toBe(true)
+    expect(edges.map((entry) => entry.kind)).toEqual(
+      expect.arrayContaining(['imports', 'implements', 'calls', 'constructs', 'contains']),
+    )
+    expect(validation.status).toBe('devview-code-subgraph-validation-passed')
+  })
+
   it('respects include filtering and reports unsupported included extensions as limitations', async () => {
     const workspace = createWorkspace()
     writeFixtureProject(workspace)
@@ -361,7 +443,7 @@ describe('graph extract-code-subgraph CLI', () => {
     const edges = codeSubgraph.edges as Array<{ from: string; to: string; kind: string }>
 
     expect(result.exitCode).toBe(ExitCode.Success)
-    expect(payload.extractionMode).toBe('native-static-js-ts-ast')
+    expect(payload.extractionMode).toBe('native-static-code-extractor')
     expect(payload.astExtractorExecuted).toBe(false)
     expect(payload.extractionSummary.interfaceNodeCount).toBeGreaterThanOrEqual(2)
     expect(payload.extractionSummary.typeNodeCount).toBeGreaterThanOrEqual(3)

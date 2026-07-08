@@ -25,14 +25,14 @@ export type NativeCodeSubgraphExtractionProfile = 'graphify-compatible' | 'rich'
 const REPORT_ROLE = 'devview-native-code-subgraph-extraction-report'
 const PASSED_STATUS = 'devview-native-code-subgraph-extraction-passed'
 const BLOCKED_STATUS = 'devview-native-code-subgraph-extraction-blocked'
-const REPORT_SCOPE = 'native-js-ts-code-subgraph-static-extraction-report-only'
+const REPORT_SCOPE = 'native-code-subgraph-static-extraction-report-only'
 const CODE_SUBGRAPH_ROLE = 'devview-code-subgraph'
 const CODE_SUBGRAPH_STATUS = 'devview-code-subgraph-supplied'
 const CODE_SUBGRAPH_SCOPE = 'code-subgraph-source-fact-only'
-const EXTRACTOR_ID = 'native-static-js-ts-ast'
+const EXTRACTOR_ID = 'native-static-code-extractor'
 const DEFAULT_EXTRACTION_PROFILE: NativeCodeSubgraphExtractionProfile = 'graphify-compatible'
 
-const supportedExtensions = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs'])
+const supportedExtensions = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.cs'])
 const importLikeEdgeKinds = new Set(['imports', 'imports_from', 're_exports'])
 const callLikeEdgeKinds = new Set(['calls', 'constructs', 'references'])
 const skippedDirectories = new Set([
@@ -50,6 +50,25 @@ const skippedDirectories = new Set([
 const maxFileBytes = 1_000_000
 const maxSupportedFiles = 1_000
 const maxAmbiguousNamesInFinding = 50
+const csharpControlKeywords = new Set([
+  'if',
+  'for',
+  'foreach',
+  'while',
+  'switch',
+  'catch',
+  'using',
+  'lock',
+  'return',
+  'throw',
+  'new',
+  'typeof',
+  'nameof',
+  'sizeof',
+  'default',
+  'base',
+  'this',
+])
 
 export interface NativeCodeSubgraphExtractorOptions {
   targetRepo?: string
@@ -154,6 +173,7 @@ interface SourceFileRecord {
   digest: string
   byteLength: number
   ast: ts.SourceFile
+  language: 'js-ts' | 'csharp'
 }
 
 interface SymbolRecord {
@@ -200,6 +220,18 @@ interface ResolvedTarget {
   confidence: Confidence
 }
 
+interface CSharpHeritageRecord {
+  symbol: SymbolRecord
+  targetName: string
+  startIndex: number
+}
+
+interface CSharpMethodBodyRecord {
+  symbol: SymbolRecord
+  body: string
+  bodyStartIndex: number
+}
+
 interface ExtractionState {
   findings: NativeCodeSubgraphExtractionFinding[]
   nodes: JsonRecord[]
@@ -225,6 +257,8 @@ interface ExtractionState {
   scannedByteCount: number
   ambiguousCallNames: Set<string>
   extractionProfile: NativeCodeSubgraphExtractionProfile
+  csharpHeritageRecords: CSharpHeritageRecord[]
+  csharpMethodBodies: CSharpMethodBodyRecord[]
 }
 
 export class NativeCodeSubgraphExtractionError extends Error {
@@ -363,6 +397,8 @@ async function extractCodeSubgraph(
     scannedByteCount: 0,
     ambiguousCallNames: new Set(),
     extractionProfile,
+    csharpHeritageRecords: [],
+    csharpMethodBodies: [],
   }
 
   const invalidInclude = includePatterns
@@ -388,7 +424,7 @@ async function extractCodeSubgraph(
     state.findings.push(
       blocker(
         'NATIVE_CODE_SUBGRAPH_NO_SUPPORTED_FILES',
-        'No JavaScript or TypeScript source files were found for static code subgraph extraction.',
+        'No JavaScript, TypeScript, or C# source files were found for static code subgraph extraction.',
         'targetRepo',
         targetRepoPath,
       ),
@@ -399,7 +435,7 @@ async function extractCodeSubgraph(
     state.findings.push(
       blocker(
         'NATIVE_CODE_SUBGRAPH_FILE_LIMIT_EXCEEDED',
-        `Static extraction supports up to ${maxSupportedFiles} JS/TS files in one report-only run; found ${supported.length}.`,
+        `Static extraction supports up to ${maxSupportedFiles} JS/TS/C# files in one report-only run; found ${supported.length}.`,
         'targetRepo',
         targetRepoPath,
       ),
@@ -415,7 +451,7 @@ async function extractCodeSubgraph(
       state.findings.push(
         warning(
           'NATIVE_CODE_SUBGRAPH_LARGE_FILE_SKIPPED',
-          `Skipped large JS/TS file over ${maxFileBytes} bytes: ${relativePath(targetRepoPath, absolutePath)}.`,
+          `Skipped large JS/TS/C# file over ${maxFileBytes} bytes: ${relativePath(targetRepoPath, absolutePath)}.`,
           undefined,
           relativePath(targetRepoPath, absolutePath),
         ),
@@ -430,6 +466,7 @@ async function extractCodeSubgraph(
       content,
       digest: `sha256:${createHash('sha256').update(bytes).digest('hex')}`,
       byteLength: bytes.byteLength,
+      language: path.extname(relative).toLowerCase() === '.cs' ? 'csharp' : 'js-ts',
       ast: ts.createSourceFile(relative, content, ts.ScriptTarget.Latest, true, scriptKindForPath(relative)),
     })
     state.includedSourcePaths.push(absolutePath)
@@ -445,15 +482,26 @@ async function extractCodeSubgraph(
     state.fileIndexesByRelativePath.set(normalizePath(sourceFile.relativePath), createFileIndex(sourceFile, fileNodeId))
   }
   for (const fileIndex of sortedFileIndexes(state)) {
+    if (fileIndex.sourceFile.language === 'csharp') continue
     extractImportsAndExports(state, targetRepoPath, fileIndex)
   }
   for (const fileIndex of sortedFileIndexes(state)) {
+    if (fileIndex.sourceFile.language === 'csharp') {
+      extractCSharpSymbols(state, fileIndex)
+      continue
+    }
     extractSymbols(state, fileIndex)
   }
   for (const fileIndex of sortedFileIndexes(state)) {
+    if (fileIndex.sourceFile.language === 'csharp') continue
     addHeritageEdges(state, fileIndex)
   }
+  addCSharpHeritageEdges(state)
   for (const fileIndex of sortedFileIndexes(state)) {
+    if (fileIndex.sourceFile.language === 'csharp') {
+      addCSharpCallLikeEdges(state, fileIndex)
+      continue
+    }
     addCallLikeEdges(state, fileIndex)
   }
 
@@ -484,7 +532,7 @@ async function extractCodeSubgraph(
     state.findings.push({
       severity: 'satisfied',
       code: 'NATIVE_CODE_SUBGRAPH_EXTRACTED',
-      message: 'JavaScript/TypeScript files were statically extracted into a DevView code subgraph source fact.',
+      message: 'JavaScript/TypeScript/C# files were statically extracted into a DevView code subgraph source fact.',
       path: targetRepoPath,
     })
   }
@@ -831,6 +879,254 @@ function extractSymbols(state: ExtractionState, fileIndex: FileIndex): void {
 
   visit(fileIndex.sourceFile.ast, null)
   applyLocalExportDeclarations(fileIndex)
+}
+
+function extractCSharpSymbols(state: ExtractionState, fileIndex: FileIndex): void {
+  const sourceFile = fileIndex.sourceFile
+  const content = sourceFile.content
+  const namespaceName =
+    matchFirst(content, /\bnamespace\s+([A-Za-z_][\w.]*)\s*;/) ??
+    matchFirst(content, /\bnamespace\s+([A-Za-z_][\w.]*)\s*\{/)
+
+  for (const match of content.matchAll(/^\s*using\s+([A-Za-z_][\w.]*)\s*;/gm)) {
+    const specifier = match[1]
+    if (!specifier) continue
+    addEdge(state, {
+      from: fileIndex.fileNodeId,
+      to: externalDependencyNode(state, sourceFile, specifier),
+      kind: 'imports',
+      sourceFile: sourceFile.relativePath,
+      sourceDigest: sourceFile.digest,
+      sourceLocation: locationRange(sourceFile, match.index ?? 0, (match.index ?? 0) + match[0].length),
+      confidence: 'inferred',
+    })
+  }
+
+  const typeRegex =
+    /\b(?:(?:public|internal|private|protected|sealed|abstract|static|partial|readonly|unsafe)\s+)*(class|interface|struct|record|enum)\s+([A-Za-z_]\w*)(?:\s*:\s*([^{]+))?\s*\{/g
+  for (const match of content.matchAll(typeRegex)) {
+    const typeKind = match[1]
+    const typeName = match[2]
+    if (!typeKind || !typeName) continue
+    const declarationStart = match.index ?? 0
+    const openBraceIndex = content.indexOf('{', declarationStart)
+    const closeBraceIndex = findMatchingBrace(content, openBraceIndex)
+    const qualifiedName = namespaceName ? `${namespaceName}.${typeName}` : typeName
+    const kind: SymbolNodeKind = typeKind === 'interface' ? 'interface' : typeKind === 'enum' ? 'type' : 'class'
+    const symbol = addCSharpSymbol(state, fileIndex, {
+      name: typeName,
+      qualifiedName,
+      kind,
+      startIndex: declarationStart,
+      endIndex: closeBraceIndex > openBraceIndex ? closeBraceIndex + 1 : declarationStart + match[0].length,
+    })
+    const heritage = (match[3] ?? '')
+      .split(',')
+      .map((entry) => cleanCSharpTypeName(entry))
+      .filter(Boolean)
+    for (const targetName of heritage) {
+      state.csharpHeritageRecords.push({ symbol, targetName, startIndex: declarationStart })
+    }
+    if (openBraceIndex >= 0 && closeBraceIndex > openBraceIndex) {
+      extractCSharpMembers(state, fileIndex, symbol, typeName, namespaceName, openBraceIndex + 1, closeBraceIndex)
+    }
+  }
+}
+
+function extractCSharpMembers(
+  state: ExtractionState,
+  fileIndex: FileIndex,
+  parentClass: SymbolRecord,
+  typeName: string,
+  namespaceName: string | null,
+  bodyStartIndex: number,
+  bodyEndIndex: number,
+): void {
+  const sourceFile = fileIndex.sourceFile
+  const body = sourceFile.content.slice(bodyStartIndex, bodyEndIndex)
+  const memberPrefix = namespaceName ? `${namespaceName}.${typeName}` : typeName
+  const methodRegex =
+    /\b(?:(?:public|private|protected|internal|static|virtual|override|async|sealed|partial|extern|unsafe|new)\s+)*(?:(?:[A-Za-z_][\w.<>,?\[\]]+)\s+)?([A-Za-z_]\w*)\s*\([^;{}]*\)\s*(?:=>|{)/g
+  for (const match of body.matchAll(methodRegex)) {
+    const methodName = match[1]
+    if (!methodName || csharpControlKeywords.has(methodName)) continue
+    const absoluteStart = bodyStartIndex + (match.index ?? 0)
+    const braceIndex = sourceFile.content.indexOf('{', absoluteStart)
+    const closeBraceIndex = braceIndex >= 0 ? findMatchingBrace(sourceFile.content, braceIndex) : -1
+    const method = addCSharpSymbol(state, fileIndex, {
+      name: methodName,
+      qualifiedName: `${memberPrefix}.${methodName}`,
+      kind: 'method',
+      startIndex: absoluteStart,
+      endIndex: closeBraceIndex > braceIndex ? closeBraceIndex + 1 : absoluteStart + match[0].length,
+      parentClass,
+    })
+    if (braceIndex >= 0 && closeBraceIndex > braceIndex) {
+      state.csharpMethodBodies.push({
+        symbol: method,
+        body: sourceFile.content.slice(braceIndex + 1, closeBraceIndex),
+        bodyStartIndex: braceIndex + 1,
+      })
+    }
+  }
+
+  const propertyRegex =
+    /\b(?:(?:public|private|protected|internal|static|virtual|override|sealed|partial|new)\s+)+[A-Za-z_][\w.<>,?\[\]]+\s+([A-Za-z_]\w*)\s*\{\s*(?:get|set|init)\b/g
+  for (const match of body.matchAll(propertyRegex)) {
+    const propertyName = match[1]
+    if (!propertyName) continue
+    const absoluteStart = bodyStartIndex + (match.index ?? 0)
+    addCSharpSymbol(state, fileIndex, {
+      name: propertyName,
+      qualifiedName: `${memberPrefix}.${propertyName}`,
+      kind: 'field',
+      startIndex: absoluteStart,
+      endIndex: absoluteStart + match[0].length,
+      parentClass,
+    })
+  }
+}
+
+function addCSharpHeritageEdges(state: ExtractionState): void {
+  for (const record of state.csharpHeritageRecords) {
+    const fileIndex = state.fileIndexesByRelativePath.get(normalizePath(record.symbol.sourceFile))
+    if (!fileIndex) continue
+    const targets = state.symbolsByName.get(normalizeToken(record.targetName)) ?? []
+    const target =
+      targets.find((candidate) => candidate.kind === 'interface') ??
+      targets.find((candidate) => candidate.kind === 'class')
+    if (!target) {
+      recordAmbiguous(state, record.targetName)
+      continue
+    }
+    addEdge(state, {
+      from: record.symbol.id,
+      to: target.id,
+      kind: target.kind === 'interface' ? 'implements' : 'inherits',
+      sourceFile: fileIndex.sourceFile.relativePath,
+      sourceDigest: fileIndex.sourceFile.digest,
+      sourceLocation: locationRange(fileIndex.sourceFile, record.startIndex, record.startIndex),
+      confidence: 'inferred',
+    })
+  }
+}
+
+function addCSharpCallLikeEdges(state: ExtractionState, fileIndex: FileIndex): void {
+  for (const record of state.csharpMethodBodies.filter(
+    (entry) => entry.symbol.sourceFile === fileIndex.sourceFile.relativePath,
+  )) {
+    for (const match of record.body.matchAll(/\b([A-Za-z_]\w*)\s*\(/g)) {
+      const name = match[1]
+      if (!name || csharpControlKeywords.has(name)) continue
+      const targets = (state.symbolsByName.get(normalizeToken(name)) ?? []).filter((symbol) =>
+        ['function', 'method'].includes(symbol.kind),
+      )
+      const target = preferSameFileTarget(targets, fileIndex.sourceFile.relativePath)
+      if (!target) {
+        if (targets.length > 1) recordAmbiguous(state, name)
+        continue
+      }
+      addEdge(state, {
+        from: record.symbol.id,
+        to: target.id,
+        kind: 'calls',
+        sourceFile: fileIndex.sourceFile.relativePath,
+        sourceDigest: fileIndex.sourceFile.digest,
+        sourceLocation: locationRange(
+          fileIndex.sourceFile,
+          record.bodyStartIndex + (match.index ?? 0),
+          record.bodyStartIndex + (match.index ?? 0) + match[0].length,
+        ),
+        confidence: target.confidence,
+      })
+    }
+    for (const match of record.body.matchAll(/\bnew\s+([A-Za-z_]\w*)\s*\(/g)) {
+      const name = match[1]
+      if (!name) continue
+      const targets = (state.symbolsByName.get(normalizeToken(name)) ?? []).filter((symbol) =>
+        ['class', 'interface', 'type'].includes(symbol.kind),
+      )
+      const target = preferSameFileTarget(targets, fileIndex.sourceFile.relativePath)
+      if (!target) continue
+      addEdge(state, {
+        from: record.symbol.id,
+        to: target.id,
+        kind: 'constructs',
+        sourceFile: fileIndex.sourceFile.relativePath,
+        sourceDigest: fileIndex.sourceFile.digest,
+        sourceLocation: locationRange(
+          fileIndex.sourceFile,
+          record.bodyStartIndex + (match.index ?? 0),
+          record.bodyStartIndex + (match.index ?? 0) + match[0].length,
+        ),
+        confidence: target.confidence,
+      })
+    }
+  }
+}
+
+function addCSharpSymbol(
+  state: ExtractionState,
+  fileIndex: FileIndex,
+  input: {
+    name: string
+    qualifiedName: string
+    kind: SymbolNodeKind
+    startIndex: number
+    endIndex: number
+    parentClass?: SymbolRecord
+  },
+): SymbolRecord {
+  const sourceFile = fileIndex.sourceFile
+  const id = uniqueNodeId(
+    state,
+    `code.${input.kind}.${sanitizeId(sourceFile.relativePath)}.${sanitizeId(input.qualifiedName)}.${lineColumnId(
+      sourceFile,
+      input.startIndex,
+    )}`,
+  )
+  const record: SymbolRecord = {
+    id,
+    name: input.name,
+    qualifiedName: input.qualifiedName,
+    kind: input.kind,
+    sourceFile: sourceFile.relativePath,
+    declaration: sourceFile.ast,
+    ...(input.parentClass ? { parentClassId: input.parentClass.id } : {}),
+  }
+  state.nodes.push(symbolNode(id, input.kind, input.qualifiedName, sourceFile, input.startIndex, input.endIndex))
+  state.symbols.push(record)
+  fileIndex.symbols.push(record)
+  addMapEntry(fileIndex.localSymbolsByName, normalizeToken(input.name), record)
+  addMapEntry(state.symbolsByName, normalizeToken(input.name), record)
+  addMapEntry(state.symbolsByName, normalizeToken(input.qualifiedName), record)
+  if (input.kind === 'class') {
+    addMapEntry(fileIndex.classSymbolsByName, normalizeToken(input.name), record)
+  }
+  if (input.kind === 'method' && input.parentClass) {
+    addMapEntry(fileIndex.classMethodsByClassIdAndName, classMethodKey(input.parentClass.id, input.name), record)
+  }
+  addEdge(state, {
+    from: fileIndex.fileNodeId,
+    to: id,
+    kind: 'contains',
+    sourceFile: sourceFile.relativePath,
+    sourceDigest: sourceFile.digest,
+    sourceLocation: locationRange(sourceFile, input.startIndex, input.startIndex),
+    confidence: 'extracted',
+  })
+  if (input.parentClass) {
+    addEdge(state, {
+      from: input.parentClass.id,
+      to: id,
+      kind: 'contains',
+      sourceFile: sourceFile.relativePath,
+      sourceDigest: sourceFile.digest,
+      sourceLocation: locationRange(sourceFile, input.startIndex, input.startIndex),
+      confidence: 'extracted',
+    })
+  }
+  return record
 }
 
 function addVariableDeclarationSymbols(
@@ -1645,7 +1941,7 @@ function renderMarkdown(report: NativeCodeSubgraphExtractionReport): string {
     '',
     '## Summary',
     '',
-    `- Supported JS/TS files: ${report.targetRepo.supportedFileCount}`,
+    `- Supported JS/TS/C# files: ${report.targetRepo.supportedFileCount}`,
     `- Nodes: ${report.outputCodeSubgraph.nodeCount}`,
     `- Edges: ${report.outputCodeSubgraph.edgeCount}`,
     `- Files/classes/interfaces/types/functions/methods/fields: ${report.extractionSummary.fileNodeCount}/${report.extractionSummary.classNodeCount}/${report.extractionSummary.interfaceNodeCount}/${report.extractionSummary.typeNodeCount}/${report.extractionSummary.functionNodeCount}/${report.extractionSummary.methodNodeCount}/${report.extractionSummary.fieldNodeCount}`,
@@ -1941,6 +2237,47 @@ function uniqueResolvedTargets(targets: ResolvedTarget[]): ResolvedTarget[] {
     unique.push(target)
   }
   return unique
+}
+
+function preferSameFileTarget(
+  targets: SymbolRecord[],
+  sourceFile: string,
+): (SymbolRecord & { confidence: Confidence }) | null {
+  if (targets.length === 0) return null
+  const sameFile = targets.filter((target) => normalizePath(target.sourceFile) === normalizePath(sourceFile))
+  const candidates = sameFile.length > 0 ? sameFile : targets
+  if (candidates.length === 1) {
+    return { ...candidates[0], confidence: sameFile.length > 0 ? 'extracted' : 'inferred' }
+  }
+  return null
+}
+
+function matchFirst(content: string, pattern: RegExp): string | null {
+  const match = content.match(pattern)
+  return match?.[1] ?? null
+}
+
+function cleanCSharpTypeName(value: string): string {
+  const trimmed = value.trim()
+  if (!trimmed) return ''
+  const withoutGeneric = trimmed.replace(/<.*$/, '')
+  const match = withoutGeneric.match(/[A-Za-z_]\w*$/)
+  return match?.[0] ?? ''
+}
+
+function findMatchingBrace(content: string, openBraceIndex: number): number {
+  if (openBraceIndex < 0) return -1
+  let depth = 0
+  for (let index = openBraceIndex; index < content.length; index += 1) {
+    const character = content[index]
+    if (character === '{') {
+      depth += 1
+    } else if (character === '}') {
+      depth -= 1
+      if (depth === 0) return index
+    }
+  }
+  return -1
 }
 
 function recordAmbiguous(state: ExtractionState, name: string): void {

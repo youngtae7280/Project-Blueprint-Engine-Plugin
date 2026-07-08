@@ -548,6 +548,26 @@ describe('DevView CLI', () => {
     )
 
     expect(init.exitCode).toBe(ExitCode.Success)
+    const canonicalGraph = JSON.parse(
+      readFileSync(join(workspace, '.devview', 'graph', 'maintainability-graph.json'), 'utf8'),
+    )
+    expect(canonicalGraph).toMatchObject({
+      artifactRole: 'devview-maintainability-graph-source',
+      status: 'devview-maintainability-graph-initialized',
+      graphScope: 'unified-devview-maintainability-graph-canonical-source',
+      codeSubgraphBoundary: {
+        codeNodesAreFirstClass: true,
+        separateCodeGraphCreated: false,
+      },
+      compatibilityBoundary: {
+        canonicalSourceOfTruth: 'devview-maintainability-graph-source',
+        productTreeCanonical: false,
+        requirementTreeCanonical: false,
+      },
+    })
+    const canonicalBoundary = readFileSync(join(workspace, '.devview', 'graph', 'canonical-graph-boundary.md'), 'utf8')
+    expect(canonicalBoundary).toContain('Code nodes are first-class nodes inside the same graph.')
+    expect(canonicalBoundary).toContain('compatibility and bootstrap views')
     const visualProfile = JSON.parse(
       readFileSync(join(workspace, '.devview', 'control', 'visual-verification-profile.json'), 'utf8'),
     )

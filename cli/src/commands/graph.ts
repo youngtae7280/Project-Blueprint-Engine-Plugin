@@ -70,6 +70,7 @@ import {
   NativeCodeSubgraphExtractionError,
 } from '../core/native-code-subgraph-extractor.js'
 import { CodeSubgraphMergePlanError, planCodeSubgraphMergeFile } from '../core/code-subgraph-merge-plan.js'
+import { CodeSymbolLinkDerivationError, deriveCodeSymbolLinksFile } from '../core/code-symbol-link-derivation.js'
 import { CodeSymbolLinkValidationError, validateCodeSymbolLinksFile } from '../core/code-symbol-link-validation.js'
 import { CodeImpactReportError, reportCodeImpactFile } from '../core/code-impact-report.js'
 import { queryUnifiedGraphFile, UnifiedGraphQueryError } from '../core/unified-graph-query.js'
@@ -515,7 +516,7 @@ export async function graphExtractCodeSubgraphCommand(context: CommandContext): 
       ok: true,
       command: 'graph extract-code-subgraph',
       exitCode: ExitCode.Success,
-      message: 'Native JavaScript/TypeScript code subgraph extracted and validated without graph-source mutation.',
+      message: 'Native JavaScript/TypeScript/C# code subgraph extracted and validated without graph-source mutation.',
       issues: [],
       data: result,
     }
@@ -540,7 +541,7 @@ export async function graphExtractCodeSubgraphCommand(context: CommandContext): 
                   message: finding.message,
                   reason: finding.field ? `Field: ${finding.field}` : undefined,
                   suggestedFix:
-                    'Provide a readable target repo with supported JS/TS files and dedicated output/validation paths outside source/control artifacts.',
+                    'Provide a readable target repo with supported JS/TS/C# files and dedicated output/validation paths outside source/control artifacts.',
                 }),
               )
           : [
@@ -688,6 +689,72 @@ export async function graphValidateCodeSymbolLinksCommand(context: CommandContex
               }),
             ],
       data: error instanceof CodeSymbolLinkValidationError ? error.report : undefined,
+    }
+  }
+}
+
+export async function graphDeriveCodeSymbolLinksCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.codeSubgraph) {
+    return invalidCommand('graph derive-code-symbol-links requires --code-subgraph <devview-code-subgraph.json>.')
+  }
+  if (!context.options.graphSource && !context.options.devviewGraphData) {
+    return invalidCommand('graph derive-code-symbol-links requires --graph-source or --devview-graph-data.')
+  }
+  if (!context.options.output) {
+    return invalidCommand('graph derive-code-symbol-links requires --output <code-symbol-links.json>.')
+  }
+
+  try {
+    const result = await deriveCodeSymbolLinksFile(context.options.root, {
+      codeSubgraph: context.options.codeSubgraph,
+      graphSource: context.options.graphSource,
+      devviewGraphData: context.options.devviewGraphData,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph derive-code-symbol-links',
+      exitCode: ExitCode.Success,
+      message: 'Code symbol links derived as report-only source facts without graph-source mutation.',
+      issues: [],
+      data: result,
+    }
+  } catch (error) {
+    const findings = error instanceof CodeSymbolLinkDerivationError ? error.artifact.derivationFindings : []
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph derive-code-symbol-links',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Code symbol link derivation blocked.',
+      issues:
+        findings.length > 0
+          ? findings
+              .filter((finding) => finding.severity === 'blocker')
+              .map((finding) =>
+                issue({
+                  validator: 'CodeSymbolLinkDerivation',
+                  code: finding.code,
+                  severity: 'error',
+                  file: finding.path,
+                  message: finding.message,
+                  reason: finding.field ? `Field: ${finding.field}` : undefined,
+                  suggestedFix:
+                    'Provide validated code subgraph facts plus graph-source or DevView graph data with source file hints and no authority/execution claims.',
+                }),
+              )
+          : [
+              issue({
+                validator: 'CodeSymbolLinkDerivation',
+                code: 'CODE_SYMBOL_LINK_DERIVATION_BLOCKED',
+                severity: 'error',
+                message,
+                suggestedFix:
+                  'Provide --code-subgraph, --graph-source or --devview-graph-data, and dedicated output paths outside protected source/control artifacts.',
+              }),
+            ],
+      data: error instanceof CodeSymbolLinkDerivationError ? error.artifact : undefined,
     }
   }
 }
