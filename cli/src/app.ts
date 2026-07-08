@@ -261,6 +261,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     releaseSurfaceValidation: undefined as string | undefined,
     providerNetworkPolicyReport: undefined as string | undefined,
     providerActivationAuthorizationReadiness: undefined as string | undefined,
+    providerActivationGrantPolicyValidation: undefined as string | undefined,
     sbom: undefined as string | undefined,
     attestation: undefined as string | undefined,
     packageArtifact: undefined as string | undefined,
@@ -1429,6 +1430,15 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
       }
       options.providerActivationAuthorizationReadiness = options.providerActivationAuthorizationReadiness
         ? `${options.providerActivationAuthorizationReadiness},${value}`
+        : value
+      index += 1
+    } else if (arg === '--provider-activation-grant-policy-validation') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--provider-activation-grant-policy-validation requires one or more file paths.' }
+      }
+      options.providerActivationGrantPolicyValidation = options.providerActivationGrantPolicyValidation
+        ? `${options.providerActivationGrantPolicyValidation},${value}`
         : value
       index += 1
     } else if (arg === '--sbom') {

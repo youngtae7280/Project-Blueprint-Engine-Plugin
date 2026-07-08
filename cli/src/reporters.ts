@@ -455,6 +455,8 @@ Options:
                        Provider/network default-deny policy report for security report-enterprise-readiness, report-provider-activation-authorization-readiness, validate-provider-activation-grant-policy, report-provenance-verification-readiness, report-ci-branch-governance-readiness, validate-ci-branch-policy, plan-ci-branch-activation, or report-ci-branch-activation-authority-readiness.
   --provider-activation-authorization-readiness <file>
                        Provider activation authorization readiness report for security report-enterprise-readiness or validate-provider-activation-grant-policy; repeat or comma-separate for multiples where supported.
+  --provider-activation-grant-policy-validation <file>
+                       Provider activation grant policy validation report for security report-enterprise-readiness; repeat or comma-separate for multiples where supported.
   --release-surface-validation <file>
                        Release surface validation report for security report-ci-branch-governance-readiness, record-package-provenance-inputs, record-package-artifact-digest, or plan-ci-branch-activation.
   --record-envelope-preview <file>

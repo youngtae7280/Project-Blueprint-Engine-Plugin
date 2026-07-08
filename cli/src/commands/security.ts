@@ -64,6 +64,7 @@ export async function securityReportEnterpriseReadinessCommand(context: CommandC
       releaseSurfaceValidation: context.options.releaseSurfaceValidation,
       providerNetworkPolicyReport: context.options.providerNetworkPolicyReport,
       providerActivationAuthorizationReadiness: context.options.providerActivationAuthorizationReadiness,
+      providerActivationGrantPolicyValidation: context.options.providerActivationGrantPolicyValidation,
       recordEnvelopePreview: context.options.recordEnvelopePreview,
       recordEnvelopeVerification: context.options.recordEnvelopeVerification,
       signingReadiness: context.options.signingReadiness,
