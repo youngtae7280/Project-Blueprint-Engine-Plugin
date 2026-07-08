@@ -74,6 +74,7 @@ import { CodeSymbolLinkValidationError, validateCodeSymbolLinksFile } from '../c
 import { CodeImpactReportError, reportCodeImpactFile } from '../core/code-impact-report.js'
 import { queryUnifiedGraphFile, UnifiedGraphQueryError } from '../core/unified-graph-query.js'
 import { CodeSubgraphRefreshPlanError, planCodeSubgraphRefreshFile } from '../core/code-subgraph-refresh-plan.js'
+import { CodeGraphHtmlRendererError, renderCodeGraphHtmlFile } from '../core/code-graph-html-renderer.js'
 import {
   compareReadModelEvidence,
   generateReadModelEvidence,
@@ -889,6 +890,67 @@ export async function graphPlanCodeSubgraphRefreshCommand(context: CommandContex
               }),
             ],
       data: error instanceof CodeSubgraphRefreshPlanError ? error.report : undefined,
+    }
+  }
+}
+
+export async function graphRenderCodeGraphHtmlCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.codeSubgraph) {
+    return invalidCommand('graph render-code-graph-html requires --code-subgraph <file>.')
+  }
+  if (!context.options.output) {
+    return invalidCommand('graph render-code-graph-html requires --output <htmlOutputPath>.')
+  }
+
+  try {
+    const result = await renderCodeGraphHtmlFile(context.options.root, {
+      codeSubgraph: context.options.codeSubgraph,
+      codeSubgraphValidation: context.options.codeSubgraphValidation,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph render-code-graph-html',
+      exitCode: ExitCode.Success,
+      message: 'Code subgraph HTML inspector rendered without graph-source mutation.',
+      issues: [],
+      data: result,
+    }
+  } catch (error) {
+    const findings = error instanceof CodeGraphHtmlRendererError ? error.report.renderFindings : []
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph render-code-graph-html',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Code graph HTML rendering blocked.',
+      issues:
+        findings.length > 0
+          ? findings
+              .filter((finding) => finding.severity === 'blocker')
+              .map((finding) =>
+                issue({
+                  validator: 'CodeGraphHtmlRenderer',
+                  code: finding.code,
+                  severity: 'error',
+                  file: finding.path,
+                  message: finding.message,
+                  reason: finding.field ? `Field: ${finding.field}` : undefined,
+                  suggestedFix:
+                    'Provide a valid devview-code-subgraph source fact, optional passed validation report, and an .html output path outside source/control artifacts.',
+                }),
+              )
+          : [
+              issue({
+                validator: 'CodeGraphHtmlRenderer',
+                code: 'CODE_GRAPH_HTML_RENDER_BLOCKED',
+                severity: 'error',
+                message,
+                suggestedFix: 'Provide --code-subgraph and --output <html> paths outside source/control artifacts.',
+              }),
+            ],
+      data: error instanceof CodeGraphHtmlRendererError ? error.report : undefined,
     }
   }
 }

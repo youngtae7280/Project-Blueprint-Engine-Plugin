@@ -14,6 +14,11 @@ import {
 } from './code-subgraph-validation.js'
 
 type JsonRecord = Record<string, unknown>
+interface SourceFileResolution {
+  value: string | null
+  original?: string
+  inferredFromEdge?: boolean
+}
 
 const REPORT_ROLE = 'devview-graphify-code-subgraph-import-report'
 const PASSED_STATUS = 'devview-graphify-code-subgraph-import-passed'
@@ -299,6 +304,7 @@ interface GraphifyGraphContext {
   originalNodeIds: Set<string>
   incomingRelations: Map<string, Set<string>>
   outgoingRelations: Map<string, Set<string>>
+  observedSourceFiles: Map<string, string>
   fileNodeHints: FileNodeHint[]
 }
 
@@ -462,7 +468,7 @@ function convertGraphifyExport(root: string, source: LoadedGraphifyExport): Conv
 
   validateCollectionShape(record, source.relativePath, findings)
   const sourceGraphifyNodes = recordsFromCollection(record.nodes ?? record.graphNodes)
-  const graphifyEdges = recordsFromCollection(record.edges ?? record.graphEdges)
+  const graphifyEdges = recordsFromCollection(record.edges ?? record.links ?? record.graphEdges)
 
   if (sourceGraphifyNodes.length === 0) {
     findings.push(
@@ -515,7 +521,10 @@ function convertGraphifyExport(root: string, source: LoadedGraphifyExport): Conv
     }
 
     const sourceFile = normalizedSourceFileFor(root, entry)
-    if (!sourceFile.value) {
+    const resolvedSourceFile = sourceFile.value
+      ? sourceFile
+      : sourceFileFallbackForGraphifyNode(graphifyNodeId, inferred, context)
+    if (!resolvedSourceFile.value) {
       findings.push(
         blocker(
           'GRAPHIFY_CODE_SUBGRAPH_NODE_SOURCE_FILE_MISSING',
@@ -526,6 +535,16 @@ function convertGraphifyExport(root: string, source: LoadedGraphifyExport): Conv
       )
       continue
     }
+    if (!sourceFile.value && resolvedSourceFile.inferredFromEdge) {
+      findings.push(
+        warning(
+          'GRAPHIFY_CODE_SUBGRAPH_NODE_SOURCE_FILE_INFERRED_FROM_EDGE',
+          `Graphify ${prefix}.sourceFile is missing; DevView recorded the node using edge source provenance.`,
+          `${prefix}.sourceFile`,
+          source.relativePath,
+        ),
+      )
+    }
 
     const devviewNodeId = `code.${sanitizeId(graphifyNodeId)}`
     const rawConfidence = confidenceFor(entry)
@@ -535,22 +554,23 @@ function convertGraphifyExport(root: string, source: LoadedGraphifyExport): Conv
       graphifyNodeId,
       devviewNodeId,
       kind: inferred.kind,
-      sourceFile: sourceFile.value,
+      sourceFile: resolvedSourceFile.value,
       synthetic: Boolean(entry.sourceGraphifyNodeSynthetic),
       record: {
         id: devviewNodeId,
         kind: inferred.kind,
         label:
           stringValue(entry.label) ?? stringValue(entry.name) ?? stringValue(entry.qualifiedName) ?? graphifyNodeId,
-        sourceFile: sourceFile.value,
-        ...(sourceFile.original ? { originalSourceFile: sourceFile.original } : {}),
-        ...locationFields(entry),
+        sourceFile: resolvedSourceFile.value,
+        ...(resolvedSourceFile.original ? { originalSourceFile: resolvedSourceFile.original } : {}),
+        ...locationFieldsForGraphifyNode(entry, Boolean(resolvedSourceFile.inferredFromEdge)),
         sourceDigest: sourceDigestFor(entry, source.sha256),
         confidence,
         extractor: 'graphify-static-import',
         sourceGraphifyNodeId: graphifyNodeId,
         ...(inferred.rawKind ? { sourceGraphifyNodeKind: inferred.rawKind } : {}),
         sourceGraphifyNodeKindInference: inferred.reason,
+        ...(resolvedSourceFile.inferredFromEdge ? { sourceFileInferredFromGraphifyEdge: true } : {}),
         ...(entry.sourceGraphifyNodeSynthetic ? { sourceGraphifyNodeSynthetic: true } : {}),
       },
     }
@@ -792,6 +812,7 @@ function buildGraphifyContext(
   const originalNodeIds = new Set<string>()
   const incomingRelations = new Map<string, Set<string>>()
   const outgoingRelations = new Map<string, Set<string>>()
+  const observedSourceFiles = new Map<string, string>()
   for (const node of graphifyNodes) {
     const id = stringValue(node.id) ?? stringValue(node.nodeId) ?? stringValue(node.key)
     if (!id) continue
@@ -806,9 +827,18 @@ function buildGraphifyContext(
     const relation = graphifyKind(edge)
     const source = endpointValue(edge, ['from', 'source', 'sourceId', 'sourceNodeId', 'sourceNode'])
     const target = endpointValue(edge, ['to', 'target', 'targetId', 'targetNodeId', 'targetNode'])
+    const sourceFile = normalizedSourceFileFor(root, edge).value
     if (!relation) continue
-    if (source) outgoingRelations.get(normalize(source))?.add(normalizeToken(relation))
-    if (target) incomingRelations.get(normalize(target))?.add(normalizeToken(relation))
+    if (source) {
+      outgoingRelations.get(normalize(source))?.add(normalizeToken(relation))
+      if (sourceFile && !observedSourceFiles.has(normalize(source)))
+        observedSourceFiles.set(normalize(source), sourceFile)
+    }
+    if (target) {
+      incomingRelations.get(normalize(target))?.add(normalizeToken(relation))
+      if (sourceFile && !observedSourceFiles.has(normalize(target)))
+        observedSourceFiles.set(normalize(target), sourceFile)
+    }
   }
   return {
     root,
@@ -816,6 +846,7 @@ function buildGraphifyContext(
     originalNodeIds,
     incomingRelations,
     outgoingRelations,
+    observedSourceFiles,
     fileNodeHints: fileNodeHintsFor(root, originalGraphifyNodes),
   }
 }
@@ -841,6 +872,14 @@ function inferGraphifyNodeKind(record: JsonRecord, context: GraphifyGraphContext
   }
   if (isFileNode(record, context.root)) {
     return { rawKind, kind: 'file', confidence: 'extracted', reason: 'graphify-file-label-and-source-file' }
+  }
+  if (!sourceFileFor(record) && context.observedSourceFiles.has(normalizedId)) {
+    return {
+      rawKind,
+      kind: 'external_dependency',
+      confidence: 'inferred',
+      reason: 'graphify-source-file-missing-external-symbol-with-edge-provenance',
+    }
   }
   if (incoming.has('method') || looksLikeMethodLabel(label)) {
     return { rawKind, kind: 'method', confidence: 'inferred', reason: 'graphify-method-relation-or-label' }
@@ -887,6 +926,25 @@ function fileHintForEndpoint(graphifyNodeId: string, hints: FileNodeHint[]): Fil
     if (id === hint.id || id.startsWith(`${hint.symbolPrefix}_`)) return hint
   }
   return null
+}
+
+function sourceFileFallbackForGraphifyNode(
+  graphifyNodeId: string,
+  inferred: GraphifyNodeKindInference,
+  context: GraphifyGraphContext,
+): SourceFileResolution {
+  const matchedFile = fileHintForEndpoint(graphifyNodeId, context.fileNodeHints)
+  if (matchedFile?.sourceFile) {
+    return { value: matchedFile.sourceFile, inferredFromEdge: true }
+  }
+  const observedSourceFile = context.observedSourceFiles.get(normalize(graphifyNodeId))
+  if (observedSourceFile) {
+    return { value: observedSourceFile, inferredFromEdge: true }
+  }
+  if (inferred.kind === 'external_dependency' && isReferenceGraphifyId(graphifyNodeId)) {
+    return { value: 'graphify-external-reference', inferredFromEdge: true }
+  }
+  return { value: null }
 }
 
 function graphifyFileSymbolPrefix(graphifyNodeId: string, sourceFile: string): string {
@@ -938,7 +996,7 @@ function missingEndpointLabel(id: string, matchedFile: FileNodeHint | null): str
   return id
 }
 
-function normalizedSourceFileFor(root: string, record: JsonRecord): { value: string | null; original?: string } {
+function normalizedSourceFileFor(root: string, record: JsonRecord): SourceFileResolution {
   const sourceFile = sourceFileFor(record)
   if (!sourceFile) return { value: null }
   const normalized = sourceFile.replaceAll('\\', '/')
@@ -1198,6 +1256,16 @@ function validateCollectionShape(
       ),
     )
   }
+  if ('links' in record && !Array.isArray(record.links) && !asRecord(record.links)) {
+    findings.push(
+      blocker(
+        'GRAPHIFY_CODE_SUBGRAPH_EXPORT_SHAPE_INVALID',
+        `${sourcePath} links must be an array or object collection.`,
+        'links',
+        sourcePath,
+      ),
+    )
+  }
   if ('graphEdges' in record && !Array.isArray(record.graphEdges) && !asRecord(record.graphEdges)) {
     findings.push(
       blocker(
@@ -1260,6 +1328,15 @@ function locationFields(record: JsonRecord): JsonRecord {
       stringValue(record.sourceLocationStatus) ??
       stringValue(record.locationStatus) ??
       'graphify-source-location-not-modeled',
+  }
+}
+
+function locationFieldsForGraphifyNode(record: JsonRecord, sourceFileInferredFromEdge: boolean): JsonRecord {
+  const fields = locationFields(record)
+  if (!sourceFileInferredFromEdge) return fields
+  if ('sourceLocation' in fields) return fields
+  return {
+    sourceLocationStatus: 'graphify-node-source-file-inferred-from-edge-provenance',
   }
 }
 

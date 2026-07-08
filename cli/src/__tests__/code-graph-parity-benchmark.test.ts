@@ -88,6 +88,53 @@ describe('benchmark compare-code-graph-parity CLI', () => {
     expect(existsSync(join(workspace, '.tmp/code-graph-parity.md'))).toBe(true)
   })
 
+  it('accepts real Graphify graph.json links as parity edges', async () => {
+    const workspace = createWorkspace()
+    const graphifyWithLinks = realGraphifyExport(workspace)
+    const links = graphifyWithLinks.edges
+    delete graphifyWithLinks.edges
+    graphifyWithLinks.links = links
+    writeJson(join(workspace, 'graphify-out', 'graph.json'), graphifyWithLinks)
+
+    const importResult = await runDevViewCli(
+      [
+        'graph',
+        'import-graphify-code-subgraph',
+        '--graphify',
+        join('graphify-out', 'graph.json'),
+        '--output',
+        '.tmp/code-subgraph.json',
+        '--validation-output',
+        '.tmp/code-subgraph-validation.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    expect(importResult.exitCode).toBe(ExitCode.Success)
+
+    const result = await runDevViewCli(
+      [
+        'benchmark',
+        'compare-code-graph-parity',
+        '--code-subgraph',
+        '.tmp/code-subgraph.json',
+        '--graphify',
+        join('graphify-out', 'graph.json'),
+        '--output',
+        '.tmp/code-graph-parity.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.rawGraphifySummary.edgeCount).toBe(10)
+    expect(payload.devviewSummary.sourceGraphifyEdgeBackedCount).toBe(10)
+    expect(payload.parity.graphifyBackedEdgeRatio).toBe(1)
+    expect(payload.parity.achieved).toBe(true)
+  })
+
   it('reports native aggregate parity when the code subgraph has no Graphify-backed source facts', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, 'graphify-out', 'graph.json'), realGraphifyExport(workspace))

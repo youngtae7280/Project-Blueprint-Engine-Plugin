@@ -94,6 +94,7 @@ import {
   graphReadModelValidateCommand,
   graphPlanCodeSubgraphRefreshCommand,
   graphQueryUnifiedCommand,
+  graphRenderCodeGraphHtmlCommand,
   graphReportCodeImpactCommand,
   graphValidateCodeSubgraphCommand,
   graphValidateCodeSymbolLinksCommand,
@@ -403,6 +404,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'graph' && subcommand === 'query-unified') {
     return graphQueryUnifiedCommand(context)
+  }
+  if (command === 'graph' && subcommand === 'render-code-graph-html') {
+    return graphRenderCodeGraphHtmlCommand(context)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'generate') {
     return graphReadModelGenerateCommand(context)

@@ -313,7 +313,9 @@ function buildReport(
   }
 
   const graphifyNodes = recordsFromCollection(graphify.record?.nodes ?? graphify.record?.graphNodes)
-  const graphifyEdges = recordsFromCollection(graphify.record?.edges ?? graphify.record?.graphEdges)
+  const graphifyEdges = recordsFromCollection(
+    graphify.record?.edges ?? graphify.record?.links ?? graphify.record?.graphEdges,
+  )
   const codeNodes = arrayRecords(codeSubgraph.record?.nodes)
   const codeEdges = arrayRecords(codeSubgraph.record?.edges)
   const edgeRelationCounts = countBy(
@@ -497,13 +499,15 @@ function validateGraphifyShape(
   if (
     !Array.isArray(record.edges) &&
     !asRecord(record.edges) &&
+    !Array.isArray(record.links) &&
+    !asRecord(record.links) &&
     !Array.isArray(record.graphEdges) &&
     !asRecord(record.graphEdges)
   ) {
     findings.push(
       blocker(
         'CODE_GRAPH_PARITY_GRAPHIFY_EDGES_INVALID',
-        `${sourcePath} must include Graphify edges or graphEdges as an array or object collection.`,
+        `${sourcePath} must include Graphify edges, links, or graphEdges as an array or object collection.`,
         'edges',
         sourcePath,
       ),

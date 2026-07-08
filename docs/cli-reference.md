@@ -748,6 +748,23 @@ findings before writing outputs. It does not run Graphify, run AST extractors, c
 graph-source, generate View Trees or Context Packs, satisfy Evidence, enforce RBAC, verify signatures, configure CI, or
 automate approval.
 
+### Code Graph HTML Render
+
+```bash
+devview graph render-code-graph-html \
+  --code-subgraph <devview-code-subgraph.json> \
+  --code-subgraph-validation <code-subgraph-validation.json> \
+  --output <code-graph.html> \
+  --markdown <code-graph-html-render.md> \
+  --json
+```
+
+Renders a read-only HTML inspector from a supplied `devview-code-subgraph` source fact. The view embeds the validated
+code nodes and edges, supports zoom/pan, keeps edge stroke width and node glyphs readable while zooming, and shows a
+Selection Details panel when a node or edge is clicked. It is a visualization boundary only: it does not run Graphify,
+run AST extractors, execute project code, mutate graph-source, apply graph deltas, generate View Trees or Context Packs,
+call providers/network/API, enforce RBAC, verify signatures, configure CI, activate hooks, or automate approval.
+
 ### Native Code Subgraph Extraction
 
 ```bash

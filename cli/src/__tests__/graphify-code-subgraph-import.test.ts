@@ -123,6 +123,54 @@ describe('graph import-graphify-code-subgraph CLI', () => {
     expect(validation.vocabulary.allowedEdgeTypes).toContain('method')
   })
 
+  it('imports Graphify external symbol nodes that omit source_file by using edge provenance', async () => {
+    const workspace = createWorkspace()
+    const sourceFile = join(workspace, 'src', 'app.ts')
+    writeJson(join(workspace, 'graphify-external-symbol.json'), {
+      nodes: [
+        realGraphifyNode('g.file.app', 'app.ts', sourceFile, 'L1'),
+        realGraphifyNode('g.fn.main', 'main()', sourceFile, 'L10'),
+        {
+          id: 'task',
+          label: 'Task',
+          file_type: 'code',
+          source_location: '',
+          _origin: 'ast',
+        },
+      ],
+      links: [realGraphifyEdge('g.fn.main', 'task', 'references', sourceFile, 'L11')],
+    })
+
+    const result = await runDevViewCli(
+      [
+        'graph',
+        'import-graphify-code-subgraph',
+        '--graphify',
+        'graphify-external-symbol.json',
+        '--output',
+        '.tmp/external-symbol-code-subgraph.json',
+        '--validation-output',
+        '.tmp/external-symbol-validation.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+    const codeSubgraph = JSON.parse(readFileSync(join(workspace, '.tmp/external-symbol-code-subgraph.json'), 'utf8'))
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.importFindings.map((entry: { code: string }) => entry.code)).toContain(
+      'GRAPHIFY_CODE_SUBGRAPH_NODE_SOURCE_FILE_INFERRED_FROM_EDGE',
+    )
+    const externalTaskNode = codeSubgraph.nodes.find(
+      (entry: { sourceGraphifyNodeId?: string }) => entry.sourceGraphifyNodeId === 'task',
+    )
+    expect(externalTaskNode.kind).toBe('external_dependency')
+    expect(externalTaskNode.sourceFile).toBe('src/app.ts')
+    expect(externalTaskNode.sourceFileInferredFromGraphifyEdge).toBe(true)
+    expect(externalTaskNode.sourceLocationStatus).toBe('graphify-node-source-file-inferred-from-edge-provenance')
+  })
+
   it('blocks unsupported Graphify vocabulary with zero writes', async () => {
     const workspace = createWorkspace()
     writeJson(join(workspace, 'bad-graphify-export.json'), {
