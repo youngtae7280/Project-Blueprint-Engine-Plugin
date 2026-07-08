@@ -70,6 +70,7 @@ import {
   NativeCodeSubgraphExtractionError,
 } from '../core/native-code-subgraph-extractor.js'
 import { CodeSubgraphMergePlanError, planCodeSubgraphMergeFile } from '../core/code-subgraph-merge-plan.js'
+import { CodeSymbolLinkValidationError, validateCodeSymbolLinksFile } from '../core/code-symbol-link-validation.js'
 import {
   compareReadModelEvidence,
   generateReadModelEvidence,
@@ -614,6 +615,74 @@ export async function graphPlanCodeSubgraphMergeCommand(context: CommandContext)
               }),
             ],
       data: error instanceof CodeSubgraphMergePlanError ? error.report : undefined,
+    }
+  }
+}
+
+export async function graphValidateCodeSymbolLinksCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.links) {
+    return invalidCommand('graph validate-code-symbol-links requires --links <code-symbol-links.json>.')
+  }
+  if (!context.options.codeSubgraph) {
+    return invalidCommand('graph validate-code-symbol-links requires --code-subgraph <devview-code-subgraph.json>.')
+  }
+  if (!context.options.output) {
+    return invalidCommand('graph validate-code-symbol-links requires --output <code-symbol-links-validation.json>.')
+  }
+
+  try {
+    const result = await validateCodeSymbolLinksFile(context.options.root, {
+      links: context.options.links,
+      codeSubgraph: context.options.codeSubgraph,
+      codeSubgraphValidation: context.options.codeSubgraphValidation,
+      codeSubgraphMergePlan: context.options.codeSubgraphMergePlan,
+      graphSource: context.options.graphSource,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph validate-code-symbol-links',
+      exitCode: ExitCode.Success,
+      message: 'Code symbol links validated without graph-source mutation.',
+      issues: [],
+      data: result,
+    }
+  } catch (error) {
+    const findings = error instanceof CodeSymbolLinkValidationError ? error.report.validationFindings : []
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph validate-code-symbol-links',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Code symbol link validation blocked.',
+      issues:
+        findings.length > 0
+          ? findings
+              .filter((finding) => finding.severity === 'blocker')
+              .map((finding) =>
+                issue({
+                  validator: 'CodeSymbolLinkValidation',
+                  code: finding.code,
+                  severity: 'error',
+                  file: finding.path,
+                  message: finding.message,
+                  reason: finding.field ? `Field: ${finding.field}` : undefined,
+                  suggestedFix:
+                    'Provide a report-only devview-code-symbol-links artifact with valid maintenance/code endpoints, supported link vocabulary, required provenance, and no unsafe authority flags.',
+                }),
+              )
+          : [
+              issue({
+                validator: 'CodeSymbolLinkValidation',
+                code: 'CODE_SYMBOL_LINK_VALIDATION_BLOCKED',
+                severity: 'error',
+                message,
+                suggestedFix:
+                  'Provide --links, --code-subgraph, and --output paths outside source/control artifacts, then rerun validation.',
+              }),
+            ],
+      data: error instanceof CodeSymbolLinkValidationError ? error.report : undefined,
     }
   }
 }

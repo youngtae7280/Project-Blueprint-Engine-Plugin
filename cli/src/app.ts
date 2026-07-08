@@ -128,6 +128,8 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     graphSource: undefined as string | undefined,
     codeSubgraph: undefined as string | undefined,
     codeSubgraphValidation: undefined as string | undefined,
+    codeSubgraphMergePlan: undefined as string | undefined,
+    links: undefined as string | undefined,
     projectMemory: undefined as string | undefined,
     directionChange: undefined as string | undefined,
     record: undefined as string | undefined,
@@ -500,6 +502,20 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--code-subgraph-validation requires a file path.' }
       }
       options.codeSubgraphValidation = value
+      index += 1
+    } else if (arg === '--code-subgraph-merge-plan') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--code-subgraph-merge-plan requires a file path.' }
+      }
+      options.codeSubgraphMergePlan = value
+      index += 1
+    } else if (arg === '--links') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--links requires a file path.' }
+      }
+      options.links = value
       index += 1
     } else if (arg === '--read-model') {
       const value = argv[index + 1]

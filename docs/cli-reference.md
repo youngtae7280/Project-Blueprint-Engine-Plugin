@@ -767,6 +767,29 @@ graph-source, apply a graph delta, generate View Trees or Context Packs, execute
 providers/network/API, satisfy Evidence, enforce RBAC, verify signatures, configure CI, activate hooks, or automate
 approval.
 
+### Code Symbol Link Validation
+
+```bash
+devview graph validate-code-symbol-links \
+  --links <code-symbol-links.json> \
+  --code-subgraph <devview-code-subgraph.json> \
+  --code-subgraph-validation <code-subgraph-validation.json> \
+  --code-subgraph-merge-plan <code-subgraph-merge-plan.json> \
+  --graph-source <maintainability-graph.json> \
+  --output <code-symbol-links-validation.json> \
+  --markdown <code-symbol-links-validation.md> \
+  --json
+```
+
+Validates a declarative `devview-code-symbol-links` source fact that connects maintenance meaning nodes such as task,
+change, check, evidence, requirement, decision, finding, risk, test, document, module, or project to concrete code nodes
+from a supplied `devview-code-subgraph`. The validator requires supported link types, endpoint ids, source and target
+kinds, source provenance, and `extracted`/`inferred`/`ambiguous` confidence. Code endpoints must exist in the supplied
+code subgraph; when `--graph-source` is supplied, maintenance-side endpoints must also exist. The command emits
+`devview-code-symbol-link-validation-report` only. It does not mutate graph-source, apply a graph delta, accept
+Evidence, satisfy runtime Evidence, enforce scope/RBAC, verify signatures, configure CI, activate hooks, call
+providers/network/API, execute shell/project code, generate View Trees or Context Packs, or automate approval.
+
 ### Code Subgraph Validation
 
 ```bash
