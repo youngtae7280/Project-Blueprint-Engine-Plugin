@@ -230,6 +230,31 @@ export class CodeSubgraphValidationError extends Error {
   }
 }
 
+export function validateCodeSubgraphRecord(
+  root: string,
+  requestedPath: string,
+  record: Record<string, unknown>,
+): CodeSubgraphValidationReport {
+  const resolvedPath = resolveRepoPath(root, requestedPath)
+  const bytes = Buffer.from(`${JSON.stringify(record, null, 2)}\n`, 'utf8')
+  const source: LoadedCodeSubgraph = {
+    requestedPath,
+    resolvedPath,
+    relativePath: relativePath(root, resolvedPath),
+    record,
+    sha256: createHash('sha256').update(bytes).digest('hex'),
+    byteLength: bytes.byteLength,
+    readError: null,
+  }
+  const findings = validateCodeSubgraph(source)
+  const blocked = findings.some((finding) => finding.severity === 'blocker')
+  const report = buildReport(source, findings, blocked)
+  if (blocked) {
+    throw new CodeSubgraphValidationError(report)
+  }
+  return report
+}
+
 export async function validateCodeSubgraphFile(
   root: string,
   options: CodeSubgraphValidationOptions,

@@ -62,6 +62,10 @@ import {
 import { buildRetrofitPlan } from '../core/graph-retrofit.js'
 import { CodeSubgraphValidationError, validateCodeSubgraphFile } from '../core/code-subgraph-validation.js'
 import {
+  GraphifyCodeSubgraphImportError,
+  importGraphifyCodeSubgraphFile,
+} from '../core/graphify-code-subgraph-import.js'
+import {
   compareReadModelEvidence,
   generateReadModelEvidence,
   observeReadModelCandidateProjections,
@@ -407,6 +411,72 @@ export async function graphValidateCodeSubgraphCommand(context: CommandContext):
                   'Provide --code-subgraph and --output paths outside source/control artifacts, then rerun validation.',
               }),
             ],
+    }
+  }
+}
+
+export async function graphImportGraphifyCodeSubgraphCommand(context: CommandContext): Promise<CommandResult> {
+  const graphifyExport = context.options.graphifyExport
+  if (!graphifyExport) {
+    return invalidCommand('graph import-graphify-code-subgraph requires --graphify <file> or --graphify-export <file>.')
+  }
+  if (!context.options.output) {
+    return invalidCommand('graph import-graphify-code-subgraph requires --output <devview-code-subgraph.json>.')
+  }
+  if (!context.options.validationOutput) {
+    return invalidCommand('graph import-graphify-code-subgraph requires --validation-output <validation.json>.')
+  }
+
+  try {
+    const result = await importGraphifyCodeSubgraphFile(context.options.root, {
+      graphifyExport,
+      output: context.options.output,
+      validationOutput: context.options.validationOutput,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph import-graphify-code-subgraph',
+      exitCode: ExitCode.Success,
+      message: 'Static Graphify export imported into a validated DevView code subgraph source fact.',
+      issues: [],
+      data: result,
+    }
+  } catch (error) {
+    const findings = error instanceof GraphifyCodeSubgraphImportError ? error.report.importFindings : []
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph import-graphify-code-subgraph',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Graphify code subgraph static import blocked.',
+      issues:
+        findings.length > 0
+          ? findings
+              .filter((finding) => finding.severity === 'blocker')
+              .map((finding) =>
+                issue({
+                  validator: 'GraphifyCodeSubgraphImport',
+                  code: finding.code,
+                  severity: 'error',
+                  file: finding.path,
+                  message: finding.message,
+                  reason: finding.field ? `Field: ${finding.field}` : undefined,
+                  suggestedFix:
+                    'Provide a static Graphify export with supported code node/edge vocabulary, valid endpoints, required source provenance, and no execution/provider/network authority.',
+                }),
+              )
+          : [
+              issue({
+                validator: 'GraphifyCodeSubgraphImport',
+                code: 'GRAPHIFY_CODE_SUBGRAPH_IMPORT_BLOCKED',
+                severity: 'error',
+                message,
+                suggestedFix:
+                  'Provide --graphify/--graphify-export, --output, and --validation-output paths outside source/control artifacts.',
+              }),
+            ],
+      data: error instanceof GraphifyCodeSubgraphImportError ? error.report : undefined,
     }
   }
 }

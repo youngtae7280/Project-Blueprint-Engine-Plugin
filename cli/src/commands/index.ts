@@ -23,6 +23,7 @@ import { filesCheckCommand } from './files.js'
 import { gateAssessCommand, gateCommand } from './gate.js'
 import {
   graphExecutionContractReportCommand,
+  graphImportGraphifyCodeSubgraphCommand,
   graphOperationApplyProposalCommand,
   graphOperationCaptureDeltaCommand,
   graphOperationGeneratePackCommand,
@@ -371,6 +372,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'graph' && subcommand === 'validate-code-subgraph') {
     return graphValidateCodeSubgraphCommand(context)
+  }
+  if (command === 'graph' && subcommand === 'import-graphify-code-subgraph') {
+    return graphImportGraphifyCodeSubgraphCommand(context)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'generate') {
     return graphReadModelGenerateCommand(context)

@@ -711,6 +711,25 @@ alignment, and expected context coverage hints for future `codex-graphify` and `
 fixtures. The command is report-only and blocks executable/provider/network instructions or unsafe authority flags
 before output is written.
 
+### Graphify Code Subgraph Import
+
+```bash
+devview graph import-graphify-code-subgraph \
+  --graphify <graphify-export.json> \
+  --output <devview-code-subgraph.json> \
+  --validation-output <code-subgraph-validation.json> \
+  --markdown <graphify-code-subgraph-import.md> \
+  --json
+```
+
+Converts a static Graphify-style export into a `devview-code-subgraph` source fact, then validates the generated
+artifact with the same code subgraph boundary used by `graph validate-code-subgraph`. The importer maps supported
+Graphify node kinds and relations into DevView code node/edge vocabulary, preserves Graphify ids in provenance fields,
+requires source-file/source-location status/confidence provenance, and reports unsupported vocabulary as blocking
+findings before writing outputs. It does not run Graphify, run AST extractors, call providers/network/API, mutate
+graph-source, generate View Trees or Context Packs, satisfy Evidence, enforce RBAC, verify signatures, configure CI, or
+automate approval.
+
 ### Code Subgraph Validation
 
 ```bash

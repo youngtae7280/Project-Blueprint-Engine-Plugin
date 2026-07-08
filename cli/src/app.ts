@@ -1639,10 +1639,10 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
       }
       options.enterpriseReadiness = value
       index += 1
-    } else if (arg === '--graphify-export') {
+    } else if (arg === '--graphify-export' || arg === '--graphify') {
       const value = argv[index + 1]
       if (!value) {
-        return { error: '--graphify-export requires a file path.' }
+        return { error: `${arg} requires a file path.` }
       }
       options.graphifyExport = value
       index += 1
