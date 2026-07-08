@@ -505,6 +505,7 @@ export async function graphExtractCodeSubgraphCommand(context: CommandContext): 
     const result = await extractNativeCodeSubgraphFile(context.options.root, {
       targetRepo: context.options.targetRepo,
       include: context.options.include,
+      extractionProfile: context.options.extractionProfile,
       output: context.options.output,
       validationOutput: context.options.validationOutput,
       markdown: context.options.markdown,

@@ -753,6 +753,7 @@ automate approval.
 ```bash
 devview graph extract-code-subgraph \
   --target-repo <repo-path> \
+  --extraction-profile graphify-compatible \
   --output <devview-code-subgraph.json> \
   --validation-output <code-subgraph-validation.json> \
   --markdown <native-code-subgraph-extraction.md> \
@@ -760,10 +761,13 @@ devview graph extract-code-subgraph \
 ```
 
 Scans JavaScript and TypeScript source files directly and emits a validated `devview-code-subgraph` source fact with
-file, class, function, method, import, contains, and call facts. The first slice is intentionally conservative: it skips
-common build/control directories, records unsupported extensions as limitations, and does not execute project code, run
-package scripts, invoke Graphify, call providers/network/API, mutate graph-source, generate View Trees or Context Packs,
-satisfy Evidence, enforce RBAC, verify signatures, configure CI, activate hooks, or automate approval.
+file, class, function, method, import, contains, and call facts. The default `graphify-compatible` extraction profile
+keeps declaration coverage while bounding noisy call/reference edges by skipping broad identifier references, filtering
+external dependency calls, and collapsing duplicate call-like `(from, kind, to)` relations. Use
+`--extraction-profile rich` when a diagnostic run needs broader identifier reference and call-site facts. The command
+skips common build/control directories, records unsupported extensions as limitations, and does not execute project
+code, run package scripts, invoke Graphify, call providers/network/API, mutate graph-source, generate View Trees or
+Context Packs, satisfy Evidence, enforce RBAC, verify signatures, configure CI, activate hooks, or automate approval.
 
 ### Code Subgraph Merge Plan
 

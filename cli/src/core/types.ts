@@ -60,6 +60,7 @@ export interface CliOptions {
   staged: boolean
   untracked: boolean
   profile?: 'full' | 'lite' | 'bypass'
+  extractionProfile?: 'graphify-compatible' | 'rich'
   brief?: string
   maxChars?: number
   text?: string

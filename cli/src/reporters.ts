@@ -361,6 +361,8 @@ Options:
   --dry-run            Preview graph operation command plans without executing wrapped scripts.
   --all                Run all configured read-model registry profiles for graph read-model validate.
   --profile <value>    Compatibility workflow-depth hint: full, lite, or bypass. Defaults to full.
+  --extraction-profile <value>
+                       Code extraction precision profile for graph extract-code-subgraph: graphify-compatible or rich. Defaults to graphify-compatible.
   --brief <text>       init project brief.
   --max-chars <n>      Maximum context pack bundle characters. Defaults to 12000.
   --text <text>        Text to assess for Human Gate clarity.

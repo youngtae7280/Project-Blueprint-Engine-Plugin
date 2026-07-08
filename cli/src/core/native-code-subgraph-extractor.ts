@@ -20,6 +20,7 @@ type CodeNodeKind = 'file' | 'class' | 'interface' | 'type' | 'function' | 'meth
 type SymbolNodeKind = Exclude<CodeNodeKind, 'file' | 'external_dependency'>
 type Confidence = 'extracted' | 'inferred' | 'ambiguous'
 type ImportBindingKind = 'default' | 'named' | 'namespace' | 'require'
+export type NativeCodeSubgraphExtractionProfile = 'graphify-compatible' | 'rich'
 
 const REPORT_ROLE = 'devview-native-code-subgraph-extraction-report'
 const PASSED_STATUS = 'devview-native-code-subgraph-extraction-passed'
@@ -29,6 +30,7 @@ const CODE_SUBGRAPH_ROLE = 'devview-code-subgraph'
 const CODE_SUBGRAPH_STATUS = 'devview-code-subgraph-supplied'
 const CODE_SUBGRAPH_SCOPE = 'code-subgraph-source-fact-only'
 const EXTRACTOR_ID = 'native-static-js-ts-ast'
+const DEFAULT_EXTRACTION_PROFILE: NativeCodeSubgraphExtractionProfile = 'graphify-compatible'
 
 const supportedExtensions = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs'])
 const importLikeEdgeKinds = new Set(['imports', 'imports_from', 're_exports'])
@@ -52,6 +54,7 @@ const maxAmbiguousNamesInFinding = 50
 export interface NativeCodeSubgraphExtractorOptions {
   targetRepo?: string
   include?: string[]
+  extractionProfile?: NativeCodeSubgraphExtractionProfile
   output?: string
   validationOutput?: string
   markdown?: string
@@ -70,6 +73,7 @@ export interface NativeCodeSubgraphExtractionReport extends JsonRecord {
   artifactRole: typeof REPORT_ROLE
   status: typeof PASSED_STATUS | typeof BLOCKED_STATUS
   extractionScope: typeof REPORT_SCOPE
+  extractionProfile: NativeCodeSubgraphExtractionProfile
   sourceFactsOnly: true
   reportOnly: true
   extractionMode: typeof EXTRACTOR_ID
@@ -112,6 +116,8 @@ export interface NativeCodeSubgraphExtractionReport extends JsonRecord {
     includePatterns: string[]
     ambiguousCallCount: number
     ambiguousCallNames: string[]
+    profileFilteredExternalCallLikeEdgeCount: number
+    profileFilteredDuplicateCallLikeEdgeCount: number
   }
   extractionFindings: NativeCodeSubgraphExtractionFinding[]
   downstreamActionPlan: string[]
@@ -203,6 +209,10 @@ interface ExtractionState {
   fileNodesByRelativePath: Map<string, string>
   fileIndexesByRelativePath: Map<string, FileIndex>
   externalNodeIdsBySpecifier: Map<string, string>
+  externalNodeIds: Set<string>
+  graphifyCompatibleCallLikeEdgeKeys: Set<string>
+  profileFilteredExternalCallLikeEdgeCount: number
+  profileFilteredDuplicateCallLikeEdgeCount: number
   seenNodeIds: Set<string>
   seenEdgeIds: Set<string>
   unsupportedExtensions: Record<string, number>
@@ -213,6 +223,7 @@ interface ExtractionState {
   skippedLargeFileCount: number
   scannedByteCount: number
   ambiguousCallNames: Set<string>
+  extractionProfile: NativeCodeSubgraphExtractionProfile
 }
 
 export class NativeCodeSubgraphExtractionError extends Error {
@@ -233,7 +244,8 @@ export async function extractNativeCodeSubgraphFile(
   await assertOutputAuthority(root, targetRepoPath, [], options)
 
   const includePatterns = parseIncludePatterns(options.include)
-  const state = await extractCodeSubgraph(targetRepoPath, includePatterns)
+  const extractionProfile = normalizeExtractionProfile(options.extractionProfile)
+  const state = await extractCodeSubgraph(targetRepoPath, includePatterns, extractionProfile)
   let blocked = state.findings.some((finding) => finding.severity === 'blocker')
   await assertOutputAuthority(root, targetRepoPath, state.includedSourcePaths, options)
   const codeSubgraph = buildCodeSubgraph(root, targetRepoPath, state)
@@ -314,7 +326,17 @@ function parseIncludePatterns(include: string[] | undefined): string[] {
   return values.length > 0 ? [...new Set(values)] : ['**/*']
 }
 
-async function extractCodeSubgraph(targetRepoPath: string, includePatterns: string[]): Promise<ExtractionState> {
+function normalizeExtractionProfile(
+  profile: NativeCodeSubgraphExtractorOptions['extractionProfile'],
+): NativeCodeSubgraphExtractionProfile {
+  return profile ?? DEFAULT_EXTRACTION_PROFILE
+}
+
+async function extractCodeSubgraph(
+  targetRepoPath: string,
+  includePatterns: string[],
+  extractionProfile: NativeCodeSubgraphExtractionProfile,
+): Promise<ExtractionState> {
   const state: ExtractionState = {
     findings: [],
     nodes: [],
@@ -325,6 +347,10 @@ async function extractCodeSubgraph(targetRepoPath: string, includePatterns: stri
     fileNodesByRelativePath: new Map(),
     fileIndexesByRelativePath: new Map(),
     externalNodeIdsBySpecifier: new Map(),
+    externalNodeIds: new Set(),
+    graphifyCompatibleCallLikeEdgeKeys: new Set(),
+    profileFilteredExternalCallLikeEdgeCount: 0,
+    profileFilteredDuplicateCallLikeEdgeCount: 0,
     seenNodeIds: new Set(),
     seenEdgeIds: new Set(),
     unsupportedExtensions: {},
@@ -335,6 +361,7 @@ async function extractCodeSubgraph(targetRepoPath: string, includePatterns: stri
     skippedLargeFileCount: 0,
     scannedByteCount: 0,
     ambiguousCallNames: new Set(),
+    extractionProfile,
   }
 
   const invalidInclude = includePatterns
@@ -1036,18 +1063,20 @@ function addCallLikeEdges(state: ExtractionState, fileIndex: FileIndex): void {
       addResolvedEdges(state, from, 'constructs', node.expression, sourceFile, targets)
     }
 
-    if (ts.isPropertyAccessExpression(node) && isReferencePropertyAccess(node)) {
-      const targets = resolveExpressionTargets(state, fileIndex, node, {
-        kinds: ['class', 'interface', 'type', 'function', 'method'],
-        currentClass: nextClass,
-      })
-      addResolvedEdges(state, from, 'references', node, sourceFile, targets)
-    } else if (ts.isIdentifier(node) && isReferenceIdentifier(node)) {
-      const targets = resolveIdentifierTargets(state, fileIndex, node.text, {
-        kinds: ['class', 'interface', 'type', 'function', 'method'],
-        currentClass: nextClass,
-      })
-      addResolvedEdges(state, from, 'references', node, sourceFile, targets)
+    if (state.extractionProfile === 'rich') {
+      if (ts.isPropertyAccessExpression(node) && isReferencePropertyAccess(node)) {
+        const targets = resolveExpressionTargets(state, fileIndex, node, {
+          kinds: ['class', 'interface', 'type', 'function', 'method'],
+          currentClass: nextClass,
+        })
+        addResolvedEdges(state, from, 'references', node, sourceFile, targets)
+      } else if (ts.isIdentifier(node) && isReferenceIdentifier(node)) {
+        const targets = resolveIdentifierTargets(state, fileIndex, node.text, {
+          kinds: ['class', 'interface', 'type', 'function', 'method'],
+          currentClass: nextClass,
+        })
+        addResolvedEdges(state, from, 'references', node, sourceFile, targets)
+      }
     }
 
     ts.forEachChild(node, (child) => visit(child, nextOwner, nextClass))
@@ -1245,6 +1274,9 @@ function addResolvedEdges(
 ): void {
   if (targets === 'ambiguous') return
   for (const target of targets) {
+    if (shouldSkipResolvedEdgeForProfile(state, from, kind, target.id)) {
+      continue
+    }
     addEdge(state, {
       from,
       to: target.id,
@@ -1255,6 +1287,29 @@ function addResolvedEdges(
       confidence: target.confidence,
     })
   }
+}
+
+function shouldSkipResolvedEdgeForProfile(state: ExtractionState, from: string, kind: string, to: string): boolean {
+  if (state.extractionProfile !== 'graphify-compatible') {
+    return false
+  }
+  if (!callLikeEdgeKinds.has(kind)) {
+    return false
+  }
+  if (kind === 'references') {
+    return true
+  }
+  if (state.externalNodeIds.has(to)) {
+    state.profileFilteredExternalCallLikeEdgeCount += 1
+    return true
+  }
+  const edgeKey = `${from}\0${kind}\0${to}`
+  if (state.graphifyCompatibleCallLikeEdgeKeys.has(edgeKey)) {
+    state.profileFilteredDuplicateCallLikeEdgeCount += 1
+    return true
+  }
+  state.graphifyCompatibleCallLikeEdgeKeys.add(edgeKey)
+  return false
 }
 
 function symbolNode(
@@ -1307,6 +1362,7 @@ function externalDependencyNode(state: ExtractionState, sourceFile: SourceFileRe
   if (existing) return existing
   const id = uniqueNodeId(state, `code.external.${sanitizeId(specifier)}`)
   state.externalNodeIdsBySpecifier.set(specifier, id)
+  state.externalNodeIds.add(id)
   state.nodes.push({
     id,
     kind: 'external_dependency',
@@ -1357,6 +1413,7 @@ function buildCodeSubgraph(root: string, targetRepoPath: string, state: Extracti
     importSource: EXTRACTOR_ID,
     extractionSource: {
       targetRepoPath: relativePath(root, targetRepoPath),
+      extractionProfile: state.extractionProfile,
       supportedExtensions: [...supportedExtensions].sort(),
       skippedDirectories: [...skippedDirectories].sort(),
       includePatterns: state.includePatterns,
@@ -1400,6 +1457,7 @@ function buildReport(
     artifactRole: REPORT_ROLE,
     status: blocked ? BLOCKED_STATUS : PASSED_STATUS,
     extractionScope: REPORT_SCOPE,
+    extractionProfile: state.extractionProfile,
     sourceFactsOnly: true,
     reportOnly: true,
     extractionMode: EXTRACTOR_ID,
@@ -1481,6 +1539,8 @@ function extractionSummary(state: ExtractionState): NativeCodeSubgraphExtraction
     includePatterns: state.includePatterns,
     ambiguousCallCount: state.ambiguousCallNames.size,
     ambiguousCallNames: [...state.ambiguousCallNames].sort(),
+    profileFilteredExternalCallLikeEdgeCount: state.profileFilteredExternalCallLikeEdgeCount,
+    profileFilteredDuplicateCallLikeEdgeCount: state.profileFilteredDuplicateCallLikeEdgeCount,
   }
 }
 
@@ -1566,6 +1626,7 @@ function renderMarkdown(report: NativeCodeSubgraphExtractionReport): string {
     '',
     `Status: ${report.status}`,
     `Target repo: \`${report.targetRepo.path}\``,
+    `Extraction profile: \`${report.extractionProfile}\``,
     `Code subgraph: \`${report.writtenCodeSubgraphPath ?? report.outputCodeSubgraph.path}\``,
     `Validation output: \`${report.writtenValidationOutputPath ?? report.validationOutput.path}\``,
     '',
@@ -1578,6 +1639,7 @@ function renderMarkdown(report: NativeCodeSubgraphExtractionReport): string {
     `- Files with symbols: ${report.extractionSummary.filesWithSymbolNodeCount}`,
     `- Imports/calls/constructs/references/contains: ${report.extractionSummary.importEdgeCount}/${report.extractionSummary.callEdgeCount}/${report.extractionSummary.constructEdgeCount}/${report.extractionSummary.referenceEdgeCount}/${report.extractionSummary.containsEdgeCount}`,
     `- Call-like edges: ${report.extractionSummary.callLikeEdgeCount}`,
+    `- Profile-filtered external/duplicate call-like edges: ${report.extractionSummary.profileFilteredExternalCallLikeEdgeCount}/${report.extractionSummary.profileFilteredDuplicateCallLikeEdgeCount}`,
     `- Validation: ${report.validationOutput.codeSubgraphValidationStatus ?? 'not-run'}`,
     '',
     '## Findings',

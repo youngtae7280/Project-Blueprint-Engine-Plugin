@@ -156,6 +156,184 @@ describe('graph extract-code-subgraph CLI', () => {
     )
   })
 
+  it('defaults to graphify-compatible extraction that bounds broad identifier references', async () => {
+    const workspace = createWorkspace()
+    writeText(
+      join(workspace, 'target/src/repeated.ts'),
+      [
+        'export function target(): number { return 1 }',
+        '',
+        'export function owner(): number {',
+        ...Array.from({ length: 40 }, (_, index) => `  const reference${index} = target`),
+        ...Array.from({ length: 40 }, () => '  target()'),
+        '  return target()',
+        '}',
+        '',
+      ].join('\n'),
+    )
+
+    const result = await runDevViewCli(
+      [
+        'graph',
+        'extract-code-subgraph',
+        '--target-repo',
+        'target',
+        '--include',
+        'src/**/*.ts',
+        '--output',
+        '.tmp/repeated-code-subgraph.json',
+        '--validation-output',
+        '.tmp/repeated-validation.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+    const codeSubgraph = JSON.parse(readFileSync(join(workspace, '.tmp/repeated-code-subgraph.json'), 'utf8'))
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.extractionProfile).toBe('graphify-compatible')
+    expect(payload.extractionSummary.referenceEdgeCount).toBe(0)
+    expect(payload.extractionSummary.callEdgeCount).toBe(1)
+    expect(payload.extractionSummary.profileFilteredDuplicateCallLikeEdgeCount).toBeGreaterThanOrEqual(40)
+    expect(codeSubgraph.edges.filter((entry: { kind: string }) => entry.kind === 'references')).toHaveLength(0)
+  })
+
+  it('supports a rich extraction profile for broad reference and call-site facts', async () => {
+    const workspace = createWorkspace()
+    writeText(
+      join(workspace, 'target/src/rich.ts'),
+      [
+        'export function target(): number { return 1 }',
+        '',
+        'export function owner(): number {',
+        '  const reference = target',
+        '  target()',
+        '  return target()',
+        '}',
+        '',
+      ].join('\n'),
+    )
+
+    const result = await runDevViewCli(
+      [
+        'graph',
+        'extract-code-subgraph',
+        '--target-repo',
+        'target',
+        '--include',
+        'src/**/*.ts',
+        '--extraction-profile',
+        'rich',
+        '--output',
+        '.tmp/rich-code-subgraph.json',
+        '--validation-output',
+        '.tmp/rich-validation.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.extractionProfile).toBe('rich')
+    expect(payload.extractionSummary.referenceEdgeCount).toBeGreaterThanOrEqual(1)
+    expect(payload.extractionSummary.callEdgeCount).toBeGreaterThanOrEqual(2)
+    expect(payload.extractionSummary.profileFilteredDuplicateCallLikeEdgeCount).toBe(0)
+  })
+
+  it('attributes calls inside named functions to the function node', async () => {
+    const workspace = createWorkspace()
+    writeText(
+      join(workspace, 'target/src/ownership.ts'),
+      [
+        'export function callee(): string {',
+        "  return 'ok'",
+        '}',
+        '',
+        'export function owner(): string {',
+        '  return callee()',
+        '}',
+        '',
+        'callee()',
+        '',
+      ].join('\n'),
+    )
+
+    const result = await runDevViewCli(
+      [
+        'graph',
+        'extract-code-subgraph',
+        '--target-repo',
+        'target',
+        '--include',
+        'src/**/*.ts',
+        '--output',
+        '.tmp/ownership-code-subgraph.json',
+        '--validation-output',
+        '.tmp/ownership-validation.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const codeSubgraph = JSON.parse(readFileSync(join(workspace, '.tmp/ownership-code-subgraph.json'), 'utf8'))
+    const nodes = codeSubgraph.nodes as Array<{ id: string; kind: string; label: string }>
+    const edges = codeSubgraph.edges as Array<{ from: string; to: string; kind: string }>
+    const owner = nodes.find((entry) => entry.kind === 'function' && entry.label === 'owner')
+    const callee = nodes.find((entry) => entry.kind === 'function' && entry.label === 'callee')
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(edges).toContainEqual(expect.objectContaining({ kind: 'calls', from: owner?.id, to: callee?.id }))
+  })
+
+  it('keeps external test framework calls out of the graphify-compatible call graph', async () => {
+    const workspace = createWorkspace()
+    writeText(join(workspace, 'target/src/helper.ts'), 'export function helper(): number { return 1 }\n')
+    writeText(
+      join(workspace, 'target/src/helper.test.ts'),
+      [
+        "import { describe, expect, it } from 'vitest'",
+        "import { helper } from './helper.js'",
+        '',
+        "describe('helper', () => {",
+        "  it('returns a value', () => {",
+        '    expect(helper()).toBe(1)',
+        '  })',
+        '})',
+        '',
+      ].join('\n'),
+    )
+
+    const result = await runDevViewCli(
+      [
+        'graph',
+        'extract-code-subgraph',
+        '--target-repo',
+        'target',
+        '--include',
+        'src/**/*.ts',
+        '--output',
+        '.tmp/test-framework-code-subgraph.json',
+        '--validation-output',
+        '.tmp/test-framework-validation.json',
+        '--json',
+      ],
+      { cwd: workspace, pluginRoot },
+    )
+    const payload = JSON.parse(result.stdout)
+    const codeSubgraph = JSON.parse(readFileSync(join(workspace, '.tmp/test-framework-code-subgraph.json'), 'utf8'))
+    const nodes = codeSubgraph.nodes as Array<{ id: string; kind: string; label: string }>
+    const edges = codeSubgraph.edges as Array<{ to: string; kind: string }>
+    const vitest = nodes.find((entry) => entry.kind === 'external_dependency' && entry.label === 'vitest')
+    const helper = nodes.find((entry) => entry.kind === 'function' && entry.label === 'helper')
+
+    expect(result.exitCode).toBe(ExitCode.Success)
+    expect(payload.extractionSummary.profileFilteredExternalCallLikeEdgeCount).toBeGreaterThanOrEqual(2)
+    expect(edges).toContainEqual(expect.objectContaining({ kind: 'imports', to: vitest?.id }))
+    expect(edges).toContainEqual(expect.objectContaining({ kind: 'calls', to: helper?.id }))
+    expect(edges.some((entry) => entry.kind === 'calls' && entry.to === vitest?.id)).toBe(false)
+  })
+
   it('extracts TypeScript AST declarations, NodeNext .js imports, re-exports, and imported calls', async () => {
     const workspace = createWorkspace()
     writeAstFixtureProject(workspace)

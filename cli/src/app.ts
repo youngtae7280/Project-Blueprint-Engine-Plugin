@@ -102,6 +102,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     staged: false,
     untracked: false,
     profile: undefined as 'full' | 'lite' | 'bypass' | undefined,
+    extractionProfile: undefined as 'graphify-compatible' | 'rich' | undefined,
     brief: undefined as string | undefined,
     maxChars: undefined as number | undefined,
     text: undefined as string | undefined,
@@ -341,6 +342,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--profile requires one of: full, lite, bypass.' }
       }
       options.profile = value as 'full' | 'lite' | 'bypass'
+      index += 1
+    } else if (arg === '--extraction-profile') {
+      const value = argv[index + 1]
+      if (!value || !['graphify-compatible', 'rich'].includes(value)) {
+        return { error: '--extraction-profile requires one of: graphify-compatible, rich.' }
+      }
+      options.extractionProfile = value as 'graphify-compatible' | 'rich'
       index += 1
     } else if (arg === '--brief') {
       const value = argv[index + 1]
