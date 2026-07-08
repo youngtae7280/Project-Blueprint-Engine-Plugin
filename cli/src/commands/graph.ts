@@ -72,6 +72,7 @@ import {
 import { CodeSubgraphMergePlanError, planCodeSubgraphMergeFile } from '../core/code-subgraph-merge-plan.js'
 import { CodeSymbolLinkValidationError, validateCodeSymbolLinksFile } from '../core/code-symbol-link-validation.js'
 import { CodeImpactReportError, reportCodeImpactFile } from '../core/code-impact-report.js'
+import { queryUnifiedGraphFile, UnifiedGraphQueryError } from '../core/unified-graph-query.js'
 import {
   compareReadModelEvidence,
   generateReadModelEvidence,
@@ -750,6 +751,77 @@ export async function graphReportCodeImpactCommand(context: CommandContext): Pro
               }),
             ],
       data: error instanceof CodeImpactReportError ? error.report : undefined,
+    }
+  }
+}
+
+export async function graphQueryUnifiedCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.codeSubgraph) {
+    return invalidCommand('graph query-unified requires --code-subgraph <devview-code-subgraph.json>.')
+  }
+  if (!context.options.mode) {
+    return invalidCommand('graph query-unified requires --mode <neighbors|path|explain>.')
+  }
+  if (!context.options.output) {
+    return invalidCommand('graph query-unified requires --output <unified-graph-query-report.json>.')
+  }
+
+  try {
+    const result = await queryUnifiedGraphFile(context.options.root, {
+      codeSubgraph: context.options.codeSubgraph,
+      codeSymbolLinksValidation: context.options.codeSymbolLinksValidation,
+      graphSource: context.options.graphSource,
+      mode: context.options.mode,
+      node: context.options.node,
+      sourceNode: context.options.sourceNode,
+      targetNode: context.options.targetNode,
+      maxDepth: context.options.maxDepth,
+      output: context.options.output,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph query-unified',
+      exitCode: ExitCode.Success,
+      message: 'Unified graph query report generated without graph-source mutation.',
+      issues: [],
+      data: result,
+    }
+  } catch (error) {
+    const findings = error instanceof UnifiedGraphQueryError ? error.report.validationFindings : []
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph query-unified',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Unified graph query report blocked.',
+      issues:
+        findings.length > 0
+          ? findings
+              .filter((finding) => finding.severity === 'blocker')
+              .map((finding) =>
+                issue({
+                  validator: 'UnifiedGraphQuery',
+                  code: finding.code,
+                  severity: 'error',
+                  file: finding.path,
+                  message: finding.message,
+                  reason: finding.field ? `Field: ${finding.field}` : undefined,
+                  suggestedFix:
+                    'Provide a valid code subgraph, supported mode arguments, optional passed code-symbol-link validation or readable graph-source, and dedicated report output paths.',
+                }),
+              )
+          : [
+              issue({
+                validator: 'UnifiedGraphQuery',
+                code: 'UNIFIED_GRAPH_QUERY_BLOCKED',
+                severity: 'error',
+                message,
+                suggestedFix:
+                  'Provide --code-subgraph, --mode, mode-specific node ids, and --output paths outside source/control artifacts.',
+              }),
+            ],
+      data: error instanceof UnifiedGraphQueryError ? error.report : undefined,
     }
   }
 }

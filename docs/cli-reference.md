@@ -813,6 +813,47 @@ future query/path/explain work. It does not mutate graph-source, apply graph del
 Packs, accept Evidence, prove runtime behavior, enforce scope/RBAC, verify signatures, configure CI, activate hooks,
 call providers/network/API, run Graphify, or automate approval.
 
+### Unified Graph Query
+
+```bash
+devview graph query-unified \
+  --code-subgraph <devview-code-subgraph.json> \
+  --code-symbol-links-validation <code-symbol-links-validation.json> \
+  --graph-source <maintainability-graph.json> \
+  --mode neighbors \
+  --node <node-id> \
+  --output <unified-graph-query-report.json> \
+  --markdown <unified-graph-query-report.md> \
+  --json
+
+devview graph query-unified \
+  --code-subgraph <devview-code-subgraph.json> \
+  --code-symbol-links-validation <code-symbol-links-validation.json> \
+  --mode path \
+  --source-node <source-node-id> \
+  --target-node <target-node-id> \
+  --max-depth 4 \
+  --output <unified-graph-path-report.json> \
+  --json
+
+devview graph query-unified \
+  --code-subgraph <devview-code-subgraph.json> \
+  --code-symbol-links-validation <code-symbol-links-validation.json> \
+  --mode explain \
+  --node <node-id> \
+  --output <unified-graph-explain-report.json> \
+  --json
+```
+
+Assembles a bounded in-memory unified graph view from supplied source facts and answers deterministic neighbors, path,
+or explain queries. The query includes code subgraph nodes/edges, optional validated maintenance-to-code symbol links,
+and optional graph-source nodes/edges when supplied. This is not natural-language search and does not create a separate
+code graph. Path mode uses directed BFS with `--max-depth` defaulting to 4; `--from`/`--to` are accepted aliases for
+`--source-node`/`--target-node`. The command emits `devview-unified-graph-query-report` and never mutates graph-source,
+applies graph deltas, generates View Trees or Context Packs, executes code, calls providers/network/API, accepts
+Evidence, proves runtime behavior, enforces scope/RBAC, verifies signatures, configures CI, activates hooks, or
+automates approval.
+
 ### View Tree Symbol Selection
 
 ```bash

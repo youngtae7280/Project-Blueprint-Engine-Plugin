@@ -131,6 +131,11 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     codeSubgraphMergePlan: undefined as string | undefined,
     codeSymbolLinksValidation: undefined as string | undefined,
     changedSymbols: [] as string[],
+    mode: undefined as string | undefined,
+    node: undefined as string | undefined,
+    sourceNode: undefined as string | undefined,
+    targetNode: undefined as string | undefined,
+    maxDepth: undefined as number | undefined,
     links: undefined as string | undefined,
     projectMemory: undefined as string | undefined,
     directionChange: undefined as string | undefined,
@@ -525,6 +530,45 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--changed-symbol requires a code node id.' }
       }
       options.changedSymbols.push(...splitIds(value))
+      index += 1
+    } else if (arg === '--mode') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--mode requires a value.' }
+      }
+      options.mode = value
+      index += 1
+    } else if (arg === '--node') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--node requires a node id.' }
+      }
+      options.node = value
+      index += 1
+    } else if (arg === '--source-node' || arg === '--from') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: `${arg} requires a node id.` }
+      }
+      options.sourceNode = value
+      index += 1
+    } else if (arg === '--target-node' || arg === '--to') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: `${arg} requires a node id.` }
+      }
+      options.targetNode = value
+      index += 1
+    } else if (arg === '--max-depth') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--max-depth requires a number.' }
+      }
+      const parsed = Number(value)
+      if (!Number.isFinite(parsed)) {
+        return { error: '--max-depth requires a finite number.' }
+      }
+      options.maxDepth = parsed
       index += 1
     } else if (arg === '--links') {
       const value = argv[index + 1]
