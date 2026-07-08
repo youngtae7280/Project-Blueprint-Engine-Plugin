@@ -93,6 +93,7 @@ import {
   graphValidateCodeSubgraphCommand,
   cleanupLegacyCommand,
   reportLegacyArtifactsCommand,
+  graphExtractCodeSubgraphCommand,
 } from './graph.js'
 import { impactAnalyzeCommand } from './impact.js'
 import { initCommand } from './init.js'
@@ -375,6 +376,9 @@ export async function runCommand(positionals: string[], context: CommandContext)
   }
   if (command === 'graph' && subcommand === 'import-graphify-code-subgraph') {
     return graphImportGraphifyCodeSubgraphCommand(context)
+  }
+  if (command === 'graph' && subcommand === 'extract-code-subgraph') {
+    return graphExtractCodeSubgraphCommand(context)
   }
   if (command === 'graph' && subcommand === 'read-model' && positionals[2] === 'generate') {
     return graphReadModelGenerateCommand(context)

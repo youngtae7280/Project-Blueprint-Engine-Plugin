@@ -65,6 +65,7 @@ export interface CliOptions {
   text?: string
   transition?: string
   files?: string[]
+  include?: string[]
   stage?: CliStageOption
   summary?: string
   title?: string

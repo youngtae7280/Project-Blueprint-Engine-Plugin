@@ -107,6 +107,7 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
     text: undefined as string | undefined,
     transition: undefined as string | undefined,
     files: [] as string[],
+    include: [] as string[],
     stage: undefined as CliStageOption | undefined,
     summary: undefined as string | undefined,
     title: undefined as string | undefined,
@@ -365,6 +366,13 @@ function parseArgs(argv: string[], cwd: string): ParsedArgs | { error: string } 
         return { error: '--files requires a comma-separated file list.' }
       }
       options.files.push(...splitIds(value))
+      index += 1
+    } else if (arg === '--include') {
+      const value = argv[index + 1]
+      if (!value) {
+        return { error: '--include requires a comma-separated pattern list.' }
+      }
+      options.include.push(...splitIds(value))
       index += 1
     } else if (arg === '--summary') {
       const value = argv[index + 1]

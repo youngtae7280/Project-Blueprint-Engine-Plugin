@@ -730,6 +730,23 @@ findings before writing outputs. It does not run Graphify, run AST extractors, c
 graph-source, generate View Trees or Context Packs, satisfy Evidence, enforce RBAC, verify signatures, configure CI, or
 automate approval.
 
+### Native Code Subgraph Extraction
+
+```bash
+devview graph extract-code-subgraph \
+  --target-repo <repo-path> \
+  --output <devview-code-subgraph.json> \
+  --validation-output <code-subgraph-validation.json> \
+  --markdown <native-code-subgraph-extraction.md> \
+  --json
+```
+
+Scans JavaScript and TypeScript source files directly and emits a validated `devview-code-subgraph` source fact with
+file, class, function, method, import, contains, and call facts. The first slice is intentionally conservative: it skips
+common build/control directories, records unsupported extensions as limitations, and does not execute project code, run
+package scripts, invoke Graphify, call providers/network/API, mutate graph-source, generate View Trees or Context Packs,
+satisfy Evidence, enforce RBAC, verify signatures, configure CI, activate hooks, or automate approval.
+
 ### Code Subgraph Validation
 
 ```bash

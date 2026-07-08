@@ -66,6 +66,10 @@ import {
   importGraphifyCodeSubgraphFile,
 } from '../core/graphify-code-subgraph-import.js'
 import {
+  extractNativeCodeSubgraphFile,
+  NativeCodeSubgraphExtractionError,
+} from '../core/native-code-subgraph-extractor.js'
+import {
   compareReadModelEvidence,
   generateReadModelEvidence,
   observeReadModelCandidateProjections,
@@ -477,6 +481,72 @@ export async function graphImportGraphifyCodeSubgraphCommand(context: CommandCon
               }),
             ],
       data: error instanceof GraphifyCodeSubgraphImportError ? error.report : undefined,
+    }
+  }
+}
+
+export async function graphExtractCodeSubgraphCommand(context: CommandContext): Promise<CommandResult> {
+  if (!context.options.targetRepo) {
+    return invalidCommand('graph extract-code-subgraph requires --target-repo <path>.')
+  }
+  if (!context.options.output) {
+    return invalidCommand('graph extract-code-subgraph requires --output <devview-code-subgraph.json>.')
+  }
+  if (!context.options.validationOutput) {
+    return invalidCommand('graph extract-code-subgraph requires --validation-output <validation.json>.')
+  }
+
+  try {
+    const result = await extractNativeCodeSubgraphFile(context.options.root, {
+      targetRepo: context.options.targetRepo,
+      include: context.options.include,
+      output: context.options.output,
+      validationOutput: context.options.validationOutput,
+      markdown: context.options.markdown,
+    })
+    return {
+      ok: true,
+      command: 'graph extract-code-subgraph',
+      exitCode: ExitCode.Success,
+      message: 'Native JavaScript/TypeScript code subgraph extracted and validated without graph-source mutation.',
+      issues: [],
+      data: result,
+    }
+  } catch (error) {
+    const findings = error instanceof NativeCodeSubgraphExtractionError ? error.report.extractionFindings : []
+    const message = error instanceof Error ? error.message : String(error)
+    return {
+      ok: false,
+      command: 'graph extract-code-subgraph',
+      exitCode: ExitCode.ValidationFailed,
+      message: 'Native code subgraph static extraction blocked.',
+      issues:
+        findings.length > 0
+          ? findings
+              .filter((finding) => finding.severity === 'blocker')
+              .map((finding) =>
+                issue({
+                  validator: 'NativeCodeSubgraphExtractor',
+                  code: finding.code,
+                  severity: 'error',
+                  file: finding.path,
+                  message: finding.message,
+                  reason: finding.field ? `Field: ${finding.field}` : undefined,
+                  suggestedFix:
+                    'Provide a readable target repo with supported JS/TS files and dedicated output/validation paths outside source/control artifacts.',
+                }),
+              )
+          : [
+              issue({
+                validator: 'NativeCodeSubgraphExtractor',
+                code: 'NATIVE_CODE_SUBGRAPH_EXTRACTION_BLOCKED',
+                severity: 'error',
+                message,
+                suggestedFix:
+                  'Provide --target-repo, --output, and --validation-output paths outside source/control artifacts.',
+              }),
+            ],
+      data: error instanceof NativeCodeSubgraphExtractionError ? error.report : undefined,
     }
   }
 }
