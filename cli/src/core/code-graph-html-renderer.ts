@@ -688,6 +688,71 @@ function renderSummary(data: RenderGraphData): CodeGraphHtmlRenderReport['htmlSu
 
 function renderHtml(data: RenderGraphData): string {
   const json = JSON.stringify(data).replace(/</g, '\\u003c')
+  const initialScale = 0.03
+  const initialCircleRadius = 7 / initialScale
+  const initialLabelX = 11 / initialScale
+  const initialLabelY = 4 / initialScale
+  const initialLabelSize = 11 / initialScale
+  const palette = [
+    '#60a5fa',
+    '#34d399',
+    '#f59e0b',
+    '#f472b6',
+    '#a78bfa',
+    '#2dd4bf',
+    '#f87171',
+    '#84cc16',
+    '#38bdf8',
+    '#fb7185',
+    '#c084fc',
+  ]
+  const kindColors = new Map<string, string>()
+  const colorForKind = (kind: string): string => {
+    if (!kindColors.has(kind)) {
+      kindColors.set(kind, palette[kindColors.size % palette.length])
+    }
+    return kindColors.get(kind) ?? palette[0]
+  }
+  const nodeById = new Map(data.nodes.map((node) => [node.id, node]))
+  const staticEdges = data.edges
+    .map((edge) => {
+      const from = nodeById.get(edge.from)
+      const to = nodeById.get(edge.to)
+      if (!from || !to) return ''
+      const attrs = `x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" data-id="${escapeAttribute(edge.id)}"`
+      return `<line ${attrs} class="edge"></line><line ${attrs} class="edge-hit"></line>`
+    })
+    .join('')
+  const staticNodes = data.nodes
+    .map(
+      (node) =>
+        `<g class="node" transform="translate(${node.x} ${node.y})" data-id="${escapeAttribute(node.id)}">` +
+        `<circle r="${initialCircleRadius}" fill="${escapeAttribute(colorForKind(node.kind))}"></circle>` +
+        `<text x="${initialLabelX}" y="${initialLabelY}" font-size="${initialLabelSize}">${escapeText(
+          shortStaticLabel(node.label),
+        )}</text>` +
+        `</g>`,
+    )
+    .join('')
+  const kindPills = Object.entries(data.summary.nodeKindCounts)
+    .sort()
+    .map(([kind, count]) => `<span class="pill">${escapeText(kind)}: ${count}</span>`)
+    .join('')
+  const kindOptions = Object.entries(data.summary.nodeKindCounts)
+    .sort()
+    .map(([kind, count]) => `<option value="${escapeAttribute(kind)}">${escapeText(kind)} (${count})</option>`)
+    .join('')
+  const resultRows = data.nodes
+    .slice(0, 200)
+    .map(
+      (node) =>
+        `<button class="row" type="button" data-node-id="${escapeAttribute(node.id)}">${escapeText(
+          node.label,
+        )}<small>${escapeText(`${node.kind} - ${node.sourceFile || 'n/a'}`)}</small></button>`,
+    )
+    .join('')
+  const graphWidth = Math.max(data.summary.graphWidth, 1)
+  const graphHeight = Math.max(data.summary.graphHeight, 1)
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -740,18 +805,23 @@ function renderHtml(data: RenderGraphData): string {
         <button id="fit" title="Fit graph">Fit</button>
         <button id="reset" title="Reset zoom">1:1</button>
         <input id="search" type="search" placeholder="Search nodes">
-        <select id="kindFilter" title="Node kind filter"><option value="">All kinds</option></select>
+        <select id="kindFilter" title="Node kind filter"><option value="">All kinds</option>${kindOptions}</select>
       </div>
-      <svg id="graphSvg" role="img" aria-label="DevView code graph"></svg>
+      <svg id="graphSvg" role="img" aria-label="DevView code graph" viewBox="0 0 ${graphWidth} ${graphHeight}" preserveAspectRatio="xMidYMin meet">
+        <g id="graphRoot">
+          <g id="edgeLayer">${staticEdges}</g>
+          <g id="nodeLayer">${staticNodes}</g>
+        </g>
+      </svg>
     </main>
     <aside class="panel">
       <header>
         <h1>DevView Code Graph</h1>
-        <div class="mono" id="sourcePath"></div>
+        <div class="mono" id="sourcePath">${escapeText(data.sourceCodeSubgraph.path)}</div>
       </header>
       <section class="summary">
-        <div class="metric"><b id="nodeCount">0</b><span>nodes</span></div>
-        <div class="metric"><b id="edgeCount">0</b><span>edges</span></div>
+        <div class="metric"><b id="nodeCount">${data.summary.nodeCount}</b><span>nodes</span></div>
+        <div class="metric"><b id="edgeCount">${data.summary.edgeCount}</b><span>edges</span></div>
       </section>
       <section class="section">
         <h2>Selection Details</h2>
@@ -759,9 +829,9 @@ function renderHtml(data: RenderGraphData): string {
       </section>
       <section class="section">
         <h2>Kinds</h2>
-        <div id="kindList" class="list"></div>
+        <div id="kindList" class="list">${kindPills}</div>
       </section>
-      <section class="results" id="results"></section>
+      <section class="results" id="results">${resultRows}</section>
     </aside>
   </div>
   <script id="graph-data" type="application/json">${json}</script>
@@ -770,8 +840,6 @@ function renderHtml(data: RenderGraphData): string {
     const svg = document.getElementById('graphSvg');
     const ns = 'http://www.w3.org/2000/svg';
     const nodeById = new Map(data.nodes.map(node => [node.id, node]));
-    const kindColors = new Map();
-    const palette = ['#60a5fa','#34d399','#f59e0b','#f472b6','#a78bfa','#2dd4bf','#f87171','#84cc16','#38bdf8','#fb7185','#c084fc'];
     let scale = 1;
     let tx = 0;
     let ty = 0;
@@ -779,40 +847,23 @@ function renderHtml(data: RenderGraphData): string {
     let dragging = false;
     let last = null;
     const viewport = { width: data.summary.graphWidth, height: data.summary.graphHeight };
-    const root = document.createElementNS(ns, 'g');
-    const edgeLayer = document.createElementNS(ns, 'g');
-    const nodeLayer = document.createElementNS(ns, 'g');
+    const root = document.getElementById('graphRoot');
     svg.setAttribute('viewBox', '0 0 1200 800');
-    svg.appendChild(root);
-    root.appendChild(edgeLayer);
-    root.appendChild(nodeLayer);
 
-    function colorFor(kind) {
-      if (!kindColors.has(kind)) kindColors.set(kind, palette[kindColors.size % palette.length]);
-      return kindColors.get(kind);
-    }
-    function el(name, attrs = {}) {
-      const element = document.createElementNS(ns, name);
-      Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, String(value)));
-      return element;
-    }
-    function text(value, attrs = {}) {
-      const element = el('text', attrs);
-      element.textContent = value;
-      return element;
-    }
     function init() {
       document.getElementById('sourcePath').textContent = data.sourceCodeSubgraph.path;
       document.getElementById('nodeCount').textContent = data.summary.nodeCount;
       document.getElementById('edgeCount').textContent = data.summary.edgeCount;
       renderFilters();
-      renderGraph();
+      attachGraphInteractions();
       renderResults(data.nodes.slice(0, 200));
       fitGraph();
     }
     function renderFilters() {
       const kindList = document.getElementById('kindList');
       const filter = document.getElementById('kindFilter');
+      kindList.innerHTML = '';
+      filter.innerHTML = '<option value="">All kinds</option>';
       Object.entries(data.summary.nodeKindCounts).sort().forEach(([kind, count]) => {
         const option = document.createElement('option');
         option.value = kind;
@@ -824,29 +875,22 @@ function renderHtml(data: RenderGraphData): string {
         kindList.appendChild(pill);
       });
     }
-    function renderGraph() {
-      data.edges.forEach(edge => {
-        const from = nodeById.get(edge.from);
-        const to = nodeById.get(edge.to);
-        if (!from || !to) return;
-        const line = el('line', { x1: from.x, y1: from.y, x2: to.x, y2: to.y, class: 'edge', 'data-id': edge.id });
-        const hit = el('line', { x1: from.x, y1: from.y, x2: to.x, y2: to.y, class: 'edge-hit', 'data-id': edge.id });
-        hit.addEventListener('click', event => { event.stopPropagation(); selectEdge(edge.id); });
-        edgeLayer.appendChild(line);
-        edgeLayer.appendChild(hit);
+    function attachGraphInteractions() {
+      document.querySelectorAll('.edge-hit').forEach(hit => {
+        hit.addEventListener('click', event => { event.stopPropagation(); selectEdge(hit.getAttribute('data-id')); });
       });
-      data.nodes.forEach(node => {
-        const group = el('g', { class: 'node', transform: 'translate(' + node.x + ' ' + node.y + ')', 'data-id': node.id });
-        group.appendChild(el('circle', { r: 7, fill: colorFor(node.kind) }));
-        group.appendChild(text(shortLabel(node.label), { x: 11, y: 4, 'font-size': 11 }));
-        group.addEventListener('click', event => { event.stopPropagation(); selectNode(node.id); });
-        nodeLayer.appendChild(group);
+      document.querySelectorAll('.node').forEach(group => {
+        group.addEventListener('click', event => { event.stopPropagation(); selectNode(group.getAttribute('data-id')); });
       });
     }
     function applyTransform() {
       root.setAttribute('transform', 'translate(' + tx + ' ' + ty + ') scale(' + scale + ')');
       document.querySelectorAll('.node circle').forEach(circle => circle.setAttribute('r', String(7 / scale)));
-      document.querySelectorAll('.node text').forEach(label => label.setAttribute('font-size', String(11 / scale)));
+      document.querySelectorAll('.node text').forEach(label => {
+        label.setAttribute('font-size', String(11 / scale));
+        label.setAttribute('x', String(11 / scale));
+        label.setAttribute('y', String(4 / scale));
+      });
     }
     function zoomAt(factor, cx = 600, cy = 400) {
       const before = screenToGraph(cx, cy);
@@ -888,6 +932,10 @@ function renderHtml(data: RenderGraphData): string {
     function showDetails(type, item) {
       const details = document.getElementById('selectionDetails');
       if (!item) return;
+      if (type === 'empty') {
+        details.innerHTML = '<span class="k">Status</span><span>Click a node or edge.</span>';
+        return;
+      }
       const rows = type === 'node'
         ? [
             ['Type', 'node'], ['Id', item.id], ['Label', item.label], ['Kind', item.kind], ['Degree', item.degree],
@@ -939,6 +987,27 @@ function renderHtml(data: RenderGraphData): string {
 </body>
 </html>
 `
+}
+
+function shortStaticLabel(value: string): string {
+  return value.length > 34 ? `${value.slice(0, 31)}...` : value
+}
+
+function escapeText(value: unknown): string {
+  return String(value ?? '').replace(/[&<>"']/g, (character) => {
+    const replacements: Record<string, string> = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    }
+    return replacements[character] ?? character
+  })
+}
+
+function escapeAttribute(value: unknown): string {
+  return escapeText(value)
 }
 
 function renderMarkdown(report: CodeGraphHtmlRenderReport): string {
