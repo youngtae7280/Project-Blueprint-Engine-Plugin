@@ -883,10 +883,11 @@ function renderHtml(data: RenderGraphData): string {
     #graphSvg.dragging { cursor:grabbing; }
     .edge { stroke:#6b7893; stroke-width:1.4; vector-effect:non-scaling-stroke; opacity:.28; }
     .edge-hit { stroke:transparent; stroke-width:12; vector-effect:non-scaling-stroke; cursor:pointer; }
-    .edge.selected { stroke:#f97316; stroke-width:2.4; opacity:.95; }
+    .edge.selected, .edge.context-highlight { stroke:#f97316; stroke-width:2.4; opacity:.95; }
     .node circle { stroke:#0b1020; stroke-width:1.2; vector-effect:non-scaling-stroke; cursor:pointer; }
     .node text { fill:#dbeafe; paint-order:stroke; stroke:#0d1020; stroke-width:3px; stroke-linejoin:round; pointer-events:none; }
-    .node.selected circle { stroke:#f97316; stroke-width:2.2; }
+    .node.selected circle, .node.context-highlight circle { stroke:#f97316; stroke-width:2.4; fill:#fef3c7; }
+    .node.context-highlight text { fill:#fff7ed; }
     .lane-label { fill:#94a3b8; font-weight:700; letter-spacing:0; }
     .workflow-dock { position:absolute; left:12px; right:12px; bottom:12px; z-index:3; display:flex; align-items:center; gap:8px; min-height:74px; padding:8px; overflow:auto hidden; background:rgba(18,22,39,.86); border:1px solid var(--graph-border); border-radius:8px; backdrop-filter:blur(10px); }
     .flow-step { display:grid; grid-template-columns:26px minmax(118px, 170px); align-items:center; gap:8px; height:54px; border:1px solid #303a5b; background:#10172a; color:#dbeafe; border-radius:7px; padding:6px 8px; text-align:left; flex:0 0 auto; }
@@ -1000,6 +1001,9 @@ function renderHtml(data: RenderGraphData): string {
     let network = null;
     let nodesDS = null;
     let edgesDS = null;
+    let colorByCommunity = new Map();
+    let activeNodeIds = new Set();
+    let activeEdgeIds = new Set();
     const hiddenCommunities = new Set();
     const communityColors = ['#4E79A7','#F28E2B','#E15759','#76B7B2','#59A14F','#EDC948','#B07AA1','#FF9DA7','#9C755F','#BAB0AC','#60A5FA','#34D399','#F472B6','#A78BFA','#2DD4BF','#F87171','#84CC16','#38BDF8'];
     const viewport = { width: data.summary.graphWidth, height: data.summary.graphHeight };
@@ -1017,12 +1021,13 @@ function renderHtml(data: RenderGraphData): string {
         attachGraphInteractions();
         fitGraph();
       }
+      applySearch({ fit: false });
     }
     function initNetwork() {
       if (!window.vis || !window.vis.Network || !window.vis.DataSet) return false;
       const container = document.getElementById('network');
       const communities = buildCommunities();
-      const colorByCommunity = new Map(communities.map((community, index) => [community.key, communityColors[index % communityColors.length]]));
+      colorByCommunity = new Map(communities.map((community, index) => [community.key, communityColors[index % communityColors.length]]));
       nodesDS = new vis.DataSet(data.nodes.map(node => {
         const community = communityKey(node);
         const color = colorByCommunity.get(community) || '#60A5FA';
@@ -1132,12 +1137,108 @@ function renderHtml(data: RenderGraphData): string {
             hiddenCommunities.add(community.key);
             row.classList.add('dimmed');
           }
-          nodesDS.update(data.nodes.filter(node => communityKey(node) === community.key).map(node => ({
-            id: node.id,
-            hidden: hiddenCommunities.has(community.key),
-          })));
+          applyGraphState({ fit: false });
         });
         kindList.appendChild(row);
+      });
+    }
+    function currentFilteredNodes() {
+      const search = document.getElementById('search');
+      const filter = document.getElementById('kindFilter');
+      const query = (search ? search.value : '').toLowerCase();
+      const kind = filter ? filter.value : '';
+      return data.nodes.filter(node =>
+        (!kind || node.kind === kind) &&
+        (!query || nodeSearchText(node).includes(query))
+      );
+    }
+    function nodeSearchText(node) {
+      return [
+        node.id,
+        node.label,
+        node.kind,
+        node.sourceFile,
+        node.extractor,
+        node.sourceGraphifyNodeId,
+        communityLabel(node),
+      ].filter(Boolean).join(' ').toLowerCase();
+    }
+    function baseNodeSize(node) {
+      return Math.max(7, Math.min(26, 7 + Math.sqrt(Math.max(node.degree || 0, 1)) * 1.8));
+    }
+    function edgeDatasetId(edge, index) {
+      return edge.id || 'edge-' + index;
+    }
+    function edgeBaseWidth(edge) {
+      return edge.kind === 'calls' ? 1.5 : 0.85;
+    }
+    function applyGraphState(options = {}) {
+      const filteredNodes = currentFilteredNodes();
+      const filteredIds = new Set(filteredNodes.map(node => node.id));
+      const visibleNodeIds = new Set();
+      data.nodes.forEach(node => {
+        if (hiddenCommunities.has(communityKey(node))) return;
+        if (filteredIds.has(node.id) || activeNodeIds.has(node.id)) visibleNodeIds.add(node.id);
+      });
+      const visibleEdgeIds = new Set();
+      data.edges.forEach((edge, index) => {
+        if (visibleNodeIds.has(edge.from) && visibleNodeIds.has(edge.to)) {
+          visibleEdgeIds.add(edgeDatasetId(edge, index));
+        }
+      });
+      if (nodesDS && edgesDS) {
+        nodesDS.update(data.nodes.map(node => {
+          const community = communityKey(node);
+          const color = colorByCommunity.get(community) || '#60A5FA';
+          const isActive = activeNodeIds.has(node.id);
+          return {
+            id: node.id,
+            hidden: !visibleNodeIds.has(node.id),
+            size: baseNodeSize(node) + (isActive ? 6 : 0),
+            borderWidth: isActive ? 4 : 1.4,
+            color: isActive
+              ? { background: '#fef3c7', border: '#f97316', highlight: { background: '#ffffff', border: '#f97316' } }
+              : { background: color, border: color, highlight: { background: '#ffffff', border: color } },
+            font: isActive ? { size: 13, color: '#fff7ed', strokeWidth: 4, strokeColor: '#0d1020' } : { size: 0, color: '#dbeafe' },
+          };
+        }));
+        edgesDS.update(data.edges.map((edge, index) => {
+          const id = edgeDatasetId(edge, index);
+          const isActive = activeEdgeIds.has(id) || (activeNodeIds.has(edge.from) && activeNodeIds.has(edge.to));
+          return {
+            id,
+            hidden: !visibleEdgeIds.has(id),
+            width: isActive ? Math.max(2.8, edgeBaseWidth(edge) + 1.5) : edgeBaseWidth(edge),
+            label: isActive ? edge.kind : '',
+            font: isActive ? { size: 11, color: '#fed7aa', strokeWidth: 3, strokeColor: '#0d1020' } : { size: 0 },
+            color: {
+              color: isActive ? '#f97316' : edgeColor(edge.kind),
+              opacity: isActive ? 0.95 : edge.kind === 'calls' ? 0.42 : 0.25,
+              highlight: '#f97316',
+            },
+          };
+        }));
+        if (options.fitToActive && activeNodeIds.size) {
+          const fitIds = Array.from(activeNodeIds).filter(id => visibleNodeIds.has(id)).slice(0, 180);
+          if (fitIds.length) network.fit({ nodes: fitIds, animation: { duration: 220, easingFunction: 'easeInOutQuad' } });
+        } else if (options.fitToFilter && visibleNodeIds.size && visibleNodeIds.size < data.nodes.length) {
+          network.fit({ nodes: Array.from(visibleNodeIds).slice(0, 300), animation: { duration: 180, easingFunction: 'easeInOutQuad' } });
+        }
+      }
+      document.querySelectorAll('.node').forEach(group => {
+        const id = group.getAttribute('data-id');
+        const visible = visibleNodeIds.has(id);
+        const active = activeNodeIds.has(id);
+        group.style.display = visible ? '' : 'none';
+        group.classList.toggle('context-highlight', active);
+      });
+      document.querySelectorAll('.edge, .edge-hit').forEach(entry => {
+        const id = entry.getAttribute('data-id');
+        const edge = data.edges.find((candidate, index) => edgeDatasetId(candidate, index) === id);
+        const visible = edge ? visibleNodeIds.has(edge.from) && visibleNodeIds.has(edge.to) : false;
+        const active = edge ? activeEdgeIds.has(id) || (activeNodeIds.has(edge.from) && activeNodeIds.has(edge.to)) : false;
+        entry.style.display = visible ? '' : 'none';
+        entry.classList.toggle('context-highlight', active);
       });
     }
     function renderDevViewContext() {
@@ -1216,6 +1317,7 @@ function renderHtml(data: RenderGraphData): string {
       };
       const item = (collections[kind] || []).find(entry => String(entry.id || entry.recordId || entry.label || '') === String(id));
       if (!item) return;
+      const match = highlightContextSelection(kind, item);
       const rows = kind === 'workflow'
         ? [['Type', 'workflow step'], ['Label', item.label], ['Phase', item.phase], ['Summary', item.summary], ['Output', item.output], ['Nodes', (item.nodeIds || []).length], ['Edges', (item.edgeIds || []).length], ['Authority', item.authority]]
         : kind === 'tree'
@@ -1223,7 +1325,130 @@ function renderHtml(data: RenderGraphData): string {
           : kind === 'subgraph'
             ? [['Type', 'SubGraph'], ['Id', item.id], ['Label', item.label], ['Task type', item.taskType], ['Start node', item.startNodeId], ['Nodes', (item.nodeIds || []).length], ['Edges', (item.edgeIds || []).length], ['Allowed files', (item.allowedFiles || []).join(', ')]]
             : [['Type', 'Work history'], ['Record', item.recordId], ['Label', item.label], ['Status', item.status], ['Code state', item.activeCodeState], ['Record path', item.recordPath]];
+      rows.push(['Linked code matches', match.nodeIds.length + ' nodes / ' + match.edgeIds.length + ' edges']);
+      rows.push(['Match strategy', match.strategy]);
+      if (match.tokens.length) rows.push(['Match terms', match.tokens.slice(0, 10).join(', ')]);
       showDetails('context', { title: item.label || item.id || id, rows });
+    }
+    function highlightContextSelection(kind, item) {
+      const match = findContextCodeMatches(kind, item);
+      activeNodeIds = new Set(match.nodeIds);
+      activeEdgeIds = new Set(match.edgeIds);
+      applyGraphState({ fitToActive: true });
+      return match;
+    }
+    function findContextCodeMatches(kind, item) {
+      const contextItems = collectLinkedContextItems(item);
+      const strings = contextItems.flatMap(entry => collectContextStrings(entry));
+      const directNodeIds = new Set();
+      const directEdgeIds = new Set();
+      contextItems.forEach(entry => {
+        [entry.id, entry.recordId, entry.startNodeId, entry.output].filter(Boolean).forEach(value => {
+          if (nodeById.has(String(value))) directNodeIds.add(String(value));
+        });
+        (entry.nodeIds || []).forEach(value => { if (nodeById.has(String(value))) directNodeIds.add(String(value)); });
+        (entry.edgeIds || []).forEach(value => {
+          if (data.edges.some((edge, index) => edgeDatasetId(edge, index) === String(value))) directEdgeIds.add(String(value));
+        });
+      });
+      const fileHints = collectFileHints(contextItems);
+      const tokens = tokenizeContext(strings);
+      const scored = new Map();
+      directNodeIds.forEach(id => scored.set(id, 50));
+      data.nodes.forEach(node => {
+        let score = scored.get(node.id) || 0;
+        const normalizedFile = normalizeText(node.sourceFile || '');
+        fileHints.forEach(hint => {
+          if (hint && (normalizedFile.endsWith(hint) || normalizedFile.includes(hint) || hint.endsWith(normalizedFile))) score += 12;
+        });
+        const haystack = normalizeText([
+          node.id,
+          node.label,
+          node.kind,
+          node.sourceFile,
+          node.sourceGraphifyNodeId,
+          communityLabel(node),
+        ].filter(Boolean).join(' '));
+        tokens.forEach(token => {
+          if (haystack.includes(token)) score += token.length >= 8 ? 3 : 1;
+        });
+        if (score >= 2) scored.set(node.id, score);
+      });
+      const nodeIds = Array.from(scored.entries())
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .slice(0, 260)
+        .map(([id]) => id);
+      const nodeSet = new Set(nodeIds);
+      const edgeIds = new Set(directEdgeIds);
+      data.edges.forEach((edge, index) => {
+        if (nodeSet.has(edge.from) && nodeSet.has(edge.to)) edgeIds.add(edgeDatasetId(edge, index));
+      });
+      const strategyParts = [];
+      if (directNodeIds.size || directEdgeIds.size) strategyParts.push('exact id');
+      if (fileHints.length) strategyParts.push('file hint');
+      if (tokens.length) strategyParts.push('semantic token');
+      return {
+        nodeIds,
+        edgeIds: Array.from(edgeIds),
+        tokens,
+        strategy: strategyParts.join(' + ') || 'no code match',
+      };
+    }
+    function collectLinkedContextItems(item) {
+      const linked = [item];
+      const refs = new Set([item.output, item.startNodeId, item.recordId, item.id].filter(Boolean).map(String));
+      (item.nodeIds || []).forEach(value => refs.add(String(value)));
+      const context = data.devviewContext || {};
+      const pools = [
+        ...(context.workflowSteps || []),
+        ...(context.trees || []),
+        ...(context.subgraphs || []),
+        ...(context.workHistory || []),
+      ];
+      pools.forEach(candidate => {
+        const ids = [candidate.id, candidate.recordId, candidate.label].filter(Boolean).map(String);
+        if (ids.some(id => refs.has(id)) && !linked.includes(candidate)) linked.push(candidate);
+      });
+      return linked;
+    }
+    function collectContextStrings(value, depth = 0) {
+      if (depth > 4 || value == null) return [];
+      if (['string', 'number', 'boolean'].includes(typeof value)) return [String(value)];
+      if (Array.isArray(value)) return value.flatMap(entry => collectContextStrings(entry, depth + 1));
+      if (typeof value === 'object') {
+        return Object.entries(value).flatMap(([key, entry]) => [key, ...collectContextStrings(entry, depth + 1)]);
+      }
+      return [];
+    }
+    function collectFileHints(items) {
+      const candidates = [];
+      const pathRootPattern = new RegExp('^.*?(src|cli|tests|WindowsUtility|Utility_Windows)/', 'i');
+      items.forEach(item => {
+        ['allowedFiles', 'sourceFiles', 'files', 'changedFiles'].forEach(key => {
+          (item[key] || []).forEach(value => candidates.push(String(value)));
+        });
+        ['sourceFile', 'recordPath', 'packPath', 'path'].forEach(key => {
+          if (item[key]) candidates.push(String(item[key]));
+        });
+      });
+      return Array.from(new Set(candidates
+        .map(value => normalizeText(value))
+        .filter(value => value.includes('/') || value.includes('.'))
+        .map(value => value.replace(pathRootPattern, '$1/'))));
+    }
+    function tokenizeContext(strings) {
+      const stop = new Set(['workflow','tree','trees','subgraph','sub','graph','view','viewpoint','selected','task','source','fact','code','node','nodes','edge','edges','output','input','phase','authority','read','only','visualization','validate','validation','derive','derived','bounded','request','change','changes','touch','touches','pack','sections','context','status','label','summary','type','start','project','module','index','work','slice','collapse','show','the','and','for','with','from','into','exact','final','current','before','after','broader','carried','instruction']);
+      const tokens = strings
+        .join(' ')
+        .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+        .toLowerCase()
+        .split(/[^a-z0-9_]+/)
+        .map(token => token.trim())
+        .filter(token => token.length >= 3 && !stop.has(token) && !/^\\d+$/.test(token));
+      return Array.from(new Set(tokens)).slice(0, 80);
+    }
+    function normalizeText(value) {
+      return String(value || '').replace(/\\\\/g, '/').toLowerCase();
     }
     function communityKey(node) {
       const source = node.sourceFile || '';
@@ -1395,10 +1620,10 @@ function renderHtml(data: RenderGraphData): string {
       });
     }
     function applySearch() {
-      const query = document.getElementById('search').value.toLowerCase();
-      const kind = document.getElementById('kindFilter').value;
-      const matches = data.nodes.filter(node => (!kind || node.kind === kind) && (!query || (node.label + ' ' + node.id + ' ' + (node.sourceFile || '')).toLowerCase().includes(query)));
+      const options = typeof arguments[0] === 'object' ? arguments[0] : {};
+      const matches = currentFilteredNodes();
       renderResults(matches.slice(0, 300));
+      applyGraphState({ fitToFilter: options.fit !== false });
     }
     function shortLabel(value) { return value.length > 34 ? value.slice(0, 31) + '...' : value; }
     function formatLocation(value) { return value && typeof value === 'object' ? JSON.stringify(value) : value; }
